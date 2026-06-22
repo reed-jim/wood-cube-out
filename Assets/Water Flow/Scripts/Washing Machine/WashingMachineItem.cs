@@ -46,6 +46,7 @@ public class WashingMachineItem : MonoBehaviour
     public bool isGhostMode;
     public bool isStucking;
     public bool isPlayingWarningLoseAnimation;
+    public bool isShuffled;
 
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;

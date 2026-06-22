@@ -458,9 +458,13 @@ namespace AntsFlow
                     Color nextFaction;
                     int numAnt;
 
+                    washingMachine.isShuffled = false;
+
                     GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt, isIncludeStartSlot: false);
 
                     washingMachine.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                    washingMachine.isShuffled = true;
                 }
             }
         }
@@ -876,15 +880,12 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
 
-            if (!isIncludeStartSlot)
-            {
-                Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+            // Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
 
-                foreach (var item in numSpawnPerFactionOrderByDifficulty)
-                {
-                    Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
-                }
-            }
+            // foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            // {
+            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            // }
 
             int maxValidIndex = 0;
 
@@ -970,7 +971,19 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
-                    CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    if (isIncludeStartSlot)
+                    {
+                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        {
+                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
+                    }
                 }
             }
 

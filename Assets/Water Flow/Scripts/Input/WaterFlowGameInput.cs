@@ -64,6 +64,13 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                     }
                 }
 
+                float tileSize = GamePersistentVariable.tileMapScaleFactor;
+
+                if (smallestDistance > GamePersistentVariable.tileMapScaleFactor)
+                {
+                    selectedTile = null;
+                }
+
                 if (selectedTile != null)
                 {
                     Color faction = selectedTile.Faction;

@@ -149,7 +149,9 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         SpawnedRewardItemsData spawnedRewardItemsData = new SpawnedRewardItemsData();
 
         spawnedRewardItemsData.totalItems = poolSize;
-        spawnedRewardItemsData.remaningItems = poolSize;
+        // spawnedRewardItemsData.remaningItems = poolSize;
+        // spawnedRewardItemsData.totalValue = totalValue;
+        spawnedRewardItemsData.remaningValue = totalValue;
         spawnedRewardItemsData.unitValue = unitValue;
 
         GamePersistentVariable.spawnedRewardItemsData = spawnedRewardItemsData;
@@ -258,15 +260,17 @@ public class SpawnedRewardItemsData
 {
     public float totalItems;
     public float remaningItems;
+    public float remaningValue;
+    public float totalValue;
     public float unitValue;
 
     public float GetValueLeft()
     {
-        if (remaningItems > 0)
+        if (remaningValue > 0)
         {
-            remaningItems -= unitValue;
+            remaningValue -= unitValue;
         }
 
-        return remaningItems * unitValue;
+        return remaningValue;
     }
 }

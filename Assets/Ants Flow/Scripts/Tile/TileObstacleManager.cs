@@ -54,6 +54,11 @@ namespace AntsFlow
 
         private void OnLevelReplayed()
         {
+            for (int i = 0; i < tileObstacles.Count; i++)
+            {
+                tileObstacles[i].gameObject.SetActive(false);
+            }
+
             currentIndex = 0;
         }
     }
