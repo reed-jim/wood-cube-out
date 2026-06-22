@@ -870,6 +870,8 @@ namespace AntsFlow
             distance = direction.magnitude;
             duration = distance / speed;
 
+            Rotate(direction);
+
             tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(-3 - 0.001f * siblingIndex), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
@@ -882,12 +884,26 @@ namespace AntsFlow
                 distance = direction.magnitude;
                 duration = distance / speed;
 
+                Rotate(direction);
+
                 tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     OnAntMovedToNest();
                 }));
             }));
+
+            void Rotate(Vector2 direction)
+            {
+                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                    transform.rotation = targetRotation;
+                }
+            }
         }
 
         public void MoveToNest()

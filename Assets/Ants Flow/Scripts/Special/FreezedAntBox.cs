@@ -49,6 +49,8 @@ public class FreezedAntBox : WashingMachineItem
             frozenSkeletonRenderer.SetPropertyBlock(materialPropertyBlock);
         });
 
+        SetState();
+
         SaferioTween.AlphaShow(numAntBoxToUnfreezeText);
 
         SoundManager.Instance.PlaySound(GameConstants.startFreezeSound);
