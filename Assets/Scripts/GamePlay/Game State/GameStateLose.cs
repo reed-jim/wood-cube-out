@@ -31,13 +31,25 @@ public class GameStateLose : BaseGameState
 
     public override void Enter()
     {
-        if (TileManager.Ins.NumLockedTileSlotContainer == 0)
+        bool isTimeOut = TileManager.Ins != null && 
+                         TileManager.Ins.levelItem != null && 
+                         TileManager.Ins.levelItem.timeLimit > 0 && 
+                         TileManager.Ins.currentLevelTime <= 0;
+
+        if (isTimeOut)
         {
-            showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
+            loseLevelEvent?.Invoke();
         }
         else
         {
-            showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+            if (TileManager.Ins != null && TileManager.Ins.NumLockedTileSlotContainer == 0)
+            {
+                showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
+            }
+            else
+            {
+                showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+            }
         }
     }
 

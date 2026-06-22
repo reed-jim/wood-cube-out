@@ -31,7 +31,7 @@ public class WinPopup : BasePopup
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
-
+    [SerializeField] private ParticleSystem fxFallingWin;
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private GoldPassDataContainer goldPassDataContainer;
     [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
@@ -68,6 +68,11 @@ public class WinPopup : BasePopup
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
     }
 
+    public void PlayFxWin()
+    {
+        fxFallingWin.gameObject.SetActive(true);
+        fxFallingWin.Play();
+    }
     private async void OnLevelWinAsync()
     {
         AdmobAdsMax.Instance.ShowBannerCollap();
@@ -78,9 +83,9 @@ public class WinPopup : BasePopup
         txLevel.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
         continueButton.transform.localScale = Vector3.zero;
 
-        continueButton.interactable = true;
-        returnHomeButton.interactable = true;
-        x5CoinButton.interactable = true;
+        continueButton.interactable = false;
+        returnHomeButton.interactable = false;
+        x5CoinButton.interactable = false;
 
         x5CoinButton.transform.localScale = Vector3.one;
 
@@ -114,7 +119,9 @@ public class WinPopup : BasePopup
 
         SoundManager.Instance.PlaySoundWin();
 
-        await Task.Delay(500);
+        await Task.Delay(1000);
+
+        if (this == null || gameObject == null) return;
 
         _currentCollectedCoin = 0;
 
@@ -162,17 +169,23 @@ public class WinPopup : BasePopup
             {
                 if (_isCollectCoinRemoteConfig)
                 {
-                    userResourcesObserver.UserResources.CoinQuantity += numCoin - _currentCollectedCoin;
+                    int coinsToCollect = numCoin - _currentCollectedCoin;
+                    userResourcesObserver.UserResources.CoinQuantity += coinsToCollect;
 
                     userResourcesObserver.Save();
 
-                    _currentCollectedCoin += numCoin;
-
                     SaferioTracking.TrackResourceSource(
-                        currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
+                        currentLevel.Value, "Coin", coinsToCollect, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
+
+                    _currentCollectedCoin = numCoin;
                 }
 
                 _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
+
+                // Mở khóa lại các button sau khi đếm số xong
+                continueButton.interactable = true;
+                returnHomeButton.interactable = true;
+                x5CoinButton.interactable = !_isAlreadyWatchRewardedAd;
 
                 onCompletedAction?.Invoke();
             })
@@ -229,22 +242,30 @@ public class WinPopup : BasePopup
 
     private void OnInterstitialAdCompleted()
     {
-        _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
-        {
-            HideImmediately();
-        }));
+        HideImmediately();
 
-        bool isBackHome = HandleSuggestFeature();
-
-        if (!isBackHome)
+        Vector3 targetPos = Vector3.zero;
+        if (GameplayScreen.Ins != null)
         {
-            goLevelEvent?.Invoke(currentLevel.Value);
+            targetPos = GameplayScreen.Ins.GetCoinTextCanvasLocalPosition();
         }
 
-        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
+        collectCoinEvent?.Invoke(targetPos, _currentCollectedCoin);
 
-        AdsDurationObserver.duration = 0;
-        GamePersistentVariable.isAutoTestingLevel = false;
+        _tweens.Add(Tween.Delay(1.5f).OnComplete(() =>
+        {
+            bool isBackHome = HandleSuggestFeature();
+
+            if (!isBackHome)
+            {
+                goLevelEvent?.Invoke(currentLevel.Value);
+            }
+
+            SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
+
+            AdsDurationObserver.duration = 0;
+            GamePersistentVariable.isAutoTestingLevel = false;
+        }));
     }
 
     #region X5 Coin

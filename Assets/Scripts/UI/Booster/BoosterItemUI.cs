@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -11,6 +13,7 @@ public class BoosterItemUI : MonoBehaviour
 {
     [SerializeField] private RectTransform quantityTextContainer;
     [SerializeField] private RectTransform quantityTextRT;
+    [SerializeField] private Image boosterIcon;
     //[SerializeField] private RectTransform addButtonRT;
 
     [SerializeField] private TMP_Text quantityText;
@@ -34,6 +37,8 @@ public class BoosterItemUI : MonoBehaviour
 
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
 
+    private List<Tween> _tweens = new List<Tween>();
+
     void Awake()
     {
         BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
@@ -50,6 +55,8 @@ public class BoosterItemUI : MonoBehaviour
         BuyBoosterPopup.updateBoosterQuantityEvent -= UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private void Setup()
@@ -148,5 +155,104 @@ public class BoosterItemUI : MonoBehaviour
                 addButton.gameObject.SetActive(true);
             }
         }
+    }
+
+    public void PlayFreezeAnimation(Action onActivateEffect, Action onComplete)
+    {
+        if (boosterIcon == null)
+        {
+            onActivateEffect?.Invoke();
+            onComplete?.Invoke();
+            return;
+        }
+
+        boosterIcon.gameObject.SetActive(true);
+
+        Animator animator = boosterIcon.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.Play("IdleFreeze");
+        }
+
+        Vector3 startPos = boosterIcon.rectTransform.localPosition;
+        Canvas canvas = boosterIcon.GetComponentInParent<Canvas>();
+        Vector3 endPos = Vector3.zero;
+        if (canvas != null)
+        {
+            endPos = boosterIcon.rectTransform.parent.InverseTransformPoint(canvas.transform.position);
+        }
+        Vector3 controlPoint = (startPos + endPos) / 2f + new Vector3(-200f, 300f, 0f);
+
+        _tweens.Add(Tween.Custom(0f, 1f, duration: 1.5f, onValueChange: t =>
+        {
+            Vector3 m1 = Vector3.Lerp(startPos, controlPoint, t);
+            Vector3 m2 = Vector3.Lerp(controlPoint, endPos, t);
+            boosterIcon.rectTransform.localPosition = Vector3.Lerp(m1, m2, t);
+        })
+        .OnComplete(() =>
+        {
+            if (animator != null)
+            {
+                animator.Play("FrezzeAnimation");
+            }
+
+            onActivateEffect?.Invoke();
+
+            _tweens.Add(Tween.Delay(1.5f).OnComplete(() =>
+            {
+                boosterIcon.rectTransform.localPosition = startPos;
+                boosterIcon.gameObject.SetActive(false);
+                if (animator != null)
+                {
+                    animator.Play("IdleFreeze");
+                }
+                onComplete?.Invoke();
+            }));
+        }));
+    }
+
+    public void PlayUnlockThemeAnimation(Transform targetThemeTransform, Action onActivateEffect, Action onComplete)
+    {
+        if (boosterIcon == null || targetThemeTransform == null)
+        {
+            onActivateEffect?.Invoke();
+            onComplete?.Invoke();
+            return;
+        }
+
+        boosterIcon.gameObject.SetActive(true);
+
+        Vector3 startPos = boosterIcon.rectTransform.localPosition;
+        Vector3 endPos = boosterIcon.rectTransform.parent.InverseTransformPoint(targetThemeTransform.position);
+        Vector3 controlPoint = (startPos + endPos) / 2f + new Vector3(200f, 300f, 0f);
+
+        _tweens.Add(Tween.Custom(0f, 1f, duration: 0.6f, onValueChange: t =>
+        {
+            Vector3 m1 = Vector3.Lerp(startPos, controlPoint, t);
+            Vector3 m2 = Vector3.Lerp(controlPoint, endPos, t);
+            boosterIcon.rectTransform.localPosition = Vector3.Lerp(m1, m2, t);
+            boosterIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, new Vector3(0.65f, 0.65f, 1f), t);
+        })
+        .OnComplete(() =>
+        {
+            boosterIcon.gameObject.SetActive(false);
+            boosterIcon.rectTransform.localPosition = startPos;
+            boosterIcon.rectTransform.localScale = Vector3.one;
+
+            TileSlotContainer targetContainer = targetThemeTransform.GetComponent<TileSlotContainer>();
+            if (targetContainer != null)
+            {
+                targetContainer.PlayUnlockAnimation(() =>
+                {
+                    onActivateEffect?.Invoke();
+                    onComplete?.Invoke();
+                });
+            }
+            else
+            {
+                onActivateEffect?.Invoke();
+                onComplete?.Invoke();
+            }
+        }));
     }
 }

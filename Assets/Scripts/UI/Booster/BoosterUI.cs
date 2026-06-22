@@ -85,6 +85,7 @@ public class BoosterUI : MonoBehaviour
         LevelLoader.startLevelCompletedEvent += UpdateUnlockThemeButtonState;
         BuyBoosterPopup.unlockScrewBoxEvent += OnUnlockScrewBoxEvent;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
+        TileManager.updateActiveSlotsEvent += UpdateUnlockThemeButtonState;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.Shuffle));
@@ -133,6 +134,7 @@ public class BoosterUI : MonoBehaviour
         LevelLoader.startLevelCompletedEvent -= UpdateUnlockThemeButtonState;
         BuyBoosterPopup.unlockScrewBoxEvent -= OnUnlockScrewBoxEvent;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
+        TileManager.updateActiveSlotsEvent -= UpdateUnlockThemeButtonState;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -213,7 +215,7 @@ public class BoosterUI : MonoBehaviour
         }
         else if (boosterType == BoosterType.UnlockTheme)
         {
-            UseUnlockTheme();
+            UseBoosterUnlockTheme();
         }
 
         useBoosterEvent?.Invoke(boosterType);
@@ -313,13 +315,31 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 2);
 
-        // Freeze time for 15 seconds
-        TileManager.Ins.UseFreezeTimeBooster(15f);
-
-        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+        BoosterItemUI freezeItemUI = freezeTimeButton.GetComponentInParent<BoosterItemUI>();
+        if (freezeItemUI != null)
         {
-            _isInTransition = false;
-        });
+            freezeItemUI.PlayFreezeAnimation(
+                onActivateEffect: () =>
+                {
+                    TileManager.Ins.UseFreezeTimeBooster(15f);
+                },
+                onComplete: () =>
+                {
+                    Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+                    {
+                        _isInTransition = false;
+                    });
+                }
+            );
+        }
+        else
+        {
+            TileManager.Ins.UseFreezeTimeBooster(15f);
+            Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+            {
+                _isInTransition = false;
+            });
+        }
     }
 
     private void UseHint()
@@ -350,8 +370,13 @@ public class BoosterUI : MonoBehaviour
         });
     }
 
-    private void UseUnlockTheme()
+    private void UseBoosterUnlockTheme()
     {
+        if (TileManager.Ins == null || !TileManager.Ins.CanUseUnlockThemeBooster())
+        {
+            return;
+        }
+
         bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme);
 
         if (TileManager.Ins.NumLockedTileSlotContainer <= 0)
@@ -386,20 +411,49 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: (int)BoosterType.UnlockTheme);
 
-        TileManager.Ins.UseUnlockThemeBooster();
+        TileSlotContainer targetContainer = TileManager.Ins.GetNextLockedTileSlotContainer();
 
-        UpdateUnlockThemeButtonState();
-
-        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+        BoosterItemUI unlockItemUI = unlockThemeButton.GetComponentInParent<BoosterItemUI>();
+        if (unlockItemUI != null && targetContainer != null)
         {
-            _isInTransition = false;
-        });
+            unlockItemUI.PlayUnlockThemeAnimation(
+                targetContainer.transform,
+                onActivateEffect: () =>
+                {
+                    TileManager.Ins.UseUnlockThemeBooster();
+                    UpdateUnlockThemeButtonState();
+                },
+                onComplete: () =>
+                {
+                    Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+                    {
+                        _isInTransition = false;
+                    });
+                }
+            );
+        }
+        else
+        {
+            TileManager.Ins.UseUnlockThemeBooster();
+            UpdateUnlockThemeButtonState();
+            Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+            {
+                _isInTransition = false;
+            });
+        }
     }
 
     private void UpdateUnlockThemeButtonState()
     {
         if (unlockThemeButton == null) return;
         if (TileManager.Ins == null) return;
+
+        bool canUseUnlockThemeBooster = TileManager.Ins.CanUseUnlockThemeBooster();
+        if (!canUseUnlockThemeBooster)
+        {
+            unlockThemeButton.interactable = false;
+            return;
+        }
 
         bool hasLockedTheme = TileManager.Ins.NumLockedTileSlotContainer > 0;
         bool isBoosterAvailable = IsBoosterAvailable((int)BoosterType.UnlockTheme);

@@ -23,6 +23,7 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private Image glow;
     [SerializeField] private Image lockObject;
     [SerializeField] private Image unlockObject;
+    [SerializeField] private GameObject animUnlock;
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isActive;
     public bool isLocked;
@@ -65,6 +66,7 @@ public class TileSlotContainer : MonoBehaviour
         originalPositionY = transform.localPosition.y;
         originalIsLocked = isLocked;
         BuyBoosterPopup.unlockScrewBoxEvent += Unlock;
+        if (animUnlock != null) animUnlock.SetActive(false);
     }
 
     public void SetOriginalLockState(bool locked)
@@ -202,6 +204,7 @@ public class TileSlotContainer : MonoBehaviour
         if (fakeTileText != null) fakeTileText.gameObject.SetActive(false);
 
         tileCountText.text = $"{tiles.Count}/{maxTile}";
+        if (animUnlock != null) animUnlock.SetActive(false);
     }
 
     public void AddTile(BaseTile tile)
@@ -483,5 +486,29 @@ public class TileSlotContainer : MonoBehaviour
                     });
                 }
             });
+    }
+
+    public void PlayUnlockAnimation(Action onComplete)
+    {
+        if (animUnlock != null)
+        {
+            animUnlock.SetActive(true);
+            Animator animator = animUnlock.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.Play("UnlockBooster", 0, 0f);
+                animator.Update(0f);
+            }
+
+            Tween.Delay(2f).OnComplete(() =>
+            {
+                animUnlock.SetActive(false);
+                onComplete?.Invoke();
+            });
+        }
+        else
+        {
+            onComplete?.Invoke();
+        }
     }
 }

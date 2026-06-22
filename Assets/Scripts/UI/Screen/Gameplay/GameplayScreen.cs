@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lean.Localization;
 using NamPhuThuy;
@@ -22,11 +23,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
     [SerializeField] private TMP_Text timerText;
+    [SerializeField] private float warningTimeLimit = 15f;
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
     [Header("Resources")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private TMP_Text coinText;
+    [SerializeField] private Image coinImage;
     public static event Action<int> coinTextChangedEvent;
 
 
@@ -48,6 +51,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
+        UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
 
         if (userResourcesObserver != null)
         {
@@ -74,8 +78,23 @@ public class GameplayScreen : Singleton<GameplayScreen>
             openDebugPopupButton.gameObject.SetActive(false);
         }
 
-        UpdateCoinText();
+        _tweens = new List<Tween>();
+
+        if (timerText != null)
+        {
+            _originalTimerColor = timerText.color;
+        }
+
+        InitCoinText();
     }
+
+    private List<Tween> _tweens;
+    private float _displayedCoinValue;
+    private Tween _numberTween;
+    private Tween _scaleTween;
+    private bool _isWaitingForCoinFlight;
+    private Color _originalTimerColor = Color.white;
+    private Tween _timerWarningTween;
 
     void OnDestroy()
     {
@@ -87,11 +106,15 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
+        UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
 
         if (userResourcesObserver != null)
         {
             userResourcesObserver.updateCoinEvent -= UpdateCoinText;
         }
+
+        StopTimerWarning();
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     #endregion
@@ -100,12 +123,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelWin()
     {
-
+        _isWaitingForCoinFlight = true;
+        StopTimerWarning();
     }
 
     private void OnLevelLose()
     {
-
+        StopTimerWarning();
     }
 
     #endregion
@@ -144,6 +168,40 @@ public class GameplayScreen : Singleton<GameplayScreen>
         if (timerText != null)
         {
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            bool hasTimeLimit = TileManager.Ins != null && TileManager.Ins.levelItem != null && TileManager.Ins.levelItem.timeLimit > 0;
+            if (hasTimeLimit)
+            {
+                if (timeToDisplay <= warningTimeLimit && timeToDisplay > 0)
+                {
+                    if (!_timerWarningTween.isAlive)
+                    {
+                        timerText.color = Color.red;
+                        _timerWarningTween = Tween.Scale(timerText.transform, 1.2f, duration: 0.5f, cycles: -1, cycleMode: CycleMode.Yoyo);
+                    }
+                }
+                else
+                {
+                    StopTimerWarning();
+                }
+            }
+            else
+            {
+                StopTimerWarning();
+            }
+        }
+    }
+
+    private void StopTimerWarning()
+    {
+        if (_timerWarningTween.isAlive)
+        {
+            _timerWarningTween.Stop();
+        }
+        if (timerText != null)
+        {
+            timerText.transform.localScale = Vector3.one;
+            timerText.color = _originalTimerColor;
         }
     }
     private void OpenDebugPopupButton()
@@ -170,7 +228,9 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelStarted()
     {
-        UpdateCoinText();
+        _isWaitingForCoinFlight = false;
+        StopTimerWarning();
+        InitCoinText();
         //bool hasTimeLimit = TileManager.Ins.levelItem.timeLimit > 0;
         //if (timerText != null)
         //{
@@ -186,12 +246,99 @@ public class GameplayScreen : Singleton<GameplayScreen>
         //}
     }
 
+    private void InitCoinText()
+    {
+        if (userResourcesObserver != null)
+        {
+            userResourcesObserver.Load();
+            if (userResourcesObserver.UserResources != null)
+            {
+                _displayedCoinValue = userResourcesObserver.UserResources.CoinQuantity;
+                UpdateCoinText(_displayedCoinValue, isPlayAnimation: false);
+            }
+        }
+    }
+
     private void UpdateCoinText()
     {
-        if (coinText != null && userResourcesObserver != null && userResourcesObserver.UserResources != null)
+        if (_isWaitingForCoinFlight) return;
+
+        if (userResourcesObserver != null)
         {
-            coinText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+            userResourcesObserver.Load();
+            if (userResourcesObserver.UserResources != null)
+            {
+                UpdateCoinText(userResourcesObserver.UserResources.CoinQuantity, isPlayAnimation: true);
+            }
         }
+    }
+
+    private void UpdateCoinText(float value)
+    {
+        UpdateCoinText(value, isPlayAnimation: true);
+    }
+
+    private void UpdateCoinText(float value, bool isPlayAnimation)
+    {
+        if (coinText == null) return;
+
+        if (userResourcesObserver != null && userResourcesObserver.UserResources != null)
+        {
+            if (value >= userResourcesObserver.UserResources.CoinQuantity)
+            {
+                _isWaitingForCoinFlight = false;
+            }
+        }
+
+        if (isPlayAnimation && value > _displayedCoinValue)
+        {
+            if (_numberTween.isAlive)
+            {
+                _numberTween.Stop();
+            }
+
+            float startVal = _displayedCoinValue;
+            _numberTween = Tween.Custom(startVal, value, duration: 0.15f, onValueChange: newVal =>
+            {
+                _displayedCoinValue = newVal;
+                coinText.text = $"{(int)newVal}";
+            });
+            _tweens.Add(_numberTween);
+
+            if (_scaleTween.isAlive)
+            {
+                _scaleTween.Stop();
+            }
+            coinText.transform.localScale = Vector3.one;
+            _scaleTween = Tween.Scale(coinText.transform, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.15f);
+            _tweens.Add(_scaleTween);
+        }
+        else
+        {
+            if (_numberTween.isAlive)
+            {
+                _numberTween.Stop();
+            }
+            _displayedCoinValue = value;
+            coinText.text = $"{(int)value}";
+
+            if (isPlayAnimation)
+            {
+                if (_scaleTween.isAlive)
+                {
+                    _scaleTween.Stop();
+                }
+                coinText.transform.localScale = Vector3.one;
+                _scaleTween = Tween.Scale(coinText.transform, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.15f);
+                _tweens.Add(_scaleTween);
+            }
+        }
+    }
+
+    public Vector2 GetCoinTextCanvasLocalPosition()
+    {
+        if (coinImage == null) return Vector2.zero;
+        return ((Vector2)coinImage.transform.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
     }
 
     private void OnLevelTextTranslated()

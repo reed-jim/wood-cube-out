@@ -41,7 +41,28 @@ public class TileManager : Singleton<TileManager>
 
     private Dictionary<ItemCategory, List<int>> availableItemIdsPerCategory = new Dictionary<ItemCategory, List<int>>();
 
+    public static event Action updateActiveSlotsEvent;
+
     public int NumLockedTileSlotContainer => tileSlotContainers.Count(item => item.isLocked);
+
+    public bool CanUseUnlockThemeBooster()
+    {
+        int activeContainers = tileSlotContainers.Count(item => !item.isHidden && !item.isCompleted);
+        int remainingThemes = activeContainers + remainingSlotContainer;
+        return remainingThemes > 2;
+    }
+
+    public TileSlotContainer GetNextLockedTileSlotContainer()
+    {
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            if (tileSlotContainers[i].isLocked)
+            {
+                return tileSlotContainers[i];
+            }
+        }
+        return null;
+    }
 
     public static event Action winLevelEvent;
     public static event Action loseLevelEvent;
@@ -188,6 +209,7 @@ public class TileManager : Singleton<TileManager>
         tileSlotContainer.Hide(() =>
         {
             CheckWinLevel();
+            updateActiveSlotsEvent?.Invoke();
         });
 
         remainingSet--;
@@ -236,7 +258,10 @@ public class TileManager : Singleton<TileManager>
         {
             if (tileSlotContainers[i].isLocked)
             {
-                tileSlotContainers[i].Unlock();
+                tileSlotContainers[i].Unlock(onCompleteAction: () =>
+                {
+                    updateActiveSlotsEvent?.Invoke();
+                });
                 break;
             }
         }
@@ -490,16 +515,21 @@ public class TileManager : Singleton<TileManager>
                         if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                         {
                             tileSlotContainer.isCompleted = true;
-                            bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
 
-                            if (remainingSlotContainer > 0 && isAnyRemainingTile)
+                            Tween.Delay(1.2f).OnComplete(() =>
                             {
-                                SpawnSlot(index);
-                            }
-                            else
-                            {
-                                HideSlot(index);
-                            }
+                                if (tileSlotContainer == null) return;
+                                bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
+
+                                if (remainingSlotContainer > 0 && isAnyRemainingTile)
+                                {
+                                    SpawnSlot(index);
+                                }
+                                else
+                                {
+                                    HideSlot(index);
+                                }
+                            });
                         }
 
                         onCompleteAction?.Invoke();
@@ -543,16 +573,21 @@ public class TileManager : Singleton<TileManager>
             if (tileSlotContainer.IsLastSlot(slot) && !tileSlotContainer.isCompleted)
             {
                 tileSlotContainer.isCompleted = true;
-                bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
 
-                if (remainingSlotContainer > 0 && isAnyRemainingTile)
+                Tween.Delay(1.2f).OnComplete(() =>
                 {
-                    SpawnSlot(tileSlotContainerIndex);
-                }
-                else
-                {
-                    HideSlot(tileSlotContainerIndex);
-                }
+                    if (tileSlotContainer == null) return;
+                    bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
+
+                    if (remainingSlotContainer > 0 && isAnyRemainingTile)
+                    {
+                        SpawnSlot(tileSlotContainerIndex);
+                    }
+                    else
+                    {
+                        HideSlot(tileSlotContainerIndex);
+                    }
+                });
             }
 
             // DropTileDown(tile);
@@ -1676,16 +1711,21 @@ public class TileManager : Singleton<TileManager>
                             if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                             {
                                 tileSlotContainer.isCompleted = true;
-                                bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
 
-                                if (remainingSlotContainer > 0 && isAnyRemainingTile)
+                                Tween.Delay(1.2f).OnComplete(() =>
                                 {
-                                    SpawnSlot(index);
-                                }
-                                else
-                                {
-                                    HideSlot(index);
-                                }
+                                    if (tileSlotContainer == null) return;
+                                    bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
+
+                                    if (remainingSlotContainer > 0 && isAnyRemainingTile)
+                                    {
+                                        SpawnSlot(index);
+                                    }
+                                    else
+                                    {
+                                        HideSlot(index);
+                                    }
+                                });
                             }
 
                             tile.IsOutside = false;
