@@ -321,7 +321,16 @@ namespace AntsFlow
         {
             if (gameObject.activeInHierarchy && navMeshAgent.isOnNavMesh)
             {
-                navMeshAgent.isStopped = isPaused;
+                // navMeshAgent.isStopped = isPaused;
+
+                if (isPaused)
+                {
+                    navMeshAgent.speed = 0;
+                }
+                else
+                {
+                    navMeshAgent.speed = speedMove;
+                }
             }
         }
 
@@ -340,6 +349,8 @@ namespace AntsFlow
             isMovingToSideTile = false;
 
             skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
+
+            navMeshAgent.speed = speedMove;
         }
 
         public void SetGhostMode()
@@ -849,6 +860,11 @@ namespace AntsFlow
             navMeshAgent.enabled = false;
             navMeshAgent.areaMask = walkableMask;
             navMeshAgent.enabled = true;
+
+            if (GamePersistentVariable.isPauseGame)
+            {
+                navMeshAgent.speed = 0;
+            }
 
             if (navMeshAgent.isOnNavMesh)
             {

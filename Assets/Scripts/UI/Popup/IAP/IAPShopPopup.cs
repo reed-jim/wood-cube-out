@@ -47,6 +47,8 @@ public class IAPShopPopup : BasePopup
 
         pauseNavmeshEvent?.Invoke(true);
 
+        GamePersistentVariable.isPauseGame = true;
+
         base.Show(onCompletedAction: () =>
         {
             ScrollToTop();
@@ -103,6 +105,8 @@ public class IAPShopPopup : BasePopup
     protected override void Hide()
     {
         pauseNavmeshEvent?.Invoke(false);
+
+        GamePersistentVariable.isPauseGame = false;
 
         base.Hide(onCompletedAction: () =>
         {

@@ -84,12 +84,16 @@ public class SettingPopup : BasePopup
     {
         pauseNavmeshEvent?.Invoke(true);
 
+        GamePersistentVariable.isPauseGame = true;
+
         base.Show(onCompletedAction);
     }
 
     protected override void Hide()
     {
         pauseNavmeshEvent?.Invoke(false);
+
+        GamePersistentVariable.isPauseGame = false;
 
         base.Hide();
     }

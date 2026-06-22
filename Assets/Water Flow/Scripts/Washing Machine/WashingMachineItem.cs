@@ -499,6 +499,13 @@ public class WashingMachineItem : MonoBehaviour
                 break;
             }
 
+            if (GamePersistentVariable.isPauseGame)
+            {
+                yield return waitForSeconds;
+                
+                continue;
+            }
+
             if (IsMovable(tilesToMove[currentAntIndex]))
             {
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
@@ -725,9 +732,9 @@ public class WashingMachineItem : MonoBehaviour
         Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
         NavMeshPath path = new NavMeshPath();
         Vector3 nearestMovableStartPoint = GetNearestMovableNavMeshPoint(transform.position, 1f * tileSize);
-        Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 1f * tileSize);
+        Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 2f * tileSize);
 
-        return NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
+        NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
 
         return path.status == NavMeshPathStatus.PathComplete;
 
