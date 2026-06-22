@@ -165,6 +165,7 @@ public class WashingMachineItem : MonoBehaviour
         isAnimating = false;
         isInSlot = false;
         isStucking = false;
+        isPlayingWarningLoseAnimation = false;
 
         washingMachineStartSlot = null;
         washingMachineSlot = null;
@@ -432,7 +433,7 @@ public class WashingMachineItem : MonoBehaviour
 
         tilesToMove = left.Concat(right).ToList();
 
-        // tilesToMove = tilesToMove.OrderBy(t => t.GetPathTotalDistance(transform.position)).ToList();
+        // tilesToMove = tilesToMove.OrderBy(t => t.GetTotalPathDistance(transform.position)).ToList();
 
         if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
         {
@@ -505,9 +506,9 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                // ant.MoveToTile(tilesToMove[currentAntIndex]);
+                ant.MoveToTile(tilesToMove[currentAntIndex]);
                 // BFS
-                ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
+                // ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
 
                 SoundManager.Instance.PlaySoundAntPop();
 
@@ -718,9 +719,11 @@ public class WashingMachineItem : MonoBehaviour
 
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
+        // check using navmesh
         // float tileSize = tile.GetWorldSize();
+        // Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
 
-        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tile.coordinate.transform.position, 0.5f * tileSize).ChangeZ(0);
+        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 0.5f * tileSize).ChangeZ(0);
         // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint, tile);
 
         // return Vector2.Distance(furthestPoint, nearestMovablePoint) < 0.5f * tileSize;
@@ -730,19 +733,19 @@ public class WashingMachineItem : MonoBehaviour
 
 
         // BFS
-        List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
+        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 
-        if (path == null || path.Count == 0)
-        {
-            return false;
-        }
+        // if (path == null || path.Count == 0)
+        // {
+        //     return false;
+        // }
 
-        tile.path = path;
+        // tile.path = path;
 
-        return true;
+        // return true;
 
 
-
+        return tile.blockages.Count < 4;
         return tile.actualBlockages.Count < 4;
     }
 

@@ -39,7 +39,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
         WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
-        AntsFlow.BaseTile.useClearOneColorBoosterEvent += OnClearOneColorBoosterUsed;
+        WaterFlowGameInput.useClearOneColorBoosterEvent += OnClearOneColorBoosterUsed;
 
         for (int i = 0; i < useBoosterButtons.Length; i++)
         {
@@ -51,7 +51,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     {
         LevelLoader.startLevelEvent -= OnLevelStarted;
         WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
-        AntsFlow.BaseTile.useClearOneColorBoosterEvent -= OnClearOneColorBoosterUsed;
+        WaterFlowGameInput.useClearOneColorBoosterEvent -= OnClearOneColorBoosterUsed;
     }
 
     private IEnumerator RunTutorial()
@@ -123,40 +123,38 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     #region  EnableClearOneColorBooster
     private IEnumerator RunClearOneColorBoosterTutorial()
     {
-        yield return new WaitForSeconds(1f / 30);
-        
-        // WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
-        // int maxStep = 3;
+        int maxStep = 3;
 
-        // for (int i = 0; i < useBoosterButtons.Length; i++)
-        // {
-        //     useBoosterButtons[i].gameObject.SetActive(false);
-        // }
+        for (int i = 0; i < useBoosterButtons.Length; i++)
+        {
+            useBoosterButtons[i].gameObject.SetActive(false);
+        }
 
-        // int boosterIndex = GetBoosterIndex(boosterType);
+        int boosterIndex = GetBoosterIndex(boosterType);
 
-        // useBoosterButtons[boosterIndex].gameObject.SetActive(true);
+        useBoosterButtons[boosterIndex].gameObject.SetActive(true);
 
-        // while (step < maxStep)
-        // {
-        //     if (step == 1)
-        //     {
-        //         localizedDescription.TranslationName = "Select a color to clear all matching tiles.";
+        while (step < maxStep)
+        {
+            if (step == 1)
+            {
+                localizedDescription.TranslationName = "Select a color to clear all matching tiles.";
 
-        //         SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
-        //         Tween.Position(worldTutorialHand.transform,
-        //             AntsFlow.TileManager.Ins.tiles[0].transform.position.AddZ(-5f), duration: 0.3f);
-        //         SaferioTween.AlphaHide(canvasGroup);
+                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
+                Tween.Position(worldTutorialHand.transform,
+                    AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-3), duration: 0.3f);
+                SaferioTween.AlphaHide(canvasGroup);
 
-        //         step++;
-        //     }
-        //     yield return waitForSeconds;
-        // }
+                step++;
+            }
+            yield return waitForSeconds;
+        }
 
-        // SaferioTween.ScaleDownWithPunch(worldTutorialHand.transform);
+        SaferioTween.ScaleDownWithPunch(worldTutorialHand.transform);
 
-        // EndTutorial();
+        EndTutorial();
     }
 
     private void OnClearOneColorBoosterUsed(Color faction)

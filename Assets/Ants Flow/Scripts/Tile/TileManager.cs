@@ -24,6 +24,7 @@ namespace AntsFlow
         public BaseTile tile;
 
         public Node Parent;
+        public bool isObstacle;
         // public int GCost;
         // public float HCost;
         // public float FCost => GCost + HCost;
@@ -37,11 +38,18 @@ namespace AntsFlow
 
         public Tilemap baseTilemap;
         public Tilemap shadowTilemap;
+        public Tilemap tileGlowTilemap;
         public Tilemap[] tilemaps;
+        public Sprite tileGlowSprite;
 
+        #region Navmesh
+        public float lastTimeUpdateNavmesh;
+        public float intervalUpdateNavmesh;
+        #endregion
 
         #region Custom Pathfinding
         public bool isDebug;
+        public int numExtraRow;
         public List<BaseTile> tiles;
         public List<Node> nodes;
         private Dictionary<Vector2Int, BaseTile> tileMap;
@@ -54,8 +62,11 @@ namespace AntsFlow
             Vector2Int.right
         };
 
+        public Node bottomLeftMostInsideLevelNode;
+        public Node bottomRightMostInsideLevelNode;
         public Node bottomLeftMostNode;
         public Node bottomRightMostNode;
+        public List<Node> bottomMostNodes;
         #endregion
 
 
@@ -69,32 +80,35 @@ namespace AntsFlow
 
         public static event Action winLevelEvent;
 
-        // Scene-specific — không DontDestroyOnLoad
-        protected override bool ShouldPersist() => false;
-
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
             BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
-            // BaseAnt.requestUpdateNavmeshEvent += UpdateNavMesh;
         }
 
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
             BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
-            // BaseAnt.requestUpdateNavmeshEvent -= UpdateNavMesh;
         }
 
         #region Grid
+        public Vector3 GetTilePosition(BaseTile tile)
+        {
+            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1);
+            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.3f, 0.3f);
+        }
+
         public void BuildMap(List<BaseTile> tiles)
         {
-            float yMin = tiles.Min(tile => tile.position.y);
-            float yMax = tiles.Max(tile => tile.position.y);
-            float xMin = tiles.Min(tile => tile.position.x);
-            float xMax = tiles.Max(tile => tile.position.x);
+            return;
+
+            float yMin = tiles.Min(tile => GetTilePosition(tile).y);
+            float yMax = tiles.Max(tile => GetTilePosition(tile).y);
+            float xMin = tiles.Min(tile => GetTilePosition(tile).x);
+            float xMax = tiles.Max(tile => GetTilePosition(tile).x);
 
             nodes = new List<Node>();
 
@@ -103,31 +117,43 @@ namespace AntsFlow
                 BaseTile tile = tiles[i];
 
                 Node node = new Node();
-                node.initialPosition = tile.position;
+                node.initialPosition = GetTilePosition(tile);
                 node.tile = tile;
 
                 nodes.Add(node);
             }
 
-            for (int i = 0; i < nodes.Count; i++)
+
+
+            Dictionary<BaseTile, Node> nodeLookup = new Dictionary<BaseTile, Node>();
+
+            foreach (Node node in nodes)
             {
-                Node node = nodes[i];
+                nodeLookup[node.tile] = node;
+            }
 
-                node.neighbors = new List<Node>();
+            foreach (Node node in nodes)
+            {
+                List<Node> neighbors = new List<Node>();
+                node.neighbors = neighbors;
 
-                for (int j = 0; j < nodes.Count; j++)
+                foreach (BaseTile blockedTile in node.tile.blockages)
                 {
-                    if (j == i)
+                    if (nodeLookup.TryGetValue(blockedTile, out Node neighbor))
                     {
-                        continue;
-                    }
-
-                    if (nodes[i].tile.blockages.Contains(nodes[j].tile))
-                    {
-                        node.neighbors.Add(nodes[j]);
+                        neighbors.Add(neighbor);
                     }
                 }
             }
+
+            // foreach (Node node in nodes)
+            // {
+            //     foreach (var item in node.neighbors)
+            //     {
+            //         Debug.Log($"AntsFlow.BaseTile {node.tile.name} {item.tile.name}");
+            //     }
+            // }
+
 
             List<Node> addedNodes = new List<Node>();
             List<Node> bottomMostNodes = new List<Node>();
@@ -135,12 +161,12 @@ namespace AntsFlow
             List<Node> leftMostNodes = new List<Node>();
             List<Node> rightMostNodes = new List<Node>();
 
+            // float tileSize = nodeFromTile.tile.worldSize;
+            float tileSize = 1.5f;
+
             for (int i = 0; i < nodes.Count; i++)
             {
                 Node nodeFromTile = nodes[i];
-
-                float tileSize = nodeFromTile.tile.worldSize;
-                tileSize = 1;
 
                 if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
                 {
@@ -237,10 +263,70 @@ namespace AntsFlow
                 // }
             }
 
+            bottomLeftMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
+            bottomRightMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
+
+            // Extra Rows
+            int extraRows = numExtraRow; // number of rows to add
+
+            List<Node> currentRow = new List<Node>(bottomMostNodes);
+
+            for (int row = 0; row < extraRows; row++)
+            {
+                List<Node> nextRow = new List<Node>();
+
+                foreach (Node parentNode in currentRow)
+                {
+                    Node node = new Node();
+                    node.initialPosition = parentNode.initialPosition.AddY(-tileSize);
+                    node.neighbors = new List<Node>();
+
+                    // Connect vertically
+                    node.neighbors.Add(parentNode);
+                    parentNode.neighbors.Add(node);
+
+                    addedNodes.Add(node);
+                    nextRow.Add(node);
+
+                    if (IsAntNestArea(node.initialPosition))
+                    {
+                        node.isObstacle = true;
+                    }
+                }
+
+                // Connect horizontally within the row
+                for (int i = 0; i < nextRow.Count; i++)
+                {
+                    for (int j = i + 1; j < nextRow.Count; j++)
+                    {
+                        nextRow[i].neighbors.Add(nextRow[j]);
+                        nextRow[j].neighbors.Add(nextRow[i]);
+                    }
+                }
+
+                currentRow = nextRow;
+            }
+
+            bool IsAntNestArea(Vector3 position)
+            {
+                float rightMostAntNest = antNest.transform.position.x + 3;
+                float leftMostAntNest = antNest.transform.position.x - 3;
+                float topMostAntNest = antNest.transform.position.y + 3;
+                float bottomMostAntNest = antNest.transform.position.y - 3;
+
+                return position.x > leftMostAntNest &&
+                    position.x < rightMostAntNest &&
+                    position.y > bottomMostAntNest &&
+                    position.y < topMostAntNest;
+            }
+
             nodes.AddRange(addedNodes);
 
             bottomLeftMostNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
             bottomRightMostNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
+
+            // bottomLeftMostNode.initialPosition = bottomLeftMostNode.initialPosition.AddX(-tileSize);
+            // bottomRightMostNode.initialPosition = bottomRightMostNode.initialPosition.AddX(tileSize);
         }
 
         private float Heuristic(Node a, Node b)
@@ -356,6 +442,11 @@ namespace AntsFlow
         {
             foreach (var node in nodes)
             {
+                if (node.isObstacle)
+                {
+                    continue;
+                }
+
                 if (node.tile == null)
                 {
                     Gizmos.color = Color.green;
@@ -462,6 +553,11 @@ namespace AntsFlow
             {
                 Node current = queue.Dequeue();
 
+                // if (isDebug)
+                // {
+                //     Debug.Log($"FindPath {target.name} {nodes.IndexOf(current)}");
+                // }
+
                 if (current == targetNode)
                 {
                     return RetracePath(start, targetNode);
@@ -469,12 +565,12 @@ namespace AntsFlow
 
                 foreach (var neighbor in current.neighbors)
                 {
-                    // if (isDebug)
-                    // {
-                    //     Debug.Log($"FindPath {target.name} {nodes.IndexOf(current)} {neighbor.tile}");
-                    // }
-
                     // blocked
+                    if (neighbor.isObstacle)
+                    {
+                        continue;
+                    }
+
                     if (neighbor.tile != null)
                     {
                         if (
@@ -485,6 +581,7 @@ namespace AntsFlow
                             continue;
                         }
                     }
+                    // 
 
                     if (visited.Contains(neighbor))
                     {
@@ -493,6 +590,14 @@ namespace AntsFlow
 
                     visited.Add(neighbor);
                     neighbor.Parent = current;
+
+                    // if (isDebug)
+                    // {
+                    //     if (neighbor.tile != null && current.tile != null)
+                    //     {
+                    //         Debug.Log($"FindPath22 {target.name} {neighbor.tile.name} {current.tile.name}");
+                    //     }
+                    // }
 
                     queue.Enqueue(neighbor);
                 }
@@ -518,6 +623,18 @@ namespace AntsFlow
             }
 
             path.Reverse();
+
+            if (isDebug)
+            {
+                for (int i = 0; i < path.Count; i++)
+                {
+                    if (path[i].tile != null)
+                    {
+                        Debug.Log($"FindPath {end.tile.name} {path[i].tile.name}");
+                    }
+                }
+            }
+
             return path;
         }
         #endregion
@@ -555,7 +672,7 @@ namespace AntsFlow
             if (validTiles.Count > 0)
             {
                 availableTile = validTiles[0];
-                
+
                 return true;
             }
             else
@@ -570,28 +687,27 @@ namespace AntsFlow
         {
             List<BaseTile> validTiles = new List<BaseTile>();
 
-            // for (int i = 0; i < tiles.Count; i++)
-            // {
-            //     BaseTile tile = tiles[i];
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
 
-            //     if (tile.gameObject.activeInHierarchy &&
-            //         tile.Faction == faction &&
-            //         !tile.isAntApproaching &&
-            //         !tile.isLocked
-            //     )
-            //     {
-            //         validTiles.Add(tile);
-            //     }
-            // }
+                if (!tile.isDone &&
+                    tile.Faction == faction &&
+                    !tile.isAntApproaching &&
+                    !tile.isLocked
+                )
+                {
+                    validTiles.Add(tile);
+                }
+            }
 
-            // validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
+            validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
 
             return validTiles;
         }
 
         private void OnTileCompleted(BaseTile tile)
         {
-            // UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
@@ -603,7 +719,13 @@ namespace AntsFlow
 
         public void UpdateNavMesh()
         {
-            if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
+            if (Time.time - lastTimeUpdateNavmesh > intervalUpdateNavmesh)
+            {
+                navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+                lastTimeUpdateNavmesh = Time.time;
+            }
+            else
             {
                 if (delayedUpdateNavmeshCoroutine != null)
                 {
@@ -611,23 +733,33 @@ namespace AntsFlow
                 }
 
                 delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
-
-                return;
             }
 
-            navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            // if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
+            // {
+            // if (delayedUpdateNavmeshCoroutine != null)
+            // {
+            //     StopCoroutine(delayedUpdateNavmeshCoroutine);
+            // }
 
-            isUpdatingNavMesh = true;
+            // delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
 
-            Tween.Delay(2).OnComplete(() =>
-            {
-                isUpdatingNavMesh = false;
-            });
+            //     return;
+            // }
+
+            // navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            // isUpdatingNavMesh = true;
+
+            // Tween.Delay(2).OnComplete(() =>
+            // {
+            //     isUpdatingNavMesh = false;
+            // });
         }
 
         private IEnumerator DelayedUpdateNavmesh()
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(intervalUpdateNavmesh);
 
             navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
         }
@@ -656,7 +788,7 @@ namespace AntsFlow
 
         private IEnumerator HightlightEachFactionSequentially()
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(1.1f);
+            WaitForSeconds waitForSeconds = new WaitForSeconds(2f);
 
             Dictionary<Color, List<BaseTile>> tilesOfFaction = new Dictionary<Color, List<BaseTile>>();
 
@@ -664,55 +796,88 @@ namespace AntsFlow
 
             int currentFactionIndex = 0;
 
+            bool isSetTiles = false;
+            float alpha = 0;
+            float deltaAlpha = 0.05f;
+            bool isGlowingUp = true;
+
+            tileGlowTilemap.gameObject.SetActive(true);
+            tileGlowTilemap.color = ColorUtil.WithAlpha(Color.white, 0);
+
             while (WaterFlowGameInput.Ins.inputMode == AntsFlowInputMode.SelectTile)
             {
                 KeyValuePair<Color, List<BaseTile>> item = tilesOfFaction.ElementAt(currentFactionIndex);
 
-                for (int i = 0; i < item.Value.Count; i++)
+                if (isSetTiles)
                 {
-                    int index = i;
+                    tileGlowTilemap.color = ColorUtil.WithAlpha(Color.white, alpha);
 
-                    BaseTile tile = item.Value[i];
-
-                    tile.isAnimating = true;
-
-                    tile.Highlight(onComplete: () =>
+                    if (isGlowingUp)
                     {
-                        tile.isAnimating = false;
-
-                        if (index == item.Value.Count - 1)
+                        if (alpha < 1)
                         {
-                            currentFactionIndex++;
+                            alpha += deltaAlpha;
+                        }
+                        else
+                        {
+                            isGlowingUp = false;
+                        }
+                    }
+                    else
+                    {
+                        if (alpha > 0)
+                        {
+                            alpha -= deltaAlpha;
+                        }
+                        else
+                        {
+                            isGlowingUp = true;
 
-                            if (currentFactionIndex >= tilesOfFaction.Count)
+                            if (currentFactionIndex < tilesOfFaction.Count - 1)
                             {
-                                GroupTiles();
-
+                                currentFactionIndex++;
+                            }
+                            else
+                            {
                                 currentFactionIndex = 0;
                             }
+
+                            isSetTiles = false;
                         }
-                    });
+                    }
+                }
+                else
+                {
+                    tileGlowTilemap.ClearAllTiles();
 
-                    // SaferioTween.MoveUpThenDown(tile.transform, 1.3f, onCompleteAction: () =>
-                    // {
-                    //     tile.isAnimating = false;
+                    for (int i = 0; i < item.Value.Count; i++)
+                    {
+                        int index = i;
 
-                    //     if (index == item.Value.Count - 1)
-                    //     {
-                    //         SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+                        BaseTile tile = item.Value[i];
 
-                    //         currentFactionIndex++;
+                        if (!isSetTiles)
+                        {
+                            Tile tileGlow = ScriptableObject.CreateInstance<Tile>();
+                            tileGlow.sprite = tileGlowSprite;
+                            tileGlowTilemap.SetTile(tile.tilemapPosition, tileGlow);
 
-                    //         if (currentFactionIndex >= item.Value.Count)
-                    //         {
-                    //             currentFactionIndex = 0;
-                    //         }
-                    //     }
-                    // });
+                            if (i == item.Value.Count - 1)
+                            {
+                                isSetTiles = true;
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                    }
                 }
 
-                yield return waitForSeconds;
+                yield return new WaitForSeconds(1f / 30);
             }
+
+            tileGlowTilemap.gameObject.SetActive(false);
 
             void GroupTiles()
             {

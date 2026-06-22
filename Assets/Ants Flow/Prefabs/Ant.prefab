@@ -49,7 +49,7 @@ MonoBehaviour:
   navMeshAgent: {fileID: 9042187430261845247}
   antRenderer: {fileID: 251625072949987562}
   skeletonAnimation: {fileID: 793793920769624515}
-  rotationSpeed: 8
+  rotationSpeed: 6
   faction: {r: 0, g: 0, b: 0, a: 0}
   walkableMask: 0
   walkableAndNestMask: 0
@@ -57,12 +57,26 @@ MonoBehaviour:
   isMovingToTile: 0
   isMovingToNest: 0
   isDroppingTile: 0
-  tile: {fileID: 0}
+  tile:
+    tilemap: {fileID: 0}
+    tilemapPosition: {x: 0, y: 0, z: 0}
+    name: 0
+    position: {x: 0, y: 0, z: 0}
+    isDone: 0
+    isAntApproaching: 0
+    isAnimating: 0
+    isLocked: 0
+    ring: 0
+    priority: 0
+    faction: {r: 0, g: 0, b: 0, a: 0}
+    worldSize: 0
+  fakeTile: {fileID: 0}
   destination: {x: 0, y: 0, z: 0}
   wiggleMagnitude: 0.1
   wiggleFrequency: 3
   noiseFrequency: 0.1
   noiseMagnitude: 0.2
+  initialSpeedMove: 6
 --- !u!195 &9042187430261845247
 NavMeshAgent:
   m_ObjectHideFlags: 0

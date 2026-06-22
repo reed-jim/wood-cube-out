@@ -24,6 +24,7 @@ namespace AntsFlow
         public int numRow;
         public List<Color> poolFaction;
         public bool isTutorialLevel;
+        public bool isTutorialSpeedUpLevel;
         public bool isUseManualFactionSetupForFirstAntBoxes;
         public LevelFactionConfig levelFactionConfig;
         public int difficulty;

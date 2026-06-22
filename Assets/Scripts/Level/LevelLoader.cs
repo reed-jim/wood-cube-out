@@ -69,6 +69,7 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
 
+        public Transform glowTilemapGrid;
         public Tilemap shadowTilemap;
         public Transform shadowTilemapGrid;
         public Sprite shadowSprite;
@@ -108,6 +109,7 @@ namespace NamPhuThuy.GamePlay
             GoLevel(currentLevel.Value);
 
             GamePersistentVariable.hasPlayerReachedGameplay = true;
+            GamePersistentVariable.tileMapScaleFactor = scaleFactor;
         }
 
         private void Start()
@@ -139,7 +141,6 @@ namespace NamPhuThuy.GamePlay
         #region LEVEL
         private async void LoadLevel()
         {
-            DebugLogger.LogSimple(message: "[FLOW] LoadLevel() START", color: Color.cyan);
             // showSceneTransitionEvent?.Invoke();
             // // NO INTERNET
             // if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -233,31 +234,28 @@ namespace NamPhuThuy.GamePlay
                 Addressables.Release(_loadLevelHandle);
             }
 
+            // _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
             // load from json
             _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
 
             _loadLevelHandle.Completed += (op) =>
             {
-                DebugLogger.LogSimple(message: $"[FLOW] Addressables.Completed status={op.Status}", color: Color.cyan);
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
-                    DebugLogger.LogSimple(message: "[FLOW] Addressables OK → ActualLoadLevel()", color: Color.green);
                     ActualLoadLevel(op.Result);
-                }
-                else
-                {
-                    DebugLogger.LogSimple(message: $"[FLOW] Addressables FAILED: {op.OperationException}", color: Color.red);
                 }
             };
 
-            DebugLogger.LogSimple(message: "[FLOW] startLevelEvent?.Invoke()", color: Color.cyan);
             startLevelEvent?.Invoke();
 
-            DebugLogger.LogSimple(message: "[FLOW] showSceneTransitionEvent?.Invoke()", color: Color.cyan);
             showSceneTransitionEvent?.Invoke();
 
             void ActualLoadLevel(TextAsset resultLoad)
             {
+                // GameObject level = resultLoad;
+                // AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
+                // Transform levelTransform = level.transform;
+
                 // load from json
                 string json = resultLoad.text;
                 AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
@@ -269,22 +267,26 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
+                CalculateLevelScale();
+
                 antLevelData = AutoSpacingAllTiles(antLevelData);
                 // FitLevelToScreenArea(levelTransform);
-                CenterLevel(levelTransform);
+                // CenterLevel(levelTransform);
 
                 FillTileMap(antLevelData, levelTransform);
                 // // BuildMesh(levelTransform);   
-                WashingMachineManager.Ins.StartLevel(levelItem);
-                DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() DONE", color: Color.green);
 
-                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() START", color: Color.yellow);
+                if (currentLevel.Value == 2)
+                {
+                    levelItem.isTutorialSpeedUpLevel = true;
+                }
+
+                WashingMachineManager.Ins.StartLevel(levelItem);
+
                 AntsFlow.TileManager.Ins.UpdateNavMesh();
-                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() DONE", color: Color.green);
 
                 Tween.Delay(1).OnComplete(() =>
                 {
-                    DebugLogger.LogSimple(message: "[FLOW] setIsLevelLoadedEvent?.Invoke()", color: Color.cyan);
                     setIsLevelLoadedEvent?.Invoke();
                 });
 
@@ -296,6 +298,19 @@ namespace NamPhuThuy.GamePlay
             {
                 isLoopLevel = isLoop;
             }
+        }
+
+        private void CalculateLevelScale()
+        {
+            int numRows = GamePersistentVariable.numRow;
+            int numCols = GamePersistentVariable.numColumn;
+
+            float scaleByX = 15f / numCols;
+            float scaleByY = 15f / numRows;
+            float finalScale = Mathf.Min(scaleByX, scaleByY);
+
+            scaleFactor = finalScale;
+            GamePersistentVariable.tileMapScaleFactor = scaleFactor;
         }
 
         private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
@@ -316,6 +331,7 @@ namespace NamPhuThuy.GamePlay
                 shadowTilemapGrid.position = shadowTilemapOffset;
                 shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
             }
+            glowTilemapGrid.localScale = scaleFactor * Vector3.one;
 
             for (int i = 0; i < numRows; i++)
             {
@@ -331,28 +347,29 @@ namespace NamPhuThuy.GamePlay
                 {
                     int index = j + i * numCols;
 
+                    // Vector3Int cellPos = shadowTilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
                     Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position);
 
-                    UnityEngine.Tilemaps.Tile tile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
+                    Tile tile = ScriptableObject.CreateInstance<Tile>();
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
-                    spawnedTileMap.SetTile(cellPos, tile);
+                    Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
+                    shadowTile.sprite = shadowSprite;
 
-                    if (shadowTilemap != null)
-                    {
-                        UnityEngine.Tilemaps.Tile shadowTile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
-                        shadowTile.sprite = shadowSprite;
-                        shadowTilemap.SetTile(cellPos, shadowTile);
-                    }
+                    spawnedTileMap.SetTile(cellPos, tile);
+                    shadowTilemap.SetTile(cellPos, shadowTile);
 
                     tilemapGrids.Add(spawnedTileMapGrid);
 
                     AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
                     AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
+
+                    TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
                 }
             }
 
             AntsFlow.TileManager.Ins.tilemaps = tilemapGrids.Select(item => item.GetComponentInChildren<Tilemap>()).ToArray();
+            AntsFlow.TileManager.Ins.UpdateNavMesh();
 
             // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
 
@@ -490,6 +507,11 @@ namespace NamPhuThuy.GamePlay
                 int rightIndex = i + 1;
                 int leftIndex = i - 1;
 
+                int topRightIndex = i + GamePersistentVariable.numColumn + 1;
+                int topLeftIndex = i + GamePersistentVariable.numColumn - 1;
+                int downRightIndex = i - GamePersistentVariable.numColumn + 1;
+                int downLeftIndex = i - GamePersistentVariable.numColumn - 1;
+
                 tile.blockages = new List<AntsFlow.BaseTile>();
 
                 if (upIndex < tiles.Count)
@@ -500,14 +522,34 @@ namespace NamPhuThuy.GamePlay
                 {
                     tile.blockages.Add(tiles[downIndex]);
                 }
-                if (rightIndex < tiles.Count)
+                if (rightIndex < tiles.Count && SameRow(i, rightIndex, GamePersistentVariable.numColumn))
                 {
                     tile.blockages.Add(tiles[rightIndex]);
                 }
-                if (leftIndex >= 0)
+                if (leftIndex >= 0 && SameRow(i, leftIndex, GamePersistentVariable.numColumn))
                 {
                     tile.blockages.Add(tiles[leftIndex]);
                 }
+
+                tile.actualBlockages = new List<AntsFlow.BaseTile>();
+                tile.actualBlockages.AddRange(tile.blockages);
+
+                // if (topRightIndex >= 0 && topRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
+                // {
+                //     tile.blockages.Add(tiles[topRightIndex]);
+                // }
+                // if (topLeftIndex >= 0 && topLeftIndex < tiles.Count && i - 1 >= 0)
+                // {
+                //     tile.blockages.Add(tiles[topLeftIndex]);
+                // }
+                // if (downRightIndex >= 0 && downRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
+                // {
+                //     tile.blockages.Add(tiles[downRightIndex]);
+                // }
+                // if (downLeftIndex >= 0 && downLeftIndex < tiles.Count && i - 1 >= 0)
+                // {
+                //     tile.blockages.Add(tiles[downLeftIndex]);
+                // }
 
                 // tile.blockages = new List<AntsFlow.BaseTile>();
 
@@ -519,10 +561,30 @@ namespace NamPhuThuy.GamePlay
                 // }
             }
 
+            // Clear in case this is rebuilt
+            foreach (var tile in tiles)
+            {
+                tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
+            }
+
+            // Build reverse references
+            foreach (var tile in tiles)
+            {
+                foreach (var blockage in tile.blockages)
+                {
+                    blockage.blockedByMe.Add(tile);
+                }
+            }
+
             AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
             AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
 
             return spawnedLevelItem;
+
+            bool SameRow(int indexA, int indexB, int numCol)
+            {
+                return (indexA / numCol) == (indexB / numCol);
+            }
         }
 
         private void CenterLevel(Transform level)
@@ -537,7 +599,7 @@ namespace NamPhuThuy.GamePlay
             average /= level.transform.childCount;
 
             level.transform.position += Vector3.left * average.x;
-            level.transform.position += Vector3.down * average.y;
+            // level.transform.position += Vector3.down * average.y;
 
             float distance = Mathf.Abs(Camera.main.transform.position.z);
 
@@ -606,7 +668,7 @@ namespace NamPhuThuy.GamePlay
                 {
                     Vector3 position = new Vector3(
                         -numCols / 2 + col * 1,
-                        (numRows / 3) + row * 1,
+                        (0.175f * numRows) + row * 1,
                         0f
                     );
 
@@ -677,6 +739,10 @@ namespace NamPhuThuy.GamePlay
             {
                 shadowTilemapGrid.SetParent(transform.parent);
             }
+            if (shadowTilemap != null)
+            {
+                shadowTilemap.ClearAllTiles();
+            }
 
             for (int i = 0; i < tilemapGrids.Count; i++)
             {
@@ -727,7 +793,7 @@ namespace NamPhuThuy.GamePlay
         {
             string res = levelName;
 
-            if (GamePersistentVariable.specialLevelConfig != null && GamePersistentVariable.specialLevelConfig.isEnable) return res;
+            if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
             if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
 
             LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
@@ -971,11 +1037,6 @@ namespace NamPhuThuy.GamePlay
             // }
 
             await Task.Delay(500);
-
-            if (this == null)
-            {
-                return;
-            }
 
             try
             {

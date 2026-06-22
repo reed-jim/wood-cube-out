@@ -35,16 +35,12 @@ namespace AntsFlow
         public static event Action ghostAntBoxesClearedEvent;
         public static event Action finishUsingEnableAllAntBoxesBoosterEvent;
 
-        // KHÔNG DontDestroyOnLoad — washingMachineStartSlots là scene objects,
-        // nếu singleton sống qua scene reload sẽ giữ reference tới các object đã bị Destroy.
-        protected override bool ShouldPersist() => false;
-
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();
 
             RevivePopup.reviveEvent += Revive;
-            BaseTile.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
+            WaterFlowGameInput.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
@@ -54,7 +50,7 @@ namespace AntsFlow
         void OnDestroy()
         {
             RevivePopup.reviveEvent -= Revive;
-            BaseTile.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
+            WaterFlowGameInput.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
@@ -75,28 +71,21 @@ namespace AntsFlow
 
         public void StartLevel(AntsFlow.LevelItem levelItem)
         {
-            Debug.Log("[FLOW] WashingMachineManager.StartLevel() BEGIN");
             this.levelItem = levelItem;
 
             difficultyLevel = levelItem.difficulty;
             numAntBoxSpawned = 0;
 
-            // KHÔNG override TileManager.Ins.tiles ở đây — sẽ mất data tiles đã set trước đó
             // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
-            Debug.Log("[FLOW] WMM: SpecialElementManager.Setup START");
             SpecialElementManager.Ins.Setup(levelItem);
-            Debug.Log("[FLOW] WMM: SpecialElementManager.Setup DONE");
 
-            Debug.Log($"[FLOW] WMM: SpawnFirstWashingMachines numStartAntBoxes={levelItem.numStartAntBoxes}");
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
-            Debug.Log("[FLOW] WMM: SpawnFirstWashingMachines DONE");
 
             if (levelItem.isTutorialLevel)
             {
-                Debug.Log("[FLOW] WMM: TutorialLevelOne.StartTutorial");
                 TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
             }
             else
@@ -104,7 +93,10 @@ namespace AntsFlow
                 TutorialLevelOne.Ins.HideTutorial();
             }
 
-            Debug.Log("[FLOW] WashingMachineManager.StartLevel() END");
+            if (levelItem.isTutorialSpeedUpLevel)
+            {
+                SpeedUpTutorialManager.Ins.StartTutorial();
+            }
         }
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem, Action onCompleteAction = null)
@@ -505,9 +497,49 @@ namespace AntsFlow
                     for (int j = 0; j < toRemoveBlockages.Count; j++)
                     {
                         tile.blockages.Remove(toRemoveBlockages[j]);
-                        tile.actualBlockages.Remove(toRemoveBlockages[j]);
+                        // tile.actualBlockages.Remove(toRemoveBlockages[j]);
                     }
                 }
+            }
+
+            for (int i = 0; i < tilesToClear.Count; i++)
+            {
+                bool isLast = i == tilesToClear.Count - 1;
+
+                tilesToClear[i].Hide();
+
+                SpawnFakeTile(tilesToClear[i], isLast);
+            }
+
+            void SpawnFakeTile(BaseTile tile, bool isLast)
+            {
+                FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
+
+                fakeTile.Init(tile);
+
+                Vector3 initialPosition = fakeTile.transform.position;
+
+                Tween.ScaleY(fakeTile.transform, 1.6f, duration: 0.3f);
+                Tween.PositionY(fakeTile.transform, fakeTile.transform.position.y + 1.6f, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    Tween.ScaleY(fakeTile.transform, 1, duration: 0.15f);
+                    Tween.Position(fakeTile.transform, initialPosition, duration: 0.15f)
+                    .OnComplete(() =>
+                    {
+                        SaferioTween.ScaleDownWithPunch(fakeTile.transform, onCompleteAction: () =>
+                        {
+                            // tile.Complete();
+
+                            ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
+                        });
+
+                        if (isLast)
+                        {
+                            SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+                        }
+                    });
+                });
             }
 
             // for (int i = 0; i < tilesToClear.Count; i++)
@@ -844,11 +876,14 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
 
-            Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
-
-            foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            if (!isIncludeStartSlot)
             {
-                Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+                Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+
+                foreach (var item in numSpawnPerFactionOrderByDifficulty)
+                {
+                    Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+                }
             }
 
             int maxValidIndex = 0;
@@ -935,20 +970,7 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
-                    if (isIncludeStartSlot)
-                    {
-                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                    }
-                    else
-                    {
-                        WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
-
-                        if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
-                        {
-                            Debug.Log($"washingMachine {washingMachine} {isIncludeStartSlot}");
-                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                    }
+                    CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
                 }
             }
 

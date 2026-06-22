@@ -22,6 +22,7 @@ namespace AntsFlow
 
         public Tilemap tilemap;
         public Vector3Int tilemapPosition;
+        public TileObstacle tileObstacle;
 
         public int name;
         public Vector3 position;
@@ -30,6 +31,7 @@ namespace AntsFlow
         public bool isAnimating;
         public bool isLocked;
         [NonSerialized] public List<BaseTile> blockages;
+        [NonSerialized] public HashSet<BaseTile> blockedByMe;
         [NonSerialized] public List<BaseTile> actualBlockages;
         [NonSerialized] public List<Node> path;
 
@@ -62,6 +64,27 @@ namespace AntsFlow
             // return worldSize;
 
             return worldSize;
+        }
+
+        public float GetTotalPathDistance(Vector3 start)
+        {
+            if (path == null || path.Count == 0)
+            {
+                return 0;
+            }
+
+            List<Vector3> points = path.Select(item => item.initialPosition).ToList();
+
+            float distance = 0;
+
+            distance += Vector2.Distance(points[0], start);
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                distance += Vector2.Distance(points[i], points[i + 1]);
+            }
+
+            return distance;
         }
 
         // public GameSetting gameSetting;
@@ -133,6 +156,8 @@ namespace AntsFlow
 
             fakeTile.Init(ant, faction);
 
+            TileManager.Ins.UpdateNavMesh();
+
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
 
@@ -141,10 +166,15 @@ namespace AntsFlow
                 HapticFeedback.LightFeedback();
             }
 
-            tilemap.SetTile(tilemapPosition, null);
-            TileManager.Ins.shadowTilemap.SetTile(tilemapPosition, null);
+            Hide();
 
             tileMoveToAntEvent?.Invoke(this);
+        }
+
+        public void Hide()
+        {
+            tilemap.SetTile(tilemapPosition, null);
+            TileManager.Ins.shadowTilemap.SetTile(tilemapPosition, null);
         }
 
         public void Highlight(Action onComplete)
@@ -174,12 +204,58 @@ namespace AntsFlow
 
             isDone = true;
 
+            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            // {
+            //     BaseTile tile = TileManager.Ins.tiles[i];
+
+            //     if (tile == this)
+            //     {
+            //         continue;
+            //     }
+
+            //     tile.blockages.Remove(this);
+            // }
+
+            // if (tileObstacle != null)
+            // {
+            //     tileObstacle.Hide();
+            //     tileObstacle = null;
+            // }
+
+            // for (int i = 0; i < blockages.Count; i++)
+            // {
+            //     BaseTile blockage = blockages[i];
+
+            //     SpawnObstacle(blockage);
+            // }
+
             tileCompleteEvent.Invoke(this);
+
+            void SpawnObstacle(BaseTile tile)
+            {
+                if (tile.tileObstacle == null)
+                {
+                    TileObstacle obstacle = ObjectPoolingEverything.GetFromPool<TileObstacle>(GameConstants.tileObstacle);
+
+                    obstacle.Init(tile);
+                }
+            }
         }
 
         public void InvokeAntStartMoveToTileEvent()
         {
             // navMeshModifierVolume.enabled = false;
+
+            if (tileObstacle != null)
+            {
+                tileObstacle.Hide();
+                tileObstacle = null;
+            }
+
+            foreach (var tile in blockedByMe)
+            {
+                tile.blockages.Remove(this);
+            }
 
             antStartMoveToTileEvent?.Invoke(this);
         }

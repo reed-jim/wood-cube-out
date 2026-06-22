@@ -246,6 +246,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
             }
         }
 
+        GamePersistentVariable.isGameSpeedChangeInDebug = true;
+
+        if (Time.timeScale == 1)
+        {
+            GamePersistentVariable.isGameSpeedChangeInDebug = false;
+        }
+
         gameSpeedText.text = $"x{(int)Time.timeScale}";
     }
     #endregion      

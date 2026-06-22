@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
 
 public enum AntsFlowInputMode
 {
@@ -9,16 +11,20 @@ public enum AntsFlowInputMode
 
 public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
 {
-        // Scene-specific - khong DontDestroyOnLoad
-        protected override bool ShouldPersist() => false;
+    // Scene-specific - khong DontDestroyOnLoad
+    protected override bool ShouldPersist() => false;
+
+    [SerializeField] private Camera mainCamera;
 
     public AntsFlowInputMode inputMode;
+
+    public static event Action<Color> useClearOneColorBoosterEvent;
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 worldPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(
             worldPoint,
             Vector2.zero,
@@ -29,6 +35,58 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
             {
                 return;
             }
+
+
+
+            if (inputMode == AntsFlowInputMode.SelectTile)
+            {
+                Vector3 touchPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+
+                Vector3Int cellPos = AntsFlow.TileManager.Ins.baseTilemap.WorldToCell(touchPoint);
+
+                float smallestDistance = float.MaxValue;
+                AntsFlow.BaseTile selectedTile = null;
+
+                for (int i = 0; i < AntsFlow.TileManager.Ins.tiles.Count; i++)
+                {
+                    AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.tiles[i];
+
+                    float distance = Vector2.Distance(0.55f * (Vector3)tile.tilemapPosition, touchPoint);
+
+                    if (distance < smallestDistance)
+                    {
+                        smallestDistance = distance;
+                        selectedTile = tile;
+                    }
+                }
+
+                if (selectedTile != null)
+                {
+                    Color faction = selectedTile.Faction;
+
+                    useClearOneColorBoosterEvent?.Invoke(faction);
+
+                    inputMode = AntsFlowInputMode.Normal;
+                }
+
+                // for (int i = 0; i < AntsFlow.TileManager.Ins.tilemaps.Length; i++)
+                // {
+                //     Sprite sprite = AntsFlow.TileManager.Ins.tilemaps[i].GetSprite(cellPos);
+
+                //     if (sprite != null)
+                //     {
+                //         Color faction = FactionMapper.Ins.GetFaction(sprite);
+
+                //         useClearOneColorBoosterEvent?.Invoke(faction);
+
+                //         inputMode = AntsFlowInputMode.Normal;
+
+                //         break;
+                //     }
+                // }
+            }
+
+
 
             if (hit.collider != null)
             {
@@ -43,14 +101,14 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 }
                 else if (inputMode == AntsFlowInputMode.SelectTile)
                 {
-                    AntsFlow.BaseTile tile = hit.collider.GetComponent<AntsFlow.BaseTile>();
+                    // AntsFlow.BaseTile tile = hit.collider.GetComponent<AntsFlow.BaseTile>();
 
-                    if (tile != null && !tile.isAnimating)
-                    {
-                        tile.ClearAllTilesOfTheSameColor();
+                    // if (tile != null && !tile.isAnimating)
+                    // {
+                    //     tile.ClearAllTilesOfTheSameColor();
 
-                        inputMode = AntsFlowInputMode.Normal;
-                    }
+                    //     inputMode = AntsFlowInputMode.Normal;
+                    // }
                 }
             }
         }
