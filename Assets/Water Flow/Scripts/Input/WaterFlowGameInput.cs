@@ -22,11 +22,11 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 worldPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(
-            worldPoint,
-            Vector2.zero,
-            0f
-        );
+                RaycastHit2D hit = Physics2D.Raycast(
+                worldPoint,
+                Vector2.zero,
+                0f
+            );
 
             if (IsClickedOnUI())
             {
