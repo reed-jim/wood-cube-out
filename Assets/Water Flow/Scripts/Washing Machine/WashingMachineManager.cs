@@ -540,18 +540,19 @@ namespace AntsFlow
             //     }
             // }
 
-            AdjustAntBoxAfterClearingOneColor(tilesToClear);
-
             for (int i = 0; i < tilesToClear.Count; i++)
             {
                 bool isLast = i == tilesToClear.Count - 1;
 
-                tilesToClear[i].Complete();
+                // tilesToClear[i].Complete();
+                tilesToClear[i].isDone = true;
                 tilesToClear[i].Hide();
                 tilesToClear[i].HideObstacle();
 
                 SpawnFakeTile(tilesToClear[i], isLast);
             }
+
+            AdjustAntBoxAfterClearingOneColor(tilesToClear);
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
             {
