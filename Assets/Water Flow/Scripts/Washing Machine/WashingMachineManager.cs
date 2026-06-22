@@ -525,7 +525,7 @@ namespace AntsFlow
 
                 Vector3 initialPosition = fakeTile.transform.position;
 
-                Tween.ScaleY(fakeTile.transform, 1.6f, duration: 0.3f);
+                Tween.ScaleY(fakeTile.transform, 1.5f, duration: 0.3f);
                 Tween.PositionY(fakeTile.transform, fakeTile.transform.position.y + 1.6f, duration: 0.3f)
                 .OnComplete(() =>
                 {

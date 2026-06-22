@@ -66,7 +66,7 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
 
                 float tileSize = GamePersistentVariable.tileMapScaleFactor;
 
-                if (smallestDistance > GamePersistentVariable.tileMapScaleFactor)
+                if (smallestDistance > tileSize)
                 {
                     selectedTile = null;
                 }

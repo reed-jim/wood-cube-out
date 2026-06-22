@@ -305,7 +305,7 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
-            float scaleByX = 15f / numCols;
+            float scaleByX = 18f / numCols;
             float scaleByY = 15f / numRows;
             float finalScale = Mathf.Min(scaleByX, scaleByY);
 
@@ -744,9 +744,9 @@ namespace NamPhuThuy.GamePlay
 
             tilemapGrids.Clear();
 
-            if (gameObject.transform.childCount > 0)
+            if (transform.childCount > 0)
             {
-                Destroy(gameObject.transform.GetChild(0).gameObject);
+                Destroy(transform.GetChild(0).gameObject);
             }
 
             currentLevel.Value = level;
