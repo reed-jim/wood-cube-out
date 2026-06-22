@@ -350,10 +350,10 @@ namespace NamPhuThuy.GamePlay
                     // Vector3Int cellPos = shadowTilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
                     Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position);
 
-                    Tile tile = ScriptableObject.CreateInstance<Tile>();
+                    UnityEngine.Tilemaps.Tile tile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
-                    Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
+                    UnityEngine.Tilemaps.Tile shadowTile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
                     shadowTile.sprite = shadowSprite;
 
                     spawnedTileMap.SetTile(cellPos, tile);

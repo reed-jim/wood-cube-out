@@ -277,7 +277,8 @@ public class SceneTransition : MonoBehaviour
             return;
         }
 
-        GameController.Instance.admobAds.ShowMRec();
+        if (GameController.Instance != null)
+            GameController.Instance.admobAds.ShowMRec();
 
         float minWaitTime = 2;
 
@@ -296,7 +297,8 @@ public class SceneTransition : MonoBehaviour
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
-            GameController.Instance.admobAds.HideMRec();
+            if (GameController.Instance != null)
+                GameController.Instance.admobAds.HideMRec();
 
             // double inter
             if (!_isFirstTimeEnterScene)
@@ -304,13 +306,14 @@ public class SceneTransition : MonoBehaviour
                 if (blackBackgroundToPassPolicy != null)
                     blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                GameController.Instance.admobAds.ShowInterstitial(
-                  actionIniterClose: () =>
-                   {
-                       if (blackBackgroundToPassPolicy != null)
-                           blackBackgroundToPassPolicy.gameObject.SetActive(false);
-                   }
-               );
+                if (GameController.Instance != null)
+                    GameController.Instance.admobAds.ShowInterstitial(
+                        actionIniterClose: () =>
+                        {
+                            if (blackBackgroundToPassPolicy != null)
+                                blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                        }
+                    );
             }
             else
             {

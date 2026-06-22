@@ -858,7 +858,7 @@ namespace AntsFlow
 
                         if (!isSetTiles)
                         {
-                            Tile tileGlow = ScriptableObject.CreateInstance<Tile>();
+                            UnityEngine.Tilemaps.Tile tileGlow = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
                             tileGlow.sprite = tileGlowSprite;
                             tileGlowTilemap.SetTile(tile.tilemapPosition, tileGlow);
 
