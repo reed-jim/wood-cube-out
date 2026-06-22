@@ -48,7 +48,14 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 {
                     AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.tiles[i];
 
-                    float distance = Vector2.Distance(0.55f * (Vector3)tile.tilemapPosition, touchPoint);
+                    if (tile.isDone)
+                    {
+                        continue;
+                    }
+
+                    Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
+
+                    float distance = Vector2.Distance(tilePosition, touchPoint);
 
                     if (distance < smallestDistance)
                     {

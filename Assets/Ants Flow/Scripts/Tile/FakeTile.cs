@@ -48,7 +48,7 @@ namespace AntsFlow
 
             Vector3 position = (Vector3)tile.tilemapPosition;
 
-            transform.position = GamePersistentVariable.tileMapScaleFactor * position.AddZ(-0.01f * position.y);
+            transform.position = TileManager.Ins.GetTilePosition(tile).AddZ(-0.01f * position.y);
             transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
             transform.localRotation = Quaternion.identity;
         }

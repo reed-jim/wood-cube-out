@@ -887,7 +887,7 @@ namespace AntsFlow
                 {
                     BaseTile tile = tiles[i];
 
-                    if (!tile.isAntApproaching)
+                    if (!tile.isAntApproaching && !tile.isDone)
                     {
                         CommonUtil.AddValueOfDictionary(tilesOfFaction, tile.Faction, tile);
                     }

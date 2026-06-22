@@ -506,7 +506,9 @@ namespace AntsFlow
             {
                 bool isLast = i == tilesToClear.Count - 1;
 
+                tilesToClear[i].Complete();
                 tilesToClear[i].Hide();
+                tilesToClear[i].HideObstacle();
 
                 SpawnFakeTile(tilesToClear[i], isLast);
             }
@@ -529,8 +531,6 @@ namespace AntsFlow
                     {
                         SaferioTween.ScaleDownWithPunch(fakeTile.transform, onCompleteAction: () =>
                         {
-                            // tile.Complete();
-
                             ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
                         });
 

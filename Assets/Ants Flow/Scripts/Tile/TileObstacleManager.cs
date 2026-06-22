@@ -17,6 +17,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
+            WashingMachineManager.winLevelEvent += OnLevelReplayed;
 
             Init();
         }
@@ -26,6 +27,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
+            WashingMachineManager.winLevelEvent -= OnLevelReplayed;
         }
 
         public void Init()
@@ -40,6 +42,11 @@ namespace AntsFlow
 
         public void SpawnObstacleAt(BaseTile tile)
         {
+            if (currentIndex >= tileObstacles.Count)
+            {
+                currentIndex = 0;
+            }
+
             tileObstacles[currentIndex].Init(tile);
 
             currentIndex++;

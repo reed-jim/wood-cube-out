@@ -242,15 +242,20 @@ namespace AntsFlow
             }
         }
 
-        public void InvokeAntStartMoveToTileEvent()
+        public void HideObstacle()
         {
-            // navMeshModifierVolume.enabled = false;
-
             if (tileObstacle != null)
             {
                 tileObstacle.Hide();
                 tileObstacle = null;
             }
+        }
+
+        public void InvokeAntStartMoveToTileEvent()
+        {
+            // navMeshModifierVolume.enabled = false;
+
+            HideObstacle();
 
             foreach (var tile in blockedByMe)
             {
