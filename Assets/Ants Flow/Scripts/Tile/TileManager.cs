@@ -440,6 +440,8 @@ namespace AntsFlow
 #if UNITY_EDITOR
         void OnDrawGizmosSelected()
         {
+            return;
+
             foreach (var node in nodes)
             {
                 if (node.isObstacle)

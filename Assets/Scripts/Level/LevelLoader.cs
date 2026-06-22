@@ -339,6 +339,8 @@ namespace NamPhuThuy.GamePlay
                 spawnedTileMapGrid.SetParent(levelTransform);
                 spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
                 spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
+                
+                tilemapGrids.Add(spawnedTileMapGrid);
 
                 for (int j = 0; j < numCols; j++)
                 {
@@ -355,8 +357,6 @@ namespace NamPhuThuy.GamePlay
 
                     spawnedTileMap.SetTile(cellPos, tile);
                     shadowTilemap.SetTile(cellPos, shadowTile);
-
-                    tilemapGrids.Add(spawnedTileMapGrid);
 
                     AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
                     AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;

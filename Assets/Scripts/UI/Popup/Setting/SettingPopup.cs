@@ -40,6 +40,7 @@ public class SettingPopup : BasePopup
     public static event Action<bool> enableGameSoundEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action replayLevelEvent;
+    public static event Action<bool> pauseNavmeshEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -77,6 +78,20 @@ public class SettingPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         GameVariableInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        pauseNavmeshEvent?.Invoke(true);
+
+        base.Show(onCompletedAction);
+    }
+
+    protected override void Hide()
+    {
+        pauseNavmeshEvent?.Invoke(false);
+
+        base.Hide();
     }
 
     private void SettingGameMusic(bool isTurnOn)

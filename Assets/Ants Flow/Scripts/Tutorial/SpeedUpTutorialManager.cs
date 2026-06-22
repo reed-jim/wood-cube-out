@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine.Unity;
@@ -11,12 +12,28 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     public CanvasGroup canvasGroup;
     public SkeletonGraphic tutorialHand;
 
+    public float numAntToShow;
+    public float intervalShowingTutorial;
+
     public static event Action<ScreenRoute> switchScreenEvent;
 
     private bool isHolding;
     private float timeHold;
 
     private bool isTutorialStarted;
+    private bool isLevelWon;
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        WashingMachineManager.winLevelEvent += OnLevelWon;
+    }
+
+    void OnDestroy()
+    {
+        WashingMachineManager.winLevelEvent -= OnLevelWon;
+    }
 
     // void Update()
     // {
@@ -42,14 +59,13 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
 
-        while (true)
+        while (!isLevelWon)
         {
             if (!isTutorialStarted)
             {
-                if (GamePersistentVariable.numActiveAnt > 10)
+                if (GamePersistentVariable.numActiveAnt > numAntToShow)
                 {
                     Show();
-                    // switchScreenEvent?.Invoke(ScreenRoute.SpeedUpTutorial);
 
                     isTutorialStarted = true;
                 }
@@ -60,7 +76,9 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
                 {
                     Hide();
 
-                    break;
+                    yield return new WaitForSeconds(intervalShowingTutorial);
+
+                    isTutorialStarted = false;
                 }
             }
 
@@ -78,5 +96,10 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     {
         SaferioTween.AlphaHide(canvasGroup);
         Tween.Alpha(tutorialHand, 0, 0.3f);
+    }
+
+    private void OnLevelWon()
+    {
+        isLevelWon = true;
     }
 }

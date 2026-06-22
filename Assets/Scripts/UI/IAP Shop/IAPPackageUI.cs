@@ -16,7 +16,8 @@ public class IAPPackageUI : MonoBehaviour
     [SerializeField] private Button buyButton;
 
     [Header("CUSTOMIZE")]
-    [SerializeField] private bool isContainRemoveAd;
+    [SerializeField] private bool isHideWhenRemoveAd;
+    [SerializeField] private bool isNonConsumable;
 
     [SerializeField] private IAPPackageData _packageData;
     [SerializeField] private bool isSalePack;
@@ -31,6 +32,7 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.buyIAPPackageEvent += OnIAPPackageBought;
         SalePackIAPManager.updateSalePackVisibilityEvent += UpdateVisibility;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
 
@@ -45,13 +47,21 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.buyIAPPackageEvent -= OnIAPPackageBought;
         SalePackIAPManager.updateSalePackVisibilityEvent -= UpdateVisibility;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
     }
 
     public void Setup(IAPPackageData data)
     {
-        if (isContainRemoveAd && UserData.IsRemoveAds)
+        if (isHideWhenRemoveAd && UserData.IsRemoveAds)
+        {
+            gameObject.SetActive(false);
+
+            return;
+        }
+
+        if (isNonConsumable && DataUtility.Load($"Is Bought {_packageData.name}", false))
         {
             gameObject.SetActive(false);
 
@@ -111,10 +121,26 @@ public class IAPPackageUI : MonoBehaviour
 
     private void OnAdsRemoved()
     {
-        // if (isContainRemoveAd)
-        // {
-        //     gameObject.SetActive(false);
-        // }
+        if (gameObject.activeInHierarchy)
+        {
+            if (isHideWhenRemoveAd)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void OnIAPPackageBought(string packageId)
+    {
+        if (gameObject.activeInHierarchy && packageId == _packageData.ProductId)
+        {
+            if (isNonConsumable)
+            {
+                gameObject.SetActive(false);
+            }
+
+            DataUtility.Save($"Is Bought {_packageData.name}", true);
+        }
     }
 
     private void UpdateVisibility()

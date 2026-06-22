@@ -77,6 +77,8 @@ namespace AntsFlow
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
             WashingMachineManager.winLevelEvent += OnLevelWon;
+            IAPShopPopup.pauseNavmeshEvent += OnNavmeshPaused;
+            SettingPopup.pauseNavmeshEvent += OnNavmeshPaused;
 
             navMeshAgent.updateRotation = false;
             navMeshAgent.updateUpAxis = false;
@@ -108,6 +110,8 @@ namespace AntsFlow
             LosePopup.replayLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
             WashingMachineManager.winLevelEvent -= OnLevelWon;
+            IAPShopPopup.pauseNavmeshEvent -= OnNavmeshPaused;
+            SettingPopup.pauseNavmeshEvent -= OnNavmeshPaused;
         }
 
         private void Start()
@@ -311,6 +315,14 @@ namespace AntsFlow
             Reset();
 
             ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
+        }
+
+        private void OnNavmeshPaused(bool isPaused)
+        {
+            if (gameObject.activeInHierarchy && navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.isStopped = isPaused;
+            }
         }
 
         public void Init(Color faction)
@@ -856,7 +868,25 @@ namespace AntsFlow
             navMeshAgent.enabled = false;
 
             tile.isAntApproaching = true;
-            tile.InvokeAntStartMoveToTileEvent();
+
+            if (tile.blockages.Count < 4)
+            {
+                tile.InvokeAntStartMoveToTileEvent();
+            }
+            else
+            {
+                bool isAnyPrepareCompleteTile = tile.blockages.Any(item => item.isPrepareComplete);
+
+                if (isAnyPrepareCompleteTile)
+                {
+                    tile.InvokeAntStartMoveToTileEvent();
+                }
+                else
+                {
+                    tile.HideObstacle();
+                    tile.isPrepareComplete = true;
+                }
+            }
 
             this.tile = tile;
 
@@ -995,7 +1025,9 @@ namespace AntsFlow
 
         public bool ReachedDestination(float threshold = 1f)
         {
-            return Vector2.Distance(transform.position, destination) < threshold;
+            float tileSize = GamePersistentVariable.tileMapScaleFactor;
+
+            return Vector2.Distance(transform.position, destination) < tileSize;
             // return AIPath.remainingDistance < 0.01f;
             // float distance = Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position);
 

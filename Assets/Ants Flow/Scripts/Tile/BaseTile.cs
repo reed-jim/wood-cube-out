@@ -29,6 +29,7 @@ namespace AntsFlow
         public bool isDone;
         public bool isAntApproaching;
         public bool isAnimating;
+        public bool isPrepareComplete;
         public bool isLocked;
         [NonSerialized] public List<BaseTile> blockages;
         [NonSerialized] public HashSet<BaseTile> blockedByMe;
@@ -136,6 +137,29 @@ namespace AntsFlow
 
             actualBlockages.Clear();
             path.Clear();
+        }
+
+        public void SetNoLongerBlockages()
+        {
+            foreach (var tile in blockedByMe)
+            {
+                tile.blockages.Remove(this);
+
+                if (tile.isPrepareComplete)
+                {
+                    tile.ActualComplete();
+                }
+            }
+        }
+
+        public void ActualComplete()
+        {
+            foreach (var tile in blockedByMe)
+            {
+                tile.blockages.Remove(this);
+            }
+
+            isDone = true;
         }
 
         public void MoveToAnt(BaseAnt ant)
@@ -257,10 +281,7 @@ namespace AntsFlow
 
             HideObstacle();
 
-            foreach (var tile in blockedByMe)
-            {
-                tile.blockages.Remove(this);
-            }
+            SetNoLongerBlockages();
 
             antStartMoveToTileEvent?.Invoke(this);
         }

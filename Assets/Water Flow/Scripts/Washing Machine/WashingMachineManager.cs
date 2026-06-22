@@ -490,21 +490,57 @@ namespace AntsFlow
                 .Where(tile => !tile.isDone && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
 
             // Remove blockages
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            for (int i = 0; i < tilesToClear.Count; i++)
             {
-                BaseTile tile = TileManager.Ins.tiles[i];
+                BaseTile tileToClear = tilesToClear[i];
 
-                if (!tile.isAntApproaching && !tilesToClear.Contains(tile))
-                {
-                    List<BaseTile> toRemoveBlockages = tilesToClear.Where(item => tile.blockages.Contains(item)).ToList();
+                // if (tileToClear.blockages.Count < 4)
+                // {
+                //     tileToClear.SetNoLongerBlockages();
+                // }
+                // else
+                // {
+                //     // // bool isAllPrepareCompleteTile = tileToClear.blockages.All(item => item.isPrepareComplete);
+                //     // int numPrepareCompleteTileNearby = tileToClear.blockages.Count(item => item.isPrepareComplete);
 
-                    for (int j = 0; j < toRemoveBlockages.Count; j++)
-                    {
-                        tile.blockages.Remove(toRemoveBlockages[j]);
-                        // tile.actualBlockages.Remove(toRemoveBlockages[j]);
-                    }
-                }
+                //     // if (numPrepareCompleteTileNearby >= 2)
+                //     // {
+                //     //     tileToClear.SetNoLongerBlockages();
+                //     // }
+                //     // else
+                //     // {
+                //     //     tileToClear.isPrepareComplete = true;
+                //     // }
+
+                //     for (int j = 0; j < tileToClear.blockages.Count; j++)
+                //     {
+                //         if (tileToClear.blockages[j].isPrepareComplete)
+                //         {
+                //             tileToClear.blockages[j].ActualComplete();
+                //         }
+                //     }
+
+                //     tileToClear.isPrepareComplete = true;
+                // }
             }
+
+            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            // {
+            //     BaseTile tile = TileManager.Ins.tiles[i];
+
+            //     if (!tile.isAntApproaching && !tilesToClear.Contains(tile))
+            //     {
+            //         List<BaseTile> toRemoveBlockages = tilesToClear.Where(item => tile.blockages.Contains(item)).ToList();
+
+            //         for (int j = 0; j < toRemoveBlockages.Count; j++)
+            //         {
+            //             tile.blockages.Remove(toRemoveBlockages[j]);
+            //             // tile.actualBlockages.Remove(toRemoveBlockages[j]);
+            //         }
+            //     }
+            // }
+
+            AdjustAntBoxAfterClearingOneColor(tilesToClear);
 
             for (int i = 0; i < tilesToClear.Count; i++)
             {
@@ -576,8 +612,6 @@ namespace AntsFlow
             //         });
             //     });
             // }
-
-            AdjustAntBoxAfterClearingOneColor(tilesToClear);
         }
 
         private void AdjustAntBoxAfterClearingOneColor(List<BaseTile> tilesToClear)
