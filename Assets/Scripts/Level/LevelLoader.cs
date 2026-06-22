@@ -310,9 +310,12 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
-            shadowTilemapGrid.SetParent(levelTransform);
-            shadowTilemapGrid.position = shadowTilemapOffset;
-            shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
+            if (shadowTilemapGrid != null)
+            {
+                shadowTilemapGrid.SetParent(levelTransform);
+                shadowTilemapGrid.position = shadowTilemapOffset;
+                shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
+            }
 
             for (int i = 0; i < numRows; i++)
             {
@@ -333,11 +336,14 @@ namespace NamPhuThuy.GamePlay
                     UnityEngine.Tilemaps.Tile tile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
-                    UnityEngine.Tilemaps.Tile shadowTile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
-                    shadowTile.sprite = shadowSprite;
-
                     spawnedTileMap.SetTile(cellPos, tile);
-                    shadowTilemap.SetTile(cellPos, shadowTile);
+
+                    if (shadowTilemap != null)
+                    {
+                        UnityEngine.Tilemaps.Tile shadowTile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
+                        shadowTile.sprite = shadowSprite;
+                        shadowTilemap.SetTile(cellPos, shadowTile);
+                    }
 
                     tilemapGrids.Add(spawnedTileMapGrid);
 
@@ -667,7 +673,10 @@ namespace NamPhuThuy.GamePlay
 
             await Task.Delay(500);
 
-            shadowTilemapGrid.SetParent(transform.parent);
+            if (shadowTilemapGrid != null)
+            {
+                shadowTilemapGrid.SetParent(transform.parent);
+            }
 
             for (int i = 0; i < tilemapGrids.Count; i++)
             {
