@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Lean.Localization;
 using static GameEnum;
+using Spine.Unity;
+using Spine;
 
 public class BoosterUI : MonoBehaviour
 {
@@ -25,6 +27,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button unlockThemeButton;
 
     [SerializeField] private CanvasGroup freezeGroup;
+    [SerializeField] private SkeletonGraphic animFreeze;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
@@ -359,7 +362,7 @@ public class BoosterUI : MonoBehaviour
 
                     TileManager.Ins.UseFreezeTimeBooster(15f, () =>
                     {
-                        Tween.Alpha(freezeGroup, 0f, duration: 1f).OnComplete(() =>
+                        Tween.Alpha(freezeGroup, 0f, duration: 2f).OnComplete(() =>
                         {
                             freezeGroup.gameObject.SetActive(false);
                         }
@@ -368,12 +371,24 @@ public class BoosterUI : MonoBehaviour
                 },
                 onComplete: () =>
                 {
-                    freezeGroup.gameObject.SetActive(true);
-                    Tween.Alpha(freezeGroup, 1f, duration: 1f);
-                    Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+                    animFreeze.gameObject.SetActive(true);
+                    TrackEntry e = animFreeze.AnimationState.SetAnimation(0, "animation", false);
+                    e.Complete += (TrackEntry trackEntry) =>
                     {
-                        _isInTransition = false;
-                    });
+                        freezeGroup.gameObject.SetActive(true);
+                        Tween.Alpha(freezeGroup, 1f, duration: 2f).OnComplete(() =>
+                        {
+                            animFreeze.gameObject.SetActive(false);
+
+                        }
+                        );
+                        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+                        {
+
+                            _isInTransition = false;
+                        });
+                    };
+
                 }
             );
         }
@@ -386,6 +401,8 @@ public class BoosterUI : MonoBehaviour
             });
         }
     }
+
+
 
     private void UseHint()
     {

@@ -23,6 +23,9 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private Image glow;
     [SerializeField] private Image lockObject;
     [SerializeField] private Image unlockObject;
+    [SerializeField] private ParticleSystem fxCompleteCard;
+    [SerializeField] private ParticleSystem fxCompleteTheme;
+
     [SerializeField] private GameObject animUnlock;
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isActive;
@@ -31,6 +34,8 @@ public class TileSlotContainer : MonoBehaviour
     public bool isHidden;
     public bool isCompleted;
     public int maxTile;
+
+    private float timeComplete = 0.15f;
     public List<BaseTile> tiles;
 
     public TileIconContainer tileIconContainer;
@@ -215,9 +220,30 @@ public class TileSlotContainer : MonoBehaviour
         tile.txCount.gameObject.SetActive(true);
 
     }
+    private void PlayFxComplete(BaseTile tile)
+    {
+        Color c = tile.glow.color;
+        c.a = 0;
+        tile.glow.color = c;
+        tile.glow.gameObject.SetActive(true);
+        fxCompleteCard.Play();
+        Tween.Alpha(tile.glow, 1f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
+        {
+            Tween.Alpha(tile.glow, 0f, duration: timeComplete, ease: Ease.InQuad).OnComplete(() =>
+            {
+                tile.glow.gameObject.SetActive(false);
+            });
+        });
+    }
 
     public void SwitchItem(BaseTile tile)
     {
+        PlayFxComplete(tile);
+        Tween.Scale(tile.transform, 1.1f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
+        {
+            Tween.Scale(tile.transform, 1f, duration: timeComplete, ease: Ease.InQuad);
+        });
+
         if (tile.IsText)
         {
             if (currentTileImage != null) currentTileImage.gameObject.SetActive(false);

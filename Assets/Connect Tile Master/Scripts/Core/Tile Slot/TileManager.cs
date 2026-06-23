@@ -540,7 +540,7 @@ public class TileManager : Singleton<TileManager>
                         {
                             tileSlotContainer.isCompleted = true;
 
-                            Tween.Delay(0.85f).OnComplete(() =>
+                            Tween.Delay(1.2f).OnComplete(() =>
                             {
                                 if (tileSlotContainer == null) return;
                                 bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
@@ -1754,7 +1754,7 @@ public class TileManager : Singleton<TileManager>
                     {
                         tile.IsMoving = true;
                         Tween.Alpha(tile.icon, 1, duration: 0.3f);
-                        Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
+                        Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.15f).OnComplete(() =>
                         {
                             tile.IsMoving = false;
 
