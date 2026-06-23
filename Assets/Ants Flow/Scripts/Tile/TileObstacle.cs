@@ -23,7 +23,7 @@ namespace AntsFlow
             transform.position = TileManager.Ins.GetTilePosition(tile);
             gameObject.SetActive(true);
             // transform.position = tile.position;
-            transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
+            transform.localScale = GamePersistentVariable.obstacleScaleFactor * Vector3.one;
 
             tile.tileObstacle = this;
         }

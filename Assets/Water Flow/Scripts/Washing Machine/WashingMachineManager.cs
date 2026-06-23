@@ -552,6 +552,8 @@ namespace AntsFlow
                 SpawnFakeTile(tilesToClear[i], isLast);
             }
 
+            TileManager.Ins.CheckWinLevel();
+
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
@@ -561,12 +563,13 @@ namespace AntsFlow
                 fakeTile.Init(tile);
 
                 Vector3 initialPosition = fakeTile.transform.position;
+                Vector3 initialScale = fakeTile.transform.localScale;
 
-                Tween.ScaleY(fakeTile.transform, 1.5f, duration: 0.3f);
+                Tween.ScaleY(fakeTile.transform, 1.5f * initialScale.y, duration: 0.3f);
                 Tween.PositionY(fakeTile.transform, fakeTile.transform.position.y + 1.6f, duration: 0.3f)
                 .OnComplete(() =>
                 {
-                    Tween.ScaleY(fakeTile.transform, 1, duration: 0.15f);
+                    Tween.ScaleY(fakeTile.transform, initialScale.y, duration: 0.15f);
                     Tween.Position(fakeTile.transform, initialPosition, duration: 0.15f)
                     .OnComplete(() =>
                     {

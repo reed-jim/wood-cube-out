@@ -158,7 +158,7 @@ namespace AntsFlow
             List<Node> leftMostNodes = new List<Node>();
             List<Node> rightMostNodes = new List<Node>();
 
-            float tileSize = GamePersistentVariable.tileMapScaleFactor;
+            float tileSize = GamePersistentVariable.obstacleScaleFactor;
 
             // for (int i = 0; i < nodes.Count; i++)
             // {
@@ -768,7 +768,7 @@ namespace AntsFlow
             tileCountText.text = $"{tileLeft}/{tiles.Count()}";
         }
 
-        private void CheckWinLevel()
+        public void CheckWinLevel()
         {
             bool isWon = !tiles.Any(tile => !tile.isDone);
 

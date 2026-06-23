@@ -199,6 +199,7 @@ public static class GamePersistentVariable
     public static int numColumn;
     public static int numRow;
     public static float tileMapScaleFactor;
+    public static float obstacleScaleFactor;
     public static bool isGameSpeedChangeInDebug;
     public static bool isPauseGame;
     public static bool isTutorialLevelOneDone;

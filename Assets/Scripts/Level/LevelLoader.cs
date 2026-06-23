@@ -307,6 +307,10 @@ namespace NamPhuThuy.GamePlay
             float scaleByY = levelScaleYRatio / numRows;
             float finalScale = Mathf.Min(scaleByX, scaleByY);
 
+            GamePersistentVariable.obstacleScaleFactor = finalScale;
+
+            finalScale /= 54f;
+
             scaleFactor = finalScale;
             GamePersistentVariable.tileMapScaleFactor = scaleFactor;
         }
@@ -328,6 +332,8 @@ namespace NamPhuThuy.GamePlay
             shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
             glowTilemapGrid.localScale = scaleFactor * Vector3.one;
 
+            float ratioXY = 54 * (54f / 64);
+
             for (int i = 0; i < numRows; i++)
             {
                 // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
@@ -345,7 +351,7 @@ namespace NamPhuThuy.GamePlay
                     int index = j + i * numCols;
 
                     // Vector3Int cellPos = shadowTilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
-                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position);
+                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
 
                     Tile tile = ScriptableObject.CreateInstance<Tile>();
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
@@ -662,7 +668,7 @@ namespace NamPhuThuy.GamePlay
                 for (int col = 0; col < numCols; col++)
                 {
                     Vector3 position = new Vector3(
-                        -numCols / 2 + col * 1,
+                        -(numCols - 1) / 2f + col * 1,
                         (levelYOffsetRatio * numRows) + row * 1,
                         0f
                     );
