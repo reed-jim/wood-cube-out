@@ -464,7 +464,7 @@ namespace NamPhuThuy.GamePlay
 
                 // tile.transform.position = antLevelDataItem.position;
 
-                tile.name = i;
+                tile.tileName = i;
                 tile.position = antLevelDataItem.position;
                 tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
                 tile.ring = antLevelDataItem.ring;

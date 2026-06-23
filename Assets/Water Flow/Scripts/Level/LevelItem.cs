@@ -17,12 +17,12 @@ namespace AntsFlow
 {
     public class LevelItem : MonoBehaviour
     {
-        public BaseTile tilePrefab;
         public Sprite picture;
 
         public int numColumn;
         public int numRow;
         public List<Color> poolFaction;
+        public List<BaseTile> tiles;
         public bool isTutorialLevel;
         public bool isTutorialSpeedUpLevel;
         public bool isUseManualFactionSetupForFirstAntBoxes;
@@ -80,62 +80,60 @@ namespace AntsFlow
 
         public void ConvertToJson()
         {
-// #if UNITY_EDITOR
-//             FactionMapper factionMapper =
-//                 AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+            #if UNITY_EDITOR
+                        FactionMapper factionMapper =
+                            AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
 
-//             List<BaseTile> tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(transform);
+                        AntLevelData antLevelData = new AntLevelData();
 
-//             AntLevelData antLevelData = new AntLevelData();
+                        antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
 
-//             antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
+                        for (int i = 0; i < tiles.Count; i++)
+                        {
+                            BaseTile tile = tiles[i];
 
-//             for (int i = 0; i < tiles.Count; i++)
-//             {
-//                 BaseTile tile = tiles[i];
+                            AntLevelDataItem dataItem = new AntLevelDataItem();
+                            dataItem.position = tile.position;
+                            dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
 
-//                 AntLevelDataItem dataItem = new AntLevelDataItem();
-//                 dataItem.position = tile.transform.position;
-//                 dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
+                            dataItem.blockageIndexes = new List<int>();
 
-//                 dataItem.blockageIndexes = new List<int>();
+                            if (tile.blockages != null)
+                            {
+                                for (int j = 0; j < tile.blockages.Count; j++)
+                                {
+                                    dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+                                }
+                            }
 
-//                 if (tile.blockages != null)
-//                 {
-//                     for (int j = 0; j < tile.blockages.Count; j++)
-//                     {
-//                         dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
-//                     }
-//                 }
+                            antLevelData.antLevelDataItems.Add(dataItem);
+                        }
 
-//                 antLevelData.antLevelDataItems.Add(dataItem);
-//             }
+                        List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction); ;
 
-//             List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction); ;
+                        antLevelData.levelItemData = new LevelItemData()
+                        {
+                            levelScale = transform.localScale,
+                            poolFactionIndexes = poolFactionIndexes,
+                            isTutorialLevel = isTutorialLevel,
+                            isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
+                            levelFactionConfig = levelFactionConfig,
+                            difficulty = difficulty,
+                            initialDifficulty = initialDifficulty,
+                            overrideInitialDifficulty = overrideInitialDifficulty,
+                            numStartAntBoxes = numStartAntBoxes,
+                            specialElementConfig = specialElementConfig
+                        };
 
-//             antLevelData.levelItemData = new LevelItemData()
-//             {
-//                 levelScale = transform.localScale,
-//                 poolFactionIndexes = poolFactionIndexes,
-//                 isTutorialLevel = isTutorialLevel,
-//                 isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
-//                 levelFactionConfig = levelFactionConfig,
-//                 difficulty = difficulty,
-//                 initialDifficulty = initialDifficulty,
-//                 overrideInitialDifficulty = overrideInitialDifficulty,
-//                 numStartAntBoxes = numStartAntBoxes,
-//                 specialElementConfig = specialElementConfig
-//             };
+                        // Use level name as file name
+                        string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
 
-//             // Use level name as file name
-//             string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
+                        // Serialize and save
+                        string json = JsonUtility.ToJson(antLevelData, false);
+                        File.WriteAllText(filePath, json);
 
-//             // Serialize and save
-//             string json = JsonUtility.ToJson(antLevelData, false);
-//             File.WriteAllText(filePath, json);
-
-//             AssetDatabase.Refresh();
-// #endif
+                        AssetDatabase.Refresh();
+            #endif
         }
     }
 
@@ -220,25 +218,25 @@ namespace AntsFlow
             //     AssignLevelPriority(levelItem);
             // }
 
-            if (GUILayout.Button("Step 5: Find Tile Blockages"))
-            {
-                levelItem.FindTileBlockages();
-            }
+            // if (GUILayout.Button("Step 5: Find Tile Blockages"))
+            // {
+            //     levelItem.FindTileBlockages();
+            // }
 
             // if (GUILayout.Button("Step 6: Get Pool Faction"))
             // {
             //     GetPoolFaction(levelItem);
             // }
 
-            if (GUILayout.Button("Center On X"))
-            {
-                CenterOnX(levelItem);
-            }
+            // if (GUILayout.Button("Center On X"))
+            // {
+            //     CenterOnX(levelItem);
+            // }
 
-            if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
-            {
-                MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
-            }
+            // if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
+            // {
+            //     MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
+            // }
 
             // GUILayout.Label("Preview Level", EditorStyles.boldLabel);
 
@@ -259,12 +257,10 @@ namespace AntsFlow
         {
             // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(levelItem.transform);
 
-            // levelItem.poolFaction = tiles.Select(item => item.Faction).ToList();
+            levelItem.poolFaction = levelItem.tiles.Select(item => item.Faction).ToList();
 
-            // EditorUtility.SetDirty(levelItem);
+            EditorUtility.SetDirty(levelItem);
         }
-
-
 
         void SpawnPixelArt(LevelItem level)
         {
@@ -328,10 +324,10 @@ namespace AntsFlow
             // GroupColors(levelItem);
             ReassignFactionForTiles(levelItem);
             AssignLevelPriority(levelItem);
-            FindTileBlockages(levelItem);
+            // FindTileBlockages(levelItem);
             GetPoolFaction(levelItem);
-            CenterOnX(levelItem);
-            MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
+            // CenterOnX(levelItem);
+            // MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
         }
 
         void ReadLevel(LevelItem level)
@@ -362,6 +358,8 @@ namespace AntsFlow
             float pixelStepY = (float)height / numTileY;
 
             tileSpacing.y = tileSpacing.x * (pixelStepY / pixelStepX);
+
+            level.tiles = new List<BaseTile>();
 
             for (float y = 0; y < height; y += pixelStepY)
             {
@@ -396,9 +394,16 @@ namespace AntsFlow
                     // tile.name = $"Tile {index}";
                     // tile.transform.position = spawnPos;
 
+                    BaseTile tile = new BaseTile();
+
+                    tile.tileName = index;
+                    tile.position = spawnPos;
+                    tile.Faction = pixelColor;
                     // tile.spriteRenderer.color = pixelColor;
 
-                    // index++;
+                    level.tiles.Add(tile);
+
+                    index++;
                 }
             }
 
@@ -557,98 +562,98 @@ namespace AntsFlow
 
         private void ReassignFactionForTiles(LevelItem level)
         {
-            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            BaseTile[] tiles = level.tiles.ToArray();
 
-            // foreach (var tile in tiles)
-            // {
-            //     Color color = FindNearestFaction(tile.spriteRenderer.color, level.factions);
-            //     tile.Faction = color;
-            //     tile.spriteRenderer.color = color;
-            // }
+            foreach (var tile in tiles)
+            {
+                Color color = FindNearestFaction(tile.Faction, level.factions);
+                tile.Faction = color;
+                tile.Faction = color;
+            }
 
-            // Color FindNearestFaction(Color color, List<Color> centers)
-            // {
-            //     int bestIndex = 0;
-            //     float bestDistance = float.MaxValue;
+            Color FindNearestFaction(Color color, List<Color> centers)
+            {
+                int bestIndex = 0;
+                float bestDistance = float.MaxValue;
 
-            //     Color outputFaction = color;
+                Color outputFaction = color;
 
-            //     for (int i = 0; i < centers.Count; i++)
-            //     {
-            //         float distance =
-            //             Mathf.Pow(color.r - centers[i].r, 2) +
-            //             Mathf.Pow(color.g - centers[i].g, 2) +
-            //             Mathf.Pow(color.b - centers[i].b, 2);
+                for (int i = 0; i < centers.Count; i++)
+                {
+                    float distance =
+                        Mathf.Pow(color.r - centers[i].r, 2) +
+                        Mathf.Pow(color.g - centers[i].g, 2) +
+                        Mathf.Pow(color.b - centers[i].b, 2);
 
-            //         if (distance < bestDistance)
-            //         {
-            //             bestDistance = distance;
-            //             bestIndex = i;
+                    if (distance < bestDistance)
+                    {
+                        bestDistance = distance;
+                        bestIndex = i;
 
-            //             outputFaction = centers[i];
-            //         }
-            //     }
+                        outputFaction = centers[i];
+                    }
+                }
 
-            //     return outputFaction;
-            // }
+                return outputFaction;
+            }
 
-            // EditorUtility.SetDirty(level);
+            EditorUtility.SetDirty(level);
         }
 
         private void AssignLevelPriority(LevelItem level)
         {
-            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            BaseTile[] tiles = level.tiles.ToArray();
 
-            // // Gom theo hàng
-            // Dictionary<float, List<BaseTile>> rows = new();
+            // Gom theo hàng
+            Dictionary<float, List<BaseTile>> rows = new();
 
-            // foreach (var tile in tiles)
+            foreach (var tile in tiles)
+            {
+                float y = tile.position.y;
+
+                // Làm tròn để tránh lỗi float
+                y = Mathf.Round(y * 1000f) / 1000f;
+
+                if (!rows.ContainsKey(y))
+                    rows[y] = new List<BaseTile>();
+
+                rows[y].Add(tile);
+            }
+
+            // Sắp xếp từ dưới lên trên
+            int numberPriovity = 0;
+            var sortedRows = rows.Keys.OrderBy(y => y).ToList();
+
+            for (int rowIndex = 0; rowIndex < sortedRows.Count; rowIndex++)
+            {
+                float y = sortedRows[rowIndex];
+
+                foreach (var tile in rows[y])
+                {
+                    tile.ring = rowIndex;
+                    tile.priority = numberPriovity;
+                    numberPriovity++;
+                }
+            }
+
+            Dictionary<int, List<BaseTile>> groups = new Dictionary<int, List<BaseTile>>();
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+               BaseTile tile = tiles[i];
+
+               if (!groups.ContainsKey(tile.ring))
+               {
+                   groups.Add(tile.ring, new List<BaseTile>() { tile });
+               }
+               else
+               {
+                   groups[tile.ring].Add(tile);
+               }
+            }
+
+            // foreach (var group in groups)
             // {
-            //     float y = tile.transform.localPosition.y;
-
-            //     // Làm tròn để tránh lỗi float
-            //     y = Mathf.Round(y * 1000f) / 1000f;
-
-            //     if (!rows.ContainsKey(y))
-            //         rows[y] = new List<BaseTile>();
-
-            //     rows[y].Add(tile);
-            // }
-
-            // // Sắp xếp từ dưới lên trên
-            // int numberPriovity = 0;
-            // var sortedRows = rows.Keys.OrderBy(y => y).ToList();
-
-            // for (int rowIndex = 0; rowIndex < sortedRows.Count; rowIndex++)
-            // {
-            //     float y = sortedRows[rowIndex];
-
-            //     foreach (var tile in rows[y])
-            //     {
-            //         tile.ring = rowIndex;
-            //         tile.priority = numberPriovity;
-            //         numberPriovity++;
-            //     }
-            // }
-
-            //Dictionary<int, List<BaseTile>> groups = new Dictionary<int, List<BaseTile>>();
-
-            //for (int i = 0; i < tiles.Length; i++)
-            //{
-            //    BaseTile tile = tiles[i];
-
-            //    if (!groups.ContainsKey(tile.ring))
-            //    {
-            //        groups.Add(tile.ring, new List<BaseTile>() { tile });
-            //    }
-            //    else
-            //    {
-            //        groups[tile.ring].Add(tile);
-            //    }
-            //}
-
-            //foreach (var group in groups)
-            //{
             //    int ring = group.Key;
             //    List<BaseTile> tilesInSameRing = group.Value;
 
@@ -727,7 +732,7 @@ namespace AntsFlow
             //            priority++;
             //        }
             //    }
-            //}
+            // }
 
             EditorUtility.SetDirty(level);
         }
@@ -736,7 +741,7 @@ namespace AntsFlow
         {
             float sumX = 0f;
 
-            foreach (Transform child in level.transform)
+            foreach (BaseTile child in level.tiles)
             {
                 sumX += child.position.x;
             }

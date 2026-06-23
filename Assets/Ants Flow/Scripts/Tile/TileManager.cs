@@ -630,7 +630,7 @@ namespace AntsFlow
                 {
                     if (path[i].tile != null)
                     {
-                        Debug.Log($"FindPath {end.tile.name} {path[i].tile.name}");
+                        
                     }
                 }
             }

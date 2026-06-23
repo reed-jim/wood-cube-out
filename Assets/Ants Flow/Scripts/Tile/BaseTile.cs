@@ -24,7 +24,7 @@ namespace AntsFlow
         public Vector3Int tilemapPosition;
         public TileObstacle tileObstacle;
 
-        public int name;
+        public int tileName;
         public Vector3 position;
         public bool isDone;
         public bool isAntApproaching;

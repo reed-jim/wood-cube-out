@@ -169,7 +169,7 @@ public static class GameConstants
         switch (boosterType)
         {
             case BoosterType.BreakObject: return 3;
-            case BoosterType.ClearScrewPorts: return 5;
+            case BoosterType.ClearScrewPorts: return 4;
             case BoosterType.ClearOneColor: return 7;
             default: return 3;
         }
