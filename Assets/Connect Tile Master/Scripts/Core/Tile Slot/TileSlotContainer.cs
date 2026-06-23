@@ -5,8 +5,10 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static GameEnum;
+using Spine.Unity;
 
 public class TileSlotContainer : MonoBehaviour
 {
@@ -21,10 +23,15 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private TMP_Text fakeTileText;
     public Image lockImage;
     [SerializeField] private Image glow;
+    [SerializeField] private Image glowUnlockTheme;
+
     [SerializeField] private Image lockObject;
     [SerializeField] private Image unlockObject;
     [SerializeField] private ParticleSystem fxCompleteCard;
     [SerializeField] private ParticleSystem fxCompleteTheme;
+    [SerializeField] private ParticleSystem fxUnlock;
+
+    [SerializeField] private SkeletonGraphic skeletonGraphic;
 
     [SerializeField] private GameObject animUnlock;
     [SerializeField] private ItemCategory itemCategory;
@@ -89,6 +96,8 @@ public class TileSlotContainer : MonoBehaviour
 
     public void Init(ItemCategory itemCategory = ItemCategory.Fast_Food, int targetCardAmount = 4)
     {
+        ClearTiles();
+        
         this.itemCategory = itemCategory;
         this.maxTile = targetCardAmount;
         this.isCompleted = false;
@@ -210,6 +219,16 @@ public class TileSlotContainer : MonoBehaviour
 
         tileCountText.text = $"{tiles.Count}/{maxTile}";
         if (animUnlock != null) animUnlock.SetActive(false);
+
+        if (skeletonGraphic != null)
+        {
+            var currentAnim = skeletonGraphic.AnimationState.GetCurrent(0);
+            if (currentAnim == null || currentAnim.Animation.Name != "begin")
+            {
+                skeletonGraphic.Skeleton.SetToSetupPose();
+                skeletonGraphic.AnimationState.SetAnimation(0, "begin", true);
+            }
+        }
     }
 
     public void AddTile(BaseTile tile)
@@ -241,7 +260,10 @@ public class TileSlotContainer : MonoBehaviour
         PlayFxComplete(tile);
         Tween.Scale(tile.transform, 1.1f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
         {
-            Tween.Scale(tile.transform, 1f, duration: timeComplete, ease: Ease.InQuad);
+            Tween.Scale(tile.transform, 1f, duration: timeComplete, ease: Ease.InQuad).OnComplete(() =>
+            {
+                tile.gameObject.SetActive(false);
+            });
         });
 
         if (tile.IsText)
@@ -311,9 +333,10 @@ public class TileSlotContainer : MonoBehaviour
             {
                 if (tileSlot != null)
                 {
-                    // Destroy old stacked tiles
-                    foreach (Transform child in tileSlot.transform)
+                    // Destroy old stacked tiles robustly
+                    for (int i = tileSlot.transform.childCount - 1; i >= 0; i--)
                     {
+                        Transform child = tileSlot.transform.GetChild(i);
                         if (child.GetComponent<BaseTile>() != null)
                         {
                             Destroy(child.gameObject);
@@ -382,25 +405,50 @@ public class TileSlotContainer : MonoBehaviour
 
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
+            fxCompleteTheme.Play();
             category.text = oldCategoryName;
-            Tween.Alpha(category, 1f, duration: 0.05f).OnComplete(() =>
-            {
-                float initialPositionY = originalPositionY;
+            Tween.Alpha(category, 1f, duration: 0.05f);
 
-                Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f)
-                .OnComplete(() =>
+            float animDelay = 0f;
+            if (skeletonGraphic != null)
+            {
+                skeletonGraphic.Skeleton.SetToSetupPose();
+                var track = skeletonGraphic.AnimationState.SetAnimation(0, "action", false);
+                if (track != null) animDelay = track.AnimationEnd;
+            }
+
+            Tween.Delay(animDelay).OnComplete(() =>
+            {
+                if (skeletonGraphic != null)
                 {
-                    Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
+                    skeletonGraphic.AnimationState.SetAnimation(0, "end", false);
+                }
+
+                Tween.Delay(1f).OnComplete(() =>
+                {
+                    float initialPositionY = originalPositionY;
+
+                    Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f)
                     .OnComplete(() =>
                     {
-                        Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
-                        category.alpha = 1f;
+                        if (skeletonGraphic != null)
+                        {
+                            skeletonGraphic.Skeleton.SetToSetupPose();
+                            skeletonGraphic.AnimationState.SetAnimation(0, "begin", true);
+                        }
 
-                        Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
+                        Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
                         .OnComplete(() =>
                         {
-                            isMoving = false;
-                            onCompleteAction?.Invoke();
+                            Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
+                            category.alpha = 1f;
+
+                            Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
+                            .OnComplete(() =>
+                            {
+                                isMoving = false;
+                                onCompleteAction?.Invoke();
+                            });
                         });
                     });
                 });
@@ -413,21 +461,46 @@ public class TileSlotContainer : MonoBehaviour
         isMoving = true;
         isHidden = true;
 
-        Tween.Alpha(category, 0f, duration: 0.2f).OnComplete(() =>
+        Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
+            if (fxCompleteTheme != null) fxCompleteTheme.Play();
             category.text = this.itemCategory.ToString().Replace("_", " ");
-            Tween.Alpha(category, 1f, duration: 0.2f).OnComplete(() =>
-            {
-                float initialPositionY = originalPositionY;
+            Tween.Alpha(category, 1f, duration: 0.05f);
 
-                Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f, startDelay: 0.5f)
-                .OnComplete(() =>
+            float animDelay = 0f;
+            if (skeletonGraphic != null)
+            {
+                skeletonGraphic.Skeleton.SetToSetupPose();
+                var track = skeletonGraphic.AnimationState.SetAnimation(0, "action", false);
+                if (track != null) animDelay = track.AnimationEnd;
+            }
+
+            Tween.Delay(animDelay).OnComplete(() =>
+            {
+                if (skeletonGraphic != null)
                 {
-                    Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
+                    skeletonGraphic.AnimationState.SetAnimation(0, "end", false);
+                }
+
+                Tween.Delay(1f).OnComplete(() =>
+                {
+                    float initialPositionY = originalPositionY;
+
+                    Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f)
                     .OnComplete(() =>
                     {
-                        isMoving = false;
-                        onCompleteAction?.Invoke();
+                        if (skeletonGraphic != null)
+                        {
+                            skeletonGraphic.Skeleton.SetToSetupPose();
+                            skeletonGraphic.AnimationState.SetAnimation(0, "begin", true);
+                        }
+
+                        Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
+                        .OnComplete(() =>
+                        {
+                            isMoving = false;
+                            onCompleteAction?.Invoke();
+                        });
                     });
                 });
             });
@@ -516,6 +589,30 @@ public class TileSlotContainer : MonoBehaviour
             });
     }
 
+    private void PlayFxUnlock(UnityAction callback)
+    {
+        Color c = glowUnlockTheme.color;
+        c.a = 0;
+        glowUnlockTheme.color = c;
+        glowUnlockTheme.gameObject.SetActive(true);
+
+        fxCompleteCard.Play();
+        glowUnlockTheme.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+        Tween tween = Tween.Scale(glowUnlockTheme.transform, 1f, duration: timeComplete * 2f);
+        Tween.Alpha(glowUnlockTheme, 1f, duration: timeComplete * 2f).OnComplete(() =>
+        {
+            Tween.Delay(0.5f).OnComplete(() =>
+            {
+                Tween.Alpha(glowUnlockTheme, 0f, duration: timeComplete * 3f).OnComplete(() =>
+                {
+                    glowUnlockTheme.gameObject.SetActive(false);
+                    callback?.Invoke();
+                });
+            });
+        });
+
+    }
+
     public void PlayUnlockAnimation(Action onComplete)
     {
         if (animUnlock != null)
@@ -530,8 +627,23 @@ public class TileSlotContainer : MonoBehaviour
 
             Tween.Delay(2f).OnComplete(() =>
             {
-                animUnlock.SetActive(false);
-                onComplete?.Invoke();
+                fxUnlock.Play();
+
+                //Tween.Scale(lockObject.transform, 1.2f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
+                //{
+                //    Tween.Scale(lockObject.transform, 1f, duration: timeComplete, ease: Ease.InQuad);
+                //});
+                PlayFxUnlock(() =>
+                {
+                    Tween.Delay(0.4f).OnComplete(() =>
+                    {
+                        animUnlock.SetActive(false);
+                        onComplete?.Invoke();
+                    });
+                }
+                );
+
+
             });
         }
         else

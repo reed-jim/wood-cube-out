@@ -187,8 +187,6 @@ public class TileManager : Singleton<TileManager>
     {
         TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
 
-        tileSlotContainer.ClearTiles();
-
         ItemCategory nextCategory = GetNextCategoryForSlotBasedOnDifficulty(difficultyLevel, tileSlotContainer);
 
         if (nextCategory == ItemCategory.None)
