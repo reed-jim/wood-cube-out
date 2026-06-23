@@ -3,6 +3,7 @@ using System.Collections;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
 using Spine.Unity;
 using UnityEngine;
 using static GameEnum;
@@ -11,6 +12,8 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 {
     public CanvasGroup canvasGroup;
     public SkeletonGraphic tutorialHand;
+    [SpineEvent] public string tutorialHandClickEvent;
+    public ParticleSystem rippleFx;
 
     public float numAntToShow;
     public float intervalShowingTutorial;
@@ -29,11 +32,21 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
         base.MoreActionOnAwake();
 
         TileManager.winLevelEvent += OnLevelWon;
+        tutorialHand.AnimationState.Event += OnSpineEvent;
     }
 
     void OnDestroy()
     {
         TileManager.winLevelEvent -= OnLevelWon;
+        tutorialHand.AnimationState.Event -= OnSpineEvent;
+    }
+
+    private void OnSpineEvent(TrackEntry trackEntry, Spine.Event e)
+    {
+        if (e.Data.Name == tutorialHandClickEvent)
+        {
+            rippleFx.Play();
+        }
     }
 
     void Update()
@@ -61,6 +74,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     public void StartTutorial()
     {
         _progressingTutorialCoroutine = StartCoroutine(ProgressingTutorial());
+        // StartCoroutine(PlayingRippleFx());
     }
 
     public IEnumerator ProgressingTutorial()
@@ -98,6 +112,22 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
             }
 
             yield return waitForSeconds;
+        }
+    }
+
+    public IEnumerator PlayingRippleFx()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.6f);
+
+        while (true)
+        {
+            yield return waitForSeconds;
+
+            rippleFx.Play();
+
+            yield return waitForSeconds;
+
+            rippleFx.Stop();
         }
     }
 
