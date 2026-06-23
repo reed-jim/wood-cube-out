@@ -189,7 +189,7 @@ namespace AntsFlow
 
                 numAntBoxSpawned++;
 
-                WashingMachineItem washingMachineItem = GetAntBoxFromPool();
+                WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column);
 
                 washingMachineItems.Add(washingMachineItem);
 
@@ -296,7 +296,7 @@ namespace AntsFlow
                 {
                     numAntBoxSpawned++;
 
-                    WashingMachineItem washingMachineItem = GetAntBoxFromPool();
+                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column);
 
                     washingMachineItem.gameObject.SetActive(true);
                     washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
@@ -315,11 +315,11 @@ namespace AntsFlow
             }
         }
 
-        private WashingMachineItem GetAntBoxFromPool()
+        private WashingMachineItem GetAntBoxFromPool(int rowIndex, int columnIndex)
         {
             string key = GameConstants.washingMachine;
 
-            LevelElement levelElement = SpecialElementManager.Ins.GetNextLevelElement();
+            LevelElement levelElement = SpecialElementManager.Ins.GetNextLevelElement(rowIndex, columnIndex);
 
             if (levelElement == LevelElement.NormalAntBox)
             {
@@ -458,9 +458,13 @@ namespace AntsFlow
                     Color nextFaction;
                     int numAnt;
 
+                    washingMachine.isShuffled = false;
+
                     GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt, isIncludeStartSlot: false);
 
                     washingMachine.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                    washingMachine.isShuffled = true;
                 }
             }
         }
@@ -486,30 +490,69 @@ namespace AntsFlow
                 .Where(tile => !tile.isDone && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
 
             // Remove blockages
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            for (int i = 0; i < tilesToClear.Count; i++)
             {
-                BaseTile tile = TileManager.Ins.tiles[i];
+                BaseTile tileToClear = tilesToClear[i];
 
-                if (!tile.isAntApproaching && !tilesToClear.Contains(tile))
-                {
-                    List<BaseTile> toRemoveBlockages = tilesToClear.Where(item => tile.blockages.Contains(item)).ToList();
+                // if (tileToClear.blockages.Count < 4)
+                // {
+                //     tileToClear.SetNoLongerBlockages();
+                // }
+                // else
+                // {
+                //     // // bool isAllPrepareCompleteTile = tileToClear.blockages.All(item => item.isPrepareComplete);
+                //     // int numPrepareCompleteTileNearby = tileToClear.blockages.Count(item => item.isPrepareComplete);
 
-                    for (int j = 0; j < toRemoveBlockages.Count; j++)
-                    {
-                        tile.blockages.Remove(toRemoveBlockages[j]);
-                        // tile.actualBlockages.Remove(toRemoveBlockages[j]);
-                    }
-                }
+                //     // if (numPrepareCompleteTileNearby >= 2)
+                //     // {
+                //     //     tileToClear.SetNoLongerBlockages();
+                //     // }
+                //     // else
+                //     // {
+                //     //     tileToClear.isPrepareComplete = true;
+                //     // }
+
+                //     for (int j = 0; j < tileToClear.blockages.Count; j++)
+                //     {
+                //         if (tileToClear.blockages[j].isPrepareComplete)
+                //         {
+                //             tileToClear.blockages[j].ActualComplete();
+                //         }
+                //     }
+
+                //     tileToClear.isPrepareComplete = true;
+                // }
             }
+
+            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            // {
+            //     BaseTile tile = TileManager.Ins.tiles[i];
+
+            //     if (!tile.isAntApproaching && !tilesToClear.Contains(tile))
+            //     {
+            //         List<BaseTile> toRemoveBlockages = tilesToClear.Where(item => tile.blockages.Contains(item)).ToList();
+
+            //         for (int j = 0; j < toRemoveBlockages.Count; j++)
+            //         {
+            //             tile.blockages.Remove(toRemoveBlockages[j]);
+            //             // tile.actualBlockages.Remove(toRemoveBlockages[j]);
+            //         }
+            //     }
+            // }
 
             for (int i = 0; i < tilesToClear.Count; i++)
             {
                 bool isLast = i == tilesToClear.Count - 1;
 
+                // tilesToClear[i].Complete();
+                tilesToClear[i].isDone = true;
                 tilesToClear[i].Hide();
+                tilesToClear[i].HideObstacle();
 
                 SpawnFakeTile(tilesToClear[i], isLast);
             }
+
+            AdjustAntBoxAfterClearingOneColor(tilesToClear);
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
             {
@@ -519,7 +562,7 @@ namespace AntsFlow
 
                 Vector3 initialPosition = fakeTile.transform.position;
 
-                Tween.ScaleY(fakeTile.transform, 1.6f, duration: 0.3f);
+                Tween.ScaleY(fakeTile.transform, 1.5f, duration: 0.3f);
                 Tween.PositionY(fakeTile.transform, fakeTile.transform.position.y + 1.6f, duration: 0.3f)
                 .OnComplete(() =>
                 {
@@ -529,8 +572,6 @@ namespace AntsFlow
                     {
                         SaferioTween.ScaleDownWithPunch(fakeTile.transform, onCompleteAction: () =>
                         {
-                            // tile.Complete();
-
                             ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
                         });
 
@@ -572,8 +613,6 @@ namespace AntsFlow
             //         });
             //     });
             // }
-
-            AdjustAntBoxAfterClearingOneColor(tilesToClear);
         }
 
         private void AdjustAntBoxAfterClearingOneColor(List<BaseTile> tilesToClear)
@@ -876,15 +915,12 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
 
-            if (!isIncludeStartSlot)
-            {
-                Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+            // Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
 
-                foreach (var item in numSpawnPerFactionOrderByDifficulty)
-                {
-                    Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
-                }
-            }
+            // foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            // {
+            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            // }
 
             int maxValidIndex = 0;
 
@@ -970,7 +1006,19 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
-                    CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    if (isIncludeStartSlot)
+                    {
+                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        {
+                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
+                    }
                 }
             }
 

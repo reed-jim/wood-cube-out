@@ -46,6 +46,7 @@ public class WashingMachineItem : MonoBehaviour
     public bool isGhostMode;
     public bool isStucking;
     public bool isPlayingWarningLoseAnimation;
+    public bool isShuffled;
 
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
@@ -498,6 +499,13 @@ public class WashingMachineItem : MonoBehaviour
                 break;
             }
 
+            if (GamePersistentVariable.isPauseGame)
+            {
+                yield return waitForSeconds;
+                
+                continue;
+            }
+
             if (IsMovable(tilesToMove[currentAntIndex]))
             {
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
@@ -720,13 +728,20 @@ public class WashingMachineItem : MonoBehaviour
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
         // check using navmesh
-        // float tileSize = tile.GetWorldSize();
-        // Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
+        float tileSize = GamePersistentVariable.tileMapScaleFactor;
+        Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
+        NavMeshPath path = new NavMeshPath();
+        Vector3 nearestMovableStartPoint = GetNearestMovableNavMeshPoint(transform.position, 1f * tileSize);
+        Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 2f * tileSize);
 
-        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 0.5f * tileSize).ChangeZ(0);
-        // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint, tile);
+        NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
 
-        // return Vector2.Distance(furthestPoint, nearestMovablePoint) < 0.5f * tileSize;
+        return path.status == NavMeshPathStatus.PathComplete;
+
+        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 0.6f * tileSize).ChangeZ(0);
+        // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint);
+
+        // return Vector2.Distance(furthestPoint, nearestMovablePoint) < 1f * tileSize;
         // return !AntsFlow.TileManager.Ins.IsBlocked(tile);
 
         // return tile.IsBlocked();
@@ -765,7 +780,7 @@ public class WashingMachineItem : MonoBehaviour
         return targetPosition;
     }
 
-    public Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition, AntsFlow.BaseTile tile)
+    public Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition)
     {
         NavMeshPath path = new NavMeshPath();
 

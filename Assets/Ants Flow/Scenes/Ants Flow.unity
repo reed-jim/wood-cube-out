@@ -8370,6 +8370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &197209960
 SpriteRenderer:
@@ -12360,6 +12361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 2
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!1001 &278384655
 PrefabInstance:
@@ -17886,6 +17888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 1
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &345263276
 SpriteRenderer:
@@ -20080,6 +20083,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedUpTutorialManager
   m_DontDestroyOnLoad: 0
+  canvasGroup: {fileID: 0}
+  tutorialHand: {fileID: 0}
+  numAntToShow: 0
+  intervalShowingTutorial: 0
 --- !u!4 &394140832
 Transform:
   m_ObjectHideFlags: 0
@@ -28540,7 +28547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f34f91cd3a511242851778e73d1e917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineManager
-  m_DontDestroyOnLoad: 1
+  m_DontDestroyOnLoad: 0
   levelItem: {fileID: 1223785556516249378, guid: 3c5386b11ec50d34c870488b3b363539, type: 3}
   mainCamera: {fileID: 2068592855}
   washingMachineSlots:
@@ -39214,7 +39221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da87bad687f89a4409b65090f988bced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.TileManager
-  m_DontDestroyOnLoad: 1
+  m_DontDestroyOnLoad: 0
   navMeshSurface: {fileID: 1252789725}
   tileCountText: {fileID: 1440758466}
   baseTilemap: {fileID: 755497653}
@@ -39861,6 +39868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &745718518
 SpriteRenderer:
@@ -62835,6 +62843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 1
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &1193831639
 SpriteRenderer:
@@ -65737,6 +65746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 2
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!1001 &1260736656
 PrefabInstance:
@@ -65851,6 +65861,7 @@ MonoBehaviour:
     isDone: 0
     isAntApproaching: 0
     isAnimating: 0
+    isPrepareComplete: 0
     isLocked: 0
     ring: 0
     priority: 0
@@ -68681,6 +68692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 3
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!1001 &1303069540
 PrefabInstance:
@@ -71199,6 +71211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 3
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &1351706840
 SpriteRenderer:
@@ -80889,6 +80902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &1521699847
 SpriteRenderer:
@@ -90586,6 +90600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 2
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!1001 &1725224287
 PrefabInstance:
@@ -94251,6 +94266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 1
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &1793023638
 SpriteRenderer:
@@ -106022,6 +106038,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
   row: 3
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!1001 &2025203940
 PrefabInstance:

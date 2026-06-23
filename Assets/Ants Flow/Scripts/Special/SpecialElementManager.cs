@@ -110,7 +110,7 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
         }
     }
 
-    public LevelElement GetNextLevelElement()
+    public LevelElement GetNextLevelElement(int rowIndex, int columnIndex)
     {
         if (specialElementConfig.hiddenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
         {
@@ -127,8 +127,18 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
             }
             catch (System.Exception)
             {
-
                 nextFreezeAntBoxRequiredNumber = 2;
+            }
+
+            int maxValue = GetMaxValueFreezedAntBox(rowIndex, columnIndex);
+
+            if (maxValue == 0)
+            {
+                return LevelElement.NormalAntBox;
+            }
+            else
+            {
+                nextFreezeAntBoxRequiredNumber = Mathf.Min(nextFreezeAntBoxRequiredNumber, maxValue);
             }
 
             specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
@@ -139,5 +149,36 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
         {
             return LevelElement.NormalAntBox;
         }
+    }
+
+    private int GetMaxValueFreezedAntBox(int rowIndex, int columnIndex)
+    {
+        int maxFreezedAntBoxRequiredNumberToUnfreeze = 0;
+
+        for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+        {
+            WashingMachineStartSlot washingMachineStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
+
+            if (washingMachineStartSlot.column != columnIndex)
+            {
+                WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                if (antBox != null && antBox is not FreezedAntBox)
+                {
+                    maxFreezedAntBoxRequiredNumberToUnfreeze++;
+                }
+            }
+            else if (washingMachineStartSlot.row < rowIndex)
+            {
+                WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                if (antBox != null && antBox is not FreezedAntBox)
+                {
+                    maxFreezedAntBoxRequiredNumberToUnfreeze++;
+                }
+            }
+        }
+
+        return maxFreezedAntBoxRequiredNumberToUnfreeze;
     }
 }

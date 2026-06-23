@@ -142,18 +142,19 @@ public class RewardCollectingUI : SaferioTweenBehaviour
             // AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
         }
 
-        float remainValue = totalValue % poolSize;
-        float unitValue = (float)(totalValue - remainValue) / poolSize;
+        // float remainValue = totalValue % poolSize;
+        // float unitValue = (float)(totalValue - remainValue) / poolSize;
+        float unitValue = (float)totalValue / poolSize;
 
         SpawnedRewardItemsData spawnedRewardItemsData = new SpawnedRewardItemsData();
 
         spawnedRewardItemsData.totalItems = poolSize;
-        spawnedRewardItemsData.remaningItems = poolSize;
+        // spawnedRewardItemsData.remaningItems = poolSize;
+        // spawnedRewardItemsData.totalValue = totalValue;
+        spawnedRewardItemsData.remaningValue = totalValue;
         spawnedRewardItemsData.unitValue = unitValue;
 
         GamePersistentVariable.spawnedRewardItemsData = spawnedRewardItemsData;
-
-        float maxDuration = 0;
 
         isCompleted = false;
 
@@ -189,30 +190,20 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             seq.OnComplete(() =>
             {
-                float valueLeft = (poolSize - index - 1) * unitValue;
-
-                if (!isCompleted && index == _rewards.Length - 1)
+                if (index == _rewards.Length - 1)
                 {
-                    valueLeft = 0;
                     GamePersistentVariable.spawnedRewardItemsData.remaningItems = 0;
 
                     collectCoinCompleteEvent?.Invoke();
-
-                    isCompleted = true;
-
-                    onCompleteAction?.Invoke();
                 }
-                else
+
+                onCompleteAction?.Invoke();
+
+                if (i % 2 == 0)
                 {
-                    if (!isCompleted)
-                    {
-                        onCompleteAction?.Invoke();
-                    }
+                    _rewards[index].GetComponent<RotatingCoin>().PlayFX();
+                    SoundManager.Instance.PlaySoundCollectCoin();
                 }
-
-                _rewards[index].GetComponent<RotatingCoin>().PlayFX();
-
-                SoundManager.Instance.PlaySoundCollectCoin();
             });
 
             // Vector3 randomBouncePosition = _rewards[index].localPosition - new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(50, 100), 0);
@@ -255,10 +246,10 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             //         // _rewards[index].gameObject.SetActive(false);
 
-            //         if (i % 8 == 0)
-            //         {
-            //             SoundManager.Instance.PlaySoundCollectCoin();
-            //         }
+            // if (i % 8 == 0)
+            // {
+            //     SoundManager.Instance.PlaySoundCollectCoin();
+            // }
             //     }));
             // }));
         }
@@ -267,17 +258,19 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
 public class SpawnedRewardItemsData
 {
-    public int totalItems;
-    public int remaningItems;
+    public float totalItems;
+    public float remaningItems;
+    public float remaningValue;
+    public float totalValue;
     public float unitValue;
 
     public float GetValueLeft()
     {
-        if (remaningItems > 0)
+        if (remaningValue > 0)
         {
-            remaningItems--;
+            remaningValue -= unitValue;
         }
 
-        return remaningItems * unitValue;
+        return remaningValue;
     }
 }

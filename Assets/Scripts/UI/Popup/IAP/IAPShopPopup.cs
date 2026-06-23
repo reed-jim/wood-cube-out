@@ -1,6 +1,7 @@
 using System;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static GameEnum;
@@ -22,6 +23,7 @@ public class IAPShopPopup : BasePopup
 
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action fetchLocalizedPriceIAPEvent;
+    public static event Action<bool> pauseNavmeshEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -42,6 +44,10 @@ public class IAPShopPopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         scrollRect.vertical = false;
+
+        pauseNavmeshEvent?.Invoke(true);
+
+        GamePersistentVariable.isPauseGame = true;
 
         base.Show(onCompletedAction: () =>
         {
@@ -98,10 +104,13 @@ public class IAPShopPopup : BasePopup
 
     protected override void Hide()
     {
+        pauseNavmeshEvent?.Invoke(false);
+
+        GamePersistentVariable.isPauseGame = false;
+
         base.Hide(onCompletedAction: () =>
         {
             switchRouteEvent?.Invoke(_prevRoute);
-            // switchRouteChannel.Invoke(_prevRoute, nameof(_prevRoute));
         });
     }
 

@@ -77,6 +77,8 @@ namespace AntsFlow
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
             WashingMachineManager.winLevelEvent += OnLevelWon;
+            IAPShopPopup.pauseNavmeshEvent += OnNavmeshPaused;
+            SettingPopup.pauseNavmeshEvent += OnNavmeshPaused;
 
             navMeshAgent.updateRotation = false;
             navMeshAgent.updateUpAxis = false;
@@ -108,6 +110,8 @@ namespace AntsFlow
             LosePopup.replayLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
             WashingMachineManager.winLevelEvent -= OnLevelWon;
+            IAPShopPopup.pauseNavmeshEvent -= OnNavmeshPaused;
+            SettingPopup.pauseNavmeshEvent -= OnNavmeshPaused;
         }
 
         private void Start()
@@ -323,6 +327,23 @@ namespace AntsFlow
             ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
         }
 
+        private void OnNavmeshPaused(bool isPaused)
+        {
+            if (gameObject.activeInHierarchy && navMeshAgent.isOnNavMesh)
+            {
+                // navMeshAgent.isStopped = isPaused;
+
+                if (isPaused)
+                {
+                    navMeshAgent.speed = 0;
+                }
+                else
+                {
+                    navMeshAgent.speed = speedMove;
+                }
+            }
+        }
+
         public void Init(Color faction)
         {
             materialPropertyBlock.SetColor("_Color", faction);
@@ -338,6 +359,8 @@ namespace AntsFlow
             isMovingToSideTile = false;
 
             skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
+
+            navMeshAgent.speed = speedMove;
         }
 
         public void SetGhostMode()
@@ -848,6 +871,11 @@ namespace AntsFlow
             navMeshAgent.areaMask = walkableMask;
             navMeshAgent.enabled = true;
 
+            if (GamePersistentVariable.isPauseGame)
+            {
+                navMeshAgent.speed = 0;
+            }
+
             if (navMeshAgent.isOnNavMesh)
             {
                 navMeshAgent.destination = destination;
@@ -866,7 +894,25 @@ namespace AntsFlow
             navMeshAgent.enabled = false;
 
             tile.isAntApproaching = true;
-            tile.InvokeAntStartMoveToTileEvent();
+
+            if (tile.blockages.Count < 4)
+            {
+                tile.InvokeAntStartMoveToTileEvent();
+            }
+            else
+            {
+                bool isAnyPrepareCompleteTile = tile.blockages.Any(item => item.isPrepareComplete);
+
+                if (isAnyPrepareCompleteTile)
+                {
+                    tile.InvokeAntStartMoveToTileEvent();
+                }
+                else
+                {
+                    tile.HideObstacle();
+                    tile.isPrepareComplete = true;
+                }
+            }
 
             this.tile = tile;
 
@@ -880,6 +926,8 @@ namespace AntsFlow
             distance = direction.magnitude;
             duration = distance / speed;
 
+            Rotate(direction);
+
             tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(-3 - 0.001f * siblingIndex), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
@@ -892,12 +940,26 @@ namespace AntsFlow
                 distance = direction.magnitude;
                 duration = distance / speed;
 
+                Rotate(direction);
+
                 tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     OnAntMovedToNest();
                 }));
             }));
+
+            void Rotate(Vector2 direction)
+            {
+                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                    transform.rotation = targetRotation;
+                }
+            }
         }
 
         public void MoveToNest()
@@ -989,7 +1051,9 @@ namespace AntsFlow
 
         public bool ReachedDestination(float threshold = 1f)
         {
-            return Vector2.Distance(transform.position, destination) < threshold;
+            float tileSize = GamePersistentVariable.tileMapScaleFactor;
+
+            return Vector2.Distance(transform.position, destination) < tileSize;
             // return AIPath.remainingDistance < 0.01f;
             // float distance = Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position);
 

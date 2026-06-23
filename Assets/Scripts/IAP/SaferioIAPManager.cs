@@ -29,6 +29,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action<int> collectCoinEvent;
     public static event Action<string, string> updatePriceEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    public static event Action<string> buyIAPPackageEvent;
     public static event Action removeAdsEvent;
     public static event Action<string, string> showNotificationEvent;
     #endregion
@@ -303,6 +304,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
                         // });
 
+                        buyIAPPackageEvent?.Invoke(productData.ProductId);
                         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);

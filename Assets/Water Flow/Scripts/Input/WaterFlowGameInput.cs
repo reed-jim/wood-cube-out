@@ -25,11 +25,11 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 worldPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(
-            worldPoint,
-            Vector2.zero,
-            0f
-        );
+                RaycastHit2D hit = Physics2D.Raycast(
+                worldPoint,
+                Vector2.zero,
+                0f
+            );
 
             if (IsClickedOnUI())
             {
@@ -51,13 +51,27 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 {
                     AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.tiles[i];
 
-                    float distance = Vector2.Distance(0.55f * (Vector3)tile.tilemapPosition, touchPoint);
+                    if (tile.isDone)
+                    {
+                        continue;
+                    }
+
+                    Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
+
+                    float distance = Vector2.Distance(tilePosition, touchPoint);
 
                     if (distance < smallestDistance)
                     {
                         smallestDistance = distance;
                         selectedTile = tile;
                     }
+                }
+
+                float tileSize = GamePersistentVariable.tileMapScaleFactor;
+
+                if (smallestDistance > tileSize)
+                {
+                    selectedTile = null;
                 }
 
                 if (selectedTile != null)
