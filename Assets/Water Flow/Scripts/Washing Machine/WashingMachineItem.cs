@@ -727,16 +727,16 @@ public class WashingMachineItem : MonoBehaviour
 
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
-        // check using navmesh
-        float tileSize = GamePersistentVariable.tileMapScaleFactor;
-        Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
-        NavMeshPath path = new NavMeshPath();
-        Vector3 nearestMovableStartPoint = GetNearestMovableNavMeshPoint(transform.position, 1f * tileSize);
-        Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 2f * tileSize);
+        // // check using navmesh
+        // float tileSize = GamePersistentVariable.tileMapScaleFactor;
+        // Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
+        // NavMeshPath path = new NavMeshPath();
+        // Vector3 nearestMovableStartPoint = GetNearestMovableNavMeshPoint(transform.position, 1f * tileSize);
+        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 2f * tileSize);
 
-        NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
+        // NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
 
-        return path.status == NavMeshPathStatus.PathComplete;
+        // return path.status == NavMeshPathStatus.PathComplete;
 
         // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 0.6f * tileSize).ChangeZ(0);
         // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint);
@@ -748,16 +748,16 @@ public class WashingMachineItem : MonoBehaviour
 
 
         // BFS
-        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
+        List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 
-        // if (path == null || path.Count == 0)
-        // {
-        //     return false;
-        // }
+        if (path == null || path.Count == 0)
+        {
+            return false;
+        }
 
-        // tile.path = path;
+        tile.path = path;
 
-        // return true;
+        return true;
 
 
         return tile.blockages.Count < 4;

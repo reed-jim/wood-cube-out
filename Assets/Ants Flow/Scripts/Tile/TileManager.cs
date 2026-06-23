@@ -103,8 +103,6 @@ namespace AntsFlow
 
         public void BuildMap(List<BaseTile> tiles)
         {
-            return;
-
             float yMin = tiles.Min(tile => GetTilePosition(tile).y);
             float yMax = tiles.Max(tile => GetTilePosition(tile).y);
             float xMin = tiles.Min(tile => GetTilePosition(tile).x);
