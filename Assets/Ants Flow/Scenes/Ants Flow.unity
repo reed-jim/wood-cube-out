@@ -1261,7 +1261,7 @@ Transform:
   m_GameObject: {fileID: 17099541}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.786, y: -2.3043478, z: 0}
+  m_LocalPosition: {x: 2.62, y: -2.3043478, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1280,7 +1280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
   m_SerializedVersion: 0
-  m_Size: {x: 0.6, y: 2.6, z: 10}
+  m_Size: {x: 0.5, y: 2.6, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
   m_Area: 3
   m_AffectedAgents: ffffffff
@@ -6430,7 +6430,7 @@ Transform:
   m_GameObject: {fileID: 140422180}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.941, y: -2.3043478, z: 0}
+  m_LocalPosition: {x: 0.88, y: -2.3043478, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6449,7 +6449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
   m_SerializedVersion: 0
-  m_Size: {x: 0.6, y: 2.6, z: 10}
+  m_Size: {x: 0.5, y: 2.6, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
   m_Area: 3
   m_AffectedAgents: ffffffff
@@ -33846,7 +33846,7 @@ Transform:
   m_GameObject: {fileID: 654761503}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.1, z: 1}
+  m_LocalPosition: {x: 0, y: -1.6, z: 1}
   m_LocalScale: {x: 2.3, y: 2.3, z: 2.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -39202,7 +39202,7 @@ MonoBehaviour:
   lastTimeUpdateNavmesh: 0
   intervalUpdateNavmesh: 2
   isDebug: 0
-  numExtraRow: 2
+  numExtraRow: 0
   tiles: []
   antNest: {fileID: 654761504}
   grids: []
@@ -65848,8 +65848,9 @@ MonoBehaviour:
   levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
-  texturedMaterial: {fileID: 0}
-  tutorialDelay: 0.2
+  levelScaleXRatio: 18
+  levelScaleYRatio: 17
+  levelYOffsetRatio: 0.12
   glowTilemapGrid: {fileID: 1097758170}
   shadowTilemap: {fileID: 1451543133}
   shadowTilemapGrid: {fileID: 1153400086}
@@ -65857,21 +65858,6 @@ MonoBehaviour:
   tilemapGrids: []
   scaleFactor: 0.55
   shadowTilemapOffset: {x: -0.1, y: 0.1, z: 0}
-  tile:
-    tilemap: {fileID: 0}
-    tilemapPosition: {x: 0, y: 0, z: 0}
-    tileObstacle: {fileID: 0}
-    name: 0
-    position: {x: 0, y: 0, z: 0}
-    isDone: 0
-    isAntApproaching: 0
-    isAnimating: 0
-    isPrepareComplete: 0
-    isLocked: 0
-    ring: 0
-    priority: 0
-    faction: {r: 0, g: 0, b: 0, a: 0}
-    worldSize: 0
 --- !u!4 &1261068466
 Transform:
   m_ObjectHideFlags: 0
@@ -72157,7 +72143,7 @@ Transform:
   m_GameObject: {fileID: 1367395092}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.936, y: -2.3043478, z: 0}
+  m_LocalPosition: {x: -0.88, y: -2.3043478, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -72176,7 +72162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
   m_SerializedVersion: 0
-  m_Size: {x: 0.6, y: 2.6, z: 10}
+  m_Size: {x: 0.5, y: 2.6, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
   m_Area: 3
   m_AffectedAgents: ffffffff
@@ -107308,7 +107294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
   m_SerializedVersion: 0
-  m_Size: {x: 0.6, y: 2.6, z: 10}
+  m_Size: {x: 0.5, y: 2.6, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
   m_Area: 3
   m_AffectedAgents: ffffffff
@@ -107321,7 +107307,7 @@ Transform:
   m_GameObject: {fileID: 2050986122}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.7869563, y: -2.3043478, z: 0}
+  m_LocalPosition: {x: -2.62, y: -2.3043478, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []

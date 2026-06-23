@@ -27,11 +27,10 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private LevelBoosterObserver levelBoosterObserver;
         [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
-        [Header("Textured Material Level")]
-        [SerializeField] private Material texturedMaterial;
-
-        [Header("Stats")]
-        [SerializeField] private float tutorialDelay = 0.2f;
+        [Header("Customize")]
+        [SerializeField] private float levelScaleXRatio = 18f;
+        [SerializeField] private float levelScaleYRatio = 15f;
+        [SerializeField] private float levelYOffsetRatio = 0.175f;
 
         #region PRIVATE FIELD
         private Camera _mainCamera;
@@ -69,6 +68,7 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
 
+        [Header("Tilemap")]
         public Transform glowTilemapGrid;
         public Tilemap shadowTilemap;
         public Transform shadowTilemapGrid;
@@ -76,8 +76,6 @@ namespace NamPhuThuy.GamePlay
         public List<Transform> tilemapGrids;
         public float scaleFactor;
         public Vector3 shadowTilemapOffset;
-
-        public AntsFlow.BaseTile tile;
 
         private void Awake()
         {
@@ -305,8 +303,8 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
-            float scaleByX = 18f / numCols;
-            float scaleByY = 15f / numRows;
+            float scaleByX = levelScaleXRatio / numCols;
+            float scaleByY = levelScaleYRatio / numRows;
             float finalScale = Mathf.Min(scaleByX, scaleByY);
 
             scaleFactor = finalScale;
@@ -665,7 +663,7 @@ namespace NamPhuThuy.GamePlay
                 {
                     Vector3 position = new Vector3(
                         -numCols / 2 + col * 1,
-                        (0.175f * numRows) + row * 1,
+                        (levelYOffsetRatio * numRows) + row * 1,
                         0f
                     );
 

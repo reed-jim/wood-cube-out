@@ -160,104 +160,104 @@ namespace AntsFlow
 
             float tileSize = GamePersistentVariable.tileMapScaleFactor;
 
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                Node nodeFromTile = nodes[i];
+            // for (int i = 0; i < nodes.Count; i++)
+            // {
+            //     Node nodeFromTile = nodes[i];
 
-                if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
-                {
-                    Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddY(-tileSize);
-                    node.neighbors = new List<Node>();
-                    node.neighbors.Add(nodeFromTile);
-                    nodeFromTile.neighbors.Add(node);
-                    addedNodes.Add(node);
+            //     if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
+            //     {
+            //         Node node = new Node();
+            //         node.initialPosition = nodeFromTile.initialPosition.AddY(-tileSize);
+            //         node.neighbors = new List<Node>();
+            //         node.neighbors.Add(nodeFromTile);
+            //         nodeFromTile.neighbors.Add(node);
+            //         addedNodes.Add(node);
 
-                    for (int j = 0; j < bottomMostNodes.Count; j++)
-                    {
-                        bottomMostNodes[j].neighbors.Add(node);
-                        node.neighbors.Add(bottomMostNodes[j]);
-                    }
+            //         for (int j = 0; j < bottomMostNodes.Count; j++)
+            //         {
+            //             bottomMostNodes[j].neighbors.Add(node);
+            //             node.neighbors.Add(bottomMostNodes[j]);
+            //         }
 
-                    bottomMostNodes.Add(node);
-                }
-                else if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
-                {
-                    Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddY(tileSize);
-                    node.neighbors = new List<Node>();
-                    node.neighbors.Add(nodeFromTile);
-                    nodeFromTile.neighbors.Add(node);
-                    addedNodes.Add(node);
+            //         bottomMostNodes.Add(node);
+            //     }
+            //     else if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
+            //     {
+            //         Node node = new Node();
+            //         node.initialPosition = nodeFromTile.initialPosition.AddY(tileSize);
+            //         node.neighbors = new List<Node>();
+            //         node.neighbors.Add(nodeFromTile);
+            //         nodeFromTile.neighbors.Add(node);
+            //         addedNodes.Add(node);
 
-                    for (int j = 0; j < topMostNodes.Count; j++)
-                    {
-                        topMostNodes[j].neighbors.Add(node);
-                        node.neighbors.Add(topMostNodes[j]);
-                    }
+            //         for (int j = 0; j < topMostNodes.Count; j++)
+            //         {
+            //             topMostNodes[j].neighbors.Add(node);
+            //             node.neighbors.Add(topMostNodes[j]);
+            //         }
 
-                    topMostNodes.Add(node);
-                }
-                else if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin))
-                {
-                    Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize);
-                    node.neighbors = new List<Node>();
-                    node.neighbors.Add(nodeFromTile);
-                    nodeFromTile.neighbors.Add(node);
-                    addedNodes.Add(node);
+            //         topMostNodes.Add(node);
+            //     }
+            //     else if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin))
+            //     {
+            //         Node node = new Node();
+            //         node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize);
+            //         node.neighbors = new List<Node>();
+            //         node.neighbors.Add(nodeFromTile);
+            //         nodeFromTile.neighbors.Add(node);
+            //         addedNodes.Add(node);
 
-                    for (int j = 0; j < leftMostNodes.Count; j++)
-                    {
-                        leftMostNodes[j].neighbors.Add(node);
-                        node.neighbors.Add(leftMostNodes[j]);
-                    }
+            //         for (int j = 0; j < leftMostNodes.Count; j++)
+            //         {
+            //             leftMostNodes[j].neighbors.Add(node);
+            //             node.neighbors.Add(leftMostNodes[j]);
+            //         }
 
-                    leftMostNodes.Add(node);
-                }
-                else if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax))
-                {
-                    Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize);
-                    node.neighbors = new List<Node>();
-                    node.neighbors.Add(nodeFromTile);
-                    nodeFromTile.neighbors.Add(node);
-                    addedNodes.Add(node);
+            //         leftMostNodes.Add(node);
+            //     }
+            //     else if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax))
+            //     {
+            //         Node node = new Node();
+            //         node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize);
+            //         node.neighbors = new List<Node>();
+            //         node.neighbors.Add(nodeFromTile);
+            //         nodeFromTile.neighbors.Add(node);
+            //         addedNodes.Add(node);
 
-                    for (int j = 0; j < rightMostNodes.Count; j++)
-                    {
-                        rightMostNodes[j].neighbors.Add(node);
-                        node.neighbors.Add(rightMostNodes[j]);
-                    }
+            //         for (int j = 0; j < rightMostNodes.Count; j++)
+            //         {
+            //             rightMostNodes[j].neighbors.Add(node);
+            //             node.neighbors.Add(rightMostNodes[j]);
+            //         }
 
-                    rightMostNodes.Add(node);
-                }
+            //         rightMostNodes.Add(node);
+            //     }
 
-                // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
-                // {
-                //     Node node = new Node();
-                //     node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize).AddY(-tileSize);
-                //     addedNodes.Add(node);
-                // }
-                // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
-                // {
-                //     Node node = new Node();
-                //     node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize).AddY(-tileSize);
-                //     addedNodes.Add(node);
-                // }
-                // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
-                // {
-                //     Node node = new Node();
-                //     node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize).AddY(tileSize);
-                //     addedNodes.Add(node);
-                // }
-                // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
-                // {
-                //     Node node = new Node();
-                //     node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize).AddY(tileSize);
-                //     addedNodes.Add(node);
-                // }
-            }
+            //     // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
+            //     // {
+            //     //     Node node = new Node();
+            //     //     node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize).AddY(-tileSize);
+            //     //     addedNodes.Add(node);
+            //     // }
+            //     // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
+            //     // {
+            //     //     Node node = new Node();
+            //     //     node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize).AddY(-tileSize);
+            //     //     addedNodes.Add(node);
+            //     // }
+            //     // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
+            //     // {
+            //     //     Node node = new Node();
+            //     //     node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize).AddY(tileSize);
+            //     //     addedNodes.Add(node);
+            //     // }
+            //     // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
+            //     // {
+            //     //     Node node = new Node();
+            //     //     node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize).AddY(tileSize);
+            //     //     addedNodes.Add(node);
+            //     // }
+            // }
 
             bottomLeftMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
             bottomRightMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
