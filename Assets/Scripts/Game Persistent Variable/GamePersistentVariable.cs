@@ -201,5 +201,6 @@ public static class GamePersistentVariable
     public static float tileMapScaleFactor;
     public static bool isGameSpeedChangeInDebug;
     public static bool isPauseGame;
+    public static bool isTutorialLevelOneDone;
     #endregion
 }

@@ -22,6 +22,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
     private bool isTutorialStarted;
     private bool isLevelWon;
+    private Coroutine _progressingTutorialCoroutine;
 
     protected override void MoreActionOnAwake()
     {
@@ -35,24 +36,29 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
         WashingMachineManager.winLevelEvent -= OnLevelWon;
     }
 
-    // void Update()
-    // {
-    //     if (Input.GetMouseButton(0))
-    //     {
-    //         if (timeHold < 0.5f)
-    //         {
-    //             timeHold += Time.unscaledDeltaTime;
-    //         }
-    //         else
-    //         {
-    //             Hide();
-    //         }
-    //     }
-    // }
+    void Update()
+    {
+        if (GamePersistentVariable.isTutorialLevelOneDone && Input.GetMouseButton(0))
+        {
+            if (timeHold < 0.5f)
+            {
+                timeHold += Time.unscaledDeltaTime;
+            }
+            else
+            {
+                if (_progressingTutorialCoroutine != null)
+                {
+                    StopCoroutine(_progressingTutorialCoroutine);
+                }
+
+                Hide();
+            }
+        }
+    }
 
     public void StartTutorial()
     {
-        StartCoroutine(ProgressingTutorial());
+        _progressingTutorialCoroutine = StartCoroutine(ProgressingTutorial());
     }
 
     public IEnumerator ProgressingTutorial()
@@ -61,6 +67,13 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
         while (!isLevelWon)
         {
+            if (!GamePersistentVariable.isTutorialLevelOneDone)
+            {
+                yield return waitForSeconds;
+
+                continue;
+            }
+
             if (!isTutorialStarted)
             {
                 if (GamePersistentVariable.numActiveAnt > numAntToShow)

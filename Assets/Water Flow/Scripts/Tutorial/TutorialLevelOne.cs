@@ -149,6 +149,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         gameplayCanvas.sortingOrder = initialGameplayCanvasSortingOrder;
 
         GamePersistentVariable.isPreventSelectAntBox = false;
+        GamePersistentVariable.isTutorialLevelOneDone = true;
     }
 }
 
