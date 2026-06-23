@@ -755,10 +755,7 @@ public class WashingMachineItem : MonoBehaviour
             return false;
         }
 
-        tile.path = path;
-
         return true;
-
 
         return tile.blockages.Count < 4;
         return tile.actualBlockages.Count < 4;

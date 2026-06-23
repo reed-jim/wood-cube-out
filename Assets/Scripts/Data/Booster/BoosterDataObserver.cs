@@ -5,6 +5,8 @@ public class BoosterDataObserver : ScriptableObject
 {
     [SerializeField] private int[] boosterCosts;
 
+    public int reviveCost;
+
     public int[] BoosterCosts
     {
         get => boosterCosts;

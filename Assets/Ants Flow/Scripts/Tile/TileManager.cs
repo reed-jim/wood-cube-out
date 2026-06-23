@@ -152,15 +152,13 @@ namespace AntsFlow
             //     }
             // }
 
-
             List<Node> addedNodes = new List<Node>();
             List<Node> bottomMostNodes = new List<Node>();
             List<Node> topMostNodes = new List<Node>();
             List<Node> leftMostNodes = new List<Node>();
             List<Node> rightMostNodes = new List<Node>();
 
-            // float tileSize = nodeFromTile.tile.worldSize;
-            float tileSize = 1.5f;
+            float tileSize = GamePersistentVariable.tileMapScaleFactor;
 
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -438,8 +436,6 @@ namespace AntsFlow
 #if UNITY_EDITOR
         void OnDrawGizmosSelected()
         {
-            return;
-
             foreach (var node in nodes)
             {
                 if (node.isObstacle)
@@ -458,7 +454,7 @@ namespace AntsFlow
                 }
                 else
                 {
-                    if (node.tile.isAntApproaching || node.tile.isDone)
+                    if (node.tile.isAntApproaching || node.tile.isDone || node.tile.blockages.Count < 4)
                     {
                         Gizmos.color = Color.green;
 
@@ -566,16 +562,17 @@ namespace AntsFlow
                 foreach (var neighbor in current.neighbors)
                 {
                     // blocked
-                    if (neighbor.isObstacle)
-                    {
-                        continue;
-                    }
+                    // if (neighbor.isObstacle)
+                    // {
+                    //     continue;
+                    // }
 
                     if (neighbor.tile != null)
                     {
                         if (
                             !neighbor.tile.isAntApproaching &&
                             !neighbor.tile.isDone
+                            && neighbor.tile.blockages.Count >= 4
                         )
                         {
                             continue;
@@ -630,7 +627,7 @@ namespace AntsFlow
                 {
                     if (path[i].tile != null)
                     {
-                        
+
                     }
                 }
             }
@@ -777,8 +774,27 @@ namespace AntsFlow
 
             if (isWon)
             {
-                winLevelEvent?.Invoke();
+                if (GamePersistentVariable.isPauseGame)
+                {
+                    StartCoroutine(PendingWinLevel());
+                }
+                else
+                {
+                    winLevelEvent?.Invoke();
+                }
             }
+        }
+
+        private IEnumerator PendingWinLevel()
+        {
+            WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+            while (GamePersistentVariable.isPauseGame)
+            {
+                yield return waitForSeconds;
+            }
+
+            winLevelEvent?.Invoke();
         }
 
         public void StartHightlightEachFactionSequentially()

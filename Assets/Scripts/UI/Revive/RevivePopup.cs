@@ -50,7 +50,7 @@ public class RevivePopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        costText.text = $"{boosterDataObserver.BoosterCosts.Last()}";
+        costText.text = $"{boosterDataObserver.reviveCost}";
 
         _reviveByDiamondButtonRT = reviveByDiamondButton.GetComponent<RectTransform>();
         _reviveByAdsButtonRT = reviveByAdsButton.GetComponent<RectTransform>();
@@ -138,7 +138,7 @@ public class RevivePopup : BasePopup
 
         reviveByDiamondButton.interactable = false;
 
-        if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts.Last())
+        if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.reviveCost)
         {
             base.Hide(onCompletedAction: () =>
             {
@@ -149,10 +149,8 @@ public class RevivePopup : BasePopup
                 reviveByDiamondButton.interactable = true;
             });
 
-            userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts.Last());
+            userResourcesObserver.ChangeCoin(-boosterDataObserver.reviveCost);
             updateCoinTextEvent?.Invoke();
-
-            // userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
 
             if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
             {

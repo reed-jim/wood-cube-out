@@ -267,7 +267,7 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
-                CalculateLevelScale();
+                CalculateLevelScale(levelItem);
 
                 antLevelData = AutoSpacingAllTiles(antLevelData);
                 // FitLevelToScreenArea(levelTransform);
@@ -300,7 +300,7 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        private void CalculateLevelScale()
+        private void CalculateLevelScale(AntsFlow.LevelItem levelItem)
         {
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
@@ -339,7 +339,7 @@ namespace NamPhuThuy.GamePlay
                 spawnedTileMapGrid.SetParent(levelTransform);
                 spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
                 spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
-                
+
                 tilemapGrids.Add(spawnedTileMapGrid);
 
                 for (int j = 0; j < numCols; j++)
