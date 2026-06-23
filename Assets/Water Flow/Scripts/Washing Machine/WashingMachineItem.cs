@@ -75,7 +75,7 @@ public class WashingMachineItem : MonoBehaviour
         SettingPopup.replayLevelEvent += OnLevelReplayed;
         LosePopup.replayLevelEvent += OnLevelReplayed;
         DebugPopup.switchLevelEvent += OnLevelReplayed;
-        WashingMachineManager.winLevelEvent += OnLevelWon;
+        TileManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
@@ -99,7 +99,7 @@ public class WashingMachineItem : MonoBehaviour
         SettingPopup.replayLevelEvent -= OnLevelReplayed;
         LosePopup.replayLevelEvent -= OnLevelReplayed;
         DebugPopup.switchLevelEvent -= OnLevelReplayed;
-        WashingMachineManager.winLevelEvent -= OnLevelWon;
+        TileManager.winLevelEvent -= OnLevelWon;
         RevivePopup.reviveEvent -= OnRevive;
         spawnAntEvent -= OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;

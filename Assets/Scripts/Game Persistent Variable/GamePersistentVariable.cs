@@ -202,5 +202,6 @@ public static class GamePersistentVariable
     public static bool isGameSpeedChangeInDebug;
     public static bool isPauseGame;
     public static bool isTutorialLevelOneDone;
+    public static bool isHideUI;
     #endregion
 }

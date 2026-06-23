@@ -76,7 +76,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
-            WashingMachineManager.winLevelEvent += OnLevelWon;
+            TileManager.winLevelEvent += OnLevelWon;
             IAPShopPopup.pauseNavmeshEvent += OnNavmeshPaused;
             SettingPopup.pauseNavmeshEvent += OnNavmeshPaused;
 
@@ -109,7 +109,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
-            WashingMachineManager.winLevelEvent -= OnLevelWon;
+            TileManager.winLevelEvent -= OnLevelWon;
             IAPShopPopup.pauseNavmeshEvent -= OnNavmeshPaused;
             SettingPopup.pauseNavmeshEvent -= OnNavmeshPaused;
         }

@@ -24,8 +24,10 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button clearAddressablesCacheButton;
     [SerializeField] private Button increaseGameSpeedButton;
     [SerializeField] private Button decreaseGameSpeedButton;
+    [SerializeField] private Button hideUIButton;
     [SerializeField] private TMP_Text gameSpeedText;
     [SerializeField] private TMP_Text debugAdsText;
+    [SerializeField] private TMP_Text hideUIButtonText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
@@ -51,6 +53,7 @@ public class DebugPopup : BasePopup
         clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
         hideDebugButton.onClick.AddListener(HideDebug);
+        hideUIButton.onClick.AddListener(HideUI);
 
         gameSpeedText.text = $"Game Speed: x{(int)Time.timeScale}";
     }
@@ -148,6 +151,20 @@ public class DebugPopup : BasePopup
         GameplayScreen.Ins.HideDebug();
 
         Hide();
+    }
+
+    private void HideUI()
+    {
+        GameplayScreen.Ins.HideUI();
+
+        if (GamePersistentVariable.isHideUI)
+        {
+            hideUIButtonText.text = $"Show UI";
+        }
+        else
+        {
+            hideUIButtonText.text = $"Hide UI";
+        }
     }
 
     private void AddBooster()

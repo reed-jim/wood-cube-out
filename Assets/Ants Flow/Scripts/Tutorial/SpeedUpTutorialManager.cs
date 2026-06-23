@@ -28,12 +28,12 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     {
         base.MoreActionOnAwake();
 
-        WashingMachineManager.winLevelEvent += OnLevelWon;
+        TileManager.winLevelEvent += OnLevelWon;
     }
 
     void OnDestroy()
     {
-        WashingMachineManager.winLevelEvent -= OnLevelWon;
+        TileManager.winLevelEvent -= OnLevelWon;
     }
 
     void Update()
@@ -46,6 +46,8 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
             }
             else
             {
+                isHolding = true;
+
                 if (_progressingTutorialCoroutine != null)
                 {
                     StopCoroutine(_progressingTutorialCoroutine);
@@ -85,7 +87,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
             }
             else
             {
-                if (GamePersistentVariable.numActiveAnt <= 0)
+                if (GamePersistentVariable.numActiveAnt <= 0 && isHolding)
                 {
                     Hide();
 

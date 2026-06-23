@@ -38,6 +38,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     [Header("Debug")]
     [SerializeField] private CanvasGroup debugContainer;
+    [SerializeField] private GameObject mainUI;
+    [SerializeField] private GameObject boosterUI;
 
     #region MonoBehaviour Callbacks
 
@@ -124,6 +126,14 @@ public class GameplayScreen : Singleton<GameplayScreen>
     public void HideDebug()
     {
         debugContainer.alpha = 0;
+    }
+
+    public void HideUI()
+    {
+        GamePersistentVariable.isHideUI = !GamePersistentVariable.isHideUI;
+
+        mainUI.SetActive(!GamePersistentVariable.isHideUI);
+        boosterUI.SetActive(!GamePersistentVariable.isHideUI);
     }
 
     private void OpenDebugPopupButton()
