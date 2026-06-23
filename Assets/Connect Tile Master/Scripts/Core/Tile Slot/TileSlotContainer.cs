@@ -11,7 +11,7 @@ using static GameEnum;
 public class TileSlotContainer : MonoBehaviour
 {
     [SerializeField] private RectTransform categoryContainer;
-    [SerializeField] private TMP_Text category;
+    [SerializeField] public TMP_Text category;
     [SerializeField] private TMP_Text tileCountText;
 
     [SerializeField] private Button unlockButton;
@@ -350,11 +350,13 @@ public class TileSlotContainer : MonoBehaviour
 
     public void Complete(ItemCategory nextCategory, Action onCompleteAction)
     {
+        string oldCategoryName = this.itemCategory.ToString().Replace("_", " ");
+        this.itemCategory = nextCategory;
         isMoving = true;
 
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
-            category.text = this.itemCategory.ToString().Replace("_", " ");
+            category.text = oldCategoryName;
             Tween.Alpha(category, 1f, duration: 0.05f).OnComplete(() =>
             {
                 float initialPositionY = originalPositionY;

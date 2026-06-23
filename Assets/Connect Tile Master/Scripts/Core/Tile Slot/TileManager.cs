@@ -7,6 +7,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static GameEnum;
 
@@ -30,7 +31,7 @@ public class TileManager : Singleton<TileManager>
     public List<ItemCategory> itemCategoryPool;
     private int totalSet;
     private int remainingSet;
-    private int remainingSlotContainer;
+    public int remainingSlotContainer;
     private float highestYGridPosition;
     public LevelItem levelItem;
 
@@ -38,6 +39,9 @@ public class TileManager : Singleton<TileManager>
     public bool isLevelActive;
     [HideInInspector] public bool isTimeFrozen;
     private Tween freezeTimeTween;
+
+    public bool IsShuffling { get; private set; }
+    public bool IsDealingCards { get; private set; }
 
     private Dictionary<ItemCategory, List<int>> availableItemIdsPerCategory = new Dictionary<ItemCategory, List<int>>();
 
@@ -49,7 +53,7 @@ public class TileManager : Singleton<TileManager>
     {
         int activeContainers = tileSlotContainers.Count(item => !item.isHidden && !item.isCompleted);
         int remainingThemes = activeContainers + remainingSlotContainer;
-        return remainingThemes > 2;
+        return remainingSlotContainer > 0;
     }
 
     public TileSlotContainer GetNextLockedTileSlotContainer()
@@ -58,6 +62,7 @@ public class TileManager : Singleton<TileManager>
         {
             if (tileSlotContainers[i].isLocked)
             {
+                Debug.LogFormat("CountLock = {0}, Title = {1}", tileSlotContainers.Count(item => item.isLocked), tileSlotContainers[i].ItemCategory);
                 return tileSlotContainers[i];
             }
         }
@@ -116,6 +121,9 @@ public class TileManager : Singleton<TileManager>
         {
             freezeTimeTween.Stop();
         }
+
+        IsShuffling = false;
+        IsDealingCards = false;
 
         availableItemIdsPerCategory.Clear();
 
@@ -227,10 +235,13 @@ public class TileManager : Singleton<TileManager>
 
             if (categories.Count > 0)
             {
+                tileSlotContainer.gameObject.SetActive(true);
                 tileSlotContainer.Init(categories[0], GetTargetCardAmount(categories[0]));
+                categories.RemoveAt(0);
             }
             else
             {
+                tileSlotContainer.gameObject.SetActive(true);
                 tileSlotContainer.Init();
             }
 
@@ -244,11 +255,6 @@ public class TileManager : Singleton<TileManager>
 
                 StartCoroutine(WaitAndDropContainer(tileSlotContainer, initialPositionY));
             });
-
-            if (categories.Count > 0)
-            {
-                categories.RemoveAt(0);
-            }
         }
     }
 
@@ -260,6 +266,7 @@ public class TileManager : Singleton<TileManager>
             {
                 tileSlotContainers[i].Unlock(onCompleteAction: () =>
                 {
+                    remainingSlotContainer--;
                     updateActiveSlotsEvent?.Invoke();
                 });
                 break;
@@ -271,12 +278,29 @@ public class TileManager : Singleton<TileManager>
     #region Category
     private List<ItemCategory> GetNextCategories(int n)
     {
-        return tiles
+        List<ItemCategory> result = tiles
             .GroupBy(t => t.ItemCategory)
             .OrderByDescending(g => g.Count())
             .Take(n)
             .Select(g => g.Key)
             .ToList();
+
+        if (result.Count < n && levelItem != null && levelItem.themeDataList != null)
+        {
+            List<ItemCategory> allCategories = levelItem.themeDataList.Select(t => t.category).ToList();
+            allCategories.Shuffle();
+            foreach (var cat in allCategories)
+            {
+                if (!result.Contains(cat))
+                {
+                    result.Add(cat);
+                    if (result.Count >= n) break;
+                }
+            }
+        }
+
+        result.Shuffle();
+        return result;
     }
 
     private ItemCategory GetNextCategoryBasedOnDifficulty(int difficultyLevel)
@@ -516,7 +540,7 @@ public class TileManager : Singleton<TileManager>
                         {
                             tileSlotContainer.isCompleted = true;
 
-                            Tween.Delay(1.2f).OnComplete(() =>
+                            Tween.Delay(0.85f).OnComplete(() =>
                             {
                                 if (tileSlotContainer == null) return;
                                 bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
@@ -718,7 +742,7 @@ public class TileManager : Singleton<TileManager>
 
             for (int i = 0; i < tileSlotContainers.Count; i++)
             {
-                if (tileSlotContainers[i].isLocked)
+                if (tileSlotContainers[i].isLocked || tileSlotContainers[i].isMoving || tileSlotContainers[i].isHidden)
                 {
                     continue;
                 }
@@ -1003,6 +1027,7 @@ public class TileManager : Singleton<TileManager>
 
     private IEnumerator DealCardsAnimCoroutine()
     {
+        IsDealingCards = true;
         // Prepare
         foreach (var grid in grids)
         {
@@ -1064,6 +1089,8 @@ public class TileManager : Singleton<TileManager>
 
             yield return new WaitForSeconds(0.15f);
         }
+
+        IsDealingCards = false;
     }
     #endregion
 
@@ -1154,7 +1181,7 @@ public class TileManager : Singleton<TileManager>
 
 
     #region Booster
-    public void UseFreezeTimeBooster(float duration)
+    public void UseFreezeTimeBooster(float duration, UnityAction callback = null)
     {
         isTimeFrozen = true;
 
@@ -1165,6 +1192,7 @@ public class TileManager : Singleton<TileManager>
 
         freezeTimeTween = Tween.Delay(duration).OnComplete(() =>
         {
+            callback?.Invoke();
             isTimeFrozen = false;
         });
     }
@@ -1281,6 +1309,32 @@ public class TileManager : Singleton<TileManager>
                 });
             }
         }
+    }
+
+    public bool CanUseHintBooster()
+    {
+        TileSlotContainer activeContainer = null;
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            if (!tileSlotContainers[i].isLocked && !tileSlotContainers[i].isHidden && !tileSlotContainers[i].isMoving && !tileSlotContainers[i].isCompleted && tileSlotContainers[i].GetAvailableTileSlot() != null)
+            {
+                activeContainer = tileSlotContainers[i];
+                break;
+            }
+        }
+
+        if (activeContainer != null)
+        {
+            foreach (var tile in tiles)
+            {
+                if (!tile.IsOnSlot && !tile.IsOutside && !tile.IsDone && tile.ItemCategory == activeContainer.ItemCategory)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public bool CanUseShuffleBooster()
@@ -1491,6 +1545,7 @@ public class TileManager : Singleton<TileManager>
                 availableItemIdsPerCategory[tileCat].Remove(tile.ThemeItemId);
         }
 
+        IsShuffling = true;
         // Start the shuffle animation coroutine
         StartCoroutine(ShuffleBoosterCoroutine(shuffleTargets, priorityPool, otherPool));
     }
@@ -1612,6 +1667,8 @@ public class TileManager : Singleton<TileManager>
 
             yield return new WaitForSeconds(0.15f);
         }
+
+        IsShuffling = false;
     }
 
     private IEnumerator FlyToDeckWithDelayCoroutine(BaseTile tile, Vector3 deckLocalPos, float delay, Action onComplete)
@@ -1750,6 +1807,7 @@ public class TileManager : Singleton<TileManager>
     {
         if (remainingSet <= 0)
         {
+            isLevelActive = false;
             winLevelEvent?.Invoke();
         }
     }

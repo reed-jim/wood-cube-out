@@ -23,6 +23,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
     [SerializeField] private TMP_Text timerText;
+    [SerializeField] private CanvasGroup warningGroup;
     [SerializeField] private float warningTimeLimit = 15f;
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
@@ -47,16 +48,18 @@ public class GameplayScreen : Singleton<GameplayScreen>
         LevelLoader.setLevelNumberEvent += SetLevelText;
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         ScrewManager.winLevelEvent += OnLevelWin;
+        TileManager.winLevelEvent += OnLevelWin;
         ScrewBoxManager.loseLevelEvent += OnLevelLose;
+        TileManager.loseLevelEvent += OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
 
-        if (userResourcesObserver != null)
-        {
-            userResourcesObserver.updateCoinEvent += UpdateCoinText;
-        }
+        //if (userResourcesObserver != null)
+        //{
+        //    userResourcesObserver.updateCoinEvent += UpdateCoinText;
+        //}
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
@@ -95,6 +98,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
     private bool _isWaitingForCoinFlight;
     private Color _originalTimerColor = Color.white;
     private Tween _timerWarningTween;
+    private Tween _screenWarning;
+
 
     void OnDestroy()
     {
@@ -102,16 +107,18 @@ public class GameplayScreen : Singleton<GameplayScreen>
         LevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         ScrewManager.winLevelEvent -= OnLevelWin;
+        TileManager.winLevelEvent -= OnLevelWin;
         ScrewBoxManager.loseLevelEvent -= OnLevelLose;
+        TileManager.loseLevelEvent -= OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
 
-        if (userResourcesObserver != null)
-        {
-            userResourcesObserver.updateCoinEvent -= UpdateCoinText;
-        }
+        //if (userResourcesObserver != null)
+        //{
+        //    userResourcesObserver.updateCoinEvent -= UpdateCoinText;
+        //}
 
         StopTimerWarning();
         CommonUtil.StopAllTweens(_tweens);
@@ -178,6 +185,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
                     {
                         timerText.color = Color.red;
                         _timerWarningTween = Tween.Scale(timerText.transform, 1.2f, duration: 0.5f, cycles: -1, cycleMode: CycleMode.Yoyo);
+                        _screenWarning = Tween.Alpha(warningGroup, 1, duration: 0.5f, cycles: -1, cycleMode: CycleMode.Yoyo);
                     }
                 }
                 else
@@ -192,7 +200,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         }
     }
 
-    private void StopTimerWarning()
+    public void StopTimerWarning()
     {
         if (_timerWarningTween.isAlive)
         {
@@ -202,6 +210,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
         {
             timerText.transform.localScale = Vector3.one;
             timerText.color = _originalTimerColor;
+        }
+        if (warningGroup != null)
+        {
+            Tween.Alpha(warningGroup, 0, duration: 0.5f);
+            _screenWarning.Stop();
         }
     }
     private void OpenDebugPopupButton()

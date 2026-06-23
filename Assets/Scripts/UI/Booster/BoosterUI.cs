@@ -4,6 +4,7 @@ using NamPhuThuy.GamePlay;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
+using Lean.Localization;
 using static GameEnum;
 
 public class BoosterUI : MonoBehaviour
@@ -23,6 +24,8 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button hintButton;
     [SerializeField] private Button unlockThemeButton;
 
+    [SerializeField] private CanvasGroup freezeGroup;
+
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private Vector2Variable canvasSize;
@@ -34,6 +37,10 @@ public class BoosterUI : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionTime;
     [SerializeField] private float waitTimeBetweenClicks;
+
+    [Header("WARNING POPUP")]
+    [SerializeField] private CanvasGroup warningPopupObj;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI warningLocalizedText;
 
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action addMoreScrewPortEvent;
@@ -51,6 +58,28 @@ public class BoosterUI : MonoBehaviour
     private bool _isInTransition;
     private bool _isEnable;
     private bool _isPreventShowWarningPopup;
+
+    private Tween _warningTween;
+
+    private void ShowWarning(string translationKey, float duration = 2f)
+    {
+        if (warningPopupObj == null || warningLocalizedText == null) return;
+
+        warningPopupObj.gameObject.SetActive(true);
+        warningLocalizedText.TranslationName = translationKey;
+        _warningTween = Tween.Alpha(warningPopupObj, 1f, duration: 0.5f).OnComplete(() =>
+        {
+            _warningTween = Tween.Delay(duration).OnComplete(() =>
+            {
+                Tween.Alpha(warningPopupObj, 0f, duration: 0.5f).OnComplete(() =>
+                {
+                    if (warningPopupObj != null)
+                        warningPopupObj.gameObject.SetActive(false);
+                });
+            });
+
+        });
+    }
 
     private Vector2 _initialBoosterContainerPosition;
     private Vector2 _initialAddMoreScrewPortButtonPosition;
@@ -82,8 +111,8 @@ public class BoosterUI : MonoBehaviour
 
         BuyBoosterPopup.updateBoosterQuantityEvent += OnBoosterQuantityChanged;
         BoosterUI.updateBoosterQuantityEvent += OnBoosterQuantityChanged;
-        LevelLoader.startLevelCompletedEvent += UpdateUnlockThemeButtonState;
-        BuyBoosterPopup.unlockScrewBoxEvent += OnUnlockScrewBoxEvent;
+        //LevelLoader.startLevelCompletedEvent += UpdateUnlockThemeButtonState;
+        //BuyBoosterPopup.unlockScrewBoxEvent += OnUnlockScrewBoxEvent;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
         TileManager.updateActiveSlotsEvent += UpdateUnlockThemeButtonState;
 
@@ -115,7 +144,7 @@ public class BoosterUI : MonoBehaviour
     private void Start()
     {
         InitializePositions();
-        UpdateUnlockThemeButtonState();
+        //UpdateUnlockThemeButtonState();
     }
 
     void OnDestroy()
@@ -131,8 +160,8 @@ public class BoosterUI : MonoBehaviour
 
         BuyBoosterPopup.updateBoosterQuantityEvent -= OnBoosterQuantityChanged;
         BoosterUI.updateBoosterQuantityEvent -= OnBoosterQuantityChanged;
-        LevelLoader.startLevelCompletedEvent -= UpdateUnlockThemeButtonState;
-        BuyBoosterPopup.unlockScrewBoxEvent -= OnUnlockScrewBoxEvent;
+        //LevelLoader.startLevelCompletedEvent -= UpdateUnlockThemeButtonState;
+        //BuyBoosterPopup.unlockScrewBoxEvent -= OnUnlockScrewBoxEvent;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
         TileManager.updateActiveSlotsEvent -= UpdateUnlockThemeButtonState;
 
@@ -157,7 +186,7 @@ public class BoosterUI : MonoBehaviour
         _isEnable = true;
         _isPreventShowWarningPopup = false;
 
-        UpdateUnlockThemeButtonState();
+        //UpdateUnlockThemeButtonState();
     }
 
     private void OnRevived(BoosterType boosterType)
@@ -174,6 +203,11 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
+        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards))
+        {
+            return;
+        }
+
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
@@ -266,6 +300,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!TileManager.Ins.CanUseShuffleBooster())
         {
+            ShowWarning("no_shuffle_available");
             return;
         }
 
@@ -321,10 +356,20 @@ public class BoosterUI : MonoBehaviour
             freezeItemUI.PlayFreezeAnimation(
                 onActivateEffect: () =>
                 {
-                    TileManager.Ins.UseFreezeTimeBooster(15f);
+
+                    TileManager.Ins.UseFreezeTimeBooster(15f, () =>
+                    {
+                        Tween.Alpha(freezeGroup, 0f, duration: 1f).OnComplete(() =>
+                        {
+                            freezeGroup.gameObject.SetActive(false);
+                        }
+                        );
+                    });
                 },
                 onComplete: () =>
                 {
+                    freezeGroup.gameObject.SetActive(true);
+                    Tween.Alpha(freezeGroup, 1f, duration: 1f);
                     Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
                     {
                         _isInTransition = false;
@@ -344,6 +389,12 @@ public class BoosterUI : MonoBehaviour
 
     private void UseHint()
     {
+        if (TileManager.Ins != null && !TileManager.Ins.CanUseHintBooster())
+        {
+            ShowWarning("no_hint_available");
+            return;
+        }
+
         if (!IsBoosterAvailable(boosterIndex: 0))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.Hint);
@@ -372,15 +423,18 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBoosterUnlockTheme()
     {
-        if (TileManager.Ins == null || !TileManager.Ins.CanUseUnlockThemeBooster())
-        {
-            return;
-        }
+        //if (TileManager.Ins == null || !TileManager.Ins.CanUseUnlockThemeBooster())
+        //{
+        //    ShowWarning("no_unlock_available");
+        //    return;
+        //}
 
         bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme);
 
-        if (TileManager.Ins.NumLockedTileSlotContainer <= 0)
+        if (TileManager.Ins.remainingSlotContainer <= 0)
         {
+            ShowWarning("no_unlock_available");
+
             if (isBoosterAvailable)
             {
                 // Khi có booster nhưng đã mở khóa hết thì mới ko cho ấn vào nữa
@@ -421,7 +475,7 @@ public class BoosterUI : MonoBehaviour
                 onActivateEffect: () =>
                 {
                     TileManager.Ins.UseUnlockThemeBooster();
-                    UpdateUnlockThemeButtonState();
+                    //UpdateUnlockThemeButtonState();
                 },
                 onComplete: () =>
                 {
@@ -435,7 +489,7 @@ public class BoosterUI : MonoBehaviour
         else
         {
             TileManager.Ins.UseUnlockThemeBooster();
-            UpdateUnlockThemeButtonState();
+            //UpdateUnlockThemeButtonState();
             Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
             {
                 _isInTransition = false;
@@ -451,7 +505,8 @@ public class BoosterUI : MonoBehaviour
         bool canUseUnlockThemeBooster = TileManager.Ins.CanUseUnlockThemeBooster();
         if (!canUseUnlockThemeBooster)
         {
-            unlockThemeButton.interactable = false;
+            //unlockThemeButton.interactable = false;
+            //Show thong bao
             return;
         }
 
@@ -462,8 +517,9 @@ public class BoosterUI : MonoBehaviour
         {
             if (isBoosterAvailable)
             {
+                //Show thong bao
                 // Khi có booster nhưng đã mở khóa hết thì mới ko cho ấn vào nữa
-                unlockThemeButton.interactable = false;
+                //unlockThemeButton.interactable = false;
             }
             else
             {

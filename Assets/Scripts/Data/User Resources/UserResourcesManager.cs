@@ -47,4 +47,11 @@ public class UserResourcesManager : MonoBehaviour
 
         updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity - GamePersistentVariable.spawnedRewardItemsData.GetValueLeft());
     }
+
+    public void RefreshCoinText()
+    {
+        userResourcesObserver.Load();
+
+        updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
+    }
 }

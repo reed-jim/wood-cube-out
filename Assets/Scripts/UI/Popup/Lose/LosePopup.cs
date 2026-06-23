@@ -11,15 +11,18 @@ using static GameEnum;
 public class LosePopup : BasePopup
 {
     [SerializeField] private Button replayButton;
-    [SerializeField] private Button skipLevelButton;
+    //[SerializeField] private Button skipLevelButton;
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Image levelProgressFill;
     [SerializeField] private TMP_Text progressText;
+    [SerializeField] private Button buyTimeByCoinButton;
+    [SerializeField] private Button buyTimeByAdsButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelObserver levelObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionDuration;
@@ -31,25 +34,29 @@ public class LosePopup : BasePopup
     public static event Action replayLevelEvent;
     public static event Action skipLevelEvent;
     public static event Action<int> changeLivesNumberEvent;
+    public static event Action buyTimeReviveEvent;
+    public static event Action<ScreenRoute> openIAPShopPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
         // GameStateLose.loseLevelEvent += OnLevelLose;
         GameStateLose.loseLevelEvent += OnLevelLose;
         RevivePopup.reviveRefusedEvent += OnLevelLose;
-        GameplayScreen.skipLevelEvent += SkipLevel;
+        //GameplayScreen.skipLevelEvent += SkipLevel;
         Application.quitting += OnAppClosed;
 
         replayButton.onClick.AddListener(Replay);
-        skipLevelButton.onClick.AddListener(SkipLevel);
+        //skipLevelButton.onClick.AddListener(SkipLevel);
         returnHomeButton.onClick.AddListener(ReturnHome);
+        buyTimeByCoinButton.onClick.AddListener(BuyTimeByCoin);
+        buyTimeByAdsButton.onClick.AddListener(BuyTimeByAds);
 
         _isAllowedSkipLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_SKIP_LEVEL_BUTTON, true);
 
-        if (!_isAllowedSkipLevel)
-        {
-            skipLevelButton.gameObject.SetActive(false);
-        }
+        //if (!_isAllowedSkipLevel)
+        //{
+        //    skipLevelButton.gameObject.SetActive(false);
+        //}
     }
 
     protected override void UnregisterMoreEvent()
@@ -57,7 +64,7 @@ public class LosePopup : BasePopup
         // GameStateLose.loseLevelEvent -= OnLevelLose;
         GameStateLose.loseLevelEvent -= OnLevelLose;
         RevivePopup.reviveRefusedEvent -= OnLevelLose;
-        GameplayScreen.skipLevelEvent -= SkipLevel;
+        //GameplayScreen.skipLevelEvent -= SkipLevel;
         Application.quitting -= OnAppClosed;
     }
 
@@ -121,13 +128,13 @@ public class LosePopup : BasePopup
 
         if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
         {
-            skipLevelButton.gameObject.SetActive(true);
+            //skipLevelButton.gameObject.SetActive(true);
 
             GamePersistentVariable.isAllowedSkipLevel = true;
         }
         else
         {
-            skipLevelButton.gameObject.SetActive(false);
+            //skipLevelButton.gameObject.SetActive(false);
         }
         #endregion
 
@@ -172,11 +179,11 @@ public class LosePopup : BasePopup
         Hide();
     }
 
-    private void SkipLevel()
-    {
-        AdmobAdsMax.Instance.ShowVideoReward(
-            OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
-    }
+    //private void SkipLevel()
+    //{
+    //    AdmobAdsMax.Instance.ShowVideoReward(
+    //        OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
+    //}
 
     private void OnRewaredAdCompletedToSkipLevel()
     {
@@ -192,6 +199,65 @@ public class LosePopup : BasePopup
     private void ShowAdsNotLoadedPopup()
     {
         InvokeShowAdNotLoadedPopupEvent();
+    }
+
+    private void BuyTimeByCoin()
+    {
+        userResourcesObserver.Load();
+
+        if (userResourcesObserver.UserResources.CoinQuantity >= 100)
+        {
+            userResourcesObserver.ChangeCoin(-100);
+
+            if (UserResourcesManager.Instance != null)
+            {
+                UserResourcesManager.Instance.RefreshCoinText();
+            }
+
+            SaferioTracking.TrackResourceSink(
+                currentLevel.Value, "Coin",
+                100, (int)userResourcesObserver.UserResources.CoinQuantity, "BuyTimeLosePopup");
+
+            Hide(onCompletedAction: () =>
+            {
+                if (TileManager.Ins != null)
+                {
+                    TileManager.Ins.currentLevelTime += 45f;
+                    TileManager.Ins.isLevelActive = true;
+                }
+
+                buyTimeReviveEvent?.Invoke();
+            });
+        }
+        else
+        {
+            Hide(onCompletedAction: () =>
+            {
+                openIAPShopPopupEvent?.Invoke(ScreenRoute.Lose);
+            });
+        }
+    }
+
+    private void BuyTimeByAds()
+    {
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompletedToBuyTime, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.BuyTime);
+    }
+
+    private void OnRewaredAdCompletedToBuyTime()
+    {
+        SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "BuyTimeLosePopup");
+
+        Hide(onCompletedAction: () =>
+        {
+            if (TileManager.Ins != null)
+            {
+                TileManager.Ins.currentLevelTime += 45f;
+                TileManager.Ins.isLevelActive = true;
+            }
+
+            buyTimeReviveEvent?.Invoke();
+        });
     }
 
     private void ReturnHome()

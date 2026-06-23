@@ -108,6 +108,10 @@ public class BoosterItemUI : MonoBehaviour
 
     private void ShowBuyBoosterPopup()
     {
+        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards))
+        {
+            return;
+        }
         showBuyBoosterPopupEvent?.Invoke((BoosterType)boosterIndex);
     }
 

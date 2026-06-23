@@ -194,6 +194,80 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65104658}
   m_CullTransparentMesh: 1
+--- !u!1 &132395014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 132395015}
+  - component: {fileID: 132395016}
+  m_Layer: 0
+  m_Name: no_shuffle_available
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &132395015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132395014}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &132395016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132395014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: No Shuffle Available!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Aucune lecture al\xE9atoire disponible\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Keine Zufallswiedergabe verf\xFCgbar!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Nessuna riproduzione casuale disponibile!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B7\u30E3\u30C3\u30D5\u30EB\u306F\u5229\u7528\u3067\u304D\u307E\u305B\u3093!"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC154\uD50C\uC744 \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "N\xE3o h\xE1 embaralhamento dispon\xEDvel!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0438\u0432\u0430\u043D\u0438\u0435
+      \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1No hay reproducci\xF3n aleatoria disponible!"
+    Object: {fileID: 0}
 --- !u!1 &142885294
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,7 +1245,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &769149516
+--- !u!1 &659388962
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1179,37 +1253,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 769149517}
-  - component: {fileID: 769149518}
+  - component: {fileID: 659388963}
+  - component: {fileID: 659388964}
   m_Layer: 0
-  m_Name: Completed
+  m_Name: no_hint_available
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &769149517
+--- !u!4 &659388963
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 769149516}
+  m_GameObject: {fileID: 659388962}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1582410616}
+  m_Father: {fileID: 1555087296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &769149518
+--- !u!114 &659388964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 769149516}
+  m_GameObject: {fileID: 659388962}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
@@ -1218,31 +1292,32 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: Completed
+    Text: No Hint Available!
     Object: {fileID: 0}
   - Language: French
-    Text: "Compl\xE9t\xE9"
+    Text: "Aucun indice disponible\_!"
     Object: {fileID: 0}
   - Language: German
-    Text: Vollendet
+    Text: "Kein Hinweis verf\xFCgbar!"
     Object: {fileID: 0}
   - Language: Italian
-    Text: Completato
+    Text: Nessun suggerimento disponibile!
     Object: {fileID: 0}
   - Language: Japanese
-    Text: "\u5B8C\u4E86"
+    Text: "\u30D2\u30F3\u30C8\u306F\u3042\u308A\u307E\u305B\u3093!"
     Object: {fileID: 0}
   - Language: Korean
-    Text: "\uC644\uC804\uD55C"
+    Text: "\uD78C\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4!"
     Object: {fileID: 0}
   - Language: Portuguese
-    Text: "Conclu\xEDdo"
+    Text: "Nenhuma dica dispon\xEDvel!"
     Object: {fileID: 0}
   - Language: Russian
-    Text: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u044B\u0439"
+    Text: "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445
+      \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043E\u043A!"
     Object: {fileID: 0}
   - Language: Spanish
-    Text: Terminado
+    Text: "\xA1No hay pistas disponibles!"
     Object: {fileID: 0}
 --- !u!1 &817468848
 GameObject:
@@ -1394,89 +1469,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
---- !u!1 &853483478
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 853483479}
-  - component: {fileID: 853483480}
-  m_Layer: 0
-  m_Name: Nice! You can also move cards <color=#FFC000>between columns</color> on
-    the tableau. Stack them if the words, pictures belong to the <color=#FFC000>same
-    category</color>.
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &853483479
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 853483478}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1582410616}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &853483480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 853483478}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
-  data: 0
-  entries:
-  - Language: English
-    Text: Nice! You can also move cards <color=#FFC000>between columns</color> on
-      the tableau. Stack them if the words, pictures belong to the <color=#FFC000>same
-      category</color>.
-    Object: {fileID: 0}
-  - Language: French
-    Text: "Nice Vous pouvez \xE9galement d\xE9placer des cartes entre les colonnes
-      du tableau. "
-    Object: {fileID: 0}
-  - Language: German
-    Text: "Sch\xF6n: Sie k\xF6nnen Karten auch zwischen den Spalten auf dem Tableau
-      verschieben. "
-    Object: {fileID: 0}
-  - Language: Italian
-    Text: 'Bello Puoi anche spostare le carte tra le colonne sul tavolo. '
-    Object: {fileID: 0}
-  - Language: Japanese
-    Text: "\u7D20\u6674\u3089\u3057\u3044 \u30BF\u30D6\u30ED\u30FC\u4E0A\u306E\u5217\u9593\u3067\u30AB\u30FC\u30C9\u3092\u79FB\u52D5\u3059\u308B\u3053\u3068\u3082\u3067\u304D\u307E\u3059\u3002"
-    Object: {fileID: 0}
-  - Language: Korean
-    Text: "\uC88B\uC2B5\uB2C8\uB2E4. \uD14C\uC774\uBE14\uC758 \uC5F4 \uAC04\uC5D0
-      \uCE74\uB4DC\uB97C \uC774\uB3D9\uD560 \uC218\uB3C4 \uC788\uC2B5\uB2C8\uB2E4. "
-    Object: {fileID: 0}
-  - Language: Portuguese
-    Text: "Legal Voc\xEA tamb\xE9m pode mover cartas entre colunas no tabuleiro. "
-    Object: {fileID: 0}
-  - Language: Russian
-    Text: "\u041F\u0440\u0438\u044F\u0442\u043D\u043E. \u0412\u044B \u0442\u0430\u043A\u0436\u0435
-      \u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0442\u044C
-      \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u043C\u0435\u0436\u0434\u0443
-      \u0441\u0442\u043E\u043B\u0431\u0446\u0430\u043C\u0438 \u0442\u0430\u0431\u043B\u0438\u0446\u044B. "
-    Object: {fileID: 0}
-  - Language: Spanish
-    Text: "Genial. Tambi\xE9n puedes mover cartas entre columnas en el cuadro. "
-    Object: {fileID: 0}
 --- !u!1 &932280850
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,6 +2229,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467068108}
   m_CullTransparentMesh: 1
+--- !u!4 &1555087296 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 1582410615}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1582410615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2285,10 +2282,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3670271567046621014, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
-      propertyPath: 'resourceSprites.Array.data[0]'
-      value: 
-      objectReference: {fileID: 21300000, guid: 788aef7f88a38bf4ebb6659949301688, type: 3}
     - target: {fileID: 7090409953449974092, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: m_Name
       value: MANAGER - DontDestroyOnLoad
@@ -2298,17 +2291,89 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 769149517}
+      addedObject: {fileID: 132395015}
     - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 853483479}
+      addedObject: {fileID: 1624172841}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 659388963}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
---- !u!4 &1582410616 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
-  m_PrefabInstance: {fileID: 1582410615}
+--- !u!1 &1624172840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1624172841}
+  - component: {fileID: 1624172842}
+  m_Layer: 0
+  m_Name: no_unlock_available
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1624172841
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624172840}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1624172842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624172840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: No Unlock Available!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Aucun d\xE9verrouillage disponible\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Keine Freischaltung verf\xFCgbar!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Nessuno sblocco disponibile!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5229\u7528\u53EF\u80FD\u306A\u30ED\u30C3\u30AF\u89E3\u9664\u306F\u3042\u308A\u307E\u305B\u3093!"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC7A0\uAE08\uD574\uC81C \uBD88\uAC00!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Nenhum desbloqueio dispon\xEDvel!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u043A\u0430
+      \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1No hay desbloqueo disponible!"
+    Object: {fileID: 0}
 --- !u!1 &1626087555
 GameObject:
   m_ObjectHideFlags: 0

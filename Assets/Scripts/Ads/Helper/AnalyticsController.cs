@@ -728,7 +728,8 @@ public enum ActionWatchVideo
     StarChest,
     LevelChest,
     SpaceRace,
-    CoinChallenge
+    CoinChallenge,
+    BuyTime
 }
 
 public enum ActionShowInter

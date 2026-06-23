@@ -40,6 +40,7 @@ namespace NamPhuThuy.GamePlay
             SituationManager.loseLevelEvent += EnterLoseState;
             TileManager.loseLevelEvent += EnterLoseState;
             RevivePopup.reviveEvent += OnRevived;
+            LosePopup.buyTimeReviveEvent += EnterPlayingState;
 
             ChangeState(new GameStatePlaying());
         }
@@ -53,6 +54,7 @@ namespace NamPhuThuy.GamePlay
             SituationManager.loseLevelEvent -= EnterLoseState;
             TileManager.loseLevelEvent -= EnterLoseState;
             RevivePopup.reviveEvent -= OnRevived;
+            LosePopup.buyTimeReviveEvent -= EnterPlayingState;
         }
 
         // void Update()

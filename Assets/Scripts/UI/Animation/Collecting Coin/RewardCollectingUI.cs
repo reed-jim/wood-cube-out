@@ -14,6 +14,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] private int poolSize;
+    public int PoolSize => poolSize;
 
     [SerializeField] private Sprite[] resourceSprites;
 
@@ -41,6 +42,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         CoinContainerUI.collectCoinEvent += Collect;
         // CoinContainerUI.collectItemsEvent += CollectItem;
         WinPopup.collectCoinEvent += Collect;
+        WinPopup.collectCoinWithCallbackEvent += CollectWithCallback;
 
         CreatePool();
     }
@@ -50,6 +52,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         CoinContainerUI.collectCoinEvent -= Collect;
         // CoinContainerUI.collectItemsEvent -= CollectItem;
         WinPopup.collectCoinEvent -= Collect;
+        WinPopup.collectCoinWithCallbackEvent -= CollectWithCallback;
     }
 
     private void CreatePool()
@@ -112,6 +115,33 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                 }
 
                 UserResourcesManager.Instance.UpdateCoinTextAnimation();
+
+                _rewards[index].gameObject.SetActive(false);
+            }));
+        }
+    }
+
+    private async void CollectWithCallback(Vector3 position, int totalValue, Action<int> onCoinLanded)
+    {
+        for (int i = 0; i < poolSize; i++)
+        {
+            _rewards[i].gameObject.SetActive(true);
+
+            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
+            _rewards[i].localScale = Vector3.zero;
+
+            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
+        }
+
+        await Task.Delay(620);
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            int index = i;
+
+            AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
+            {
+                onCoinLanded?.Invoke(index);
 
                 _rewards[index].gameObject.SetActive(false);
             }));
