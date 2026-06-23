@@ -36,6 +36,9 @@ public class GameplayScreen : Singleton<GameplayScreen>
     public static event Action prevLevelEvent;
     public static event Action skipLevelEvent;
 
+    [Header("Debug")]
+    [SerializeField] private CanvasGroup debugContainer;
+
     #region MonoBehaviour Callbacks
 
     protected override void MoreActionOnAwake()
@@ -118,8 +121,15 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     #endregion
 
+    public void HideDebug()
+    {
+        debugContainer.alpha = 0;
+    }
+
     private void OpenDebugPopupButton()
     {
+        debugContainer.alpha = 1;
+
         switchRouteEvent?.Invoke(ScreenRoute.Debug);
     }
 

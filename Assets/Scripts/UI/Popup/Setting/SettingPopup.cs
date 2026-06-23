@@ -91,6 +91,11 @@ public class SettingPopup : BasePopup
 
     protected override void Hide()
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         pauseNavmeshEvent?.Invoke(false);
 
         GamePersistentVariable.isPauseGame = false;
