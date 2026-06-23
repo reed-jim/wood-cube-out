@@ -11,6 +11,7 @@ public class DebugPopup : BasePopup
     [SerializeField] private TMP_InputField levelInput;
     [SerializeField] private TMP_InputField backgroundColorInput;
 
+    [SerializeField] private Button hideDebugButton;
     [SerializeField] private Button debugPlayLevelButton;
     [SerializeField] private Button debugNextLevelButton;
     [SerializeField] private Button debugPrevLevelButton;
@@ -49,6 +50,7 @@ public class DebugPopup : BasePopup
         startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
         clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
+        hideDebugButton.onClick.AddListener(HideDebug);
 
         gameSpeedText.text = $"Game Speed: x{(int)Time.timeScale}";
     }
@@ -139,6 +141,13 @@ public class DebugPopup : BasePopup
 
             debugAdsText.text = "Enable Ads";
         }
+    }
+
+    private void HideDebug()
+    {
+        GameplayScreen.Ins.HideDebug();
+
+        Hide();
     }
 
     private void AddBooster()

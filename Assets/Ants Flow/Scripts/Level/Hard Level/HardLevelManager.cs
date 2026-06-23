@@ -1,3 +1,4 @@
+using System.Linq;
 using Lean.Localization;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
@@ -29,6 +30,11 @@ namespace AntsFlow
         public float hardLevelThreshold;
         public float superHardLevelThreshold;
 
+        public int[] hardLevels;
+        public int[] superHardLevels;
+
+        public IntVariable currentLevel;
+
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();
@@ -45,7 +51,10 @@ namespace AntsFlow
 
         public void Setup(LevelItem levelItem)
         {
-            if (levelItem.difficulty >= hardLevelThreshold)
+            bool isHardLevel = hardLevels.Contains(currentLevel.Value);
+            bool isSuperHardLevel = superHardLevels.Contains(currentLevel.Value);
+
+            if (isHardLevel || isSuperHardLevel)
             {
                 canvasGroup.gameObject.SetActive(true);
                 canvasGroup.alpha = 1;
@@ -53,19 +62,19 @@ namespace AntsFlow
                 hardLevelSpine.gameObject.SetActive(true);
                 hardLevelSpine.color = Color.white;
 
-                // hardLevelSpine.Skeleton.SetToSetupPose();
-                // hardLevelSpine.AnimationState.ClearTracks();
-                hardLevelSpine.Skeleton.SetSkin(hardSkin);
-
-                hardLevelText.fontMaterial = hardTextMaterial;
-                localizedHardLevelText.TranslationName = "Hard";
-
-                if (levelItem.difficulty >= superHardLevelThreshold)
+                if (isSuperHardLevel)
                 {
                     hardLevelSpine.Skeleton.SetSkin(superHardSkin);
 
                     hardLevelText.fontMaterial = superHardTextMaterial;
                     localizedHardLevelText.TranslationName = "Super Hard";
+                }
+                else
+                {
+                    hardLevelSpine.Skeleton.SetSkin(hardSkin);
+
+                    hardLevelText.fontMaterial = hardTextMaterial;
+                    localizedHardLevelText.TranslationName = "Hard";
                 }
 
                 hardLevelSpine.Skeleton.SetToSetupPose();
@@ -97,7 +106,11 @@ namespace AntsFlow
 
         private void OnLevelLoaded()
         {
-            if (GamePersistentVariable.levelItem == null || GamePersistentVariable.levelItem.difficulty < hardLevelThreshold)
+            bool isHardLevel = hardLevels.Contains(currentLevel.Value);
+            bool isSuperHardLevel = superHardLevels.Contains(currentLevel.Value);
+            bool isNotHardLevel = !isHardLevel && !isSuperHardLevel;
+
+            if (GamePersistentVariable.levelItem == null || isNotHardLevel)
             {
                 hardLevelSpine.gameObject.SetActive(false);
                 SaferioTween.AlphaHide(canvasGroup);

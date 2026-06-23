@@ -34174,6 +34174,7 @@ MonoBehaviour:
   decreaseGameSpeedButton: {fileID: 765135574}
   gameSpeedText: {fileID: 900073423}
   hardModeCanvasGroup: {fileID: 2081052580}
+  debugContainer: {fileID: 760980270}
 --- !u!1001 &658327892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40637,6 +40638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 760980267}
   - component: {fileID: 760980269}
+  - component: {fileID: 760980270}
   - component: {fileID: 760980268}
   m_Layer: 5
   m_Name: Open Debug Button
@@ -40720,6 +40722,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 760980266}
   m_CullTransparentMesh: 1
+--- !u!225 &760980270
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760980266}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &761054898
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65852,6 +65866,7 @@ MonoBehaviour:
     isDone: 0
     isAntApproaching: 0
     isAnimating: 0
+    isPrepareComplete: 0
     isLocked: 0
     ring: 0
     priority: 0
@@ -113784,6 +113799,10 @@ PrefabInstance:
       propertyPath: gameplayCanvas
       value: 
       objectReference: {fileID: 1577199172}
+    - target: {fileID: 6081346096635791751, guid: 965f9e689d31e4249b60e2803fcf90f5, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6834822983003304286, guid: 965f9e689d31e4249b60e2803fcf90f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -114517,6 +114536,10 @@ PrefabInstance:
       value: 33.05
       objectReference: {fileID: 0}
     - target: {fileID: 3882482620061423132, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6297379854574794480, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
