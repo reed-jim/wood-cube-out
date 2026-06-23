@@ -142,7 +142,11 @@ public class DebugPopup : BasePopup
     {
         base.Show(onCompletedAction);
 
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        bool isRemoveAds = GameController.Instance != null
+            ? GameController.Instance.useProfile.IsRemoveAds
+            : UserData.IsRemoveAds;
+
+        if (isRemoveAds)
         {
             debugAdsText.text = "Enable Ads";
         }
@@ -216,7 +220,7 @@ public class DebugPopup : BasePopup
 
     private void DebugAdsButton()
     {
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (GameController.Instance != null && GameController.Instance.useProfile.IsRemoveAds)
         {
             UserData.IsRemoveAds = false;
             GameController.Instance.useProfile.IsRemoveAds = false;
@@ -226,7 +230,8 @@ public class DebugPopup : BasePopup
         else
         {
             UserData.IsRemoveAds = true;
-            GameController.Instance.useProfile.IsRemoveAds = true;
+            if (GameController.Instance != null)
+                GameController.Instance.useProfile.IsRemoveAds = true;
 
             debugAdsText.text = "Enable Ads";
         }
