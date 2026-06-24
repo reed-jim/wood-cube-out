@@ -31,6 +31,8 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private float levelScaleXRatio = 18f;
         [SerializeField] private float levelScaleYRatio = 15f;
         [SerializeField] private float levelYOffsetRatio = 0.175f;
+        [SerializeField] private float multiplierScaleX = 54f;
+        [SerializeField] private float multiplierScaleY = 54f;
 
         #region PRIVATE FIELD
         private Camera _mainCamera;
@@ -309,7 +311,7 @@ namespace NamPhuThuy.GamePlay
 
             GamePersistentVariable.obstacleScaleFactor = finalScale;
 
-            finalScale /= 54f;
+            finalScale /= multiplierScaleX;
 
             scaleFactor = finalScale;
             GamePersistentVariable.tileMapScaleFactor = scaleFactor;
@@ -332,7 +334,7 @@ namespace NamPhuThuy.GamePlay
             shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
             glowTilemapGrid.localScale = scaleFactor * Vector3.one;
 
-            float ratioXY = 54 * (54f / 64);
+            float ratioXY = multiplierScaleX * (multiplierScaleX / multiplierScaleY);
 
             for (int i = 0; i < numRows; i++)
             {
