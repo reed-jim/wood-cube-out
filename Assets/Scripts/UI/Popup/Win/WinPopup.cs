@@ -83,7 +83,7 @@ public class WinPopup : BasePopup
 
     private async void OnLevelWinAsync()
     {
-        GameController.Instance.admobAds.ShowBannerCollap();
+        // GameController.Instance.admobAds.ShowBannerCollap();
 
         coinText.text = $"{0}";
         starText.text = $"{0}";
@@ -335,6 +335,7 @@ public class WinPopup : BasePopup
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
         new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime).Send();
+        SaferioTracking.LogLevelComplete(currentLevel.Value);
 
         GamePersistentVariable.levelRetryTime = 0;
 

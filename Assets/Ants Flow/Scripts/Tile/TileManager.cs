@@ -748,6 +748,11 @@ namespace AntsFlow
                         }
                     }
 
+                    if (current.isStarter && neighbor.isStarter)
+                    {
+                        isBlocked = false;
+                    }
+
                     if (neighbor.tile != null && !isReachTarget)
                     {
                         if (isBlocked)
