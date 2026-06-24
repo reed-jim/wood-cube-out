@@ -33,6 +33,7 @@ namespace AntsFlow
         public bool isAnimating;
         public bool isPrepareComplete;
         public bool isLocked;
+        public int numStepToReach;
         [NonSerialized] public List<BaseTile> blockages;
         [NonSerialized] public HashSet<BaseTile> blockedByMe;
         [NonSerialized] public List<BaseTile> actualBlockages;
@@ -198,7 +199,7 @@ namespace AntsFlow
             }
 
             Hide();
-            // HideObstacle();
+            HideObstacle();
 
             tileMoveToAntEvent?.Invoke(this);
         }
@@ -248,7 +249,7 @@ namespace AntsFlow
         {
             // navMeshModifierVolume.enabled = false;
 
-            HideObstacle();
+            // HideObstacle();
 
             SetNoLongerBlockages();
 

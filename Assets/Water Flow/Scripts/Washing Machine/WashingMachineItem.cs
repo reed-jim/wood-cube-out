@@ -400,7 +400,24 @@ public class WashingMachineItem : MonoBehaviour
 
         AntsFlow.TileManager.Ins.UpdateMovableTiles(faction);
 
-        List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetAllAvailableTiles(faction, remainingNumber);
+        int max = AntsFlow.TileManager.Ins.tiles.Count(tile => !tile.isAntApproaching && !tile.isDone && tile.Faction == faction);
+
+        List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetFirstNMovableTiles(faction, max);
+
+        foreach (var item in foundTiles)
+        {
+            if (item.numStepToReach > 0)
+            {
+                Debug.Log($"CheckAntsPath {AntsFlow.TileManager.Ins.tiles.IndexOf(item)} {item.numStepToReach}");
+            }
+        }
+
+        foundTiles = foundTiles
+            .Where(item => item.numStepToReach < 5)
+            .OrderBy(item => item.position.y)
+            .ThenBy(item => item.position.x)
+            .Take(remainingNumber)
+            .ToList();
 
         for (int i = 0; i < foundTiles.Count; i++)
         {
@@ -766,6 +783,7 @@ public class WashingMachineItem : MonoBehaviour
 
 
         // BFS
+        return true;
         return tile.IsMovable();
         // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 

@@ -91,13 +91,13 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
-            BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
+            BaseTile.tileMoveToAntEvent += UpdateNavMesh;
         }
 
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
-            BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
+            BaseTile.tileMoveToAntEvent -= UpdateNavMesh;
         }
 
         #region Grid
@@ -688,6 +688,94 @@ namespace AntsFlow
             Debug.Log($"Dequeue {count}");
         }
 
+        public List<BaseTile> GetFirstNMovableTiles(Color faction, int count)
+        {
+            Node start = bottomLeftMostNode;
+
+            var result = new List<BaseTile>();
+            var queue = new Queue<Node>();
+            var visited = new HashSet<Node>();
+            var distance = new Dictionary<Node, int>();
+
+            queue.Enqueue(start);
+            visited.Add(start);
+            distance[start] = 0;
+
+            while (queue.Count > 0 && result.Count < count)
+            {
+                Node current = queue.Dequeue();
+
+                // Add only tiles matching the faction
+                if (
+                    current.tile != null &&
+                    !current.tile.isDone &&
+                    !current.tile.isAntApproaching &&
+                    current.tile.Faction == faction &&
+                    !current.tile.isLocked
+                )
+                {
+                    result.Add(current.tile);
+
+                    if (distance.ContainsKey(current))
+                    {
+                        current.tile.numStepToReach = distance[current];
+                    }
+                    else
+                    {
+                        current.tile.numStepToReach = 0;
+                    }
+                }
+
+                foreach (var neighbor in current.neighbors)
+                {
+                    // blocked
+                    bool isStarterTileAvailable = current.isStarter && !current.tile.isAntApproaching;
+                    bool isReachTarget = !isStarterTileAvailable && neighbor.tile.Faction == faction;
+                    bool isSameFaction = current.tile.Faction == faction && neighbor.tile.Faction == faction;
+                    bool isBlocked = !neighbor.tile.isAntApproaching && !neighbor.tile.isDone && !neighbor.isStarter;
+
+                    if (!isBlocked)
+                    {
+                        if (!neighbor.tile.isAntApproaching && !neighbor.tile.isDone && !isSameFaction)
+                        {
+                            isBlocked = true;
+                        }
+                    }
+
+                    if (neighbor.tile != null && !isReachTarget)
+                    {
+                        if (isBlocked)
+                        {
+                            continue;
+                        }
+                    }
+                    //
+
+                    if (visited.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor);
+
+                    if (isBlocked)
+                    {
+                        distance[neighbor] = distance[current] + 1;
+                    }
+                    else
+                    {
+                        distance[neighbor] = distance[current];
+                    }
+
+                    queue.Enqueue(neighbor);
+                }
+            }
+
+            Debug.Log($"GetFirstNMovableTiles {result.Count} {count}");
+
+            return result;
+        }
+
         public List<Node> FindPath(BaseTile target)
         {
             Node start = bottomLeftMostNode;
@@ -717,18 +805,8 @@ namespace AntsFlow
                 foreach (var neighbor in current.neighbors)
                 {
                     // blocked
-                    // if (neighbor.isObstacle)
-                    // {
-                    //     continue;
-                    // }    
-
                     bool isStarterTileAvailable = current.isStarter && !current.tile.isAntApproaching;
                     bool isReachTarget = !isStarterTileAvailable && neighbor.tile == target;
-
-                    if (tiles.IndexOf(current.tile) == 79)
-                    {
-                        Debug.Log($"RetracePath {tiles.IndexOf(neighbor.tile)} {tiles.IndexOf(target)} {isReachTarget}");
-                    }
 
                     if (neighbor.tile != null && !isReachTarget)
                     {
