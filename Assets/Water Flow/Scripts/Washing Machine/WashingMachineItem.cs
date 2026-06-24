@@ -398,6 +398,8 @@ public class WashingMachineItem : MonoBehaviour
 
         int addedTile = 0;
 
+        AntsFlow.TileManager.Ins.UpdateMovableTiles();
+
         for (int i = 0; i < remainingNumber; i++)
         {
             AntsFlow.BaseTile tile;
@@ -502,7 +504,7 @@ public class WashingMachineItem : MonoBehaviour
             if (GamePersistentVariable.isPauseGame)
             {
                 yield return waitForSeconds;
-                
+
                 continue;
             }
 
@@ -748,14 +750,15 @@ public class WashingMachineItem : MonoBehaviour
 
 
         // BFS
-        List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
+        return tile.isMovable;
+        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 
-        if (path == null || path.Count == 0)
-        {
-            return false;
-        }
+        // if (path == null || path.Count == 0)
+        // {
+        //     return false;
+        // }
 
-        return true;
+        // return true;
 
         return tile.blockages.Count < 4;
         return tile.actualBlockages.Count < 4;

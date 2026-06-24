@@ -26,6 +26,7 @@ namespace AntsFlow
 
         public int tileName;
         public Vector3 position;
+        public bool isMovable;
         public bool isDone;
         public bool isAntApproaching;
         public bool isAnimating;
