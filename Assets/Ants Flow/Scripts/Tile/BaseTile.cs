@@ -31,6 +31,7 @@ namespace AntsFlow
         public bool isAntApproaching;
         public bool isTempAntApproaching;
         public bool isAnimating;
+        public bool isMovedToAnt;
         public bool isPrepareComplete;
         public bool isLocked;
         public int numStepToReach;
@@ -197,6 +198,8 @@ namespace AntsFlow
             {
                 HapticFeedback.LightFeedback();
             }
+
+            isMovedToAnt = true;
 
             Hide();
             HideObstacle();

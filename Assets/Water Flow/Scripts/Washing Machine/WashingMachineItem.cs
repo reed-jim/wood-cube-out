@@ -70,7 +70,7 @@ public class WashingMachineItem : MonoBehaviour
         selectWashingMachineEvent += OnAntBoxSelected;
         antBoxDoneEvent += OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent += OnLevelLose;
-        AntsFlow.BaseTile.tileCompleteEvent += OnTileCompleted;
+        AntsFlow.BaseTile.tileMoveToAntEvent += OnTileMoveToAnt;
         LevelLoader.startLevelEvent += OnLevelStarted;
         SettingPopup.replayLevelEvent += OnLevelReplayed;
         LosePopup.replayLevelEvent += OnLevelReplayed;
@@ -94,7 +94,7 @@ public class WashingMachineItem : MonoBehaviour
         selectWashingMachineEvent -= OnAntBoxSelected;
         antBoxDoneEvent -= OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent -= OnLevelLose;
-        AntsFlow.BaseTile.tileCompleteEvent -= OnTileCompleted;
+        AntsFlow.BaseTile.tileMoveToAntEvent -= OnTileMoveToAnt;
         LevelLoader.startLevelEvent -= OnLevelStarted;
         SettingPopup.replayLevelEvent -= OnLevelReplayed;
         LosePopup.replayLevelEvent -= OnLevelReplayed;
@@ -404,16 +404,16 @@ public class WashingMachineItem : MonoBehaviour
 
         List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetFirstNMovableTiles(faction, max);
 
-        foreach (var item in foundTiles)
-        {
-            if (item.numStepToReach > 0)
-            {
-                Debug.Log($"CheckAntsPath {AntsFlow.TileManager.Ins.tiles.IndexOf(item)} {item.numStepToReach}");
-            }
-        }
+        // foreach (var item in foundTiles)
+        // {
+        //     if (item.numStepToReach > 0)
+        //     {
+        //         Debug.Log($"CheckAntsPath {AntsFlow.TileManager.Ins.tiles.IndexOf(item)} {item.numStepToReach}");
+        //     }
+        // }
 
         foundTiles = foundTiles
-            .Where(item => item.numStepToReach < 5)
+            // .Where(item => item.numStepToReach < 5)
             .OrderBy(item => item.position.y)
             .ThenBy(item => item.position.x)
             .Take(remainingNumber)
@@ -752,7 +752,23 @@ public class WashingMachineItem : MonoBehaviour
         selectWashingMachineEvent?.Invoke(this);
     }
 
+    // private void OnTileCompleted(AntsFlow.BaseTile tile)
+    // {
+    //     if (isInSlot)
+    //     {
+    //         CheckAntsPath();
+    //     }
+    // }
+
     private void OnTileCompleted(AntsFlow.BaseTile tile)
+    {
+        if (isInSlot)
+        {
+            CheckAntsPath();
+        }
+    }
+
+    private void OnTileMoveToAnt(AntsFlow.BaseTile tile)
     {
         if (isInSlot)
         {

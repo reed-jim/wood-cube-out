@@ -333,8 +333,6 @@ namespace AntsFlow
             //         b.neighbors.Add(a);
             // }
 
-
-
             bottomLeftMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
             bottomRightMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
 
@@ -729,16 +727,16 @@ namespace AntsFlow
                 foreach (var neighbor in current.neighbors)
                 {
                     // blocked
-                    bool isStarterTileAvailable = current.isStarter && !current.tile.isAntApproaching;
-                    bool isReachTarget = !isStarterTileAvailable && neighbor.tile.Faction == faction;
+                    bool isStarterTileAvailable = current.isStarter && !current.tile.isMovedToAnt;
+                    bool isReachTarget = false;
                     bool isSameFaction = current.tile.Faction == faction && neighbor.tile.Faction == faction;
-                    bool isBlocked = !neighbor.tile.isAntApproaching && !neighbor.tile.isDone && !neighbor.isStarter;
+                    bool isBlocked = !neighbor.tile.isMovedToAnt && !neighbor.tile.isDone && !neighbor.isStarter;
 
-                    if (!isBlocked)
+                    if (current.tile.isMovedToAnt || current.tile.isDone)
                     {
-                        if (!neighbor.tile.isAntApproaching && !neighbor.tile.isDone && !isSameFaction)
+                        if (neighbor.tile.Faction == faction)
                         {
-                            isBlocked = true;
+                            isReachTarget = false;
                         }
                     }
 
@@ -771,7 +769,7 @@ namespace AntsFlow
                 }
             }
 
-            Debug.Log($"GetFirstNMovableTiles {result.Count} {count}");
+            // Debug.Log($"GetFirstNMovableTiles {result.Count} {count}");
 
             return result;
         }
