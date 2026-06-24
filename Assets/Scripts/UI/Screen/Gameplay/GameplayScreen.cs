@@ -15,6 +15,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [Header("Buttons")]
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button noAdsButton;
+    [SerializeField] private Button x2SpeedButton;
     [SerializeField] private Button openShopPopupButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
@@ -27,6 +28,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private Button increaseGameSpeedButton;
     [SerializeField] private Button decreaseGameSpeedButton;
     [SerializeField] private TMP_Text gameSpeedText;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedGameSpeedText;
 
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
@@ -56,6 +58,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
+        x2SpeedButton.onClick.AddListener(X2Speed);
 
         openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
@@ -74,6 +77,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         }
 
         gameSpeedText.text = $"x{(int)Time.timeScale}";
+        localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{(int)Time.timeScale}");
     }
 
     void OnDestroy()
@@ -209,6 +213,22 @@ public class GameplayScreen : Singleton<GameplayScreen>
     #endregion
 
     #region Game Speed
+    public void X2Speed()
+    {
+        float prevValue = Time.timeScale;
+
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 2;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+
+        localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{prevValue}");
+    }
+
     private void IncreaseGameSpeed()
     {
         ChangeGameSpeed(true);
