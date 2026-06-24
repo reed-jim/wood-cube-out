@@ -118,33 +118,33 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
             return LevelElement.HiddenAntBox;
         }
-        else if (specialElementConfig.frozenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
-        {
-            try
-            {
-                nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
-                specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
-            }
-            catch (System.Exception)
-            {
-                nextFreezeAntBoxRequiredNumber = 2;
-            }
+        // else if (specialElementConfig.frozenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+        // {
+        //     try
+        //     {
+        //         nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
+        //         specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+        //     }
+        //     catch (System.Exception)
+        //     {
+        //         nextFreezeAntBoxRequiredNumber = 2;
+        //     }
 
-            int maxValue = GetMaxValueFreezedAntBox(rowIndex, columnIndex);
+        //     int maxValue = GetMaxValueFreezedAntBox(rowIndex, columnIndex);
 
-            if (maxValue == 0)
-            {
-                return LevelElement.NormalAntBox;
-            }
-            else
-            {
-                nextFreezeAntBoxRequiredNumber = Mathf.Min(nextFreezeAntBoxRequiredNumber, maxValue);
-            }
+        //     if (maxValue == 0)
+        //     {
+        //         return LevelElement.NormalAntBox;
+        //     }
+        //     else
+        //     {
+        //         nextFreezeAntBoxRequiredNumber = Mathf.Min(nextFreezeAntBoxRequiredNumber, maxValue);
+        //     }
 
-            specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
+        //     specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
 
-            return LevelElement.FreezedAntBox;
-        }
+        //     return LevelElement.FreezedAntBox;
+        // }
         else
         {
             return LevelElement.NormalAntBox;

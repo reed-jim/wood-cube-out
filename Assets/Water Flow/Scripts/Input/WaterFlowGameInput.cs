@@ -67,7 +67,7 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                     }
                 }
 
-                float tileSize = GamePersistentVariable.tileMapScaleFactor;
+                float tileSize = GamePersistentVariable.obstacleScaleFactor;
 
                 if (smallestDistance > tileSize)
                 {

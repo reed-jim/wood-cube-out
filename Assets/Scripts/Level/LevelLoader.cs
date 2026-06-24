@@ -27,11 +27,12 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private LevelBoosterObserver levelBoosterObserver;
         [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
-        [Header("Textured Material Level")]
-        [SerializeField] private Material texturedMaterial;
-
-        [Header("Stats")]
-        [SerializeField] private float tutorialDelay = 0.2f;
+        [Header("Customize")]
+        [SerializeField] private float levelScaleXRatio = 18f;
+        [SerializeField] private float levelScaleYRatio = 15f;
+        [SerializeField] private float levelYOffsetRatio = 0.175f;
+        [SerializeField] private float multiplierScaleX = 54f;
+        [SerializeField] private float multiplierScaleY = 54f;
 
         #region PRIVATE FIELD
         private Camera _mainCamera;
@@ -69,6 +70,7 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
 
+        [Header("Tilemap")]
         public Transform glowTilemapGrid;
         public Tilemap shadowTilemap;
         public Transform shadowTilemapGrid;
@@ -76,8 +78,6 @@ namespace NamPhuThuy.GamePlay
         public List<Transform> tilemapGrids;
         public float scaleFactor;
         public Vector3 shadowTilemapOffset;
-
-        public AntsFlow.BaseTile tile;
 
         private void Awake()
         {
@@ -267,7 +267,7 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
-                CalculateLevelScale();
+                CalculateLevelScale(levelItem);
 
                 antLevelData = AutoSpacingAllTiles(antLevelData);
                 // FitLevelToScreenArea(levelTransform);
@@ -276,7 +276,7 @@ namespace NamPhuThuy.GamePlay
                 FillTileMap(antLevelData, levelTransform);
                 // // BuildMesh(levelTransform);   
 
-                if (currentLevel.Value == 2)
+                if (currentLevel.Value == 1)
                 {
                     levelItem.isTutorialSpeedUpLevel = true;
                 }
@@ -300,14 +300,18 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        private void CalculateLevelScale()
+        private void CalculateLevelScale(AntsFlow.LevelItem levelItem)
         {
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
-            float scaleByX = 18f / numCols;
-            float scaleByY = 15f / numRows;
+            float scaleByX = levelScaleXRatio / numCols;
+            float scaleByY = levelScaleYRatio / numRows;
             float finalScale = Mathf.Min(scaleByX, scaleByY);
+
+            GamePersistentVariable.obstacleScaleFactor = finalScale;
+
+            finalScale /= multiplierScaleX;
 
             scaleFactor = finalScale;
             GamePersistentVariable.tileMapScaleFactor = scaleFactor;
@@ -333,6 +337,8 @@ namespace NamPhuThuy.GamePlay
             }
             glowTilemapGrid.localScale = scaleFactor * Vector3.one;
 
+            float ratioXY = multiplierScaleX * (multiplierScaleX / multiplierScaleY);
+
             for (int i = 0; i < numRows; i++)
             {
                 // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
@@ -342,7 +348,7 @@ namespace NamPhuThuy.GamePlay
                 spawnedTileMapGrid.SetParent(levelTransform);
                 spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
                 spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
-                
+
                 tilemapGrids.Add(spawnedTileMapGrid);
 
                 for (int j = 0; j < numCols; j++)
@@ -350,7 +356,7 @@ namespace NamPhuThuy.GamePlay
                     int index = j + i * numCols;
 
                     // Vector3Int cellPos = shadowTilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
-                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position);
+                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
 
                     UnityEngine.Tilemaps.Tile tile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
@@ -467,7 +473,7 @@ namespace NamPhuThuy.GamePlay
 
                 // tile.transform.position = antLevelDataItem.position;
 
-                tile.name = i;
+                tile.tileName = i;
                 tile.position = antLevelDataItem.position;
                 tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
                 tile.ring = antLevelDataItem.ring;
@@ -667,8 +673,8 @@ namespace NamPhuThuy.GamePlay
                 for (int col = 0; col < numCols; col++)
                 {
                     Vector3 position = new Vector3(
-                        -numCols / 2 + col * 1,
-                        (0.175f * numRows) + row * 1,
+                        -(numCols - 1) / 2f + col * 1,
+                        (levelYOffsetRatio * numRows) + row * 1,
                         0f
                     );
 

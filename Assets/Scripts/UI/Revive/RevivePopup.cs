@@ -175,7 +175,8 @@ public class RevivePopup : BasePopup
                     currentLevel.Value, "Coin",
                     cost, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
 
-            // userResourcesObserver.UserResources.CoinQuantity -= cost;
+            updateCoinTextEvent?.Invoke();
+
 
             if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
             {

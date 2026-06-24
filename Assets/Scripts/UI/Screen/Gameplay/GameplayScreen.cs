@@ -36,6 +36,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
     public static event Action prevLevelEvent;
     public static event Action skipLevelEvent;
 
+    [Header("Debug")]
+    [SerializeField] private CanvasGroup debugContainer;
+    [SerializeField] private GameObject mainUI;
+    [SerializeField] private GameObject boosterUI;
+
     #region MonoBehaviour Callbacks
 
     protected override void MoreActionOnAwake()
@@ -118,8 +123,23 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     #endregion
 
+    public void HideDebug()
+    {
+        debugContainer.alpha = 0;
+    }
+
+    public void HideUI()
+    {
+        GamePersistentVariable.isHideUI = !GamePersistentVariable.isHideUI;
+
+        mainUI.SetActive(!GamePersistentVariable.isHideUI);
+        boosterUI.SetActive(!GamePersistentVariable.isHideUI);
+    }
+
     private void OpenDebugPopupButton()
     {
+        debugContainer.alpha = 1;
+
         switchRouteEvent?.Invoke(ScreenRoute.Debug);
     }
 

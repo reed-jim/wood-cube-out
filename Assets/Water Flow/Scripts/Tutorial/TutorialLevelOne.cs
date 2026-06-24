@@ -47,6 +47,10 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     public void StartTutorial(List<WashingMachineItem> washingMachines)
     {
+        tutorialHand.gameObject.SetActive(true);
+        tutorialCanvasGroup.gameObject.SetActive(true);
+        blackOverlay.gameObject.SetActive(true);
+
         initialGameplayCanvasSortingOrder = gameplayCanvas.sortingOrder;
 
         gameplayCanvas.renderMode = RenderMode.ScreenSpaceCamera;
@@ -72,7 +76,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
-        int maxStep = 1;
+        int maxStep = 0;
 
         description.text = $"Select the ant box to spawn ants.";
 
@@ -85,7 +89,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
                 if (numAntBoxToSelectLeft <= 0)
                 {
                     NextStep();
-                    StartStepTwo();
+                    // StartStepTwo();
                 }
             }
 
@@ -147,11 +151,17 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         SaferioTween.AlphaHide(blackOverlay);
         SaferioTween.AlphaHide(tutorialCanvasGroup);
+        Tween.PositionX(tutorialHand.transform, tutorialHand.transform.position.x + 10, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            tutorialHand.gameObject.SetActive(false);
+        });
 
         gameplayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         gameplayCanvas.sortingOrder = initialGameplayCanvasSortingOrder;
 
         GamePersistentVariable.isPreventSelectAntBox = false;
+        GamePersistentVariable.isTutorialLevelOneDone = true;
     }
 }
 

@@ -24,8 +24,9 @@ namespace AntsFlow
         public Vector3Int tilemapPosition;
         public TileObstacle tileObstacle;
 
-        public int name;
+        public int tileName;
         public Vector3 position;
+        public bool isMovable;
         public bool isDone;
         public bool isAntApproaching;
         public bool isAnimating;
@@ -222,48 +223,9 @@ namespace AntsFlow
 
         public void Complete()
         {
-            // gameObject.SetActive(false);
-
-            // TileManager.Ins.UpdateNavMesh(boxCollider);
-
             isDone = true;
 
-            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
-            // {
-            //     BaseTile tile = TileManager.Ins.tiles[i];
-
-            //     if (tile == this)
-            //     {
-            //         continue;
-            //     }
-
-            //     tile.blockages.Remove(this);
-            // }
-
-            // if (tileObstacle != null)
-            // {
-            //     tileObstacle.Hide();
-            //     tileObstacle = null;
-            // }
-
-            // for (int i = 0; i < blockages.Count; i++)
-            // {
-            //     BaseTile blockage = blockages[i];
-
-            //     SpawnObstacle(blockage);
-            // }
-
             tileCompleteEvent.Invoke(this);
-
-            void SpawnObstacle(BaseTile tile)
-            {
-                if (tile.tileObstacle == null)
-                {
-                    TileObstacle obstacle = ObjectPoolingEverything.GetFromPool<TileObstacle>(GameConstants.tileObstacle);
-
-                    obstacle.Init(tile);
-                }
-            }
         }
 
         public void HideObstacle()

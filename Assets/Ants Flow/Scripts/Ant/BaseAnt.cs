@@ -76,7 +76,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
-            WashingMachineManager.winLevelEvent += OnLevelWon;
+            TileManager.winLevelEvent += OnLevelWon;
             IAPShopPopup.pauseNavmeshEvent += OnNavmeshPaused;
             SettingPopup.pauseNavmeshEvent += OnNavmeshPaused;
 
@@ -109,7 +109,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
-            WashingMachineManager.winLevelEvent -= OnLevelWon;
+            TileManager.winLevelEvent -= OnLevelWon;
             IAPShopPopup.pauseNavmeshEvent -= OnNavmeshPaused;
             SettingPopup.pauseNavmeshEvent -= OnNavmeshPaused;
         }
@@ -1051,7 +1051,7 @@ namespace AntsFlow
 
         public bool ReachedDestination(float threshold = 1f)
         {
-            float tileSize = GamePersistentVariable.tileMapScaleFactor;
+            float tileSize = GamePersistentVariable.obstacleScaleFactor;
 
             return Vector2.Distance(transform.position, destination) < tileSize;
             // return AIPath.remainingDistance < 0.01f;

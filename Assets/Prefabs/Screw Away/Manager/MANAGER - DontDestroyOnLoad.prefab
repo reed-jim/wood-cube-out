@@ -1785,6 +1785,81 @@ MonoBehaviour:
   - Language: English
     Text: Add Slot
     Object: {fileID: 0}
+--- !u!1 &1146506412440889717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6808705165150599096}
+  - component: {fileID: 5415665006456058416}
+  m_Layer: 0
+  m_Name: Tap anywhere to speed up
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6808705165150599096
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146506412440889717}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5415665006456058416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146506412440889717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Tap anywhere to speed up!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Appuyez n'importe o\xF9 pour acc\xE9l\xE9rer\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Tippen Sie irgendwo hin, um schneller zu werden!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Tocca ovunque per accelerare!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3069\u3053\u3067\u3082\u30BF\u30C3\u30D7\u3059\u308B\u3068\u30B9\u30D4\u30FC\u30C9\u30A2\u30C3\u30D7\u3057\u307E\u3059\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC18D\uB3C4\uB97C \uB192\uC774\uB824\uBA74 \uC544\uBB34 \uACF3\uC774\uB098
+      \uD0ED\uD558\uC138\uC694!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Toque em qualquer lugar para acelerar!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0432 \u043B\u044E\u0431\u043E\u043C
+      \u043C\u0435\u0441\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0443\u0441\u043A\u043E\u0440\u0438\u0442\u044C\u0441\u044F!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Toca en cualquier lugar para acelerar!"
+    Object: {fileID: 0}
 --- !u!1 &1176418244927531467
 GameObject:
   m_ObjectHideFlags: 0
@@ -4213,7 +4288,6 @@ MonoBehaviour:
   baseTile: {fileID: 7515087262887657689, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
   fakeTilePrefab: {fileID: 7515087262887657689, guid: 0cb926ee7f35018418e0c0171d4f9080, type: 3}
   tilemapPrefab: {fileID: 5196122292102480756, guid: e0c172cfcbdcd774caefec61dcb77b35, type: 3}
-  tileObstaclePrefab: {fileID: 0}
   washingMachineItemPrefab: {fileID: 1148281578818409660, guid: 9f39d111f9cc954499c2f5ce7c22292e, type: 3}
   clothingPiecePrefab: {fileID: 2626563146641554035, guid: e9ab9a5bf6d05f04aad5b1a7711f2fac, type: 3}
   pathSlotPrefab: {fileID: 8262014832508821915, guid: 405925f23c037394883c206d0062ff77, type: 3}
@@ -9091,6 +9165,7 @@ Transform:
   - {fileID: 4990051466471391265}
   - {fileID: 5271398802256722098}
   - {fileID: 9149839531363994100}
+  - {fileID: 6808705165150599096}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269

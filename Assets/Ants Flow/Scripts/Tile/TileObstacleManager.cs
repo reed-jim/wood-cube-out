@@ -17,7 +17,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
-            WashingMachineManager.winLevelEvent += OnLevelReplayed;
+            TileManager.winLevelEvent += OnLevelReplayed;
 
             Init();
         }
@@ -27,7 +27,7 @@ namespace AntsFlow
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
-            WashingMachineManager.winLevelEvent -= OnLevelReplayed;
+            TileManager.winLevelEvent -= OnLevelReplayed;
         }
 
         public void Init()

@@ -19,7 +19,7 @@ public class ConfigBuild
     static bool flagchange;
     private static string IconPath = "Joker2X/Icon/{0}.png";
     public static string ActiveIconPath = "Joker2X/Icon/Active/ActiveIcon.png";
-    private static string KeyStorePath = "Assets/01_BaseCode/KeyStore/birdsort2.keystore";
+    private static string KeyStorePath = "Assets/01_BaseCode/KeyStore/antout.keystore";
 
     private const string folderPath = "BirdTripleMatch_Final";
 

@@ -75,7 +75,7 @@ public class WashingMachineItem : MonoBehaviour
         SettingPopup.replayLevelEvent += OnLevelReplayed;
         LosePopup.replayLevelEvent += OnLevelReplayed;
         DebugPopup.switchLevelEvent += OnLevelReplayed;
-        WashingMachineManager.winLevelEvent += OnLevelWon;
+        TileManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
@@ -99,7 +99,7 @@ public class WashingMachineItem : MonoBehaviour
         SettingPopup.replayLevelEvent -= OnLevelReplayed;
         LosePopup.replayLevelEvent -= OnLevelReplayed;
         DebugPopup.switchLevelEvent -= OnLevelReplayed;
-        WashingMachineManager.winLevelEvent -= OnLevelWon;
+        TileManager.winLevelEvent -= OnLevelWon;
         RevivePopup.reviveEvent -= OnRevive;
         spawnAntEvent -= OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
@@ -398,6 +398,8 @@ public class WashingMachineItem : MonoBehaviour
 
         int addedTile = 0;
 
+        AntsFlow.TileManager.Ins.UpdateMovableTiles();
+
         for (int i = 0; i < remainingNumber; i++)
         {
             AntsFlow.BaseTile tile;
@@ -502,7 +504,7 @@ public class WashingMachineItem : MonoBehaviour
             if (GamePersistentVariable.isPauseGame)
             {
                 yield return waitForSeconds;
-                
+
                 continue;
             }
 
@@ -727,16 +729,16 @@ public class WashingMachineItem : MonoBehaviour
 
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
-        // check using navmesh
-        float tileSize = GamePersistentVariable.tileMapScaleFactor;
-        Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
-        NavMeshPath path = new NavMeshPath();
-        Vector3 nearestMovableStartPoint = GetNearestMovableNavMeshPoint(transform.position, 1f * tileSize);
-        Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 2f * tileSize);
+        // // check using navmesh
+        // float tileSize = GamePersistentVariable.tileMapScaleFactor;
+        // Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
+        // NavMeshPath path = new NavMeshPath();
+        // Vector3 nearestMovableStartPoint = GetNearestMovableNavMeshPoint(transform.position, 1f * tileSize);
+        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 2f * tileSize);
 
-        NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
+        // NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
 
-        return path.status == NavMeshPathStatus.PathComplete;
+        // return path.status == NavMeshPathStatus.PathComplete;
 
         // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 0.6f * tileSize).ChangeZ(0);
         // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint);
@@ -748,6 +750,7 @@ public class WashingMachineItem : MonoBehaviour
 
 
         // BFS
+        return tile.isMovable;
         // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 
         // if (path == null || path.Count == 0)
@@ -755,10 +758,7 @@ public class WashingMachineItem : MonoBehaviour
         //     return false;
         // }
 
-        // tile.path = path;
-
         // return true;
-
 
         return tile.blockages.Count < 4;
         return tile.actualBlockages.Count < 4;
