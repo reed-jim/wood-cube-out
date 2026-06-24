@@ -112,11 +112,14 @@ namespace AntsFlow
                 antLevelData.antLevelDataItems.Add(dataItem);
             }
 
-            List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction); ;
+            List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction);
 
             antLevelData.levelItemData = new LevelItemData()
             {
                 levelScale = transform.localScale,
+                isOverrideLevelScale = isOverrideLevelScale,
+                multiplierScaleX = multiplierScaleX,
+                multiplierScaleY = multiplierScaleY,
                 poolFactionIndexes = poolFactionIndexes,
                 isTutorialLevel = isTutorialLevel,
                 isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
@@ -983,6 +986,9 @@ public class LevelItemData
     public Vector3 levelScale;
     public int numColumn;
     public int numRow;
+    public bool isOverrideLevelScale;
+    public float multiplierScaleX;
+    public float multiplierScaleY;
     public List<int> poolFactionIndexes;
     public bool isTutorialLevel;
     public bool isUseManualFactionSetupForFirstAntBoxes;

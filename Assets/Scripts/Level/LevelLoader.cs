@@ -449,6 +449,9 @@ namespace NamPhuThuy.GamePlay
 
             AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
             spawnedLevelItem.poolFaction = poolFaction;
+            spawnedLevelItem.isOverrideLevelScale = antLevelData.levelItemData.isOverrideLevelScale;
+            spawnedLevelItem.multiplierScaleX = antLevelData.levelItemData.multiplierScaleX;
+            spawnedLevelItem.multiplierScaleY = antLevelData.levelItemData.multiplierScaleY;
             spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
             spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
             spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
