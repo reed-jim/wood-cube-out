@@ -21,6 +21,9 @@ namespace AntsFlow
 
         public int numColumn;
         public int numRow;
+        public bool isOverrideLevelScale;
+        public float multiplierScaleX;
+        public float multiplierScaleY;
         public List<Color> poolFaction;
         public List<BaseTile> tiles;
         public bool isTutorialLevel;
@@ -80,60 +83,60 @@ namespace AntsFlow
 
         public void ConvertToJson()
         {
-            #if UNITY_EDITOR
-                        FactionMapper factionMapper =
-                            AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+#if UNITY_EDITOR
+            FactionMapper factionMapper =
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
 
-                        AntLevelData antLevelData = new AntLevelData();
+            AntLevelData antLevelData = new AntLevelData();
 
-                        antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
+            antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
 
-                        for (int i = 0; i < tiles.Count; i++)
-                        {
-                            BaseTile tile = tiles[i];
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
 
-                            AntLevelDataItem dataItem = new AntLevelDataItem();
-                            dataItem.position = tile.position;
-                            dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
+                AntLevelDataItem dataItem = new AntLevelDataItem();
+                dataItem.position = tile.position;
+                dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
 
-                            dataItem.blockageIndexes = new List<int>();
+                dataItem.blockageIndexes = new List<int>();
 
-                            if (tile.blockages != null)
-                            {
-                                for (int j = 0; j < tile.blockages.Count; j++)
-                                {
-                                    dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
-                                }
-                            }
+                if (tile.blockages != null)
+                {
+                    for (int j = 0; j < tile.blockages.Count; j++)
+                    {
+                        dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+                    }
+                }
 
-                            antLevelData.antLevelDataItems.Add(dataItem);
-                        }
+                antLevelData.antLevelDataItems.Add(dataItem);
+            }
 
-                        List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction); ;
+            List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction); ;
 
-                        antLevelData.levelItemData = new LevelItemData()
-                        {
-                            levelScale = transform.localScale,
-                            poolFactionIndexes = poolFactionIndexes,
-                            isTutorialLevel = isTutorialLevel,
-                            isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
-                            levelFactionConfig = levelFactionConfig,
-                            difficulty = difficulty,
-                            initialDifficulty = initialDifficulty,
-                            overrideInitialDifficulty = overrideInitialDifficulty,
-                            numStartAntBoxes = numStartAntBoxes,
-                            specialElementConfig = specialElementConfig
-                        };
+            antLevelData.levelItemData = new LevelItemData()
+            {
+                levelScale = transform.localScale,
+                poolFactionIndexes = poolFactionIndexes,
+                isTutorialLevel = isTutorialLevel,
+                isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
+                levelFactionConfig = levelFactionConfig,
+                difficulty = difficulty,
+                initialDifficulty = initialDifficulty,
+                overrideInitialDifficulty = overrideInitialDifficulty,
+                numStartAntBoxes = numStartAntBoxes,
+                specialElementConfig = specialElementConfig
+            };
 
-                        // Use level name as file name
-                        string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
+            // Use level name as file name
+            string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
 
-                        // Serialize and save
-                        string json = JsonUtility.ToJson(antLevelData, false);
-                        File.WriteAllText(filePath, json);
+            // Serialize and save
+            string json = JsonUtility.ToJson(antLevelData, false);
+            File.WriteAllText(filePath, json);
 
-                        AssetDatabase.Refresh();
-            #endif
+            AssetDatabase.Refresh();
+#endif
         }
     }
 
@@ -640,16 +643,16 @@ namespace AntsFlow
 
             for (int i = 0; i < tiles.Length; i++)
             {
-               BaseTile tile = tiles[i];
+                BaseTile tile = tiles[i];
 
-               if (!groups.ContainsKey(tile.ring))
-               {
-                   groups.Add(tile.ring, new List<BaseTile>() { tile });
-               }
-               else
-               {
-                   groups[tile.ring].Add(tile);
-               }
+                if (!groups.ContainsKey(tile.ring))
+                {
+                    groups.Add(tile.ring, new List<BaseTile>() { tile });
+                }
+                else
+                {
+                    groups[tile.ring].Add(tile);
+                }
             }
 
             // foreach (var group in groups)

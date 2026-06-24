@@ -267,6 +267,12 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
+                if (levelItem.isOverrideLevelScale)
+                {
+                    multiplierScaleX = levelItem.multiplierScaleX;
+                    multiplierScaleY = levelItem.multiplierScaleY;
+                }
+
                 CalculateLevelScale(levelItem);
 
                 antLevelData = AutoSpacingAllTiles(antLevelData);
