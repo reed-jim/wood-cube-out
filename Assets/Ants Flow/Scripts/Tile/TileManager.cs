@@ -528,7 +528,7 @@ namespace AntsFlow
                 }
                 else
                 {
-                    if (node.tile.isAntApproaching || node.tile.isTempAntApproaching || node.tile.isDone || node.isStarter)
+                    if (node.tile.isMovedToAnt || node.tile.isDone || node.isStarter)
                     {
                         Gizmos.color = Color.green;
 
@@ -736,7 +736,15 @@ namespace AntsFlow
                     {
                         if (neighbor.tile.Faction == faction)
                         {
-                            isReachTarget = false;
+                            isReachTarget = true;
+                        }
+                    }
+
+                    if (!current.tile.isMovedToAnt && !current.tile.isDone)
+                    {
+                        if (current.tile.Faction != faction)
+                        {
+                            isBlocked = true;
                         }
                     }
 
