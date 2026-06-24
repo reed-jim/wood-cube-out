@@ -398,43 +398,59 @@ public class WashingMachineItem : MonoBehaviour
 
         int addedTile = 0;
 
-        AntsFlow.TileManager.Ins.UpdateMovableTiles();
+        AntsFlow.TileManager.Ins.UpdateMovableTiles(faction);
 
-        for (int i = 0; i < remainingNumber; i++)
+        List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetAllAvailableTiles(faction, remainingNumber);
+
+        for (int i = 0; i < foundTiles.Count; i++)
         {
-            AntsFlow.BaseTile tile;
-
-            bool isFound = AntsFlow.TileManager.Ins.GetAvailableTile(faction, out tile);
-
-            if (!isFound)
-            {
-                break;
-            }
+            AntsFlow.BaseTile tile = foundTiles[i];
 
             if (!tilesToMove.Contains(tile))
             {
                 tilesToMove.Add(tile);
 
                 tile.isAntApproaching = true;
-                // tile.InvokeRemoveTileAsBlockageEvent();
 
                 addedTile++;
             }
         }
 
+        // for (int i = 0; i < remainingNumber; i++)
+        // {
+        //     AntsFlow.BaseTile tile;
+
+        //     bool isFound = AntsFlow.TileManager.Ins.GetAvailableTile(faction, out tile);
+
+        //     if (!isFound)
+        //     {
+        //         break;
+        //     }
+
+        //     if (!tilesToMove.Contains(tile))
+        //     {
+        //         tilesToMove.Add(tile);
+
+        //         tile.isAntApproaching = true;
+        //         // tile.InvokeRemoveTileAsBlockageEvent();
+
+        //         addedTile++;
+        //     }
+        // }
+
         remainingNumber -= addedTile;
 
-        var left = tilesToMove
-            .Where(t => t.position.x < 0)
-            .OrderBy(t => t.position.y)
-            .ThenBy(t => t.position.x);
+        // var left = tilesToMove
+        //     .Where(t => t.position.x < 0)
+        //     .OrderBy(t => t.position.y)
+        //     .ThenBy(t => t.position.x);
 
-        var right = tilesToMove
-            .Where(t => t.position.x >= 0)
-            .OrderBy(t => t.position.y)
-            .ThenByDescending(t => t.position.x);
+        // var right = tilesToMove
+        //     .Where(t => t.position.x >= 0)
+        //     .OrderBy(t => t.position.y)
+        //     .ThenByDescending(t => t.position.x);
 
-        tilesToMove = left.Concat(right).ToList();
+        // tilesToMove = left.Concat(right).ToList();
 
         // tilesToMove = tilesToMove.OrderBy(t => t.GetTotalPathDistance(transform.position)).ToList();
 
@@ -750,7 +766,7 @@ public class WashingMachineItem : MonoBehaviour
 
 
         // BFS
-        return tile.isMovable;
+        return tile.IsMovable();
         // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 
         // if (path == null || path.Count == 0)

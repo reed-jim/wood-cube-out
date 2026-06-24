@@ -24,6 +24,7 @@ namespace AntsFlow
         public BaseTile tile;
 
         public Node Parent;
+        public bool isStarter;
         public bool isObstacle;
         public int VisitId;
 
@@ -148,34 +149,63 @@ namespace AntsFlow
             }
 
             // List<Node> addedNodes = new List<Node>();
-            // List<Node> bottomMostNodes = new List<Node>();
-            // List<Node> topMostNodes = new List<Node>();
-            // List<Node> leftMostNodes = new List<Node>();
-            // List<Node> rightMostNodes = new List<Node>();
+            List<Node> bottomMostNodes = new List<Node>();
+            List<Node> topMostNodes = new List<Node>();
+            List<Node> leftMostNodes = new List<Node>();
+            List<Node> rightMostNodes = new List<Node>();
 
-            // float tileSize = GamePersistentVariable.obstacleScaleFactor;
+            float tileSize = GamePersistentVariable.obstacleScaleFactor;
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+
+                if (Mathf.Approximately(node.initialPosition.y, yMin))
+                {
+                    // bottomMostNodes.Add(node);
+                    node.isStarter = true;
+                }
+
+                if (Mathf.Approximately(node.initialPosition.y, yMax))
+                {
+                    // topMostNodes.Add(node);
+                    node.isStarter = true;
+                }
+
+                if (Mathf.Approximately(node.initialPosition.x, xMin))
+                {
+                    // leftMostNodes.Add(node);
+                    node.isStarter = true;
+                }
+
+                if (Mathf.Approximately(node.initialPosition.x, xMax))
+                {
+                    // rightMostNodes.Add(node);
+                    node.isStarter = true;
+                }
+            }
 
             // for (int i = 0; i < nodes.Count; i++)
             // {
             //     Node nodeFromTile = nodes[i];
 
-            //     if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
+            // if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
+            // {
+            //     Node node = new Node();
+            //     node.initialPosition = nodeFromTile.initialPosition.AddY(-tileSize);
+            //     node.neighbors = new List<Node>();
+            //     node.neighbors.Add(nodeFromTile);
+            //     nodeFromTile.neighbors.Add(node);
+            //     addedNodes.Add(node);
+
+            //     for (int j = 0; j < bottomMostNodes.Count; j++)
             //     {
-            //         Node node = new Node();
-            //         node.initialPosition = nodeFromTile.initialPosition.AddY(-tileSize);
-            //         node.neighbors = new List<Node>();
-            //         node.neighbors.Add(nodeFromTile);
-            //         nodeFromTile.neighbors.Add(node);
-            //         addedNodes.Add(node);
-
-            //         for (int j = 0; j < bottomMostNodes.Count; j++)
-            //         {
-            //             bottomMostNodes[j].neighbors.Add(node);
-            //             node.neighbors.Add(bottomMostNodes[j]);
-            //         }
-
-            //         bottomMostNodes.Add(node);
+            //         bottomMostNodes[j].neighbors.Add(node);
+            //         node.neighbors.Add(bottomMostNodes[j]);
             //     }
+
+            //     bottomMostNodes.Add(node);
+            // }
             //     if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
             //     {
             //         Node node = new Node();
@@ -193,23 +223,23 @@ namespace AntsFlow
 
             //         topMostNodes.Add(node);
             //     }
-            //     if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin))
+            // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin))
+            // {
+            //     Node node = new Node();
+            //     node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize);
+            //     node.neighbors = new List<Node>();
+            //     node.neighbors.Add(nodeFromTile);
+            //     nodeFromTile.neighbors.Add(node);
+            //     addedNodes.Add(node);
+
+            //     for (int j = 0; j < leftMostNodes.Count; j++)
             //     {
-            //         Node node = new Node();
-            //         node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize);
-            //         node.neighbors = new List<Node>();
-            //         node.neighbors.Add(nodeFromTile);
-            //         nodeFromTile.neighbors.Add(node);
-            //         addedNodes.Add(node);
-
-            //         for (int j = 0; j < leftMostNodes.Count; j++)
-            //         {
-            //             leftMostNodes[j].neighbors.Add(node);
-            //             node.neighbors.Add(leftMostNodes[j]);
-            //         }
-
-            //         leftMostNodes.Add(node);
+            //         leftMostNodes[j].neighbors.Add(node);
+            //         node.neighbors.Add(leftMostNodes[j]);
             //     }
+
+            //     leftMostNodes.Add(node);
+            // }
             //     if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax))
             //     {
             //         Node node = new Node();
@@ -500,7 +530,7 @@ namespace AntsFlow
                 }
                 else
                 {
-                    if (node.tile.isAntApproaching || node.tile.isDone)
+                    if (node.tile.isAntApproaching || node.tile.isTempAntApproaching || node.tile.isDone || node.isStarter)
                     {
                         Gizmos.color = Color.green;
 
@@ -513,8 +543,25 @@ namespace AntsFlow
                     // {
                     //     Gizmos.color = Color.red;
 
-                    //     Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                    //     Gizmos.DrawSphere(node.initialPosition, 0.15f);
+                    //     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
                     // }
+
+                    // if (node.tile.isAntApproaching)
+                    // {
+                    //     Gizmos.color = Color.yellow;
+
+                    //     Gizmos.DrawSphere(node.initialPosition.AddY(0.31f), 0.15f);
+                    //     Handles.Label(node.initialPosition.AddY(0.61f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
+                    // }
+
+                    if (node.tile.isMovable)
+                    {
+                        Gizmos.color = Color.yellow;
+
+                        Gizmos.DrawSphere(node.initialPosition.AddY(0.31f), 0.15f);
+                        Handles.Label(node.initialPosition.AddY(0.61f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
+                    }
                 }
 
                 // Gizmos.DrawSphere(node.initialPosition, 0.2f);
@@ -570,47 +617,64 @@ namespace AntsFlow
 
         private int searchId = 0;
 
-        public void UpdateMovableTiles()
+        public void UpdateMovableTiles(Color faction)
         {
+            return;
+
             currentSearchId++;
 
             Node start = bottomLeftMostNode;
 
-            // Reset tile state
-            foreach (var node in nodes)
-            {
-                if (node.tile != null)
-                {
-                    node.tile.isMovable = false;
-                }
-            }
+            // // Reset tile state
+            // foreach (var node in nodes)
+            // {
+            //     if (node.tile != null)
+            //     {
+            //         node.tile.isMovable = false;
+            //     }
+            // }
 
             queue.Clear();
 
             start.VisitId = currentSearchId;
             queue.Enqueue(start);
 
+            int count = 0;
+
             while (queue.Count > 0)
             {
                 Node current = queue.Dequeue();
 
-                Debug.Log($"UpdateMovableTiles {nodes.IndexOf(current)} {current.neighbors.Count} {current.tile}");
+                // Debug.Log($"Dequeue {nodes.IndexOf(current)}");
 
-                if (current.tile != null)
+                if (current.tile.isDone && !current.tile.isAntApproaching)
+                {
+                    current.tile.isAntApproaching = true;
+                }
+
+                if (current.tile != null && current.tile.Faction == faction)
                 {
                     current.tile.isMovable = true;
                 }
 
                 foreach (var neighbor in current.neighbors)
                 {
+                    count++;
+
                     if (neighbor.VisitId == currentSearchId)
+                    {
                         continue;
+                    }
 
                     // blocked
-                    if (neighbor.tile != null)
+                    if (neighbor.tile != null && !current.tile.isAntApproaching)
                     {
-                        if (!neighbor.tile.isAntApproaching &&
-                            !neighbor.tile.isDone)
+                        if
+                        (
+                            !neighbor.tile.isAntApproaching &&
+                            !neighbor.tile.isDone &&
+                            !neighbor.isStarter
+                        )
                         {
                             continue;
                         }
@@ -620,52 +684,13 @@ namespace AntsFlow
                     queue.Enqueue(neighbor);
                 }
             }
+
+            Debug.Log($"Dequeue {count}");
         }
 
-        public void ComputeReachableNodes()
+        public List<Node> FindPath(BaseTile target)
         {
             Node start = bottomLeftMostNode;
-
-            searchId++;
-
-            Queue<Node> queue = new();
-
-            start.VisitId = searchId;
-            queue.Enqueue(start);
-
-            while (queue.Count > 0)
-            {
-                Node current = queue.Dequeue();
-
-                foreach (var neighbor in current.neighbors)
-                {
-                    if (neighbor.VisitId == searchId)
-                        continue;
-
-                    if (neighbor.tile != null)
-                    {
-                        if (!neighbor.tile.isAntApproaching &&
-                            !neighbor.tile.isDone)
-                        {
-                            continue;
-                        }
-                    }
-
-                    neighbor.VisitId = searchId;
-                    queue.Enqueue(neighbor);
-                }
-            }
-        }
-
-        public List<Node> FindPath(BaseTile target, Vector3 currentPosition)
-        {
-            Node start = bottomLeftMostNode;
-
-            if (currentPosition.x > 0)
-            {
-                start = bottomRightMostNode;
-            }
-
             Node targetNode = nodes.First(node => node.tile == target);
 
             // Reset state
@@ -684,11 +709,6 @@ namespace AntsFlow
             {
                 Node current = queue.Dequeue();
 
-                // if (isDebug)
-                // {
-                //     Debug.Log($"FindPath {target.name} {nodes.IndexOf(current)}");
-                // }
-
                 if (current == targetNode)
                 {
                     return RetracePath(start, targetNode);
@@ -700,13 +720,23 @@ namespace AntsFlow
                     // if (neighbor.isObstacle)
                     // {
                     //     continue;
-                    // }
+                    // }    
 
-                    if (neighbor.tile != null)
+                    bool isStarterTileAvailable = current.isStarter && !current.tile.isAntApproaching;
+                    bool isReachTarget = !isStarterTileAvailable && neighbor.tile == target;
+
+                    if (tiles.IndexOf(current.tile) == 79)
+                    {
+                        Debug.Log($"RetracePath {tiles.IndexOf(neighbor.tile)} {tiles.IndexOf(target)} {isReachTarget}");
+                    }
+
+                    if (neighbor.tile != null && !isReachTarget)
                     {
                         if (
                             !neighbor.tile.isAntApproaching &&
-                            !neighbor.tile.isDone
+                            !neighbor.tile.isTempAntApproaching &&
+                            !neighbor.tile.isDone &&
+                            !neighbor.isStarter
                         )
                         {
                             continue;
@@ -722,19 +752,11 @@ namespace AntsFlow
                     visited.Add(neighbor);
                     neighbor.Parent = current;
 
-                    // if (isDebug)
-                    // {
-                    //     if (neighbor.tile != null && current.tile != null)
-                    //     {
-                    //         Debug.Log($"FindPath22 {target.name} {neighbor.tile.name} {current.tile.name}");
-                    //     }
-                    // }
-
                     queue.Enqueue(neighbor);
                 }
             }
 
-            return null;
+            return new List<Node>();
         }
 
         private List<Node> RetracePath(Node start, Node end)
@@ -771,6 +793,50 @@ namespace AntsFlow
         #endregion
         #endregion
 
+        public List<BaseTile> GetAllAvailableTiles(Color faction, int max)
+        {
+            List<BaseTile> validTiles = new List<BaseTile>();
+
+            int countFound = 0;
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                if (!tile.isDone &&
+                    !tile.isAntApproaching &&
+                    tile.Faction == faction &&
+                    !tile.isLocked
+                )
+                {
+                    tile.path = FindPath(tile);
+
+                    if (tile.IsMovable())
+                    {
+                        validTiles.Add(tile);
+
+                        tile.isTempAntApproaching = true;
+
+                        countFound++;
+                    }
+                }
+
+                if (countFound >= max)
+                {
+                    break;
+                }
+            }
+
+            validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
+
+            for (int i = 0; i < validTiles.Count; i++)
+            {
+                validTiles[i].isTempAntApproaching = false;
+            }
+
+            return validTiles;
+        }
+
         public bool GetAvailableTile(Color faction, out BaseTile availableTile)
         {
             // bool isAvailable = tiles.Any(
@@ -789,12 +855,16 @@ namespace AntsFlow
 
                 if (!tile.isDone &&
                     !tile.isAntApproaching &&
-                    tile.isMovable &&
                     tile.Faction == faction &&
                     !tile.isLocked
                 )
                 {
-                    validTiles.Add(tile);
+                    tile.path = FindPath(tile);
+
+                    if (tile.IsMovable())
+                    {
+                        validTiles.Add(tile);
+                    }
                 }
             }
 

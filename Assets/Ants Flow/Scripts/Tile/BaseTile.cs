@@ -29,6 +29,7 @@ namespace AntsFlow
         public bool isMovable;
         public bool isDone;
         public bool isAntApproaching;
+        public bool isTempAntApproaching;
         public bool isAnimating;
         public bool isPrepareComplete;
         public bool isLocked;
@@ -52,6 +53,11 @@ namespace AntsFlow
 
                 faction = value;
             }
+        }
+
+        public bool IsMovable()
+        {
+            return path != null && path.Count > 0;
         }
 
         public float GetWorldSize()
@@ -192,6 +198,7 @@ namespace AntsFlow
             }
 
             Hide();
+            // HideObstacle();
 
             tileMoveToAntEvent?.Invoke(this);
         }
