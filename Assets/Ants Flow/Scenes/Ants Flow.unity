@@ -19988,8 +19988,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7572492778082143720, guid: 4dc2ed3352f1e0a4e84852ae1f260d4b, type: 3}
   m_PrefabInstance: {fileID: 390615021}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &394140832 stripped
-Transform:
+--- !u!224 &394140832 stripped
+RectTransform:
   m_CorrespondingSourceObject: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
   m_PrefabInstance: {fileID: 7171469102774219247}
   m_PrefabAsset: {fileID: 0}
@@ -28809,7 +28809,7 @@ MonoBehaviour:
   poolFaction: []
   difficultyLevel: 0
   minAntNumberThreshold: 10
-  maxAntNumberThreshold: 50
+  maxAntNumberThreshold: 30
   difficultyCurve:
     serializedVersion: 2
     m_Curve:
@@ -114348,6 +114348,38 @@ PrefabInstance:
     m_TransformParent: {fileID: 1577199173}
     m_Modifications:
     - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -114376,6 +114408,14 @@ PrefabInstance:
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788165249516818381, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -114387,18 +114427,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6678189683978128895, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6678189683978128895, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6678189683978128895, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 5364137953479297067, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 1577199172}
     - target: {fileID: 8663299571502265038, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_Name
       value: Speed Up Tutorial Manager

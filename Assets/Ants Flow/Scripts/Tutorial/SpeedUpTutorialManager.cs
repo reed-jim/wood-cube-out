@@ -13,6 +13,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 {
     public CanvasGroup canvasGroup;
     public Button x2SpeedButton;
+    public RectTransform upSpeedButtonHighlight;
     public SkeletonGraphic tutorialHand;
     [SpineEvent] public string tutorialHandClickEvent;
     public ParticleSystem rippleFx;
@@ -148,8 +149,18 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
     private void Show()
     {
-        SaferioTween.AlphaShow(canvasGroup);
+        upSpeedButtonHighlight.sizeDelta = 4000 * Vector2.one;
+
+        SaferioTween.AlphaShow(canvasGroup, onCompleteAction: () =>
+        {
+            HighlightUpSpeedButton();
+        });
         Tween.Alpha(tutorialHand, 1, 0.3f);
+    }
+
+    private void HighlightUpSpeedButton()
+    {
+        Tween.UISizeDelta(upSpeedButtonHighlight, Vector2.zero, duration: 0.3f);
     }
 
     private void Hide()
