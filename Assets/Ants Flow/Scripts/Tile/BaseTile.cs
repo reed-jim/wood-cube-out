@@ -29,9 +29,12 @@ namespace AntsFlow
         public bool isMovable;
         public bool isDone;
         public bool isAntApproaching;
+        public bool isTempAntApproaching;
         public bool isAnimating;
+        public bool isMovedToAnt;
         public bool isPrepareComplete;
         public bool isLocked;
+        public int numStepToReach;
         [NonSerialized] public List<BaseTile> blockages;
         [NonSerialized] public HashSet<BaseTile> blockedByMe;
         [NonSerialized] public List<BaseTile> actualBlockages;
@@ -52,6 +55,11 @@ namespace AntsFlow
 
                 faction = value;
             }
+        }
+
+        public bool IsMovable()
+        {
+            return path != null && path.Count > 0;
         }
 
         public float GetWorldSize()
@@ -191,7 +199,10 @@ namespace AntsFlow
                 HapticFeedback.LightFeedback();
             }
 
+            isMovedToAnt = true;
+
             Hide();
+            HideObstacle();
 
             tileMoveToAntEvent?.Invoke(this);
         }
@@ -241,7 +252,7 @@ namespace AntsFlow
         {
             // navMeshModifierVolume.enabled = false;
 
-            HideObstacle();
+            // HideObstacle();
 
             SetNoLongerBlockages();
 

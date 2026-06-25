@@ -552,6 +552,7 @@ namespace AntsFlow
                 SpawnFakeTile(tilesToClear[i], isLast);
             }
 
+            TileManager.Ins.UpdateNavMesh();
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);

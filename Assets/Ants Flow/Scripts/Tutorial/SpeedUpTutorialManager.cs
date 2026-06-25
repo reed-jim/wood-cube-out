@@ -6,11 +6,13 @@ using Saferio.Util.SaferioTween;
 using Spine;
 using Spine.Unity;
 using UnityEngine;
+using UnityEngine.UI;
 using static GameEnum;
 
 public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 {
     public CanvasGroup canvasGroup;
+    public Button x2SpeedButton;
     public SkeletonGraphic tutorialHand;
     [SpineEvent] public string tutorialHandClickEvent;
     public ParticleSystem rippleFx;
@@ -31,6 +33,8 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     {
         base.MoreActionOnAwake();
 
+        x2SpeedButton.onClick.AddListener(X2Speed);
+
         TileManager.winLevelEvent += OnLevelWon;
         tutorialHand.AnimationState.Event += OnSpineEvent;
     }
@@ -49,30 +53,41 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
         }
     }
 
-    void Update()
+    // void Update()
+    // {
+    //     if (GamePersistentVariable.isTutorialLevelOneDone && Input.GetMouseButton(0))
+    //     {
+    //         if (timeHold < 0.5f)
+    //         {
+    //             timeHold += Time.unscaledDeltaTime;
+    //         }
+    //         else
+    //         {
+    //             isHolding = true;
+
+    //             if (_progressingTutorialCoroutine != null)
+    //             {
+    //                 StopCoroutine(_progressingTutorialCoroutine);
+    //             }
+
+    //             Hide();
+    //         }
+    //     }
+    // }
+
+    private void X2Speed()
     {
-        if (GamePersistentVariable.isTutorialLevelOneDone && Input.GetMouseButton(0))
-        {
-            if (timeHold < 0.5f)
-            {
-                timeHold += Time.unscaledDeltaTime;
-            }
-            else
-            {
-                isHolding = true;
+        x2SpeedButton.interactable = false;
 
-                if (_progressingTutorialCoroutine != null)
-                {
-                    StopCoroutine(_progressingTutorialCoroutine);
-                }
+        GameplayScreen.Ins.X2Speed();
 
-                Hide();
-            }
-        }
+        Hide();
     }
 
     public void StartTutorial()
     {
+        x2SpeedButton.interactable = true;
+
         _progressingTutorialCoroutine = StartCoroutine(ProgressingTutorial());
         // StartCoroutine(PlayingRippleFx());
     }

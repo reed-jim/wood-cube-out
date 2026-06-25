@@ -9166,6 +9166,8 @@ Transform:
   - {fileID: 5271398802256722098}
   - {fileID: 9149839531363994100}
   - {fileID: 6808705165150599096}
+  - {fileID: 18841902316788978}
+  - {fileID: 3848226533631462939}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -13617,6 +13619,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Tu nivel est\xE1 en progreso. \xBFTe gustar\xEDa continuar o reiniciar?"
     Object: {fileID: 0}
+--- !u!1 &7716864842313363672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3848226533631462939}
+  - component: {fileID: 1542821448460033707}
+  m_Layer: 0
+  m_Name: x2 speed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3848226533631462939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7716864842313363672}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1542821448460033707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7716864842313363672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: x2 Speed
+    Object: {fileID: 0}
+  - Language: French
+    Text: Vitesse x2
+    Object: {fileID: 0}
+  - Language: German
+    Text: x2 Geschwindigkeit
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "x2 Velocit\xE0"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u500D\u901F"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "x2 \uC18D\uB3C4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Velocidade x2
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "x2 \u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Velocidad x2
+    Object: {fileID: 0}
 --- !u!1 &7725241648440617524
 GameObject:
   m_ObjectHideFlags: 0
@@ -13737,6 +13812,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Elige cualquier Ant Box en la cola
+    Object: {fileID: 0}
+--- !u!1 &7803656482894124069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 18841902316788978}
+  - component: {fileID: 3746140452788464002}
+  m_Layer: 0
+  m_Name: x2 Speed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &18841902316788978
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7803656482894124069}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3746140452788464002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7803656482894124069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: x{value} Speed
+    Object: {fileID: 0}
+  - Language: French
+    Text: x{value} Vitesse
+    Object: {fileID: 0}
+  - Language: German
+    Text: x{value} Geschwindigkeit
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "x{value} Velocit\xE0"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "x{value} \u901F\u5EA6"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "x{value} \uC18D\uB3C4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: x{value} Velocidade
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "x{value} \u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: x{value} Velocidad
     Object: {fileID: 0}
 --- !u!1 &7826624952946173288
 GameObject:

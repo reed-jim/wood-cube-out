@@ -328,6 +328,12 @@ public class WinPopup : BasePopup
 
         SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
 
+        TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
+        new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime).Send();
+        SaferioTracking.LogLevelComplete(currentLevel.Value);
+
+        GamePersistentVariable.levelRetryTime = 0;
+
         // don't track loop level CostCenter
         if (currentLevel.Value <= NamPhuThuy.GamePlay.LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
