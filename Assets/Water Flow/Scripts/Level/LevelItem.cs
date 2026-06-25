@@ -22,6 +22,8 @@ namespace AntsFlow
         public int numColumn;
         public int numRow;
         public bool isOverrideLevelScale;
+        public float levelScaleXRatio;
+        public float levelScaleYRatio;
         public float multiplierScaleX;
         public float multiplierScaleY;
         public List<Color> poolFaction;
@@ -118,6 +120,8 @@ namespace AntsFlow
             {
                 levelScale = transform.localScale,
                 isOverrideLevelScale = isOverrideLevelScale,
+                levelScaleXRatio = levelScaleXRatio,
+                levelScaleYRatio = levelScaleYRatio,
                 multiplierScaleX = multiplierScaleX,
                 multiplierScaleY = multiplierScaleY,
                 poolFactionIndexes = poolFactionIndexes,
@@ -987,6 +991,8 @@ public class LevelItemData
     public int numColumn;
     public int numRow;
     public bool isOverrideLevelScale;
+    public float levelScaleXRatio = 18f;
+    public float levelScaleYRatio = 15f;
     public float multiplierScaleX;
     public float multiplierScaleY;
     public List<int> poolFactionIndexes;

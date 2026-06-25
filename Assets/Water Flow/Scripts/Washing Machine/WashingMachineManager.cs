@@ -67,6 +67,8 @@ namespace AntsFlow
 
                 finishUsingEnableAllAntBoxesBoosterEvent?.Invoke();
             }
+
+            CheckNoAntBoxLeftOnStartSlots();
         }
 
         public void StartLevel(AntsFlow.LevelItem levelItem)
@@ -710,6 +712,16 @@ namespace AntsFlow
         #endregion
 
         #region Check Win
+        private void CheckNoAntBoxLeftOnStartSlots()
+        {
+            bool isNoAntBoxLeftOnStartSlots = washingMachineStartSlots.Count(item => item.washingMachine != null) == 0;
+
+            if (isNoAntBoxLeftOnStartSlots)
+            {
+                UpSpeedAnt.Ins.UpSpeedNearEndLevel();
+            }
+        }
+
         private void CheckWinLevel()
         {
             bool isWin = poolFaction.Count + ClothesManager.Ins.clothingPieces.Count == 0;

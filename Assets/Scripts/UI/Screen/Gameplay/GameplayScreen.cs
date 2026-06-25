@@ -15,7 +15,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [Header("Buttons")]
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button noAdsButton;
-    [SerializeField] private Button x2SpeedButton;
     [SerializeField] private Button openShopPopupButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
@@ -25,10 +24,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private GameSetting gameSetting;
 
     [Header("Game Speed")]
+    [SerializeField] private Button upSpeedButton;
+    [SerializeField] private CanvasGroup upSpeedActiveState;
+    [SerializeField] private CanvasGroup upSpeedInactiveState;
+
     [SerializeField] private Button increaseGameSpeedButton;
     [SerializeField] private Button decreaseGameSpeedButton;
     [SerializeField] private TMP_Text gameSpeedText;
-    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedGameSpeedText;
 
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
@@ -58,7 +60,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
-        x2SpeedButton.onClick.AddListener(X2Speed);
+        upSpeedButton.onClick.AddListener(X2Speed);
 
         openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
@@ -77,7 +79,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
         }
 
         gameSpeedText.text = $"x{(int)Time.timeScale}";
-        localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{(int)Time.timeScale}");
     }
 
     void OnDestroy()
@@ -215,18 +216,18 @@ public class GameplayScreen : Singleton<GameplayScreen>
     #region Game Speed
     public void X2Speed()
     {
-        float prevValue = Time.timeScale;
+        int currentSpeed = UpSpeedAnt.Ins.SwitchGameSpeed();
 
-        if (Time.timeScale == 1)
+        if (currentSpeed == 1)
         {
-            Time.timeScale = 2;
+            SaferioTween.AlphaHide(upSpeedActiveState);
+            SaferioTween.AlphaShow(upSpeedInactiveState);
         }
         else
         {
-            Time.timeScale = 1;
+            SaferioTween.AlphaShow(upSpeedActiveState);
+            SaferioTween.AlphaHide(upSpeedInactiveState);
         }
-
-        localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{prevValue}");
     }
 
     private void IncreaseGameSpeed()
