@@ -33,16 +33,29 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     {
         base.MoreActionOnAwake();
 
-        x2SpeedButton.onClick.AddListener(X2Speed);
+        if (x2SpeedButton != null)
+        {
+            x2SpeedButton.onClick.AddListener(X2Speed);
+        }
 
         TileManager.winLevelEvent += OnLevelWon;
-        tutorialHand.AnimationState.Event += OnSpineEvent;
+
+        if (tutorialHand != null && tutorialHand.AnimationState != null)
+        {
+            tutorialHand.AnimationState.Event += OnSpineEvent;
+        }
+
     }
 
     void OnDestroy()
     {
         TileManager.winLevelEvent -= OnLevelWon;
-        tutorialHand.AnimationState.Event -= OnSpineEvent;
+
+        if (tutorialHand != null && tutorialHand.AnimationState != null)
+        {
+            tutorialHand.AnimationState.Event -= OnSpineEvent;
+        }
+
     }
 
     private void OnSpineEvent(TrackEntry trackEntry, Spine.Event e)
@@ -77,7 +90,10 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
     private void X2Speed()
     {
-        x2SpeedButton.interactable = false;
+        if (x2SpeedButton != null)
+        {
+            x2SpeedButton.interactable = false;
+        }
 
         GameplayScreen.Ins.X2Speed();
 
@@ -86,7 +102,11 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
     public void StartTutorial()
     {
-        x2SpeedButton.interactable = true;
+        if (x2SpeedButton != null)
+        {
+            x2SpeedButton.interactable = true;
+        }
+
 
         _progressingTutorialCoroutine = StartCoroutine(ProgressingTutorial());
         // StartCoroutine(PlayingRippleFx());

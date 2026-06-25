@@ -222,6 +222,9 @@ public class BoosterUI : MonoBehaviour
         else if (boosterType == BoosterType.ClearScrewPorts)
         {
             boosterIndex = 2;
+        }else if (boosterType == BoosterType.ClearOneColor)
+        {
+            boosterIndex = 4;
         }
         else
         {

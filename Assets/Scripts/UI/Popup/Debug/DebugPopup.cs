@@ -63,8 +63,15 @@ public class DebugPopup : BasePopup
         }
         clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
-        hideDebugButton.onClick.AddListener(HideDebug);
-        hideUIButton.onClick.AddListener(HideUI);
+        if (hideDebugButton != null)
+        {
+            hideDebugButton.onClick.AddListener(HideDebug);
+        }
+        if (hideUIButton != null)
+        {
+            hideUIButton.onClick.AddListener(HideUI);
+        }
+
 
         gameSpeedText.text = $"Game Speed: x{(int)Time.timeScale}";
     }

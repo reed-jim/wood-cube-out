@@ -20083,8 +20083,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedUpTutorialManager
   m_DontDestroyOnLoad: 0
-  canvasGroup: {fileID: 0}
-  tutorialHand: {fileID: 0}
+  canvasGroup: {fileID: 8779043976519746292}
+  x2SpeedButton: {fileID: 0}
+  tutorialHand: {fileID: 8779043976519746291}
+  tutorialHandClickEvent: 
+  rippleFx: {fileID: 0}
   numAntToShow: 0
   intervalShowingTutorial: 0
 --- !u!4 &394140832
@@ -34198,6 +34201,7 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   pauseButton: {fileID: 1011284607}
   noAdsButton: {fileID: 316604634}
+  x2SpeedButton: {fileID: 0}
   openShopPopupButton: {fileID: 1124534174}
   openDebugPopupButton: {fileID: 760980268}
   remainingScrewText: {fileID: 1440758466}
@@ -34207,7 +34211,11 @@ MonoBehaviour:
   increaseGameSpeedButton: {fileID: 2118647710}
   decreaseGameSpeedButton: {fileID: 765135574}
   gameSpeedText: {fileID: 900073423}
+  localizedGameSpeedText: {fileID: 0}
   hardModeCanvasGroup: {fileID: 2081052580}
+  debugContainer: {fileID: 0}
+  mainUI: {fileID: 0}
+  boosterUI: {fileID: 0}
 --- !u!1001 &658327892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65843,8 +65851,11 @@ MonoBehaviour:
   levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
-  texturedMaterial: {fileID: 0}
-  tutorialDelay: 0.2
+  levelScaleXRatio: 18
+  levelScaleYRatio: 15
+  levelYOffsetRatio: 0.175
+  multiplierScaleX: 54
+  multiplierScaleY: 54
   glowTilemapGrid: {fileID: 1097758170}
   shadowTilemap: {fileID: 1451543133}
   shadowTilemapGrid: {fileID: 1153400086}
@@ -65852,21 +65863,6 @@ MonoBehaviour:
   tilemapGrids: []
   scaleFactor: 0.55
   shadowTilemapOffset: {x: -0.1, y: 0.1, z: 0}
-  tile:
-    tilemap: {fileID: 0}
-    tilemapPosition: {x: 0, y: 0, z: 0}
-    tileObstacle: {fileID: 0}
-    name: 0
-    position: {x: 0, y: 0, z: 0}
-    isDone: 0
-    isAntApproaching: 0
-    isAnimating: 0
-    isPrepareComplete: 0
-    isLocked: 0
-    ring: 0
-    priority: 0
-    faction: {r: 0, g: 0, b: 0, a: 0}
-    worldSize: 0
 --- !u!4 &1261068466
 Transform:
   m_ObjectHideFlags: 0
@@ -74248,8 +74244,8 @@ RectTransform:
   - {fileID: 1921746765}
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.04028436}
-  m_AnchorMax: {x: 1, y: 0.9443128}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -112722,8 +112718,8 @@ RectTransform:
   - {fileID: 4691125694994539992}
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.04028436}
-  m_AnchorMax: {x: 1, y: 0.9443128}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -113851,6 +113847,10 @@ PrefabInstance:
       propertyPath: gameplayCanvas
       value: 
       objectReference: {fileID: 1577199172}
+    - target: {fileID: 6081346096635791751, guid: 965f9e689d31e4249b60e2803fcf90f5, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6834822983003304286, guid: 965f9e689d31e4249b60e2803fcf90f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -114587,6 +114587,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6297379854574794480, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7799966238309539232, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
       propertyPath: m_Name
       value: Booster Tutorial
@@ -114644,6 +114648,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+--- !u!114 &8779043976519746291 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7912506898811784141, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+  m_PrefabInstance: {fileID: 8779043976519746290}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85b887af7e6c3f45a2e2d2920d641bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonGraphic
+--- !u!225 &8779043976519746292 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 9097711329966665084, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+  m_PrefabInstance: {fileID: 8779043976519746290}
+  m_PrefabAsset: {fileID: 0}
 --- !u!222 &8914315990271841473
 CanvasRenderer:
   m_ObjectHideFlags: 0

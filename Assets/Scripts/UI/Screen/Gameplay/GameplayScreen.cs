@@ -58,7 +58,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
-        x2SpeedButton.onClick.AddListener(X2Speed);
+        if (x2SpeedButton != null)
+        {
+            x2SpeedButton.onClick.AddListener(X2Speed);
+        }
 
         openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
@@ -76,8 +79,14 @@ public class GameplayScreen : Singleton<GameplayScreen>
             openDebugPopupButton.gameObject.SetActive(false);
         }
 
-        gameSpeedText.text = $"x{(int)Time.timeScale}";
-        localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{(int)Time.timeScale}");
+        if (gameSpeedText != null)
+        {
+            gameSpeedText.text = $"x{(int)Time.timeScale}";
+        }
+        if (localizedGameSpeedText != null)
+        {
+            localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{(int)Time.timeScale}");
+        }
     }
 
     void OnDestroy()
@@ -256,7 +265,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
             Time.timeScale = 1;
         }
 
-        localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{prevValue}");
+        if (localizedGameSpeedText != null)
+        {
+            localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{prevValue}");
+        }
     }
 
     private void IncreaseGameSpeed()
@@ -293,7 +305,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
             GamePersistentVariable.isGameSpeedChangeInDebug = false;
         }
 
-        gameSpeedText.text = $"x{(int)Time.timeScale}";
+        if (gameSpeedText != null)
+        {
+            gameSpeedText.text = $"x{(int)Time.timeScale}";
+        }
     }
     #endregion      
 }
