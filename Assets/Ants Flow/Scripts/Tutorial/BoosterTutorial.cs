@@ -140,6 +140,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         int boosterIndex = GetBoosterIndex(boosterType);
 
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
+        boosterSkeletonGraphic[boosterIndex].color = Color.white;
 
         while (step < maxStep)
         {

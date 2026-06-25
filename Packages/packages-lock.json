@@ -116,6 +116,15 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.2d.tilemap": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.tilemap": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0"
+      }
+    },
     "com.unity.addressables": {
       "version": "2.9.0",
       "depth": 0,
@@ -520,15 +529,6 @@
       "source": "git",
       "dependencies": {},
       "hash": "9dd8431f3b2e7e4654e5a6284e3b8c36b4071c2f"
-    },
-    "xyz.candycoded.hapticfeedback": {
-      "version": "https://github.com/CandyCoded/HapticFeedback.git#v1.0.3",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.modules.androidjni": "1.0.0"
-      },
-      "hash": "4597a0376eafedee647bc3a02c6b574c309f3fa7"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
