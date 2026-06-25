@@ -91,13 +91,13 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
-            BaseTile.tileMoveToAntEvent += UpdateNavMesh;
+            BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
         }
 
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
-            BaseTile.tileMoveToAntEvent -= UpdateNavMesh;
+            BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
         }
 
         #region Grid
@@ -1067,6 +1067,8 @@ namespace AntsFlow
 
             if (isWon)
             {
+                UpSpeedAnt.Ins.ResetSpeedNearEndLevel();
+
                 if (GamePersistentVariable.isPauseGame)
                 {
                     StartCoroutine(PendingWinLevel());

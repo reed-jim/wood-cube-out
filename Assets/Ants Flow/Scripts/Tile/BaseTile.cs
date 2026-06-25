@@ -202,7 +202,7 @@ namespace AntsFlow
             isMovedToAnt = true;
 
             Hide();
-            HideObstacle();
+            // HideObstacle();
 
             tileMoveToAntEvent?.Invoke(this);
         }
@@ -252,7 +252,7 @@ namespace AntsFlow
         {
             // navMeshModifierVolume.enabled = false;
 
-            // HideObstacle();
+            HideObstacle();
 
             SetNoLongerBlockages();
 

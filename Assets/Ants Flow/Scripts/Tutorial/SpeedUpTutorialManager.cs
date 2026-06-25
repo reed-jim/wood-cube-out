@@ -12,6 +12,7 @@ using static GameEnum;
 public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 {
     public CanvasGroup canvasGroup;
+    public CanvasGroup nonSafeAreaCanvasGroup;
     public Button x2SpeedButton;
     public RectTransform upSpeedButtonHighlight;
     public SkeletonGraphic tutorialHand;
@@ -155,6 +156,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
         {
             HighlightUpSpeedButton();
         });
+        SaferioTween.AlphaShow(nonSafeAreaCanvasGroup);
         Tween.Alpha(tutorialHand, 1, 0.3f);
     }
 
@@ -166,6 +168,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
     private void Hide()
     {
         SaferioTween.AlphaHide(canvasGroup);
+        SaferioTween.AlphaHide(nonSafeAreaCanvasGroup);
         Tween.Alpha(tutorialHand, 0, 0.3f);
     }
 

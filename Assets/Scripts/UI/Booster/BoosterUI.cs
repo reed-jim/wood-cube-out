@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AntsFlow;
 using Falcon.FalconAnalytics.Scripts.Enum;
 using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
+using Lean.Localization;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -27,6 +28,11 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private RectTransform breakModeButtonRT;
     [SerializeField] private RectTransform clearAllScrewPortsButtonRT;
     [SerializeField] private RectTransform breakModeContainer;
+    [SerializeField] private CanvasGroup breakModeContainerCanvasGroup;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
+
+    public string enableAllAntBoxesTranslationName;
+    public string clearOneColorTranslationName;
 
     [SerializeField] private Button addMoreScrewPortButton;
     [SerializeField] private Button breakObjectButton;
@@ -78,6 +84,7 @@ public class BoosterUI : MonoBehaviour
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
+        WashingMachineItem.selectWashingMachineEvent += ConfirmUseEnableAllBoxes;
         WaterFlowGameInput.useClearOneColorBoosterEvent += ConfirmClearOneColor;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
@@ -93,7 +100,7 @@ public class BoosterUI : MonoBehaviour
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
         clearOneColorButton.onClick.AddListener(() => UseBooster(BoosterType.ClearOneColor));
-        disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
+        // disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
         _tweens = new List<Tween>();
 
@@ -114,6 +121,7 @@ public class BoosterUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
+        WashingMachineItem.selectWashingMachineEvent -= ConfirmUseEnableAllBoxes;
         WaterFlowGameInput.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
@@ -379,9 +387,12 @@ public class BoosterUI : MonoBehaviour
         }
 
         breakModeContainer.gameObject.SetActive(true);
+        breakModeContainerCanvasGroup.alpha = 1;
+        localizedDescription.TranslationName = clearOneColorTranslationName;
 
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
+        // Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
+        Tween.LocalPositionY(breakModeContainer, -breakModeContainer.sizeDelta.y, duration: transitionTime)
         .OnComplete(() =>
         {
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
@@ -390,6 +401,14 @@ public class BoosterUI : MonoBehaviour
 
             _isInTransition = false;
         });
+    }
+
+    private void ConfirmUseEnableAllBoxes(WashingMachineItem antBox)
+    {
+        if (breakModeContainer.gameObject.activeInHierarchy)
+        {
+            DisableBreakObjectMode();
+        }
     }
 
     private void ConfirmClearOneColor(Color faction)
@@ -402,9 +421,9 @@ public class BoosterUI : MonoBehaviour
     private void DisableBreakObjectMode()
     {
         Tween.LocalPositionY(boosterContainer, _initialBoosterContainerPosition.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime)
-        .OnComplete(() =>
+        SaferioTween.AlphaHide(breakModeContainerCanvasGroup, onCompleteAction: () =>
         {
+            breakModeContainer.localPosition = breakModeContainer.localPosition.ChangeY(-canvasSizeOfReferenceDevice.Value.y);
             breakModeContainer.gameObject.SetActive(false);
         });
     }
@@ -446,7 +465,17 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 1);
 
-        HideBooster();
+        // HideBooster();
+        breakModeContainer.gameObject.SetActive(true);
+        breakModeContainerCanvasGroup.alpha = 1;
+        localizedDescription.TranslationName = enableAllAntBoxesTranslationName;
+
+        Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
+        Tween.LocalPositionY(breakModeContainer, 0, duration: transitionTime)
+        .OnComplete(() =>
+        {
+            _isInTransition = false;
+        });
 
         WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
         // WashingMachineManager.Ins.UseMagicBooster();
