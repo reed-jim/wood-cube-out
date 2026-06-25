@@ -330,13 +330,6 @@ namespace NamPhuThuy.GamePlay
 
         private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
         {
-            // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
-
-            // Vector3 initialScale = tilemapGrid.localScale;
-
-            // tilemapGrid.SetParent(levelTransform);
-            // tilemapGrid.localScale = Vector3.one;
-
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
@@ -347,23 +340,29 @@ namespace NamPhuThuy.GamePlay
 
             float ratioXY = multiplierScaleX * (multiplierScaleX / multiplierScaleY);
 
+            Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
+            Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+
+            spawnedTileMapGrid.SetParent(levelTransform);
+            spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
+
+            tilemapGrids.Add(spawnedTileMapGrid);
+
             for (int i = 0; i < numRows; i++)
             {
-                // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
-                Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
-                Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+                // Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
+                // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
 
-                spawnedTileMapGrid.SetParent(levelTransform);
-                spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
-                spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
+                // spawnedTileMapGrid.SetParent(levelTransform);
+                // spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
+                // spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
 
-                tilemapGrids.Add(spawnedTileMapGrid);
+                // tilemapGrids.Add(spawnedTileMapGrid);
 
                 for (int j = 0; j < numCols; j++)
                 {
                     int index = j + i * numCols;
 
-                    // Vector3Int cellPos = shadowTilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
                     Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
 
                     Tile tile = ScriptableObject.CreateInstance<Tile>();
@@ -384,61 +383,7 @@ namespace NamPhuThuy.GamePlay
 
             AntsFlow.TileManager.Ins.tilemaps = tilemapGrids.Select(item => item.GetComponentInChildren<Tilemap>()).ToArray();
             AntsFlow.TileManager.Ins.UpdateNavMesh();
-
-            // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
-
-            // foreach (var t in antLevelData.antLevelDataItems)
-            // {
-            //     Color faction = FactionMapper.Ins.indexesOfColors[t.factionIndex];
-
-            //     CommonUtil.AddValueOfDictionary(itemByFaction, faction, t);
-            // }
-
-            // foreach (var t in itemByFaction)
-            // {
-            // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
-            // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
-
-            //     for (int i = 0; i < t.Value.Count; i++)
-            //     {
-            //         Vector3Int cellPos = tilemap.WorldToCell(t.Value[i].position);
-
-            //         Tile tile = ScriptableObject.CreateInstance<Tile>();
-            //         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.Value[i].factionIndex]);
-
-            //         spawnedTileMap.SetTile(cellPos, tile);
-            //     }
-            // }
-
-            // foreach (var t in antLevelData.antLevelDataItems)
-            // {
-            //     Vector3Int cellPos = tilemap.WorldToCell(t.position);
-
-            //     Debug.Log($"row {t.position} {cellPos}");
-
-            //     Tile tile = ScriptableObject.CreateInstance<Tile>();
-            //     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.factionIndex]);
-
-            //     tilemap.SetTile(cellPos, tile);
-            // }
         }
-
-        // private void FillTileMap(Transform level)
-        // {
-        //     AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
-
-        //     tilemap.transform.SetParent(level);
-
-        //     foreach (var t in tiles)
-        //     {
-        //         Vector3Int cellPos = tilemap.WorldToCell(t.transform.position);
-
-        //         Tile tile = ScriptableObject.CreateInstance<Tile>();
-        //         tile.sprite = t.spriteRenderer.sprite;
-
-        //         tilemap.SetTile(cellPos, tile);
-        //     }
-        // }
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
         {
