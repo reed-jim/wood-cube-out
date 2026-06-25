@@ -323,9 +323,25 @@ namespace NamPhuThuy.GamePlay
             GamePersistentVariable.obstacleScaleFactor = finalScale;
 
             finalScale /= multiplierScaleX;
+            finalScale *= (1 - GetTopUnsafeRatio());
 
             scaleFactor = finalScale;
             GamePersistentVariable.tileMapScaleFactor = scaleFactor;
+
+            float GetTopUnsafeRatio()
+            {
+                Rect safe = Screen.safeArea;
+
+                float screenHeight = Screen.height;
+
+                // safe.yMax is the top of the safe area in screen pixels
+                float safeTop = safe.yMax;
+
+                // unsafe top area height
+                float unsafeTopHeight = screenHeight - safeTop;
+
+                return unsafeTopHeight / screenHeight;
+            }
         }
 
         private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
