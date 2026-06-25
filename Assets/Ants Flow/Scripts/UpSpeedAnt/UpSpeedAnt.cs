@@ -120,6 +120,13 @@ public class UpSpeedAnt : Singleton<UpSpeedAnt>
         ChangeGameSpeed();
     }
 
+    public void ResetSpeedNearEndLevel()
+    {
+        nearEndLevelSpeedUpMultiplier = 1;
+
+        ChangeGameSpeed();
+    }
+
     private void OnLevelStarted()
     {
         speedUpMultiplier = 1;

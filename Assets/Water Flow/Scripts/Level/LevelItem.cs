@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.IO;
+using AntsFlow;
+
 
 
 
@@ -1027,12 +1029,12 @@ public class SpecialElementItemConfig
 
     public void RemoveOneSpecialElementInPool()
     {
-        spawnOrder.RemoveAt(0);
+        spawnOrder.Remove(WashingMachineManager.Ins.numAntBoxSpawned);
     }
 
     public bool IsCorrectOrder(int numAntBoxesSpawned)
     {
-        return spawnOrder[0] == numAntBoxesSpawned;
+        return spawnOrder.Contains(numAntBoxesSpawned);
     }
 
     public bool IsValidToSpawn(int numAntBoxesSpawned)

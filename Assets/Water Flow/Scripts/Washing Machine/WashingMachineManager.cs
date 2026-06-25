@@ -714,9 +714,9 @@ namespace AntsFlow
         #region Check Win
         private void CheckNoAntBoxLeftOnStartSlots()
         {
-            bool isNoAntBoxLeftOnStartSlots = washingMachineStartSlots.Count(item => item.washingMachine != null) == 0;
+            int numAntBoxLeftOnStartSlots = washingMachineStartSlots.Count(item => item.washingMachine != null);
 
-            if (isNoAntBoxLeftOnStartSlots)
+            if (numAntBoxLeftOnStartSlots <= 1)
             {
                 UpSpeedAnt.Ins.UpSpeedNearEndLevel();
             }
