@@ -5,6 +5,8 @@ using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,6 +46,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private CanvasGroup debugContainer;
     [SerializeField] private GameObject mainUI;
     [SerializeField] private GameObject boosterUI;
+    [SerializeField] private CanvasGroup mainUICanvasGroup;
+    [SerializeField] private CanvasGroup boosterUICanvasGroup;
+    [SerializeField] private SkeletonGraphic iconSkeleton;
+    [SpineAnimation] public string iconLoadingAnimation;
 
     #region MonoBehaviour Callbacks
 
@@ -109,6 +115,43 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     #endregion
 
+    #region Near Win Level
+    public void ShowUINearWinLevel()
+    {
+        SaferioTween.AlphaShow(mainUICanvasGroup);
+        SaferioTween.AlphaShow(boosterUICanvasGroup);
+    }
+
+    public void HideUINearWinLevel(Action onCompleteAction)
+    {
+        SaferioTween.AlphaHide(mainUICanvasGroup);
+        SaferioTween.AlphaHide(boosterUICanvasGroup, onCompleteAction: onCompleteAction);
+    }
+
+    public void ShowGameIcon(Action onCompleteAction)
+    {
+        iconSkeleton.gameObject.SetActive(true);
+        iconSkeleton.color = Color.white;
+
+        iconSkeleton.Skeleton.SetToSetupPose();
+        iconSkeleton.AnimationState.ClearTracks();
+        TrackEntry trackEntry = iconSkeleton.AnimationState.SetAnimation(0, iconLoadingAnimation, false);
+
+        trackEntry.Complete += OnAnimationComplete;
+
+        void OnAnimationComplete(TrackEntry entry)
+        {
+            trackEntry.Complete -= OnAnimationComplete;
+
+            Tween.Alpha(iconSkeleton, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                onCompleteAction?.Invoke();
+            });
+        }
+    }
+    #endregion
+
     #region Button Events
 
     private void Pause()
@@ -172,7 +215,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelStarted()
     {
-
+        ShowUINearWinLevel();
     }
 
     private void OnLevelTextTranslated()
@@ -218,6 +261,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         int currentSpeed = UpSpeedAnt.Ins.SwitchGameSpeed();
 
+        UpdateUpSpeedState(currentSpeed);
+    }
+
+    public void UpdateUpSpeedState(int currentSpeed)
+    {
         if (currentSpeed == 1)
         {
             SaferioTween.AlphaHide(upSpeedActiveState);

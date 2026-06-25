@@ -1067,7 +1067,7 @@ namespace AntsFlow
 
             if (isWon)
             {
-                UpSpeedAnt.Ins.ResetSpeedNearEndLevel();
+                UpSpeedAnt.Ins.ResetSpeedOnWinLevel();
 
                 if (GamePersistentVariable.isPauseGame)
                 {
@@ -1075,7 +1075,10 @@ namespace AntsFlow
                 }
                 else
                 {
-                    winLevelEvent?.Invoke();
+                    GameplayScreen.Ins.ShowGameIcon(() =>
+                    {
+                        winLevelEvent?.Invoke();
+                    });
                 }
             }
         }
@@ -1089,7 +1092,10 @@ namespace AntsFlow
                 yield return waitForSeconds;
             }
 
-            winLevelEvent?.Invoke();
+            GameplayScreen.Ins.ShowGameIcon(() =>
+            {
+                winLevelEvent?.Invoke();
+            });
         }
 
         public void StartHightlightEachFactionSequentially()

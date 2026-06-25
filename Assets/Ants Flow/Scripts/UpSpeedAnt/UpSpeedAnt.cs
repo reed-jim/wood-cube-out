@@ -115,14 +115,20 @@ public class UpSpeedAnt : Singleton<UpSpeedAnt>
 
     public void UpSpeedNearEndLevel()
     {
-        nearEndLevelSpeedUpMultiplier = 2;
+        GameplayScreen.Ins.HideUINearWinLevel(onCompleteAction: () =>
+        {
+            nearEndLevelSpeedUpMultiplier = 3;
 
-        ChangeGameSpeed();
+            ChangeGameSpeed();
+        });
     }
 
-    public void ResetSpeedNearEndLevel()
+    public void ResetSpeedOnWinLevel()
     {
+        speedUpMultiplier = 1;
         nearEndLevelSpeedUpMultiplier = 1;
+
+        GameplayScreen.Ins.UpdateUpSpeedState(speedUpMultiplier);
 
         ChangeGameSpeed();
     }
