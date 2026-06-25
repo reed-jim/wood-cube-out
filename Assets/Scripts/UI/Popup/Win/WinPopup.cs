@@ -30,6 +30,8 @@ public class WinPopup : BasePopup
     [SerializeField] private RectTransform eventItemGroup;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
 
+    [SerializeField] private ParticleSystem completeFx;
+
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
@@ -133,6 +135,8 @@ public class WinPopup : BasePopup
         int coinQuantity = GamePersistentVariable.isHardMode ? 30 : 10;
 
         CollectCoin(coinQuantity);
+
+        completeFx.Play();
 
         TrackLevelWin();
 
