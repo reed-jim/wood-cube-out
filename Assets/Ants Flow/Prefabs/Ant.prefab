@@ -60,12 +60,18 @@ MonoBehaviour:
   tile:
     tilemap: {fileID: 0}
     tilemapPosition: {x: 0, y: 0, z: 0}
-    name: 0
+    tileObstacle: {fileID: 0}
+    tileName: 0
     position: {x: 0, y: 0, z: 0}
+    isMovable: 0
     isDone: 0
     isAntApproaching: 0
+    isTempAntApproaching: 0
     isAnimating: 0
+    isMovedToAnt: 0
+    isPrepareComplete: 0
     isLocked: 0
+    numStepToReach: 0
     ring: 0
     priority: 0
     faction: {r: 0, g: 0, b: 0, a: 0}
@@ -76,7 +82,7 @@ MonoBehaviour:
   wiggleFrequency: 3
   noiseFrequency: 0.1
   noiseMagnitude: 0.2
-  initialSpeedMove: 6
+  initialSpeedMove: 10.2
 --- !u!195 &9042187430261845247
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -88,7 +94,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 6
-  m_Acceleration: 8
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 160
   m_StoppingDistance: 0
