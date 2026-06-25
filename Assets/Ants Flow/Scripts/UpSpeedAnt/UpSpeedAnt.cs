@@ -92,7 +92,7 @@ public class UpSpeedAnt : Singleton<UpSpeedAnt>
     {
         int totalSpeedUpMultiplier = speedUpMultiplier * nearEndLevelSpeedUpMultiplier;
 
-        totalSpeedUpMultiplier = Mathf.Min(totalSpeedUpMultiplier, 2);
+        totalSpeedUpMultiplier = Mathf.Min(totalSpeedUpMultiplier, 3);
 
         Time.timeScale = totalSpeedUpMultiplier;
     }
