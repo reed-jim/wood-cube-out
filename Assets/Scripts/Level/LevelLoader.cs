@@ -269,6 +269,11 @@ namespace NamPhuThuy.GamePlay
 
                 if (levelItem.isOverrideLevelScale)
                 {
+                    if (levelItem.levelScaleXRatio > 1 && levelItem.levelScaleYRatio > 1)
+                    {
+                        levelScaleXRatio = levelItem.levelScaleXRatio;
+                        levelScaleYRatio = levelItem.levelScaleYRatio;
+                    }
                     multiplierScaleX = levelItem.multiplierScaleX;
                     multiplierScaleY = levelItem.multiplierScaleY;
                 }
@@ -450,6 +455,8 @@ namespace NamPhuThuy.GamePlay
             AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
             spawnedLevelItem.poolFaction = poolFaction;
             spawnedLevelItem.isOverrideLevelScale = antLevelData.levelItemData.isOverrideLevelScale;
+            spawnedLevelItem.levelScaleXRatio = antLevelData.levelItemData.levelScaleXRatio;
+            spawnedLevelItem.levelScaleYRatio = antLevelData.levelItemData.levelScaleYRatio;
             spawnedLevelItem.multiplierScaleX = antLevelData.levelItemData.multiplierScaleX;
             spawnedLevelItem.multiplierScaleY = antLevelData.levelItemData.multiplierScaleY;
             spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
