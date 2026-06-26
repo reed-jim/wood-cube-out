@@ -172,7 +172,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             Sequence seq = DOTween.Sequence();
 
-            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.1f * i));
+            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.1f * index));
 
             seq.Append(
                 DOTween.Sequence()
@@ -199,10 +199,14 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
                 onCompleteAction?.Invoke();
 
-                if (i % 2 == 0)
+                if (index % 3 == 0)
                 {
                     _rewards[index].GetComponent<RotatingCoin>().PlayFX();
                     SoundManager.Instance.PlaySoundCollectCoin();
+                }
+                else
+                {
+                    _rewards[index].gameObject.SetActive(false);
                 }
             });
 

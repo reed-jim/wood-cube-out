@@ -325,11 +325,12 @@ namespace NamPhuThuy.GamePlay
             float scaleByX = levelScaleXRatio / numCols;
             float scaleByY = levelScaleYRatio / numRows;
             float finalScale = Mathf.Min(scaleByX, scaleByY);
+            float safeAreaRatio = 1 - GetTopUnsafeRatio();
 
-            GamePersistentVariable.obstacleScaleFactor = finalScale;
+            GamePersistentVariable.obstacleScaleFactor = finalScale * safeAreaRatio;
 
             finalScale /= multiplierScaleX;
-            finalScale *= (1 - GetTopUnsafeRatio());
+            finalScale *= safeAreaRatio;
 
             scaleFactor = finalScale;
             GamePersistentVariable.tileMapScaleFactor = scaleFactor;

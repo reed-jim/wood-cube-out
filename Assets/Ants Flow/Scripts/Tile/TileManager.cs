@@ -124,6 +124,8 @@ namespace AntsFlow
             nodes = new List<Node>();
             Node[,] grid = new Node[width, height];
 
+            int totalNode = 0;
+
             // Create all grid nodes
             for (int y = 0; y < height; y++)
             {
@@ -140,6 +142,8 @@ namespace AntsFlow
 
                     grid[x, y] = node;
                     nodes.Add(node);
+
+                    totalNode++;
                 }
             }
 
@@ -197,27 +201,28 @@ namespace AntsFlow
             {
                 Node node = nodes[i];
 
-                if (Mathf.Approximately(node.initialPosition.y, yMin))
+                if (node.tile == null)
                 {
-                    // bottomMostNodes.Add(node);
+                    continue;
+                }
+
+                if (Mathf.Abs(node.initialPosition.y - yMin) < 0.1f * tileDistance.x)
+                {
                     node.isStarter = true;
                 }
 
-                if (Mathf.Approximately(node.initialPosition.y, yMax))
+                if (Mathf.Abs(node.initialPosition.y - yMax) < 0.1f * tileDistance.x)
                 {
-                    // topMostNodes.Add(node);
                     node.isStarter = true;
                 }
 
-                if (Mathf.Approximately(node.initialPosition.x, xMin))
+                if (Mathf.Abs(node.initialPosition.x - xMin) < 0.1f * tileDistance.x)
                 {
-                    // leftMostNodes.Add(node);
                     node.isStarter = true;
                 }
 
-                if (Mathf.Approximately(node.initialPosition.x, xMax))
+                if (Mathf.Abs(node.initialPosition.x - xMax) < 0.1f * tileDistance.x)
                 {
-                    // rightMostNodes.Add(node);
                     node.isStarter = true;
                 }
             }
