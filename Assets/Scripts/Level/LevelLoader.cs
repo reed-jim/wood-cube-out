@@ -316,6 +316,12 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
+            if (levelItem.isLevelHavingTransparentPixels)
+            {
+                numRows = levelItem.numRow;
+                numCols = levelItem.numColumn;
+            }
+
             float scaleByX = levelScaleXRatio / numCols;
             float scaleByY = levelScaleYRatio / numRows;
             float finalScale = Mathf.Min(scaleByX, scaleByY);
@@ -364,25 +370,14 @@ namespace NamPhuThuy.GamePlay
 
             tilemapGrids.Add(spawnedTileMapGrid);
 
-            for (int i = 0; i < numRows; i++)
+            if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
             {
-                // Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
-                // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
-
-                // spawnedTileMapGrid.SetParent(levelTransform);
-                // spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
-                // spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
-
-                // tilemapGrids.Add(spawnedTileMapGrid);
-
-                for (int j = 0; j < numCols; j++)
+                for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
                 {
-                    int index = j + i * numCols;
-
-                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
+                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[i].position.MultiplyX(54).MultiplyY(ratioXY));
 
                     Tile tile = ScriptableObject.CreateInstance<Tile>();
-                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
+                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[i].factionIndex]);
 
                     Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
                     shadowTile.sprite = shadowSprite;
@@ -390,10 +385,45 @@ namespace NamPhuThuy.GamePlay
                     spawnedTileMap.SetTile(cellPos, tile);
                     shadowTilemap.SetTile(cellPos, shadowTile);
 
-                    AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
-                    AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
+                    AntsFlow.TileManager.Ins.tiles[i].tilemap = spawnedTileMap;
+                    AntsFlow.TileManager.Ins.tiles[i].tilemapPosition = cellPos;
 
-                    TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
+                    TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < numRows; i++)
+                {
+                    // Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
+                    // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+
+                    // spawnedTileMapGrid.SetParent(levelTransform);
+                    // spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
+                    // spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
+
+                    // tilemapGrids.Add(spawnedTileMapGrid);
+
+                    for (int j = 0; j < numCols; j++)
+                    {
+                        int index = j + i * numCols;
+
+                        Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
+
+                        Tile tile = ScriptableObject.CreateInstance<Tile>();
+                        tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
+
+                        Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
+                        shadowTile.sprite = shadowSprite;
+
+                        spawnedTileMap.SetTile(cellPos, tile);
+                        shadowTilemap.SetTile(cellPos, shadowTile);
+
+                        AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
+                        AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
+
+                        TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
+                    }
                 }
             }
 
@@ -415,6 +445,9 @@ namespace NamPhuThuy.GamePlay
 
             AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
             spawnedLevelItem.poolFaction = poolFaction;
+            spawnedLevelItem.numColumn = antLevelData.levelItemData.numColumn;
+            spawnedLevelItem.numRow = antLevelData.levelItemData.numRow;
+            spawnedLevelItem.isLevelHavingTransparentPixels = antLevelData.levelItemData.isLevelHavingTransparentPixels;
             spawnedLevelItem.isOverrideLevelScale = antLevelData.levelItemData.isOverrideLevelScale;
             spawnedLevelItem.levelScaleXRatio = antLevelData.levelItemData.levelScaleXRatio;
             spawnedLevelItem.levelScaleYRatio = antLevelData.levelItemData.levelScaleYRatio;
@@ -594,69 +627,39 @@ namespace NamPhuThuy.GamePlay
         {
             AntLevelData result = antLevelData;
 
-            Vector3 center = Vector3.zero;
-
-            foreach (AntLevelDataItem tile in antLevelData.antLevelDataItems)
-                center += tile.position;
-
-            center /= antLevelData.antLevelDataItems.Count;
-
-            // float baseSpacingX = 0.7605271f;
-            // float baseSpacingY = 0.760527f;
-            // float currentSpacingX = antLevelData.antLevelDataItems[1].position.x - antLevelData.antLevelDataItems[0].position.x;
-            // float currentSpacingY = antLevelData.antLevelDataItems[numCols].position.y - antLevelData.antLevelDataItems[0].position.y;
-
-            // float ratioX = currentSpacingX / baseSpacingX;
-            // float ratioY = currentSpacingY / baseSpacingY;
-
-            // // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
-            // Vector2 tileSpacing = new Vector2(1.5f, 1.5f);
-
-            // float positionZ;
-
-            // int index = 0;
-
-            // foreach (AntLevelDataItem item in result.antLevelDataItems)
-            // {
-            //     Vector3 offset = item.position - center;
-
-            //     float gridX = offset.x / currentSpacingX * ratioX;
-            //     float gridY = offset.y / currentSpacingY * ratioY;
-
-            //     positionZ = item.position.z;
-
-            //     Vector3 position = center + new Vector3(
-            //         gridX * tileSpacing.x,
-            //         gridY * tileSpacing.y
-            //     );
-
-            //     item.position = position;
-
-            //     AntsFlow.TileManager.Ins.tiles[index].position = position;
-
-            //     index++;
-
-            //     // item.position = CommonUtil.GetVector3Int(item.position);
-            // }
-
-            int numRows = GamePersistentVariable.numRow;
-            int numCols = GamePersistentVariable.numColumn;
-
-            for (int row = 0; row < numRows; row++)
+            if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
             {
-                for (int col = 0; col < numCols; col++)
+                int numRows = antLevelData.levelItemData.numColumn;
+                int numCols = antLevelData.levelItemData.numRow;
+
+                for (int i = 0; i < result.antLevelDataItems.Count; i++)
                 {
-                    Vector3 position = new Vector3(
-                        -(numCols - 1) / 2f + col * 1,
-                        (levelYOffsetRatio * numRows) + row * 1,
-                        0f
-                    );
+                    AntLevelDataItem antLevelDataItem = result.antLevelDataItems[i];
 
-                    int index = col + row * numCols;
+                    antLevelDataItem.position = antLevelDataItem.position.AddX(-(numCols - 1) / 2f).AddY(levelYOffsetRatio * numRows);
+                }
+            }
+            else
+            {
+                int numRows = GamePersistentVariable.numRow;
+                int numCols = GamePersistentVariable.numColumn;
 
-                    result.antLevelDataItems[index].position = position;
+                for (int row = 0; row < numRows; row++)
+                {
+                    for (int col = 0; col < numCols; col++)
+                    {
+                        Vector3 position = new Vector3(
+                            -(numCols - 1) / 2f + col * 1,
+                            (levelYOffsetRatio * numRows) + row * 1,
+                            0f
+                        );
 
-                    AntsFlow.TileManager.Ins.tiles[index].position = scaleFactor * position;
+                        int index = col + row * numCols;
+
+                        result.antLevelDataItems[index].position = position;
+
+                        AntsFlow.TileManager.Ins.tiles[index].position = scaleFactor * position;
+                    }
                 }
             }
 

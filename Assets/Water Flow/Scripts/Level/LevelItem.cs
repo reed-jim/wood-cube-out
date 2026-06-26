@@ -23,6 +23,7 @@ namespace AntsFlow
 
         public int numColumn;
         public int numRow;
+        public bool isLevelHavingTransparentPixels;
         public bool isOverrideLevelScale;
         public float levelScaleXRatio;
         public float levelScaleYRatio;
@@ -121,6 +122,9 @@ namespace AntsFlow
             antLevelData.levelItemData = new LevelItemData()
             {
                 levelScale = transform.localScale,
+                numColumn = numColumn,
+                numRow = numRow,
+                isLevelHavingTransparentPixels = isLevelHavingTransparentPixels,
                 isOverrideLevelScale = isOverrideLevelScale,
                 levelScaleXRatio = levelScaleXRatio,
                 levelScaleYRatio = levelScaleYRatio,
@@ -159,8 +163,6 @@ namespace AntsFlow
         private int size = 16;
         private Vector2 tileSpacing = 1.6f * Vector2.one;
         private string json;
-        private int numTileX = 12;
-        private int numTileY = 12;
         private float colorGroupThreshold = 0.05f;
         public float difficulty;
         public float moveTilesCloserFactor = 0.9f;
@@ -180,8 +182,6 @@ namespace AntsFlow
             // startY = EditorGUILayout.IntField("StartY", startY);
             // size = EditorGUILayout.IntField("Size", size);
             tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
-            numTileX = EditorGUILayout.IntField("numTileX", numTileX);
-            numTileY = EditorGUILayout.IntField("numTileY", numTileY);
             // colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
             // moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
             // factionMapper = (FactionMapper)EditorGUILayout.ObjectField("Faction Mapper", factionMapper, typeof(FactionMapper), true);
@@ -366,8 +366,8 @@ namespace AntsFlow
 
             int index = 0;
 
-            float pixelStepX = (float)width / numTileX;
-            float pixelStepY = (float)height / numTileY;
+            float pixelStepX = (float)width / level.numColumn;
+            float pixelStepY = (float)height / level.numRow;
 
             tileSpacing.y = tileSpacing.x * (pixelStepY / pixelStepX);
 
@@ -382,13 +382,13 @@ namespace AntsFlow
                         continue;
                     }
 
-                    if (y + 0.7f * pixelStepY > height)
+                    if (y + 0.5f * pixelStepY > height)
                     {
                         continue;
                     }
 
                     int pixelX = (int)(x + 0.5f * pixelStepX);
-                    int pixelY = (int)(y + 0.7f * pixelStepY);
+                    int pixelY = (int)(y + 0.5f * pixelStepY);
 
                     Color pixelColor = pixels[pixelY * width + pixelX];
 
@@ -409,9 +409,9 @@ namespace AntsFlow
                     BaseTile tile = new BaseTile();
 
                     tile.tileName = index;
-                    tile.position = spawnPos;
+                    // tile.position = spawnPos;
+                    tile.position = new Vector3(((int)x / (int)pixelStepX), ((int)y / (int)pixelStepY));
                     tile.Faction = pixelColor;
-                    // tile.spriteRenderer.color = pixelColor;
 
                     level.tiles.Add(tile);
 
@@ -992,6 +992,7 @@ public class LevelItemData
     public Vector3 levelScale;
     public int numColumn;
     public int numRow;
+    public bool isLevelHavingTransparentPixels;
     public bool isOverrideLevelScale;
     public float levelScaleXRatio = 18f;
     public float levelScaleYRatio = 15f;
