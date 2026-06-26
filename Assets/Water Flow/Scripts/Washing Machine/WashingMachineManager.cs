@@ -1136,7 +1136,9 @@ namespace AntsFlow
 
         private float GetLevelProgress()
         {
-            return (totalTile - poolFaction.Count) / (float)totalTile;
+            int numDoneTile = TileManager.Ins.tiles.Count(tile => tile.isDone);
+
+            return numDoneTile / (float)totalTile;
         }
 
         private int GetCurrentLevelDifficulty()
@@ -1144,6 +1146,8 @@ namespace AntsFlow
             float progress = GetLevelProgress();
 
             int difficultyAtCurrentProgress = (int)(difficultyLevel * difficultyCurve.Evaluate(progress));
+
+            // Debug.Log($"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {progress} {difficultyCurve.Evaluate(progress)}");
 
             return difficultyAtCurrentProgress;
         }

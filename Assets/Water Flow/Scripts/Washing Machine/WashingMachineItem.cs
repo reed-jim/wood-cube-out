@@ -200,22 +200,6 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
-    public void ReceiveTile()
-    {
-        number--;
-        numberText.text = $"{number}";
-
-        if (number <= 0)
-        {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
-            {
-                antBoxDoneEvent?.Invoke(this);
-            });
-
-            SoundManager.Instance.PlaySoundSlotDone();
-        }
-    }
-
     public void UpdateNumber()
     {
         numberText.text = $"{number}";
@@ -282,7 +266,15 @@ public class WashingMachineItem : MonoBehaviour
             return;
         }
 
-        skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
+        if (isDouble)
+        {
+            Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+        }
+        else
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
+        }
+
         // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
 
         if (GamePersistentVariable.IsVibrate)
@@ -300,7 +292,14 @@ public class WashingMachineItem : MonoBehaviour
 
     public void TurnOffWarningLoseAnimation()
     {
-        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+        if (isInSlot)
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+        }
+        else
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
+        }
 
         isPlayingWarningLoseAnimation = false;
     }
@@ -609,7 +608,10 @@ public class WashingMachineItem : MonoBehaviour
         {
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {
-                washingMachineSlot.washingMachineItem = null;
+                if (washingMachineSlot.washingMachineItem != null)
+                {
+                    washingMachineSlot.washingMachineItem = null;
+                }
 
                 antBoxDoneEvent?.Invoke(this);
             });
@@ -667,7 +669,10 @@ public class WashingMachineItem : MonoBehaviour
         {
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {
-                washingMachineSlot.washingMachineItem = null;
+                if (washingMachineSlot.washingMachineItem != null)
+                {
+                    washingMachineSlot.washingMachineItem = null;
+                }
 
                 antBoxDoneEvent?.Invoke(this);
             });

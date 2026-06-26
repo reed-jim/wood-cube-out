@@ -1122,10 +1122,12 @@ namespace AntsFlow
                 }
                 else
                 {
-                    GameplayScreen.Ins.ShowGameIcon(() =>
-                    {
-                        winLevelEvent?.Invoke();
-                    });
+                    winLevelEvent?.Invoke();
+
+                    // GameplayScreen.Ins.ShowGameIcon(() =>
+                    // {
+                    //     winLevelEvent?.Invoke();
+                    // });
                 }
             }
         }
@@ -1139,10 +1141,12 @@ namespace AntsFlow
                 yield return waitForSeconds;
             }
 
-            GameplayScreen.Ins.ShowGameIcon(() =>
-            {
-                winLevelEvent?.Invoke();
-            });
+            winLevelEvent?.Invoke();
+
+            // GameplayScreen.Ins.ShowGameIcon(() =>
+            // {
+            //     winLevelEvent?.Invoke();
+            // });
         }
 
         public void StartHightlightEachFactionSequentially()

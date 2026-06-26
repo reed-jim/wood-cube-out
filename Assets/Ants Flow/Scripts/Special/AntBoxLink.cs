@@ -141,6 +141,11 @@ public class AntBoxLink : MonoBehaviour
     {
         WashingMachineItem selectedAntBox = null;
 
+        if (antBoxes.Length == 0)
+        {
+            return;
+        }
+
         for (int i = 0; i < antBoxes.Length; i++)
         {
             if (antBoxes[i] == antBox)

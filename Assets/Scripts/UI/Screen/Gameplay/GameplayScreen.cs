@@ -33,6 +33,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private Button increaseGameSpeedButton;
     [SerializeField] private Button decreaseGameSpeedButton;
     [SerializeField] private TMP_Text gameSpeedText;
+    private bool _isSwitchingStateUpSpeed;
 
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
@@ -259,6 +260,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
     #region Game Speed
     public void X2Speed()
     {
+        if (_isSwitchingStateUpSpeed)
+        {
+            return;
+        }
+
+        _isSwitchingStateUpSpeed = true;
+
         int currentSpeed = UpSpeedAnt.Ins.SwitchGameSpeed();
 
         UpdateUpSpeedState(currentSpeed);
@@ -269,12 +277,18 @@ public class GameplayScreen : Singleton<GameplayScreen>
         if (currentSpeed == 1)
         {
             SaferioTween.AlphaHide(upSpeedActiveState);
-            SaferioTween.AlphaShow(upSpeedInactiveState);
+            SaferioTween.AlphaShow(upSpeedInactiveState, onCompleteAction: () =>
+            {
+                _isSwitchingStateUpSpeed = false;
+            });
         }
         else
         {
             SaferioTween.AlphaShow(upSpeedActiveState);
-            SaferioTween.AlphaHide(upSpeedInactiveState);
+            SaferioTween.AlphaHide(upSpeedInactiveState, onCompleteAction: () =>
+            {
+                _isSwitchingStateUpSpeed = false;
+            });
         }
     }
 

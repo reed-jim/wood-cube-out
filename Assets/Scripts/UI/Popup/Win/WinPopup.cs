@@ -42,8 +42,8 @@ public class WinPopup : BasePopup
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
-    [SerializeField]
-    private CanvasGroup nextLevelCG;
+    [SerializeField] private float timeDelayShowContinueButton;
+    [SerializeField] private CanvasGroup nextLevelCG;
 
     private bool _isCollectCoinRemoteConfig;
     private int _multiplierCoinWinLevel;
@@ -92,7 +92,7 @@ public class WinPopup : BasePopup
         goldPassKeyText.text = $"{0}";
         continueButton.transform.localScale = Vector3.zero;
 
-        continueButton.interactable = true;
+        continueButton.interactable = false;
         returnHomeButton.interactable = true;
         x5CoinButton.interactable = true;
 
@@ -188,7 +188,12 @@ public class WinPopup : BasePopup
                         currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
                 }
 
-                _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
+                _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin, startDelay: timeDelayShowContinueButton)
+                .OnComplete(() =>
+                {
+                    continueButton.interactable = true;
+                })
+                );
 
                 onCompletedAction?.Invoke();
             })

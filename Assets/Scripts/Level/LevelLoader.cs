@@ -369,6 +369,7 @@ namespace NamPhuThuy.GamePlay
             Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
 
             spawnedTileMapGrid.SetParent(levelTransform);
+            spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f);
             spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
 
             tilemapGrids.Add(spawnedTileMapGrid);

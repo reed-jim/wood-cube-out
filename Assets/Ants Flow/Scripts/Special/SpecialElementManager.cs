@@ -34,6 +34,8 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
     public void SpawnAntBoxLink()
     {
+        return;
+
         if (!specialElementConfig.doubleAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
         {
             return;
