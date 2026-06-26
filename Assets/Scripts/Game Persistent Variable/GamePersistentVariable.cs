@@ -204,5 +204,6 @@ public static class GamePersistentVariable
     public static bool isPauseGame;
     public static bool isTutorialLevelOneDone;
     public static bool isHideUI;
+    public static Vector2 tileDistance;
     #endregion
 }

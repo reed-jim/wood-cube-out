@@ -362,6 +362,8 @@ namespace NamPhuThuy.GamePlay
 
             float ratioXY = multiplierScaleX * (multiplierScaleX / multiplierScaleY);
 
+            GamePersistentVariable.tileDistance = GamePersistentVariable.obstacleScaleFactor * new Vector2(1, multiplierScaleX / multiplierScaleY);
+
             Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
             Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
 

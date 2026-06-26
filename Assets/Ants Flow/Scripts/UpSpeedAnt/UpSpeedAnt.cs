@@ -139,5 +139,7 @@ public class UpSpeedAnt : Singleton<UpSpeedAnt>
         nearEndLevelSpeedUpMultiplier = 1;
 
         ChangeGameSpeed();
+
+        GameplayScreen.Ins.UpdateUpSpeedState(speedUpMultiplier);
     }
 }
