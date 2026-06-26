@@ -373,22 +373,22 @@ namespace AntsFlow
 
             level.tiles = new List<BaseTile>();
 
-            for (float y = 0; y < height; y += pixelStepY)
+            for (float y = 0.25f * pixelStepY; y < height; y += pixelStepY)
             {
-                for (float x = 0; x < width; x += pixelStepX)
+                for (float x = 0.25f * pixelStepX; x < width; x += pixelStepX)
                 {
-                    if (x + 0.5f * pixelStepX > width)
-                    {
-                        continue;
-                    }
+                    // if (x + 0.5f * pixelStepX > width)
+                    // {
+                    //     continue;
+                    // }
 
-                    if (y + 0.5f * pixelStepY > height)
-                    {
-                        continue;
-                    }
+                    // if (y + 0.5f * pixelStepY > height)
+                    // {
+                    //     continue;
+                    // }
 
-                    int pixelX = (int)(x + 0.5f * pixelStepX);
-                    int pixelY = (int)(y + 0.5f * pixelStepY);
+                    int pixelX = Mathf.FloorToInt(x);
+                    int pixelY = Mathf.FloorToInt(y);
 
                     Color pixelColor = pixels[pixelY * width + pixelX];
 
@@ -409,8 +409,10 @@ namespace AntsFlow
                     BaseTile tile = new BaseTile();
 
                     tile.tileName = index;
-                    // tile.position = spawnPos;
-                    tile.position = new Vector3(((int)x / (int)pixelStepX), ((int)y / (int)pixelStepY));
+                    tile.position = new Vector3(Mathf.FloorToInt(x / pixelStepX), Mathf.FloorToInt(y / pixelStepY));
+
+                    // Debug.Log($"Gen Level {tile.position} {x / pixelStepX}");
+
                     tile.Faction = pixelColor;
 
                     level.tiles.Add(tile);

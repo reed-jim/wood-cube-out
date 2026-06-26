@@ -631,8 +631,8 @@ namespace NamPhuThuy.GamePlay
 
             if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
             {
-                int numRows = antLevelData.levelItemData.numColumn;
-                int numCols = antLevelData.levelItemData.numRow;
+                int numRows = antLevelData.levelItemData.numRow;
+                int numCols = antLevelData.levelItemData.numColumn;
 
                 for (int i = 0; i < result.antLevelDataItems.Count; i++)
                 {
