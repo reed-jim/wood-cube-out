@@ -362,6 +362,8 @@ namespace NamPhuThuy.GamePlay
 
             float ratioXY = multiplierScaleX * (multiplierScaleX / multiplierScaleY);
 
+            GamePersistentVariable.tileDistance = GamePersistentVariable.obstacleScaleFactor * new Vector2(1, multiplierScaleX / multiplierScaleY);
+
             Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
             Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
 
@@ -629,8 +631,8 @@ namespace NamPhuThuy.GamePlay
 
             if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
             {
-                int numRows = antLevelData.levelItemData.numColumn;
-                int numCols = antLevelData.levelItemData.numRow;
+                int numRows = antLevelData.levelItemData.numRow;
+                int numCols = antLevelData.levelItemData.numColumn;
 
                 for (int i = 0; i < result.antLevelDataItems.Count; i++)
                 {

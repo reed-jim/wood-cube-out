@@ -109,52 +109,89 @@ namespace AntsFlow
 
         public void BuildMap(List<BaseTile> tiles)
         {
+            Vector2 tileDistance = GamePersistentVariable.tileDistance;
+
+            // Find bounds
             float yMin = tiles.Min(tile => GetTilePosition(tile).y);
             float yMax = tiles.Max(tile => GetTilePosition(tile).y);
             float xMin = tiles.Min(tile => GetTilePosition(tile).x);
             float xMax = tiles.Max(tile => GetTilePosition(tile).x);
 
+            // Grid size
+            int width = Mathf.RoundToInt((xMax - xMin) / tileDistance.x) + 1;
+            int height = Mathf.RoundToInt((yMax - yMin) / tileDistance.y) + 1;
+
             nodes = new List<Node>();
+            Node[,] grid = new Node[width, height];
 
-            for (int i = 0; i < tiles.Count; i++)
+            // Create all grid nodes
+            for (int y = 0; y < height; y++)
             {
-                BaseTile tile = tiles[i];
-
-                Node node = new Node();
-                node.initialPosition = GetTilePosition(tile);
-                node.tile = tile;
-
-                nodes.Add(node);
-            }
-
-            Dictionary<BaseTile, Node> nodeLookup = new Dictionary<BaseTile, Node>();
-
-            foreach (Node node in nodes)
-            {
-                nodeLookup[node.tile] = node;
-            }
-
-            foreach (Node node in nodes)
-            {
-                List<Node> neighbors = new List<Node>();
-                node.neighbors = neighbors;
-
-                foreach (BaseTile blockedTile in node.tile.blockages)
+                for (int x = 0; x < width; x++)
                 {
-                    if (nodeLookup.TryGetValue(blockedTile, out Node neighbor))
+                    Node node = new Node
                     {
-                        neighbors.Add(neighbor);
+                        initialPosition = new Vector2(
+                            xMin + x * tileDistance.x,
+                            yMin + y * tileDistance.y),
+                        tile = null,
+                        neighbors = new List<Node>()
+                    };
+
+                    grid[x, y] = node;
+                    nodes.Add(node);
+                }
+            }
+
+            // Assign neighbors (4-way)
+            Vector2Int[] directions =
+            {
+                Vector2Int.left,
+                Vector2Int.right,
+                Vector2Int.up,
+                Vector2Int.down
+            };
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Node node = grid[x, y];
+
+                    foreach (Vector2Int dir in directions)
+                    {
+                        int nx = x + dir.x;
+                        int ny = y + dir.y;
+
+                        if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+                        {
+                            node.neighbors.Add(grid[nx, ny]);
+                        }
                     }
                 }
             }
 
-            // List<Node> addedNodes = new List<Node>();
-            List<Node> bottomMostNodes = new List<Node>();
-            List<Node> topMostNodes = new List<Node>();
-            List<Node> leftMostNodes = new List<Node>();
-            List<Node> rightMostNodes = new List<Node>();
+            // Assign each tile to the nearest node
+            foreach (BaseTile tile in tiles)
+            {
+                Vector2 tilePos = GetTilePosition(tile);
 
-            float tileSize = GamePersistentVariable.obstacleScaleFactor;
+                Node closest = null;
+                float bestDistance = float.MaxValue;
+
+                foreach (Node node in nodes)
+                {
+                    float sqrDist = ((Vector2)node.initialPosition - tilePos).sqrMagnitude;
+
+                    if (sqrDist < bestDistance)
+                    {
+                        bestDistance = sqrDist;
+                        closest = node;
+                    }
+                }
+
+                closest.tile = tile;
+            }
 
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -726,41 +763,46 @@ namespace AntsFlow
 
                 foreach (var neighbor in current.neighbors)
                 {
-                    // blocked
-                    bool isStarterTileAvailable = current.isStarter && !current.tile.isMovedToAnt;
-                    bool isReachTarget = false;
-                    bool isSameFaction = current.tile.Faction == faction && neighbor.tile.Faction == faction;
-                    bool isBlocked = !neighbor.tile.isMovedToAnt && !neighbor.tile.isDone && !neighbor.isStarter;
+                    bool isBlocked = false;
 
-                    if (current.tile.isMovedToAnt || current.tile.isDone)
+                    if (current.tile != null && neighbor.tile != null)
                     {
-                        if (neighbor.tile.Faction == faction)
+                        // blocked
+                        bool isStarterTileAvailable = current.isStarter && !current.tile.isMovedToAnt;
+                        bool isReachTarget = false;
+                        bool isSameFaction = current.tile.Faction == faction && neighbor.tile.Faction == faction;
+                        isBlocked = !neighbor.tile.isMovedToAnt && !neighbor.tile.isDone && !neighbor.isStarter;
+
+                        if (current.tile.isMovedToAnt || current.tile.isDone)
                         {
-                            isReachTarget = true;
+                            if (neighbor.tile.Faction == faction)
+                            {
+                                isReachTarget = true;
+                            }
                         }
-                    }
 
-                    if (!current.tile.isMovedToAnt && !current.tile.isDone)
-                    {
-                        if (current.tile.Faction != faction)
+                        if (!current.tile.isMovedToAnt && !current.tile.isDone)
                         {
-                            isBlocked = true;
+                            if (current.tile.Faction != faction)
+                            {
+                                isBlocked = true;
+                            }
                         }
-                    }
 
-                    if (current.isStarter && neighbor.isStarter)
-                    {
-                        isBlocked = false;
-                    }
-
-                    if (neighbor.tile != null && !isReachTarget)
-                    {
-                        if (isBlocked)
+                        if (current.isStarter && neighbor.isStarter)
                         {
-                            continue;
+                            isBlocked = false;
                         }
+
+                        if (neighbor.tile != null && !isReachTarget)
+                        {
+                            if (isBlocked)
+                            {
+                                continue;
+                            }
+                        }
+                        //
                     }
-                    //
 
                     if (visited.Contains(neighbor))
                     {
