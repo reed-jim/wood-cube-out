@@ -17,12 +17,45 @@ public class TileIconContainer : ScriptableObject
     {
         CategoryIconSet matchCategoryIconSet = categoryIconSets.First(item => item.itemCategory == itemCategory);
 
-        if (matchCategoryIconSet.icons == null || matchCategoryIconSet.icons.Length == 0)
+        if (matchCategoryIconSet.isOnServer)
         {
+            // ── CDN path (index 21+) ───────────────────────────────────────────────
+            // icons[] may have been cleared; check array first, then CDN memory cache.
+            if (matchCategoryIconSet.icons != null && matchCategoryIconSet.icons.Length > 0)
+            {
+                var nonNull = System.Array.FindAll(matchCategoryIconSet.icons, s => s != null);
+                if (nonNull.Length > 0)
+                    return CommonUtil.GetRandomValueFromArray(nonNull);
+            }
+
+#if !UNITY_EDITOR
+            if (matchCategoryIconSet.iconCdnKeys != null)
+            {
+                var downloader = GplayCdn.CdnDownloader.Instance;
+                if (downloader != null)
+                {
+                    var cachedSprites = new System.Collections.Generic.List<Sprite>();
+                    foreach (var key in matchCategoryIconSet.iconCdnKeys)
+                    {
+                        if (string.IsNullOrEmpty(key)) continue;
+                        var s = downloader.GetCachedSprite(key);
+                        if (s != null) cachedSprites.Add(s);
+                    }
+                    if (cachedSprites.Count > 0)
+                        return CommonUtil.GetRandomValueFromArray(cachedSprites.ToArray());
+                }
+            }
+#endif
             return null;
         }
+        else
+        {
+            // ── Local path (index 0-20): use icons[] directly ──────────────────────
+            if (matchCategoryIconSet.icons == null || matchCategoryIconSet.icons.Length == 0)
+                return null;
 
-        return CommonUtil.GetRandomValueFromArray(matchCategoryIconSet.icons);
+            return CommonUtil.GetRandomValueFromArray(matchCategoryIconSet.icons);
+        }
     }
 
     public string GetRandomTextOfCategory(ItemCategory itemCategory)
@@ -46,6 +79,11 @@ public class CategoryIconSet
     public string[] text;
     public string textOrder;
     public Sprite spriteOrder;
+
+    // CDN fields - populated after upload, used for runtime download
+    public string[] iconCdnKeys;        // CDN fileId for each icon sprite
+    public string spriteOrderCdnKey;    // CDN fileId for spriteOrder sprite
+    public bool isOnServer;             // true if sprites are uploaded to CDN
 }
 
 #if UNITY_EDITOR

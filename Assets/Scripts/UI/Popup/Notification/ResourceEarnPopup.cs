@@ -96,12 +96,12 @@ public class ResourceEarnPopup : BasePopup
             _isRemoveAds = true;
         }
 
-        if (GamePersistentVariable.isUnlockedAllScrewBoxes)
-        {
-            validResourceGroups.Add(resourceGroups[5]);
+        //if (GamePersistentVariable.isUnlockedAllScrewBoxes)
+        //{
+        //    validResourceGroups.Add(resourceGroups[5]);
 
-            GamePersistentVariable.isUnlockedAllScrewBoxes = false;
-        }
+        //    GamePersistentVariable.isUnlockedAllScrewBoxes = false;
+        //}
 
         if (coinQuantity > 0)
         {
@@ -112,7 +112,7 @@ public class ResourceEarnPopup : BasePopup
 
         for (int i = 0; i < boosterQuantities.Length; i++)
         {
-            if (boosterQuantities[i] > 0)
+            if (boosterQuantities[i] > 0 && 2 + i < _resourceGroupsUI.Length)
             {
                 _resourceGroupsUI[2 + i].SetQuantity(boosterQuantities[i]);
 

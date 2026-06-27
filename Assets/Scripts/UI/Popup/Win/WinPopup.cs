@@ -32,6 +32,7 @@ public class WinPopup : BasePopup
     [SerializeField] private RectTransform starGroup;
     [SerializeField] private RectTransform eventItemGroup;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
+    [SerializeField] private Image coinStartGain;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -56,7 +57,7 @@ public class WinPopup : BasePopup
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action<Vector3, int> collectCoinEvent;
-    public static event Action<Vector3, int, Action<int>> collectCoinWithCallbackEvent;
+    public static event Action<Vector3, Vector3, int, Action<int>> collectCoinWithCallbackEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -64,7 +65,7 @@ public class WinPopup : BasePopup
         DebugPopup.winLevelEvent += OnLevelWinAsync;
 
         continueButton.onClick.AddListener(Continue);
-        returnHomeButton.onClick.AddListener(ReturnHome);
+        //returnHomeButton.onClick.AddListener(ReturnHome);
         x5CoinButton.onClick.AddListener(X5Coin);
     }
 
@@ -177,13 +178,13 @@ public class WinPopup : BasePopup
 
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
     {
-        coinText.text = $"{_currentCollectedCoin}";
+        coinText.text = $"x{_currentCollectedCoin}";
 
         int deltaCoin = (int)(numCoin / 10f);
 
         _tweens.Add(Tween.Custom(_currentCollectedCoin, numCoin, duration: timeCollectCoin, onValueChange: newVal =>
         {
-            coinText.text = $"{(int)newVal}";
+            coinText.text = $"x{(int)newVal}";
 
         })
         .OnComplete(() =>
@@ -259,23 +260,22 @@ public class WinPopup : BasePopup
         returnHomeButton.interactable = false;
 
         Vector3 targetPos = GetWinCoinTextCanvasLocalPosition();
+        Vector3 startPos = GetCoinStartGainCanvasLocalPosition();
 
         userResourcesObserver.Load();
         int currentCoins = (int)userResourcesObserver.UserResources.CoinQuantity;
         int finalCoins = currentCoins + _currentCollectedCoin;
 
         int coinsLandedCount = 0;
-        collectCoinWithCallbackEvent?.Invoke(targetPos, _currentCollectedCoin, (index) =>
+        int coinsToSpawn = 10;
+
+        collectCoinWithCallbackEvent?.Invoke(startPos, targetPos, _currentCollectedCoin, (index) =>
         {
             coinsLandedCount++;
-            if (RewardCollectingUI.Instance != null)
+            int displayedCoins = (int)Mathf.Lerp(currentCoins, finalCoins, (float)coinsLandedCount / coinsToSpawn);
+            if (txCoinResource != null)
             {
-                int poolSize = RewardCollectingUI.Instance.PoolSize;
-                int displayedCoins = (int)Mathf.Lerp(currentCoins, finalCoins, (float)coinsLandedCount / poolSize);
-                if (txCoinResource != null)
-                {
-                    txCoinResource.text = $"{displayedCoins}";
-                }
+                txCoinResource.text = $"{displayedCoins}";
             }
 
             if (index % 2 == 0)
@@ -289,44 +289,57 @@ public class WinPopup : BasePopup
                 fxGainCoin.gameObject.SetActive(true);
                 fxGainCoin.Play();
             }
-        });
 
-        _tweens.Add(Tween.Delay(1.5f).OnComplete(() =>
-        {
-            if (_isCollectCoinRemoteConfig)
+            if (coinsLandedCount == coinsToSpawn)
             {
-                userResourcesObserver.UserResources.CoinQuantity += _currentCollectedCoin;
-                userResourcesObserver.Save();
-
-                if (UserResourcesManager.Instance != null)
+                _tweens.Add(Tween.Delay(1f).OnComplete(() =>
                 {
-                    UserResourcesManager.Instance.RefreshCoinText();
-                }
+                    if (_isCollectCoinRemoteConfig)
+                    {
+                        userResourcesObserver.UserResources.CoinQuantity += _currentCollectedCoin;
+                        userResourcesObserver.Save();
 
-                SaferioTracking.TrackResourceSource(
-                    currentLevel.Value, "Coin", _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
+                        if (UserResourcesManager.Instance != null)
+                        {
+                            UserResourcesManager.Instance.RefreshCoinText();
+                        }
+
+                        SaferioTracking.TrackResourceSource(
+                            currentLevel.Value, "Coin", _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
+                    }
+                    goLevelEvent?.Invoke(currentLevel.Value);
+                    HideImmediately();
+                    //bool isBackHome = HandleSuggestFeature();
+
+                    //if (!isBackHome)
+                    //{
+                    //    goLevelEvent?.Invoke(currentLevel.Value);
+                    //    HideImmediately();
+                    //}
+                    //else
+                    //{
+                    //    HideImmediately();
+                    //}
+
+                    SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
+
+                    AdsDurationObserver.duration = 0;
+                    GamePersistentVariable.isAutoTestingLevel = false;
+                }));
             }
-
-            HideImmediately();
-
-            bool isBackHome = HandleSuggestFeature();
-
-            if (!isBackHome)
-            {
-                goLevelEvent?.Invoke(currentLevel.Value);
-            }
-
-            SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
-
-            AdsDurationObserver.duration = 0;
-            GamePersistentVariable.isAutoTestingLevel = false;
-        }));
+        });
     }
 
     public Vector2 GetWinCoinTextCanvasLocalPosition()
     {
         if (imgCoin == null) return Vector2.zero;
         return ((Vector2)imgCoin.transform.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+    }
+
+    public Vector2 GetCoinStartGainCanvasLocalPosition()
+    {
+        if (coinStartGain == null) return Vector2.zero;
+        return ((Vector2)coinStartGain.transform.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
     }
 
     #region X5 Coin

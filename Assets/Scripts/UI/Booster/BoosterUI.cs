@@ -8,6 +8,7 @@ using Lean.Localization;
 using static GameEnum;
 using Spine.Unity;
 using Spine;
+using Coffee.UIExtensions;
 
 public class BoosterUI : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button freezeTimeButton;
     [SerializeField] private Button hintButton;
     [SerializeField] private Button unlockThemeButton;
-
+    [SerializeField] private ParticleSystem fxFreezeTrail;
     [SerializeField] private CanvasGroup freezeGroup;
     [SerializeField] private SkeletonGraphic animFreeze;
 
@@ -206,7 +207,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards))
+        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards || TileManager.Ins.IsAnyTileDragging()))
         {
             return;
         }
@@ -359,7 +360,6 @@ public class BoosterUI : MonoBehaviour
             freezeItemUI.PlayFreezeAnimation(
                 onActivateEffect: () =>
                 {
-
                     TileManager.Ins.UseFreezeTimeBooster(15f, () =>
                     {
                         Tween.Alpha(freezeGroup, 0f, duration: 2f).OnComplete(() =>
@@ -371,15 +371,30 @@ public class BoosterUI : MonoBehaviour
                 },
                 onComplete: () =>
                 {
+                    //fxFreezeTrail.gameObject.SetActive(true);
                     animFreeze.gameObject.SetActive(true);
+                    //freezeItemUI.fxTrailFreeze.transform.SetParent(transform);
+                    //           freezeItemUI.fxTrailFreeze.transform.position = animFreeze.transform.position;
+                    //           UIParticle uiParticle = freezeItemUI.fxTrailFreeze.GetComponent<UIParticle>();
+                    //           Tween.Custom(startValue: 1f, endValue: 4f, duration: 0.2f, onValueChange: newVal =>
+                    //    {
+                    //        uiParticle.scale = newVal;
+                    //    }
+                    //);
+
                     TrackEntry e = animFreeze.AnimationState.SetAnimation(0, "animation", false);
+
                     e.Complete += (TrackEntry trackEntry) =>
                     {
                         freezeGroup.gameObject.SetActive(true);
+
                         Tween.Alpha(freezeGroup, 1f, duration: 2f).OnComplete(() =>
                         {
-                            animFreeze.gameObject.SetActive(false);
 
+                            animFreeze.gameObject.SetActive(false);
+                            //freezeItemUI.fxTrailFreeze.transform.SetParent(freezeItemUI.boosterIcon.transform);
+                            //uiParticle.scale = 1f;
+                            //freezeItemUI.fxTrailFreeze.transform.localPosition = Vector3.zero;
                         }
                         );
                         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
@@ -496,7 +511,7 @@ public class BoosterUI : MonoBehaviour
                 },
                 onComplete: () =>
                 {
-                    Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+                    Tween.Delay(0.1f).OnComplete(() =>
                     {
                         _isInTransition = false;
                     });
@@ -507,7 +522,7 @@ public class BoosterUI : MonoBehaviour
         {
             TileManager.Ins.UseUnlockThemeBooster();
             //UpdateUnlockThemeButtonState();
-            Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+            Tween.Delay(0.1f).OnComplete(() =>
             {
                 _isInTransition = false;
             });

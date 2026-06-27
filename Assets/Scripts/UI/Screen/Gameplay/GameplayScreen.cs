@@ -14,6 +14,7 @@ using static GameEnum;
 public class GameplayScreen : Singleton<GameplayScreen>
 {
     [Header("Buttons")]
+    [SerializeField] private Button btShop;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button noAdsButton;
     [SerializeField] private Button openDebugPopupButton;
@@ -56,13 +57,14 @@ public class GameplayScreen : Singleton<GameplayScreen>
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
 
-        //if (userResourcesObserver != null)
-        //{
-        //    userResourcesObserver.updateCoinEvent += UpdateCoinText;
-        //}
+        if (userResourcesObserver != null)
+        {
+            userResourcesObserver.updateCoinEvent += UpdateCoinText;
+        }
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
+        btShop.onClick.AddListener(OpenShopPopup);
 
         if (openInventoryPopupButton != null)
         {
@@ -115,10 +117,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
 
-        //if (userResourcesObserver != null)
-        //{
-        //    userResourcesObserver.updateCoinEvent -= UpdateCoinText;
-        //}
+        if (userResourcesObserver != null)
+        {
+            userResourcesObserver.updateCoinEvent -= UpdateCoinText;
+        }
 
         StopTimerWarning();
         CommonUtil.StopAllTweens(_tweens);
@@ -151,6 +153,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
     private void OpenNoAdsPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
+    }
+    private void OpenShopPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.IAPShopPopup);
     }
 
     private void OpenInventoryPopup()

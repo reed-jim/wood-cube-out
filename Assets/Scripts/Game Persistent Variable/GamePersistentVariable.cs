@@ -118,6 +118,7 @@ public static class GamePersistentVariable
     public static string IAPLocation;
     public static int IAPAddition;
     public static bool isUnlockedAllScrewBoxes;
+    public static bool isUnlockTheme;
     public static SaleIAPPackType saleIAPPackType;
     public static Dictionary<SaleIAPPackType, bool> isShowSalePacks;
     #endregion

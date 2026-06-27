@@ -34,6 +34,21 @@ public class LevelItem : MonoBehaviour
     public float priorityCardRatio = 0.5f;
     public bool isHard = false;
 
+    [Space(10)]
+    [Header("Tile Spacing (0 = dùng mặc định)")]
+    [Tooltip("Khoảng cách ngang giữa các ô tile. 0 = dùng mặc định (210). " +
+             "Tăng lên khi số cột < 5 để tiles trải rộng hơn.")]
+    public float tileSpacingWidth = 0f;
+
+    [Tooltip("Khoảng cách dọc giữa các hàng tile. 0 = dùng mặc định (266). " +
+             "Tăng lên khi số hàng < 4 để tiles trải rộng hơn.")]
+    public float tileSpacingHeight = 0f;
+
+    /// <summary>Spacing ngang thực sự sẽ dùng (fallback về 210 nếu = 0).</summary>
+    public float ActualSpacingWidth  => tileSpacingWidth  > 0 ? tileSpacingWidth  : 210f;
+    /// <summary>Spacing dọc thực sự sẽ dùng (fallback về 266 nếu = 0).</summary>
+    public float ActualSpacingHeight => tileSpacingHeight > 0 ? tileSpacingHeight : 266f;
+
     [Space(20)]
     [Header("Tutorial")]
     public bool isTutorial;
@@ -53,6 +68,67 @@ public class LevelItemEditor : Editor
         DrawDefaultInspector();
 
         LevelItem levelItem = (LevelItem)target;
+
+        // ── Spacing helper section ───────────────────────────────────────────
+        GUILayout.Space(10);
+        GUILayout.Label("Tile Spacing Helper", EditorStyles.boldLabel);
+
+        bool isSmallGrid = levelItem.initRow < 4 || levelItem.initColumn < 5;
+
+        if (isSmallGrid)
+        {
+            EditorGUILayout.HelpBox(
+                $"Grid {levelItem.initRow} hàng × {levelItem.initColumn} cột " +
+                $"(nhỏ hơn 4×5). Hãy tăng spacing để tiles không bị chen chật.",
+                MessageType.Warning);
+        }
+        else
+        {
+            EditorGUILayout.HelpBox(
+                $"Grid {levelItem.initRow} hàng × {levelItem.initColumn} cột. " +
+                "Để spacing = 0 sẽ dùng mặc định (210 × 266).",
+                MessageType.Info);
+        }
+
+        // Show effective spacing
+        EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+        GUILayout.Label("Spacing hiệu lực:", GUILayout.Width(120));
+        GUILayout.Label($"W = {levelItem.ActualSpacingWidth:F0}", EditorStyles.boldLabel, GUILayout.Width(80));
+        GUILayout.Label($"H = {levelItem.ActualSpacingHeight:F0}", EditorStyles.boldLabel, GUILayout.Width(80));
+        EditorGUILayout.EndHorizontal();
+
+        // Auto-suggest button
+        if (GUILayout.Button("Auto-suggest Spacing theo Grid", GUILayout.Height(28)))
+        {
+            Undo.RecordObject(levelItem, "Auto Suggest Spacing");
+
+            // Base spacing: scale up proportionally when fewer tiles
+            // 4×5 = 20 tiles → base 210×266
+            // Fewer cols → wider, fewer rows → taller
+            float baseW = 210f;
+            float baseH = 266f;
+            float suggestW = baseW * (5f / Mathf.Max(1, levelItem.initColumn));
+            float suggestH = baseH * (4f / Mathf.Max(1, levelItem.initRow));
+
+            // Cap at 2× base (don't over-expand)
+            suggestW = Mathf.Min(suggestW, baseW * 2f);
+            suggestH = Mathf.Min(suggestH, baseH * 2f);
+
+            // Round to nearest 10
+            levelItem.tileSpacingWidth  = Mathf.Round(suggestW  / 10f) * 10f;
+            levelItem.tileSpacingHeight = Mathf.Round(suggestH / 10f) * 10f;
+
+            EditorUtility.SetDirty(levelItem);
+            Debug.Log($"[LevelItem] Auto-suggest spacing: W={levelItem.tileSpacingWidth}, H={levelItem.tileSpacingHeight}");
+        }
+
+        if (GUILayout.Button("Reset về mặc định (210 × 266)", GUILayout.Height(24)))
+        {
+            Undo.RecordObject(levelItem, "Reset Spacing");
+            levelItem.tileSpacingWidth  = 0f;
+            levelItem.tileSpacingHeight = 0f;
+            EditorUtility.SetDirty(levelItem);
+        }
 
         GUILayout.Space(10);
 

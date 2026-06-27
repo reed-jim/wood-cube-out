@@ -7,6 +7,7 @@ dependencies {
 // Android Resolver Dependencies Start
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:12
     implementation 'androidx.recyclerview:recyclerview:1.2.1' // Packages/com.applovin.mediation.adapters.mintegral.android/Editor/Dependencies.xml:9
+    // implementation 'com.android.installreferrer:installreferrer:1.1.2' // Assets/Falcon/FalconCore/ReferrerAndroid/Editor/ReferrerDependencies.xml:5
     implementation 'com.android.installreferrer:installreferrer:2.1' // Assets/AppsFlyer/Editor/AppsFlyerDependencies.xml:10
     implementation 'com.applovin.mediation:bytedance-adapter:6.5.0.4.0' // Packages/com.applovin.mediation.adapters.bytedance.android/Editor/Dependencies.xml:8
     implementation 'com.applovin.mediation:facebook-adapter:[6.19.0.1]' // Packages/com.applovin.mediation.adapters.facebook.android/Editor/Dependencies.xml:7
@@ -43,6 +44,8 @@ dependencies {
     implementation 'com.google.flatbuffers:flatbuffers-java:1.12.0' // Assets/Firebase/Editor/MessagingDependencies.xml:19
     implementation 'com.google.games:gpgs-plugin-support:2.0.0' // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
 // Android Resolver Dependencies End
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.6.1'
 **DEPS**}
 
 // Android Resolver Exclusions Start

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using PrimeTween;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -83,7 +84,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
             _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
             _rewards[i].localScale = Vector3.zero;
 
-            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
+            AddTween(PrimeTween.Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
         }
 
         await Task.Delay(620);
@@ -103,7 +104,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         {
             int index = i;
 
-            AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
+            AddTween(PrimeTween.Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
             {
                 // addCoinEvent?.Invoke((float)totalValue / poolSize);
 
@@ -121,30 +122,56 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         }
     }
 
-    private async void CollectWithCallback(Vector3 position, int totalValue, Action<int> onCoinLanded)
+    public void CollectWithCallback(Vector3 startPosition, Vector3 targetPosition, int totalValue, Action<int> onCoinLanded)
     {
-        for (int i = 0; i < poolSize; i++)
-        {
-            _rewards[i].gameObject.SetActive(true);
+        int coinsToSpawn = 10;
 
-            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
-            _rewards[i].localScale = Vector3.zero;
+        coinsToSpawn = Mathf.Min(coinsToSpawn, poolSize);
 
-            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
-        }
-
-        await Task.Delay(620);
-
-        for (int i = 0; i < poolSize; i++)
+        for (int i = 0; i < coinsToSpawn; i++)
         {
             int index = i;
 
-            AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
+            _rewards[index].gameObject.SetActive(true);
+            _rewards[index].localPosition = startPosition;
+            _rewards[index].localScale = Vector3.zero;
+
+            Vector3[] path =
             {
+                startPosition + new Vector3(150f + UnityEngine.Random.Range(-30f, 30f), -100f + UnityEngine.Random.Range(-20f, 20f), 0f), // curve right & down
+                startPosition + new Vector3(250f + UnityEngine.Random.Range(-30f, 30f),  50f + UnityEngine.Random.Range(-20f, 20f), 0f), // start moving up
+                targetPosition
+            };
+
+            DG.Tweening.Sequence seq = DG.Tweening.DOTween.Sequence();
+
+            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.1f * index));
+
+            seq.Append(
+                DG.Tweening.DOTween.Sequence()
+                .Join(_rewards[index].DOLocalPath(
+                    path,
+                    0.8f,
+                    DG.Tweening.PathType.CatmullRom
+                ).SetEase(DG.Tweening.Ease.InOutSine))
+                .Join(
+                    DG.Tweening.DOTween.Sequence()
+                        .Append(_rewards[index].DOScale(1.5f, 0.4f))
+                        .Append(_rewards[index].DOScale(1f, 0.4f))
+                )
+            );
+
+            seq.OnComplete(() =>
+            {
+                _rewards[index].gameObject.SetActive(false);
+
                 onCoinLanded?.Invoke(index);
 
-                _rewards[index].gameObject.SetActive(false);
-            }));
+                if (index % 2 == 0)
+                {
+                    SoundManager.Instance.PlaySoundCollectCoin();
+                }
+            });
         }
     }
 
@@ -165,7 +192,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
             _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX), UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX));
             _rewards[i].localScale = Vector3.zero;
 
-            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
+            AddTween(PrimeTween.Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
         }
 
         await Task.Delay(620);
@@ -187,10 +214,10 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             Vector3 randomBouncePosition = _rewards[index].localPosition - new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(50, 100), 0);
 
-            AddTween(Tween.LocalPosition(_rewards[index], randomBouncePosition, duration: 0.3f, ease: Ease.Linear)
+            AddTween(PrimeTween.Tween.LocalPosition(_rewards[index], randomBouncePosition, duration: 0.3f, ease: PrimeTween.Ease.Linear)
             .OnComplete(() =>
             {
-                AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f), ease: Ease.InOutSine)
+                AddTween(PrimeTween.Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f), ease: PrimeTween.Ease.InOutSine)
                 .OnComplete(() =>
                 {
                     float valueLeft = (poolSize - index - 1) * unitValue;
@@ -204,7 +231,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
                     _rewards[index].gameObject.SetActive(false);
 
-                    if(i % 2 == 0)
+                    if (i % 2 == 0)
                     {
                         SoundManager.Instance.PlaySoundCollectCoin();
                     }

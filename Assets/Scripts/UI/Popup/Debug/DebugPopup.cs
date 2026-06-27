@@ -31,6 +31,12 @@ public class DebugPopup : BasePopup
     public static event Action winLevelEvent;
     public static event Action startAutoTestLevelEvent;
 
+    public static void TriggerToLevelEvent(int level)
+    {
+        toLevelEvent?.Invoke(level);
+    }
+
+
     protected override void RegisterMoreEvent()
     {
         debugPlayLevelButton.onClick.AddListener(DebugPlayLevel);

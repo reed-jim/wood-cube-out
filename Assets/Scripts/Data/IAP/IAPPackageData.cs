@@ -9,6 +9,10 @@ public class IAPPackageData : ScriptableObject
     [SerializeField] private int addHoleBoosterQuantity;
     [SerializeField] private int breakObjectBoosterQuantity;
     [SerializeField] private int clearHolesBoosterQuantity;
+    [SerializeField] private int addHintBoosterQuantity;
+    [SerializeField] private int addShuffleBoosterQuantity;
+    [SerializeField] private int addFreezeBoosterQuantity;
+    [SerializeField] private int addUnlockBoosterQuantity;
     [SerializeField] private bool isRemoveAd;
     [SerializeField] private bool isUnlockAllScrewBoxes;
     [SerializeField] private float price;
@@ -27,6 +31,27 @@ public class IAPPackageData : ScriptableObject
     {
         get => coinQuantity;
     }
+
+    public int AddHintBoosterQuantity
+    {
+        get => addHintBoosterQuantity;
+    }
+
+    public int AddShuffleBoosterQuantity
+    {
+        get => addShuffleBoosterQuantity;
+    }
+
+    public int AddFreezeBoosterQuantity
+    {
+        get => addFreezeBoosterQuantity;
+    }
+
+    public int AddUnlockBoosterQuantity
+    {
+        get => addUnlockBoosterQuantity;
+    }
+
 
     public int AddHoleBoosterQuantity
     {

@@ -194,6 +194,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65104658}
   m_CullTransparentMesh: 1
+--- !u!1 &98357300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 98357301}
+  - component: {fileID: 98357302}
+  m_Layer: 0
+  m_Name: Suggest a card that matches the theme of the ordered slot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &98357301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98357300}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &98357302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98357300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Suggest a card that matches the theme of the ordered slot
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Sugg\xE9rer une carte correspondant au th\xE8me de l'emplacement command\xE9"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Schlagen Sie eine Karte vor, die zum Thema des bestellten Slots passt
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Suggerisci una carta che corrisponda al tema dello slot ordinato
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6CE8\u6587\u3057\u305F\u30B9\u30ED\u30C3\u30C8\u306E\u30C6\u30FC\u30DE\u306B\u5408\u3063\u305F\u30AB\u30FC\u30C9\u3092\u63D0\u6848\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC8FC\uBB38\uD55C \uC2AC\uB86F\uC758 \uD14C\uB9C8\uC5D0 \uB9DE\uB294
+      \uCE74\uB4DC\uB97C \uCD94\uCC9C\uD574\uC8FC\uC138\uC694"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Sugira um cart\xE3o que corresponda ao tema do slot solicitado"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u0435 \u043A\u0430\u0440\u0442\u0443,
+      \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0443\u044E
+      \u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0435 \u0437\u0430\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E
+      \u0441\u043B\u043E\u0442\u0430"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Sugiera una tarjeta que coincida con el tema de la tragamonedas solicitada.
+    Object: {fileID: 0}
 --- !u!1 &132395014
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,6 +344,80 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "\xA1No hay reproducci\xF3n aleatoria disponible!"
+    Object: {fileID: 0}
+--- !u!1 &139749172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 139749173}
+  - component: {fileID: 139749174}
+  m_Layer: 0
+  m_Name: Freeze time for 10 seconds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &139749173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139749172}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &139749174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139749172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Freeze time for 10 seconds
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Temps de cong\xE9lation pendant 10 secondes"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Gefrierzeit f\xFCr 10 Sekunden"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Congelare il tempo per 10 secondi
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "10\u79D2\u9593\u306E\u30D5\u30EA\u30FC\u30BA\u30BF\u30A4\u30E0"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "10\uCD08 \uB3D9\uC548 \uB3D9\uACB0 \uC2DC\uAC04"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Congele o tempo por 10 segundos
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u0440\u0435\u043C\u044F \u0437\u0430\u043C\u043E\u0440\u043E\u0437\u043A\u0438
+      \u043D\u0430 10 \u0441\u0435\u043A\u0443\u043D\u0434"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Congelar el tiempo durante 10 segundos.
     Object: {fileID: 0}
 --- !u!1 &142885294
 GameObject:
@@ -496,7 +647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &218068565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,6 +841,80 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 391742158}
   m_CullTransparentMesh: 1
+--- !u!1 &398847972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 398847973}
+  - component: {fileID: 398847974}
+  m_Layer: 0
+  m_Name: Unlock a theme slot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &398847973
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398847972}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &398847974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398847972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Unlock a theme slot
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9bloquez un emplacement \xE0 th\xE8me"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Schalten Sie einen Themen-Slot frei
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sblocca uno slot tematico
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C6\u30FC\u30DE\u30B9\u30ED\u30C3\u30C8\u306E\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3059\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD14C\uB9C8 \uC2AC\uB86F \uC7A0\uAE08 \uD574\uC81C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Desbloqueie um slot tem\xE1tico"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C
+      \u0441\u043B\u043E\u0442 \u0442\u0435\u043C\u044B"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Desbloquear un espacio tem\xE1tico"
+    Object: {fileID: 0}
 --- !u!1 &425484462
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,6 +1470,79 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &631280501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 631280502}
+  - component: {fileID: 631280503}
+  m_Layer: 0
+  m_Name: Freeze Timer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &631280502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631280501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &631280503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631280501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Freeze Timer
+    Object: {fileID: 0}
+  - Language: French
+    Text: Minuterie de gel
+    Object: {fileID: 0}
+  - Language: German
+    Text: Gefriertimer
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Congelamento del timer
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D5\u30EA\u30FC\u30BA\u30BF\u30A4\u30DE\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB3D9\uACB0 \uD0C0\uC774\uBA38"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Temporizador de congelamento
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0422\u0430\u0439\u043C\u0435\u0440 \u0437\u0430\u043C\u043E\u0440\u043E\u0437\u043A\u0438"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Temporizador de congelaci\xF3n"
+    Object: {fileID: 0}
 --- !u!1 &659388962
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,6 +1878,80 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1025156680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1025156681}
+  - component: {fileID: 1025156682}
+  m_Layer: 0
+  m_Name: Shuffle the cards on the table
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1025156681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025156680}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1025156682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025156680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Shuffle the cards on the table
+    Object: {fileID: 0}
+  - Language: French
+    Text: "M\xE9langez les cartes sur la table"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Mische die Karten auf dem Tisch
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Mescola le carte sul tavolo
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C6\u30FC\u30D6\u30EB\u4E0A\u306E\u30AB\u30FC\u30C9\u3092\u30B7\u30E3\u30C3\u30D5\u30EB\u3059\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD14C\uC774\uBE14 \uC704\uC758 \uCE74\uB4DC\uB97C \uC11E\uB294\uB2E4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Embaralhe as cartas na mesa
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0435\u0440\u0435\u0442\u0430\u0441\u0443\u0439\u0442\u0435 \u043A\u0430\u0440\u0442\u044B
+      \u043D\u0430 \u0441\u0442\u043E\u043B\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Baraja las cartas sobre la mesa
+    Object: {fileID: 0}
 --- !u!1001 &1139578509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1983,7 +2355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1284977395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2041,6 +2413,152 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1289002544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1289002545}
+  - component: {fileID: 1289002546}
+  m_Layer: 0
+  m_Name: NO ADS BUNDLE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1289002545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289002544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1289002546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289002544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: NO ADS BUNDLE
+    Object: {fileID: 0}
+  - Language: French
+    Text: "PAS DE GROUPE DE PUBLICIT\xC9"
+    Object: {fileID: 0}
+  - Language: German
+    Text: KEIN WERBEBUNDLE
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: NESSUN PACCHETTO ANNUNCI
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5E83\u544A\u30D0\u30F3\u30C9\u30EB\u306A\u3057"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAD11\uACE0 \uBC88\uB4E4 \uC5C6\uC74C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "SEM PACOTE DE AN\xDANCIOS"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0411\u0415\u0417 \u041D\u0410\u0411\u041E\u0420\u0410 \u0420\u0415\u041A\u041B\u0410\u041C\u042B"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: PAQUETE SIN ANUNCIOS
+    Object: {fileID: 0}
+--- !u!1 &1306543207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1306543208}
+  - component: {fileID: 1306543209}
+  m_Layer: 0
+  m_Name: Hint Booster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1306543208
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306543207}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1306543209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306543207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Hint Booster
+    Object: {fileID: 0}
+  - Language: French
+    Text: Booster d'indices
+    Object: {fileID: 0}
+  - Language: German
+    Text: Hinweis-Booster
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Booster di suggerimenti
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D2\u30F3\u30C8\u30D6\u30FC\u30B9\u30BF\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD78C\uD2B8 \uBD80\uC2A4\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Impulsionador de dicas
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0441\u0438\u043B\u0438\u0442\u0435\u043B\u044C \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043E\u043A"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Refuerzo de pistas
+    Object: {fileID: 0}
 --- !u!1 &1309970413
 GameObject:
   m_ObjectHideFlags: 0
@@ -2234,6 +2752,80 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
   m_PrefabInstance: {fileID: 1582410615}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1579457711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1579457712}
+  - component: {fileID: 1579457713}
+  m_Layer: 0
+  m_Name: Unlock Theme
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1579457712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579457711}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1579457713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579457711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Unlock Theme
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Th\xE8me de d\xE9verrouillage"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Theme freischalten
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sblocca tema
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C6\u30FC\u30DE\u306E\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3059\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD14C\uB9C8 \uC7A0\uAE08 \uD574\uC81C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Desbloquear tema
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C
+      \u0442\u0435\u043C\u0443"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Desbloquear tema
+    Object: {fileID: 0}
 --- !u!1001 &1582410615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2282,6 +2874,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1870026379653017996, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3554123854284385176, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: FallbackText
+      value: "Bao gi\u1EDD c\xF3 Ads th\xEC s\u1EEDa c\xE1i n\xE0y"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3554123854284385176, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: translationName
+      value: "Bao gi\u1EDD c\xF3 Ads th\xEC s\u1EEDa c\xE1i n\xE0y"
+      objectReference: {fileID: 0}
     - target: {fileID: 7090409953449974092, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: m_Name
       value: MANAGER - DontDestroyOnLoad
@@ -2298,6 +2902,33 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       insertIndex: -1
       addedObject: {fileID: 659388963}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1289002545}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 631280502}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1306543208}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1722217025}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1579457712}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1025156681}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 139749173}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 398847973}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 98357301}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
 --- !u!1 &1624172840
@@ -2706,6 +3337,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1722217024
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1722217025}
+  - component: {fileID: 1722217026}
+  m_Layer: 0
+  m_Name: Shuffle Booster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1722217025
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722217024}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1555087296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1722217026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722217024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Shuffle Booster
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Booster de lecture al\xE9atoire"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Shuffle-Booster
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Booster casuale
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B7\u30E3\u30C3\u30D5\u30EB\u30D6\u30FC\u30B9\u30BF\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC154\uD50C \uBD80\uC2A4\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Refor\xE7o aleat\xF3rio"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0442\u044C \u0431\u0443\u0441\u0442\u0435\u0440"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: refuerzo aleatorio
+    Object: {fileID: 0}
 --- !u!1 &395928970860806824
 GameObject:
   m_ObjectHideFlags: 0

@@ -60,6 +60,7 @@ public class GameLoading : MonoBehaviour
         _tweens = new List<Tween>();
 
         GamePersistentVariable.hasAppJustLaunched = true;
+        GamePersistentVariable.isLoadingComplete = false;
 
         // blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
@@ -69,7 +70,7 @@ public class GameLoading : MonoBehaviour
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
             DebugLogger.LogSimple();
-            Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, LoadSceneMode.Additive);
+            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, LoadSceneMode.Additive);
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
@@ -149,6 +150,11 @@ public class GameLoading : MonoBehaviour
             }
 
             yield return waitForSeconds;
+        }
+
+        while (!_menuSceneHandle.IsDone)
+        {
+            yield return null;
         }
 
         BurstTransition();

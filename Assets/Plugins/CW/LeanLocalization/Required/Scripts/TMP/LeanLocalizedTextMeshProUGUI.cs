@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
 using System.Text;
 using System;
@@ -78,7 +78,13 @@ namespace Lean.Localization
 			pattern.Append(parameter);
 			pattern.Append("}");
 
-			textMeshPro.text = textMeshPro.text.Replace(pattern.ToString(), value);
+			string escapedPattern = System.Text.RegularExpressions.Regex.Escape(pattern.ToString());
+			textMeshPro.text = System.Text.RegularExpressions.Regex.Replace(
+				textMeshPro.text, 
+				escapedPattern, 
+				value, 
+				System.Text.RegularExpressions.RegexOptions.IgnoreCase
+			);
 
 			_cachedParameter = parameter;
 			_cachedParameterValue = value;

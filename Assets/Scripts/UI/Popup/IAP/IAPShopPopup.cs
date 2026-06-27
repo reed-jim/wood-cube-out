@@ -42,6 +42,19 @@ public class IAPShopPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        if (scrollRect != null)
+        {
+            scrollRect.StopMovement();
+            scrollRect.verticalNormalizedPosition = 1f;
+        }
+
+        if (scrollContent != null)
+        {
+            Vector3 pos = scrollContent.localPosition;
+            pos.y = 0f;
+            scrollContent.localPosition = pos;
+        }
+
         base.Show(onCompletedAction);
 
         fetchLocalizedPriceIAPEvent?.Invoke();
@@ -55,6 +68,11 @@ public class IAPShopPopup : BasePopup
 
         Show(onCompletedAction: () =>
         {
+            if (scrollContent != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(scrollContent);
+            }
+
             float distance = 0.9f * (firstPackRT.localPosition.y - firstCoinPackRT.localPosition.y);
 
             _tweens.Add(Tween.LocalPositionY(scrollContent, distance, duration: scrollToCoinPackDuration)

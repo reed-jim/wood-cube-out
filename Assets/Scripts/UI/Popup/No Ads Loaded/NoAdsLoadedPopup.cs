@@ -35,4 +35,9 @@ public class NoAdsLoadedPopup : BasePopup
 
         base.Hide();
     }
+
+    protected void ClickBtOK()
+    {
+
+    }
 }

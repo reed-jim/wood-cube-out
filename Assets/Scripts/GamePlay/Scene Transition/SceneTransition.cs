@@ -65,6 +65,7 @@ public class SceneTransition : MonoBehaviour
         }
 
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
+        loadLevelInProgressContainer.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -83,6 +84,8 @@ public class SceneTransition : MonoBehaviour
         if (_isFirstTimeOpenApp)
         {
             _isFirstTimeOpenApp = false;
+
+            transitionCompletedEvent?.Invoke();
 
             return;
         }
@@ -132,7 +135,7 @@ public class SceneTransition : MonoBehaviour
 
         ShowBlackScreenImmediately();
 
-        yield return new WaitUntil(() => _isLevelLoaded);
+        yield return new WaitUntil(() => _isLevelLoaded && GamePersistentVariable.isLoadingComplete);
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
 
@@ -170,6 +173,8 @@ public class SceneTransition : MonoBehaviour
             loadLevelInProgressContainer.gameObject.SetActive(false);
 
             _isFirstTimeEnterScene = false;
+
+            transitionCompletedEvent?.Invoke();
 
             return;
         }

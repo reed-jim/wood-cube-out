@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Dreamteck.Utilities;
+using GplayCdn;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -41,7 +42,32 @@ public class TileManager : Singleton<TileManager>
     private Tween freezeTimeTween;
 
     public bool IsShuffling { get; private set; }
-    public bool IsDealingCards { get; private set; }
+    private bool _isDealingStartCards;
+    public bool IsDealingCards
+    {
+        get
+        {
+            if (_isDealingStartCards) return true;
+            if (tiles != null)
+            {
+                for (int i = 0; i < tiles.Count; i++)
+                {
+                    if (tiles[i] != null && tiles[i].IsMoving)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    public BaseTile CurrentlyDraggedTile { get; set; }
+
+    public bool IsAnyTileDragging()
+    {
+        return CurrentlyDraggedTile != null;
+    }
 
     private Dictionary<ItemCategory, List<int>> availableItemIdsPerCategory = new Dictionary<ItemCategory, List<int>>();
 
@@ -78,6 +104,8 @@ public class TileManager : Singleton<TileManager>
     {
         base.MoreActionOnAwake();
 
+        Input.multiTouchEnabled = false;
+
         RevivePopup.reviveEvent += OnRevive;
 
         totalSlotInShelf = 5;
@@ -110,10 +138,118 @@ public class TileManager : Singleton<TileManager>
     {
         this.levelItem = levelItem;
 
+        // Check if any categories need CDN sprites downloaded
+        StartCoroutine(SetupLevelWithCdnDownload(levelItem));
+    }
+
+    private IEnumerator SetupLevelWithCdnDownload(LevelItem levelItem)
+    {
+        // Collect CDN categories that need downloading for this level
+        List<CategoryIconSet> cdnSetsToDownload = new List<CategoryIconSet>();
+
+        foreach (var theme in levelItem.themeDataList)
+        {
+            var iconSet = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == theme.category);
+            if (iconSet != null && iconSet.isOnServer)
+            {
+                // Check if icons need downloading (null or empty)
+                bool needsDownload = (iconSet.icons == null || iconSet.icons.Length == 0 || iconSet.icons.Any(s => s == null));
+                bool needsSpriteOrder = iconSet.spriteOrder == null && !string.IsNullOrEmpty(iconSet.spriteOrderCdnKey);
+
+                if (needsDownload || needsSpriteOrder)
+                {
+                    cdnSetsToDownload.Add(iconSet);
+                }
+            }
+        }
+
+        // Download CDN sprites if needed
+        if (cdnSetsToDownload.Count > 0 && CdnDownloader.Instance != null)
+        {
+            Debug.Log($"[TileManager] Downloading CDN sprites for {cdnSetsToDownload.Count} categories...");
+
+            bool allDone = false;
+            StartCoroutine(DownloadCdnSpritesForLevel(cdnSetsToDownload, () => allDone = true));
+            yield return new WaitUntil(() => allDone);
+
+            Debug.Log("[TileManager] CDN sprites download complete.");
+        }
+
+        // Notify that the level (including assets/sprites download) is fully loaded
+        NamPhuThuy.GamePlay.LevelLoader.NotifyLevelLoaded();
+
+        // Continue with normal setup
+        SetupLevelInternal(levelItem);
+    }
+
+    private IEnumerator DownloadCdnSpritesForLevel(List<CategoryIconSet> cdnSets, Action onComplete)
+    {
+        foreach (var iconSet in cdnSets)
+        {
+            // Download icons
+            if (iconSet.iconCdnKeys != null && iconSet.iconCdnKeys.Length > 0)
+            {
+                // Initialize icons array if needed
+                if (iconSet.icons == null || iconSet.icons.Length != iconSet.iconCdnKeys.Length)
+                {
+                    iconSet.icons = new Sprite[iconSet.iconCdnKeys.Length];
+                }
+
+                for (int i = 0; i < iconSet.iconCdnKeys.Length; i++)
+                {
+                    string key = iconSet.iconCdnKeys[i];
+                    if (string.IsNullOrEmpty(key)) continue;
+                    if (iconSet.icons[i] != null) continue; // Already loaded
+
+                    int idx = i;
+                    bool done = false;
+
+                    CdnDownloader.Instance.LoadSprite(key, (sprite) =>
+                    {
+                        iconSet.icons[idx] = sprite;
+                        done = true;
+                    }, () =>
+                    {
+                        Debug.LogError($"[TileManager] Failed to download icon {idx} for {iconSet.itemCategory}, key: {key}");
+                        done = true;
+                    });
+
+                    yield return new WaitUntil(() => done);
+                }
+            }
+
+            // Download spriteOrder
+            if (!string.IsNullOrEmpty(iconSet.spriteOrderCdnKey) && iconSet.spriteOrder == null)
+            {
+                bool done = false;
+
+                CdnDownloader.Instance.LoadSprite(iconSet.spriteOrderCdnKey, (sprite) =>
+                {
+                    iconSet.spriteOrder = sprite;
+                    done = true;
+                }, () =>
+                {
+                    Debug.LogError($"[TileManager] Failed to download spriteOrder for {iconSet.itemCategory}");
+                    done = true;
+                });
+
+                yield return new WaitUntil(() => done);
+            }
+        }
+
+        onComplete?.Invoke();
+    }
+
+    private void SetupLevelInternal(LevelItem levelItem)
+    {
+        isLevelActive = true;
         if (levelItem.timeLimit > 0)
         {
             currentLevelTime = levelItem.timeLimit;
-            isLevelActive = true;
+        }
+        else
+        {
+            currentLevelTime = 0;
         }
 
         isTimeFrozen = false;
@@ -123,7 +259,7 @@ public class TileManager : Singleton<TileManager>
         }
 
         IsShuffling = false;
-        IsDealingCards = false;
+        _isDealingStartCards = false;
 
         availableItemIdsPerCategory.Clear();
 
@@ -132,7 +268,22 @@ public class TileManager : Singleton<TileManager>
             var iconSet = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == theme.category);
             if (iconSet != null)
             {
-                int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                int spriteCount;
+                if (iconSet.isOnServer)
+                {
+                    // CDN category (index 21+): icons may have been cleared after upload.
+                    // CDN download already ran above, so icons[] should now be populated.
+                    // Use iconCdnKeys.Length as authoritative count (in case icons are still null).
+                    spriteCount = (iconSet.icons != null && iconSet.icons.Length > 0)
+                        ? iconSet.icons.Length
+                        : (iconSet.iconCdnKeys != null ? iconSet.iconCdnKeys.Length : 0);
+                }
+                else
+                {
+                    // Local category (index 0-20): always use icons array directly.
+                    spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                }
+
                 int textCount = iconSet.text != null ? iconSet.text.Length : 0;
                 int totalItems = spriteCount + textCount;
 
@@ -616,6 +767,7 @@ public class TileManager : Singleton<TileManager>
         });
 
         slot.AddTile(tile);
+        tileSlotContainer.AddTile(tile);
     }
 
     public bool HasOpenContainerOfCategory(ItemCategory category)
@@ -831,6 +983,7 @@ public class TileManager : Singleton<TileManager>
                 if (tile != null)
                 {
                     tile.gameObject.SetActive(true);
+                    tile.txCount.gameObject.SetActive(false);
 
                     tiles.Add(tile);
 
@@ -897,8 +1050,10 @@ public class TileManager : Singleton<TileManager>
     {
         int col = levelItem.initColumn;
         int row = levelItem.initRow;
-        float tileSpacingWidth = 1f * 210;
-        float tileSpacingHeight = 1f * 266;
+        // Use custom spacing from LevelItem if set (> 0), otherwise fall back to defaults.
+        // Useful when row < 4 or col < 5 and tiles need more spread.
+        float tileSpacingWidth  = levelItem.ActualSpacingWidth;   // default 210
+        float tileSpacingHeight = levelItem.ActualSpacingHeight;  // default 266
 
         float totalWidth = (col - 1) * tileSpacingWidth;
         float totalHeight = (row - 1) * tileSpacingHeight;
@@ -1025,7 +1180,7 @@ public class TileManager : Singleton<TileManager>
 
     private IEnumerator DealCardsAnimCoroutine()
     {
-        IsDealingCards = true;
+        _isDealingStartCards = true;
         // Prepare
         foreach (var grid in grids)
         {
@@ -1036,6 +1191,10 @@ public class TileManager : Singleton<TileManager>
             tile.transform.position = CardStockPile.Ins.transform.position;
             tile.transform.localEulerAngles = Vector3.zero;
             tile.transform.localScale = Vector3.one;
+            if (tile.ObjHide != null)
+            {
+                tile.ObjHide.transform.localScale = Vector3.one;
+            }
         }
 
         yield return StartCoroutine(WaitForTransitionCompleted());
@@ -1088,7 +1247,7 @@ public class TileManager : Singleton<TileManager>
             yield return new WaitForSeconds(0.15f);
         }
 
-        IsDealingCards = false;
+        _isDealingStartCards = false;
     }
     #endregion
 
@@ -1098,17 +1257,52 @@ public class TileManager : Singleton<TileManager>
 
         int itemId = GetUniqueItemId(nextCategory, iconSet);
 
-        int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+        int spriteCount;
         string textData = null;
         Sprite spriteData = null;
 
-        if (itemId < spriteCount)
+        if (iconSet.isOnServer)
         {
-            spriteData = iconSet.icons[itemId];
+
+            spriteCount = (iconSet.icons != null && iconSet.icons.Length > 0)
+                ? iconSet.icons.Length
+                : (iconSet.iconCdnKeys != null ? iconSet.iconCdnKeys.Length : 0);
+
+            if (itemId < spriteCount)
+            {
+                if (iconSet.icons != null && iconSet.icons.Length > itemId && iconSet.icons[itemId] != null)
+                {
+                    spriteData = iconSet.icons[itemId];
+                }
+                // Fallback: read directly from CDN memory cache
+                if (spriteData == null && iconSet.iconCdnKeys != null
+                    && iconSet.iconCdnKeys.Length > itemId && GplayCdn.CdnDownloader.Instance != null)
+                {
+                    string key = iconSet.iconCdnKeys[itemId];
+                    if (!string.IsNullOrEmpty(key))
+                        spriteData = GplayCdn.CdnDownloader.Instance.GetCachedSprite(key);
+                }
+            }
+            else
+            {
+                if (iconSet.text != null && iconSet.text.Length > (itemId - spriteCount))
+                    textData = iconSet.text[itemId - spriteCount];
+            }
         }
         else
         {
-            textData = iconSet.text[itemId - spriteCount];
+            // ── Local path (index 0-20): use icons[] directly, no CDN ────────────
+            spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+
+            if (itemId < spriteCount)
+            {
+                spriteData = iconSet.icons[itemId];
+            }
+            else
+            {
+                if (iconSet.text != null && iconSet.text.Length > (itemId - spriteCount))
+                    textData = iconSet.text[itemId - spriteCount];
+            }
         }
 
         tile.Init(nextCategory, itemId, spriteData, textData);
@@ -1125,10 +1319,17 @@ public class TileManager : Singleton<TileManager>
         }
 
         // Fallback: return a random valid index
-        int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+        int spriteCount;
+        if (iconSet.isOnServer)
+            spriteCount = (iconSet.icons != null && iconSet.icons.Length > 0)
+                ? iconSet.icons.Length
+                : (iconSet.iconCdnKeys != null ? iconSet.iconCdnKeys.Length : 0);
+        else
+            spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+
         int textCount = iconSet.text != null ? iconSet.text.Length : 0;
         int totalItems = spriteCount + textCount;
-        return UnityEngine.Random.Range(0, totalItems);
+        return UnityEngine.Random.Range(0, Mathf.Max(1, totalItems));
     }
 
 
@@ -1216,12 +1417,27 @@ public class TileManager : Singleton<TileManager>
     public void UseHintBooster()
     {
         TileSlotContainer activeContainer = null;
+        BaseTile highlightedTile = null;
+
         for (int i = 0; i < tileSlotContainers.Count; i++)
         {
-            if (!tileSlotContainers[i].isLocked && !tileSlotContainers[i].isHidden && !tileSlotContainers[i].isMoving && !tileSlotContainers[i].isCompleted && tileSlotContainers[i].GetAvailableTileSlot() != null)
+            var container = tileSlotContainers[i];
+            if (!container.isLocked && !container.isHidden && !container.isMoving && !container.isCompleted && container.GetAvailableTileSlot() != null)
             {
-                activeContainer = tileSlotContainers[i];
-                break;
+                foreach (var tile in tiles)
+                {
+                    if (!tile.IsOnSlot && !tile.IsOutside && !tile.IsDone && tile.ItemCategory == container.ItemCategory)
+                    {
+                        activeContainer = container;
+                        highlightedTile = tile;
+                        break;
+                    }
+                }
+
+                if (activeContainer != null)
+                {
+                    break;
+                }
             }
         }
 
@@ -1229,15 +1445,9 @@ public class TileManager : Singleton<TileManager>
         {
             activeContainer.SetHighlight(true);
 
-            BaseTile highlightedTile = null;
-            foreach (var tile in tiles)
+            if (highlightedTile != null)
             {
-                if (!tile.IsOnSlot && !tile.IsOutside && !tile.IsDone && tile.ItemCategory == activeContainer.ItemCategory)
-                {
-                    tile.SetHighlight(true);
-                    highlightedTile = tile;
-                    break;
-                }
+                highlightedTile.SetHighlight(true);
             }
 
             Transform originalContainerParent = null;
@@ -1256,6 +1466,7 @@ public class TileManager : Singleton<TileManager>
                 if (highlightedTile != null)
                 {
                     originalTileParent = highlightedTile.transform.parent;
+
                     originalTileSiblingIndex = highlightedTile.transform.GetSiblingIndex();
                     highlightedTile.transform.SetParent(upToAll.transform, true);
                 }
@@ -1311,23 +1522,17 @@ public class TileManager : Singleton<TileManager>
 
     public bool CanUseHintBooster()
     {
-        TileSlotContainer activeContainer = null;
         for (int i = 0; i < tileSlotContainers.Count; i++)
         {
-            if (!tileSlotContainers[i].isLocked && !tileSlotContainers[i].isHidden && !tileSlotContainers[i].isMoving && !tileSlotContainers[i].isCompleted && tileSlotContainers[i].GetAvailableTileSlot() != null)
+            var container = tileSlotContainers[i];
+            if (!container.isLocked && !container.isHidden && !container.isMoving && !container.isCompleted && container.GetAvailableTileSlot() != null)
             {
-                activeContainer = tileSlotContainers[i];
-                break;
-            }
-        }
-
-        if (activeContainer != null)
-        {
-            foreach (var tile in tiles)
-            {
-                if (!tile.IsOnSlot && !tile.IsOutside && !tile.IsDone && tile.ItemCategory == activeContainer.ItemCategory)
+                foreach (var tile in tiles)
                 {
-                    return true;
+                    if (!tile.IsOnSlot && !tile.IsOutside && !tile.IsDone && tile.ItemCategory == container.ItemCategory)
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -1581,6 +1786,33 @@ public class TileManager : Singleton<TileManager>
             yield return null;
         }
 
+        // Calculate arrival times for all tiles to determine correct rendering order
+        var arrivalTimes = new List<System.Tuple<BaseTile, float>>();
+        for (int i = 0; i < sortedTargets.Count; i++)
+        {
+            var target = sortedTargets[i];
+            if (target.tile == null) continue;
+
+            float flyDelay = i * 0.15f;
+            float distance = Vector3.Distance(target.tile.transform.localPosition, deckLocalPos);
+            float moveDuration = Mathf.Max(0.2f, distance / 1500f);
+            float arrivalTime = flyDelay + moveDuration;
+
+            arrivalTimes.Add(new System.Tuple<BaseTile, float>(target.tile, arrivalTime));
+        }
+
+        // Sort tiles by arrival time in ascending order (earlier arrival -> lower layer/sibling index)
+        arrivalTimes.Sort((a, b) => a.Item2.CompareTo(b.Item2));
+
+        // Set sibling index before starting the fly animation
+        for (int k = 0; k < arrivalTimes.Count; k++)
+        {
+            if (arrivalTimes[k].Item1 != null)
+            {
+                arrivalTimes[k].Item1.transform.SetSiblingIndex(k);
+            }
+        }
+
         // 2b. Khi tất cả đã úp xong mới bắt đầu di chuyển để shuffle về bộ bài (staggered)
         int flyCompleted = 0;
         for (int i = 0; i < sortedTargets.Count; i++)
@@ -1751,14 +1983,14 @@ public class TileManager : Singleton<TileManager>
                     if (tileSlot != null)
                     {
                         tile.IsMoving = true;
-                        Tween.Alpha(tile.icon, 1, duration: 0.3f);
+                        //Tween.Alpha(tile.icon, 1, duration: 0.3f);
                         Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.15f).OnComplete(() =>
                         {
                             tile.IsMoving = false;
 
                             tile.IsDone = true;
                             tiles.Remove(tile);
-                            tile.gameObject.SetActive(false);
+                            //tile.gameObject.SetActive(false);
                             tile.transform.SetParent(tileSlot.transform);
 
                             tileSlotContainer.SwitchItem(tile);
@@ -1789,6 +2021,7 @@ public class TileManager : Singleton<TileManager>
                         });
 
                         tileSlot.AddTile(tile);
+                        tileSlotContainer.AddTile(tile);
 
                         return true;
                     }

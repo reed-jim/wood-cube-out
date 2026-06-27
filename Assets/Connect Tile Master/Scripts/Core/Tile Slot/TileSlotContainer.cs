@@ -31,7 +31,9 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private ParticleSystem fxCompleteTheme;
     [SerializeField] private ParticleSystem fxUnlock;
 
-    [SerializeField] private SkeletonGraphic skeletonGraphic;
+    [SerializeField] private SkeletonGraphic skeletonGraphicBack;
+    [SerializeField] private SkeletonGraphic skeletonGraphicFront;
+
 
     [SerializeField] private GameObject animUnlock;
     [SerializeField] private ItemCategory itemCategory;
@@ -79,6 +81,16 @@ public class TileSlotContainer : MonoBehaviour
         originalIsLocked = isLocked;
         BuyBoosterPopup.unlockScrewBoxEvent += Unlock;
         if (animUnlock != null) animUnlock.SetActive(false);
+        //if (tileCountText != null)
+        //{
+        //    Canvas canvas = tileCountText.gameObject.GetComponent<Canvas>();
+        //    if (canvas == null)
+        //    {
+        //        canvas = tileCountText.gameObject.AddComponent<Canvas>();
+        //    }
+        //    canvas.overrideSorting = true;
+        //    canvas.sortingOrder = 2;
+        //}
     }
 
     public void SetOriginalLockState(bool locked)
@@ -94,21 +106,34 @@ public class TileSlotContainer : MonoBehaviour
 
     private BaseTile tileTemp;
 
-    public void Init(ItemCategory itemCategory = ItemCategory.Fast_Food, int targetCardAmount = 4)
+    public void Init(ItemCategory itemCategory = ItemCategory.Fast_Food, int targetCardAmount = 4, bool resetLockState = true)
     {
         ClearTiles();
-        
+
+        if (tileCountText != null)
+        {
+            Canvas canvas = tileCountText.gameObject.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                canvas.overrideSorting = false;
+            }
+        }
+
         this.itemCategory = itemCategory;
         this.maxTile = targetCardAmount;
         this.isCompleted = false;
         this.isHidden = false;
         this.isMoving = false;
-        this.isLocked = originalIsLocked;
+        if (resetLockState)
+        {
+            this.isLocked = originalIsLocked;
+        }
 
         if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
         if (glow != null) glow.gameObject.SetActive(false);
         if (unlockObject != null) unlockObject.transform.localScale = Vector3.one;
         category.text = "???";
+        category.transform.localScale = Vector3.one;
         if (category != null) category.alpha = 1f;
 
         if (lockImage != null)
@@ -145,11 +170,26 @@ public class TileSlotContainer : MonoBehaviour
         CategoryIconSet iconSet = containerToUse.categoryIconSets.First(item => item.itemCategory == itemCategory);
 
         bool hasText = iconSet.text != null && iconSet.text.Length > 0;
-        bool hasIcon = iconSet.icons != null && iconSet.icons.Length > 0;
 
-        // Check if specific order text or order sprite is defined
+        bool hasIcon;
         bool hasTextOrder = !string.IsNullOrEmpty(iconSet.textOrder);
-        bool hasIconOrder = iconSet.spriteOrder != null;
+        bool hasIconOrder;
+
+        if (iconSet.isOnServer)
+        {
+            // CDN category (index 21+): icons/spriteOrder may be cleared after upload.
+            // Consider CDN keys as proof that assets exist.
+            hasIcon = (iconSet.icons != null && iconSet.icons.Length > 0)
+                      || (iconSet.iconCdnKeys != null && iconSet.iconCdnKeys.Length > 0);
+            hasIconOrder = iconSet.spriteOrder != null
+                           || !string.IsNullOrEmpty(iconSet.spriteOrderCdnKey);
+        }
+        else
+        {
+            // Local category (index 0-20): use sprite references directly.
+            hasIcon = iconSet.icons != null && iconSet.icons.Length > 0;
+            hasIconOrder = iconSet.spriteOrder != null;
+        }
 
         bool useText = false;
         if (hasTextOrder && hasIconOrder)
@@ -203,13 +243,48 @@ public class TileSlotContainer : MonoBehaviour
             if (currentTileImage != null)
             {
                 currentTileImage.gameObject.SetActive(true);
-                if (hasIconOrder)
+
+                if (iconSet.isOnServer)
                 {
-                    currentTileImage.sprite = iconSet.spriteOrder;
+                    // ── CDN path (index 21+) ──────────────────────────────────────
+                    // Prefer spriteOrder already loaded in memory
+                    if (iconSet.spriteOrder != null)
+                    {
+                        currentTileImage.sprite = iconSet.spriteOrder;
+                    }
+                    // Fallback: get spriteOrder from CDN memory cache
+                    else if (!string.IsNullOrEmpty(iconSet.spriteOrderCdnKey)
+                        && GplayCdn.CdnDownloader.Instance != null)
+                    {
+                        var cached = GplayCdn.CdnDownloader.Instance.GetCachedSprite(iconSet.spriteOrderCdnKey);
+                        if (cached != null)
+                        {
+                            iconSet.spriteOrder = cached; // write back for next access
+                            currentTileImage.sprite = cached;
+                        }
+                    }
+                    // Fallback: use a non-null icon from CDN cache
+                    else if (iconSet.iconCdnKeys != null && GplayCdn.CdnDownloader.Instance != null)
+                    {
+                        foreach (var key in iconSet.iconCdnKeys)
+                        {
+                            if (string.IsNullOrEmpty(key)) continue;
+                            var s = GplayCdn.CdnDownloader.Instance.GetCachedSprite(key);
+                            if (s != null) { currentTileImage.sprite = s; break; }
+                        }
+                    }
                 }
-                else if (hasIcon)
+                else
                 {
-                    currentTileImage.sprite = iconSet.icons[UnityEngine.Random.Range(0, iconSet.icons.Length)];
+                    // ── Local path (index 0-20) ───────────────────────────────────
+                    if (iconSet.spriteOrder != null)
+                    {
+                        currentTileImage.sprite = iconSet.spriteOrder;
+                    }
+                    else if (iconSet.icons != null && iconSet.icons.Length > 0)
+                    {
+                        currentTileImage.sprite = iconSet.icons[UnityEngine.Random.Range(0, iconSet.icons.Length)];
+                    }
                 }
             }
         }
@@ -220,13 +295,24 @@ public class TileSlotContainer : MonoBehaviour
         tileCountText.text = $"{tiles.Count}/{maxTile}";
         if (animUnlock != null) animUnlock.SetActive(false);
 
-        if (skeletonGraphic != null)
+        if (skeletonGraphicBack != null)
         {
-            var currentAnim = skeletonGraphic.AnimationState.GetCurrent(0);
+
+            var currentAnim = skeletonGraphicBack.AnimationState.GetCurrent(0);
             if (currentAnim == null || currentAnim.Animation.Name != "begin")
             {
-                skeletonGraphic.Skeleton.SetToSetupPose();
-                skeletonGraphic.AnimationState.SetAnimation(0, "begin", true);
+                skeletonGraphicBack.Skeleton.SetToSetupPose();
+                skeletonGraphicBack.AnimationState.SetAnimation(0, "begin", true);
+            }
+        }
+        if (skeletonGraphicFront != null)
+        {
+
+            var currentAnim = skeletonGraphicFront.AnimationState.GetCurrent(0);
+            if (currentAnim == null || currentAnim.Animation.Name != "begin")
+            {
+                skeletonGraphicFront.Skeleton.SetToSetupPose();
+                skeletonGraphicFront.AnimationState.SetAnimation(0, "begin", true);
             }
         }
     }
@@ -234,12 +320,9 @@ public class TileSlotContainer : MonoBehaviour
     public void AddTile(BaseTile tile)
     {
         tiles.Add(tile);
-        tileCountText.text = $"{tiles.Count}/{maxTile}";
-        tile.txCount.text = $"{tiles.Count}/{maxTile}";
-        tile.txCount.gameObject.SetActive(true);
-
+        tile.txCount.gameObject.SetActive(false);
     }
-    private void PlayFxComplete(BaseTile tile)
+    private void PlayFxComplete(BaseTile tile, UnityAction callback = null)
     {
         Color c = tile.glow.color;
         c.a = 0;
@@ -250,14 +333,59 @@ public class TileSlotContainer : MonoBehaviour
         {
             Tween.Alpha(tile.glow, 0f, duration: timeComplete, ease: Ease.InQuad).OnComplete(() =>
             {
+                callback?.Invoke();
                 tile.glow.gameObject.SetActive(false);
+                Color c = tile.glow.color;
+                c.a = 1;
+                tile.glow.color = c;
             });
         });
+    }
+
+
+
+    private void ScaleCountTextWithTween()
+    {
+        if (tileCountText != null)
+        {
+            SettingLayerTextCount();
+
+            tileCountText.text = $"{tiles.Count}/{maxTile}";
+            tileCountText.transform.localScale = Vector3.one;
+            Tween.Scale(tileCountText.transform, 1.3f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
+            {
+                Tween.Scale(tileCountText.transform, 1f, duration: timeComplete, ease: Ease.InQuad).OnComplete(() =>
+                {
+                    Canvas canvas = tileCountText.gameObject.GetComponent<Canvas>();
+                    if (canvas != null)
+                    {
+                        canvas.overrideSorting = false;
+                    }
+                });
+            });
+        }
+    }
+
+    private void SettingLayerTextCount()
+    {
+        if (tileCountText != null)
+        {
+            Canvas canvas = tileCountText.gameObject.GetComponent<Canvas>();
+            if (canvas == null)
+            {
+                canvas = tileCountText.gameObject.AddComponent<Canvas>();
+            }
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = 2;
+        }
     }
 
     public void SwitchItem(BaseTile tile)
     {
         PlayFxComplete(tile);
+
+        ScaleCountTextWithTween();
+
         Tween.Scale(tile.transform, 1.1f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
         {
             Tween.Scale(tile.transform, 1f, duration: timeComplete, ease: Ease.InQuad).OnComplete(() =>
@@ -364,6 +492,11 @@ public class TileSlotContainer : MonoBehaviour
 
     private void ClickButtonUnlockByAds()
     {
+        if (TileManager.Ins != null && TileManager.Ins.IsAnyTileDragging())
+        {
+            return;
+        }
+
         if (isLocked)
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
@@ -382,13 +515,15 @@ public class TileSlotContainer : MonoBehaviour
             category.gameObject.SetActive(true);
             category.alpha = 0;
 
-            Tween.Alpha(category, 1, duration: 0.3f);
-            Tween.Alpha(lockImage, 0, duration: 0.3f).OnComplete(() =>
+            Tween.Alpha(category, 1, duration: 0.25f);
+            Tween.Alpha(lockImage, 0, duration: 0.25f).OnComplete(() =>
             {
                 lockImage.gameObject.SetActive(false);
                 categoryContainer.gameObject.SetActive(true);
                 unlockObject.gameObject.SetActive(true);
                 lockObject.gameObject.SetActive(false);
+                //SettingLayerTextCount();
+                //ScaleCountTextWithTween();
             });
 
             isLocked = false;
@@ -403,83 +538,136 @@ public class TileSlotContainer : MonoBehaviour
         this.itemCategory = nextCategory;
         isMoving = true;
 
+        if (tileCountText != null)
+        {
+            Canvas canvas = tileCountText.gameObject.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                canvas.overrideSorting = false;
+            }
+        }
+
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
             fxCompleteTheme.Play();
             category.text = oldCategoryName;
             Tween.Alpha(category, 1f, duration: 0.05f);
+            category.transform.localScale = Vector3.one;
+            Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
+            {
+                Tween.Scale(category.transform, 1f, duration: 0.15f, ease: Ease.InQuad);
+            });
 
             float animDelay = 0f;
-            if (skeletonGraphic != null)
+            if (skeletonGraphicBack != null)
             {
-                skeletonGraphic.Skeleton.SetToSetupPose();
-                var track = skeletonGraphic.AnimationState.SetAnimation(0, "action", false);
+                skeletonGraphicBack.Skeleton.SetToSetupPose();
+                var track = skeletonGraphicBack.AnimationState.SetAnimation(0, "action", false);
                 if (track != null) animDelay = track.AnimationEnd;
             }
-
+            if (skeletonGraphicFront != null)
+            {
+                skeletonGraphicFront.Skeleton.SetToSetupPose();
+                var track = skeletonGraphicFront.AnimationState.SetAnimation(0, "action", false);
+                if (track != null) animDelay = track.AnimationEnd;
+            }
             Tween.Delay(animDelay).OnComplete(() =>
             {
-                if (skeletonGraphic != null)
+                if (skeletonGraphicBack != null)
                 {
-                    skeletonGraphic.AnimationState.SetAnimation(0, "end", false);
+                    skeletonGraphicBack.AnimationState.SetAnimation(0, "end", false);
+                }
+                if (skeletonGraphicFront != null)
+                {
+                    skeletonGraphicFront.AnimationState.SetAnimation(0, "end", false);
                 }
 
                 Tween.Delay(1f).OnComplete(() =>
-                {
-                    float initialPositionY = originalPositionY;
+            {
+                float initialPositionY = originalPositionY;
 
-                    Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f)
+                Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f)
+                .OnComplete(() =>
+                {
+                    if (skeletonGraphicBack != null)
+                    {
+                        skeletonGraphicBack.Skeleton.SetToSetupPose();
+                        skeletonGraphicBack.AnimationState.SetAnimation(0, "begin", true);
+                    }
+                    if (skeletonGraphicFront != null)
+                    {
+                        skeletonGraphicFront.Skeleton.SetToSetupPose();
+                        skeletonGraphicFront.AnimationState.SetAnimation(0, "begin", true);
+                    }
+
+                    Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
                     .OnComplete(() =>
                     {
-                        if (skeletonGraphic != null)
-                        {
-                            skeletonGraphic.Skeleton.SetToSetupPose();
-                            skeletonGraphic.AnimationState.SetAnimation(0, "begin", true);
-                        }
+                        Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory), resetLockState: false);
+                        category.alpha = 1f;
 
-                        Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
+                        Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
                         .OnComplete(() =>
                         {
-                            Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
-                            category.alpha = 1f;
-
-                            Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
-                            .OnComplete(() =>
-                            {
-                                isMoving = false;
-                                onCompleteAction?.Invoke();
-                            });
+                            isMoving = false;
+                            onCompleteAction?.Invoke();
                         });
                     });
                 });
             });
+            });
         });
     }
+
 
     public void Hide(Action onCompleteAction)
     {
         isMoving = true;
         isHidden = true;
 
+        if (tileCountText != null)
+        {
+            Canvas canvas = tileCountText.gameObject.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                canvas.overrideSorting = false;
+            }
+        }
+
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
             if (fxCompleteTheme != null) fxCompleteTheme.Play();
             category.text = this.itemCategory.ToString().Replace("_", " ");
             Tween.Alpha(category, 1f, duration: 0.05f);
+            category.transform.localScale = Vector3.one;
+            Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
+            {
+                Tween.Scale(category.transform, 1f, duration: 0.15f, ease: Ease.InQuad);
+            });
 
             float animDelay = 0f;
-            if (skeletonGraphic != null)
+            if (skeletonGraphicBack != null)
             {
-                skeletonGraphic.Skeleton.SetToSetupPose();
-                var track = skeletonGraphic.AnimationState.SetAnimation(0, "action", false);
+                skeletonGraphicBack.Skeleton.SetToSetupPose();
+                var track = skeletonGraphicBack.AnimationState.SetAnimation(0, "action", false);
+                if (track != null) animDelay = track.AnimationEnd;
+            }
+            if (skeletonGraphicFront != null)
+            {
+                skeletonGraphicFront.Skeleton.SetToSetupPose();
+                var track = skeletonGraphicFront.AnimationState.SetAnimation(0, "action", false);
                 if (track != null) animDelay = track.AnimationEnd;
             }
 
             Tween.Delay(animDelay).OnComplete(() =>
             {
-                if (skeletonGraphic != null)
+                if (skeletonGraphicBack != null)
                 {
-                    skeletonGraphic.AnimationState.SetAnimation(0, "end", false);
+                    skeletonGraphicBack.AnimationState.SetAnimation(0, "end", false);
+                }
+                if (skeletonGraphicFront != null)
+                {
+                    skeletonGraphicFront.AnimationState.SetAnimation(0, "end", false);
                 }
 
                 Tween.Delay(1f).OnComplete(() =>
@@ -489,10 +677,15 @@ public class TileSlotContainer : MonoBehaviour
                     Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f)
                     .OnComplete(() =>
                     {
-                        if (skeletonGraphic != null)
+                        if (skeletonGraphicBack != null)
                         {
-                            skeletonGraphic.Skeleton.SetToSetupPose();
-                            skeletonGraphic.AnimationState.SetAnimation(0, "begin", true);
+                            skeletonGraphicBack.Skeleton.SetToSetupPose();
+                            skeletonGraphicBack.AnimationState.SetAnimation(0, "begin", true);
+                        }
+                        if (skeletonGraphicFront != null)
+                        {
+                            skeletonGraphicFront.Skeleton.SetToSetupPose();
+                            skeletonGraphicFront.AnimationState.SetAnimation(0, "begin", true);
                         }
 
                         Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
@@ -596,19 +789,19 @@ public class TileSlotContainer : MonoBehaviour
         glowUnlockTheme.color = c;
         glowUnlockTheme.gameObject.SetActive(true);
 
-        fxCompleteCard.Play();
+        fxUnlock.Play();
         glowUnlockTheme.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
         Tween tween = Tween.Scale(glowUnlockTheme.transform, 1f, duration: timeComplete * 2f);
         Tween.Alpha(glowUnlockTheme, 1f, duration: timeComplete * 2f).OnComplete(() =>
         {
-            Tween.Delay(0.5f).OnComplete(() =>
+            //Tween.Delay(0.5f).OnComplete(() =>
+            //{
+            Tween.Alpha(glowUnlockTheme, 0f, duration: timeComplete * 2f).OnComplete(() =>
             {
-                Tween.Alpha(glowUnlockTheme, 0f, duration: timeComplete * 3f).OnComplete(() =>
-                {
-                    glowUnlockTheme.gameObject.SetActive(false);
-                    callback?.Invoke();
-                });
+                glowUnlockTheme.gameObject.SetActive(false);
+                callback?.Invoke();
             });
+            //});
         });
 
     }
@@ -625,9 +818,9 @@ public class TileSlotContainer : MonoBehaviour
                 animator.Update(0f);
             }
 
-            Tween.Delay(2f).OnComplete(() =>
+            Tween.Delay(0.5f).OnComplete(() =>
             {
-                fxUnlock.Play();
+                //fxUnlock.Play();
 
                 //Tween.Scale(lockObject.transform, 1.2f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
                 //{
@@ -635,11 +828,11 @@ public class TileSlotContainer : MonoBehaviour
                 //});
                 PlayFxUnlock(() =>
                 {
-                    Tween.Delay(0.4f).OnComplete(() =>
-                    {
-                        animUnlock.SetActive(false);
-                        onComplete?.Invoke();
-                    });
+                    //Tween.Delay(0.4f).OnComplete(() =>
+                    //{
+                    animUnlock.SetActive(false);
+                    onComplete?.Invoke();
+                    //});
                 }
                 );
 

@@ -64,6 +64,7 @@ public class BuyBoosterPopup : BasePopup
 
         buyWithDiamondButton.onClick.AddListener(GetWithCoin);
         getWithAdsButton.onClick.AddListener(GetWithAds);
+        userResourcesObserver.updateCoinEvent += UpdateCoinBalanceText;
     }
 
     protected override void UnregisterMoreEvent()
@@ -74,6 +75,7 @@ public class BuyBoosterPopup : BasePopup
         TileSlotContainer.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent -= OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+        userResourcesObserver.updateCoinEvent -= UpdateCoinBalanceText;
     }
 
     private void ShowBuyBoosterPopup(BoosterType boosterType)
@@ -270,10 +272,21 @@ public class BuyBoosterPopup : BasePopup
 
         //     // coinButtonRT.localPosition = _coinButtonPosition - (_coinButtonPosition - _adsButtonPosition) / 2;
 
-        //     userResourcesObserver.Load();
+        userResourcesObserver.Load();
 
-        //     coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
-        // }
+        coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
     }
     #endregion
+
+    private void UpdateCoinBalanceText()
+    {
+        if (coinBalanceText != null)
+        {
+            coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+        }
+    }
 }
+
+
+
+

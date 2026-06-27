@@ -13,9 +13,9 @@ public class BoosterItemUI : MonoBehaviour
 {
     [SerializeField] private RectTransform quantityTextContainer;
     [SerializeField] private RectTransform quantityTextRT;
-    [SerializeField] private Image boosterIcon;
+    [SerializeField] public Image boosterIcon;
     //[SerializeField] private RectTransform addButtonRT;
-
+    [SerializeField] public ParticleSystem fxTrailFreeze;
     [SerializeField] private TMP_Text quantityText;
     [SerializeField] private Button addButton;
     [Header("UNLOCK")]
@@ -38,11 +38,15 @@ public class BoosterItemUI : MonoBehaviour
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
 
     private List<Tween> _tweens = new List<Tween>();
+    private Button _mainButton;
 
     void Awake()
     {
+        _mainButton = GetComponent<Button>();
+
         BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent += UpdateQuantityText;
+        LosePopup.updateBoosterQuantityEvent += UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
@@ -54,6 +58,7 @@ public class BoosterItemUI : MonoBehaviour
     {
         BuyBoosterPopup.updateBoosterQuantityEvent -= UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
+        LosePopup.updateBoosterQuantityEvent -= UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
 
         CommonUtil.StopAllTweens(_tweens);
@@ -87,10 +92,30 @@ public class BoosterItemUI : MonoBehaviour
 
             quantityTextContainer.gameObject.SetActive(false);
             addButton.gameObject.SetActive(false);
+
+            if (unlockCanvasGroup != null)
+            {
+                unlockCanvasGroup.gameObject.SetActive(false);
+            }
+
+            if (_mainButton != null)
+            {
+                _mainButton.interactable = false;
+            }
         }
         else
         {
             SaferioTween.AlphaHide(lockCanvasGroup);
+
+            if (unlockCanvasGroup != null)
+            {
+                unlockCanvasGroup.gameObject.SetActive(true);
+            }
+
+            if (_mainButton != null)
+            {
+                _mainButton.interactable = true;
+            }
 
             if (quantity > 0)
             {
@@ -108,7 +133,7 @@ public class BoosterItemUI : MonoBehaviour
 
     private void ShowBuyBoosterPopup()
     {
-        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards))
+        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards || TileManager.Ins.IsAnyTileDragging()))
         {
             return;
         }
@@ -177,6 +202,7 @@ public class BoosterItemUI : MonoBehaviour
         {
             animator.Play("IdleFreeze");
         }
+        fxTrailFreeze.gameObject.SetActive(true);
 
         Vector3 startPos = boosterIcon.rectTransform.localPosition;
         Canvas canvas = boosterIcon.GetComponentInParent<Canvas>();
@@ -187,7 +213,7 @@ public class BoosterItemUI : MonoBehaviour
         }
         Vector3 controlPoint = (startPos + endPos) / 2f + new Vector3(-200f, 300f, 0f);
 
-        _tweens.Add(Tween.Custom(0f, 1f, duration: 1.5f, onValueChange: t =>
+        _tweens.Add(Tween.Custom(0f, 1f, duration: 1f, onValueChange: t =>
         {
             Vector3 m1 = Vector3.Lerp(startPos, controlPoint, t);
             Vector3 m2 = Vector3.Lerp(controlPoint, endPos, t);
@@ -195,6 +221,7 @@ public class BoosterItemUI : MonoBehaviour
         })
         .OnComplete(() =>
         {
+            fxTrailFreeze.gameObject.SetActive(false);
             if (animator != null)
             {
                 animator.Play("FrezzeAnimation");
@@ -202,10 +229,11 @@ public class BoosterItemUI : MonoBehaviour
 
             onActivateEffect?.Invoke();
 
-            _tweens.Add(Tween.Delay(1.5f).OnComplete(() =>
+            _tweens.Add(Tween.Delay(0.2f).OnComplete(() =>
             {
                 boosterIcon.rectTransform.localPosition = startPos;
                 boosterIcon.gameObject.SetActive(false);
+
                 if (animator != null)
                 {
                     animator.Play("IdleFreeze");
@@ -230,7 +258,7 @@ public class BoosterItemUI : MonoBehaviour
         Vector3 endPos = boosterIcon.rectTransform.parent.InverseTransformPoint(targetThemeTransform.position);
         Vector3 controlPoint = (startPos + endPos) / 2f + new Vector3(200f, 300f, 0f);
 
-        _tweens.Add(Tween.Custom(0f, 1f, duration: 0.6f, onValueChange: t =>
+        _tweens.Add(Tween.Custom(0f, 1f, duration: 0.5f, onValueChange: t =>
         {
             Vector3 m1 = Vector3.Lerp(startPos, controlPoint, t);
             Vector3 m2 = Vector3.Lerp(controlPoint, endPos, t);

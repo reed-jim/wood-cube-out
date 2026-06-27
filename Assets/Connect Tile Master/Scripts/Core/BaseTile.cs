@@ -93,6 +93,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     private int _originalSiblingIndex;
     private bool _isDragging;
 
+    public bool IsDragging => _isDragging;
+
     void Awake()
     {
         // selectButton.onClick.AddListener(Select);
@@ -102,6 +104,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     {
         this.itemCategory = itemCategory;
         this.themeItemId = themeItemId;
+        txCount.gameObject.SetActive(false);
         isText = !string.IsNullOrEmpty(textData);
         if (iconSprite == null)
         {
@@ -119,7 +122,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             icon.gameObject.SetActive(true);
             category.gameObject.SetActive(false);
             icon.sprite = iconSprite;
-            UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
+            //UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
         }
 
         containerImage.color = containerImage.color.ChangeAlpha(1);
@@ -134,6 +137,10 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (_highlightShakeTween.isAlive) _highlightShakeTween.Stop();
         if (glow != null) glow.gameObject.SetActive(false);
         transform.localScale = Vector3.one;
+        if (ObjHide != null)
+        {
+            ObjHide.transform.localScale = Vector3.one;
+        }
     }
 
     public void PrepareForShuffle()
@@ -216,7 +223,14 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (TileManager.Ins != null && !TileManager.Ins.isLevelActive) return;
         if (IsMoving || IsOnSlot || IsDone) return;
+        if (TileManager.Ins != null && TileManager.Ins.IsAnyTileDragging()) return;
+
+        if (TileManager.Ins != null)
+        {
+            TileManager.Ins.CurrentlyDraggedTile = this;
+        }
 
         _isDragging = true;
         _originalPosition = transform.position;
@@ -224,6 +238,20 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         transform.SetAsLastSibling();
         //Tween.Scale(transform, 1.1f, duration: 0.15f);
+
+        Canvas canvas = gameObject.GetComponent<Canvas>();
+        if (canvas == null)
+        {
+            canvas = gameObject.AddComponent<Canvas>();
+        }
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = 999;
+
+        GraphicRaycaster raycaster = gameObject.GetComponent<GraphicRaycaster>();
+        if (raycaster == null)
+        {
+            raycaster = gameObject.AddComponent<GraphicRaycaster>();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -246,6 +274,11 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (!_isDragging) return;
         _isDragging = false;
 
+        if (TileManager.Ins != null && TileManager.Ins.CurrentlyDraggedTile == this)
+        {
+            TileManager.Ins.CurrentlyDraggedTile = null;
+        }
+
         if (IsMoving || IsOnSlot || IsDone) return;
 
         if (TileManager.Ins.IsHoveringValidContainer(this.itemCategory, eventData.position, eventData.pressEventCamera))
@@ -255,6 +288,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             TileManager.Ins.MoveTileToSlot(this, onCompleteAction: () =>
             {
                 IsMoving = false;
+                ResetSorting();
             });
 
             selectTileEvent?.Invoke(this);
@@ -267,8 +301,48 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             {
                 IsMoving = false;
                 transform.SetSiblingIndex(_originalSiblingIndex);
+                ResetSorting();
             });
         }
+    }
+
+    public void CancelDrag()
+    {
+        if (!_isDragging) return;
+        _isDragging = false;
+
+        if (TileManager.Ins != null && TileManager.Ins.CurrentlyDraggedTile == this)
+        {
+            TileManager.Ins.CurrentlyDraggedTile = null;
+        }
+
+        IsMoving = true;
+        Tween.Scale(transform, Vector3.one, duration: 0.2f);
+        Tween.Position(transform, _originalPosition, duration: 0.2f).OnComplete(() =>
+        {
+            IsMoving = false;
+            transform.SetSiblingIndex(_originalSiblingIndex);
+            ResetSorting();
+        });
+    }
+
+    public void ResetSorting()
+    {
+        Canvas canvas = gameObject.GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            canvas.overrideSorting = false;
+        }
+    }
+
+    private void OnDisable()
+    {
+        _isDragging = false;
+        if (TileManager.Ins != null && TileManager.Ins.CurrentlyDraggedTile == this)
+        {
+            TileManager.Ins.CurrentlyDraggedTile = null;
+        }
+        ResetSorting();
     }
 
     public void MoveToOutsideBox()

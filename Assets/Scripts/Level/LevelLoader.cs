@@ -70,6 +70,11 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
 
+        public static void NotifyLevelLoaded()
+        {
+            setIsLevelLoadedEvent?.Invoke();
+        }
+
         private void Awake()
         {
             PausePopup.replayLevelEvent += Replay;
@@ -243,8 +248,7 @@ namespace NamPhuThuy.GamePlay
 
                 TileManager.Ins.SetupLevel(levelItem);
 
-                setIsLevelLoadedEvent?.Invoke();
-
+                // Removed immediate invocation of setIsLevelLoadedEvent - will be called after CDN download completes in TileManager
                 return;
 
                 _currentLevelContainer = level.transform;
@@ -380,6 +384,8 @@ namespace NamPhuThuy.GamePlay
 
         private async void GoLevel(int level)
         {
+            showSceneTransitionEvent?.Invoke();
+
             endCurrentLevelEvent?.Invoke();
 
             // DebugLogger.LogSimple();

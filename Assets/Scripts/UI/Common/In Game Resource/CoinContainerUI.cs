@@ -15,6 +15,7 @@ public class CoinContainerUI : MonoBehaviour
     [SerializeField] private Vector2Variable canvasScale;
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private Button addButton;
+    [SerializeField] private ParticleSystem fxGainCoin;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
@@ -113,19 +114,46 @@ public class CoinContainerUI : MonoBehaviour
             return;
         }
 
-        Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+        Vector3 targetPos = ((Vector2)iconRT.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+        Vector3 startPos = Vector3.zero;
 
-        RewardCollectingUI.Instance.CollectItem
-        (
-            ResourceType.Coin,
-            positionRelativeToCanvas,
-            onCompleteAction: () => UserResourcesManager.Instance.UpdateCoinTextAnimation(),
-            totalValue: value,
-            poolSize: 16,
-            itemSizeX: iconRT.sizeDelta.x
-        );
+        userResourcesObserver.Load();
+        int finalCoins = (int)userResourcesObserver.UserResources.CoinQuantity;
+        int currentCoins = finalCoins - value;
 
-        // collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
-        // collectItemsEvent?.Invoke(ResourceType.Live, positionRelativeToCanvas, value);
+        int coinsLandedCount = 0;
+        int coinsToSpawn = 10;
+        if (RewardCollectingUI.Instance != null)
+        {
+            coinsToSpawn = Mathf.Min(coinsToSpawn, RewardCollectingUI.Instance.PoolSize);
+        }
+
+        coinText.text = $"{currentCoins}";
+
+        if (RewardCollectingUI.Instance != null)
+        {
+            RewardCollectingUI.Instance.CollectWithCallback(startPos, targetPos, value, (index) =>
+            {
+                coinsLandedCount++;
+                int displayedCoins = (int)Mathf.Lerp(currentCoins, finalCoins, (float)coinsLandedCount / coinsToSpawn);
+                coinText.text = $"{displayedCoins}";
+
+                if (fxGainCoin != null)
+                {
+                    fxGainCoin.gameObject.SetActive(false);
+                    fxGainCoin.gameObject.SetActive(true);
+                    fxGainCoin.Play();
+                }
+
+                if (coinsLandedCount == coinsToSpawn)
+                {
+                    coinText.text = $"{finalCoins}";
+                    UserResourcesManager.Instance.RefreshCoinText();
+                }
+            });
+        }
+
+        // collectCoinEvent?.Invoke(targetPos, value);
+        // collectItemsEvent?.Invoke(ResourceType.Live, targetPos, value);
     }
 }

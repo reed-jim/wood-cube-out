@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Lean.Localization;
 
 public class ResourceGroupUI : MonoBehaviour
 {
@@ -10,6 +11,13 @@ public class ResourceGroupUI : MonoBehaviour
     public void SetQuantity(int quantity)
     {
         quantityText.text = $"{quantity}";
+
+        // Prevent Localization script from overwriting our quantity text with a translation string
+        var localizedText = quantityText.GetComponent<LeanLocalizedTextMeshProUGUI>();
+        if (localizedText != null)
+        {
+            localizedText.enabled = false;
+        }
     }
 
     public void SetMultiplyQuantity(int quantity)
@@ -22,6 +30,12 @@ public class ResourceGroupUI : MonoBehaviour
             );
 
             multiplyQuantityText.text = $"{quantity}";
+
+            var localizedText = multiplyQuantityText.GetComponent<LeanLocalizedTextMeshProUGUI>();
+            if (localizedText != null)
+            {
+                localizedText.enabled = false;
+            }
         }
     }
 }

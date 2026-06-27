@@ -7,9 +7,11 @@ using static GameEnum;
 public class IAPPackageUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text coinQuantityText;
-    [SerializeField] private TMP_Text addHoleQuantityText;
-    [SerializeField] private TMP_Text breakObjectQuantityText;
-    [SerializeField] private TMP_Text clearHolesQuantityText;
+    [SerializeField] private TMP_Text addHintText;
+    [SerializeField] private TMP_Text addShuffleText;
+    [SerializeField] private TMP_Text addFreezeText;
+    [SerializeField] private TMP_Text addUnlockText;
+
     [SerializeField] private TMP_Text priceText;
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Button buyButton;
@@ -62,19 +64,24 @@ public class IAPPackageUI : MonoBehaviour
             coinQuantityText.text = $"{data.CoinQuantity}";
         }
 
-        if (addHoleQuantityText != null)
+        if (addHintText != null)
         {
-            addHoleQuantityText.text = $"{data.AddHoleBoosterQuantity}";
+            addHintText.text = $"{data.AddHintBoosterQuantity}";
         }
 
-        if (breakObjectQuantityText != null)
+        if (addShuffleText != null)
         {
-            breakObjectQuantityText.text = $"{data.BreakObjectBoosterQuantity}";
+            addShuffleText.text = $"{data.AddShuffleBoosterQuantity}";
         }
 
-        if (clearHolesQuantityText != null)
+        if (addFreezeText != null)
         {
-            clearHolesQuantityText.text = $"{data.ClearHolesBoosterQuantity}";
+            addFreezeText.text = $"{data.AddFreezeBoosterQuantity}";
+        }
+
+        if (addUnlockText != null)
+        {
+            addUnlockText.text = $"{data.AddUnlockBoosterQuantity}";
         }
 
         if (Application.internetReachability == NetworkReachability.NotReachable)
