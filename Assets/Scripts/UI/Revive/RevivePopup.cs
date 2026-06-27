@@ -249,7 +249,6 @@ public class RevivePopup : BasePopup
 
     public void OnHoldSeeBoard()
     {
-        Debug.Log("Hold==== " + isBoardApla);
         isClickBoard = true;
     }
 

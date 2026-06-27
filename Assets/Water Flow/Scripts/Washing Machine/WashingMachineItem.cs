@@ -149,9 +149,13 @@ public class WashingMachineItem : MonoBehaviour
 
         Setup(washingMachineStartSlot);
 
+        isMoving = false;
+        isAnimating = false;
         isInSlot = false;
         isGhostMode = false;
         isDouble = false;
+        isStucking = false;
+        isPlayingWarningLoseAnimation = false;
         remainingNumber = number;
         spawningAntCoroutine = null;
 
@@ -161,12 +165,15 @@ public class WashingMachineItem : MonoBehaviour
     private void Reset()
     {
         doubleAntBoxHole.gameObject.SetActive(false);
-
+        
         isMoving = false;
         isAnimating = false;
         isInSlot = false;
+        isGhostMode = false;
+        isDouble = false;
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
+        isShuffled = false;
 
         washingMachineStartSlot = null;
         washingMachineSlot = null;
@@ -572,7 +579,7 @@ public class WashingMachineItem : MonoBehaviour
         {
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {
-                if (washingMachineSlot.washingMachineItem != null)
+                if (washingMachineSlot != null)
                 {
                     washingMachineSlot.washingMachineItem = null;
                 }
@@ -625,6 +632,8 @@ public class WashingMachineItem : MonoBehaviour
             }
 
             tilesToMove.RemoveAt(0);
+
+            GamePersistentVariable.numActiveAnt++;
 
             yield return waitForSeconds;
         }

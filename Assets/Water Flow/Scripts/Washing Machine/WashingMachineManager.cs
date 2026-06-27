@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Dreamteck.Utilities;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace AntsFlow
         public List<WashingMachineItem> ghostAntBoxes;
         public Coroutine pendingLoseLevelCoroutine;
 
+        public IntVariable currentLevel;
+
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
         public static event Action ghostAntBoxesClearedEvent;
@@ -42,9 +45,16 @@ namespace AntsFlow
             RevivePopup.reviveEvent += Revive;
             WaterFlowGameInput.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
+            LevelLoader.startLevelEvent += OnLevelReplayed;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
+            TileManager.winLevelEvent += OnLevelReplayed;
+
+            if (currentLevel.Value < 10)
+            {
+                maxAntNumberThreshold = 50;
+            }
         }
 
         void OnDestroy()
@@ -52,9 +62,11 @@ namespace AntsFlow
             RevivePopup.reviveEvent -= Revive;
             WaterFlowGameInput.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
-            LosePopup.replayLevelEvent += OnLevelReplayed;
-            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
+            TileManager.winLevelEvent -= OnLevelReplayed;
         }
 
         private void OnAntBoxSelected(WashingMachineItem antBox)
@@ -801,16 +813,16 @@ namespace AntsFlow
                 yield return waitForSeconds;
             }
 
-            yield return new WaitForSeconds(2f);
+            // yield return new WaitForSeconds(2f);
 
-            List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
+            // List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
 
-            for (int i = 0; i < stuckAntBoxes.Count; i++)
-            {
-                WashingMachineItem antBox = stuckAntBoxes[i];
+            // for (int i = 0; i < stuckAntBoxes.Count; i++)
+            // {
+            //     WashingMachineItem antBox = stuckAntBoxes[i];
 
-                antBox.CheckAntsPath(isAlsoCheckLose: false);
-            }
+            //     antBox.CheckAntsPath(isAlsoCheckLose: false);
+            // }
 
             if (IsLose() && !GamePersistentVariable.isLevelLost)
             {

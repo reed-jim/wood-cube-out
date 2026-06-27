@@ -563,7 +563,7 @@ namespace AntsFlow
                 {
                     Gizmos.color = Color.green;
 
-                    Gizmos.DrawSphere(node.initialPosition, 0.15f);
+                    Gizmos.DrawSphere(node.initialPosition, 0.03f);
                     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
 
                     // DrawConnectors(node);
@@ -574,8 +574,9 @@ namespace AntsFlow
                     {
                         Gizmos.color = Color.green;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.15f);
-                        Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
+                        Gizmos.DrawSphere(node.initialPosition, 0.03f);
+                        Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
+                        // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} ({node.tile.tileName})");
 
                         // DrawConnectors(node);
                     }
@@ -727,11 +728,11 @@ namespace AntsFlow
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();
             var visited = new HashSet<Node>();
-            var distance = new Dictionary<Node, int>();
+            // var distance = new Dictionary<Node, int>();
 
             queue.Enqueue(start);
             visited.Add(start);
-            distance[start] = 0;
+            // distance[start] = 0;
 
             while (queue.Count > 0 && result.Count < count)
             {
@@ -748,14 +749,14 @@ namespace AntsFlow
                 {
                     result.Add(current.tile);
 
-                    if (distance.ContainsKey(current))
-                    {
-                        current.tile.numStepToReach = distance[current];
-                    }
-                    else
-                    {
-                        current.tile.numStepToReach = 0;
-                    }
+                    // if (distance.ContainsKey(current))
+                    // {
+                    //     current.tile.numStepToReach = distance[current];
+                    // }
+                    // else
+                    // {
+                    //     current.tile.numStepToReach = 0;
+                    // }
                 }
 
                 foreach (var neighbor in current.neighbors)
@@ -765,12 +766,8 @@ namespace AntsFlow
                     if (current.tile != null && neighbor.tile != null)
                     {
                         // blocked
-                        bool isStarterTileAvailable = current.isStarter && !current.tile.isMovedToAnt;
                         bool isReachTarget = false;
-                        bool isSameFaction = current.tile.Faction == faction && neighbor.tile.Faction == faction;
                         isBlocked = !neighbor.tile.isMovedToAnt && !neighbor.tile.isDone && !neighbor.isStarter;
-
-                        // Debug.Log($"neighbor {nodes.IndexOf(neighbor)} {neighbor.tile.isMovedToAnt} {neighbor.tile.isDone}");
 
                         if (current.tile.isMovedToAnt || current.tile.isDone)
                         {
@@ -788,10 +785,7 @@ namespace AntsFlow
                             }
                         }
 
-                        // if (isBlocked)
-                        // {
-                        //     Debug.Log($"neighbor {nodes.IndexOf(current)} {nodes.IndexOf(neighbor)} {neighbor.tile.isMovedToAnt} {neighbor.tile.isDone}");
-                        // }
+                        // Debug.Log($"neighbor {nodes.IndexOf(current)} {nodes.IndexOf(neighbor)} {neighbor.tile.isMovedToAnt} {neighbor.tile.isDone}");
 
                         if (current.isStarter && neighbor.isStarter)
                         {
@@ -815,14 +809,14 @@ namespace AntsFlow
 
                     visited.Add(neighbor);
 
-                    if (isBlocked)
-                    {
-                        distance[neighbor] = distance[current] + 1;
-                    }
-                    else
-                    {
-                        distance[neighbor] = distance[current];
-                    }
+                    // if (isBlocked)
+                    // {
+                    //     distance[neighbor] = distance[current] + 1;
+                    // }
+                    // else
+                    // {
+                    //     distance[neighbor] = distance[current];
+                    // }
 
                     queue.Enqueue(neighbor);
                 }

@@ -21,6 +21,11 @@ public class LoopScaleAnimation : MonoBehaviour
 
     void OnEnable()
     {
+        if (animationTween.isAlive)
+        {
+            animationTween.Stop();
+        }
+
         animationTween = Tween.Scale(transform, zoomUpScale, duration: 1, cycles: -1, cycleMode: CycleMode.Yoyo);
     }
 

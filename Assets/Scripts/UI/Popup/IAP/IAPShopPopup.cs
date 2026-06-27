@@ -108,14 +108,19 @@ public class IAPShopPopup : BasePopup
         {
             return;
         }
-        
+
         pauseNavmeshEvent?.Invoke(false);
 
         GamePersistentVariable.isPauseGame = false;
 
         base.Hide(onCompletedAction: () =>
         {
-            switchRouteEvent?.Invoke(_prevRoute);
+            if (_prevRoute != ScreenRoute.None)
+            {
+                switchRouteEvent?.Invoke(_prevRoute);
+
+                _prevRoute = ScreenRoute.None;
+            }
         });
     }
 

@@ -204,6 +204,8 @@ namespace AntsFlow
             Hide();
             // HideObstacle();
 
+            // Debug.Log($"BaseTile {tileName} {isMovedToAnt} {isAntApproaching} {isDone}");
+
             tileMoveToAntEvent?.Invoke(this);
         }
 
