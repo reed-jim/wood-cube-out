@@ -594,14 +594,6 @@ namespace AntsFlow
                     //     Gizmos.DrawSphere(node.initialPosition.AddY(0.31f), 0.15f);
                     //     Handles.Label(node.initialPosition.AddY(0.61f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
                     // }
-
-                    if (node.tile.isMovable)
-                    {
-                        Gizmos.color = Color.yellow;
-
-                        Gizmos.DrawSphere(node.initialPosition.AddY(0.31f), 0.15f);
-                        Handles.Label(node.initialPosition.AddY(0.61f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
-                    }
                 }
 
                 // Gizmos.DrawSphere(node.initialPosition, 0.2f);
@@ -778,6 +770,8 @@ namespace AntsFlow
                         bool isSameFaction = current.tile.Faction == faction && neighbor.tile.Faction == faction;
                         isBlocked = !neighbor.tile.isMovedToAnt && !neighbor.tile.isDone && !neighbor.isStarter;
 
+                        // Debug.Log($"neighbor {nodes.IndexOf(neighbor)} {neighbor.tile.isMovedToAnt} {neighbor.tile.isDone}");
+
                         if (current.tile.isMovedToAnt || current.tile.isDone)
                         {
                             if (neighbor.tile.Faction == faction)
@@ -793,6 +787,11 @@ namespace AntsFlow
                                 isBlocked = true;
                             }
                         }
+
+                        // if (isBlocked)
+                        // {
+                        //     Debug.Log($"neighbor {nodes.IndexOf(current)} {nodes.IndexOf(neighbor)} {neighbor.tile.isMovedToAnt} {neighbor.tile.isDone}");
+                        // }
 
                         if (current.isStarter && neighbor.isStarter)
                         {

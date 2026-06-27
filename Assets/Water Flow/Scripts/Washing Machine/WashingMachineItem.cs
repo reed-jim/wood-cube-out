@@ -383,7 +383,7 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
-    public void CheckAntsPath()
+    public void CheckAntsPath(bool isAlsoCheckLose = true)
     {
         if (remainingNumber <= 0)
         {
@@ -397,19 +397,9 @@ public class WashingMachineItem : MonoBehaviour
 
         int addedTile = 0;
 
-        AntsFlow.TileManager.Ins.UpdateMovableTiles(faction);
-
         int max = AntsFlow.TileManager.Ins.tiles.Count(tile => !tile.isAntApproaching && !tile.isDone && tile.Faction == faction);
 
         List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetFirstNMovableTiles(faction, max);
-
-        // foreach (var item in foundTiles)
-        // {
-        //     if (item.numStepToReach > 0)
-        //     {
-        //         Debug.Log($"CheckAntsPath {AntsFlow.TileManager.Ins.tiles.IndexOf(item)} {item.numStepToReach}");
-        //     }
-        // }
 
         foundTiles = foundTiles
             // .Where(item => item.numStepToReach < 5)
@@ -431,6 +421,8 @@ public class WashingMachineItem : MonoBehaviour
                 addedTile++;
             }
         }
+
+        // Debug.Log($"CheckAntsPath {name} {max} {remainingNumber} {tilesToMove.Count}");
 
         // for (int i = 0; i < remainingNumber; i++)
         // {
@@ -477,12 +469,14 @@ public class WashingMachineItem : MonoBehaviour
 
         if (tilesToMove.Count > 0)
         {
+            isStucking = false;
+
             if (spawningAntCoroutine == null)
             {
                 spawningAntCoroutine = StartCoroutine(SpawningAnts());
             }
         }
-        else
+        else if (isAlsoCheckLose)
         {
             isStucking = true;
 
@@ -515,8 +509,6 @@ public class WashingMachineItem : MonoBehaviour
 
         int currentAntIndex = 0;
 
-        isStucking = false;
-
         while (tilesToMove.Count > 0)
         {
             if (GamePersistentVariable.isLevelLost)
@@ -540,68 +532,40 @@ public class WashingMachineItem : MonoBehaviour
                 continue;
             }
 
-            if (IsMovable(tilesToMove[currentAntIndex]))
+            BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
+
+            ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
+            ant.transform.eulerAngles = Vector3.zero;
+
+            ant.Init(faction);
+            ant.MoveToTile(tilesToMove[currentAntIndex]);
+            // BFS
+            // ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
+
+            SoundManager.Instance.PlaySoundAntPop();
+
+            number--;
+            numberText.text = $"{number}";
+
+            if (!isAnimating)
             {
-                BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
-
-                ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
-                ant.transform.eulerAngles = Vector3.zero;
-
-                ant.Init(faction);
-                ant.MoveToTile(tilesToMove[currentAntIndex]);
-                // BFS
-                // ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
-
-                SoundManager.Instance.PlaySoundAntPop();
-
-                number--;
-                numberText.text = $"{number}";
-
-                if (!isAnimating)
+                SaferioTween.Punch(numberText.transform, 1.1f, onCompleteAction: () =>
                 {
-                    SaferioTween.Punch(numberText.transform, 1.1f, onCompleteAction: () =>
-                    {
-                        isAnimating = false;
-                    });
+                    isAnimating = false;
+                });
 
-                    isAnimating = true;
-                }
-
-                tilesToMove.RemoveAt(currentAntIndex);
-
-                currentAntIndex = 0;
-
-                GamePersistentVariable.numActiveAnt++;
-
-                spawnAntEvent?.Invoke();
-
-                yield return waitForSeconds;
+                isAnimating = true;
             }
-            else
-            {
-                bool isAnyMovableAnt = false;
 
-                for (int i = 1; i < tilesToMove.Count; i++)
-                {
-                    if (IsMovable(tilesToMove[i]))
-                    {
-                        currentAntIndex = i;
+            tilesToMove.RemoveAt(currentAntIndex);
 
-                        isAnyMovableAnt = true;
+            currentAntIndex = 0;
 
-                        break;
-                    }
-                }
+            GamePersistentVariable.numActiveAnt++;
 
-                if (!isAnyMovableAnt)
-                {
-                    isStucking = true;
+            spawnAntEvent?.Invoke();
 
-                    WashingMachineManager.Ins.CheckLoseLevel();
-                }
-
-                yield return waitForSeconds;
-            }
+            yield return waitForSeconds;
         }
 
         if (number == 0)

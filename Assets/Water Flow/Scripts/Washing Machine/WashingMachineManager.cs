@@ -779,6 +779,11 @@ namespace AntsFlow
                     antBox.TurnOnWarningLoseAnimation();
                 }
 
+                if (pendingLoseLevelCoroutine != null)
+                {
+                    StopCoroutine(pendingLoseLevelCoroutine);
+                }
+
                 pendingLoseLevelCoroutine = StartCoroutine(PendingLoseLevel());
 
                 GamePersistentVariable.isPendingLoseLevel = true;
@@ -794,6 +799,17 @@ namespace AntsFlow
             while (GamePersistentVariable.numActiveAnt > 0)
             {
                 yield return waitForSeconds;
+            }
+
+            yield return new WaitForSeconds(2f);
+
+            List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
+
+            for (int i = 0; i < stuckAntBoxes.Count; i++)
+            {
+                WashingMachineItem antBox = stuckAntBoxes[i];
+
+                antBox.CheckAntsPath(isAlsoCheckLose: false);
             }
 
             if (IsLose() && !GamePersistentVariable.isLevelLost)
