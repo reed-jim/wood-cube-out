@@ -633,7 +633,6 @@ public class TileSlotContainer : MonoBehaviour
                 canvas.overrideSorting = false;
             }
         }
-
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
             if (fxCompleteTheme != null) fxCompleteTheme.Play();

@@ -38,6 +38,7 @@ public class TileManager : Singleton<TileManager>
 
     public float currentLevelTime;
     public bool isLevelActive;
+    private bool _hasTriggeredWin;
     [HideInInspector] public bool isTimeFrozen;
     private Tween freezeTimeTween;
 
@@ -243,6 +244,7 @@ public class TileManager : Singleton<TileManager>
     private void SetupLevelInternal(LevelItem levelItem)
     {
         isLevelActive = true;
+        _hasTriggeredWin = false;
         if (levelItem.timeLimit > 0)
         {
             currentLevelTime = levelItem.timeLimit;
@@ -652,6 +654,32 @@ public class TileManager : Singleton<TileManager>
     }
     #endregion
 
+    private void OnSlotCompleted(TileSlotContainer tileSlotContainer, int index)
+    {
+        tileSlotContainer.isCompleted = true;
+
+        if (remainingSet == 1)
+        {
+            isLevelActive = false;
+        }
+
+        Tween.Delay(1.2f).OnComplete(() =>
+        {
+            if (tileSlotContainer == null) return;
+            
+            bool isAnyRemainingTileAfterDelay = tiles.Any(item => !item.IsOnSlot);
+
+            if (remainingSlotContainer > 0 && isAnyRemainingTileAfterDelay)
+            {
+                SpawnSlot(index);
+            }
+            else
+            {
+                HideSlot(index);
+            }
+        });
+    }
+
     #region Move Tiles  
     public void MoveTileToSlot(BaseTile tile, Action onCompleteAction)
     {
@@ -687,22 +715,7 @@ public class TileManager : Singleton<TileManager>
 
                         if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                         {
-                            tileSlotContainer.isCompleted = true;
-
-                            Tween.Delay(1.2f).OnComplete(() =>
-                            {
-                                if (tileSlotContainer == null) return;
-                                bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
-
-                                if (remainingSlotContainer > 0 && isAnyRemainingTile)
-                                {
-                                    SpawnSlot(index);
-                                }
-                                else
-                                {
-                                    HideSlot(index);
-                                }
-                            });
+                            OnSlotCompleted(tileSlotContainer, index);
                         }
 
                         onCompleteAction?.Invoke();
@@ -745,22 +758,7 @@ public class TileManager : Singleton<TileManager>
 
             if (tileSlotContainer.IsLastSlot(slot) && !tileSlotContainer.isCompleted)
             {
-                tileSlotContainer.isCompleted = true;
-
-                Tween.Delay(1.2f).OnComplete(() =>
-                {
-                    if (tileSlotContainer == null) return;
-                    bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
-
-                    if (remainingSlotContainer > 0 && isAnyRemainingTile)
-                    {
-                        SpawnSlot(tileSlotContainerIndex);
-                    }
-                    else
-                    {
-                        HideSlot(tileSlotContainerIndex);
-                    }
-                });
+                OnSlotCompleted(tileSlotContainer, tileSlotContainerIndex);
             }
 
             // DropTileDown(tile);
@@ -1052,7 +1050,7 @@ public class TileManager : Singleton<TileManager>
         int row = levelItem.initRow;
         // Use custom spacing from LevelItem if set (> 0), otherwise fall back to defaults.
         // Useful when row < 4 or col < 5 and tiles need more spread.
-        float tileSpacingWidth  = levelItem.ActualSpacingWidth;   // default 210
+        float tileSpacingWidth = levelItem.ActualSpacingWidth;   // default 210
         float tileSpacingHeight = levelItem.ActualSpacingHeight;  // default 266
 
         float totalWidth = (col - 1) * tileSpacingWidth;
@@ -1997,22 +1995,7 @@ public class TileManager : Singleton<TileManager>
 
                             if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                             {
-                                tileSlotContainer.isCompleted = true;
-
-                                Tween.Delay(1.2f).OnComplete(() =>
-                                {
-                                    if (tileSlotContainer == null) return;
-                                    bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
-
-                                    if (remainingSlotContainer > 0 && isAnyRemainingTile)
-                                    {
-                                        SpawnSlot(index);
-                                    }
-                                    else
-                                    {
-                                        HideSlot(index);
-                                    }
-                                });
+                                OnSlotCompleted(tileSlotContainer, index);
                             }
 
                             tile.IsOutside = false;
@@ -2034,12 +2017,16 @@ public class TileManager : Singleton<TileManager>
     #endregion
 
     #region Win Level
-    private void CheckWinLevel()
+    public void CheckWinLevel()
     {
         if (remainingSet <= 0)
         {
-            isLevelActive = false;
-            winLevelEvent?.Invoke();
+            if (!_hasTriggeredWin)
+            {
+                _hasTriggeredWin = true;
+                isLevelActive = false;
+                winLevelEvent?.Invoke();
+            }
         }
     }
     #endregion
