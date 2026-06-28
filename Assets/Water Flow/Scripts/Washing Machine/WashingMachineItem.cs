@@ -410,7 +410,8 @@ public class WashingMachineItem : MonoBehaviour
 
         foundTiles = foundTiles
             // .Where(item => item.numStepToReach < 5)
-            .OrderBy(item => item.position.y)
+            .OrderBy(item => item.numStepToReach)
+            .ThenBy(item => item.position.y)
             .ThenBy(item => item.position.x)
             .Take(remainingNumber)
             .ToList();

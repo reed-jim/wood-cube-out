@@ -728,11 +728,11 @@ namespace AntsFlow
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();
             var visited = new HashSet<Node>();
-            // var distance = new Dictionary<Node, int>();
+            var distance = new Dictionary<Node, int>();
 
             queue.Enqueue(start);
             visited.Add(start);
-            // distance[start] = 0;
+            distance[start] = 0;
 
             while (queue.Count > 0 && result.Count < count)
             {
@@ -749,14 +749,14 @@ namespace AntsFlow
                 {
                     result.Add(current.tile);
 
-                    // if (distance.ContainsKey(current))
-                    // {
-                    //     current.tile.numStepToReach = distance[current];
-                    // }
-                    // else
-                    // {
-                    //     current.tile.numStepToReach = 0;
-                    // }
+                    if (distance.ContainsKey(current))
+                    {
+                        current.tile.numStepToReach = distance[current];
+                    }
+                    else
+                    {
+                        current.tile.numStepToReach = 0;
+                    }
                 }
 
                 foreach (var neighbor in current.neighbors)
@@ -782,6 +782,20 @@ namespace AntsFlow
                             if (current.tile.Faction != faction)
                             {
                                 isBlocked = true;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    if(!isReachTarget)
+                                    {
+                                        distance[neighbor] = distance[current] + 1;
+                                    }
+                                }
+                                catch (System.Exception)
+                                {
+
+                                }
                             }
                         }
 
@@ -809,13 +823,20 @@ namespace AntsFlow
 
                     visited.Add(neighbor);
 
-                    // if (isBlocked)
+                    // try
                     // {
-                    //     distance[neighbor] = distance[current] + 1;
+                    //     if (isBlocked)
+                    //     {
+                    //         distance[neighbor] = distance[current] + 1;
+                    //     }
+                    //     else
+                    //     {
+                    //         distance[neighbor] = distance[current];
+                    //     }
                     // }
-                    // else
+                    // catch (System.Exception)
                     // {
-                    //     distance[neighbor] = distance[current];
+
                     // }
 
                     queue.Enqueue(neighbor);
