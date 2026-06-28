@@ -525,7 +525,6 @@ public class AdmobAdsMax
 
     private void RefreshAdmobBanner()
     {
-        Debug.Log("refresh banner admob =====");
         _cooldownAdmobBannerTimer = RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 30);
         _isTryLoadAdmobBanner = true;
         _bannerView.LoadAd(bannerHomeLoadRequest);
@@ -556,7 +555,6 @@ public class AdmobAdsMax
 
         void OnBannerAdLoaded()
         {
-            Debug.Log("load admob banner success=====");
             _isTryLoadAdmobBanner = false;
 #if TEST_BANNER_MAX
             var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, false);
@@ -565,7 +563,6 @@ public class AdmobAdsMax
 #else
             var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, true);
 #endif
-            Debug.Log($"Is show ads admob banner {isEnableAdmobBanner}");
             _isShowAdmobBanner = isEnableAdmobBanner;
             _cooldownAdmobBannerTimer =
                 RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 30);

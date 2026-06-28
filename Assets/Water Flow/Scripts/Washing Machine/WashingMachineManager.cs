@@ -86,8 +86,19 @@ namespace AntsFlow
         public void StartLevel(AntsFlow.LevelItem levelItem)
         {
             this.levelItem = levelItem;
+            
+            try 
+            {
+                int difficultyMultiplier = RemoteConfigController.GetIntConfig("difficultyMultiplier", 1);
+                int difficultyAddend = RemoteConfigController.GetIntConfig("difficultyAddend", 0);
 
-            difficultyLevel = levelItem.difficulty;
+                difficultyLevel = difficultyAddend + difficultyMultiplier * levelItem.difficulty;
+            }
+            catch 
+            {
+                difficultyLevel = levelItem.difficulty;
+            }
+            
             numAntBoxSpawned = 0;
 
             // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);

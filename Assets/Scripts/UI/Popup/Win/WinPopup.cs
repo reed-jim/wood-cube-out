@@ -85,7 +85,7 @@ public class WinPopup : BasePopup
 
     private async void OnLevelWinAsync()
     {
-        // GameController.Instance.admobAds.ShowBannerCollap();
+        GameController.Instance.admobAds.ShowBannerCollap();
 
         coinText.text = $"{0}";
         starText.text = $"{0}";
