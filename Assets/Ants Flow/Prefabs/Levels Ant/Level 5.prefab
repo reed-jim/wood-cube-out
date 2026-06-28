@@ -47,6 +47,7 @@ MonoBehaviour:
   picture: {fileID: 21300000, guid: 462c4a58b817c9b4f85491633c3c4fd9, type: 3}
   numColumn: 0
   numRow: 0
+  isLevelHavingTransparentPixels: 0
   isOverrideLevelScale: 0
   levelScaleXRatio: 0
   levelScaleYRatio: 0
@@ -9670,13 +9671,27 @@ MonoBehaviour:
     worldSize: 0
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
+    items:
+    - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+      numAnt: 60
+    - faction: {r: 0.99215686, g: 0.62352943, b: 0.06666667, a: 1}
+      numAnt: 20
+    - faction: {r: 0, g: 0.7137255, b: 0.30980393, a: 1}
+      numAnt: 45
+    - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+      numAnt: 60
+    - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+      numAnt: 25
+    - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
+      numAnt: 50
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 40
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0
-  numStartAntBoxes: 6
+  numStartAntBoxes: 7
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 
