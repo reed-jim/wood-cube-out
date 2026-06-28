@@ -475,7 +475,7 @@ public class AdmobAdsMax
 
     public void ShowBannerCollap()
     {
-        if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
+        if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", false))
         {
             if (GameController.Instance.useProfile.IsRemoveAds)
                 return;
@@ -1186,10 +1186,10 @@ public class AdmobAdsMax
 
         this.adWhere = adWhere;
 
-//#if UNITY_EDITOR
-//        actionReward?.Invoke();
-//        return;
-//#endif
+        //#if UNITY_EDITOR
+        //        actionReward?.Invoke();
+        //        return;
+        //#endif
 
         actionWatchVideo = actionType;
         GameController.Instance.AnalyticsController.LogRequestVideoReward(actionType.ToString());
@@ -1300,13 +1300,15 @@ public class AdmobAdsMax
     public void OnAppStateChanged(AppState state)
     {
         if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
-            if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
+        {
+            if (RemoteConfigController.GetBoolConfig("is_show_open_app_ad", false) && state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
             {
                 // COMPLETE: Show an app open ad if available.
                 AppOpenAdManager.Instance.ShowAdIfAvailable();
                 oldTime = DateTime.Now;
                 countdownAds = 0;
             }
+        }
     }
 
     #endregion
