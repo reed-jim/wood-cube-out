@@ -728,17 +728,14 @@ namespace AntsFlow
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();
             var visited = new HashSet<Node>();
-            var distance = new Dictionary<Node, int>();
 
             queue.Enqueue(start);
             visited.Add(start);
-            distance[start] = 0;
 
             while (queue.Count > 0 && result.Count < count)
             {
                 Node current = queue.Dequeue();
 
-                // Add only tiles matching the faction
                 if (
                     current.tile != null &&
                     !current.tile.isDone &&
@@ -748,74 +745,18 @@ namespace AntsFlow
                 )
                 {
                     result.Add(current.tile);
+                }
 
-                    if (distance.ContainsKey(current))
+                if (current.tile != null)
+                {
+                    if (!current.isStarter && !current.tile.isMovedToAnt && !current.tile.isDone && current.tile.Faction != faction)
                     {
-                        current.tile.numStepToReach = distance[current];
-                    }
-                    else
-                    {
-                        current.tile.numStepToReach = 0;
+                        continue;
                     }
                 }
 
                 foreach (var neighbor in current.neighbors)
                 {
-                    bool isBlocked = false;
-
-                    if (current.tile != null && neighbor.tile != null)
-                    {
-                        // blocked
-                        bool isReachTarget = false;
-                        isBlocked = !neighbor.tile.isMovedToAnt && !neighbor.tile.isDone && !neighbor.isStarter;
-
-                        if (current.tile.isMovedToAnt || current.tile.isDone)
-                        {
-                            if (neighbor.tile.Faction == faction)
-                            {
-                                isReachTarget = true;
-                            }
-                        }
-
-                        if (!current.tile.isMovedToAnt && !current.tile.isDone)
-                        {
-                            if (current.tile.Faction != faction)
-                            {
-                                isBlocked = true;
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    if(!isReachTarget)
-                                    {
-                                        distance[neighbor] = distance[current] + 1;
-                                    }
-                                }
-                                catch (System.Exception)
-                                {
-
-                                }
-                            }
-                        }
-
-                        // Debug.Log($"neighbor {nodes.IndexOf(current)} {nodes.IndexOf(neighbor)} {neighbor.tile.isMovedToAnt} {neighbor.tile.isDone}");
-
-                        if (current.isStarter && neighbor.isStarter)
-                        {
-                            isBlocked = false;
-                        }
-
-                        if (neighbor.tile != null && !isReachTarget)
-                        {
-                            if (isBlocked)
-                            {
-                                continue;
-                            }
-                        }
-                        //
-                    }
-
                     if (visited.Contains(neighbor))
                     {
                         continue;
@@ -823,27 +764,56 @@ namespace AntsFlow
 
                     visited.Add(neighbor);
 
-                    // try
-                    // {
-                    //     if (isBlocked)
-                    //     {
-                    //         distance[neighbor] = distance[current] + 1;
-                    //     }
-                    //     else
-                    //     {
-                    //         distance[neighbor] = distance[current];
-                    //     }
-                    // }
-                    // catch (System.Exception)
-                    // {
+                    bool isBlocked = true;
+                    bool isReachTarget = false;
 
-                    // }
+                    if (neighbor.tile == null)
+                    {
+                        isBlocked = false;
+                    }
+                    else
+                    {
+                        if (neighbor.tile.isMovedToAnt || neighbor.tile.isDone)
+                        {
+                            isBlocked = false;
+                        }
+                    }
+
+                    if (!isBlocked && current.isStarter)
+                    {
+                        if (current.tile != null && !current.tile.isMovedToAnt && !current.tile.isDone && current.tile.Faction != faction)
+                        {
+                            isBlocked = true;
+                        }
+                    }
+
+                    if (neighbor.isStarter)
+                    {
+                        isBlocked = false;
+                    }
+
+                    if (neighbor.tile != null && neighbor.tile.Faction == faction)
+                    {
+                        if (current.tile == null)
+                        {
+                            isReachTarget = true;
+                        }
+                        else if (current.tile.isMovedToAnt || current.tile.isDone)
+                        {
+                            isReachTarget = true;
+                        }
+                    }
+
+                    // Debug.Log($"IndexOf {nodes.IndexOf(current)} {nodes.IndexOf(neighbor)} {isBlocked} {isReachTarget}");
+
+                    if (isBlocked && !isReachTarget)
+                    {
+                        continue;
+                    }
 
                     queue.Enqueue(neighbor);
                 }
             }
-
-            // Debug.Log($"GetFirstNMovableTiles {result.Count} {count}");
 
             return result;
         }
