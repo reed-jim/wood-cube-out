@@ -477,13 +477,13 @@ namespace AntsFlow
             float zigZagFrequency = 1f;
             float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 1f);
 
-            if (count == 1)
-            {
-                if (path[0].initialPosition.x > 0)
-                {
-                    curveHeight = -1f * UnityEngine.Random.RandomRange(0f, 1f);
-                }
-            }
+            // if (count == 1)
+            // {
+            //     if (path[0].initialPosition.x > 0)
+            //     {
+            //         curveHeight = -1f * UnityEngine.Random.RandomRange(0f, 1f);
+            //     }
+            // }
 
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
             // points = Simplify(points);

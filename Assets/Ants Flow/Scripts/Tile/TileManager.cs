@@ -118,8 +118,8 @@ namespace AntsFlow
             float xMax = tiles.Max(tile => GetTilePosition(tile).x);
 
             // Grid size
-            int numExtraColumn = 4;
-            int numExtraRow = 4;
+            int numExtraColumn = 6;
+            int numExtraRow = 6;
             int width = Mathf.RoundToInt((xMax - xMin) / tileDistance.x) + 1 + numExtraColumn;
             int height = Mathf.RoundToInt((yMax - yMin) / tileDistance.y) + 1 + numExtraRow;
 
@@ -146,12 +146,20 @@ namespace AntsFlow
             }
 
             // Assign neighbors (4-way)
-            Vector2Int[] directions =
+            Vector2Int[] verticalPrioritydirections =
             {
                 Vector2Int.up,
                 Vector2Int.down,
                 Vector2Int.right,
                 Vector2Int.left
+            };
+
+            Vector2Int[] horizontalPriorityDirections =
+            {
+                Vector2Int.right,
+                Vector2Int.left,
+                Vector2Int.up,
+                Vector2Int.down
             };
 
             for (int y = 0; y < height; y++)
@@ -160,8 +168,50 @@ namespace AntsFlow
                 {
                     Node node = grid[x, y];
 
+                    Vector2Int[] directions = verticalPrioritydirections;
+
+                    if (y < 5)
+                    {
+                        directions = horizontalPriorityDirections;
+                    }
+
                     foreach (Vector2Int dir in directions)
                     {
+                        if (x >= 1 && x <= 1 + numExtraColumn / 4)
+                        {
+                            if (dir == Vector2Int.up || dir == Vector2Int.down)
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (x >= width - 1 - 1 - numExtraColumn / 4 && x <= width - 1 - 1)
+                        {
+                            if (dir == Vector2Int.up || dir == Vector2Int.down)
+                            {
+                                continue;
+                            }
+                        }
+
+                        // if (x == numExtraColumn / 4 || x == width - 1 - numExtraColumn / 4)
+                        // {
+                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
+                        //     {
+                        //         continue;
+                        //     }
+                        // }
+
+                        // if (x > 0 && x < width - 1)
+                        // {
+                        //     if (y > 3 && y < height - 4)
+                        //     {
+                        //         if (dir == Vector2Int.up || dir == Vector2Int.down)
+                        //         {
+                        //             continue;
+                        //         }
+                        //     }
+                        // }
+
                         int nx = x + dir.x;
                         int ny = y + dir.y;
 
@@ -891,9 +941,28 @@ namespace AntsFlow
 
         public List<Node> FindPath(BaseTile target)
         {
+            Vector3 tilePosition = GetTilePosition(target);
+
             Node start = bottomMostNodes
-                .OrderBy(node => (node.initialPosition - GetTilePosition(target)).sqrMagnitude)
+                .OrderBy(node => (node.initialPosition - tilePosition).sqrMagnitude)
                 .First();
+
+            // if (tilePosition.x < -3)
+            // {
+            //     start = bottomLeftMostNode;
+            // }
+            // else if (tilePosition.x > 3)
+            // {
+            //     start = bottomRightMostNode;
+            // }
+
+            // Node start = bottomLeftMostNode;
+
+            // if (GetTilePosition(target).x > 0)
+            // {
+            //     start = bottomRightMostNode;
+            // }
+
             Node targetNode = nodes.First(node => node.tile == target);
 
             // Reset state
