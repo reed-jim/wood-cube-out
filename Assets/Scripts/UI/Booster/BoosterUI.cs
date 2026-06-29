@@ -182,6 +182,12 @@ public class BoosterUI : MonoBehaviour
         //Tween.LocalPosition(clearAllScrewPortsButtonRT, _initialClearAllScrewPortsButtonPosition, duration: transitionTime);
 
         breakModeContainer.gameObject.SetActive(false);
+        
+        if (freezeGroup != null)
+        {
+            freezeGroup.alpha = 0;
+            freezeGroup.gameObject.SetActive(false);
+        }
 
         addMoreScrewPortButton.interactable = true;
 
