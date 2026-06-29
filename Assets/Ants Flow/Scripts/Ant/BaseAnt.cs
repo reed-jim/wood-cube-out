@@ -399,7 +399,7 @@ namespace AntsFlow
             movingCoroutine = StartCoroutine(MovingCurved(reversePath, 2));
         }
 
-        public static List<Vector3> Simplify(List<Vector3> points, float tolerance = 1f)
+        public static List<Vector3> Simplify(List<Vector3> points, float tolerance = 1.5f)
         {
             if (points.Count < 3)
                 return points;
@@ -486,7 +486,7 @@ namespace AntsFlow
             }
 
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
-            points = Simplify(points);
+            // points = Simplify(points);
 
             bool isCenter = Math.Abs(transform.position.x) < 0.1f;
 

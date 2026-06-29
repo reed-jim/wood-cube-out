@@ -165,7 +165,7 @@ public class WashingMachineItem : MonoBehaviour
     private void Reset()
     {
         doubleAntBoxHole.gameObject.SetActive(false);
-        
+
         isMoving = false;
         isAnimating = false;
         isInSlot = false;
@@ -547,6 +547,7 @@ public class WashingMachineItem : MonoBehaviour
             ant.Init(faction);
             // ant.MoveToTile(tilesToMove[currentAntIndex]);
             // BFS
+            tilesToMove[currentAntIndex].path = AntsFlow.TileManager.Ins.FindPath(tilesToMove[currentAntIndex]);
             ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
 
             SoundManager.Instance.PlaySoundAntPop();

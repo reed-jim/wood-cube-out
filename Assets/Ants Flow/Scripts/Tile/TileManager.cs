@@ -148,10 +148,10 @@ namespace AntsFlow
             // Assign neighbors (4-way)
             Vector2Int[] directions =
             {
-                Vector2Int.left,
-                Vector2Int.right,
                 Vector2Int.up,
-                Vector2Int.down
+                Vector2Int.down,
+                Vector2Int.right,
+                Vector2Int.left
             };
 
             for (int y = 0; y < height; y++)
@@ -196,6 +196,8 @@ namespace AntsFlow
             }
 
             bottomMostNodes = new List<Node>();
+
+            yMin = nodes.Min(node => node.initialPosition.y);
 
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -649,9 +651,20 @@ namespace AntsFlow
         {
             // Node start = bottomLeftMostNode;
 
-            Node start = nodes
-                .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
-                .First();
+            // Node start = nodes
+            //     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
+            //     .First();
+
+            Node start;
+
+            if (antBoxPosition.x < 0)
+            {
+                start = bottomLeftMostNode;
+            }
+            else
+            {
+                start = bottomRightMostNode;
+            }
 
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();
@@ -758,6 +771,108 @@ namespace AntsFlow
             return result;
         }
 
+        public void FindSingleAntPath(BaseTile tile)
+        {
+            Node start = bottomMostNodes
+                .OrderBy(node => (node.initialPosition - GetTilePosition(tile)).sqrMagnitude)
+                .First();
+
+            var queue = new Queue<Node>();
+            var visited = new HashSet<Node>();
+            var parent = new Dictionary<Node, Node>();
+
+            queue.Enqueue(start);
+            visited.Add(start);
+            parent[start] = null;
+
+            while (queue.Count > 0)
+            {
+                Node current = queue.Dequeue();
+
+                if (current.tile == tile)
+                {
+                    current.tile.path = ReconstructPath(current, parent);
+
+                    break;
+                }
+
+                if (current.tile != null)
+                {
+                    if (
+                        !current.isStarter &&
+                        !current.tile.isMovedToAnt &&
+                        !current.tile.isDone &&
+                        current.tile.Faction != tile.Faction
+                    )
+                    {
+                        continue;
+                    }
+                }
+
+                foreach (var neighbor in current.neighbors)
+                {
+                    if (visited.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    bool isBlocked = true;
+                    bool isReachTarget = false;
+
+                    if (neighbor.tile == null)
+                    {
+                        isBlocked = false;
+                    }
+                    else
+                    {
+                        if (neighbor.tile.isMovedToAnt || neighbor.tile.isDone)
+                        {
+                            isBlocked = false;
+                        }
+                    }
+
+                    if (!isBlocked && current.isStarter)
+                    {
+                        if (
+                            current.tile != null &&
+                            !current.tile.isMovedToAnt &&
+                            !current.tile.isDone &&
+                            current.tile.Faction != tile.Faction
+                        )
+                        {
+                            isBlocked = true;
+                        }
+                    }
+
+                    if (neighbor.isStarter)
+                    {
+                        isBlocked = false;
+                    }
+
+                    if (neighbor.tile != null && neighbor.tile.Faction == tile.Faction)
+                    {
+                        if (current.tile == null)
+                        {
+                            isReachTarget = true;
+                        }
+                        else if (current.tile.isMovedToAnt || current.tile.isDone)
+                        {
+                            isReachTarget = true;
+                        }
+                    }
+
+                    if (isBlocked && !isReachTarget)
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor);
+                    parent[neighbor] = current;
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+
         private List<Node> ReconstructPath(Node end, Dictionary<Node, Node> parent)
         {
             var path = new List<Node>();
@@ -776,7 +891,9 @@ namespace AntsFlow
 
         public List<Node> FindPath(BaseTile target)
         {
-            Node start = bottomLeftMostNode;
+            Node start = bottomMostNodes
+                .OrderBy(node => (node.initialPosition - GetTilePosition(target)).sqrMagnitude)
+                .First();
             Node targetNode = nodes.First(node => node.tile == target);
 
             // Reset state
@@ -803,13 +920,13 @@ namespace AntsFlow
                 foreach (var neighbor in current.neighbors)
                 {
                     // blocked
-                    bool isStarterTileAvailable = current.isStarter && !current.tile.isAntApproaching;
+                    bool isStarterTileAvailable = current.isStarter && !current.tile.isMovedToAnt;
                     bool isReachTarget = !isStarterTileAvailable && neighbor.tile == target;
 
                     if (neighbor.tile != null && !isReachTarget)
                     {
                         if (
-                            !neighbor.tile.isAntApproaching &&
+                            !neighbor.tile.isMovedToAnt &&
                             !neighbor.tile.isTempAntApproaching &&
                             !neighbor.tile.isDone &&
                             !neighbor.isStarter
