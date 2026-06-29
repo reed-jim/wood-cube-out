@@ -20,7 +20,7 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private Grid[] grids;
     [SerializeField] private TileIconContainer tileIconContainer;
     [SerializeField] private Image upToAll;
-
+    [SerializeField] private RectTransform head;
     public RectTransform tileContainer;
     public TMP_Text setCountText;
     public RectTransform outsideBox;
@@ -100,10 +100,17 @@ public class TileManager : Singleton<TileManager>
     public static event Action loseLevelEvent;
 
     private float valueRotateWhenShuffling = 60f;
+    private float originalHeadY;
+
     #region Life Cycle
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
+
+        if (head != null)
+        {
+            originalHeadY = head.anchoredPosition.y;
+        }
 
         Input.multiTouchEnabled = false;
 
@@ -383,6 +390,29 @@ public class TileManager : Singleton<TileManager>
 
         IsShuffling = false;
         _isDealingStartCards = false;
+
+        // Cập nhật vị trí Y của tileContainer từ levelItem
+        if (tileContainer != null && levelItem != null)
+        {
+            Vector3 pos = tileContainer.localPosition;
+            pos.y = levelItem.ActualTileContainerYOffset;
+            tileContainer.localPosition = pos;
+        }
+
+        // Cập nhật vị trí Y của head nếu grid nhỏ hơn 3x4 (tổng < 12)
+        if (head != null && levelItem != null)
+        {
+            Vector2 headPos = head.anchoredPosition;
+            if (levelItem.initRow * levelItem.initColumn < 12)
+            {
+                headPos.y = originalHeadY - 30f; // đẩy head xuống 1 khoảng Y
+            }
+            else
+            {
+                headPos.y = originalHeadY;
+            }
+            head.anchoredPosition = headPos;
+        }
 
         availableItemIdsPerCategory.Clear();
 
@@ -855,6 +885,7 @@ public class TileManager : Singleton<TileManager>
 
                 if (tileSlot != null)
                 {
+                    //SoundManager.Instance.PlaySoundCardPutIntoTheme();
                     Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                     {
                         tile.IsMoving = false;
@@ -899,6 +930,7 @@ public class TileManager : Singleton<TileManager>
         TileSlotContainer tileSlotContainer = tileSlotContainers[tileSlotContainerIndex];
 
         tile.IsMoving = true;
+        //SoundManager.Instance.PlaySoundCardPutIntoTheme();
         Tween.Position(tile.transform, slot.transform.position, duration: 0.3f).OnComplete(() =>
         {
             tile.IsMoving = false;
@@ -1116,6 +1148,7 @@ public class TileManager : Singleton<TileManager>
     #region Spawn Tiles
     private void SpawnTilesForEmptyGrid()
     {
+        //SoundManager.Instance.PlaySoundDealCards();
         if (itemCategoryPool.Count <= 0)
         {
             return;
@@ -1160,8 +1193,6 @@ public class TileManager : Singleton<TileManager>
                     tile.transform.SetAsLastSibling();
 
                     Tween.LocalPosition(tile.transform, grids[i].position, dealDuration);
-                    Tween.Scale(tile.transform, Vector3.one, dealDuration, ease: Ease.OutQuad);
-                    Tween.Scale(tile.ObjHide.transform, 0.91f, dealDuration, ease: Ease.OutQuad);
 
                     float halfDuration = dealDuration / 2f;
                     Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
@@ -1199,6 +1230,7 @@ public class TileManager : Singleton<TileManager>
 
     private void SpawnTiles(int totalSet)
     {
+        //SoundManager.Instance.PlaySoundDealCards();
         int col = levelItem.initColumn;
         int row = levelItem.initRow;
         // Use custom spacing from LevelItem if set (> 0), otherwise fall back to defaults.
@@ -1365,8 +1397,6 @@ public class TileManager : Singleton<TileManager>
 
             tile.transform.SetAsLastSibling();
             Tween.LocalPosition(tile.transform, grid.position, dealDuration);
-            Tween.Scale(tile.transform, Vector3.one, dealDuration, ease: Ease.OutQuad);
-            Tween.Scale(tile.ObjHide.transform, 0.91f, dealDuration, ease: Ease.OutQuad);
 
             float halfDuration = dealDuration / 2f;
             Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
@@ -2011,8 +2041,6 @@ public class TileManager : Singleton<TileManager>
 
             tile.transform.SetAsLastSibling();
             Tween.LocalPosition(tile.transform, target.targetLocalPos, dealDuration);
-            Tween.Scale(tile.transform, Vector3.one, dealDuration, ease: Ease.OutQuad);
-            Tween.Scale(tile.ObjHide.transform, 0.91f, dealDuration, ease: Ease.OutQuad);
 
             float halfDuration = dealDuration / 3f;
             Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, valueRotateWhenShuffling, -valueRotateWhenShuffling), halfDuration)

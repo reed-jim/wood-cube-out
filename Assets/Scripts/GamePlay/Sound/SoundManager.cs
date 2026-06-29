@@ -304,6 +304,95 @@ public class SoundManager : MonoBehaviour
 
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.collectCoinSound);
 
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundAddSlot()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.ADD_SLOT_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    //public void PlaySoundCardPutIntoTheme()
+    //{
+    //    if (!_isEnableGameSound) return;
+    //    AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CARD_PUT_INTO_THEME_SOUND);
+    //    sound.loop = false;
+    //    sound.Play();
+    //}
+
+    //public void PlaySoundDealCards()
+    //{
+    //    if (!_isEnableGameSound) return;
+    //    AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.DEAL_CARDS_SOUND);
+    //    sound.loop = false;
+    //    sound.Play();
+    //}
+
+    public void PlaySoundFreezeBooster()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.FREEZE_BOOSTER_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundMatchCorrectCard()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.MATCH_CORRECT_CARD_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundHintBooster()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.HINT_BOOSTER_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundCompleteTheme()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.COMPLETE_THEME_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundFlipCard()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.FLIP_CARD_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundTakeCardFromGrid()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.TAKE_CARD_FROM_GRID_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundShuffleBooster()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.SHUFFLE_BOOSTER_SOUND);
+        sound.loop = false;
+        sound.Play();
+    }
+
+    public void PlaySoundDropCardBackToTable()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.DROP_CARD_BACK_TO_TABLE_SOUND);
+        sound.loop = false;
         sound.Play();
     }
 

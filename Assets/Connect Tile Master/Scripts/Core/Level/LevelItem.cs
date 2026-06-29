@@ -44,15 +44,47 @@ public class LevelItem : MonoBehaviour
              "Tăng lên khi số hàng < 4 để tiles trải rộng hơn.")]
     public float tileSpacingHeight = 0f;
 
-    /// <summary>Spacing ngang thực sự sẽ dùng (fallback về 210 nếu = 0).</summary>
-    public float ActualSpacingWidth  => tileSpacingWidth  > 0 ? tileSpacingWidth  : 210f;
-    /// <summary>Spacing dọc thực sự sẽ dùng (fallback về 266 nếu = 0).</summary>
-    public float ActualSpacingHeight => tileSpacingHeight > 0 ? tileSpacingHeight : 266f;
+    /// <summary>Spacing ngang thực sự sẽ dùng (fallback về 250 nếu = 0).</summary>
+    public float ActualSpacingWidth
+    {
+        get
+        {
+            if (tileSpacingWidth > 0) return tileSpacingWidth;
+            if ((initRow == 2 && initColumn == 3) || (initRow == 3 && initColumn == 3)) return 300f;
+            return 250f;
+        }
+    }
+
+    /// <summary>Spacing dọc thực sự sẽ dùng (fallback về 275 nếu = 0).</summary>
+    public float ActualSpacingHeight
+    {
+        get
+        {
+            if (tileSpacingHeight > 0) return tileSpacingHeight;
+            if (initRow == 2 && initColumn == 4) return 350.5f;
+            if (initRow == 3 && initColumn == 4) return 353f;
+            if ((initRow == 2 && initColumn == 3) || (initRow == 3 && initColumn == 3)) return 353f;
+            return 275f;
+        }
+    }
+
+    public float ActualTileContainerYOffset
+    {
+        get
+        {
+            if (initRow == 2 && initColumn == 4) return -18f;
+            return tileContainerYOffset;
+        }
+    }
 
     [Space(20)]
     [Header("Tutorial")]
     public bool isTutorial;
 
+    [Space(20)]
+    [Header("Tile Container Config")]
+    [Tooltip("Điều chỉnh vị trí Y của Tile Container lúc khởi tạo")]
+    public float tileContainerYOffset = -30f;
 }
 
 #if UNITY_EDITOR

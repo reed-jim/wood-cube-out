@@ -302,13 +302,23 @@ public class BoosterUI : MonoBehaviour
 
     private void Shuffle()
     {
+        bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: 1);
+
         if (!TileManager.Ins.CanUseShuffleBooster())
         {
-            ShowWarning("no_shuffle_available");
-            return;
+            if (isBoosterAvailable)
+            {
+                ShowWarning("no_shuffle_available");
+                return;
+            }
+            else
+            {
+                showBuyBoosterPopupEvent?.Invoke(BoosterType.Shuffle);
+                return;
+            }
         }
 
-        if (!IsBoosterAvailable(boosterIndex: 1))
+        if (!isBoosterAvailable)
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.Shuffle);
 
@@ -327,6 +337,7 @@ public class BoosterUI : MonoBehaviour
         ConsumeBooster(boosterIndex: 1);
 
         TileManager.Ins.UseShuffleBooster();
+        SoundManager.Instance.PlaySoundShuffleBooster();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {
@@ -353,6 +364,8 @@ public class BoosterUI : MonoBehaviour
         }
 
         ConsumeBooster(boosterIndex: 2);
+
+        SoundManager.Instance.PlaySoundFreezeBooster();
 
         BoosterItemUI freezeItemUI = freezeTimeButton.GetComponentInParent<BoosterItemUI>();
         if (freezeItemUI != null)
@@ -421,13 +434,23 @@ public class BoosterUI : MonoBehaviour
 
     private void UseHint()
     {
+        bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: 0);
+
         if (TileManager.Ins != null && !TileManager.Ins.CanUseHintBooster())
         {
-            ShowWarning("no_hint_available");
-            return;
+            if (isBoosterAvailable)
+            {
+                ShowWarning("no_hint_available");
+                return;
+            }
+            else
+            {
+                showBuyBoosterPopupEvent?.Invoke(BoosterType.Hint);
+                return;
+            }
         }
 
-        if (!IsBoosterAvailable(boosterIndex: 0))
+        if (!isBoosterAvailable)
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.Hint);
 
@@ -446,6 +469,7 @@ public class BoosterUI : MonoBehaviour
         ConsumeBooster(boosterIndex: 0);
 
         TileManager.Ins.UseHintBooster();
+        SoundManager.Instance.PlaySoundHintBooster();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {
@@ -506,6 +530,8 @@ public class BoosterUI : MonoBehaviour
                 targetContainer.transform,
                 onActivateEffect: () =>
                 {
+                    SoundManager.Instance.PlaySoundAddSlot();
+
                     TileManager.Ins.UseUnlockThemeBooster();
                     //UpdateUnlockThemeButtonState();
                 },

@@ -29,6 +29,10 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] public Image ObjShow;
     [SerializeField] public Image ObjHide;
 
+    [Header("Text Config")]
+    [Tooltip("Nếu true, chữ hiển thị sẽ tự động viết hoa toàn bộ")]
+    [SerializeField] private bool isTextUppercase = true;
+
     private Tween _highlightScaleTween;
     private Tween _highlightShakeTween;
 
@@ -115,7 +119,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         {
             icon.gameObject.SetActive(false);
             category.gameObject.SetActive(true);
-            category.text = textData;
+            category.text = isTextUppercase ? textData.ToUpper() : textData;
         }
         else
         {
@@ -158,6 +162,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         float flipDuration = 0.12f;
         // Lật bài góc Y sang 90 độ để úp mặt
+        Tween.Delay(delay).OnComplete(() => SoundManager.Instance.PlaySoundFlipCard());
         Tween.LocalEulerAngles(transform, Vector3.zero, new Vector3(0, valueRotateWhenShuffling, 0), flipDuration, startDelay: delay)
             .OnComplete(() =>
             {
@@ -227,6 +232,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (IsMoving || IsOnSlot || IsDone) return;
         if (TileManager.Ins != null && TileManager.Ins.IsAnyTileDragging()) return;
 
+        SoundManager.Instance.PlaySoundTakeCardFromGrid();
+
         if (TileManager.Ins != null)
         {
             TileManager.Ins.CurrentlyDraggedTile = this;
@@ -295,6 +302,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         }
         else
         {
+            SoundManager.Instance.PlaySoundDropCardBackToTable();
             IsMoving = true;
             Tween.Scale(transform, Vector3.one, duration: 0.2f);
             Tween.Position(transform, _originalPosition, duration: 0.2f).OnComplete(() =>
@@ -316,6 +324,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             TileManager.Ins.CurrentlyDraggedTile = null;
         }
 
+        SoundManager.Instance.PlaySoundDropCardBackToTable();
         IsMoving = true;
         Tween.Scale(transform, Vector3.one, duration: 0.2f);
         Tween.Position(transform, _originalPosition, duration: 0.2f).OnComplete(() =>

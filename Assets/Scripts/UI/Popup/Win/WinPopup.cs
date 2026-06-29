@@ -586,31 +586,31 @@ public class WinPopup : BasePopup
 
     private void CheckEvent()
     {
-        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+        //CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
-        bool isUnlocked = currentLevel.Value >= 30;
+        //bool isUnlocked = currentLevel.Value >= 30;
 
-        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+        //DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
 
-        bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+        //bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
 
-        isAvailable = false;
+        //isAvailable = false;
 
-        if (isUnlocked && isAvailable && !coinChallengeData.IsCompleted())
-        {
-            eventItemGroup.gameObject.SetActive(true);
+        //if (isUnlocked && isAvailable && !coinChallengeData.IsCompleted())
+        //{
+        //    eventItemGroup.gameObject.SetActive(true);
 
-            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-280);
-            starGroup.localPosition = coinGroup.localPosition.ChangeX(0);
-            eventItemGroup.localPosition = coinGroup.localPosition.ChangeX(280);
-        }
-        else
-        {
-            eventItemGroup.gameObject.SetActive(false);
+        //    coinGroup.localPosition = coinGroup.localPosition.ChangeX(-280);
+        //    starGroup.localPosition = coinGroup.localPosition.ChangeX(0);
+        //    eventItemGroup.localPosition = coinGroup.localPosition.ChangeX(280);
+        //}
+        //else
+        //{
+        //    eventItemGroup.gameObject.SetActive(false);
 
-            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-140);
-            starGroup.localPosition = coinGroup.localPosition.ChangeX(140);
-        }
+        //    coinGroup.localPosition = coinGroup.localPosition.ChangeX(-140);
+        //    starGroup.localPosition = coinGroup.localPosition.ChangeX(140);
+        //}
     }
     #endregion
 }

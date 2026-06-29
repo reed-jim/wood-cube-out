@@ -49,6 +49,10 @@ public class TileSlotContainer : MonoBehaviour
 
     public TileIconContainer tileIconContainer;
 
+    [Header("Text Config")]
+    [Tooltip("Nếu true, chữ hiển thị sẽ tự động viết hoa toàn bộ")]
+    [SerializeField] private bool isTextUppercase = true;
+
     public ItemCategory ItemCategory
     {
         get => itemCategory;
@@ -229,11 +233,12 @@ public class TileSlotContainer : MonoBehaviour
                 currentTileText.gameObject.SetActive(true);
                 if (hasTextOrder)
                 {
-                    currentTileText.text = iconSet.textOrder;
+                    currentTileText.text = isTextUppercase ? iconSet.textOrder.ToUpper() : iconSet.textOrder;
                 }
                 else
                 {
-                    currentTileText.text = containerToUse.GetRandomTextOfCategory(itemCategory);
+                    string rndText = containerToUse.GetRandomTextOfCategory(itemCategory);
+                    currentTileText.text = isTextUppercase ? rndText.ToUpper() : rndText;
                 }
             }
         }
@@ -382,6 +387,7 @@ public class TileSlotContainer : MonoBehaviour
 
     public void SwitchItem(BaseTile tile)
     {
+        SoundManager.Instance.PlaySoundMatchCorrectCard();
         PlayFxComplete(tile);
 
         ScaleCountTextWithTween();
@@ -406,7 +412,7 @@ public class TileSlotContainer : MonoBehaviour
                 fakeTileText.color = Color.white;
 
                 currentTileText.gameObject.SetActive(true);
-                currentTileText.text = tile.category.text;
+                currentTileText.text = isTextUppercase ? tile.category.text.ToUpper() : tile.category.text;
                 Color txtColor = currentTileText.color;
                 currentTileText.color = new Color(txtColor.r, txtColor.g, txtColor.b, 0f);
 
@@ -549,8 +555,9 @@ public class TileSlotContainer : MonoBehaviour
 
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
+            SoundManager.Instance.PlaySoundCompleteTheme();
             fxCompleteTheme.Play();
-            category.text = oldCategoryName;
+            category.text = isTextUppercase ? oldCategoryName.ToUpper() : oldCategoryName;
             Tween.Alpha(category, 1f, duration: 0.05f);
             category.transform.localScale = Vector3.one;
             Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
@@ -636,7 +643,8 @@ public class TileSlotContainer : MonoBehaviour
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
             if (fxCompleteTheme != null) fxCompleteTheme.Play();
-            category.text = this.itemCategory.ToString().Replace("_", " ");
+            string catName = this.itemCategory.ToString().Replace("_", " ");
+            category.text = isTextUppercase ? catName.ToUpper() : catName;
             Tween.Alpha(category, 1f, duration: 0.05f);
             category.transform.localScale = Vector3.one;
             Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>

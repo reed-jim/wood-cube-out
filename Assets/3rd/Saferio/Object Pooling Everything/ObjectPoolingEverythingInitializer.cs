@@ -46,6 +46,19 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     [SerializeField] private GameObject taskItemUIPrefab;
 
+    [Header("Connect Tile Master Sounds")]
+    [SerializeField] private GameObject addSlotSoundPrefab;
+    //[SerializeField] private GameObject cardPutIntoThemeSoundPrefab;
+    //[SerializeField] private GameObject dealCardsSoundPrefab;
+    [SerializeField] private GameObject freezeBoosterSoundPrefab;
+    [SerializeField] private GameObject matchCorrectCardSoundPrefab;
+    [SerializeField] private GameObject hintBoosterSoundPrefab;
+    [SerializeField] private GameObject completeThemeSoundPrefab;
+    [SerializeField] private GameObject flipCardSoundPrefab;
+    [SerializeField] private GameObject takeCardFromGridSoundPrefab;
+    [SerializeField] private GameObject shuffleBoosterSoundPrefab;
+    [SerializeField] private GameObject dropCardBackToTableSoundPrefab;
+
     [Header("Connect Master")]
     [SerializeField] private GameObject baseTile;
 
@@ -112,6 +125,18 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.COMPlETE_TASK_SOUND, completeTaskSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.GENERATE_TASK_SOUND, generateTaskSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.collectCoinSound, coinSoundPrefab, 24);
+
+        RegisterPool<AudioSource>(GameConstants.ADD_SLOT_SOUND, addSlotSoundPrefab, 3);
+        //RegisterPool<AudioSource>(GameConstants.CARD_PUT_INTO_THEME_SOUND, cardPutIntoThemeSoundPrefab, 3);
+        //RegisterPool<AudioSource>(GameConstants.DEAL_CARDS_SOUND, dealCardsSoundPrefab, 3);
+        RegisterPool<AudioSource>(GameConstants.FREEZE_BOOSTER_SOUND, freezeBoosterSoundPrefab, 3);
+        RegisterPool<AudioSource>(GameConstants.MATCH_CORRECT_CARD_SOUND, matchCorrectCardSoundPrefab, 3);
+        RegisterPool<AudioSource>(GameConstants.HINT_BOOSTER_SOUND, hintBoosterSoundPrefab, 3);
+        RegisterPool<AudioSource>(GameConstants.COMPLETE_THEME_SOUND, completeThemeSoundPrefab, 4);
+        RegisterPool<AudioSource>(GameConstants.FLIP_CARD_SOUND, flipCardSoundPrefab, 16);
+        RegisterPool<AudioSource>(GameConstants.TAKE_CARD_FROM_GRID_SOUND, takeCardFromGridSoundPrefab, 16);
+        RegisterPool<AudioSource>(GameConstants.SHUFFLE_BOOSTER_SOUND, shuffleBoosterSoundPrefab, 3);
+        RegisterPool<AudioSource>(GameConstants.DROP_CARD_BACK_TO_TABLE_SOUND, dropCardBackToTableSoundPrefab, 5);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
