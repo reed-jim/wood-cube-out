@@ -36,6 +36,7 @@ namespace AntsFlow
         public FakeTile fakeTile;
         public Vector3 destination;
         private List<Node> reversePath;
+        private Coroutine movingCoroutine;
 
         private List<Tween> tweens;
         private List<Sequence> sequences;
@@ -48,7 +49,11 @@ namespace AntsFlow
 
         public static event Action requestUpdateNavmeshEvent;
 
-
+        #region Debug
+#if UNITY_EDITOR
+        List<Vector3> debugMovePoints;
+#endif
+        #endregion
 
         #region Wiggle
         private int wiggleCount;
@@ -133,22 +138,22 @@ namespace AntsFlow
 
         void Update()
         {
-            transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
+            // transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
-            if (!isDroppingTile)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            // if (!isDroppingTile)
+            // {
+            //     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+            //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
+            //     transform.rotation = Quaternion.Lerp(
+            //         transform.rotation,
+            //         targetRotation,
+            //         rotationSpeed * Time.deltaTime
+            //     );
 
-                // transform.rotation = targetRotation;
-            }
+            //     // transform.rotation = targetRotation;
+            // }
 
             return;
 
@@ -371,7 +376,12 @@ namespace AntsFlow
 
             navMeshAgent.enabled = false;
 
-            StartCoroutine(MovingCurved(path, 1));
+            if (movingCoroutine != null)
+            {
+                StopCoroutine(movingCoroutine);
+            }
+
+            movingCoroutine = StartCoroutine(MovingCurved(path, 1));
 
             tile.isAntApproaching = true;
             tile.InvokeAntStartMoveToTileEvent();
@@ -379,110 +389,14 @@ namespace AntsFlow
             this.tile = tile;
         }
 
-        public void MoveTo(List<Node> path)
+        public void ReverseMove()
         {
-            StartCoroutine(MovingCurved(reversePath, 2));
-        }
-
-        private IEnumerator MovingToZigZag(List<Node> path, int count)
-        {
-            float moveSpeed = 5f;
-            float zigZagWidth = 0.2f;
-            float zigZagFrequency = 2f;
-
-            List<Vector3> points = path.Select(item => item.initialPosition).ToList();
-
-            if (count == 2)
+            if (movingCoroutine != null)
             {
-                points.Add(TileManager.Ins.antNest.position.AddY(0.3f));
+                StopCoroutine(movingCoroutine);
             }
 
-            for (int i = 0; i < points.Count; i++)
-            {
-                int index = i;
-
-                Vector3 start = transform.position;
-                Vector3 target = points[i];
-
-                float distance = Vector3.Distance(start, target);
-                if (distance < 0.01f)
-                    continue;
-
-                Vector3 dir = (target - start).normalized;
-                Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
-
-                direction = dir;
-
-                float t = 0f;
-
-                bool isZigzag = false;
-
-                if (count == 1 && index == 0)
-                {
-                    isZigzag = true;
-                }
-
-                if (count == 2 && index == points.Count - 1)
-                {
-                    isZigzag = true;
-                }
-
-                while (t < 1f)
-                {
-                    t += (moveSpeed / distance) * Time.deltaTime;
-
-                    Vector3 basePos = Vector3.Lerp(start, target, t);
-
-                    if (isZigzag)
-                    {
-                        float offset =
-                            Mathf.Sin(t * zigZagFrequency * Mathf.PI * 2f) *
-                            zigZagWidth;
-
-                        transform.position = basePos + perp * offset;
-                    }
-                    else
-                    {
-                        transform.position = basePos;
-                    }
-
-                    yield return null;
-                }
-
-                transform.position = target;
-            }
-
-            if (count < 2)
-            {
-                if (tile != null)
-                {
-                    tile.MoveToAnt(this);
-                }
-
-                List<Node> reversePath = new List<Node>();
-
-                for (int i = path.Count - 1; i >= 0; i--)
-                {
-                    reversePath.Add(path[i]);
-                }
-
-                MoveTo(reversePath);
-            }
-            else
-            {
-                OnAntMovedToNest();
-
-                // float speed = 6;
-                // float duration = Vector2.Distance(transform.position, TileManager.Ins.antNest.position.AddY(0.3f)) / speed;
-
-                // direction = TileManager.Ins.antNest.position.AddY(0.3f) - transform.position;
-
-                // tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f), duration, ease: Ease.Linear)
-                // .OnComplete(() =>
-                // {
-                //     OnAntMovedToNest();
-                // }));
-            }
+            movingCoroutine = StartCoroutine(MovingCurved(reversePath, 2));
         }
 
         public static List<Vector3> Simplify(List<Vector3> points, float tolerance = 1f)
@@ -544,6 +458,18 @@ namespace AntsFlow
             }
         }
 
+#if UNITY_EDITOR
+        void OnDrawGizmosSelected()
+        {
+            foreach (var point in debugMovePoints)
+            {
+                Gizmos.color = Color.green;
+
+                Gizmos.DrawSphere(point, 0.15f);
+            }
+        }
+#endif
+
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
             float moveSpeed = 5f;
@@ -569,6 +495,7 @@ namespace AntsFlow
                 reversePath = new List<Node>();
                 reversePath.AddRange(path);
                 reversePath.Reverse();
+                // reversePath.RemoveAt(0);
 
                 // start at center
                 if (isCenter)
@@ -585,39 +512,64 @@ namespace AntsFlow
                 }
             }
 
-            float totalDistance = GetTotalDistance(points, transform.position);
-            float totalTime = totalDistance / speedMove;
-
             if (count == 2)
             {
                 // List<Vector3> toRemovePoints = new List<Vector3>();
 
-                // float removeThresholdY = TileManager.Ins.antNest.transform.position.y;
-
                 // for (int i = 0; i < points.Count; i++)
                 // {
-                //     if (points[i].y < removeThresholdY)
+                //     if (Mathf.Abs(points[i].y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f)
                 //     {
-                //         toRemovePoints.Add(points[i]);
+                //         if (
+                //             Mathf.Abs(points[i].x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f ||
+                //             Mathf.Abs(points[i].x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f
+                //         )
+                //         {
+
+                //         }
+                //         else
+                //         {
+                //             toRemovePoints.Add(points[i]);
+                //         }
                 //     }
                 // }
+
+                // Node closestBottomBoardNode = TileManager.Ins.nodes
+                //     .OrderBy(node => Mathf.Abs(node.initialPosition.x - transform.position.x))
+                //     .First();
 
                 // for (int i = 0; i < toRemovePoints.Count; i++)
                 // {
                 //     points.Remove(toRemovePoints[i]);
                 // }
 
-                // if (path[0].initialPosition.x > 0)
-                // {
-                //     points.Add(TileManager.Ins.bottomRightMostInsideLevelNode.initialPosition);
-                // }
-                // else
-                // {
-                //     points.Add(TileManager.Ins.bottomLeftMostInsideLevelNode.initialPosition);
-                // }
-                points.Add(TileManager.Ins.antNest.position.AddY(0.7f));
+                // points.Add(closestBottomBoardNode.initialPosition);
+
+                Vector3 antNestPosition = TileManager.Ins.antNest.position.AddY(0.7f);
+
+                try
+                {
+                    if (Mathf.Abs(points[^2].x - antNestPosition.x) < Mathf.Abs(points[^1].x - antNestPosition.x))
+                    {
+                        points.RemoveAt(points.Count - 1);
+                    }
+                }
+                catch (System.Exception)
+                {
+
+                }
+
+                points.Add(antNestPosition);
                 // points.Add(TileManager.Ins.antNest.position.AddY(UnityEngine.Random.RandomRange(-0.5f, 0.7f)));
             }
+
+            float totalDistance = GetTotalDistance(points, transform.position);
+            float totalTime = totalDistance / speedMove;
+
+#if UNITY_EDITOR
+            debugMovePoints = new List<Vector3>();
+            debugMovePoints.AddRange(points);
+#endif
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -626,14 +578,18 @@ namespace AntsFlow
                 Vector3 start = transform.position;
                 Vector3 end = points[i];
 
-                float distance = Vector3.Distance(start, end);
+                direction = (end - start).normalized;
 
-                Vector3 mid = (start + end) * 0.5f;
+                // if (count == 1 && index == points.Count - 1)
+                // {
+                //     break;
+                // }
+
+                float distance = Vector3.Distance(start, end);
 
                 // Control point above the line
                 Vector3 dir = (end - start).normalized;
                 Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
-                Vector3 control = mid + perp * curveHeight;
 
                 bool isCurved = false;
                 bool isZigzag = false;
@@ -666,39 +622,21 @@ namespace AntsFlow
 
                     Vector3 pos;
 
-                    if (isCurved)
+                    if (isZigzag)
                     {
-                        // // Quadratic Bezier
-                        // pos =
-                        //     Mathf.Pow(1 - t, 2) * start +
-                        //     2 * (1 - t) * t * control +
-                        //     Mathf.Pow(t, 2) * end;
+                        float offset =
+                            Mathf.Sin(t * zigZagFrequency * Mathf.PI * 2f) *
+                            zigZagWidth;
 
-                        float tt = t * t;
-
-                        pos = start
-                            + (2f * (control - start)) * t
-                            + (start - 2f * control + end) * tt;
+                        pos = Vector3.Lerp(start, end, t) + perp * offset;
                     }
                     else
                     {
-                        if (isZigzag)
-                        {
-                            float offset =
-                                Mathf.Sin(t * zigZagFrequency * Mathf.PI * 2f) *
-                                zigZagWidth;
-
-                            pos = Vector3.Lerp(start, end, t) + perp * offset;
-                        }
-                        else
-                        {
-                            pos = Vector3.Lerp(start, end, t);
-                        }
+                        pos = Vector3.Lerp(start, end, t);
                     }
 
-                    direction = (end - pos).normalized;
-
                     transform.position = pos.ChangeZ(-3 - 0.001f * siblingIndex);
+                    Rotate(progress: t);
 
                     yield return null;
                 }
@@ -710,21 +648,41 @@ namespace AntsFlow
             {
                 if (tile != null)
                 {
-                    tile.MoveToAnt(this);
+                    tile.MoveToAnt(this, onCompleteAction: () =>
+                    {
+                        // if (movingCoroutine != null)
+                        // {
+                        //     StopCoroutine(movingCoroutine);
+                        // }
+
+                        // ReverseMove();
+                    });
+
+                    ReverseMove();
                 }
-
-                List<Node> reversePath = new List<Node>();
-
-                for (int i = path.Count - 1; i >= 0; i--)
-                {
-                    reversePath.Add(path[i]);
-                }
-
-                MoveTo(reversePath);
             }
             else
             {
                 OnAntMovedToNest();
+            }
+
+            void Rotate(float progress)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                transform.rotation = Quaternion.Lerp(
+                    transform.rotation,
+                    targetRotation,
+                    progress
+                );
+
+                // transform.rotation = Quaternion.RotateTowards(
+                //     transform.rotation,
+                //     targetRotation,
+                //     rotationSpeed
+                // );
             }
         }
 

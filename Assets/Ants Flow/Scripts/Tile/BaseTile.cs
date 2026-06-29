@@ -171,7 +171,7 @@ namespace AntsFlow
             isDone = true;
         }
 
-        public void MoveToAnt(BaseAnt ant)
+        public void MoveToAnt(BaseAnt ant, Action onCompleteAction = null)
         {
             // boxCollider.enabled = false;
             // navMeshModifierVolume.enabled = false;
@@ -189,7 +189,17 @@ namespace AntsFlow
 
             fakeTile.Init(ant, faction);
 
-            TileManager.Ins.UpdateNavMesh();
+            fakeTile.transform.position = TileManager.Ins.GetTilePosition(this).AddZ(-0.0001f * (100 - position.y) - 3);
+            fakeTile.transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
+            fakeTile.transform.localRotation = Quaternion.identity;
+
+            Tween.LocalPosition(fakeTile.transform, fakeTile.positionInAnt, duration: 0.1f);
+            Tween.Scale(fakeTile.transform, fakeTile.scaleInAnt, duration: 0.1f);
+            Tween.LocalRotation(fakeTile.transform, Quaternion.identity, duration: 0.1f)
+            .OnComplete(() =>
+            {
+                onCompleteAction?.Invoke();
+            });
 
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
@@ -202,9 +212,6 @@ namespace AntsFlow
             isMovedToAnt = true;
 
             Hide();
-            // HideObstacle();
-
-            // Debug.Log($"BaseTile {tileName} {isMovedToAnt} {isAntApproaching} {isDone}");
 
             tileMoveToAntEvent?.Invoke(this);
         }

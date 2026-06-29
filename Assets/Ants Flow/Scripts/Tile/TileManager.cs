@@ -119,7 +119,7 @@ namespace AntsFlow
 
             // Grid size
             int numExtraColumn = 4;
-            int numExtraRow = 2;
+            int numExtraRow = 4;
             int width = Mathf.RoundToInt((xMax - xMin) / tileDistance.x) + 1 + numExtraColumn;
             int height = Mathf.RoundToInt((yMax - yMin) / tileDistance.y) + 1 + numExtraRow;
 
@@ -644,79 +644,6 @@ namespace AntsFlow
             }
         }
 #endif
-
-        private int searchId = 0;
-
-        public void UpdateMovableTiles(Color faction)
-        {
-            return;
-
-            currentSearchId++;
-
-            Node start = bottomLeftMostNode;
-
-            // // Reset tile state
-            // foreach (var node in nodes)
-            // {
-            //     if (node.tile != null)
-            //     {
-            //         node.tile.isMovable = false;
-            //     }
-            // }
-
-            queue.Clear();
-
-            start.VisitId = currentSearchId;
-            queue.Enqueue(start);
-
-            int count = 0;
-
-            while (queue.Count > 0)
-            {
-                Node current = queue.Dequeue();
-
-                // Debug.Log($"Dequeue {nodes.IndexOf(current)}");
-
-                if (current.tile.isDone && !current.tile.isAntApproaching)
-                {
-                    current.tile.isAntApproaching = true;
-                }
-
-                if (current.tile != null && current.tile.Faction == faction)
-                {
-                    current.tile.isMovable = true;
-                }
-
-                foreach (var neighbor in current.neighbors)
-                {
-                    count++;
-
-                    if (neighbor.VisitId == currentSearchId)
-                    {
-                        continue;
-                    }
-
-                    // blocked
-                    if (neighbor.tile != null && !current.tile.isAntApproaching)
-                    {
-                        if
-                        (
-                            !neighbor.tile.isAntApproaching &&
-                            !neighbor.tile.isDone &&
-                            !neighbor.isStarter
-                        )
-                        {
-                            continue;
-                        }
-                    }
-
-                    neighbor.VisitId = currentSearchId;
-                    queue.Enqueue(neighbor);
-                }
-            }
-
-            Debug.Log($"Dequeue {count}");
-        }
 
         public List<BaseTile> GetFirstNMovableTiles(Color faction, int count, Vector2 antBoxPosition)
         {
