@@ -333,6 +333,11 @@ public class BasePopup : MonoBehaviour
         showAdNotLoadedPopupEvent?.Invoke();
     }
 
+    public static void TriggerShowAdNotLoadedPopupEvent()
+    {
+        showAdNotLoadedPopupEvent?.Invoke();
+    }
+
     protected void InvokeShowResourcesEarnPopupPopupEvent(int coinQuantity, int[] boosterQuantites, bool isRemoveAds)
     {
         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, isRemoveAds);

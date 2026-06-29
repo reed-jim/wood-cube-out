@@ -13,6 +13,8 @@ using UnityEngine.UI;
 
 public class SceneTransition : MonoBehaviour
 {
+    public static SceneTransition Instance { get; private set; }
+
     [SerializeField] private RectTransform canvas;
     [SerializeField] private CanvasGroup blackBackground;
 
@@ -22,6 +24,8 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private RectTransform rotatingLoadingIcon;
     [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _loadingLevelInProgressCoroutine;
+    
+    private CanvasGroup _rootCanvasGroup;
 
     [SerializeField] private IntVariable currentLevel;
 
@@ -42,8 +46,10 @@ public class SceneTransition : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
-        ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
+        //ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
         LevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
 
         _tweens = new List<Tween>();
@@ -70,11 +76,37 @@ public class SceneTransition : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+
         LevelLoader.showSceneTransitionEvent -= TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
         LevelLoader.setIsLevelLoadedEvent -= SetIsLevelLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
+    }
+
+    public void SetOverlayActive(bool active)
+    {
+        if (canvas != null)
+        {
+            canvas.gameObject.SetActive(active);
+        }
+
+        if (_rootCanvasGroup == null)
+        {
+            _rootCanvasGroup = GetComponent<CanvasGroup>();
+            if (_rootCanvasGroup == null)
+            {
+                _rootCanvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
+        }
+
+        _rootCanvasGroup.alpha = active ? 1 : 0;
+        _rootCanvasGroup.blocksRaycasts = active;
+        _rootCanvasGroup.interactable = active;
     }
 
     #endregion
@@ -133,9 +165,14 @@ public class SceneTransition : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        if (!GamePersistentVariable.isLoadingComplete)
+        {
+            yield return new WaitUntil(() => GamePersistentVariable.isLoadingComplete);
+        }
+
         ShowBlackScreenImmediately();
 
-        yield return new WaitUntil(() => _isLevelLoaded && GamePersistentVariable.isLoadingComplete);
+        yield return new WaitUntil(() => _isLevelLoaded);
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
 

@@ -125,12 +125,13 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     private void OnTileSelected(BaseTile tile)
     {
-        tilesToSelect.Remove(tile);
+        //comment de tét
+        //tilesToSelect.Remove(tile);
 
-        if (tilesToSelect.Count > 0)
-        {
-            Tween.Position(tutorialHand.transform, tilesToSelect[0].transform.position.AddZ(-1), duration: 0.3f);
-        }
+        //if (tilesToSelect.Count > 0)
+        //{
+        //    Tween.Position(tutorialHand.transform, tilesToSelect[0].transform.position.AddZ(-1), duration: 0.3f);
+        //}
     }
 
     private void EndTutorial()

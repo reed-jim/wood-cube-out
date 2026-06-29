@@ -183,8 +183,52 @@ public class TileManager : Singleton<TileManager>
         SetupLevelInternal(levelItem);
     }
 
+    private void ShowNoInternetPopup()
+    {
+        if (!NoAdsLoadedPopup.IsShown)
+        {
+            NoAdsLoadedPopup.IsNoInternetMode = true;
+            BasePopup.TriggerShowAdNotLoadedPopupEvent();
+        }
+    }
+
     private IEnumerator DownloadCdnSpritesForLevel(List<CategoryIconSet> cdnSets, Action onComplete)
     {
+        bool allCached = true;
+        foreach (var iconSet in cdnSets)
+        {
+            if (iconSet.iconCdnKeys != null)
+            {
+                foreach (var key in iconSet.iconCdnKeys)
+                {
+                    if (!string.IsNullOrEmpty(key) && !CdnDownloader.Instance.IsResourceCached(key))
+                    {
+                        allCached = false;
+                        break;
+                    }
+                }
+            }
+            if (!allCached) break;
+            if (!string.IsNullOrEmpty(iconSet.spriteOrderCdnKey) && !CdnDownloader.Instance.IsResourceCached(iconSet.spriteOrderCdnKey))
+            {
+                allCached = false;
+                break;
+            }
+        }
+
+        if (!allCached && Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            Debug.Log("[TileManager] No internet and assets not cached. Showing popup.");
+            ShowNoInternetPopup();
+
+            while (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
+        }
+
+        float startTime = Time.unscaledTime;
+
         foreach (var iconSet in cdnSets)
         {
             // Download icons
@@ -204,18 +248,54 @@ public class TileManager : Singleton<TileManager>
 
                     int idx = i;
                     bool done = false;
+                    bool success = false;
 
-                    CdnDownloader.Instance.LoadSprite(key, (sprite) =>
+                    while (!success)
                     {
-                        iconSet.icons[idx] = sprite;
-                        done = true;
-                    }, () =>
-                    {
-                        Debug.LogError($"[TileManager] Failed to download icon {idx} for {iconSet.itemCategory}, key: {key}");
-                        done = true;
-                    });
+                        if (Application.internetReachability == NetworkReachability.NotReachable)
+                        {
+                            ShowNoInternetPopup();
+                            yield return new WaitUntil(() => Application.internetReachability != NetworkReachability.NotReachable);
+                            startTime = Time.unscaledTime;
+                        }
 
-                    yield return new WaitUntil(() => done);
+                        done = false;
+                        CdnDownloader.Instance.LoadSprite(key, (sprite) =>
+                        {
+                            iconSet.icons[idx] = sprite;
+                            success = true;
+                            done = true;
+                        }, () =>
+                        {
+                            Debug.LogError($"[TileManager] Failed to download icon {idx} for {iconSet.itemCategory}, key: {key}");
+                            done = true;
+                        });
+
+                        while (!done)
+                        {
+                            if (Application.internetReachability == NetworkReachability.NotReachable)
+                            {
+                                Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
+                                ShowNoInternetPopup();
+                            }
+                            else if (!success && (Time.unscaledTime - startTime > 5f))
+                            {
+                                if (!NoAdsLoadedPopup.IsShown)
+                                {
+                                    Debug.LogWarning("[TileManager] Download taking too long (>5s). Showing popup.");
+                                    NoAdsLoadedPopup.IsWeakInternetMode = true;
+                                    ShowNoInternetPopup();
+                                    startTime = Time.unscaledTime;
+                                }
+                            }
+                            yield return null;
+                        }
+
+                        if (!success)
+                        {
+                            yield return new WaitForSecondsRealtime(1f);
+                        }
+                    }
                 }
             }
 
@@ -223,19 +303,60 @@ public class TileManager : Singleton<TileManager>
             if (!string.IsNullOrEmpty(iconSet.spriteOrderCdnKey) && iconSet.spriteOrder == null)
             {
                 bool done = false;
+                bool success = false;
 
-                CdnDownloader.Instance.LoadSprite(iconSet.spriteOrderCdnKey, (sprite) =>
+                while (!success)
                 {
-                    iconSet.spriteOrder = sprite;
-                    done = true;
-                }, () =>
-                {
-                    Debug.LogError($"[TileManager] Failed to download spriteOrder for {iconSet.itemCategory}");
-                    done = true;
-                });
+                    if (Application.internetReachability == NetworkReachability.NotReachable)
+                    {
+                        ShowNoInternetPopup();
+                        yield return new WaitUntil(() => Application.internetReachability != NetworkReachability.NotReachable);
+                        startTime = Time.unscaledTime;
+                    }
 
-                yield return new WaitUntil(() => done);
+                    done = false;
+                    CdnDownloader.Instance.LoadSprite(iconSet.spriteOrderCdnKey, (sprite) =>
+                    {
+                        iconSet.spriteOrder = sprite;
+                        success = true;
+                        done = true;
+                    }, () =>
+                    {
+                        Debug.LogError($"[TileManager] Failed to download spriteOrder for {iconSet.itemCategory}");
+                        done = true;
+                    });
+
+                    while (!done)
+                    {
+                        if (Application.internetReachability == NetworkReachability.NotReachable)
+                        {
+                            Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
+                            ShowNoInternetPopup();
+                        }
+                        else if (!success && (Time.unscaledTime - startTime > 5f))
+                        {
+                            if (!NoAdsLoadedPopup.IsShown)
+                            {
+                                Debug.LogWarning("[TileManager] Download taking too long (>5s). Showing popup.");
+                                NoAdsLoadedPopup.IsWeakInternetMode = true;
+                                ShowNoInternetPopup();
+                                startTime = Time.unscaledTime;
+                            }
+                        }
+                        yield return null;
+                    }
+
+                    if (!success)
+                    {
+                        yield return new WaitForSecondsRealtime(1f);
+                    }
+                }
             }
+        }
+
+        if (NoAdsLoadedPopup.IsShown)
+        {
+            NoAdsLoadedPopup.Instance?.HidePopup();
         }
 
         onComplete?.Invoke();
@@ -308,7 +429,7 @@ public class TileManager : Singleton<TileManager>
 
         if (levelItem.isTutorial)
         {
-            TutorialLevelOne.Ins.StartTutorial();
+            //TutorialLevelOne.Ins.StartTutorial();
         }
         else
         {
@@ -456,7 +577,51 @@ public class TileManager : Singleton<TileManager>
 
     private ItemCategory GetNextCategoryBasedOnDifficulty(int difficultyLevel)
     {
-        // The higher the score, the easier
+        // 1. Collect currently active ordered categories (unlocked, not completed, not hidden)
+        List<ItemCategory> orderedCategories = tileSlotContainers
+            .Where(c => !c.isLocked && !c.isHidden && !c.isCompleted)
+            .Select(c => c.ItemCategory)
+            .Distinct()
+            .ToList();
+
+        float ratio = levelItem != null ? levelItem.priorityCardRatio : 0.5f;
+        float randVal = UnityEngine.Random.value;
+
+        ItemCategory chosenCategory;
+
+        if (orderedCategories.Count > 0)
+        {
+            if (randVal <= ratio)
+            {
+                // Deal a card belonging to one of the ordered categories
+                List<ItemCategory> matchingInPool = itemCategoryPool
+                    .Where(c => orderedCategories.Contains(c))
+                    .ToList();
+
+                if (matchingInPool.Count > 0)
+                {
+                    chosenCategory = matchingInPool[UnityEngine.Random.Range(0, matchingInPool.Count)];
+                    itemCategoryPool.Remove(chosenCategory);
+                    return chosenCategory;
+                }
+            }
+            else
+            {
+                // Deal a card NOT belonging to the ordered categories
+                List<ItemCategory> nonMatchingInPool = itemCategoryPool
+                    .Where(c => !orderedCategories.Contains(c))
+                    .ToList();
+
+                if (nonMatchingInPool.Count > 0)
+                {
+                    chosenCategory = nonMatchingInPool[UnityEngine.Random.Range(0, nonMatchingInPool.Count)];
+                    itemCategoryPool.Remove(chosenCategory);
+                    return chosenCategory;
+                }
+            }
+        }
+
+        // Fallback: If no ordered categories or target pools are empty, use score difficulty sorting
         List<ItemCategory> categoriesOfTileSlotContainers = new List<ItemCategory>();
 
         for (int i = 0; i < tileSlotContainers.Count; i++)
@@ -492,12 +657,6 @@ public class TileManager : Singleton<TileManager>
             .Select(kvp => kvp.Key)
             .ToArray();
 
-        // Debug
-        // foreach (var item in scoreOfEachCategory)
-        // {
-        //     Debug.Log($"scoreOfEachCategory {item.Key} {item.Value}");
-        // }
-
         for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
         {
             if (itemCategoryPool.Contains(sortedCategory[i]))
@@ -506,12 +665,6 @@ public class TileManager : Singleton<TileManager>
 
                 return sortedCategory[i];
             }
-        }
-
-        foreach (var item in scoreOfEachCategory)
-        {
-            ItemCategory category = item.Key;
-            int score = item.Value;
         }
 
         // fallback return first value of itemCategoryPool
@@ -666,7 +819,7 @@ public class TileManager : Singleton<TileManager>
         Tween.Delay(1.2f).OnComplete(() =>
         {
             if (tileSlotContainer == null) return;
-            
+
             bool isAnyRemainingTileAfterDelay = tiles.Any(item => !item.IsOnSlot);
 
             if (remainingSlotContainer > 0 && isAnyRemainingTileAfterDelay)

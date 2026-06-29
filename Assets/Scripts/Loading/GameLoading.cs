@@ -98,21 +98,6 @@ public class GameLoading : MonoBehaviour
         WaitForSeconds waitForSeconds = new WaitForSeconds(Time.fixedDeltaTime);
 
         float progress = 0;
-        float deltaProgress = Time.fixedDeltaTime / maxExpectedMenuLoadTime;
-
-        bool isReadyToBurst = false;
-        float burstReadyDuration = 2f;
-        float timePassedAfterSceneLoaded = 0;
-
-        float avoidInitialLagDuration = 1.5f;
-        bool isPlayLoadingAnimation = false;
-
-        // // WEAK DEVICES
-        // yield return new WaitForSeconds(burstReadyDuration);
-
-        // WeakDevices();
-
-        // yield break;
 
         // SPLASH SCREEN
         _tweens.Add(Tween.Alpha(splashScreenBackground, 0, duration: 0.3f, startDelay: 1.2f));
@@ -122,35 +107,22 @@ public class GameLoading : MonoBehaviour
             splashScreenBackground.gameObject.SetActive(false);
         }));
 
-        while (!isReadyToBurst)
+        while (progress < 1f)
         {
             progressBarFill.fillAmount = progress;
-            // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 2 * (progress - 0.08f));
-
-            // if (progress >= 0.08f)
-            // {
-            //     loadingText.text = $"{(int)(progress * 100)}%";
-            // }
-            // else
-            // {
-            //     loadingText.text = $"{(int)(0 * 100)}%";
-            // }
-
             loadingText.text = $"{(int)(progress * 100)}%";
 
-            progress += deltaProgress;
+            // Smoothly accelerate the progress if the scene is loaded in the background
+            float expectedTime = _menuSceneHandle.IsDone ? 1.5f : maxExpectedMenuLoadTime;
+            float delta = Time.fixedDeltaTime / expectedTime;
 
-
-
-            timePassedAfterSceneLoaded += Time.fixedDeltaTime;
-
-            if (timePassedAfterSceneLoaded > burstReadyDuration)
-            {
-                isReadyToBurst = true;
-            }
+            progress += delta;
 
             yield return waitForSeconds;
         }
+
+        progressBarFill.fillAmount = 1f;
+        loadingText.text = "100%";
 
         while (!_menuSceneHandle.IsDone)
         {
@@ -205,21 +177,19 @@ public class GameLoading : MonoBehaviour
 
                 blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 0);
 
-                _tweens.Add(Tween.Alpha(blackBackground, 0, 1, cycles: 2, cycleMode: CycleMode.Yoyo, duration: fadeOutDuration).OnComplete(() =>
+                // Tween 1: Fade to black (screen becomes fully black)
+                _tweens.Add(Tween.Alpha(blackBackground, 0, 1, duration: fadeOutDuration).OnComplete(() =>
                 {
-                    // blackBackground.gameObject.SetActive(false);
-
-                    // AdmobAdsMax.Instance.ShowInterstitialAdmob();
-
-                    // blackBackgroundToPassPolicy.gameObject.SetActive(true);
-
+                    // At the peak of the black screen, mark loading as complete
+                    // This triggers the Gameplay SceneTransition to show its black overlay immediately
                     GamePersistentVariable.isLoadingComplete = true;
 
-                    SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-                }));
+                    // Tween 2: Fade back to transparent
+                    _tweens.Add(Tween.Alpha(blackBackground, 1, 0, duration: fadeOutDuration).OnComplete(() =>
+                    {
+                        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+                    }));
 
-                _tweens.Add(Tween.Delay(fadeOutDuration, onComplete: () =>
-                {
                     loadingScreenContainer.gameObject.SetActive(false);
                 }));
             }
