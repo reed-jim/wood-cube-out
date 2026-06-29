@@ -406,7 +406,7 @@ public class WashingMachineItem : MonoBehaviour
 
         int max = AntsFlow.TileManager.Ins.tiles.Count(tile => !tile.isAntApproaching && !tile.isDone && tile.Faction == faction);
 
-        List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetFirstNMovableTiles(faction, max);
+        List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetFirstNMovableTiles(faction, max, transform.position);
 
         foundTiles = foundTiles
             // .Where(item => item.numStepToReach < 5)
@@ -545,9 +545,9 @@ public class WashingMachineItem : MonoBehaviour
             ant.transform.eulerAngles = Vector3.zero;
 
             ant.Init(faction);
-            ant.MoveToTile(tilesToMove[currentAntIndex]);
+            // ant.MoveToTile(tilesToMove[currentAntIndex]);
             // BFS
-            // ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
+            ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
 
             SoundManager.Instance.PlaySoundAntPop();
 

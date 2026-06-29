@@ -118,13 +118,13 @@ namespace AntsFlow
             float xMax = tiles.Max(tile => GetTilePosition(tile).x);
 
             // Grid size
-            int width = Mathf.RoundToInt((xMax - xMin) / tileDistance.x) + 1;
-            int height = Mathf.RoundToInt((yMax - yMin) / tileDistance.y) + 1;
+            int numExtraColumn = 4;
+            int numExtraRow = 2;
+            int width = Mathf.RoundToInt((xMax - xMin) / tileDistance.x) + 1 + numExtraColumn;
+            int height = Mathf.RoundToInt((yMax - yMin) / tileDistance.y) + 1 + numExtraRow;
 
             nodes = new List<Node>();
             Node[,] grid = new Node[width, height];
-
-            int totalNode = 0;
 
             // Create all grid nodes
             for (int y = 0; y < height; y++)
@@ -134,16 +134,14 @@ namespace AntsFlow
                     Node node = new Node
                     {
                         initialPosition = new Vector2(
-                            xMin + x * tileDistance.x,
-                            yMin + y * tileDistance.y),
+                            xMin + (x - numExtraColumn / 2) * tileDistance.x,
+                            yMin + (y - numExtraRow / 2) * tileDistance.y),
                         tile = null,
                         neighbors = new List<Node>()
                     };
 
                     grid[x, y] = node;
                     nodes.Add(node);
-
-                    totalNode++;
                 }
             }
 
@@ -197,34 +195,33 @@ namespace AntsFlow
                 closest.tile = tile;
             }
 
+            bottomMostNodes = new List<Node>();
+
             for (int i = 0; i < nodes.Count; i++)
             {
                 Node node = nodes[i];
 
-                if (node.tile == null)
-                {
-                    continue;
-                }
-
                 if (Mathf.Abs(node.initialPosition.y - yMin) < 0.1f * tileDistance.x)
                 {
-                    node.isStarter = true;
+                    // node.isStarter = true;
+
+                    bottomMostNodes.Add(node);
                 }
 
-                if (Mathf.Abs(node.initialPosition.y - yMax) < 0.1f * tileDistance.x)
-                {
-                    node.isStarter = true;
-                }
+                // if (Mathf.Abs(node.initialPosition.y - yMax) < 0.1f * tileDistance.x)
+                // {
+                //     node.isStarter = true;
+                // }
 
-                if (Mathf.Abs(node.initialPosition.x - xMin) < 0.1f * tileDistance.x)
-                {
-                    node.isStarter = true;
-                }
+                // if (Mathf.Abs(node.initialPosition.x - xMin) < 0.1f * tileDistance.x)
+                // {
+                //     node.isStarter = true;
+                // }
 
-                if (Mathf.Abs(node.initialPosition.x - xMax) < 0.1f * tileDistance.x)
-                {
-                    node.isStarter = true;
-                }
+                // if (Mathf.Abs(node.initialPosition.x - xMax) < 0.1f * tileDistance.x)
+                // {
+                //     node.isStarter = true;
+                // }
             }
 
             // for (int i = 0; i < nodes.Count; i++)
@@ -563,7 +560,7 @@ namespace AntsFlow
                 {
                     Gizmos.color = Color.green;
 
-                    Gizmos.DrawSphere(node.initialPosition, 0.03f);
+                    Gizmos.DrawSphere(node.initialPosition, 0.1f);
                     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
 
                     // DrawConnectors(node);
@@ -574,7 +571,7 @@ namespace AntsFlow
                     {
                         Gizmos.color = Color.green;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.03f);
+                        Gizmos.DrawSphere(node.initialPosition, 0.1f);
                         Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
                         // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} ({node.tile.tileName})");
 
@@ -721,16 +718,22 @@ namespace AntsFlow
             Debug.Log($"Dequeue {count}");
         }
 
-        public List<BaseTile> GetFirstNMovableTiles(Color faction, int count)
+        public List<BaseTile> GetFirstNMovableTiles(Color faction, int count, Vector2 antBoxPosition)
         {
-            Node start = bottomLeftMostNode;
+            // Node start = bottomLeftMostNode;
+
+            Node start = nodes
+                .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
+                .First();
 
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();
             var visited = new HashSet<Node>();
+            var parent = new Dictionary<Node, Node>();
 
             queue.Enqueue(start);
             visited.Add(start);
+            parent[start] = null;
 
             while (queue.Count > 0 && result.Count < count)
             {
@@ -744,12 +747,19 @@ namespace AntsFlow
                     !current.tile.isLocked
                 )
                 {
+                    current.tile.path = ReconstructPath(current, parent);
+
                     result.Add(current.tile);
                 }
 
                 if (current.tile != null)
                 {
-                    if (!current.isStarter && !current.tile.isMovedToAnt && !current.tile.isDone && current.tile.Faction != faction)
+                    if (
+                        !current.isStarter &&
+                        !current.tile.isMovedToAnt &&
+                        !current.tile.isDone &&
+                        current.tile.Faction != faction
+                    )
                     {
                         continue;
                     }
@@ -761,8 +771,6 @@ namespace AntsFlow
                     {
                         continue;
                     }
-
-                    visited.Add(neighbor);
 
                     bool isBlocked = true;
                     bool isReachTarget = false;
@@ -781,7 +789,12 @@ namespace AntsFlow
 
                     if (!isBlocked && current.isStarter)
                     {
-                        if (current.tile != null && !current.tile.isMovedToAnt && !current.tile.isDone && current.tile.Faction != faction)
+                        if (
+                            current.tile != null &&
+                            !current.tile.isMovedToAnt &&
+                            !current.tile.isDone &&
+                            current.tile.Faction != faction
+                        )
                         {
                             isBlocked = true;
                         }
@@ -804,18 +817,34 @@ namespace AntsFlow
                         }
                     }
 
-                    // Debug.Log($"IndexOf {nodes.IndexOf(current)} {nodes.IndexOf(neighbor)} {isBlocked} {isReachTarget}");
-
                     if (isBlocked && !isReachTarget)
                     {
                         continue;
                     }
 
+                    visited.Add(neighbor);
+                    parent[neighbor] = current;
                     queue.Enqueue(neighbor);
                 }
             }
 
             return result;
+        }
+
+        private List<Node> ReconstructPath(Node end, Dictionary<Node, Node> parent)
+        {
+            var path = new List<Node>();
+
+            Node current = end;
+
+            while (current != null)
+            {
+                path.Add(current);
+                current = parent[current];
+            }
+
+            path.Reverse();
+            return path;
         }
 
         public List<Node> FindPath(BaseTile target)
@@ -1248,144 +1277,6 @@ namespace AntsFlow
         }
 
         public List<GridNode> grids;
-
-        public void BuildGrids()
-        {
-            int row = 40;
-            int column = 40;
-            int distance = 1;
-
-            grids = new List<GridNode>(row * column);
-
-            for (int i = 0; i < row; i++)
-            {
-                for (int j = 0; j < column; j++)
-                {
-                    int index = j + i * column;
-
-                    grids.Add(new GridNode(new Vector3(j - row / 2, row / 2 - i, 0), new Vector2Int(j - row / 2, row / 2 - i), null));
-                }
-            }
-        }
-
-        public void AssignTilesForGrids()
-        {
-            // for (int i = 0; i < tiles.Count; i++)
-            // {
-            //     GridNode gridNode = grids.First(item => item.Position == CommonUtil.GetVector2Int(tiles[i].transform.position));
-            //     gridNode.tile = tiles[i];
-            // }
-        }
-
-        public GridNode GetGridNode(Vector3 position)
-        {
-            return grids.First(item => item.Position == CommonUtil.GetVector2Int(position));
-        }
-
-        public List<GridNode> FindPath
-        (
-            GridNode start,
-            GridNode goal
-        )
-        {
-            var openSet = new List<GridNode> { start };
-            var closedSet = new HashSet<GridNode>();
-
-            var cameFrom = new Dictionary<GridNode, GridNode>();
-
-            var gScore = new Dictionary<GridNode, float>
-            {
-                [start] = 0
-            };
-
-            var fScore = new Dictionary<GridNode, float>
-            {
-                [start] = Heuristic(start, goal)
-            };
-
-            while (openSet.Count > 0)
-            {
-                GridNode current = openSet
-                    .OrderBy(n => fScore.GetValueOrDefault(n, float.MaxValue))
-                    .First();
-
-                if (current == goal)
-                    return ReconstructPath(cameFrom, current);
-
-                openSet.Remove(current);
-                closedSet.Add(current);
-
-                foreach (var neighbor in GetNeighbors(current, grids))
-                {
-                    if (neighbor.IsObstacle || closedSet.Contains(neighbor))
-                        continue;
-
-                    float tentativeG =
-                        gScore.GetValueOrDefault(current, float.MaxValue) + 1;
-
-                    if (tentativeG < gScore.GetValueOrDefault(neighbor, float.MaxValue))
-                    {
-                        cameFrom[neighbor] = current;
-                        gScore[neighbor] = tentativeG;
-                        fScore[neighbor] = tentativeG + Heuristic(neighbor, goal);
-
-                        if (!openSet.Contains(neighbor))
-                            openSet.Add(neighbor);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        static float Heuristic(GridNode a, GridNode b)
-        {
-            return Mathf.Abs(a.Position.x - b.Position.x) +
-                   Mathf.Abs(a.Position.y - b.Position.y);
-        }
-
-        static List<GridNode> GetNeighbors(
-            GridNode node,
-            List<GridNode> grid)
-        {
-            Vector2Int[] dirs =
-            {
-            Vector2Int.up,
-            Vector2Int.down,
-            Vector2Int.left,
-            Vector2Int.right
-        };
-
-            List<GridNode> neighbors = new();
-
-            foreach (var dir in dirs)
-            {
-                Vector2Int pos = node.Position + dir;
-
-                GridNode neighbor = grid.FirstOrDefault(
-                    n => n.Position == pos);
-
-                if (neighbor != null)
-                    neighbors.Add(neighbor);
-            }
-
-            return neighbors;
-        }
-
-        static List<GridNode> ReconstructPath(
-            Dictionary<GridNode, GridNode> cameFrom,
-            GridNode current)
-        {
-            List<GridNode> path = new() { current };
-
-            while (cameFrom.ContainsKey(current))
-            {
-                current = cameFrom[current];
-                path.Insert(0, current);
-            }
-
-            return path;
-        }
     }
 }
 
