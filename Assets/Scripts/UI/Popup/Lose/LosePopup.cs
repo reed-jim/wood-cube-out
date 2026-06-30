@@ -53,7 +53,7 @@ public class LosePopup : BasePopup
     {
         // GameStateLose.loseLevelEvent += OnLevelLose;
         GameStateLose.loseLevelEvent += OnLevelLose;
-        RevivePopup.reviveRefusedEvent += OnLevelLose;
+        //RevivePopup.reviveRefusedEvent += OnLevelLose;
         //GameplayScreen.skipLevelEvent += SkipLevel;
         Application.quitting += OnAppClosed;
         LevelLoader.startLevelEvent += ResetRevivePurchaseCount;
@@ -78,7 +78,7 @@ public class LosePopup : BasePopup
     {
         // GameStateLose.loseLevelEvent -= OnLevelLose;
         GameStateLose.loseLevelEvent -= OnLevelLose;
-        RevivePopup.reviveRefusedEvent -= OnLevelLose;
+        //RevivePopup.reviveRefusedEvent -= OnLevelLose;
         //GameplayScreen.skipLevelEvent -= SkipLevel;
         Application.quitting -= OnAppClosed;
         LevelLoader.startLevelEvent -= ResetRevivePurchaseCount;
@@ -340,7 +340,7 @@ public class LosePopup : BasePopup
 
     private void ReturnHome()
     {
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        //Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 
     #region SKIP LEVEL

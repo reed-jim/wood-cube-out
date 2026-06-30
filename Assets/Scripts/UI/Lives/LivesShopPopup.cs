@@ -125,6 +125,6 @@ public class LivesShopPopup : BasePopup
     {
         GamePersistentVariable.isLevelLost = false;
 
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        //Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 }

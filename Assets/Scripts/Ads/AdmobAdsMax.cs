@@ -1,14 +1,15 @@
-using UnityEngine;
-using System.Collections;
-using System;
-using System.Collections.Generic;
-using UnityEngine.Events;
+using AppsFlyerSDK;
+using Falcon.Modules.Core.ThirdParty.Mediation.Runtime;
+using Firebase.Analytics;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
-using Firebase.Analytics;
-using UnityEngine.SceneManagement;
-using AppsFlyerSDK;
 using GoogleMobileAds.Ump.Api;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class AdmobAdsMax : MonoBehaviour
 {
@@ -158,6 +159,8 @@ public class AdmobAdsMax : MonoBehaviour
             // MaxSdk.ShowMediationDebugger();
             InitializeBannerMax();
             InitializeMRecAds();
+            IsFsnCollapseEnabled();
+
         };
 
         SetupUserConsentUMP();
@@ -208,7 +211,16 @@ public class AdmobAdsMax : MonoBehaviour
         }
         //#endif
     }
+    public bool IsFsnCollapseEnabled()
+    {
+        // int levelRequired = RemoteConfigController.GetIntConfig(FirebaseConfig.COMPLETE_LEVEL_SHOW_COLLAPSE, 1);
+        // bool result = UseProfile.CompletedLevelsCount >= levelRequired;
+        // // Debug.Log($"[AdsController] IsFsnCollapseEnabled() = {result} (RC key: '{FirebaseConfig.USE_FSN_COLLAPSE}')");
+        // Debug.Log($"[Firebase] Connected: {AnalyticsController.firebaseInitialized} | CompletedLevels: {UseProfile.CompletedLevelsCount} | Required: {levelRequired} | show_collapse: {result}");
+        // return result;
 
+        return true;
+    }
     private void SetupUserConsentUMP()
     {
         GoogleMobileAds.Ump.Api.ConsentStatus status = ConsentInformation.ConsentStatus;
@@ -1634,6 +1646,54 @@ public class AdmobAdsMax : MonoBehaviour
     public void ResetAdsCooldown()
     {
         countdownAds = 0;
+    }
+    #endregion
+
+    #region FNS
+    private bool _isFsnCollapseShowing;
+    private Coroutine _fsnCollapseCoroutine;
+    public void ShowFsnCollapse()
+    {
+        if (GameController.Instance.isTest) return;
+        if (UserData.IsRemoveAds) return;
+        if (!IsFsnCollapseEnabled()) return;
+
+        Debug.Log("FSN_COLLAPSE======= ShowFsnCollapse called");
+        _isFsnCollapseShowing = true;
+
+        if (_fsnCollapseCoroutine != null)
+            StopCoroutine(_fsnCollapseCoroutine);
+        _fsnCollapseCoroutine = StartCoroutine(IEShowFsnCollapse());
+    }
+
+    private IEnumerator IEShowFsnCollapse()
+    {
+        yield return new WaitForSeconds(0.45f);
+        if (!_isFsnCollapseShowing) yield break;
+
+        Debug.Log("FSN_COLLAPSE======= IEShowFsnCollapse -> ShowTrackedNativeWithFallback(Banner)");
+        FsnAdManager.Instance.ShowTrackedNativeWithFallback(
+            FsnAdType.Collapsible,
+            onDone: () =>
+            {
+                ShowBanner();
+            }
+        );
+        _fsnCollapseCoroutine = null;
+    }
+
+    public void HideFsnCollapse()
+    {
+        if (!IsFsnCollapseEnabled()) return;
+
+        Debug.Log("FSN_COLLAPSE======= HideFsnCollapse called");
+        _isFsnCollapseShowing = false;
+
+        if (_fsnCollapseCoroutine != null)
+        {
+            StopCoroutine(_fsnCollapseCoroutine);
+            _fsnCollapseCoroutine = null;
+        }
     }
     #endregion
 }

@@ -36,7 +36,7 @@ public class PausePopup : BasePopup
     {
         ScriptableObjectInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
 
-        returnHomeButton.onClick.AddListener(ReturnHome);
+        //returnHomeButton.onClick.AddListener(ReturnHome);
         replayLevelButton.onClick.AddListener(Replay);
         turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
@@ -52,7 +52,7 @@ public class PausePopup : BasePopup
 
     private void OnEnable()
     {
-        
+
     }
 
     #region Overrdide Methods
@@ -92,7 +92,7 @@ public class PausePopup : BasePopup
             {
                 SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
             }
-            Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+            //Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
         }
     }
 

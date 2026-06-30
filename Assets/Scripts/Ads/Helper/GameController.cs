@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     [HideInInspector] public SceneType currentScene;
 
     [HideInInspector] public bool openFeatureBox = false;
+    [HideInInspector] public bool isTest = false;
 
     public static bool isFirstLoadLevel = false;
     protected void Start()
@@ -29,21 +30,21 @@ public class GameController : MonoBehaviour
 
         //MMVibrationManager.SetHapticsActive(useProfile.OnVibration);
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-//         ResetDay();
-//         UseProfile.NumPlayedInDay++;
+        //         ResetDay();
+        //         UseProfile.NumPlayedInDay++;
 
-//         GplayUMP.ShowConsentForm((consert) =>
-//         {
-//             UseProfile.GDPRContentValue = consert;
-// #if UNITY_IOS
-//  if(ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
-//             {
-//                 ATTrackingStatusBinding.RequestAuthorizationTracking();
-//             }
-// #endif
-//             InitLoadScene();
-//         });
-//         //notificationController.Initialize();
+        //         GplayUMP.ShowConsentForm((consert) =>
+        //         {
+        //             UseProfile.GDPRContentValue = consert;
+        // #if UNITY_IOS
+        //  if(ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
+        //             {
+        //                 ATTrackingStatusBinding.RequestAuthorizationTracking();
+        //             }
+        // #endif
+        //             InitLoadScene();
+        //         });
+        //         //notificationController.Initialize();
 
     }
     public void InitLoadScene()

@@ -32,7 +32,7 @@ public class BottomBarItem : MonoBehaviour
     {
         BottomBar.setHighlightPositionEvent += OnSwipe;
         CoinContainerUI.goToIAPShopEvent += GoToIAPShop;
-        LivesShopPopup.lackCoinReplenishLiveEvent += OnLackCoinReplenishLive;
+        //LivesShopPopup.lackCoinReplenishLiveEvent += OnLackCoinReplenishLive;
 
         selectButton.onClick.AddListener(Select);
 
@@ -45,7 +45,7 @@ public class BottomBarItem : MonoBehaviour
     {
         BottomBar.setHighlightPositionEvent -= OnSwipe;
         CoinContainerUI.goToIAPShopEvent -= GoToIAPShop;
-        LivesShopPopup.lackCoinReplenishLiveEvent -= OnLackCoinReplenishLive;
+        //LivesShopPopup.lackCoinReplenishLiveEvent -= OnLackCoinReplenishLive;
     }
 
     private void OnSwipe(float highlightPosition)

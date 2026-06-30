@@ -440,6 +440,11 @@ public class BoosterUI : MonoBehaviour
 
     private void UseHint()
     {
+        if (TileManager.Ins != null && TileManager.Ins.IsAnyThemeCompleting())
+        {
+            return;
+        }
+
         bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: 0);
 
         if (TileManager.Ins != null && !TileManager.Ins.CanUseHintBooster())

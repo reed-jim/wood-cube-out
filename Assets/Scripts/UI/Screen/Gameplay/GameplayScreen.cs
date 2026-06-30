@@ -167,7 +167,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     #endregion
     private void Update()
     {
-        if (TileManager.Ins != null && TileManager.Ins.isLevelActive)
+        if (TileManager.Ins != null && TileManager.Ins.levelItem != null)
         {
             UpdateTimerDisplay(TileManager.Ins.currentLevelTime);
         }

@@ -78,6 +78,8 @@ public class TileSlotContainer : MonoBehaviour
     private bool originalIsLocked;
     private Tween _highlightScaleTween;
     private Tween _highlightShakeTween;
+    [SerializeField] private Image wrongGlow;
+    private Tween _wrongShakeTween;
 
     void Awake()
     {
@@ -95,6 +97,11 @@ public class TileSlotContainer : MonoBehaviour
         //    canvas.overrideSorting = true;
         //    canvas.sortingOrder = 2;
         //}
+        if (wrongGlow == null)
+        {
+            wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
+        }
+        if (wrongGlow != null) wrongGlow.gameObject.SetActive(false);
     }
 
     public void SetOriginalLockState(bool locked)
@@ -134,7 +141,13 @@ public class TileSlotContainer : MonoBehaviour
         }
 
         if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
+        if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();
         if (glow != null) glow.gameObject.SetActive(false);
+        if (wrongGlow == null)
+        {
+            wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
+        }
+        if (wrongGlow != null) wrongGlow.gameObject.SetActive(false);
         if (unlockObject != null) unlockObject.transform.localScale = Vector3.one;
         category.text = "???";
         category.transform.localScale = Vector3.one;
@@ -240,6 +253,7 @@ public class TileSlotContainer : MonoBehaviour
                     string rndText = containerToUse.GetRandomTextOfCategory(itemCategory);
                     currentTileText.text = isTextUppercase ? rndText.ToUpper() : rndText;
                 }
+                AdjustFontSize(currentTileText, currentTileText.text);
             }
         }
         else
@@ -410,11 +424,13 @@ public class TileSlotContainer : MonoBehaviour
                 fakeTileText.gameObject.SetActive(true);
                 fakeTileText.text = currentTileText.text;
                 fakeTileText.color = Color.white;
+                AdjustFontSize(fakeTileText, fakeTileText.text);
 
                 currentTileText.gameObject.SetActive(true);
                 currentTileText.text = isTextUppercase ? tile.category.text.ToUpper() : tile.category.text;
                 Color txtColor = currentTileText.color;
                 currentTileText.color = new Color(txtColor.r, txtColor.g, txtColor.b, 0f);
+                AdjustFontSize(currentTileText, currentTileText.text);
 
                 Tween.Alpha(currentTileText, 1f, duration: 0.3f);
                 Tween.Alpha(fakeTileText, 0f, duration: 0.3f).OnComplete(() => fakeTileText.gameObject.SetActive(false));
@@ -850,5 +866,49 @@ public class TileSlotContainer : MonoBehaviour
         {
             onComplete?.Invoke();
         }
+    }
+
+    private void AdjustFontSize(TMP_Text textComponent, string text)
+    {
+        if (textComponent == null || string.IsNullOrEmpty(text)) return;
+
+        int length = text.Length;
+        float size;
+        if (length <= 3) size = 40f;
+        else if (length == 4) size = 38f;
+        else if (length == 5) size = 36f;
+        else if (length == 6) size = 34f;
+        else if (length == 7) size = 30f;
+        else size = 26f;
+
+        textComponent.fontSize = size;
+    }
+
+    public void ShowWrongFeedback()
+    {
+        if (wrongGlow == null)
+        {
+            wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
+        }
+
+        if (wrongGlow != null)
+        {
+            wrongGlow.gameObject.SetActive(true);
+            Color c = wrongGlow.color;
+            c.a = 1f;
+            wrongGlow.color = c;
+        }
+
+        if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();
+
+        // Rung nhẹ container
+        _wrongShakeTween = Tween.ShakeLocalPosition(transform, strength: new Vector3(10f, 10f, 0f), duration: 0.2f, frequency: 15)
+            .OnComplete(() =>
+            {
+                if (wrongGlow != null)
+                {
+                    wrongGlow.gameObject.SetActive(false);
+                }
+            });
     }
 }

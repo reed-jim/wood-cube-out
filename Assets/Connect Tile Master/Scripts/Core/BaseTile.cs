@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -12,6 +13,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] private Button selectButton;
     [SerializeField] private Image containerImage;
     [SerializeField] public Image glow;
+    [SerializeField] public Image wrongGlow;
+
     [SerializeField] public Image icon;
     [SerializeField] public TMP_Text category;
     [SerializeField] public TMP_Text txCount;
@@ -33,8 +36,11 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [Tooltip("Nếu true, chữ hiển thị sẽ tự động viết hoa toàn bộ")]
     [SerializeField] private bool isTextUppercase = true;
 
+    private float dragYOffset = 100f;
+
     private Tween _highlightScaleTween;
     private Tween _highlightShakeTween;
+    private Tween _wrongShakeTween;
 
 
     public static event Action<BaseTile> selectTileEvent;
@@ -102,6 +108,10 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     void Awake()
     {
         // selectButton.onClick.AddListener(Select);
+        if (wrongGlow == null)
+        {
+            wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
+        }
     }
 
     public void Init(ItemCategory itemCategory, int themeItemId, Sprite iconSprite, string textData = null)
@@ -120,6 +130,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             icon.gameObject.SetActive(false);
             category.gameObject.SetActive(true);
             category.text = isTextUppercase ? textData.ToUpper() : textData;
+            AdjustFontSize(category, textData);
         }
         else
         {
@@ -139,7 +150,13 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
         if (_highlightShakeTween.isAlive) _highlightShakeTween.Stop();
+        if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();
         if (glow != null) glow.gameObject.SetActive(false);
+        if (wrongGlow == null)
+        {
+            wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
+        }
+        if (wrongGlow != null) wrongGlow.gameObject.SetActive(false);
         transform.localScale = Vector3.one;
         if (ObjHide != null)
         {
@@ -152,7 +169,13 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         isMoving = true;
         if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
         if (_highlightShakeTween.isAlive) _highlightShakeTween.Stop();
+        if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();
         if (glow != null) glow.gameObject.SetActive(false);
+        if (wrongGlow == null)
+        {
+            wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
+        }
+        if (wrongGlow != null) wrongGlow.gameObject.SetActive(false);
         transform.localScale = Vector3.one;
     }
 
@@ -259,6 +282,17 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         {
             raycaster = gameObject.AddComponent<GraphicRaycaster>();
         }
+
+        // Apply visual offset on begin drag
+        Vector2 dragPosition = eventData.position + new Vector2(0f, dragYOffset);
+        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                (RectTransform)transform.parent,
+                dragPosition,
+                eventData.pressEventCamera,
+                out Vector3 worldPoint))
+        {
+            transform.position = worldPoint;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -266,9 +300,10 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (!_isDragging) return;
         if (IsMoving || IsOnSlot || IsDone) return;
 
+        Vector2 dragPosition = eventData.position + new Vector2(0f, dragYOffset);
         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
                 (RectTransform)transform.parent,
-                eventData.position,
+                dragPosition,
                 eventData.pressEventCamera,
                 out Vector3 worldPoint))
         {
@@ -288,7 +323,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         if (IsMoving || IsOnSlot || IsDone) return;
 
-        if (TileManager.Ins.IsHoveringValidContainer(this.itemCategory, eventData.position, eventData.pressEventCamera))
+        Vector2 dragPosition = eventData.position + new Vector2(0f, dragYOffset);
+        if (TileManager.Ins.IsHoveringValidContainer(this.itemCategory, dragPosition, eventData.pressEventCamera))
         {
             IsMoving = true;
 
@@ -302,6 +338,13 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         }
         else
         {
+            TileSlotContainer hoveredContainer = TileManager.Ins != null ? TileManager.Ins.GetHoveredContainer(dragPosition, eventData.pressEventCamera) : null;
+            bool isWrongTheme = hoveredContainer != null && hoveredContainer.ItemCategory != this.itemCategory;
+
+            //if (isWrongTheme)
+            //{
+            //}
+
             SoundManager.Instance.PlaySoundDropCardBackToTable();
             IsMoving = true;
             Tween.Scale(transform, Vector3.one, duration: 0.2f);
@@ -310,6 +353,13 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
                 IsMoving = false;
                 transform.SetSiblingIndex(_originalSiblingIndex);
                 ResetSorting();
+
+                if (isWrongTheme)
+                {
+                    hoveredContainer.ShowWrongFeedback();
+
+                    ShowWrongFeedback();
+                }
             });
         }
     }
@@ -441,9 +491,53 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             });
     }
 
+    private void AdjustFontSize(TMP_Text textComponent, string text)
+    {
+        if (textComponent == null || string.IsNullOrEmpty(text)) return;
+
+        int length = text.Length;
+        float size;
+        if (length <= 3) size = 40f;
+        else if (length == 4) size = 38f;
+        else if (length == 5) size = 36f;
+        else if (length == 6) size = 34f;
+        else if (length == 7) size = 30f;
+        else size = 26f;
+
+        textComponent.fontSize = size;
+    }
+
     public void SetFaceUp(bool isFaceUp)
     {
         if (ObjShow != null) ObjShow.gameObject.SetActive(isFaceUp);
         if (ObjHide != null) ObjHide.gameObject.SetActive(!isFaceUp);
+    }
+
+    public void ShowWrongFeedback()
+    {
+        if (wrongGlow == null)
+        {
+            wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
+        }
+
+        if (wrongGlow != null)
+        {
+            wrongGlow.gameObject.SetActive(true);
+            Color c = wrongGlow.color;
+            c.a = 1f;
+            wrongGlow.color = c;
+        }
+
+        if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();
+
+        // Rung nhẹ quân bài sau khi đã bay về chỗ trên grid
+        _wrongShakeTween = Tween.ShakeLocalPosition(transform, strength: new Vector3(10f, 10f, 0f), duration: 0.2f, frequency: 15)
+            .OnComplete(() =>
+            {
+                if (wrongGlow != null)
+                {
+                    wrongGlow.gameObject.SetActive(false);
+                }
+            });
     }
 }

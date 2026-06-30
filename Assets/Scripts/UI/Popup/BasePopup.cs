@@ -44,12 +44,12 @@ public class BasePopup : MonoBehaviour
         switchRouteEvent += OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
-        MenuScreen.switchRouteEvent += OnRouteSwitched;
+        //MenuScreen.switchRouteEvent += OnRouteSwitched;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
         LevelLoader.switchRouteEvent += OnRouteSwitched;
 
-        UserLivesUI.switchRouteEvent += OnRouteSwitched;
-        LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
+        //UserLivesUI.switchRouteEvent += OnRouteSwitched;
+        //LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -90,12 +90,12 @@ public class BasePopup : MonoBehaviour
         switchRouteEvent -= OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
-        MenuScreen.switchRouteEvent -= OnRouteSwitched;
+        //MenuScreen.switchRouteEvent -= OnRouteSwitched;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
 
-        UserLivesUI.switchRouteEvent -= OnRouteSwitched;
-        LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
+        //UserLivesUI.switchRouteEvent -= OnRouteSwitched;
+        //LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 

@@ -12,8 +12,8 @@ public class SoundManager : MonoBehaviour
 
     #region PRIVATE FIELD
     private List<Tween> _tweens;
-    private bool _isEnableGameSound;
-    private bool _isEnableGameMusic;
+    private bool _isEnableGameSound = true;
+    private bool _isEnableGameMusic = true;
     #endregion
 
     void Awake()
@@ -198,7 +198,7 @@ public class SoundManager : MonoBehaviour
 
         breakObjectSound.Play();
     }
-    
+
     public void PlaySoundGenerateTask()
     {
         if (!_isEnableGameSound)
@@ -210,7 +210,7 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
-    
+
     public void PlaySoundCompleteTask()
     {
         if (!_isEnableGameSound)
@@ -222,7 +222,7 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
-    
+
     public void PlaySoundChainBreak()
     {
         if (!_isEnableGameSound)
@@ -234,7 +234,7 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
-    
+
     public void PlaySoundRustyBreak()
     {
         if (!_isEnableGameSound)

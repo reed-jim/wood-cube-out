@@ -15,6 +15,6 @@ public class LevelComingSoonPopup : BasePopup
     {
         returnHomeButton.interactable = false;
 
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        //Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 {
-    private float scaleMultiplier = 1.025f;
+    private float scaleMultiplier = 1.15f;
     private float animationDuration = 0.1f;
 
     [Header("CUSTOMIZE")]

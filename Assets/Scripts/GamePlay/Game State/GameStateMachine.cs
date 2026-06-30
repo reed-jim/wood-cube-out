@@ -34,12 +34,12 @@ namespace NamPhuThuy.GamePlay
         private void Awake()
         {
             LevelLoader.startLevelEvent += EnterPlayingState;
-            ScrewManager.winLevelEvent += EnterWinState;
+            //ScrewManager.winLevelEvent += EnterWinState;
             TileManager.winLevelEvent += EnterWinState;
-            ScrewBoxManager.loseLevelEvent += EnterLoseState;
+            //ScrewBoxManager.loseLevelEvent += EnterLoseState;
             SituationManager.loseLevelEvent += EnterLoseState;
             TileManager.loseLevelEvent += EnterLoseState;
-            RevivePopup.reviveEvent += OnRevived;
+            //RevivePopup.reviveEvent += OnRevived;
             LosePopup.buyTimeReviveEvent += EnterPlayingState;
 
             ChangeState(new GameStatePlaying());
@@ -48,12 +48,12 @@ namespace NamPhuThuy.GamePlay
         void OnDestroy()
         {
             LevelLoader.startLevelEvent -= EnterPlayingState;
-            ScrewManager.winLevelEvent -= EnterWinState;
+            //ScrewManager.winLevelEvent -= EnterWinState;
             TileManager.winLevelEvent -= EnterWinState;
-            ScrewBoxManager.loseLevelEvent -= EnterLoseState;
+            //ScrewBoxManager.loseLevelEvent -= EnterLoseState;
             SituationManager.loseLevelEvent -= EnterLoseState;
             TileManager.loseLevelEvent -= EnterLoseState;
-            RevivePopup.reviveEvent -= OnRevived;
+            //RevivePopup.reviveEvent -= OnRevived;
             LosePopup.buyTimeReviveEvent -= EnterPlayingState;
         }
 

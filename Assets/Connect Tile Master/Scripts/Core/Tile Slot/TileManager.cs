@@ -15,11 +15,13 @@ using static GameEnum;
 public class TileManager : Singleton<TileManager>
 {
     [SerializeField] private List<TileSlotContainer> tileSlotContainers;
+    public List<TileSlotContainer> TileSlotContainers => tileSlotContainers;
     [SerializeField] private List<TileSlot> additionalTileSlots;
     [SerializeField] public List<BaseTile> tiles;
     [SerializeField] private Grid[] grids;
     [SerializeField] private TileIconContainer tileIconContainer;
     [SerializeField] private Image upToAll;
+    public Image UpToAll => upToAll;
     [SerializeField] private RectTransform head;
     public RectTransform tileContainer;
     public TMP_Text setCountText;
@@ -32,6 +34,7 @@ public class TileManager : Singleton<TileManager>
     public List<ItemCategory> itemCategoryPool;
     private int totalSet;
     private int remainingSet;
+    private int remainingSetToComplete;
     public int remainingSlotContainer;
     private float highestYGridPosition;
     public LevelItem levelItem;
@@ -75,6 +78,23 @@ public class TileManager : Singleton<TileManager>
     public static event Action updateActiveSlotsEvent;
 
     public int NumLockedTileSlotContainer => tileSlotContainers.Count(item => item.isLocked);
+
+    public bool IsAnyThemeCompleting()
+    {
+        if (tileSlotContainers == null) return false;
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            var container = tileSlotContainers[i];
+            if (container != null && !container.isLocked && !container.isHidden)
+            {
+                if (container.isCompleted || container.isMoving)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public bool CanUseUnlockThemeBooster()
     {
@@ -295,6 +315,12 @@ public class TileManager : Singleton<TileManager>
                                     startTime = Time.unscaledTime;
                                 }
                             }
+
+                            if (NoAdsLoadedPopup.IsShown)
+                            {
+                                startTime = Time.unscaledTime;
+                            }
+
                             yield return null;
                         }
 
@@ -350,6 +376,12 @@ public class TileManager : Singleton<TileManager>
                                 startTime = Time.unscaledTime;
                             }
                         }
+
+                        if (NoAdsLoadedPopup.IsShown)
+                        {
+                            startTime = Time.unscaledTime;
+                        }
+
                         yield return null;
                     }
 
@@ -371,7 +403,7 @@ public class TileManager : Singleton<TileManager>
 
     private void SetupLevelInternal(LevelItem levelItem)
     {
-        isLevelActive = true;
+        isLevelActive = false;
         _hasTriggeredWin = false;
         if (levelItem.timeLimit > 0)
         {
@@ -459,11 +491,17 @@ public class TileManager : Singleton<TileManager>
 
         if (levelItem.isTutorial)
         {
-            //TutorialLevelOne.Ins.StartTutorial();
+            if (TutorialLevelOne.Ins != null)
+            {
+                TutorialLevelOne.Ins.StartTutorial();
+            }
         }
         else
         {
-            //TutorialLevelOne.Ins.HideTutorial();
+            if (TutorialLevelOne.Ins != null)
+            {
+                TutorialLevelOne.Ins.HideTutorial();
+            }
         }
 
         for (int i = 0; i < tileSlotContainers.Count; i++)
@@ -841,7 +879,8 @@ public class TileManager : Singleton<TileManager>
     {
         tileSlotContainer.isCompleted = true;
 
-        if (remainingSet == 1)
+        remainingSetToComplete--;
+        if (remainingSetToComplete <= 0)
         {
             isLevelActive = false;
         }
@@ -996,6 +1035,28 @@ public class TileManager : Singleton<TileManager>
 
         return false;
     }
+
+    public TileSlotContainer GetHoveredContainer(Vector2 screenPoint, Camera camera)
+    {
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+            if (tileSlotContainer.isLocked || tileSlotContainer.isHidden || tileSlotContainer.isMoving)
+            {
+                continue;
+            }
+
+            RectTransform rectTransform = tileSlotContainer.GetComponent<RectTransform>();
+            if (rectTransform != null && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, screenPoint, camera))
+            {
+                return tileSlotContainer;
+            }
+        }
+
+        return null;
+    }
+
 
     private void MoveTileToAdditionalSlot(BaseTile tile, Action onCompleteAction)
     {
@@ -1177,6 +1238,10 @@ public class TileManager : Singleton<TileManager>
                     tile.transform.position = CardStockPile.Ins.transform.position;
 
                     ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
+                    if (levelItem.isTutorial && TutorialLevelOne.Ins != null && TutorialLevelOne.Ins.gameObject.activeSelf)
+                    {
+                        nextCategory = TutorialLevelOne.Ins.GetTutorialForcedCategory(nextCategory);
+                    }
 
                     InitTileWithSpriteOrString(tile, nextCategory);
 
@@ -1254,6 +1319,7 @@ public class TileManager : Singleton<TileManager>
 
         this.totalSet = totalSet;
         remainingSet = totalSet;
+        remainingSetToComplete = totalSet;
         remainingSlotContainer = totalSet - 2;
 
         UpdateSetCountText();
@@ -1428,7 +1494,10 @@ public class TileManager : Singleton<TileManager>
             yield return new WaitForSeconds(0.15f);
         }
 
+        yield return new WaitForSeconds(0.15f);
+
         _isDealingStartCards = false;
+        isLevelActive = true;
     }
     #endregion
 
@@ -2202,6 +2271,24 @@ public class TileManager : Singleton<TileManager>
     {
         if (remainingSet <= 0)
         {
+            bool anySlotMoving = false;
+            if (tileSlotContainers != null)
+            {
+                for (int i = 0; i < tileSlotContainers.Count; i++)
+                {
+                    if (tileSlotContainers[i] != null && tileSlotContainers[i].isMoving)
+                    {
+                        anySlotMoving = true;
+                        break;
+                    }
+                }
+            }
+
+            if (anySlotMoving)
+            {
+                return;
+            }
+
             if (!_hasTriggeredWin)
             {
                 _hasTriggeredWin = true;

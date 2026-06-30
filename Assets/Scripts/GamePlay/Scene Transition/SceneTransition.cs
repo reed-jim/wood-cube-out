@@ -24,7 +24,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private RectTransform rotatingLoadingIcon;
     [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _loadingLevelInProgressCoroutine;
-    
+
     private CanvasGroup _rootCanvasGroup;
 
     [SerializeField] private IntVariable currentLevel;
@@ -275,13 +275,11 @@ public class SceneTransition : MonoBehaviour
 
     private IEnumerator RotatingIcon()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
-
         while (true)
         {
-            rotatingLoadingIcon.eulerAngles -= new Vector3(0, 0, 8);
+            rotatingLoadingIcon.Rotate(0, 0, -480 * Time.deltaTime);
 
-            yield return waitForSeconds;
+            yield return null;
         }
     }
     #endregion
