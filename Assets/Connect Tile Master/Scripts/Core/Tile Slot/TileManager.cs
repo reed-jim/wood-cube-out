@@ -491,9 +491,22 @@ public class TileManager : Singleton<TileManager>
 
         if (levelItem.isTutorial)
         {
-            if (TutorialLevelOne.Ins != null)
+            if (GamePersistentVariable.currentLevel == 2)
             {
-                TutorialLevelOne.Ins.StartTutorial();
+                TutorialLevelTwo tut2 = TutorialLevelTwo.Ins != null ? TutorialLevelTwo.Ins : FindObjectOfType<TutorialLevelTwo>(true);
+                if (tut2 != null)
+                {
+                    tut2.gameObject.SetActive(true);
+                    tut2.StartTutorial();
+                }
+            }
+            else
+            {
+                TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
+                if (tut1 != null)
+                {
+                    tut1.gameObject.SetActive(true);
+                }
             }
         }
         else
@@ -501,6 +514,11 @@ public class TileManager : Singleton<TileManager>
             if (TutorialLevelOne.Ins != null)
             {
                 TutorialLevelOne.Ins.HideTutorial();
+            }
+            
+            if (TutorialLevelTwo.Ins != null)
+            {
+                TutorialLevelTwo.Ins.HideTutorial();
             }
         }
 
@@ -1238,9 +1256,24 @@ public class TileManager : Singleton<TileManager>
                     tile.transform.position = CardStockPile.Ins.transform.position;
 
                     ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
-                    if (levelItem.isTutorial && TutorialLevelOne.Ins != null && TutorialLevelOne.Ins.gameObject.activeSelf)
+                    if (levelItem.isTutorial)
                     {
-                        nextCategory = TutorialLevelOne.Ins.GetTutorialForcedCategory(nextCategory);
+                        if (GamePersistentVariable.currentLevel == 2)
+                        {
+                            TutorialLevelTwo tut2 = TutorialLevelTwo.Ins != null ? TutorialLevelTwo.Ins : FindObjectOfType<TutorialLevelTwo>(true);
+                            if (tut2 != null && tut2.gameObject.activeSelf)
+                            {
+                                nextCategory = tut2.GetTutorialForcedCategory(nextCategory);
+                            }
+                        }
+                        else
+                        {
+                            TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
+                            if (tut1 != null && tut1.gameObject.activeSelf)
+                            {
+                                nextCategory = tut1.GetTutorialForcedCategory(nextCategory);
+                            }
+                        }
                     }
 
                     InitTileWithSpriteOrString(tile, nextCategory);
