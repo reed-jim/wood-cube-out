@@ -21,6 +21,7 @@ public class BoosterUI : MonoBehaviour
 
     [SerializeField] private Button addMoreScrewPortButton;
     [SerializeField] private Button breakObjectButton;
+    public Button ShuffleButton => breakObjectButton;
     [SerializeField] private Button clearAllScrewPortsButton;
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
     [SerializeField] private Button freezeTimeButton;

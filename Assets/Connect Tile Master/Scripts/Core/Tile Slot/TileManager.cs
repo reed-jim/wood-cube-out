@@ -44,6 +44,9 @@ public class TileManager : Singleton<TileManager>
     private bool _hasTriggeredWin;
     [HideInInspector] public bool isTimeFrozen;
     private Tween freezeTimeTween;
+    private Tween gridPositionTween;
+
+    public static ItemCategory targetThemeLevel10 = ItemCategory.None;
 
     public bool IsShuffling { get; private set; }
     private bool _isDealingStartCards;
@@ -525,6 +528,15 @@ public class TileManager : Singleton<TileManager>
                     tut7.StartTutorial();
                 }
             }
+            else if (GamePersistentVariable.currentLevel == 10)
+            {
+                TutorialLevelTen tut10 = TutorialLevelTen.Ins != null ? TutorialLevelTen.Ins : FindObjectOfType<TutorialLevelTen>(true);
+                if (tut10 != null)
+                {
+                    tut10.gameObject.SetActive(true);
+                    tut10.StartTutorial();
+                }
+            }
         }
         else
         {
@@ -546,6 +558,11 @@ public class TileManager : Singleton<TileManager>
             if (TutorialLevelSeven.Ins != null)
             {
                 TutorialLevelSeven.Ins.HideTutorial();
+            }
+
+            if (TutorialLevelTen.Ins != null)
+            {
+                TutorialLevelTen.Ins.HideTutorial();
             }
         }
 
@@ -700,6 +717,15 @@ public class TileManager : Singleton<TileManager>
         {
             result.Remove(ItemCategory.Number_5);
             result.Insert(0, ItemCategory.Number_5);
+        }
+
+        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 10)
+        {
+            if (targetThemeLevel10 != ItemCategory.None)
+            {
+                result.Remove(targetThemeLevel10);
+                result.Insert(0, targetThemeLevel10);
+            }
         }
 
         return result;
@@ -958,6 +984,31 @@ public class TileManager : Singleton<TileManager>
             for (int i = 0; i < number5Count; i++)
             {
                 itemCategoryPool.Insert(0, ItemCategory.Number_5);
+            }
+        }
+        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 10)
+        {
+            if (itemCategoryPool.Count > 0)
+            {
+                ItemCategory targetTheme = itemCategoryPool[0];
+                targetThemeLevel10 = targetTheme;
+                
+                int gridSize = (levelItem.initRow > 0 && levelItem.initColumn > 0) ? levelItem.initRow * levelItem.initColumn : 16;
+                int removedCount = itemCategoryPool.RemoveAll(c => c == targetTheme);
+                
+                int insertPos = Mathf.Min(gridSize - 2, itemCategoryPool.Count);
+                if (insertPos < 0) insertPos = 0;
+                
+                int numInGrid = Mathf.Min(2, removedCount);
+                for (int i = 0; i < numInGrid; i++)
+                {
+                    itemCategoryPool.Insert(insertPos, targetTheme);
+                }
+                
+                for (int i = numInGrid; i < removedCount; i++)
+                {
+                    itemCategoryPool.Add(targetTheme);
+                }
             }
         }
 
@@ -2081,6 +2132,20 @@ public class TileManager : Singleton<TileManager>
 
         shuffledGridCategories.Shuffle();
         tilesToShuffle.Shuffle();
+
+        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 10)
+        {
+            if (targetThemeLevel10 != ItemCategory.None)
+            {
+                // Move targetTheme to front of shuffledGridCategories
+                List<ItemCategory> targetCats = shuffledGridCategories.Where(c => c == targetThemeLevel10).ToList();
+                shuffledGridCategories.RemoveAll(c => c == targetThemeLevel10);
+                shuffledGridCategories.InsertRange(0, targetCats);
+                
+                // Sort tilesToShuffle by y position descending so first elements are at the top row
+                tilesToShuffle = tilesToShuffle.OrderByDescending(t => t.transform.localPosition.y).ToList();
+            }
+        }
 
         List<ShuffleTargetInfo> shuffleTargets = new List<ShuffleTargetInfo>();
         Dictionary<ItemCategory, List<int>> assignedGridIds = new Dictionary<ItemCategory, List<int>>();
