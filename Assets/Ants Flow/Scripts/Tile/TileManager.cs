@@ -162,6 +162,24 @@ namespace AntsFlow
                 Vector2Int.down
             };
 
+            Vector2Int[] leftHorizontalPriorityDirections =
+            {
+                Vector2Int.left,
+                Vector2Int.right,
+                Vector2Int.up,
+                Vector2Int.down
+            };
+
+            Vector2Int[] rightHorizontalPriorityDirections =
+            {
+                Vector2Int.right,
+                Vector2Int.left,
+                Vector2Int.up,
+                Vector2Int.down
+            };
+
+            int halfWidth = width / 2;
+
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -170,10 +188,17 @@ namespace AntsFlow
 
                     Vector2Int[] directions = verticalPrioritydirections;
 
-                    if (y < 5)
-                    {
-                        directions = horizontalPriorityDirections;
-                    }
+                    // if (y < 5)
+                    // {
+                    //     if (x < halfWidth)
+                    //     {
+                    //         directions = leftHorizontalPriorityDirections;
+                    //     }
+                    //     else
+                    //     {
+                    //         directions = rightHorizontalPriorityDirections;
+                    //     }
+                    // }
 
                     foreach (Vector2Int dir in directions)
                     {
@@ -188,6 +213,14 @@ namespace AntsFlow
                         if (x >= width - 1 - 1 - numExtraColumn / 4 && x <= width - 1 - 1)
                         {
                             if (dir == Vector2Int.up || dir == Vector2Int.down)
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (y >= height - 1 - 1 - numExtraRow / 4 && y <= height - 1)
+                        {
+                            if (dir == Vector2Int.right || dir == Vector2Int.left)
                             {
                                 continue;
                             }
@@ -701,20 +734,29 @@ namespace AntsFlow
         {
             // Node start = bottomLeftMostNode;
 
-            // Node start = nodes
-            //     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
-            //     .First();
-
             Node start;
 
-            if (antBoxPosition.x < 0)
+            if (Mathf.Abs(antBoxPosition.x) < 3)
             {
-                start = bottomLeftMostNode;
+                start = nodes
+                    .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
+                    .First();
             }
             else
             {
-                start = bottomRightMostNode;
+                if (antBoxPosition.x > 0)
+                {
+                    start = bottomRightMostNode;
+                }
+                else
+                {
+                    start = bottomLeftMostNode;
+                }
             }
+
+            // start = nodes
+            //         .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
+            //         .First();
 
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();
@@ -939,7 +981,7 @@ namespace AntsFlow
             return path;
         }
 
-        public List<Node> FindPath(BaseTile target)
+        public List<Node> FindPath(BaseTile target, Vector2 antBoxPosition)
         {
             Vector3 tilePosition = GetTilePosition(target);
 
@@ -1071,7 +1113,7 @@ namespace AntsFlow
                     !tile.isLocked
                 )
                 {
-                    tile.path = FindPath(tile);
+                    // tile.path = FindPath(tile);
 
                     if (tile.IsMovable())
                     {
@@ -1121,7 +1163,7 @@ namespace AntsFlow
                     !tile.isLocked
                 )
                 {
-                    tile.path = FindPath(tile);
+                    // tile.path = FindPath(tile);
 
                     if (tile.IsMovable())
                     {
