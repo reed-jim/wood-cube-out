@@ -475,8 +475,8 @@ namespace AntsFlow
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
             float moveSpeed = 5f;
-            float zigZagWidth = 0.15f;
-            float zigZagFrequency = 1f;
+            float zigZagWidth = 0.5f;
+            float zigZagFrequency = 0.5f;
             float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 1f);
 
             // if (count == 1)
@@ -648,12 +648,24 @@ namespace AntsFlow
             debugMovePoints.AddRange(points);
 #endif
 
+            float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 1.6f);
+
             for (int i = 0; i < points.Count; i++)
             {
                 int index = i;
 
                 Vector3 start = transform.position;
                 Vector3 end = points[i];
+
+                if (Mathf.Abs(end.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f)
+                {
+                    end = end.AddX(-randomWiggleMagnitude);
+                }
+
+                if (Mathf.Abs(end.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f)
+                {
+                    end = end.AddX(randomWiggleMagnitude);
+                }
 
                 direction = (end - start).normalized;
 
@@ -699,18 +711,20 @@ namespace AntsFlow
 
                     Vector3 pos;
 
-                    if (isZigzag)
-                    {
-                        float offset =
-                            Mathf.Sin(t * zigZagFrequency * Mathf.PI * 2f) *
-                            zigZagWidth;
+                    // if (isZigzag)
+                    // {
+                    //     float offset =
+                    //         Mathf.Sin(timePassed / totalTime * zigZagFrequency * Mathf.PI * 2f) *
+                    //         zigZagWidth;
 
-                        pos = Vector3.Lerp(start, end, t) + perp * offset;
-                    }
-                    else
-                    {
-                        pos = Vector3.Lerp(start, end, t);
-                    }
+                    //     pos = Vector3.Lerp(start, end, t) + perp * offset;
+                    // }
+                    // else
+                    // {
+                    //     pos = Vector3.Lerp(start, end, t);
+                    // }
+
+                    pos = Vector3.Lerp(start, end, t);
 
                     transform.position = pos.ChangeZ(-3 - 0.001f * siblingIndex);
                     Rotate(progress: t);
