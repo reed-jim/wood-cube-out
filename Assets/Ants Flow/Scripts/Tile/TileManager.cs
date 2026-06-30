@@ -118,8 +118,8 @@ namespace AntsFlow
             float xMax = tiles.Max(tile => GetTilePosition(tile).x);
 
             // Grid size
-            int numExtraColumn = 6;
-            int numExtraRow = 6;
+            int numExtraColumn = 2;
+            int numExtraRow = 2;
             int width = Mathf.RoundToInt((xMax - xMin) / tileDistance.x) + 1 + numExtraColumn;
             int height = Mathf.RoundToInt((yMax - yMin) / tileDistance.y) + 1 + numExtraRow;
 
@@ -131,11 +131,35 @@ namespace AntsFlow
             {
                 for (int x = 0; x < width; x++)
                 {
+                    float extraColumn = 0;
+                    float extraRow = 0;
+                    float extra = 1.5f;
+
+                    if (x == 0)
+                    {
+                        extraColumn = -extra;
+                    }
+
+                    if (x == width - 1)
+                    {
+                        extraColumn = extra;
+                    }
+
+                    if (y == 0)
+                    {
+                        extraRow = -extra;
+                    }
+
+                    if (y == height - 1)
+                    {
+                        extraRow = extra;
+                    }
+
                     Node node = new Node
                     {
                         initialPosition = new Vector2(
-                            xMin + (x - numExtraColumn / 2) * tileDistance.x,
-                            yMin + (y - numExtraRow / 2) * tileDistance.y),
+                            extraColumn + xMin + (x - numExtraColumn / 2) * tileDistance.x,
+                            extraRow + yMin + (y - numExtraRow / 2) * tileDistance.y),
                         tile = null,
                         neighbors = new List<Node>()
                     };
@@ -188,20 +212,28 @@ namespace AntsFlow
 
                     Vector2Int[] directions = verticalPrioritydirections;
 
-                    // if (y < 5)
-                    // {
-                    //     if (x < halfWidth)
-                    //     {
-                    //         directions = leftHorizontalPriorityDirections;
-                    //     }
-                    //     else
-                    //     {
-                    //         directions = rightHorizontalPriorityDirections;
-                    //     }
-                    // }
+                    if (y == 0)
+                    {
+                        if (x < halfWidth)
+                        {
+                            directions = leftHorizontalPriorityDirections;
+                        }
+                        else
+                        {
+                            directions = rightHorizontalPriorityDirections;
+                        }
+                    }
 
                     foreach (Vector2Int dir in directions)
                     {
+                        // if (x > 0 && x < width - 1 && y > 6)
+                        // {
+                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
+                        //     {
+                        //         continue;
+                        //     }
+                        // }
+
                         if (x >= 1 && x <= 1 + numExtraColumn / 4)
                         {
                             if (dir == Vector2Int.up || dir == Vector2Int.down)
@@ -225,25 +257,6 @@ namespace AntsFlow
                                 continue;
                             }
                         }
-
-                        // if (x == numExtraColumn / 4 || x == width - 1 - numExtraColumn / 4)
-                        // {
-                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
-                        //     {
-                        //         continue;
-                        //     }
-                        // }
-
-                        // if (x > 0 && x < width - 1)
-                        // {
-                        //     if (y > 3 && y < height - 4)
-                        //     {
-                        //         if (dir == Vector2Int.up || dir == Vector2Int.down)
-                        //         {
-                        //             continue;
-                        //         }
-                        //     }
-                        // }
 
                         int nx = x + dir.x;
                         int ny = y + dir.y;
@@ -732,31 +745,20 @@ namespace AntsFlow
 
         public List<BaseTile> GetFirstNMovableTiles(Color faction, int count, Vector2 antBoxPosition)
         {
-            // Node start = bottomLeftMostNode;
-
-            Node start;
-
-            if (Mathf.Abs(antBoxPosition.x) < 3)
-            {
-                start = nodes
+            Node start = nodes
                     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
                     .First();
-            }
-            else
-            {
-                if (antBoxPosition.x > 0)
-                {
-                    start = bottomRightMostNode;
-                }
-                else
-                {
-                    start = bottomLeftMostNode;
-                }
-            }
 
-            // start = nodes
-            //         .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
-            //         .First();
+            // Node start;
+
+            // if (antBoxPosition.x > 0)
+            // {
+            //     start = bottomRightMostNode;
+            // }
+            // else
+            // {
+            //     start = bottomLeftMostNode;
+            // }
 
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();

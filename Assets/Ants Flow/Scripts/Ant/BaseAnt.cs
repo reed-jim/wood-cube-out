@@ -506,19 +506,14 @@ namespace AntsFlow
 
                     points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
                     points.Insert(1, TileManager.Ins.antNest.position.ChangeY(-3).ChangeX(sign * 3f));
-                    points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
+                    // points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
                 }
                 else
                 {
-                    points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
+                    // points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
                 }
 
                 // points = Simplify(points);
-
-                if (Vector2.Distance(points[0], points[1]) < 0.5f)
-                {
-                    points.RemoveAt(1);
-                }
             }
 
             if (count == 2)
@@ -556,9 +551,11 @@ namespace AntsFlow
 
                 List<Vector3> pointInFirstRow = new List<Vector3>();
 
+                float minY = points.Min(item => item.y);
+
                 for (int i = 0; i < points.Count; i++)
                 {
-                    if (Mathf.Abs(points[i].y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f)
+                    if (Mathf.Abs(points[i].y - minY) < 0.1f)
                     {
                         pointInFirstRow.Add(points[i]);
                     }
