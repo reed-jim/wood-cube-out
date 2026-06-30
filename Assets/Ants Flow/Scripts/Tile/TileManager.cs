@@ -27,6 +27,7 @@ namespace AntsFlow
         public bool isStarter;
         public bool isObstacle;
         public int VisitId;
+        public int EdgePriority;
 
         // public int GCost;
         // public float HCost;
@@ -73,9 +74,10 @@ namespace AntsFlow
         public List<Node> bottomMostNodes;
         public List<Node> leftMostNodes;
         public List<Node> rightMostNodes;
+        private float boardMinX, boardMaxX, boardMinY, boardMaxY;
 
         private int currentSearchId;
-        private readonly Queue<Node> queue = new();
+        // private readonly Queue<Node> queue = new();
         #endregion
 
 
@@ -215,57 +217,25 @@ namespace AntsFlow
 
                     Vector2Int[] directions = verticalPrioritydirections;
 
-                    if (y == 0)
-                    {
-                        if (x < halfWidth)
-                        {
-                            directions = leftHorizontalPriorityDirections;
-                        }
-                        else
-                        {
-                            directions = rightHorizontalPriorityDirections;
-                        }
-                    }
+                    // if (y == 0)
+                    // {
+                    //     if (x < halfWidth)
+                    //     {
+                    //         directions = leftHorizontalPriorityDirections;
+                    //     }
+                    //     else
+                    //     {
+                    //         directions = rightHorizontalPriorityDirections;
+                    //     }
+                    // }
 
-                    if (x == 0 || x == width - 1)
-                    {
-                        directions = verticalPrioritydirections;
-                    }
+                    // if (x == 0 || x == width - 1)
+                    // {
+                    //     directions = verticalPrioritydirections;
+                    // }
 
                     foreach (Vector2Int dir in directions)
                     {
-                        // if (x > 0 && x < width - 1 && y > 6)
-                        // {
-                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
-                        //     {
-                        //         continue;
-                        //     }
-                        // }
-
-                        // if (x >= 1 && x <= 1 + numExtraColumn / 4)
-                        // {
-                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
-                        //     {
-                        //         continue;
-                        //     }
-                        // }
-
-                        // if (x >= width - 1 - 1 - numExtraColumn / 4 && x <= width - 1 - 1)
-                        // {
-                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
-                        //     {
-                        //         continue;
-                        //     }
-                        // }
-
-                        // if (y >= height - 1 - 1 - numExtraRow / 4 && y <= height - 1)
-                        // {
-                        //     if (dir == Vector2Int.right || dir == Vector2Int.left)
-                        //     {
-                        //         continue;
-                        //     }
-                        // }
-
                         int nx = x + dir.x;
                         int ny = y + dir.y;
 
@@ -333,197 +303,20 @@ namespace AntsFlow
                 }
             }
 
-            // for (int i = 0; i < nodes.Count; i++)
-            // {
-            //     Node nodeFromTile = nodes[i];
 
-            // if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
-            // {
-            //     Node node = new Node();
-            //     node.initialPosition = nodeFromTile.initialPosition.AddY(-tileSize);
-            //     node.neighbors = new List<Node>();
-            //     node.neighbors.Add(nodeFromTile);
-            //     nodeFromTile.neighbors.Add(node);
-            //     addedNodes.Add(node);
+            foreach (var node in nodes)
+            {
+                node.EdgePriority = node.neighbors.Count;
+            }
 
-            //     for (int j = 0; j < bottomMostNodes.Count; j++)
-            //     {
-            //         bottomMostNodes[j].neighbors.Add(node);
-            //         node.neighbors.Add(bottomMostNodes[j]);
-            //     }
+            boardMinX = nodes.Min(n => n.initialPosition.x);
+            boardMaxX = nodes.Max(n => n.initialPosition.x);
+            boardMinY = nodes.Min(n => n.initialPosition.y);
+            boardMaxY = nodes.Max(n => n.initialPosition.y);
 
-            //     bottomMostNodes.Add(node);
-            // }
-            //     if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
-            //     {
-            //         Node node = new Node();
-            //         node.initialPosition = nodeFromTile.initialPosition.AddY(tileSize);
-            //         node.neighbors = new List<Node>();
-            //         node.neighbors.Add(nodeFromTile);
-            //         nodeFromTile.neighbors.Add(node);
-            //         addedNodes.Add(node);
-
-            //         for (int j = 0; j < topMostNodes.Count; j++)
-            //         {
-            //             topMostNodes[j].neighbors.Add(node);
-            //             node.neighbors.Add(topMostNodes[j]);
-            //         }
-
-            //         topMostNodes.Add(node);
-            //     }
-            // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin))
-            // {
-            //     Node node = new Node();
-            //     node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize);
-            //     node.neighbors = new List<Node>();
-            //     node.neighbors.Add(nodeFromTile);
-            //     nodeFromTile.neighbors.Add(node);
-            //     addedNodes.Add(node);
-
-            //     for (int j = 0; j < leftMostNodes.Count; j++)
-            //     {
-            //         leftMostNodes[j].neighbors.Add(node);
-            //         node.neighbors.Add(leftMostNodes[j]);
-            //     }
-
-            //     leftMostNodes.Add(node);
-            // }
-            //     if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax))
-            //     {
-            //         Node node = new Node();
-            //         node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize);
-            //         node.neighbors = new List<Node>();
-            //         node.neighbors.Add(nodeFromTile);
-            //         nodeFromTile.neighbors.Add(node);
-            //         addedNodes.Add(node);
-
-            //         for (int j = 0; j < rightMostNodes.Count; j++)
-            //         {
-            //             rightMostNodes[j].neighbors.Add(node);
-            //             node.neighbors.Add(rightMostNodes[j]);
-            //         }
-
-            //         rightMostNodes.Add(node);
-            //     }
-            // }
-
-
-
-            // // Bottom Left
-            // Node bottomLeft = new Node
-            // {
-            //     initialPosition = new Vector3(xMin - tileSize, yMin - tileSize),
-            //     neighbors = new List<Node>()
-            // };
-
-            // Connect(bottomLeft, FindNodeAt(new Vector3(xMin - tileSize, yMin)));
-            // Connect(bottomLeft, FindNodeAt(new Vector3(xMin, yMin - tileSize)));
-            // Connect(bottomLeft, FindNodeAt(new Vector3(xMin, yMin)));
-
-            // addedNodes.Add(bottomLeft);
-
-            // // Bottom Right
-            // Node bottomRight = new Node
-            // {
-            //     initialPosition = new Vector3(xMax + tileSize, yMin - tileSize),
-            //     neighbors = new List<Node>()
-            // };
-
-            // Connect(bottomRight, FindNodeAt(new Vector3(xMax + tileSize, yMin)));
-            // Connect(bottomRight, FindNodeAt(new Vector3(xMax, yMin - tileSize)));
-            // Connect(bottomRight, FindNodeAt(new Vector3(xMax, yMin)));
-
-            // addedNodes.Add(bottomRight);
-
-            // // Top Left
-            // Node topLeft = new Node
-            // {
-            //     initialPosition = new Vector3(xMin - tileSize, yMax + tileSize),
-            //     neighbors = new List<Node>()
-            // };
-
-            // Connect(topLeft, FindNodeAt(new Vector3(xMin - tileSize, yMax)));
-            // Connect(topLeft, FindNodeAt(new Vector3(xMin, yMax + tileSize)));
-            // Connect(topLeft, FindNodeAt(new Vector3(xMin, yMax)));
-
-            // addedNodes.Add(topLeft);
-
-            // // Top Right
-            // Node topRight = new Node
-            // {
-            //     initialPosition = new Vector3(xMax + tileSize, yMax + tileSize),
-            //     neighbors = new List<Node>()
-            // };
-
-            // Connect(topRight, FindNodeAt(new Vector3(xMax + tileSize, yMax)));
-            // Connect(topRight, FindNodeAt(new Vector3(xMax, yMax + tileSize)));
-            // Connect(topRight, FindNodeAt(new Vector3(xMax, yMax)));
-
-            // addedNodes.Add(topRight);
-
-            // Node FindNodeAt(Vector3 pos)
-            // {
-            //     return nodes.Concat(addedNodes)
-            //                 .FirstOrDefault(n =>
-            //                     Mathf.Approximately(n.initialPosition.x, pos.x) &&
-            //                     Mathf.Approximately(n.initialPosition.y, pos.y));
-            // }
-
-            // void Connect(Node a, Node b)
-            // {
-            //     if (a == null || b == null)
-            //         return;
-
-            //     if (!a.neighbors.Contains(b))
-            //         a.neighbors.Add(b);
-
-            //     if (!b.neighbors.Contains(a))
-            //         b.neighbors.Add(a);
-            // }
 
             bottomLeftMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
             bottomRightMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
-
-            // // Extra Rows
-            // int extraRows = numExtraRow; // number of rows to add
-
-            // List<Node> currentRow = new List<Node>(bottomMostNodes);
-
-            // for (int row = 0; row < extraRows; row++)
-            // {
-            //     List<Node> nextRow = new List<Node>();
-
-            //     foreach (Node parentNode in currentRow)
-            //     {
-            //         Node node = new Node();
-            //         node.initialPosition = parentNode.initialPosition.AddY(-tileSize);
-            //         node.neighbors = new List<Node>();
-
-            //         // Connect vertically
-            //         node.neighbors.Add(parentNode);
-            //         parentNode.neighbors.Add(node);
-
-            //         addedNodes.Add(node);
-            //         nextRow.Add(node);
-
-            //         if (IsAntNestArea(node.initialPosition))
-            //         {
-            //             node.isObstacle = true;
-            //         }
-            //     }
-
-            //     // Connect horizontally within the row
-            //     for (int i = 0; i < nextRow.Count; i++)
-            //     {
-            //         for (int j = i + 1; j < nextRow.Count; j++)
-            //         {
-            //             nextRow[i].neighbors.Add(nextRow[j]);
-            //             nextRow[j].neighbors.Add(nextRow[i]);
-            //         }
-            //     }
-
-            //     currentRow = nextRow;
-            // }
 
             bool IsAntNestArea(Vector3 position)
             {
@@ -538,13 +331,18 @@ namespace AntsFlow
                     position.y < topMostAntNest;
             }
 
-            // nodes.AddRange(addedNodes);
-
             bottomLeftMostNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
             bottomRightMostNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
+        }
 
-            // bottomLeftMostNode.initialPosition = bottomLeftMostNode.initialPosition.AddX(-tileSize);
-            // bottomRightMostNode.initialPosition = bottomRightMostNode.initialPosition.AddX(tileSize);
+        public float EdgeDistance(Node node)
+        {
+            float left = node.initialPosition.x - boardMinX;
+            float right = boardMaxX - node.initialPosition.x;
+            float bottom = node.initialPosition.y - boardMinY;
+            float top = boardMaxY - node.initialPosition.y;
+
+            return Mathf.Min(left, right, top, bottom);
         }
 
         private float Heuristic(Node a, Node b)
@@ -670,7 +468,7 @@ namespace AntsFlow
                     Gizmos.color = Color.green;
 
                     Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
+                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
 
                     DrawConnectors(node);
                 }
@@ -681,7 +479,7 @@ namespace AntsFlow
                         Gizmos.color = Color.green;
 
                         Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                        Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
+                        Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
                         // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} ({node.tile.tileName})");
 
                         DrawConnectors(node);
@@ -763,17 +561,20 @@ namespace AntsFlow
                     .First();
 
             var result = new List<BaseTile>();
-            var queue = new Queue<Node>();
+            Queue<Node> edgeQueue = new();
+            Queue<Node> normalQueue = new();
             var visited = new HashSet<Node>();
             var parent = new Dictionary<Node, Node>();
 
-            queue.Enqueue(start);
+            edgeQueue.Enqueue(start);
             visited.Add(start);
             parent[start] = null;
 
-            while (queue.Count > 0 && result.Count < count)
+            while ((edgeQueue.Count > 0 || normalQueue.Count > 0) && result.Count < count)
             {
-                Node current = queue.Dequeue();
+                Node current = edgeQueue.Count > 0
+                    ? edgeQueue.Dequeue()
+                    : normalQueue.Dequeue();
 
                 if (
                     current.tile != null &&
@@ -801,7 +602,8 @@ namespace AntsFlow
                     }
                 }
 
-                foreach (var neighbor in current.neighbors)
+                foreach (var neighbor in current.neighbors
+                        .OrderBy(n => n.EdgePriority))
                 {
                     if (visited.Contains(neighbor))
                     {
@@ -860,7 +662,11 @@ namespace AntsFlow
 
                     visited.Add(neighbor);
                     parent[neighbor] = current;
-                    queue.Enqueue(neighbor);
+
+                    if (neighbor.EdgePriority <= 3)
+                        edgeQueue.Enqueue(neighbor);
+                    else
+                        normalQueue.Enqueue(neighbor);
                 }
             }
 
