@@ -25,6 +25,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
     [SerializeField] private Button freezeTimeButton;
     [SerializeField] private Button hintButton;
+    public Button HintButton => hintButton;
     [SerializeField] private Button unlockThemeButton;
     [SerializeField] private ParticleSystem fxFreezeTrail;
     [SerializeField] private CanvasGroup freezeGroup;

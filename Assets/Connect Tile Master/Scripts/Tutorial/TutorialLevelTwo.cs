@@ -109,9 +109,8 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
         };
 
         // --- BƯỚC 1 ---
-        // Fast Food: Kéo card có text của theme Fast Food. 
         step = 1;
-        BaseTile tile1 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme1 && t.IsText);
+        BaseTile tile1 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme1);
 
         if (tile1 != null)
         {
@@ -143,45 +142,25 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             bool clicked = false;
             tile1.onInteract = () =>
             {
-                // Khôi phục parent
-                if (container1 != null && origContainerParent != null)
-                {
-                    container1.transform.SetParent(origContainerParent, true);
-                    container1.transform.SetSiblingIndex(origContainerSiblingIndex);
-                    container1.SetHighlight(false);
-                }
-                if (tile1 != null && origTileParent != null)
-                {
-                    tile1.transform.SetParent(origTileParent, true);
-                    tile1.transform.SetSiblingIndex(origTileSiblingIndex);
-                }
-
-                // Ẩn overlay và bàn tay
-                Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+                if (clicked) return;
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
                 clicked = true;
             };
 
-            yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
+            
+            // Khôi phục parent của container sau khi tile đã vào slot
+            if (container1 != null && origContainerParent != null)
+            {
+                container1.transform.SetParent(origContainerParent, true);
+                container1.transform.SetSiblingIndex(origContainerSiblingIndex);
+                container1.SetHighlight(false);
+            }
         }
 
-        // Đợi người chơi chơi tự do cho đến khi:
-        // 1. Xuất hiện card text của theme 2 (ví dụ chữ Bus thuộc Vehicles)
-        // 2. Theme vehicles đang được order (container 1 đã xong, hoặc container 2 đang có bài)
-        yield return new WaitUntil(() => 
-        {
-            if (TileManager.Ins.IsDealingCards) return false;
-
-            bool hasTextCard = TileManager.Ins.tiles.Any(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme2 && t.IsText);
-            bool isContainerReady = container2 != null && container2.gameObject.activeInHierarchy && !container2.isLocked && !container2.isHidden && !container2.isCompleted;
-            bool isActiveOrder = container1.isCompleted || container2.CurrentCardAmount > 0;
-
-            return hasTextCard && isContainerReady && isActiveOrder;
-        });
-
-        yield return new WaitForSeconds(0.2f); // Chờ một chút cho animation nếu có
+        // Đợi lá bài mới được chia từ bộ bài xong
+        yield return StartCoroutine(WaitForCardsDealt());
 
         // --- BƯỚC 2 ---
         // Highlight: Theme: Vehicles, Card: Bus. Hand kéo. Text: Images and words can both match!
@@ -208,46 +187,41 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
             Transform origTileParent = tile2.transform.parent;
             int origTileSiblingIndex = tile2.transform.GetSiblingIndex();
+
             tile2.transform.SetParent(upToAll.transform, true);
             tile2.transform.SetAsLastSibling();
 
             // Chạy bàn tay kéo lặp lại
             StartDragLoop(tile2.transform, container2.transform);
 
-            bool clicked = false;
+            bool clicked2 = false;
             tile2.onInteract = () =>
             {
-                // Khôi phục parent
-                if (container2 != null && origContainerParent != null)
-                {
-                    container2.transform.SetParent(origContainerParent, true);
-                    container2.transform.SetSiblingIndex(origContainerSiblingIndex);
-                    container2.SetHighlight(false);
-                }
-                if (tile2 != null && origTileParent != null)
-                {
-                    tile2.transform.SetParent(origTileParent, true);
-                    tile2.transform.SetSiblingIndex(origTileSiblingIndex);
-                }
-
-                // Ẩn overlay và bàn tay
-                Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+                if (clicked2) return;
+                
+                // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
-                clicked = true;
+                clicked2 = true;
             };
 
-            yield return new WaitUntil(() => clicked);
+            yield return new WaitUntil(() => clicked2);
             yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
+            
+            if (container2 != null && origContainerParent != null)
+            {
+                container2.transform.SetParent(origContainerParent, true);
+                container2.transform.SetSiblingIndex(origContainerSiblingIndex);
+                container2.SetHighlight(false);
+            }
         }
 
-
         // --- BƯỚC 3 ---
-        // Mở khóa các input. Text: Keep matching!
         step = 3;
         
         upToAll.gameObject.SetActive(true);
         upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
+        Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
         
         showText("Keep matching!");
         
@@ -286,7 +260,13 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
         // để đảm bảo 2 tutorial không bị dính liền nhau.
         if (step <= 1 && defaultCategory == theme2)
         {
-            return theme1; 
+            ItemCategory otherCategory = TileManager.Ins.itemCategoryPool.FirstOrDefault(c => c != theme2 && c != ItemCategory.None);
+            if (otherCategory != ItemCategory.None)
+            {
+                TileManager.Ins.itemCategoryPool.Add(defaultCategory);
+                TileManager.Ins.itemCategoryPool.Remove(otherCategory);
+                return otherCategory;
+            }
         }
         
         return defaultCategory;

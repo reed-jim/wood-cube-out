@@ -487,11 +487,18 @@ public class TileManager : Singleton<TileManager>
 
         int totalSet = levelItem.themeDataList.Count;
 
-        SpawnTiles(totalSet);
-
         if (levelItem.isTutorial)
         {
-            if (GamePersistentVariable.currentLevel == 2)
+            if (GamePersistentVariable.currentLevel == 1)
+            {
+                TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
+                if (tut1 != null)
+                {
+                    tut1.gameObject.SetActive(true);
+                    tut1.StartTutorial();
+                }
+            }
+            else if (GamePersistentVariable.currentLevel == 2)
             {
                 TutorialLevelTwo tut2 = TutorialLevelTwo.Ins != null ? TutorialLevelTwo.Ins : FindObjectOfType<TutorialLevelTwo>(true);
                 if (tut2 != null)
@@ -500,12 +507,22 @@ public class TileManager : Singleton<TileManager>
                     tut2.StartTutorial();
                 }
             }
-            else
+            else if (GamePersistentVariable.currentLevel == 5)
             {
-                TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
-                if (tut1 != null)
+                TutorialLevelFive tut5 = TutorialLevelFive.Ins != null ? TutorialLevelFive.Ins : FindObjectOfType<TutorialLevelFive>(true);
+                if (tut5 != null)
                 {
-                    tut1.gameObject.SetActive(true);
+                    tut5.gameObject.SetActive(true);
+                    tut5.StartTutorial();
+                }
+            }
+            else if (GamePersistentVariable.currentLevel == 7)
+            {
+                TutorialLevelSeven tut7 = TutorialLevelSeven.Ins != null ? TutorialLevelSeven.Ins : FindObjectOfType<TutorialLevelSeven>(true);
+                if (tut7 != null)
+                {
+                    tut7.gameObject.SetActive(true);
+                    tut7.StartTutorial();
                 }
             }
         }
@@ -520,7 +537,19 @@ public class TileManager : Singleton<TileManager>
             {
                 TutorialLevelTwo.Ins.HideTutorial();
             }
+
+            if (TutorialLevelFive.Ins != null)
+            {
+                TutorialLevelFive.Ins.HideTutorial();
+            }
+
+            if (TutorialLevelSeven.Ins != null)
+            {
+                TutorialLevelSeven.Ins.HideTutorial();
+            }
         }
+
+        SpawnTiles(totalSet);
 
         for (int i = 0; i < tileSlotContainers.Count; i++)
         {
@@ -658,6 +687,21 @@ public class TileManager : Singleton<TileManager>
         }
 
         result.Shuffle();
+
+        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 2)
+        {
+            result.Remove(ItemCategory.Fast_Food);
+            result.Remove(ItemCategory.Vehicles);
+            
+            result.Insert(0, ItemCategory.Vehicles);
+            result.Insert(0, ItemCategory.Fast_Food);
+        }
+        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 5)
+        {
+            result.Remove(ItemCategory.Number_5);
+            result.Insert(0, ItemCategory.Number_5);
+        }
+
         return result;
     }
 
@@ -888,6 +932,34 @@ public class TileManager : Singleton<TileManager>
         }
 
         itemCategoryPool.Shuffle();
+
+        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 2)
+        {
+            if (itemCategoryPool.Remove(ItemCategory.Vehicles))
+            {
+                itemCategoryPool.Insert(0, ItemCategory.Vehicles);
+            }
+
+            int fastFoodCount = 0;
+            if (itemCategoryPool.Remove(ItemCategory.Fast_Food)) fastFoodCount++;
+            if (itemCategoryPool.Remove(ItemCategory.Fast_Food)) fastFoodCount++;
+
+            for (int i = 0; i < fastFoodCount; i++)
+            {
+                itemCategoryPool.Insert(0, ItemCategory.Fast_Food);
+            }
+        }
+        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 5)
+        {
+            int number5Count = 0;
+            if (itemCategoryPool.Remove(ItemCategory.Number_5)) number5Count++;
+            if (itemCategoryPool.Remove(ItemCategory.Number_5)) number5Count++;
+
+            for (int i = 0; i < number5Count; i++)
+            {
+                itemCategoryPool.Insert(0, ItemCategory.Number_5);
+            }
+        }
 
         return itemCategoryPool;
     }
@@ -1420,7 +1492,12 @@ public class TileManager : Singleton<TileManager>
             CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets.First(item => item.itemCategory == currentCategory);
 
             float xPos = xIndex * tileSpacingWidth - totalWidth / 2f;
-            float yPos = yIndex * tileSpacingHeight - totalHeight / 2f;
+            int actualYIndex = yIndex;
+            if (levelItem != null && levelItem.isTutorial)
+            {
+                actualYIndex = row - 1 - yIndex;
+            }
+            float yPos = actualYIndex * tileSpacingHeight - totalHeight / 2f;
 
             Vector3 spawnPos = new Vector3(xPos, yPos, 0);
 
@@ -1593,6 +1670,64 @@ public class TileManager : Singleton<TileManager>
 
     private int GetUniqueItemId(ItemCategory category, CategoryIconSet iconSet)
     {
+        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 2 && category == ItemCategory.Vehicles)
+        {
+            int spCount;
+            if (iconSet.isOnServer)
+                spCount = (iconSet.icons != null && iconSet.icons.Length > 0)
+                    ? iconSet.icons.Length
+                    : (iconSet.iconCdnKeys != null ? iconSet.iconCdnKeys.Length : 0);
+            else
+                spCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                
+            if (availableItemIdsPerCategory.ContainsKey(category))
+            {
+                int textIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id >= spCount);
+                if (textIdIndex != -1)
+                {
+                    int itemId = availableItemIdsPerCategory[category][textIdIndex];
+                    availableItemIdsPerCategory[category].RemoveAt(textIdIndex);
+                    return itemId;
+                }
+            }
+        }
+        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 5 && category == ItemCategory.Number_5)
+        {
+            int spCount;
+            if (iconSet.isOnServer)
+                spCount = (iconSet.icons != null && iconSet.icons.Length > 0)
+                    ? iconSet.icons.Length
+                    : (iconSet.iconCdnKeys != null ? iconSet.iconCdnKeys.Length : 0);
+            else
+                spCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                
+            if (availableItemIdsPerCategory.ContainsKey(category))
+            {
+                if (TutorialLevelFive.Ins != null && !TutorialLevelFive.Ins.hasDealtFirstTextCard)
+                {
+                    int textIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id >= spCount);
+                    if (textIdIndex != -1)
+                    {
+                        TutorialLevelFive.Ins.hasDealtFirstTextCard = true;
+                        int itemId = availableItemIdsPerCategory[category][textIdIndex];
+                        availableItemIdsPerCategory[category].RemoveAt(textIdIndex);
+                        return itemId;
+                    }
+                }
+                else if (TutorialLevelFive.Ins != null && !TutorialLevelFive.Ins.hasDealtFirstSpriteCard)
+                {
+                    int spriteIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id < spCount);
+                    if (spriteIdIndex != -1)
+                    {
+                        TutorialLevelFive.Ins.hasDealtFirstSpriteCard = true;
+                        int itemId = availableItemIdsPerCategory[category][spriteIdIndex];
+                        availableItemIdsPerCategory[category].RemoveAt(spriteIdIndex);
+                        return itemId;
+                    }
+                }
+            }
+        }
+
         if (availableItemIdsPerCategory.ContainsKey(category) && availableItemIdsPerCategory[category].Count > 0)
         {
             int index = UnityEngine.Random.Range(0, availableItemIdsPerCategory[category].Count);

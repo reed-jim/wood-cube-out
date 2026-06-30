@@ -143,21 +143,9 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             bool clicked = false;
             tile1.onInteract = () =>
             {
-                // Khôi phục parent
-                if (container1 != null && origContainerParent != null)
-                {
-                    container1.transform.SetParent(origContainerParent, true);
-                    container1.transform.SetSiblingIndex(origContainerSiblingIndex);
-                    container1.SetHighlight(false);
-                }
-                if (tile1 != null && origTileParent != null)
-                {
-                    tile1.transform.SetParent(origTileParent, true);
-                    tile1.transform.SetSiblingIndex(origTileSiblingIndex);
-                }
-
-                // Ẩn overlay và bàn tay
-                Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+                if (clicked) return;
+                
+                // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
                 clicked = true;
@@ -165,6 +153,14 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
+            
+            // Khôi phục parent của container sau khi tile đã vào slot
+            if (container1 != null && origContainerParent != null)
+            {
+                container1.transform.SetParent(origContainerParent, true);
+                container1.transform.SetSiblingIndex(origContainerSiblingIndex);
+                container1.SetHighlight(false);
+            }
         }
 
         // Đợi lá bài mới được chia từ bộ bài xong
@@ -203,21 +199,9 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             bool clicked = false;
             tile2.onInteract = () =>
             {
-                // Khôi phục parent
-                if (container1 != null && origContainerParent != null)
-                {
-                    container1.transform.SetParent(origContainerParent, true);
-                    container1.transform.SetSiblingIndex(origContainerSiblingIndex);
-                    container1.SetHighlight(false);
-                }
-                if (tile2 != null && origTileParent != null)
-                {
-                    tile2.transform.SetParent(origTileParent, true);
-                    tile2.transform.SetSiblingIndex(origTileSiblingIndex);
-                }
-
-                // Ẩn overlay và bàn tay
-                Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+                if (clicked) return;
+                
+                // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
                 clicked = true;
@@ -225,6 +209,14 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
+            
+            // Khôi phục parent của container sau khi tile đã vào slot
+            if (container1 != null && origContainerParent != null)
+            {
+                container1.transform.SetParent(origContainerParent, true);
+                container1.transform.SetSiblingIndex(origContainerSiblingIndex);
+                container1.SetHighlight(false);
+            }
         }
 
         // Đợi lá bài mới được chia từ bộ bài xong
@@ -263,21 +255,9 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             bool clicked = false;
             tile3.onInteract = () =>
             {
-                // Khôi phục parent
-                if (container2 != null && origContainerParent != null)
-                {
-                    container2.transform.SetParent(origContainerParent, true);
-                    container2.transform.SetSiblingIndex(origContainerSiblingIndex);
-                    container2.SetHighlight(false);
-                }
-                if (tile3 != null && origTileParent != null)
-                {
-                    tile3.transform.SetParent(origTileParent, true);
-                    tile3.transform.SetSiblingIndex(origTileSiblingIndex);
-                }
-
-                // Ẩn overlay và bàn tay
-                Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+                if (clicked) return;
+                
+                // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
                 clicked = true;
@@ -285,6 +265,14 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile3 == null || tile3.IsOnSlot);
+            
+            // Khôi phục parent của container sau khi tile đã vào slot
+            if (container2 != null && origContainerParent != null)
+            {
+                container2.transform.SetParent(origContainerParent, true);
+                container2.transform.SetSiblingIndex(origContainerSiblingIndex);
+                container2.SetHighlight(false);
+            }
         }
 
         // Đợi lá bài mới được chia từ bộ bài xong
@@ -323,21 +311,9 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             bool clicked = false;
             tile4.onInteract = () =>
             {
-                // Khôi phục parent
-                if (container2 != null && origContainerParent != null)
-                {
-                    container2.transform.SetParent(origContainerParent, true);
-                    container2.transform.SetSiblingIndex(origContainerSiblingIndex);
-                    container2.SetHighlight(false);
-                }
-                if (tile4 != null && origTileParent != null)
-                {
-                    tile4.transform.SetParent(origTileParent, true);
-                    tile4.transform.SetSiblingIndex(origTileSiblingIndex);
-                }
-
-                // Ẩn overlay và bàn tay
-                Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+                if (clicked) return;
+                
+                // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
                 clicked = true;
@@ -345,7 +321,18 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile4 == null || tile4.IsOnSlot);
+            
+            // Khôi phục parent của container sau khi tile đã vào slot
+            if (container2 != null && origContainerParent != null)
+            {
+                container2.transform.SetParent(origContainerParent, true);
+                container2.transform.SetSiblingIndex(origContainerSiblingIndex);
+                container2.SetHighlight(false);
+            }
         }
+
+        // Ẩn overlay hoàn toàn sau khi bài đã vào slot
+        Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
 
         // Kết thúc tutorial hoàn toàn
         step = 5;
@@ -396,6 +383,10 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             {
                 TileManager.Ins.itemCategoryPool.Add(defaultCategory);
                 TileManager.Ins.itemCategoryPool.Remove(forcedCategory);
+            }
+            else
+            {
+                forcedCategory = defaultCategory;
             }
         }
 
