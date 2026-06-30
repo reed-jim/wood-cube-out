@@ -31,10 +31,12 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     private ItemCategory theme2;
     private Coroutine tutorialCoroutine;
     private Coroutine dragLoopCoroutine;
+    private int lastForcedStep = 0;
 
     public void StartTutorial()
     {
         step = 0;
+        lastForcedStep = 0;
         if (tutorialCoroutine != null)
         {
             StopCoroutine(tutorialCoroutine);
@@ -128,15 +130,17 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             Transform origContainerParent = container1.transform.parent;
             int origContainerSiblingIndex = container1.transform.GetSiblingIndex();
             container1.transform.SetParent(upToAll.transform, true);
+            container1.transform.SetAsLastSibling();
 
             Transform origTileParent = tile1.transform.parent;
             int origTileSiblingIndex = tile1.transform.GetSiblingIndex();
             tile1.transform.SetParent(upToAll.transform, true);
+            tile1.transform.SetAsLastSibling();
 
             // Chạy bàn tay kéo lặp lại
             StartDragLoop(tile1.transform, container1.transform);
 
-            bool step1Done = false;
+            bool clicked = false;
             tile1.onInteract = () =>
             {
                 // Khôi phục parent
@@ -156,10 +160,11 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
                 Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
-                step1Done = true;
+                clicked = true;
             };
 
-            yield return new WaitUntil(() => step1Done);
+            yield return new WaitUntil(() => clicked);
+            yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
         }
 
         // Đợi lá bài mới được chia từ bộ bài xong
@@ -185,15 +190,17 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             Transform origContainerParent = container1.transform.parent;
             int origContainerSiblingIndex = container1.transform.GetSiblingIndex();
             container1.transform.SetParent(upToAll.transform, true);
+            container1.transform.SetAsLastSibling();
 
             Transform origTileParent = tile2.transform.parent;
             int origTileSiblingIndex = tile2.transform.GetSiblingIndex();
             tile2.transform.SetParent(upToAll.transform, true);
+            tile2.transform.SetAsLastSibling();
 
             // Chạy bàn tay kéo lặp lại
             StartDragLoop(tile2.transform, container1.transform);
 
-            bool step2Done = false;
+            bool clicked = false;
             tile2.onInteract = () =>
             {
                 // Khôi phục parent
@@ -213,10 +220,11 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
                 Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
-                step2Done = true;
+                clicked = true;
             };
 
-            yield return new WaitUntil(() => step2Done);
+            yield return new WaitUntil(() => clicked);
+            yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
         }
 
         // Đợi lá bài mới được chia từ bộ bài xong
@@ -242,15 +250,17 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             Transform origContainerParent = container2.transform.parent;
             int origContainerSiblingIndex = container2.transform.GetSiblingIndex();
             container2.transform.SetParent(upToAll.transform, true);
+            container2.transform.SetAsLastSibling();
 
             Transform origTileParent = tile3.transform.parent;
             int origTileSiblingIndex = tile3.transform.GetSiblingIndex();
             tile3.transform.SetParent(upToAll.transform, true);
+            tile3.transform.SetAsLastSibling();
 
             // Chạy bàn tay kéo lặp lại
             StartDragLoop(tile3.transform, container2.transform);
 
-            bool step3Done = false;
+            bool clicked = false;
             tile3.onInteract = () =>
             {
                 // Khôi phục parent
@@ -270,10 +280,11 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
                 Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
-                step3Done = true;
+                clicked = true;
             };
 
-            yield return new WaitUntil(() => step3Done);
+            yield return new WaitUntil(() => clicked);
+            yield return new WaitUntil(() => tile3 == null || tile3.IsOnSlot);
         }
 
         // Đợi lá bài mới được chia từ bộ bài xong
@@ -299,15 +310,17 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             Transform origContainerParent = container2.transform.parent;
             int origContainerSiblingIndex = container2.transform.GetSiblingIndex();
             container2.transform.SetParent(upToAll.transform, true);
+            container2.transform.SetAsLastSibling();
 
             Transform origTileParent = tile4.transform.parent;
             int origTileSiblingIndex = tile4.transform.GetSiblingIndex();
             tile4.transform.SetParent(upToAll.transform, true);
+            tile4.transform.SetAsLastSibling();
 
             // Chạy bàn tay kéo lặp lại
             StartDragLoop(tile4.transform, container2.transform);
 
-            bool step4Done = false;
+            bool clicked = false;
             tile4.onInteract = () =>
             {
                 // Khôi phục parent
@@ -327,10 +340,11 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
                 Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
-                step4Done = true;
+                clicked = true;
             };
 
-            yield return new WaitUntil(() => step4Done);
+            yield return new WaitUntil(() => clicked);
+            yield return new WaitUntil(() => tile4 == null || tile4.IsOnSlot);
         }
 
         // Kết thúc tutorial hoàn toàn
@@ -344,7 +358,15 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     private IEnumerator WaitForCardsDealt()
     {
-        yield return new WaitForSeconds(0.2f);
+        // Chờ tối đa 1.5 giây để bài bắt đầu chia (IsDealingCards = true)
+        float timeout = 1.5f;
+        while (!TileManager.Ins.IsDealingCards && timeout > 0)
+        {
+            timeout -= Time.deltaTime;
+            yield return null;
+        }
+
+        // Đợi chia bài xong (IsDealingCards = false)
         yield return new WaitUntil(() => !TileManager.Ins.IsDealingCards);
         yield return new WaitForSeconds(0.2f);
     }
@@ -352,17 +374,20 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     public ItemCategory GetTutorialForcedCategory(ItemCategory defaultCategory)
     {
         ItemCategory forcedCategory = defaultCategory;
-        if (step == 1) // Vừa hoàn tất click bài bước 1, chuẩn bị chia bài cho bước 2
+        if (step == 1 && lastForcedStep < 1) // Vừa hoàn tất click bài bước 1, chuẩn bị chia bài cho bước 2
         {
             forcedCategory = theme1;
+            lastForcedStep = 1;
         }
-        else if (step == 2) // Vừa hoàn tất click bài bước 2, chuẩn bị chia bài cho bước 3
+        else if (step == 2 && lastForcedStep < 2) // Vừa hoàn tất click bài bước 2, chuẩn bị chia bài cho bước 3
         {
             forcedCategory = theme2;
+            lastForcedStep = 2;
         }
-        else if (step == 3) // Vừa hoàn tất click bài bước 3, chuẩn bị chia bài cho bước 4
+        else if (step == 3 && lastForcedStep < 3) // Vừa hoàn tất click bài bước 3, chuẩn bị chia bài cho bước 4
         {
             forcedCategory = theme2;
+            lastForcedStep = 3;
         }
 
         if (forcedCategory != defaultCategory)
@@ -402,6 +427,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
         tutorialHand.gameObject.SetActive(true);
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
+        tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
 
         while (true)
