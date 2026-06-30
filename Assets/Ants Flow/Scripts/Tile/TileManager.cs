@@ -69,6 +69,7 @@ namespace AntsFlow
         public Node bottomRightMostInsideLevelNode;
         public Node bottomLeftMostNode;
         public Node bottomRightMostNode;
+        public List<Node> topMostNodes;
         public List<Node> bottomMostNodes;
         public List<Node> leftMostNodes;
         public List<Node> rightMostNodes;
@@ -298,6 +299,7 @@ namespace AntsFlow
                 closest.tile = tile;
             }
 
+            topMostNodes = new List<Node>();
             bottomMostNodes = new List<Node>();
             leftMostNodes = new List<Node>();
             rightMostNodes = new List<Node>();
@@ -315,10 +317,10 @@ namespace AntsFlow
                     bottomMostNodes.Add(node);
                 }
 
-                // if (Mathf.Abs(node.initialPosition.y - yMax) < 0.1f * tileDistance.x)
-                // {
-                //     node.isStarter = true;
-                // }
+                if (Mathf.Abs(node.initialPosition.y - yMax) < 0.1f * tileDistance.x)
+                {
+                    topMostNodes.Add(node);
+                }
 
                 if (Mathf.Abs(node.initialPosition.x - xMin) < 0.1f * tileDistance.x)
                 {

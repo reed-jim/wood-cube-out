@@ -499,36 +499,62 @@ namespace AntsFlow
                 // reversePath.RemoveAt(0);
 
 
-                // List<Vector3> LeftMostPoints = new List<Vector3>();
+                Vector3 tilePosition = path[^1].initialPosition;
+                Vector3 corner = tilePosition.x > 0 ? TileManager.Ins.bottomRightMostNode.initialPosition : TileManager.Ins.bottomLeftMostNode.initialPosition;
 
-                // float minX = points.Min(item => item.x);
+                // if (tilePosition.x < 0)
+                // {
+                //     float minX = points.Min(item => item.x);
+
+                //     for (int i = 0; i < points.Count; i++)
+                //     {
+                //         if (Mathf.Abs(points[i].x - minX) < 0.1f)
+                //         {
+                //             points[i] = points[i].AddX(-0.5f);
+                //             // points[i] = points[i].ChangeX(TileManager.Ins.bottomLeftMostNode.initialPosition.x);
+                //         }
+                //     }
+                // }
+                // else
+                // {
+                //     float maxX = points.Max(item => item.x);
+
+                //     for (int i = 0; i < points.Count; i++)
+                //     {
+                //         if (Mathf.Abs(points[i].x - maxX) < 0.1f)
+                //         {
+                //             points[i] = points[i].AddX(0.5f);
+                //             // points[i] = points[i].ChangeX(TileManager.Ins.bottomRightMostNode.initialPosition.x);
+                //         }
+                //     }
+                // }
+
+                // // float maxY = points.Max(item => item.y);
 
                 // for (int i = 0; i < points.Count; i++)
                 // {
-                //     if (Mathf.Abs(points[i].x - minX) < 0.1f)
+                //     if (points[i].y > tilePosition.y && Mathf.Abs(points[i].y - TileManager.Ins.topMostNodes[0].initialPosition.y) < 1f)
                 //     {
-                //         points[i] = points[i].ChangeX(TileManager.Ins.bottomLeftMostNode.initialPosition.x);
+                //         points[i] = points[i].AddY(0.5f);
+                //         // points[i] = points[i].ChangeY(TileManager.Ins.topMostNodes[0].initialPosition.y);
                 //     }
                 // }
 
 
-                Vector3 tilePosition = path[^1].initialPosition;
-                Vector3 corner = tilePosition.x > 0 ? TileManager.Ins.bottomRightMostNode.initialPosition : TileManager.Ins.bottomLeftMostNode.initialPosition;
-
                 if (isCenter)
                 {
-                    // int sign = transform.position.x > 0 ? 1 : -1;
+                    // int sign = tilePosition.x > 0 ? 1 : -1;
                     int sign = 1;
 
                     points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
                     points.Insert(1, TileManager.Ins.antNest.position.ChangeY(-3).ChangeX(sign * 3f));
-                    points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
+                    // points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
                     // points.Insert(3, corner);
                     // points.Insert(4, corner.ChangeY(tilePosition.y));
                 }
                 else
                 {
-                    points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
+                    // points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
                     // points.Insert(1, corner);
                     // points.Insert(2, corner.ChangeY(tilePosition.y));
                 }
