@@ -70,6 +70,8 @@ namespace AntsFlow
         public Node bottomLeftMostNode;
         public Node bottomRightMostNode;
         public List<Node> bottomMostNodes;
+        public List<Node> leftMostNodes;
+        public List<Node> rightMostNodes;
 
         private int currentSearchId;
         private readonly Queue<Node> queue = new();
@@ -133,7 +135,7 @@ namespace AntsFlow
                 {
                     float extraColumn = 0;
                     float extraRow = 0;
-                    float extra = 1.5f;
+                    float extra = 1f;
 
                     if (x == 0)
                     {
@@ -224,6 +226,11 @@ namespace AntsFlow
                         }
                     }
 
+                    if (x == 0 || x == width - 1)
+                    {
+                        directions = verticalPrioritydirections;
+                    }
+
                     foreach (Vector2Int dir in directions)
                     {
                         // if (x > 0 && x < width - 1 && y > 6)
@@ -234,29 +241,29 @@ namespace AntsFlow
                         //     }
                         // }
 
-                        if (x >= 1 && x <= 1 + numExtraColumn / 4)
-                        {
-                            if (dir == Vector2Int.up || dir == Vector2Int.down)
-                            {
-                                continue;
-                            }
-                        }
+                        // if (x >= 1 && x <= 1 + numExtraColumn / 4)
+                        // {
+                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
+                        //     {
+                        //         continue;
+                        //     }
+                        // }
 
-                        if (x >= width - 1 - 1 - numExtraColumn / 4 && x <= width - 1 - 1)
-                        {
-                            if (dir == Vector2Int.up || dir == Vector2Int.down)
-                            {
-                                continue;
-                            }
-                        }
+                        // if (x >= width - 1 - 1 - numExtraColumn / 4 && x <= width - 1 - 1)
+                        // {
+                        //     if (dir == Vector2Int.up || dir == Vector2Int.down)
+                        //     {
+                        //         continue;
+                        //     }
+                        // }
 
-                        if (y >= height - 1 - 1 - numExtraRow / 4 && y <= height - 1)
-                        {
-                            if (dir == Vector2Int.right || dir == Vector2Int.left)
-                            {
-                                continue;
-                            }
-                        }
+                        // if (y >= height - 1 - 1 - numExtraRow / 4 && y <= height - 1)
+                        // {
+                        //     if (dir == Vector2Int.right || dir == Vector2Int.left)
+                        //     {
+                        //         continue;
+                        //     }
+                        // }
 
                         int nx = x + dir.x;
                         int ny = y + dir.y;
@@ -292,6 +299,8 @@ namespace AntsFlow
             }
 
             bottomMostNodes = new List<Node>();
+            leftMostNodes = new List<Node>();
+            rightMostNodes = new List<Node>();
 
             yMin = nodes.Min(node => node.initialPosition.y);
 
@@ -311,15 +320,15 @@ namespace AntsFlow
                 //     node.isStarter = true;
                 // }
 
-                // if (Mathf.Abs(node.initialPosition.x - xMin) < 0.1f * tileDistance.x)
-                // {
-                //     node.isStarter = true;
-                // }
+                if (Mathf.Abs(node.initialPosition.x - xMin) < 0.1f * tileDistance.x)
+                {
+                    leftMostNodes.Add(node);
+                }
 
-                // if (Mathf.Abs(node.initialPosition.x - xMax) < 0.1f * tileDistance.x)
-                // {
-                //     node.isStarter = true;
-                // }
+                if (Mathf.Abs(node.initialPosition.x - xMax) < 0.1f * tileDistance.x)
+                {
+                    rightMostNodes.Add(node);
+                }
             }
 
             // for (int i = 0; i < nodes.Count; i++)
@@ -661,7 +670,7 @@ namespace AntsFlow
                     Gizmos.DrawSphere(node.initialPosition, 0.1f);
                     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
 
-                    // DrawConnectors(node);
+                    DrawConnectors(node);
                 }
                 else
                 {
@@ -673,7 +682,7 @@ namespace AntsFlow
                         Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
                         // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} ({node.tile.tileName})");
 
-                        // DrawConnectors(node);
+                        DrawConnectors(node);
                     }
                     // else
                     // {
@@ -718,6 +727,8 @@ namespace AntsFlow
                         Node neighbor = node.neighbors[i];
 
                         DrawArrow(node.initialPosition, neighbor.initialPosition);
+
+                        break;
                     }
                 }
 
@@ -748,17 +759,6 @@ namespace AntsFlow
             Node start = nodes
                     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
                     .First();
-
-            // Node start;
-
-            // if (antBoxPosition.x > 0)
-            // {
-            //     start = bottomRightMostNode;
-            // }
-            // else
-            // {
-            //     start = bottomLeftMostNode;
-            // }
 
             var result = new List<BaseTile>();
             var queue = new Queue<Node>();
@@ -987,9 +987,24 @@ namespace AntsFlow
         {
             Vector3 tilePosition = GetTilePosition(target);
 
-            Node start = bottomMostNodes
-                .OrderBy(node => (node.initialPosition - tilePosition).sqrMagnitude)
-                .First();
+            Node start;
+
+            if (tilePosition.x > 0)
+            {
+                tilePosition = tilePosition.ChangeX(bottomRightMostNode.initialPosition.x);
+
+                start = rightMostNodes
+                    .OrderBy(node => (node.initialPosition - tilePosition).sqrMagnitude)
+                    .First();
+            }
+            else
+            {
+                tilePosition = tilePosition.ChangeX(bottomLeftMostNode.initialPosition.x);
+
+                start = leftMostNodes
+                    .OrderBy(node => (node.initialPosition - tilePosition).sqrMagnitude)
+                    .First();
+            }
 
             // if (tilePosition.x < -3)
             // {

@@ -498,7 +498,23 @@ namespace AntsFlow
                 reversePath.Reverse();
                 // reversePath.RemoveAt(0);
 
-                // start at center
+
+                // List<Vector3> LeftMostPoints = new List<Vector3>();
+
+                // float minX = points.Min(item => item.x);
+
+                // for (int i = 0; i < points.Count; i++)
+                // {
+                //     if (Mathf.Abs(points[i].x - minX) < 0.1f)
+                //     {
+                //         points[i] = points[i].ChangeX(TileManager.Ins.bottomLeftMostNode.initialPosition.x);
+                //     }
+                // }
+
+
+                Vector3 tilePosition = path[^1].initialPosition;
+                Vector3 corner = tilePosition.x > 0 ? TileManager.Ins.bottomRightMostNode.initialPosition : TileManager.Ins.bottomLeftMostNode.initialPosition;
+
                 if (isCenter)
                 {
                     // int sign = transform.position.x > 0 ? 1 : -1;
@@ -506,11 +522,15 @@ namespace AntsFlow
 
                     points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
                     points.Insert(1, TileManager.Ins.antNest.position.ChangeY(-3).ChangeX(sign * 3f));
-                    // points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
+                    points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
+                    // points.Insert(3, corner);
+                    // points.Insert(4, corner.ChangeY(tilePosition.y));
                 }
                 else
                 {
-                    // points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
+                    points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
+                    // points.Insert(1, corner);
+                    // points.Insert(2, corner.ChangeY(tilePosition.y));
                 }
 
                 // points = Simplify(points);
@@ -572,8 +592,6 @@ namespace AntsFlow
                     points.Remove(pointInFirstRow[i]);
                 }
 
-                points.Add(closestPointToNest);
-
                 Vector3 nearAntNestPosition = antNestPosition + 1f * (points[^1] - antNestPosition).normalized;
 
                 // try
@@ -588,8 +606,12 @@ namespace AntsFlow
 
                 // }
 
+                if (Vector2.Distance(closestPointToNest, nearAntNestPosition) > 2)
+                {
+                    points.Add(closestPointToNest);
+                }
+
                 points.Add(nearAntNestPosition);
-                // points.Add(TileManager.Ins.antNest.position.AddY(UnityEngine.Random.RandomRange(-0.5f, 0.7f)));
             }
 
             float totalDistance = GetTotalDistance(points, transform.position);
