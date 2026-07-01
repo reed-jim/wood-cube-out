@@ -391,6 +391,8 @@ namespace NamPhuThuy.GamePlay
                     AntsFlow.TileManager.Ins.tiles[i].tilemapPosition = cellPos;
 
                     // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
+
+                    SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
                 }
             }
             else
