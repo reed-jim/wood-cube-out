@@ -294,8 +294,6 @@ namespace NamPhuThuy.GamePlay
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
-                AntsFlow.TileManager.Ins.UpdateNavMesh();
-
                 Tween.Delay(1).OnComplete(() =>
                 {
                     setIsLevelLoadedEvent?.Invoke();
@@ -392,7 +390,7 @@ namespace NamPhuThuy.GamePlay
                     AntsFlow.TileManager.Ins.tiles[i].tilemap = spawnedTileMap;
                     AntsFlow.TileManager.Ins.tiles[i].tilemapPosition = cellPos;
 
-                    TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
+                    // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
                 }
             }
             else
@@ -426,13 +424,12 @@ namespace NamPhuThuy.GamePlay
                         AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
                         AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
 
-                        TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
+                        // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
                     }
                 }
             }
 
             AntsFlow.TileManager.Ins.tilemaps = tilemapGrids.Select(item => item.GetComponentInChildren<Tilemap>()).ToArray();
-            AntsFlow.TileManager.Ins.UpdateNavMesh();
         }
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)

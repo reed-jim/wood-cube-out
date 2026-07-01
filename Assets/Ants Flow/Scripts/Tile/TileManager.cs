@@ -138,7 +138,7 @@ namespace AntsFlow
                 {
                     float extraColumn = 0;
                     float extraRow = 0;
-                    float extra = 1f;
+                    float extra = 0.6f;
 
                     if (x == 0)
                     {
@@ -177,10 +177,10 @@ namespace AntsFlow
             // Assign neighbors (4-way)
             Vector2Int[] verticalPrioritydirections =
             {
-                Vector2Int.up,
-                Vector2Int.down,
                 Vector2Int.right,
-                Vector2Int.left
+                Vector2Int.left,
+                Vector2Int.up,
+                Vector2Int.down
             };
 
             Vector2Int[] horizontalPriorityDirections =
@@ -554,6 +554,20 @@ namespace AntsFlow
         }
 #endif
 
+        private float TurnPenalty(Node current, Node neighbor)
+        {
+            if (current.Parent == null)
+                return 0;
+
+            Vector2 prevDir = (current.initialPosition - current.Parent.initialPosition).normalized;
+            Vector2 nextDir = (neighbor.initialPosition - current.initialPosition).normalized;
+
+            // 1 = straight, 0 = 90°, -1 = U-turn
+            float dot = Vector2.Dot(prevDir, nextDir);
+
+            return -100 * dot; // smaller is better
+        }
+
         public List<BaseTile> GetFirstNMovableTiles(Color faction, int count, Vector2 antBoxPosition)
         {
             Node start = nodes
@@ -625,22 +639,14 @@ namespace AntsFlow
                         }
                     }
 
-                    if (!isBlocked && current.isStarter)
+                    if
+                    (
+                        current.tile != null &&
+                        !current.tile.isMovedToAnt &&
+                        !current.tile.isDone
+                    )
                     {
-                        if (
-                            current.tile != null &&
-                            !current.tile.isMovedToAnt &&
-                            !current.tile.isDone &&
-                            current.tile.Faction != faction
-                        )
-                        {
-                            isBlocked = true;
-                        }
-                    }
-
-                    if (neighbor.isStarter)
-                    {
-                        isBlocked = false;
+                        isBlocked = true;
                     }
 
                     if (neighbor.tile != null && neighbor.tile.Faction == faction)
