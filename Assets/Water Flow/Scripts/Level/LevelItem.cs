@@ -1042,6 +1042,23 @@ public class SpecialElementItemConfig
 
     public bool IsValidToSpawn(int numAntBoxesSpawned)
     {
+        List<int> remainingColumns = new List<int>() { 0, 1, 2 };
+
+        for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+        {
+            WashingMachineStartSlot antBoxStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
+
+            if (antBoxStartSlot.washingMachine != null && antBoxStartSlot.washingMachine.isDouble && remainingColumns.Contains(antBoxStartSlot.column))
+            {
+                remainingColumns.Remove(antBoxStartSlot.column);
+            }
+        }
+
+        if (remainingColumns.Count == 0)
+        {
+            return false;
+        }
+
         return GetNumLeft() > 0 && IsCorrectOrder(numAntBoxesSpawned);
     }
 }
