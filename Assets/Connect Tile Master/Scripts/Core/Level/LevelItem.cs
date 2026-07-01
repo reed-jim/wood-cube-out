@@ -44,14 +44,14 @@ public class LevelItem : MonoBehaviour
              "Tăng lên khi số hàng < 4 để tiles trải rộng hơn.")]
     public float tileSpacingHeight = 0f;
 
-    /// <summary>Spacing ngang thực sự sẽ dùng (fallback về 250 nếu = 0).</summary>
+    /// <summary>Spacing ngang thực sự sẽ dùng (fallback về 234 nếu = 0).</summary>
     public float ActualSpacingWidth
     {
         get
         {
             if (tileSpacingWidth > 0) return tileSpacingWidth;
             if ((initRow == 2 && initColumn == 3) || (initRow == 3 && initColumn == 3)) return 300f;
-            return 250f;
+            return 234f;
         }
     }
 
@@ -64,7 +64,7 @@ public class LevelItem : MonoBehaviour
             if (initRow == 2 && initColumn == 4) return 350.5f;
             if (initRow == 3 && initColumn == 4) return 353f;
             if ((initRow == 2 && initColumn == 3) || (initRow == 3 && initColumn == 3)) return 353f;
-            return 275f;
+            return 287.5f;
         }
     }
 
@@ -72,7 +72,7 @@ public class LevelItem : MonoBehaviour
     {
         get
         {
-            if (initRow == 2 && initColumn == 4) return -18f;
+            if (initRow == 2 && initColumn == 4) return -30f;
             return tileContainerYOffset;
         }
     }
@@ -84,7 +84,7 @@ public class LevelItem : MonoBehaviour
     [Space(20)]
     [Header("Tile Container Config")]
     [Tooltip("Điều chỉnh vị trí Y của Tile Container lúc khởi tạo")]
-    public float tileContainerYOffset = -30f;
+    private float tileContainerYOffset = -52f;
 }
 
 #if UNITY_EDITOR
@@ -147,7 +147,7 @@ public class LevelItemEditor : Editor
             suggestH = Mathf.Min(suggestH, baseH * 2f);
 
             // Round to nearest 10
-            levelItem.tileSpacingWidth  = Mathf.Round(suggestW  / 10f) * 10f;
+            levelItem.tileSpacingWidth = Mathf.Round(suggestW / 10f) * 10f;
             levelItem.tileSpacingHeight = Mathf.Round(suggestH / 10f) * 10f;
 
             EditorUtility.SetDirty(levelItem);
@@ -157,7 +157,7 @@ public class LevelItemEditor : Editor
         if (GUILayout.Button("Reset về mặc định (210 × 266)", GUILayout.Height(24)))
         {
             Undo.RecordObject(levelItem, "Reset Spacing");
-            levelItem.tileSpacingWidth  = 0f;
+            levelItem.tileSpacingWidth = 0f;
             levelItem.tileSpacingHeight = 0f;
             EditorUtility.SetDirty(levelItem);
         }

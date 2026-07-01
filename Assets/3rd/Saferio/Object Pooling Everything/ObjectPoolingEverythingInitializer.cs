@@ -58,6 +58,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject takeCardFromGridSoundPrefab;
     [SerializeField] private GameObject shuffleBoosterSoundPrefab;
     [SerializeField] private GameObject dropCardBackToTableSoundPrefab;
+    [SerializeField] private GameObject dealCardsSoundPrefab;
+    [SerializeField] private GameObject TimeLeftSoundPrefab;
+
 
     [Header("Connect Master")]
     [SerializeField] private GameObject baseTile;
@@ -137,6 +140,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.TAKE_CARD_FROM_GRID_SOUND, takeCardFromGridSoundPrefab, 16);
         RegisterPool<AudioSource>(GameConstants.SHUFFLE_BOOSTER_SOUND, shuffleBoosterSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.DROP_CARD_BACK_TO_TABLE_SOUND, dropCardBackToTableSoundPrefab, 5);
+        RegisterPool<AudioSource>(GameConstants.DEAL_CARDS_SOUND, dealCardsSoundPrefab, 16);
+
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);

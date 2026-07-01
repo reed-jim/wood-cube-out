@@ -680,6 +680,7 @@ public class AdmobAdsMax : MonoBehaviour
                 actionWatchLog,
                 actionIniterClose: () =>
                 {
+                    if (AdsBreakScreen.Instance != null) AdsBreakScreen.Instance.Hide();
                     interOneFinished = true;
 
                     CheckAllAdsClosed();

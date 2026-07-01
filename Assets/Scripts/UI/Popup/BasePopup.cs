@@ -26,6 +26,9 @@ public class BasePopup : MonoBehaviour
     protected bool _isShown;
     protected bool _isInTransition;
     protected List<Tween> _tweens;
+    
+    public static int activePopupCount = 0;
+    public static bool IsAnyPopupOpen => activePopupCount > 0;
     #endregion
 
     #region EVENT
@@ -71,6 +74,7 @@ public class BasePopup : MonoBehaviour
             gameObject.SetActive(true);
 
             _isShown = true;
+            activePopupCount++;
         }
         else
         {
@@ -100,6 +104,12 @@ public class BasePopup : MonoBehaviour
         UnregisterMoreEvent();
 
         CommonUtil.StopAllTweens(_tweens);
+
+        if (_isShown)
+        {
+            activePopupCount--;
+            if (activePopupCount < 0) activePopupCount = 0;
+        }
 
         MoreActionOnDestroy();
     }
@@ -160,6 +170,7 @@ public class BasePopup : MonoBehaviour
 
         _isShown = true;
         _isInTransition = true;
+        activePopupCount++;
 
         enableSwipingScreenEvent?.Invoke(false);
 
@@ -214,6 +225,8 @@ public class BasePopup : MonoBehaviour
 
         _isShown = false;
         _isInTransition = true;
+        activePopupCount--;
+        if (activePopupCount < 0) activePopupCount = 0;
 
         AfterHide();
 
@@ -250,6 +263,8 @@ public class BasePopup : MonoBehaviour
             popupHideEvent?.Invoke();
 
             _isShown = false;
+            activePopupCount--;
+            if (activePopupCount < 0) activePopupCount = 0;
 
             AfterHide();
 

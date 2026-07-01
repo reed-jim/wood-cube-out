@@ -48,6 +48,7 @@ public class BoosterItemUI : MonoBehaviour
         BoosterUI.updateBoosterQuantityEvent += UpdateQuantityText;
         LosePopup.updateBoosterQuantityEvent += UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
+        NamPhuThuy.GamePlay.LevelLoader.startLevelCompletedEvent += Setup;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
 
@@ -60,6 +61,7 @@ public class BoosterItemUI : MonoBehaviour
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
         LosePopup.updateBoosterQuantityEvent -= UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
+        NamPhuThuy.GamePlay.LevelLoader.startLevelCompletedEvent -= Setup;
 
         CommonUtil.StopAllTweens(_tweens);
     }

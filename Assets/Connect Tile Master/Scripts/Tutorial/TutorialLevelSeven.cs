@@ -206,6 +206,8 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             yield return new WaitForSeconds(2f);
         }
         
+        Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+        
         // Kết thúc tutorial hoàn toàn
         step = 3;
         if (TileManager.Ins.levelItem != null)

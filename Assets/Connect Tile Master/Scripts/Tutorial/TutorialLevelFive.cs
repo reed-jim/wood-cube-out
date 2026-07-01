@@ -238,7 +238,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
         // Wait 1.5 seconds then hide text
         yield return new WaitForSeconds(1.5f);
         if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
-        upToAll.gameObject.SetActive(false);
+        Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
 
         // Kết thúc tutorial hoàn toàn
         step = 4;

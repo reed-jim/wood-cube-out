@@ -19,7 +19,7 @@ public class CardStockPile : Singleton<CardStockPile>
     [SerializeField] private float slideDuration = 0.5f;
     [SerializeField] private float bounceDuration = 0.2f;
     [SerializeField] private float delayDraw = 0.2f;
-
+    public Image stockImg;
 
     private Vector2 originalCardPos;
     private bool hasCachedOriginalPos = false;
@@ -68,6 +68,11 @@ public class CardStockPile : Singleton<CardStockPile>
     public void UpdateText(bool updateAllCardVisibilities = true)
     {
         int numCardLeft = TileManager.Ins.itemCategoryPool.Count;
+
+        if (stockImg != null)
+        {
+            stockImg.gameObject.SetActive(numCardLeft == 1);
+        }
 
         if (numCardLeft > 0)
         {
@@ -162,6 +167,7 @@ public class CardStockPile : Singleton<CardStockPile>
         UpdateText(false);
         int numCardLeft = TileManager.Ins.itemCategoryPool.Count;
         ApplyCardVisibility(numCardLeft, true);
+        SoundManager.Instance?.PlaySoundTakeCardFromGrid();
 
         if (numCardLeft >= 2 && listCards.Count > 1)
         {

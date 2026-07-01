@@ -25,9 +25,11 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button clearAllScrewPortsButton;
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
     [SerializeField] private Button freezeTimeButton;
+    public Button FreezeTimeButton => freezeTimeButton;
     [SerializeField] private Button hintButton;
     public Button HintButton => hintButton;
     [SerializeField] private Button unlockThemeButton;
+    public Button UnlockThemeButton => unlockThemeButton;
     [SerializeField] private ParticleSystem fxFreezeTrail;
     [SerializeField] private CanvasGroup freezeGroup;
     [SerializeField] private SkeletonGraphic animFreeze;
@@ -62,6 +64,7 @@ public class BoosterUI : MonoBehaviour
     private List<Tween> _tweens;
     private int _numScrewPortsAdded;
     private bool _isInTransition;
+    public bool IsInTransition => _isInTransition;
     private bool _isEnable;
     private bool _isPreventShowWarningPopup;
 
@@ -112,6 +115,8 @@ public class BoosterUI : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent += EnableBooster;
         ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
+        TileManager.winLevelEvent += HideFreezeGroup;
+        TileManager.loseLevelEvent += HideFreezeGroup;
         ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
         RevivePopup.reviveEvent += OnRevived;
 
@@ -163,6 +168,8 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
         RevivePopup.reviveEvent -= OnRevived;
+        TileManager.winLevelEvent -= HideFreezeGroup;
+        TileManager.loseLevelEvent -= HideFreezeGroup;
 
         BuyBoosterPopup.updateBoosterQuantityEvent -= OnBoosterQuantityChanged;
         BoosterUI.updateBoosterQuantityEvent -= OnBoosterQuantityChanged;
@@ -172,6 +179,15 @@ public class BoosterUI : MonoBehaviour
         TileManager.updateActiveSlotsEvent -= UpdateUnlockThemeButtonState;
 
         CommonUtil.StopAllTweens(_tweens);
+    }
+
+    private void HideFreezeGroup()
+    {
+        if (freezeGroup != null)
+        {
+            freezeGroup.alpha = 0;
+            freezeGroup.gameObject.SetActive(false);
+        }
     }
 
     private void Reset()

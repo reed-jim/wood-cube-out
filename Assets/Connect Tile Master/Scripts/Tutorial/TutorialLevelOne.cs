@@ -41,7 +41,27 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         {
             StopCoroutine(tutorialCoroutine);
         }
-        tutorialCoroutine = StartCoroutine(RunLevelOneTutorialCoroutine());
+
+        IntVariable levelVar = Resources.FindObjectsOfTypeAll<IntVariable>().FirstOrDefault(v => v.name.Equals("currentLevel", StringComparison.OrdinalIgnoreCase) || v.name.Contains("Level"));
+        int levelNum = 1;
+        if (levelVar != null)
+        {
+            levelVar.Load();
+            levelNum = levelVar.Value;
+        }
+
+        if (levelNum == 1)
+        {
+            tutorialCoroutine = StartCoroutine(RunLevelOneTutorialCoroutine());
+        }
+        else if (levelNum == 13)
+        {
+            tutorialCoroutine = StartCoroutine(RunLevelThirteenTutorialCoroutine());
+        }
+        else
+        {
+            HideTutorial();
+        }
     }
 
     public void HideTutorial()
@@ -437,5 +457,154 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             Tween.Alpha(tutorialHand, 0f, duration: 0.25f);
             yield return new WaitForSeconds(0.4f);
         }
+    }
+
+    private void StartPointLoop(Transform target)
+    {
+        StopDragLoop();
+        dragLoopCoroutine = StartCoroutine(PointLoop(target));
+    }
+
+    private IEnumerator PointLoop(Transform target)
+    {
+        if (tutorialHand == null || target == null) yield break;
+
+        tutorialHand.gameObject.SetActive(true);
+        tutorialHand.transform.SetParent(target, false);
+        tutorialHand.transform.localPosition = Vector3.zero;
+        tutorialHand.transform.localScale = Vector3.one;
+
+        while (true)
+        {
+            Tween.Alpha(tutorialHand, 1f, duration: 0.25f);
+            yield return new WaitForSeconds(0.25f);
+
+            Tween.Scale(tutorialHand.transform, 0.9f, duration: 0.2f);
+            yield return new WaitForSeconds(0.2f);
+            Tween.Scale(tutorialHand.transform, 1.0f, duration: 0.2f);
+            yield return new WaitForSeconds(0.6f);
+        }
+    }
+
+    private IEnumerator RunLevelThirteenTutorialCoroutine()
+    {
+        // Step 0: Đợi game bắt đầu hoạt động
+        yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
+        yield return new WaitForSeconds(0.2f);
+
+        BoosterUI boosterUI = FindObjectOfType<BoosterUI>();
+        Button freezeBtn = null;
+        if (boosterUI != null)
+        {
+            freezeBtn = boosterUI.FreezeTimeButton;
+        }
+        if (freezeBtn == null)
+        {
+            GameObject freezeObj = GameObject.Find("Freeze");
+            if (freezeObj != null)
+            {
+                freezeBtn = freezeObj.GetComponent<Button>();
+            }
+        }
+
+        if (freezeBtn == null)
+        {
+            Debug.LogError("[Tutorial] Freeze booster button not found!");
+            HideTutorial();
+            yield break;
+        }
+
+        Image upToAll = TileManager.Ins.UpToAll;
+        if (upToAll == null)
+        {
+            Debug.LogError("[Tutorial] upToAll is null!");
+            HideTutorial();
+            yield break;
+        }
+
+        Transform textImageTrans = upToAll.transform.Find("Image");
+        TMP_Text tutText = null;
+        Text legacyText = null;
+        if (textImageTrans != null)
+        {
+            tutText = textImageTrans.GetComponentInChildren<TMP_Text>(true);
+            legacyText = textImageTrans.GetComponentInChildren<Text>(true);
+        }
+
+        Action<string> showText = (textStr) =>
+        {
+            if (textImageTrans != null)
+            {
+                textImageTrans.gameObject.SetActive(true);
+            }
+            if (tutText != null)
+            {
+                tutText.text = textStr;
+            }
+            else if (legacyText != null)
+            {
+                legacyText.text = textStr;
+            }
+        };
+
+        // Kích hoạt overlay
+        upToAll.gameObject.SetActive(true);
+        upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
+        Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+
+        if (textImageTrans != null)
+        {
+            textImageTrans.localPosition += new Vector3(0, 250, 0);
+        }
+        showText("Freeze stops the timer!");
+
+        // Highlight nút Freeze bằng cách đưa lên overlay
+        Transform origParent = freezeBtn.transform.parent;
+        int origSiblingIndex = freezeBtn.transform.GetSiblingIndex();
+        freezeBtn.transform.SetParent(upToAll.transform, true);
+        freezeBtn.transform.SetAsLastSibling();
+
+        // Chạy hiệu ứng bàn tay chỉ vào nút Freeze
+        StartPointLoop(freezeBtn.transform);
+
+        bool clicked = false;
+        UnityEngine.Events.UnityAction onClickAction = () => clicked = true;
+        freezeBtn.onClick.AddListener(onClickAction);
+
+        yield return new WaitUntil(() => clicked);
+
+        freezeBtn.onClick.RemoveListener(onClickAction);
+
+        // Khôi phục parent của nút Freeze ngay lập tức
+        if (freezeBtn != null && origParent != null)
+        {
+            freezeBtn.transform.SetParent(origParent, true);
+            freezeBtn.transform.SetSiblingIndex(origSiblingIndex);
+        }
+
+        // Tắt bàn tay chỉ dẫn
+        StopDragLoop();
+
+        if (textImageTrans != null)
+        {
+            textImageTrans.localPosition -= new Vector3(0, 250, 0);
+        }
+
+        // Hiển thị text mới
+        showText("Use it when time is low!");
+
+        // Đợi 1.5s
+        yield return new WaitForSeconds(1.5f);
+
+        // Ẩn overlay
+        Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
+        if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
+
+        // Kết thúc tutorial hoàn toàn
+        if (TileManager.Ins.levelItem != null)
+        {
+            TileManager.Ins.levelItem.isTutorial = false;
+        }
+        HideTutorial();
     }
 }

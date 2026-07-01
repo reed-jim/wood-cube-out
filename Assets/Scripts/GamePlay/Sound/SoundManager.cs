@@ -247,6 +247,8 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    private AudioSource _outOfTimeSound;
+
     public void PlaySoundCountingTime()
     {
         if (!_isEnableGameSound)
@@ -254,9 +256,22 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.COUNTING_TIME_SOUND);
+        if (_outOfTimeSound != null && _outOfTimeSound.isPlaying) return;
 
-        sound.Play();
+        _outOfTimeSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.COUNTING_TIME_SOUND);
+        if (_outOfTimeSound != null)
+        {
+            _outOfTimeSound.loop = true;
+            _outOfTimeSound.Play();
+        }
+    }
+
+    public void StopSoundCountingTime()
+    {
+        if (_outOfTimeSound != null)
+        {
+            _outOfTimeSound.Stop();
+        }
     }
 
     public void PlaySoundChestAppear()
@@ -316,21 +331,27 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
-    //public void PlaySoundCardPutIntoTheme()
-    //{
-    //    if (!_isEnableGameSound) return;
-    //    AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CARD_PUT_INTO_THEME_SOUND);
-    //    sound.loop = false;
-    //    sound.Play();
-    //}
+    public void PlaySoundCardPutIntoTheme()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.TAKE_CARD_FROM_GRID_SOUND);
+        if (sound != null)
+        {
+            sound.loop = false;
+            sound.Play();
+        }
+    }
 
-    //public void PlaySoundDealCards()
-    //{
-    //    if (!_isEnableGameSound) return;
-    //    AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.DEAL_CARDS_SOUND);
-    //    sound.loop = false;
-    //    sound.Play();
-    //}
+    public void PlaySoundDealCards()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.DEAL_CARDS_SOUND);
+        if (sound != null)
+        {
+            sound.loop = false;
+            sound.Play();
+        }
+    }
 
     public void PlaySoundFreezeBooster()
     {
@@ -368,8 +389,11 @@ public class SoundManager : MonoBehaviour
     {
         if (!_isEnableGameSound) return;
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.FLIP_CARD_SOUND);
-        sound.loop = false;
-        sound.Play();
+        if (sound != null)
+        {
+            sound.loop = false;
+            sound.Play();
+        }
     }
 
     public void PlaySoundTakeCardFromGrid()

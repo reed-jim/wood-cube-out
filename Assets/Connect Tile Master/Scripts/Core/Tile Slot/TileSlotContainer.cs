@@ -24,6 +24,7 @@ public class TileSlotContainer : MonoBehaviour
     public Image lockImage;
     [SerializeField] private Image glow;
     [SerializeField] private Image glowUnlockTheme;
+    public Image GlowUnlockTheme => glowUnlockTheme;
 
     [SerializeField] private Image lockObject;
     [SerializeField] private Image unlockObject;
@@ -559,7 +560,6 @@ public class TileSlotContainer : MonoBehaviour
         string oldCategoryName = this.itemCategory.ToString().Replace("_", " ");
         this.itemCategory = nextCategory;
         isMoving = true;
-
         if (tileCountText != null)
         {
             Canvas canvas = tileCountText.gameObject.GetComponent<Canvas>();
@@ -658,6 +658,7 @@ public class TileSlotContainer : MonoBehaviour
         }
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
+            if (SoundManager.Instance != null) SoundManager.Instance.PlaySoundCompleteTheme();
             if (fxCompleteTheme != null) fxCompleteTheme.Play();
             string catName = this.itemCategory.ToString().Replace("_", " ");
             category.text = isTextUppercase ? catName.ToUpper() : catName;
@@ -878,7 +879,7 @@ public class TileSlotContainer : MonoBehaviour
         else if (length == 4) size = 38f;
         else if (length == 5) size = 36f;
         else if (length == 6) size = 34f;
-        else if (length == 7) size = 30f;
+        else if (length == 7) size = 29f;
         else size = 26f;
 
         textComponent.fontSize = size;
@@ -897,6 +898,11 @@ public class TileSlotContainer : MonoBehaviour
             Color c = wrongGlow.color;
             c.a = 1f;
             wrongGlow.color = c;
+        }
+
+        if (GamePersistentVariable.IsVibrate)
+        {
+            CandyCoded.HapticFeedback.HapticFeedback.MediumFeedback();
         }
 
         if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();

@@ -144,14 +144,27 @@ public class TileManager : Singleton<TileManager>
 
     private void Update()
     {
-        if (isLevelActive && !isTimeFrozen && currentLevelTime > 0)
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            InstantWin();
+        }
+#endif
+
+        if (isLevelActive && !isTimeFrozen && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
         {
             currentLevelTime -= Time.deltaTime;
+
+            if (currentLevelTime <= 15f && currentLevelTime > 0)
+            {
+                SoundManager.Instance?.PlaySoundCountingTime();
+            }
 
             if (currentLevelTime <= 0)
             {
                 currentLevelTime = 0;
                 isLevelActive = false;
+                SoundManager.Instance?.StopSoundCountingTime();
                 loseLevelEvent?.Invoke();
             }
         }
@@ -407,6 +420,7 @@ public class TileManager : Singleton<TileManager>
     private void SetupLevelInternal(LevelItem levelItem)
     {
         isLevelActive = false;
+        SoundManager.Instance?.StopSoundCountingTime();
         _hasTriggeredWin = false;
         if (levelItem.timeLimit > 0)
         {
@@ -537,6 +551,15 @@ public class TileManager : Singleton<TileManager>
                     tut10.StartTutorial();
                 }
             }
+            else if (GamePersistentVariable.currentLevel == 15)
+            {
+                TutorialLevelSixteen tut16 = TutorialLevelSixteen.Ins != null ? TutorialLevelSixteen.Ins : FindObjectOfType<TutorialLevelSixteen>(true);
+                if (tut16 != null)
+                {
+                    tut16.gameObject.SetActive(true);
+                    tut16.StartTutorial();
+                }
+            }
         }
         else
         {
@@ -544,7 +567,7 @@ public class TileManager : Singleton<TileManager>
             {
                 TutorialLevelOne.Ins.HideTutorial();
             }
-            
+
             if (TutorialLevelTwo.Ins != null)
             {
                 TutorialLevelTwo.Ins.HideTutorial();
@@ -563,6 +586,11 @@ public class TileManager : Singleton<TileManager>
             if (TutorialLevelTen.Ins != null)
             {
                 TutorialLevelTen.Ins.HideTutorial();
+            }
+
+            if (TutorialLevelSixteen.Ins != null)
+            {
+                TutorialLevelSixteen.Ins.HideTutorial();
             }
         }
 
@@ -709,7 +737,7 @@ public class TileManager : Singleton<TileManager>
         {
             result.Remove(ItemCategory.Fast_Food);
             result.Remove(ItemCategory.Vehicles);
-            
+
             result.Insert(0, ItemCategory.Vehicles);
             result.Insert(0, ItemCategory.Fast_Food);
         }
@@ -727,6 +755,22 @@ public class TileManager : Singleton<TileManager>
                 result.Insert(0, targetThemeLevel10);
             }
         }
+        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 15)
+        {
+            if (levelItem.themeDataList.Count > 2)
+            {
+                ItemCategory lockedTheme = levelItem.themeDataList[2].category;
+                result.Remove(lockedTheme);
+                if (result.Count >= 2)
+                {
+                    result.Insert(2, lockedTheme);
+                }
+                else
+                {
+                    result.Add(lockedTheme);
+                }
+            }
+        }
 
         return result;
     }
@@ -740,40 +784,51 @@ public class TileManager : Singleton<TileManager>
             .Distinct()
             .ToList();
 
-        float ratio = levelItem != null ? levelItem.priorityCardRatio : 0.5f;
-        float randVal = UnityEngine.Random.value;
-
         ItemCategory chosenCategory;
 
         if (orderedCategories.Count > 0)
         {
-            if (randVal <= ratio)
-            {
-                // Deal a card belonging to one of the ordered categories
-                List<ItemCategory> matchingInPool = itemCategoryPool
-                    .Where(c => orderedCategories.Contains(c))
-                    .ToList();
+            List<ItemCategory> matchingInPool = itemCategoryPool
+                .Where(c => orderedCategories.Contains(c))
+                .ToList();
 
-                if (matchingInPool.Count > 0)
+            List<ItemCategory> nonMatchingInPool = itemCategoryPool
+                .Where(c => !orderedCategories.Contains(c))
+                .ToList();
+
+            if (matchingInPool.Count > 0)
+            {
+                int countOnGrid = tiles.Count(tile => !tile.IsDone && !tile.IsOnSlot && orderedCategories.Contains(tile.ItemCategory));
+                float ratio = 0f;
+                if (countOnGrid <= 1) ratio = 1.0f;
+                else if (countOnGrid == 2) ratio = 0.85f;
+                else if (countOnGrid == 3) ratio = 0.60f;
+                else if (countOnGrid == 4) ratio = 0.40f;
+                else if (countOnGrid == 5) ratio = 0.35f;
+                else if (countOnGrid == 6) ratio = 0.20f;
+                else if (countOnGrid == 7) ratio = 0.10f;
+                else ratio = 0.0f;
+
+                float randVal = UnityEngine.Random.value;
+
+                if (randVal <= ratio || nonMatchingInPool.Count == 0)
                 {
                     chosenCategory = matchingInPool[UnityEngine.Random.Range(0, matchingInPool.Count)];
                     itemCategoryPool.Remove(chosenCategory);
                     return chosenCategory;
                 }
-            }
-            else
-            {
-                // Deal a card NOT belonging to the ordered categories
-                List<ItemCategory> nonMatchingInPool = itemCategoryPool
-                    .Where(c => !orderedCategories.Contains(c))
-                    .ToList();
-
-                if (nonMatchingInPool.Count > 0)
+                else
                 {
                     chosenCategory = nonMatchingInPool[UnityEngine.Random.Range(0, nonMatchingInPool.Count)];
                     itemCategoryPool.Remove(chosenCategory);
                     return chosenCategory;
                 }
+            }
+            else if (nonMatchingInPool.Count > 0)
+            {
+                chosenCategory = nonMatchingInPool[UnityEngine.Random.Range(0, nonMatchingInPool.Count)];
+                itemCategoryPool.Remove(chosenCategory);
+                return chosenCategory;
             }
         }
 
@@ -992,22 +1047,42 @@ public class TileManager : Singleton<TileManager>
             {
                 ItemCategory targetTheme = itemCategoryPool[0];
                 targetThemeLevel10 = targetTheme;
-                
+
                 int gridSize = (levelItem.initRow > 0 && levelItem.initColumn > 0) ? levelItem.initRow * levelItem.initColumn : 16;
                 int removedCount = itemCategoryPool.RemoveAll(c => c == targetTheme);
-                
+
                 int insertPos = Mathf.Min(gridSize - 2, itemCategoryPool.Count);
                 if (insertPos < 0) insertPos = 0;
-                
+
                 int numInGrid = Mathf.Min(2, removedCount);
                 for (int i = 0; i < numInGrid; i++)
                 {
                     itemCategoryPool.Insert(insertPos, targetTheme);
                 }
-                
+
                 for (int i = numInGrid; i < removedCount; i++)
                 {
                     itemCategoryPool.Add(targetTheme);
+                }
+            }
+        }
+        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 15)
+        {
+            if (levelItem.themeDataList.Count > 2)
+            {
+                ItemCategory lockedTheme = levelItem.themeDataList[2].category;
+                int lockedThemeCount = itemCategoryPool.Count(c => c == lockedTheme);
+                itemCategoryPool.RemoveAll(c => c == lockedTheme);
+
+                int numInGrid = Mathf.Min(3, lockedThemeCount);
+                for (int i = 0; i < numInGrid; i++)
+                {
+                    itemCategoryPool.Insert(0, lockedTheme);
+                }
+
+                for (int i = numInGrid; i < lockedThemeCount; i++)
+                {
+                    itemCategoryPool.Add(lockedTheme);
                 }
             }
         }
@@ -1429,6 +1504,7 @@ public class TileManager : Singleton<TileManager>
                             {
                                 if (tile != null)
                                 {
+                                    SoundManager.Instance?.PlaySoundFlipCard();
                                     tile.SetFaceUp(true);
                                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration)
                                     .OnComplete(() =>
@@ -1623,6 +1699,7 @@ public class TileManager : Singleton<TileManager>
             float dealDuration = distance / dealSpeed;
 
             tile.transform.SetAsLastSibling();
+            SoundManager.Instance?.PlaySoundDealCards();
             Tween.LocalPosition(tile.transform, grid.position, dealDuration);
 
             float halfDuration = dealDuration / 2f;
@@ -1647,6 +1724,7 @@ public class TileManager : Singleton<TileManager>
             {
                 if (tile != null)
                 {
+                    SoundManager.Instance?.PlaySoundFlipCard();
                     tile.SetFaceUp(true);
                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration);
                 }
@@ -1730,7 +1808,7 @@ public class TileManager : Singleton<TileManager>
                     : (iconSet.iconCdnKeys != null ? iconSet.iconCdnKeys.Length : 0);
             else
                 spCount = iconSet.icons != null ? iconSet.icons.Length : 0;
-                
+
             if (availableItemIdsPerCategory.ContainsKey(category))
             {
                 int textIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id >= spCount);
@@ -1751,7 +1829,7 @@ public class TileManager : Singleton<TileManager>
                     : (iconSet.iconCdnKeys != null ? iconSet.iconCdnKeys.Length : 0);
             else
                 spCount = iconSet.icons != null ? iconSet.icons.Length : 0;
-                
+
             if (availableItemIdsPerCategory.ContainsKey(category))
             {
                 if (TutorialLevelFive.Ins != null && !TutorialLevelFive.Ins.hasDealtFirstTextCard)
@@ -1852,6 +1930,7 @@ public class TileManager : Singleton<TileManager>
     public void UseFreezeTimeBooster(float duration, UnityAction callback = null)
     {
         isTimeFrozen = true;
+        SoundManager.Instance?.StopSoundCountingTime();
 
         if (freezeTimeTween.isAlive)
         {
@@ -2107,7 +2186,7 @@ public class TileManager : Singleton<TileManager>
             if (!hasPriority && !hasOther) break;
 
             ItemCategory chosen;
-            float ratio = levelItem != null ? levelItem.priorityCardRatio : 0.5f;
+            float ratio = 0.5f;
             if (hasPriority && (!hasOther || UnityEngine.Random.value < ratio))
             {
                 chosen = priorityPool[0];
@@ -2141,7 +2220,7 @@ public class TileManager : Singleton<TileManager>
                 List<ItemCategory> targetCats = shuffledGridCategories.Where(c => c == targetThemeLevel10).ToList();
                 shuffledGridCategories.RemoveAll(c => c == targetThemeLevel10);
                 shuffledGridCategories.InsertRange(0, targetCats);
-                
+
                 // Sort tilesToShuffle by y position descending so first elements are at the top row
                 tilesToShuffle = tilesToShuffle.OrderByDescending(t => t.transform.localPosition.y).ToList();
             }
@@ -2257,6 +2336,7 @@ public class TileManager : Singleton<TileManager>
         {
             var target = sortedTargets[i];
             float delay = i * 0.08f;
+            Tween.Delay(delay).OnComplete(() => { if (SoundManager.Instance != null) SoundManager.Instance.PlaySoundFlipCard(); });
             target.tile.FlipFaceDown(delay, () =>
             {
                 flipsCompleted++;
@@ -2342,6 +2422,7 @@ public class TileManager : Singleton<TileManager>
             float dealDuration = distance / dealSpeed;
 
             tile.transform.SetAsLastSibling();
+            SoundManager.Instance?.PlaySoundDealCards();
             Tween.LocalPosition(tile.transform, target.targetLocalPos, dealDuration);
 
             float halfDuration = dealDuration / 3f;
@@ -2363,11 +2444,14 @@ public class TileManager : Singleton<TileManager>
             BaseTile tile = target.tile;
             if (tile == null) continue;
 
+            if (SoundManager.Instance != null) SoundManager.Instance.PlaySoundFlipCard();
+
             float flipDuration = 0.15f;
             Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 90f, 0), flipDuration).OnComplete(() =>
             {
                 if (tile != null)
                 {
+                    SoundManager.Instance?.PlaySoundFlipCard();
                     tile.SetFaceUp(true);
                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration).OnComplete(() =>
                     {
@@ -2524,10 +2608,19 @@ public class TileManager : Singleton<TileManager>
 
             if (!_hasTriggeredWin)
             {
-                _hasTriggeredWin = true;
-                isLevelActive = false;
-                winLevelEvent?.Invoke();
+                InstantWin();
             }
+        }
+    }
+
+    public void InstantWin()
+    {
+        SoundManager.Instance?.StopSoundCountingTime();
+        if (!_hasTriggeredWin)
+        {
+            _hasTriggeredWin = true;
+            isLevelActive = false;
+            winLevelEvent?.Invoke();
         }
     }
     #endregion
