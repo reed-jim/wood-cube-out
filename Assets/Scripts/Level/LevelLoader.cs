@@ -370,6 +370,8 @@ namespace NamPhuThuy.GamePlay
             spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f);
             spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
 
+            AntsFlow.TileManager.Ins.tilemap = spawnedTileMap;
+
             tilemapGrids.Add(spawnedTileMapGrid);
 
             if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
@@ -391,9 +393,9 @@ namespace NamPhuThuy.GamePlay
                     AntsFlow.TileManager.Ins.tiles[i].tilemapPosition = cellPos;
 
                     // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
-
-                    SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
                 }
+                
+                SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
             }
             else
             {
@@ -430,8 +432,6 @@ namespace NamPhuThuy.GamePlay
                     }
                 }
             }
-
-            AntsFlow.TileManager.Ins.tilemaps = tilemapGrids.Select(item => item.GetComponentInChildren<Tilemap>()).ToArray();
         }
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)

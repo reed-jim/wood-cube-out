@@ -43,7 +43,7 @@ namespace AntsFlow
         public Tilemap baseTilemap;
         public Tilemap shadowTilemap;
         public Tilemap tileGlowTilemap;
-        public Tilemap[] tilemaps;
+        public Tilemap tilemap;
         public Sprite tileGlowSprite;
 
         #region Navmesh
@@ -56,15 +56,6 @@ namespace AntsFlow
         public int numExtraRow;
         public List<BaseTile> tiles;
         public List<Node> nodes;
-        private Dictionary<Vector2Int, BaseTile> tileMap;
-
-        private static readonly Vector2Int[] dirs =
-        {
-            Vector2Int.up,
-            Vector2Int.down,
-            Vector2Int.left,
-            Vector2Int.right
-        };
 
         public Node bottomLeftMostInsideLevelNode;
         public Node bottomRightMostInsideLevelNode;
@@ -110,6 +101,16 @@ namespace AntsFlow
         {
             return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1);
             return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.3f, 0.3f);
+        }
+
+        public void RevealTile(BaseTile tile)
+        {
+            Vector3Int cellPos = tile.tilemapPosition;
+
+            Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
+            tilemapTile.sprite = FactionMapper.Ins.GetTileSprite(tile.Faction);
+
+            tilemap.SetTile(cellPos, tilemapTile);
         }
 
         public void BuildMap(List<BaseTile> tiles)

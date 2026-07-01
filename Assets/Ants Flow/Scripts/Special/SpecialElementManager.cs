@@ -188,19 +188,22 @@ namespace AntsFlow
 
         public void FillHiddenTiles(Tilemap tilemap, int width, int height)
         {
-            int clusterSize = 10;
+            int clusterSize = 50;
             int[] indexesToFill = GetRandomCluster(width, height, clusterSize);
 
             for (int i = 0; i < indexesToFill.Length; i++)
             {
                 int index = indexesToFill[i];
+                BaseTile tile = TileManager.Ins.tiles[index];
 
-                Vector3Int cellPos = TileManager.Ins.tiles[index].tilemapPosition;
+                Vector3Int cellPos = tile.tilemapPosition;
 
-                Tile tile = ScriptableObject.CreateInstance<Tile>();
-                tile.sprite = hiddenTileSprite;
+                Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
+                tilemapTile.sprite = hiddenTileSprite;
 
-                tilemap.SetTile(cellPos, tile);
+                tilemap.SetTile(cellPos, tilemapTile);
+
+                tile.isHidden = true;
             }
         }
 

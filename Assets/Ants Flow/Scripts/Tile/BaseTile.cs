@@ -34,6 +34,7 @@ namespace AntsFlow
         public bool isMovedToAnt;
         public bool isPrepareComplete;
         public bool isLocked;
+        public bool isHidden;
         public int numStepToReach;
         [NonSerialized] public List<BaseTile> blockages;
         [NonSerialized] public HashSet<BaseTile> blockedByMe;
@@ -161,6 +162,19 @@ namespace AntsFlow
             }
         }
 
+        public void RevealHiddenTiles()
+        {
+            foreach (var tile in blockedByMe)
+            {
+                if (tile.isHidden)
+                {
+                    TileManager.Ins.RevealTile(tile);
+
+                    tile.isHidden = false;
+                }
+            }
+        }
+
         public void ActualComplete()
         {
             foreach (var tile in blockedByMe)
@@ -245,6 +259,8 @@ namespace AntsFlow
         {
             isDone = true;
 
+            RevealHiddenTiles();
+
             tileCompleteEvent.Invoke(this);
         }
 
@@ -259,11 +275,9 @@ namespace AntsFlow
 
         public void InvokeAntStartMoveToTileEvent()
         {
-            // navMeshModifierVolume.enabled = false;
-
             HideObstacle();
 
-            SetNoLongerBlockages();
+            // SetNoLongerBlockages();
 
             antStartMoveToTileEvent?.Invoke(this);
         }
