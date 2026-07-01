@@ -420,6 +420,17 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    public void PlaySoundWrongCard()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.WRONG_CARD_SOUND);
+        if (sound != null)
+        {
+            sound.loop = false;
+            sound.Play();
+        }
+    }
+
     private void FadeOutBackgroundMusic()
     {
         _tweens.Add(Tween.Custom(0.5f, 0, duration: 0.3f, onValueChange: newVal =>

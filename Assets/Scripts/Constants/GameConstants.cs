@@ -89,6 +89,7 @@ public static class GameConstants
     public static string SHUFFLE_BOOSTER_SOUND = "Shuffle Booster Sound";
     public static string DROP_CARD_BACK_TO_TABLE_SOUND = "Drop Card Back To Table Sound";
     public static string DEAL_CARDS_SOUND = "Deal Cards Sound";
+    public static string WRONG_CARD_SOUND = "Wrong Card";
     #endregion
 
     #region ANIMATION

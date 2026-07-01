@@ -15,6 +15,7 @@ public class PausePopup : BasePopup
     [SerializeField] private SaferioToggle turnMusicToggle;
     [SerializeField] private SaferioToggle turnSoundToggle;
     [SerializeField] private SaferioToggle vibrationToggle;
+    [SerializeField] private Button btContinue;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
@@ -37,11 +38,13 @@ public class PausePopup : BasePopup
         ScriptableObjectInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
 
         //returnHomeButton.onClick.AddListener(ReturnHome);
+        btContinue.onClick.AddListener(Hide);
         replayLevelButton.onClick.AddListener(Replay);
         turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
     }
+
 
     protected override void UnregisterMoreEvent()
     {

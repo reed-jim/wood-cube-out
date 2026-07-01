@@ -191,7 +191,7 @@ public class LevelItemEditor : Editor
                     {
                         if (iconSet.itemCategory == selectedCategory)
                         {
-                            int spritesCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                            int spritesCount = (iconSet.iconCdnKeys != null && iconSet.iconCdnKeys.Length > 0) ? iconSet.iconCdnKeys.Length : (iconSet.icons != null ? iconSet.icons.Length : 0);
                             int stringsCount = iconSet.text != null ? iconSet.text.Length : 0;
 
                             if (themeData.numSprite != spritesCount || themeData.numString != stringsCount)
@@ -234,7 +234,7 @@ public class LevelItemEditor : Editor
                     {
                         if (iconSet.itemCategory == themeData.category)
                         {
-                            int spritesCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                            int spritesCount = (iconSet.iconCdnKeys != null && iconSet.iconCdnKeys.Length > 0) ? iconSet.iconCdnKeys.Length : (iconSet.icons != null ? iconSet.icons.Length : 0);
                             int stringsCount = iconSet.text != null ? iconSet.text.Length : 0;
 
                             if (themeData.numSprite != spritesCount || themeData.numString != stringsCount)

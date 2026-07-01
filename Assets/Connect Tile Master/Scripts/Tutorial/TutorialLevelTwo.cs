@@ -163,9 +163,9 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
         yield return StartCoroutine(WaitForCardsDealt());
 
         // --- BƯỚC 2 ---
-        // Highlight: Theme: Vehicles, Card: Bus. Hand kéo. Text: Images and words can both match!
+        // Highlight: Theme: Gaming. Hand kéo. Text: Images and words can both match!
         step = 2;
-        BaseTile tile2 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme2 && t.IsText);
+        BaseTile tile2 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme2 && !t.IsText);
         if (tile2 != null)
         {
             // Kích hoạt overlay
@@ -256,7 +256,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
     public ItemCategory GetTutorialForcedCategory(ItemCategory defaultCategory)
     {
-        // Chặn không cho theme 2 (Vehicles) xuất hiện ở ngay lần chia bài đầu tiên (khi step == 1)
+        // Chặn không cho theme 2 (Gaming) xuất hiện ở ngay lần chia bài đầu tiên (khi step == 1)
         // để đảm bảo 2 tutorial không bị dính liền nhau.
         if (step <= 1 && defaultCategory == theme2)
         {

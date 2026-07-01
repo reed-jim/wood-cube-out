@@ -515,6 +515,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void ShowWrongFeedback()
     {
+        SoundManager.Instance?.PlaySoundWrongCard();
+
         if (wrongGlow == null)
         {
             wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");

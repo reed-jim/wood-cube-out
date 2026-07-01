@@ -43,6 +43,7 @@ public class TileManager : Singleton<TileManager>
     public bool isLevelActive;
     private bool _hasTriggeredWin;
     [HideInInspector] public bool isTimeFrozen;
+    [HideInInspector] public bool isCurrentLevelTutorialActive;
     private Tween freezeTimeTween;
     private Tween gridPositionTween;
 
@@ -121,6 +122,7 @@ public class TileManager : Singleton<TileManager>
 
     public static event Action winLevelEvent;
     public static event Action loseLevelEvent;
+    public static event Action startLevelEvent;
 
     private float valueRotateWhenShuffling = 60f;
     private float originalHeadY;
@@ -224,6 +226,7 @@ public class TileManager : Singleton<TileManager>
 
         // Continue with normal setup
         SetupLevelInternal(levelItem);
+        startLevelEvent?.Invoke();
     }
 
     private void ShowNoInternetPopup()
@@ -419,6 +422,40 @@ public class TileManager : Singleton<TileManager>
 
     private void SetupLevelInternal(LevelItem levelItem)
     {
+        if (levelItem != null && levelItem.themeDataList != null && levelItem.tileIconContainer != null)
+        {
+            foreach (var theme in levelItem.themeDataList)
+            {
+                if (theme.numSprite == 0 && theme.numString == 0)
+                {
+                    foreach (var iconSet in levelItem.tileIconContainer.categoryIconSets)
+                    {
+                        if (iconSet.itemCategory == theme.category)
+                        {
+                            theme.numSprite = iconSet.icons != null ? iconSet.icons.Length : 0;
+                            theme.numString = iconSet.text != null ? iconSet.text.Length : 0;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (levelItem != null && levelItem.isTutorial)
+        {
+            string prefKey = "Tutorial_Level_" + GamePersistentVariable.currentLevel;
+            isCurrentLevelTutorialActive = PlayerPrefs.GetInt(prefKey, 0) == 0;
+            if (isCurrentLevelTutorialActive)
+            {
+                PlayerPrefs.SetInt(prefKey, 1);
+                PlayerPrefs.Save();
+            }
+        }
+        else
+        {
+            isCurrentLevelTutorialActive = false;
+        }
+
         isLevelActive = false;
         SoundManager.Instance?.StopSoundCountingTime();
         _hasTriggeredWin = false;
@@ -504,9 +541,9 @@ public class TileManager : Singleton<TileManager>
 
         int totalSet = levelItem.themeDataList.Count;
 
-        if (levelItem.isTutorial)
+        if (isCurrentLevelTutorialActive)
         {
-            if (GamePersistentVariable.currentLevel == 1)
+            if (GamePersistentVariable.currentLevel == 1 || GamePersistentVariable.currentLevel == 13)
             {
                 TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
                 if (tut1 != null)
@@ -733,21 +770,21 @@ public class TileManager : Singleton<TileManager>
 
         result.Shuffle();
 
-        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 2)
+        if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 2)
         {
             result.Remove(ItemCategory.Fast_Food);
-            result.Remove(ItemCategory.Vehicles);
+            result.Remove(ItemCategory.Gaming);
 
-            result.Insert(0, ItemCategory.Vehicles);
+            result.Insert(0, ItemCategory.Gaming);
             result.Insert(0, ItemCategory.Fast_Food);
         }
-        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 5)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 5)
         {
             result.Remove(ItemCategory.Number_5);
             result.Insert(0, ItemCategory.Number_5);
         }
 
-        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 10)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 10)
         {
             if (targetThemeLevel10 != ItemCategory.None)
             {
@@ -755,7 +792,7 @@ public class TileManager : Singleton<TileManager>
                 result.Insert(0, targetThemeLevel10);
             }
         }
-        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 15)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 15)
         {
             if (levelItem.themeDataList.Count > 2)
             {
@@ -1014,11 +1051,11 @@ public class TileManager : Singleton<TileManager>
 
         itemCategoryPool.Shuffle();
 
-        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 2)
+        if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 2)
         {
-            if (itemCategoryPool.Remove(ItemCategory.Vehicles))
+            if (itemCategoryPool.Remove(ItemCategory.Gaming))
             {
-                itemCategoryPool.Insert(0, ItemCategory.Vehicles);
+                itemCategoryPool.Insert(0, ItemCategory.Gaming);
             }
 
             int fastFoodCount = 0;
@@ -1030,7 +1067,7 @@ public class TileManager : Singleton<TileManager>
                 itemCategoryPool.Insert(0, ItemCategory.Fast_Food);
             }
         }
-        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 5)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 5)
         {
             int number5Count = 0;
             if (itemCategoryPool.Remove(ItemCategory.Number_5)) number5Count++;
@@ -1041,7 +1078,7 @@ public class TileManager : Singleton<TileManager>
                 itemCategoryPool.Insert(0, ItemCategory.Number_5);
             }
         }
-        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 10)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 10)
         {
             if (itemCategoryPool.Count > 0)
             {
@@ -1066,7 +1103,7 @@ public class TileManager : Singleton<TileManager>
                 }
             }
         }
-        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 15)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 15)
         {
             if (levelItem.themeDataList.Count > 2)
             {
@@ -1454,7 +1491,7 @@ public class TileManager : Singleton<TileManager>
                     tile.transform.position = CardStockPile.Ins.transform.position;
 
                     ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
-                    if (levelItem.isTutorial)
+                    if (isCurrentLevelTutorialActive)
                     {
                         if (GamePersistentVariable.currentLevel == 2)
                         {
@@ -1620,7 +1657,7 @@ public class TileManager : Singleton<TileManager>
 
             float xPos = xIndex * tileSpacingWidth - totalWidth / 2f;
             int actualYIndex = yIndex;
-            if (levelItem != null && levelItem.isTutorial)
+            if (isCurrentLevelTutorialActive)
             {
                 actualYIndex = row - 1 - yIndex;
             }
@@ -1726,7 +1763,11 @@ public class TileManager : Singleton<TileManager>
                 {
                     SoundManager.Instance?.PlaySoundFlipCard();
                     tile.SetFaceUp(true);
-                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration);
+                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration)
+                        .OnComplete(() =>
+                        {
+                            if (tile != null) tile.IsMoving = false;
+                        });
                 }
             });
 
@@ -1799,7 +1840,7 @@ public class TileManager : Singleton<TileManager>
 
     private int GetUniqueItemId(ItemCategory category, CategoryIconSet iconSet)
     {
-        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 2 && category == ItemCategory.Vehicles)
+        if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 2 && category == ItemCategory.Gaming)
         {
             int spCount;
             if (iconSet.isOnServer)
@@ -1811,16 +1852,16 @@ public class TileManager : Singleton<TileManager>
 
             if (availableItemIdsPerCategory.ContainsKey(category))
             {
-                int textIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id >= spCount);
-                if (textIdIndex != -1)
+                int targetIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id < spCount);
+                if (targetIdIndex != -1)
                 {
-                    int itemId = availableItemIdsPerCategory[category][textIdIndex];
-                    availableItemIdsPerCategory[category].RemoveAt(textIdIndex);
+                    int itemId = availableItemIdsPerCategory[category][targetIdIndex];
+                    availableItemIdsPerCategory[category].RemoveAt(targetIdIndex);
                     return itemId;
                 }
             }
         }
-        else if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 5 && category == ItemCategory.Number_5)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 5 && category == ItemCategory.Number_5)
         {
             int spCount;
             if (iconSet.isOnServer)
@@ -1991,6 +2032,8 @@ public class TileManager : Singleton<TileManager>
 
         if (activeContainer != null)
         {
+            if (upToAll != null && activeContainer.transform.parent == upToAll.transform) return;
+
             activeContainer.SetHighlight(true);
 
             if (highlightedTile != null)
@@ -2212,7 +2255,7 @@ public class TileManager : Singleton<TileManager>
         shuffledGridCategories.Shuffle();
         tilesToShuffle.Shuffle();
 
-        if (levelItem != null && levelItem.isTutorial && GamePersistentVariable.currentLevel == 10)
+        if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 10)
         {
             if (targetThemeLevel10 != ItemCategory.None)
             {

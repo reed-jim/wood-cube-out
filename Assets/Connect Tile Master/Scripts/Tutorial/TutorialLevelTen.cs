@@ -246,7 +246,7 @@ public class TutorialLevelTen : Singleton<TutorialLevelTen>
             if (target == null) yield break;
             
             tutorialHand.transform.position = target.position + new Vector3(30f, -30f, 0f);
-            tutorialHand.AnimationState.SetAnimation(0, "tap", false);
+            tutorialHand.AnimationState.SetAnimation(0, "action", false);
             
             yield return new WaitForSeconds(1f);
         }
