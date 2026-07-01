@@ -540,6 +540,7 @@ namespace AntsFlow
                 //     }
                 // }
 
+                int firstBottomMostPointIndex = 0;
 
                 if (isCenter)
                 {
@@ -548,18 +549,70 @@ namespace AntsFlow
 
                     points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
                     points.Insert(1, TileManager.Ins.antNest.position.ChangeY(-3).ChangeX(sign * 3f));
-                    // points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
+                    points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
                     // points.Insert(3, corner);
                     // points.Insert(4, corner.ChangeY(tilePosition.y));
+
+                    firstBottomMostPointIndex = 2;
                 }
                 else
                 {
-                    // points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
+                    points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
                     // points.Insert(1, corner);
                     // points.Insert(2, corner.ChangeY(tilePosition.y));
+
+                    firstBottomMostPointIndex = 0;
                 }
 
                 // points = Simplify(points);
+
+                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 1f);
+
+                Vector3 cachePoint = Vector3.zero;
+                int cachePointIndex = -1;
+
+                for (int i = 0; i < points.Count; i++)
+                {
+                    Vector3 point = points[i];
+
+                    bool isNearBottomMost = Mathf.Abs(point.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f;
+                    bool isNearLeftMost = Mathf.Abs(point.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f;
+                    bool isNearRightMost = Mathf.Abs(point.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f;
+
+                    if (isNearBottomMost)
+                    {
+                        cachePoint = point;
+                        cachePointIndex = i;
+                    }
+
+                    if (isNearLeftMost)
+                    {
+                        points[i] = points[i].AddX(-randomWiggleMagnitude);
+                    }
+
+                    if (isNearRightMost)
+                    {
+                        points[i] = points[i].AddX(randomWiggleMagnitude);
+                    }
+                }
+
+                if (cachePointIndex != -1)
+                {
+                    points.Insert(cachePointIndex, cachePoint);
+                }
+
+                // remove uneccessary points
+                if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
+                    points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
+                {
+                    points.RemoveAt(firstBottomMostPointIndex + 1);
+                }
+
+                if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
+                    points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
+                {
+                    points.RemoveAt(firstBottomMostPointIndex + 1);
+                }
             }
 
             if (count == 2)
@@ -642,7 +695,7 @@ namespace AntsFlow
             debugMovePoints.AddRange(points);
 #endif
 
-            float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 1f);
+            // float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 1f);
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -651,18 +704,18 @@ namespace AntsFlow
                 Vector3 start = transform.position;
                 Vector3 end = points[i];
 
-                if (end.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y > 4f)
-                {
-                    if (Mathf.Abs(end.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f)
-                    {
-                        end = end.AddX(-randomWiggleMagnitude);
-                    }
+                // if (end.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y > 4f)
+                // {
+                //     if (Mathf.Abs(end.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f)
+                //     {
+                //         end = end.AddX(-randomWiggleMagnitude);
+                //     }
 
-                    if (Mathf.Abs(end.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f)
-                    {
-                        end = end.AddX(randomWiggleMagnitude);
-                    }
-                }
+                //     if (Mathf.Abs(end.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f)
+                //     {
+                //         end = end.AddX(randomWiggleMagnitude);
+                //     }
+                // }
 
                 direction = (end - start).normalized;
 
