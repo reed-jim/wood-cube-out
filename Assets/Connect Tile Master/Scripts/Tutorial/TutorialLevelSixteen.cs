@@ -119,7 +119,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
         {
             textImageTrans.localPosition += new Vector3(0, 250, 0);
         }
-        showText("Add a new theme slot!");
+        showText("<color=#FBC201>Add</color> a <color=#FBC201>new theme</color> slot!");
 
         // Highlight nút UnlockTheme và theme thứ 3 (đang bị khóa)
         // Theme thứ 3 bị khóa là tileSlotContainers[2]
@@ -215,7 +215,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
         {
             textImageTrans.localPosition -= new Vector3(0, 250, 0);
         }
-        showText("Match even more cards!");
+        showText("<color=#FBC201>Match</color> even <color=#FBC201>more cards!<color=#FBC201></color>");
 
         // Highlight theme đã mở khóa và các lá bài cùng theme với theme thứ 3 bằng glow
         ItemCategory targetCategory = ItemCategory.None;

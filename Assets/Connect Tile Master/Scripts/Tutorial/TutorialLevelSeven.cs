@@ -113,7 +113,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
         {
             textImageTrans.localPosition += new Vector3(0, 250, 0);
         }
-        showText("Use Hint to Reveal a match!");
+        showText("Use <color=#FBC201>Hint</color> to <color=#FBC201>Reveal</color> a match!");
 
         Transform origHintParent = hintBtn.transform.parent;
         int origHintSiblingIndex = hintBtn.transform.GetSiblingIndex();

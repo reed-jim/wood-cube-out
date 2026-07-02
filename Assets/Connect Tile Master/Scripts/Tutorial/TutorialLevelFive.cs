@@ -125,7 +125,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
             Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-            showText("This calculation equals 5!");
+            showText("This calculation <color=#FBC201>equals 5!</color>");
 
             // Highlight container và tile
             container1.SetHighlight(true);
@@ -182,7 +182,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
             Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-            showText("This also means 5!");
+            showText("This also <color=#FBC201>means 5!</color>");
 
             // Highlight container và tile
             container1.SetHighlight(true);
@@ -233,7 +233,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
         upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
         Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-        showText("Find more that make 5!");
+        showText("Find <color=#FBC201>more</color> that <color=#FBC201>make 5!</color>");
 
         // Wait 1.5 seconds then hide text
         yield return new WaitForSeconds(1.5f);

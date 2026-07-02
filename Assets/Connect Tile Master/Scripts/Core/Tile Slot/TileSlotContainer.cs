@@ -24,6 +24,7 @@ public class TileSlotContainer : MonoBehaviour
     public Image lockImage;
     [SerializeField] private Image glow;
     [SerializeField] private Image glowUnlockTheme;
+    [SerializeField] private Image highlightTheme;
     public Image GlowUnlockTheme => glowUnlockTheme;
 
     [SerializeField] private Image lockObject;
@@ -561,6 +562,14 @@ public class TileSlotContainer : MonoBehaviour
 
     public void Complete(ItemCategory nextCategory, Action onCompleteAction)
     {
+        Canvas containerCanvas = GetComponent<Canvas>();
+        if (containerCanvas == null)
+        {
+            containerCanvas = gameObject.AddComponent<Canvas>();
+        }
+        containerCanvas.overrideSorting = true;
+        containerCanvas.sortingOrder = 10;
+
         string oldCategoryName = this.itemCategory.ToString().Replace("_", " ");
         this.itemCategory = nextCategory;
         isMoving = true;
@@ -576,14 +585,8 @@ public class TileSlotContainer : MonoBehaviour
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
             SoundManager.Instance.PlaySoundCompleteTheme();
-            fxCompleteTheme.Play();
-            category.text = isTextUppercase ? oldCategoryName.ToUpper() : oldCategoryName;
-            Tween.Alpha(category, 1f, duration: 0.05f);
-            category.transform.localScale = Vector3.one;
-            Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
-            {
-                Tween.Scale(category.transform, 1f, duration: 0.15f, ease: Ease.InQuad);
-            });
+
+
 
             float animDelay = 0f;
             if (skeletonGraphicBack != null)
@@ -600,7 +603,18 @@ public class TileSlotContainer : MonoBehaviour
             }
             Tween.Delay(animDelay).OnComplete(() =>
             {
-
+                HighlightTheme(() =>
+                {
+                    fxCompleteTheme.Play();
+                    category.text = isTextUppercase ? oldCategoryName.ToUpper() : oldCategoryName;
+                    Tween.Alpha(category, 1f, duration: 0.05f);
+                    category.transform.localScale = Vector3.one;
+                    Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
+                    {
+                        Tween.Scale(category.transform, 1f, duration: 0.15f, ease: Ease.InQuad);
+                    });
+                }
+         );
                 if (skeletonGraphicBack != null)
                 {
                     skeletonGraphicBack.AnimationState.SetAnimation(0, "end", false);
@@ -638,6 +652,11 @@ public class TileSlotContainer : MonoBehaviour
                         .OnComplete(() =>
                         {
                             isMoving = false;
+                            Canvas c = GetComponent<Canvas>();
+                            if (c != null)
+                            {
+                                c.overrideSorting = false;
+                            }
                             onCompleteAction?.Invoke();
                         });
                     });
@@ -650,6 +669,14 @@ public class TileSlotContainer : MonoBehaviour
 
     public void Hide(Action onCompleteAction)
     {
+        Canvas containerCanvas = GetComponent<Canvas>();
+        if (containerCanvas == null)
+        {
+            containerCanvas = gameObject.AddComponent<Canvas>();
+        }
+        containerCanvas.overrideSorting = true;
+        containerCanvas.sortingOrder = 10;
+
         isMoving = true;
         isHidden = true;
 
@@ -664,15 +691,6 @@ public class TileSlotContainer : MonoBehaviour
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
             if (SoundManager.Instance != null) SoundManager.Instance.PlaySoundCompleteTheme();
-            if (fxCompleteTheme != null) fxCompleteTheme.Play();
-            string catName = this.itemCategory.ToString().Replace("_", " ");
-            category.text = isTextUppercase ? catName.ToUpper() : catName;
-            Tween.Alpha(category, 1f, duration: 0.05f);
-            category.transform.localScale = Vector3.one;
-            Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
-            {
-                Tween.Scale(category.transform, 1f, duration: 0.15f, ease: Ease.InQuad);
-            });
 
             float animDelay = 0f;
             if (skeletonGraphicBack != null)
@@ -690,6 +708,19 @@ public class TileSlotContainer : MonoBehaviour
 
             Tween.Delay(animDelay).OnComplete(() =>
             {
+                HighlightTheme(() =>
+                {
+                    fxCompleteTheme.Play();
+                    string catName = this.itemCategory.ToString().Replace("_", " ");
+                    category.text = isTextUppercase ? catName.ToUpper() : catName;
+                    Tween.Alpha(category, 1f, duration: 0.05f);
+                    category.transform.localScale = Vector3.one;
+                    Tween.Scale(category.transform, 1.3f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
+                    {
+                        Tween.Scale(category.transform, 1f, duration: 0.15f, ease: Ease.InQuad);
+                    });
+                }
+           );
                 if (skeletonGraphicBack != null)
                 {
                     skeletonGraphicBack.AnimationState.SetAnimation(0, "end", false);
@@ -721,12 +752,43 @@ public class TileSlotContainer : MonoBehaviour
                         .OnComplete(() =>
                         {
                             isMoving = false;
+                            Canvas c = GetComponent<Canvas>();
+                            if (c != null)
+                            {
+                                c.overrideSorting = false;
+                            }
                             onCompleteAction?.Invoke();
                         });
                     });
                 });
             });
         });
+    }
+
+    public void HighlightTheme(UnityAction callback)
+    {
+        if (highlightTheme != null)
+        {
+            Color tempColor = highlightTheme.color;
+
+            // Thay đổi giá trị alpha trên biến tạm đó
+            tempColor.a = 1f;
+
+            // Gán ngược biến tạm lại cho component
+            highlightTheme.color = tempColor;
+            Canvas glowCanvas = highlightTheme.GetComponent<Canvas>();
+            AdjustGlowSorting(glowCanvas);
+            callback?.Invoke();
+            Tween.Scale(categoryContainer.transform, 1.07f, duration: 0.15f, ease: Ease.OutQuad).OnComplete(() =>
+            {
+                Tween.Scale(categoryContainer.transform, 1f, duration: 0.15f, ease: Ease.InQuad).OnComplete(() =>
+                {
+                    Color tempColor = highlightTheme.color;
+                    tempColor.a = 0f;
+                    highlightTheme.color = tempColor;
+                });
+            });
+        }
     }
 
     public void SetHighlight(bool isHighlight)
@@ -943,7 +1005,6 @@ public class TileSlotContainer : MonoBehaviour
             else
             {
                 canvas.overrideSorting = false;
-
             }
         }
         else

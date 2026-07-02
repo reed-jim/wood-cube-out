@@ -110,7 +110,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
         // --- BƯỚC 1 ---
         step = 1;
-        BaseTile tile1 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme1);
+        BaseTile tile1 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme1 && t.IsText);
 
         if (tile1 != null)
         {
@@ -165,7 +165,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
         // --- BƯỚC 2 ---
         // Highlight: Theme: Gaming. Hand kéo. Text: Images and words can both match!
         step = 2;
-        BaseTile tile2 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme2 && !t.IsText);
+        BaseTile tile2 = TileManager.Ins.tiles.FirstOrDefault(t => !t.IsOnSlot && !t.IsOutside && !t.IsDone && t.ItemCategory == theme2 && t.IsText);
         if (tile2 != null)
         {
             // Kích hoạt overlay
