@@ -203,17 +203,23 @@ namespace AntsFlow
 
             fakeTile.Init(ant, faction);
 
-            fakeTile.transform.position = TileManager.Ins.GetTilePosition(this).AddZ(-0.0001f * (100 - position.y) - 3);
-            fakeTile.transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
-            fakeTile.transform.localRotation = Quaternion.identity;
+            // fakeTile.transform.position = TileManager.Ins.GetTilePosition(this).AddZ(-0.0001f * (100 - position.y) - 3);
+            // fakeTile.transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
+            // fakeTile.transform.localRotation = Quaternion.identity;
 
-            Tween.LocalPosition(fakeTile.transform, fakeTile.positionInAnt, duration: 0.3f);
-            Tween.Scale(fakeTile.transform, fakeTile.scaleInAnt, duration: 0.3f);
-            Tween.LocalRotation(fakeTile.transform, Quaternion.identity, duration: 0.3f)
-            .OnComplete(() =>
-            {
-                onCompleteAction?.Invoke();
-            });
+            // Tween.LocalPosition(fakeTile.transform, fakeTile.positionInAnt, duration: 0.3f);
+            // Tween.Scale(fakeTile.transform, fakeTile.scaleInAnt, duration: 0.3f);
+            // Tween.LocalRotation(fakeTile.transform, Quaternion.identity, duration: 0.3f)
+            // .OnComplete(() =>
+            // {
+            //     onCompleteAction?.Invoke();
+            // });
+
+            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+            fx.transform.position = TileManager.Ins.GetTilePosition(this).AddZ(-0.0001f * (100 - position.y) - 3);
+            var main = fx.main;
+            main.startColor = faction;
+            fx.Play();
 
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
