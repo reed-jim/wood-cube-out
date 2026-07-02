@@ -1048,9 +1048,12 @@ public class SpecialElementItemConfig
         {
             WashingMachineStartSlot antBoxStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
 
-            if (antBoxStartSlot.washingMachine != null && antBoxStartSlot.washingMachine.isDouble && remainingColumns.Contains(antBoxStartSlot.column))
+            if (antBoxStartSlot.washingMachine != null && remainingColumns.Contains(antBoxStartSlot.column))
             {
-                remainingColumns.Remove(antBoxStartSlot.column);
+                if (antBoxStartSlot.washingMachine.isDouble || antBoxStartSlot.washingMachine is FreezedAntBox)
+                {
+                    remainingColumns.Remove(antBoxStartSlot.column);
+                }
             }
         }
 

@@ -36,8 +36,11 @@ namespace AntsFlow
         {
             base.Init(washingMachineStartSlot, faction, number);
 
+            totalNumAntBoxToUnfreeze = SpecialElementManager.Ins.nextFreezeAntBoxRequiredNumber;
             numAntBoxToUnfreeze = totalNumAntBoxToUnfreeze;
             isFreezed = true;
+
+            numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
 
             frozenSkeletonAnimation.gameObject.SetActive(true);
             numberText.gameObject.SetActive(false);
@@ -58,6 +61,7 @@ namespace AntsFlow
         public void AssignRequirementNumber()
         {
             totalNumAntBoxToUnfreeze = SpecialElementManager.Ins.GetMaxValueFreezedAntBox(washingMachineStartSlot.row, washingMachineStartSlot.column);
+            numAntBoxToUnfreeze = totalNumAntBoxToUnfreeze;
             numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
         }
 

@@ -35,7 +35,6 @@ namespace AntsFlow
         public bool isPrepareComplete;
         public bool isLocked;
         public bool isHidden;
-        public bool isWall;
         public int numStepToReach;
         [NonSerialized] public List<BaseTile> blockages;
         [NonSerialized] public HashSet<BaseTile> blockedByMe;
@@ -167,7 +166,7 @@ namespace AntsFlow
         {
             foreach (var tile in blockedByMe)
             {
-                if (tile.isHidden)
+                if (tile.isHidden && !tile.isMovedToAnt)
                 {
                     TileManager.Ins.RevealTile(tile);
 

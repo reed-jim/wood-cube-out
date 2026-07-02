@@ -269,7 +269,7 @@ namespace AntsFlow
                                 continue;
                             }
 
-                            if (washingMachineItem is FreezedAntBox)
+                            if (washingMachineStartSlot.row == 1 && washingMachineItem is FreezedAntBox)
                             {
                                 (washingMachineItem as FreezedAntBox).AssignRequirementNumber();
                             }

@@ -475,17 +475,8 @@ namespace AntsFlow
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
             float moveSpeed = 5f;
-            float zigZagWidth = 0.5f;
+            float zigZagWidth = 0.25f;
             float zigZagFrequency = 0.5f;
-            float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 1f);
-
-            // if (count == 1)
-            // {
-            //     if (path[0].initialPosition.x > 0)
-            //     {
-            //         curveHeight = -1f * UnityEngine.Random.RandomRange(0f, 1f);
-            //     }
-            // }
 
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
 
@@ -498,53 +489,13 @@ namespace AntsFlow
                 reversePath.Reverse();
                 // reversePath.RemoveAt(0);
 
-
                 Vector3 tilePosition = path[^1].initialPosition;
                 Vector3 corner = tilePosition.x > 0 ? TileManager.Ins.bottomRightMostNode.initialPosition : TileManager.Ins.bottomLeftMostNode.initialPosition;
-
-                // if (tilePosition.x < 0)
-                // {
-                //     float minX = points.Min(item => item.x);
-
-                //     for (int i = 0; i < points.Count; i++)
-                //     {
-                //         if (Mathf.Abs(points[i].x - minX) < 0.1f)
-                //         {
-                //             points[i] = points[i].AddX(-0.5f);
-                //             // points[i] = points[i].ChangeX(TileManager.Ins.bottomLeftMostNode.initialPosition.x);
-                //         }
-                //     }
-                // }
-                // else
-                // {
-                //     float maxX = points.Max(item => item.x);
-
-                //     for (int i = 0; i < points.Count; i++)
-                //     {
-                //         if (Mathf.Abs(points[i].x - maxX) < 0.1f)
-                //         {
-                //             points[i] = points[i].AddX(0.5f);
-                //             // points[i] = points[i].ChangeX(TileManager.Ins.bottomRightMostNode.initialPosition.x);
-                //         }
-                //     }
-                // }
-
-                // // float maxY = points.Max(item => item.y);
-
-                // for (int i = 0; i < points.Count; i++)
-                // {
-                //     if (points[i].y > tilePosition.y && Mathf.Abs(points[i].y - TileManager.Ins.topMostNodes[0].initialPosition.y) < 1f)
-                //     {
-                //         points[i] = points[i].AddY(0.5f);
-                //         // points[i] = points[i].ChangeY(TileManager.Ins.topMostNodes[0].initialPosition.y);
-                //     }
-                // }
 
                 int firstBottomMostPointIndex = 0;
 
                 if (isCenter)
                 {
-                    // int sign = tilePosition.x > 0 ? 1 : -1;
                     int sign = 1;
 
                     points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
@@ -571,35 +522,35 @@ namespace AntsFlow
                 Vector3 cachePoint = Vector3.zero;
                 int cachePointIndex = -1;
 
-                for (int i = 0; i < points.Count; i++)
-                {
-                    Vector3 point = points[i];
+                // for (int i = 0; i < points.Count; i++)
+                // {
+                //     Vector3 point = points[i];
 
-                    bool isNearBottomMost = Mathf.Abs(point.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f;
-                    bool isNearLeftMost = Mathf.Abs(point.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f;
-                    bool isNearRightMost = Mathf.Abs(point.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f;
+                //     bool isNearBottomMost = Mathf.Abs(point.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f;
+                //     bool isNearLeftMost = Mathf.Abs(point.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f;
+                //     bool isNearRightMost = Mathf.Abs(point.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f;
 
-                    if (isNearBottomMost)
-                    {
-                        cachePoint = point;
-                        cachePointIndex = i;
-                    }
+                //     if (isNearBottomMost)
+                //     {
+                //         cachePoint = point;
+                //         cachePointIndex = i;
+                //     }
 
-                    if (isNearLeftMost)
-                    {
-                        points[i] = points[i].AddX(-randomWiggleMagnitude);
-                    }
+                //     if (isNearLeftMost)
+                //     {
+                //         points[i] = points[i].AddX(-randomWiggleMagnitude);
+                //     }
 
-                    if (isNearRightMost)
-                    {
-                        points[i] = points[i].AddX(randomWiggleMagnitude);
-                    }
-                }
+                //     if (isNearRightMost)
+                //     {
+                //         points[i] = points[i].AddX(randomWiggleMagnitude);
+                //     }
+                // }
 
-                if (cachePointIndex != -1)
-                {
-                    points.Insert(cachePointIndex, cachePoint);
-                }
+                // if (cachePointIndex != -1)
+                // {
+                //     points.Insert(cachePointIndex, cachePoint);
+                // }
 
                 // remove uneccessary points
                 if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
@@ -695,7 +646,11 @@ namespace AntsFlow
             debugMovePoints.AddRange(points);
 #endif
 
-            // float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 1f);
+            float totalTimePassed = 0;
+            int zigZagSign = siblingIndex % 2 == 0 ? 1 : -1;
+            float zigzagControl = zigZagSign * zigZagFrequency * Mathf.PI * 2f;
+
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -704,49 +659,19 @@ namespace AntsFlow
                 Vector3 start = transform.position;
                 Vector3 end = points[i];
 
-                // if (end.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y > 4f)
-                // {
-                //     if (Mathf.Abs(end.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f)
-                //     {
-                //         end = end.AddX(-randomWiggleMagnitude);
-                //     }
-
-                //     if (Mathf.Abs(end.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f)
-                //     {
-                //         end = end.AddX(randomWiggleMagnitude);
-                //     }
-                // }
-
                 direction = (end - start).normalized;
-
-                // if (count == 1 && index == points.Count - 1)
-                // {
-                //     break;
-                // }
 
                 float distance = Vector3.Distance(start, end);
 
-                // Control point above the line
-                Vector3 dir = (end - start).normalized;
-                Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
+                Vector3 perp = new Vector3(-direction.y, direction.x, 0f);
 
-                bool isCurved = false;
-                bool isZigzag = false;
+                float offset =
+                       Mathf.Sin(totalTimePassed / totalTime * zigzagControl) *
+                       zigZagWidth;
 
-                if (count == 1 && index == 1)
-                {
-                    isCurved = true;
-                }
+                end = points[i] + perp * offset;
 
-                if (count == 1 && index == 0)
-                {
-                    if (!isCenter)
-                    {
-                        isZigzag = true;
-                    }
-                }
-
-                isCurved = false;
+                direction = (end - start).normalized;
 
                 float t = 0f;
                 float timeNeeded = distance / totalDistance * totalTime;
@@ -754,18 +679,17 @@ namespace AntsFlow
 
                 while (timePassed < timeNeeded)
                 {
-                    // t += Time.deltaTime;
-                    // t = Mathf.Clamp01(t);
                     timePassed += Time.deltaTime;
+                    totalTimePassed += Time.deltaTime;
                     t = timePassed / timeNeeded;
 
                     Vector3 pos;
 
                     // if (isZigzag)
                     // {
-                    //     float offset =
-                    //         Mathf.Sin(timePassed / totalTime * zigZagFrequency * Mathf.PI * 2f) *
-                    //         zigZagWidth;
+                    // float offset =
+                    //     Mathf.Sin(totalTimePassed / totalTime * zigzagControl) *
+                    //     zigZagWidth;
 
                     //     pos = Vector3.Lerp(start, end, t) + perp * offset;
                     // }
@@ -779,7 +703,7 @@ namespace AntsFlow
                     transform.position = pos.ChangeZ(-3 - 0.001f * siblingIndex);
                     Rotate(progress: t);
 
-                    yield return null;
+                    yield return waitForSeconds;
                 }
 
                 transform.position = end;
@@ -789,15 +713,7 @@ namespace AntsFlow
             {
                 if (tile != null)
                 {
-                    tile.MoveToAnt(this, onCompleteAction: () =>
-                    {
-                        // if (movingCoroutine != null)
-                        // {
-                        //     StopCoroutine(movingCoroutine);
-                        // }
-
-                        // ReverseMove();
-                    });
+                    tile.MoveToAnt(this);
 
                     ReverseMove();
                 }
@@ -818,12 +734,6 @@ namespace AntsFlow
                     targetRotation,
                     progress
                 );
-
-                // transform.rotation = Quaternion.RotateTowards(
-                //     transform.rotation,
-                //     targetRotation,
-                //     rotationSpeed
-                // );
             }
         }
 

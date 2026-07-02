@@ -204,7 +204,7 @@ namespace AntsFlow
 
                 tilemap.SetTile(cellPos, tilemapTile);
 
-                tile.isWall = true;
+                tile.isHidden = true;
             }
         }
 

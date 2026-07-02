@@ -292,6 +292,7 @@ namespace AntsFlow
             {
                 if (node.tile != null)
                 {
+                    node.tile.blockages = new List<BaseTile>();
                     node.tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
                 }
             }
@@ -305,6 +306,7 @@ namespace AntsFlow
                     {
                         if (neighbor.tile != null)
                         {
+                            node.tile.blockages.Add(neighbor.tile);
                             neighbor.tile.blockedByMe.Add(node.tile);
                         }
                     }
@@ -344,7 +346,6 @@ namespace AntsFlow
                     rightMostNodes.Add(node);
                 }
             }
-
 
             foreach (var node in nodes)
             {
