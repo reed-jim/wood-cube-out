@@ -691,7 +691,7 @@ namespace AntsFlow
                     pos = Vector3.Lerp(start, end, t);
 
                     transform.position = pos.ChangeZ(-3 - 0.001f * siblingIndex);
-                    Rotate(progress: t);
+                    Rotate(progress: 2 * t);
 
                     yield return waitForSeconds;
                 }

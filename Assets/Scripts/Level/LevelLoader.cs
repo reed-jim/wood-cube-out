@@ -368,7 +368,7 @@ namespace NamPhuThuy.GamePlay
             Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
 
             spawnedTileMapGrid.SetParent(levelTransform);
-            spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f);
+            spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-6f);
             spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
 
             AntsFlow.TileManager.Ins.tilemap = spawnedTileMap;
