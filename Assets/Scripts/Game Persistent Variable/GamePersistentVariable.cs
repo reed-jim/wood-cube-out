@@ -205,5 +205,6 @@ public static class GamePersistentVariable
     public static bool isTutorialLevelOneDone;
     public static bool isHideUI;
     public static Vector2 tileDistance;
+    public static float ratioXY;
     #endregion
 }

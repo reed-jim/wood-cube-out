@@ -26,6 +26,7 @@ namespace AntsFlow
         public List<AntBoxLink> antBoxLinks;
 
         public Sprite hiddenTileSprite;
+        public Sprite wallTileSprite;
 
         public void Setup(AntsFlow.LevelItem levelItem)
         {
@@ -155,7 +156,7 @@ namespace AntsFlow
             }
         }
 
-        private int GetMaxValueFreezedAntBox(int rowIndex, int columnIndex)
+        public int GetMaxValueFreezedAntBox(int rowIndex, int columnIndex)
         {
             int maxFreezedAntBoxRequiredNumberToUnfreeze = 0;
 
@@ -203,7 +204,71 @@ namespace AntsFlow
 
                 tilemap.SetTile(cellPos, tilemapTile);
 
-                tile.isHidden = true;
+                tile.isWall = true;
+            }
+        }
+
+        public void FillWallTiles(Tilemap tilemap, int width, int height)
+        {
+            // int clusterSize = 300;
+            // int[] indexesToFill = GetRandomCluster(width, height, clusterSize);
+
+            // for (int i = 0; i < indexesToFill.Length; i++)
+            // {
+            //     int index = indexesToFill[i];
+            //     Node node = TileManager.Ins.nodes[index];
+
+            //     if (node.tile != null)
+            //     {
+            //         continue;
+            //     }
+
+            //     int x = index % width;
+            //     int y = index / width;
+
+            //     if (x == 0 || x == width - 1 || y == 0 || y == height - 1)
+            //     {
+            //         continue;
+            //     }
+
+            //     Vector3Int cellPos = CommonUtil.GetVector3Int(node.initialPosition / GamePersistentVariable.tileMapScaleFactor);
+
+            //     Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
+            //     tilemapTile.sprite = wallTileSprite;
+
+            //     tilemap.SetTile(cellPos, tilemapTile);
+
+            //     node.isObstacle = true;
+            // }
+
+            List<Node> nodes = TileManager.Ins.nodes;
+
+            int maxX = nodes.Max(item => item.x);
+            int maxY = nodes.Max(item => item.y);
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+
+                if (node.x == 1 || node.x == maxX - 1 || node.y == maxY - 1)
+                {
+                    if (node.x > 0 && node.x < maxX && node.y > 0 && node.y < maxY)
+                    {
+                        if (node.tile != null)
+                        {
+                            continue;
+                        }
+
+                        Vector3Int cellPos = CommonUtil.GetVector3Int(node.initialPosition / GamePersistentVariable.tileMapScaleFactor);
+
+                        Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
+                        tilemapTile.sprite = wallTileSprite;
+
+                        tilemap.SetTile(cellPos, tilemapTile);
+
+                        node.isObstacle = true;
+                    }
+                }
             }
         }
 

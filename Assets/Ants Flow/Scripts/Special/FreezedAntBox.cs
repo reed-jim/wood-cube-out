@@ -36,11 +36,8 @@ namespace AntsFlow
         {
             base.Init(washingMachineStartSlot, faction, number);
 
-            totalNumAntBoxToUnfreeze = SpecialElementManager.Ins.nextFreezeAntBoxRequiredNumber;
             numAntBoxToUnfreeze = totalNumAntBoxToUnfreeze;
             isFreezed = true;
-
-            numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
 
             frozenSkeletonAnimation.gameObject.SetActive(true);
             numberText.gameObject.SetActive(false);
@@ -56,6 +53,12 @@ namespace AntsFlow
             SaferioTween.AlphaShow(numAntBoxToUnfreezeText);
 
             SoundManager.Instance.PlaySound(GameConstants.startFreezeSound);
+        }
+
+        public void AssignRequirementNumber()
+        {
+            totalNumAntBoxToUnfreeze = SpecialElementManager.Ins.GetMaxValueFreezedAntBox(washingMachineStartSlot.row, washingMachineStartSlot.column);
+            numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
         }
 
         public override bool IsValidToSelect()

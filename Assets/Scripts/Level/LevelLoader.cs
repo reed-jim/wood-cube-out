@@ -362,6 +362,7 @@ namespace NamPhuThuy.GamePlay
             float ratioXY = multiplierScaleX * (multiplierScaleX / multiplierScaleY);
 
             GamePersistentVariable.tileDistance = GamePersistentVariable.obstacleScaleFactor * new Vector2(1, multiplierScaleX / multiplierScaleY);
+            GamePersistentVariable.ratioXY = ratioXY;
 
             Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
             Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
@@ -394,7 +395,7 @@ namespace NamPhuThuy.GamePlay
 
                     // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
                 }
-                
+
                 SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
             }
             else
@@ -577,20 +578,20 @@ namespace NamPhuThuy.GamePlay
                 // }
             }
 
-            // Clear in case this is rebuilt
-            foreach (var tile in tiles)
-            {
-                tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
-            }
+            // // Clear in case this is rebuilt
+            // foreach (var tile in tiles)
+            // {
+            //     tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
+            // }
 
-            // Build reverse references
-            foreach (var tile in tiles)
-            {
-                foreach (var blockage in tile.blockages)
-                {
-                    blockage.blockedByMe.Add(tile);
-                }
-            }
+            // // Build reverse references
+            // foreach (var tile in tiles)
+            // {
+            //     foreach (var blockage in tile.blockages)
+            //     {
+            //         blockage.blockedByMe.Add(tile);
+            //     }
+            // }
 
             AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
             AntsFlow.TileManager.Ins.tiles.AddRange(tiles);

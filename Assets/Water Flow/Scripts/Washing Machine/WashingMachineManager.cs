@@ -86,19 +86,19 @@ namespace AntsFlow
         public void StartLevel(AntsFlow.LevelItem levelItem)
         {
             this.levelItem = levelItem;
-            
-            try 
+
+            try
             {
                 int difficultyMultiplier = RemoteConfigController.GetIntConfig("difficultyMultiplier", 1);
                 int difficultyAddend = RemoteConfigController.GetIntConfig("difficultyAddend", 0);
 
                 difficultyLevel = difficultyAddend + difficultyMultiplier * levelItem.difficulty;
             }
-            catch 
+            catch
             {
                 difficultyLevel = levelItem.difficulty;
             }
-            
+
             numAntBoxSpawned = 0;
 
             // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
@@ -106,6 +106,7 @@ namespace AntsFlow
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             SpecialElementManager.Ins.Setup(levelItem);
+            SpecialElementManager.Ins.FillWallTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow);
 
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
 
@@ -266,6 +267,11 @@ namespace AntsFlow
                             if (washingMachineItem.isMoving)
                             {
                                 continue;
+                            }
+
+                            if (washingMachineItem is FreezedAntBox)
+                            {
+                                (washingMachineItem as FreezedAntBox).AssignRequirementNumber();
                             }
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);

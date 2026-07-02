@@ -29,6 +29,9 @@ namespace AntsFlow
         public int VisitId;
         public int EdgePriority;
 
+        public int x;
+        public int y;
+
         // public int GCost;
         // public float HCost;
         // public float FCost => GCost + HCost;
@@ -45,6 +48,8 @@ namespace AntsFlow
         public Tilemap tileGlowTilemap;
         public Tilemap tilemap;
         public Sprite tileGlowSprite;
+        public int numColumn;
+        public int numRow;
 
         #region Navmesh
         public float lastTimeUpdateNavmesh;
@@ -167,7 +172,9 @@ namespace AntsFlow
                             extraColumn + xMin + (x - numExtraColumn / 2) * tileDistance.x,
                             extraRow + yMin + (y - numExtraRow / 2) * tileDistance.y),
                         tile = null,
-                        neighbors = new List<Node>()
+                        neighbors = new List<Node>(),
+                        x = x,
+                        y = y
                     };
 
                     grid[x, y] = node;
@@ -235,6 +242,11 @@ namespace AntsFlow
                     //     directions = verticalPrioritydirections;
                     // }
 
+                    if (node.tile != null)
+                    {
+                        node.tile.blockages = new List<BaseTile>();
+                    }
+
                     foreach (Vector2Int dir in directions)
                     {
                         int nx = x + dir.x;
@@ -243,6 +255,11 @@ namespace AntsFlow
                         if (nx >= 0 && nx < width && ny >= 0 && ny < height)
                         {
                             node.neighbors.Add(grid[nx, ny]);
+
+                            if (node.tile != null && grid[nx, ny].tile != null)
+                            {
+                                node.tile.blockages.Add(grid[nx, ny].tile);
+                            }
                         }
                     }
                 }
@@ -268,6 +285,30 @@ namespace AntsFlow
                 }
 
                 closest.tile = tile;
+            }
+
+            // Clear in case this is rebuilt
+            foreach (var node in nodes)
+            {
+                if (node.tile != null)
+                {
+                    node.tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
+                }
+            }
+
+            // Build reverse references
+            foreach (var node in nodes)
+            {
+                if (node.tile != null)
+                {
+                    foreach (var neighbor in node.neighbors)
+                    {
+                        if (neighbor.tile != null)
+                        {
+                            neighbor.tile.blockedByMe.Add(node.tile);
+                        }
+                    }
+                }
             }
 
             topMostNodes = new List<Node>();
@@ -314,7 +355,6 @@ namespace AntsFlow
             boardMaxX = nodes.Max(n => n.initialPosition.x);
             boardMinY = nodes.Min(n => n.initialPosition.y);
             boardMaxY = nodes.Max(n => n.initialPosition.y);
-
 
             bottomLeftMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
             bottomRightMostInsideLevelNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
@@ -617,6 +657,11 @@ namespace AntsFlow
                     }
                 }
 
+                if (current.isObstacle)
+                {
+                    continue;
+                }
+
                 foreach (var neighbor in current.neighbors
                         .OrderBy(n => n.EdgePriority))
                 {
@@ -646,6 +691,11 @@ namespace AntsFlow
                         !current.tile.isMovedToAnt &&
                         !current.tile.isDone
                     )
+                    {
+                        isBlocked = true;
+                    }
+
+                    if (neighbor.isObstacle)
                     {
                         isBlocked = true;
                     }
