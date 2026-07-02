@@ -71,6 +71,7 @@ MonoBehaviour:
     isMovedToAnt: 0
     isPrepareComplete: 0
     isLocked: 0
+    isHidden: 0
     numStepToReach: 0
     ring: 0
     priority: 0
@@ -82,7 +83,7 @@ MonoBehaviour:
   wiggleFrequency: 3
   noiseFrequency: 0.1
   noiseMagnitude: 0.2
-  initialSpeedMove: 6.5
+  initialSpeedMove: 9
 --- !u!195 &9042187430261845247
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -235,4 +236,4 @@ MonoBehaviour:
   unscaledTime: 0
   _animationName: move
   loop: 1
-  timeScale: 1.7
+  timeScale: 1.5

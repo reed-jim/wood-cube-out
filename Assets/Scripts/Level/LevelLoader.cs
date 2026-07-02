@@ -396,7 +396,10 @@ namespace NamPhuThuy.GamePlay
                     // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
                 }
 
-                SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
+                if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
+                {
+                    SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
+                }
             }
             else
             {

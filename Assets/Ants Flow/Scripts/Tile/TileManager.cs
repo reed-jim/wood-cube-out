@@ -144,7 +144,7 @@ namespace AntsFlow
                 {
                     float extraColumn = 0;
                     float extraRow = 0;
-                    float extra = 0.6f;
+                    float extra = 0.8f;
 
                     if (x == 0)
                     {
@@ -596,18 +596,18 @@ namespace AntsFlow
         }
 #endif
 
-        private float TurnPenalty(Node current, Node neighbor)
+        private float TurnPenalty(Node current, Node neighbor, Dictionary<Node, Node> parent)
         {
-            if (current.Parent == null)
+            if (parent[current] == null)
                 return 0;
 
-            Vector2 prevDir = (current.initialPosition - current.Parent.initialPosition).normalized;
+            Vector2 prevDir = (current.initialPosition - parent[current].initialPosition).normalized;
             Vector2 nextDir = (neighbor.initialPosition - current.initialPosition).normalized;
 
             // 1 = straight, 0 = 90°, -1 = U-turn
             float dot = Vector2.Dot(prevDir, nextDir);
 
-            return -100 * dot; // smaller is better
+            return -dot; // smaller is better
         }
 
         public List<BaseTile> GetFirstNMovableTiles(Color faction, int count, Vector2 antBoxPosition)
@@ -664,7 +664,8 @@ namespace AntsFlow
                 }
 
                 foreach (var neighbor in current.neighbors
-                        .OrderBy(n => n.EdgePriority))
+                        .OrderBy(n => n.EdgePriority)
+                        )
                 {
                     if (visited.Contains(neighbor))
                     {
@@ -722,9 +723,13 @@ namespace AntsFlow
                     parent[neighbor] = current;
 
                     if (neighbor.EdgePriority <= 3)
+                    {
                         edgeQueue.Enqueue(neighbor);
+                    }
                     else
+                    {
                         normalQueue.Enqueue(neighbor);
+                    }
                 }
             }
 

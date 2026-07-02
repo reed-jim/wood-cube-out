@@ -487,7 +487,6 @@ namespace AntsFlow
                 reversePath = new List<Node>();
                 reversePath.AddRange(path);
                 reversePath.Reverse();
-                // reversePath.RemoveAt(0);
 
                 Vector3 tilePosition = path[^1].initialPosition;
                 Vector3 corner = tilePosition.x > 0 ? TileManager.Ins.bottomRightMostNode.initialPosition : TileManager.Ins.bottomLeftMostNode.initialPosition;
@@ -522,35 +521,35 @@ namespace AntsFlow
                 Vector3 cachePoint = Vector3.zero;
                 int cachePointIndex = -1;
 
-                // for (int i = 0; i < points.Count; i++)
-                // {
-                //     Vector3 point = points[i];
+                for (int i = 0; i < points.Count; i++)
+                {
+                    Vector3 point = points[i];
 
-                //     bool isNearBottomMost = Mathf.Abs(point.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f;
-                //     bool isNearLeftMost = Mathf.Abs(point.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f;
-                //     bool isNearRightMost = Mathf.Abs(point.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f;
+                    bool isNearBottomMost = Mathf.Abs(point.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f;
+                    bool isNearLeftMost = Mathf.Abs(point.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f;
+                    bool isNearRightMost = Mathf.Abs(point.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f;
 
-                //     if (isNearBottomMost)
-                //     {
-                //         cachePoint = point;
-                //         cachePointIndex = i;
-                //     }
+                    if (isNearBottomMost)
+                    {
+                        cachePoint = point;
+                        cachePointIndex = i;
+                    }
 
-                //     if (isNearLeftMost)
-                //     {
-                //         points[i] = points[i].AddX(-randomWiggleMagnitude);
-                //     }
+                    if (isNearLeftMost)
+                    {
+                        points[i] = points[i].AddX(-randomWiggleMagnitude);
+                    }
 
-                //     if (isNearRightMost)
-                //     {
-                //         points[i] = points[i].AddX(randomWiggleMagnitude);
-                //     }
-                // }
+                    if (isNearRightMost)
+                    {
+                        points[i] = points[i].AddX(randomWiggleMagnitude);
+                    }
+                }
 
-                // if (cachePointIndex != -1)
-                // {
-                //     points.Insert(cachePointIndex, cachePoint);
-                // }
+                if (cachePointIndex != -1)
+                {
+                    points.Insert(cachePointIndex, cachePoint);
+                }
 
                 // remove uneccessary points
                 if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
@@ -624,18 +623,9 @@ namespace AntsFlow
 
                 Vector3 nearAntNestPosition = antNestPosition + 1f * (points[^1] - antNestPosition).normalized;
 
-                // if (Vector2.Distance(closestPointToNest, antNestPosition) > 2)
-                // {
-                //     points.Add(closestPointToNest);
-
-                //     nearAntNestPosition = antNestPosition + 1f * (closestPointToNest - antNestPosition).normalized;
-                // }
-                // else
-                // {
-                //     nearAntNestPosition = antNestPosition + 1f * (points[^1] - antNestPosition).normalized;
-                // }
-
                 points.Add(nearAntNestPosition);
+
+                points.RemoveAt(0);
             }
 
             float totalDistance = GetTotalDistance(points, transform.position);
@@ -663,13 +653,13 @@ namespace AntsFlow
 
                 float distance = Vector3.Distance(start, end);
 
-                Vector3 perp = new Vector3(-direction.y, direction.x, 0f);
+                // Vector3 perp = new Vector3(-direction.y, direction.x, 0f);
 
-                float offset =
-                       Mathf.Sin(totalTimePassed / totalTime * zigzagControl) *
-                       zigZagWidth;
+                // float offset =
+                //        Mathf.Sin(totalTimePassed / totalTime * zigzagControl) *
+                //        zigZagWidth;
 
-                end = points[i] + perp * offset;
+                // end = points[i] + perp * offset;
 
                 direction = (end - start).normalized;
 
@@ -734,6 +724,8 @@ namespace AntsFlow
                     targetRotation,
                     progress
                 );
+
+                // transform.rotation = targetRotation;
             }
         }
 

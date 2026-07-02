@@ -1018,6 +1018,8 @@ public class SpecialElementConfig
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;
+    public bool isContainsHiddenTiles;
+    public bool isContainsWallTiles;
 }
 
 [Serializable]

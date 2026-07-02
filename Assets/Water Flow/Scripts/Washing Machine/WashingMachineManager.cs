@@ -106,7 +106,10 @@ namespace AntsFlow
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             SpecialElementManager.Ins.Setup(levelItem);
-            SpecialElementManager.Ins.FillWallTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow);
+            if (GamePersistentVariable.levelItem.specialElementConfig.isContainsWallTiles)
+            {
+                SpecialElementManager.Ins.FillWallTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow);
+            }
 
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
 

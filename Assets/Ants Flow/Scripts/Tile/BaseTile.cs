@@ -207,9 +207,9 @@ namespace AntsFlow
             fakeTile.transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
             fakeTile.transform.localRotation = Quaternion.identity;
 
-            Tween.LocalPosition(fakeTile.transform, fakeTile.positionInAnt, duration: 0.1f);
-            Tween.Scale(fakeTile.transform, fakeTile.scaleInAnt, duration: 0.1f);
-            Tween.LocalRotation(fakeTile.transform, Quaternion.identity, duration: 0.1f)
+            Tween.LocalPosition(fakeTile.transform, fakeTile.positionInAnt, duration: 0.3f);
+            Tween.Scale(fakeTile.transform, fakeTile.scaleInAnt, duration: 0.3f);
+            Tween.LocalRotation(fakeTile.transform, Quaternion.identity, duration: 0.3f)
             .OnComplete(() =>
             {
                 onCompleteAction?.Invoke();
