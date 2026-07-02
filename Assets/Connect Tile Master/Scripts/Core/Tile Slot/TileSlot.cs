@@ -45,12 +45,12 @@ public enum ItemCategory
     Pirates,
     Ninjas,
     Wizards,
-    Detectives,
+    Detective,
     Royalty,
     Digging,
     Circus,
     Number_8,
-    Sea_Animals,
+    Marine,
     Diggers,
     Sweets,
     Heroes,
@@ -180,6 +180,7 @@ public enum ItemCategory
     Movie_Theater,
     Camping_Trip,
     Coffee_Shop,
+    Cars,
     None
 
 }
