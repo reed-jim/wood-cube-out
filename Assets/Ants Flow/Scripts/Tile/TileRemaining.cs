@@ -28,7 +28,7 @@ namespace AntsFlow
 
                 spriteRenderers[index].gameObject.SetActive(true);
 
-                Vector2 randomPosition = Random.insideUnitCircle * 0.3f;
+                Vector2 randomPosition = Random.insideUnitCircle * 1f;
                 spriteRenderers[index].transform.localPosition = randomPosition;
                 spriteRenderers[index].color = tile.Faction;
 
