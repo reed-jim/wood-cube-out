@@ -217,10 +217,15 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         float speed = 1500f;
         float moveDuration = Mathf.Max(0.2f, distance / speed);
 
-        Tween.LocalPosition(transform, deckLocalPos, moveDuration, ease: Ease.InQuad);
+        Tween.LocalPosition(transform, deckLocalPos, moveDuration, ease: Ease.InQuad).OnComplete(() =>
+        {
+            SoundManager.Instance.PlaySoundShuffleBooster();
+        }
+        );
         Tween.Scale(ObjHide.transform, Vector3.one, moveDuration, ease: Ease.InQuad);
-
         // Xoay nghiêng nửa đường đầu sang (0, 70, -70), nửa đường sau xoay về (0, 0, 0) để không bị méo khi vào bộ bài
+
+
         float halfDuration = moveDuration / 2f;
         Tween.LocalEulerAngles(transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
             .OnComplete(() =>

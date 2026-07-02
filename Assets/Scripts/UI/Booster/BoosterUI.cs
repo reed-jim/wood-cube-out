@@ -361,7 +361,6 @@ public class BoosterUI : MonoBehaviour
         ConsumeBooster(boosterIndex: 1);
 
         TileManager.Ins.UseShuffleBooster();
-        SoundManager.Instance.PlaySoundShuffleBooster();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {

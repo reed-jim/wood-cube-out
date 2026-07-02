@@ -140,7 +140,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.COMPLETE_THEME_SOUND, completeThemeSoundPrefab, 4);
         RegisterPool<AudioSource>(GameConstants.FLIP_CARD_SOUND, flipCardSoundPrefab, 16);
         RegisterPool<AudioSource>(GameConstants.TAKE_CARD_FROM_GRID_SOUND, takeCardFromGridSoundPrefab, 16);
-        RegisterPool<AudioSource>(GameConstants.SHUFFLE_BOOSTER_SOUND, shuffleBoosterSoundPrefab, 3);
+        RegisterPool<AudioSource>(GameConstants.SHUFFLE_BOOSTER_SOUND, shuffleBoosterSoundPrefab, 16);
         RegisterPool<AudioSource>(GameConstants.DROP_CARD_BACK_TO_TABLE_SOUND, dropCardBackToTableSoundPrefab, 5);
         RegisterPool<AudioSource>(GameConstants.DEAL_CARDS_SOUND, dealCardsSoundPrefab, 16);
         RegisterPool<AudioSource>(GameConstants.WRONG_CARD_SOUND, wrongCardSoundPrefab, 3);

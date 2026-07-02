@@ -584,7 +584,6 @@ public class TileSlotContainer : MonoBehaviour
 
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
-            SoundManager.Instance.PlaySoundCompleteTheme();
 
 
 
@@ -603,6 +602,7 @@ public class TileSlotContainer : MonoBehaviour
             }
             Tween.Delay(animDelay).OnComplete(() =>
             {
+                SoundManager.Instance.PlaySoundCompleteTheme();
                 HighlightTheme(() =>
                 {
                     fxCompleteTheme.Play();
@@ -690,7 +690,6 @@ public class TileSlotContainer : MonoBehaviour
         }
         Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
-            if (SoundManager.Instance != null) SoundManager.Instance.PlaySoundCompleteTheme();
 
             float animDelay = 0f;
             if (skeletonGraphicBack != null)
@@ -708,6 +707,8 @@ public class TileSlotContainer : MonoBehaviour
 
             Tween.Delay(animDelay).OnComplete(() =>
             {
+                if (SoundManager.Instance != null) SoundManager.Instance.PlaySoundCompleteTheme();
+
                 HighlightTheme(() =>
                 {
                     fxCompleteTheme.Play();
