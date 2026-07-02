@@ -2856,7 +2856,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4775947362079516699, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4775947362079516699, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_SortingLayer
@@ -2874,6 +2874,10 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6231305277931170512, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 64354937d5968a54689fb1215ce97d2a, type: 2}
     - target: {fileID: 7264740888226918873, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_Layer
       value: 5
@@ -3386,6 +3390,18 @@ PrefabInstance:
       propertyPath: m_Scale3D.z
       value: 22
       objectReference: {fileID: 0}
+    - target: {fileID: 8520233797790775680, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
+      propertyPath: m_Particles.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8520233797790775680, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
+      propertyPath: 'm_Particles.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2980574566658498527}
+    - target: {fileID: 8520233797790775680, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
+      propertyPath: 'm_Particles.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8765059115921653071}
     - target: {fileID: 8836157439311298510, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -3415,6 +3431,11 @@ ParticleSystem:
 --- !u!224 &6093135721802472164 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4637699483745150730, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
+  m_PrefabInstance: {fileID: 1500615377189862894}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8765059115921653071 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7886083802855686305, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
   m_PrefabInstance: {fileID: 1500615377189862894}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6068446522075285717
@@ -3451,15 +3472,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4637699483745150730, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4637699483745150730, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4637699483745150730, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4637699483745150730, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3746,12 +3767,16 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: db02ddf2ee4f13a4796049dd386bd31a, type: 2}
     - target: {fileID: 6231305277931170512, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6231305277931170512, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6231305277931170512, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: db02ddf2ee4f13a4796049dd386bd31a, type: 2}
     - target: {fileID: 7264740888226918873, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_Layer
       value: 5
@@ -3944,6 +3969,10 @@ PrefabInstance:
       propertyPath: m_Particles.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8520233797790775680, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
+      propertyPath: 'm_Particles.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7274727231875279078}
     - target: {fileID: 8836157439311298510, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
