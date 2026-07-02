@@ -254,7 +254,7 @@ public class TileSlotContainer : MonoBehaviour
                     string rndText = containerToUse.GetRandomTextOfCategory(itemCategory);
                     currentTileText.text = isTextUppercase ? rndText.ToUpper() : rndText;
                 }
-                AdjustFontSize(currentTileText, currentTileText.text);
+                //AdjustFontSize(currentTileText, currentTileText.text);
             }
         }
         else
@@ -348,7 +348,11 @@ public class TileSlotContainer : MonoBehaviour
         c.a = 0;
         tile.glow.color = c;
         tile.glow.gameObject.SetActive(true);
-        fxCompleteCard.Play();
+        if (fxCompleteCard != null)
+        {
+            fxCompleteCard.Stop();
+            fxCompleteCard.Play();
+        }
         Tween.Alpha(tile.glow, 1f, duration: timeComplete, ease: Ease.OutQuad).OnComplete(() =>
         {
             Tween.Alpha(tile.glow, 0f, duration: timeComplete, ease: Ease.InQuad).OnComplete(() =>
@@ -431,7 +435,7 @@ public class TileSlotContainer : MonoBehaviour
                 currentTileText.text = isTextUppercase ? tile.category.text.ToUpper() : tile.category.text;
                 Color txtColor = currentTileText.color;
                 currentTileText.color = new Color(txtColor.r, txtColor.g, txtColor.b, 0f);
-                AdjustFontSize(currentTileText, currentTileText.text);
+                //AdjustFontSize(currentTileText, currentTileText.text);
 
                 Tween.Alpha(currentTileText, 1f, duration: 0.3f);
                 Tween.Alpha(fakeTileText, 0f, duration: 0.3f).OnComplete(() => fakeTileText.gameObject.SetActive(false));
@@ -596,6 +600,7 @@ public class TileSlotContainer : MonoBehaviour
             }
             Tween.Delay(animDelay).OnComplete(() =>
             {
+
                 if (skeletonGraphicBack != null)
                 {
                     skeletonGraphicBack.AnimationState.SetAnimation(0, "end", false);
@@ -731,6 +736,8 @@ public class TileSlotContainer : MonoBehaviour
             if (isHighlight)
             {
                 glow.gameObject.SetActive(true);
+                Canvas glowCanvas = glow.GetComponent<Canvas>();
+                AdjustGlowSorting(glowCanvas);
                 Tween.Alpha(glow, 1f, duration: 0.3f);
             }
             else
@@ -895,6 +902,8 @@ public class TileSlotContainer : MonoBehaviour
         if (wrongGlow != null)
         {
             wrongGlow.gameObject.SetActive(true);
+            Canvas wrongGlowCanvas = wrongGlow.GetComponent<Canvas>();
+            AdjustGlowSorting(wrongGlowCanvas);
             Color c = wrongGlow.color;
             c.a = 1f;
             wrongGlow.color = c;
@@ -916,5 +925,31 @@ public class TileSlotContainer : MonoBehaviour
                     wrongGlow.gameObject.SetActive(false);
                 }
             });
+    }
+
+    private void AdjustGlowSorting(Canvas canvas)
+    {
+        if (canvas == null) return;
+
+        bool isTutActive = TileManager.Ins != null && TileManager.Ins.UpToAll != null && TileManager.Ins.UpToAll.gameObject.activeInHierarchy;
+        if (isTutActive)
+        {
+            bool isChildOfUpToAll = transform.parent == TileManager.Ins.UpToAll.transform;
+            if (isChildOfUpToAll)
+            {
+                canvas.overrideSorting = true;
+                canvas.sortingOrder = 100;
+            }
+            else
+            {
+                canvas.overrideSorting = false;
+
+            }
+        }
+        else
+        {
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = 100;
+        }
     }
 }

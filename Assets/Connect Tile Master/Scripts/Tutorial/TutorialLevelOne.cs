@@ -24,9 +24,9 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     public List<BaseTile> tilesToSelect;
     public int step;
-    
+
     private int gameplayCanvasOriginalSortingOrder;
-    
+
     private ItemCategory theme1;
     private ItemCategory theme2;
     private Coroutine tutorialCoroutine;
@@ -138,9 +138,9 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-            showText("Match cards with the same theme!");
+            showText("Match cards with the <color=#FBC201>same</color> theme!");
 
             // Highlight container và tile
             container1.SetHighlight(true);
@@ -164,7 +164,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             tile1.onInteract = () =>
             {
                 if (clicked) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -173,7 +173,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
-            
+
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
             {
@@ -194,9 +194,9 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-            showText("Match cards with the same theme!");
+            showText("Match cards with the <color=#FBC201>same</color> theme!");
 
             // Highlight container và tile
             container1.SetHighlight(true);
@@ -220,7 +220,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             tile2.onInteract = () =>
             {
                 if (clicked) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -229,7 +229,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
-            
+
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
             {
@@ -250,7 +250,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
             showText("Match the card next!");
 
@@ -276,7 +276,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             tile3.onInteract = () =>
             {
                 if (clicked) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -285,7 +285,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile3 == null || tile3.IsOnSlot);
-            
+
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container2 != null && origContainerParent != null)
             {
@@ -306,7 +306,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
             showText("Keep Matching!");
 
@@ -332,7 +332,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             tile4.onInteract = () =>
             {
                 if (clicked) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -341,7 +341,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile4 == null || tile4.IsOnSlot);
-            
+
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container2 != null && origContainerParent != null)
             {
@@ -446,7 +446,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             if (from == null || to == null) yield break;
 
             tutorialHand.transform.position = from.position;
-            
+
             Tween.Alpha(tutorialHand, 1f, duration: 0.25f);
             yield return new WaitForSeconds(0.25f);
 
@@ -550,13 +550,13 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         // Kích hoạt overlay
         upToAll.gameObject.SetActive(true);
         upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-        Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+        Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
         if (textImageTrans != null)
         {
             textImageTrans.localPosition += new Vector3(0, 250, 0);
         }
-        showText("Freeze stops the timer!");
+        showText("Freeze <color=#FBC201>stops</color> the timer!");
 
         // Highlight nút Freeze bằng cách đưa lên overlay
         Transform origParent = freezeBtn.transform.parent;

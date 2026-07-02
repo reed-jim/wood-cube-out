@@ -130,7 +130,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             icon.gameObject.SetActive(false);
             category.gameObject.SetActive(true);
             category.text = isTextUppercase ? textData.ToUpper() : textData;
-            AdjustFontSize(category, textData);
+            //AdjustFontSize(category, textData);
         }
         else
         {
@@ -422,7 +422,31 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         IsOutside = true;
     }
+    private void AdjustGlowSorting(Canvas canvas)
+    {
+        if (canvas == null) return;
 
+        bool isTutActive = TileManager.Ins != null && TileManager.Ins.UpToAll != null && TileManager.Ins.UpToAll.gameObject.activeInHierarchy;
+        if (isTutActive)
+        {
+            bool isChildOfUpToAll = transform.parent == TileManager.Ins.UpToAll.transform;
+            if (isChildOfUpToAll)
+            {
+                canvas.overrideSorting = true;
+                canvas.sortingOrder = 100;
+            }
+            else
+            {
+                canvas.overrideSorting = false;
+
+            }
+        }
+        else
+        {
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = 100;
+        }
+    }
     public void SetHighlight(bool isHighlight)
     {
         if (glow != null)
@@ -435,6 +459,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         if (isHighlight)
         {
+            Canvas glowCanvas = glow.GetComponent<Canvas>();
+            AdjustGlowSorting(glowCanvas);
             Tween.Delay(0.25f).OnComplete(() =>
             {
                 if (gameObject != null && glow != null && glow.gameObject.activeSelf)
@@ -524,6 +550,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         if (wrongGlow != null)
         {
+            Canvas wrongGlowCanvas = wrongGlow.GetComponent<Canvas>();
+            AdjustGlowSorting(wrongGlowCanvas);
             wrongGlow.gameObject.SetActive(true);
             Color c = wrongGlow.color;
             c.a = 1f;

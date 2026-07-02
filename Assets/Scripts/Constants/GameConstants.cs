@@ -77,7 +77,7 @@ public static class GameConstants
     public static string GENERATE_TASK_SOUND = "Generate Task Sound";
     public static string RUSTY_BREAK_SOUND = "Rusty Break Sound";
     public static string collectCoinSound = "Collect Coin Sound";
-    
+
     // NEW CONNECT TILE MASTER SOUNDS
     public static string ADD_SLOT_SOUND = "Add Slot Sound";
     public static string FREEZE_BOOSTER_SOUND = "Freeze Booster Sound";
@@ -90,6 +90,8 @@ public static class GameConstants
     public static string DROP_CARD_BACK_TO_TABLE_SOUND = "Drop Card Back To Table Sound";
     public static string DEAL_CARDS_SOUND = "Deal Cards Sound";
     public static string WRONG_CARD_SOUND = "Wrong Card";
+    public static string BUY_SUCCESS_SOUND = "Buy Success Sound";
+
     #endregion
 
     #region ANIMATION

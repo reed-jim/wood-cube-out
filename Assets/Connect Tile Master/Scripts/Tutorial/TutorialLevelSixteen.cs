@@ -23,19 +23,19 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
 
     private Coroutine tutorialCoroutine;
     private int step = 0;
-    
+
     public void StartTutorial()
     {
         if (tutorialCoroutine != null)
         {
             StopCoroutine(tutorialCoroutine);
         }
-        
+
         step = 0;
         if (tutorialContainer != null) tutorialContainer.gameObject.SetActive(false);
         if (blackOverlay != null) blackOverlay.gameObject.SetActive(false);
         if (tutorialHand != null) tutorialHand.gameObject.SetActive(false);
-        
+
         tutorialCoroutine = StartCoroutine(RunLevelSixteenTutorialCoroutine());
     }
 
@@ -70,7 +70,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
             HideTutorial();
             yield break;
         }
-        
+
         BoosterUI boosterUI = FindObjectOfType<BoosterUI>();
         if (boosterUI == null || boosterUI.UnlockThemeButton == null)
         {
@@ -78,7 +78,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
             HideTutorial();
             yield break;
         }
-        
+
         Button unlockThemeBtn = boosterUI.UnlockThemeButton;
         BoosterItemUI unlockItemUI = unlockThemeBtn.GetComponentInParent<BoosterItemUI>();
 
@@ -109,11 +109,11 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
 
         // --- BƯỚC 1 ---
         step = 1;
-        
+
         upToAll.gameObject.SetActive(true);
         upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-        Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
-        
+        Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
+
         // Đẩy text lên trên để tránh bị vướng nút booster ở dưới
         if (textImageTrans != null)
         {
@@ -131,7 +131,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
 
         Transform origUnlockBtnParent = unlockThemeBtn.transform.parent;
         int origUnlockBtnSiblingIndex = unlockThemeBtn.transform.GetSiblingIndex();
-        
+
         unlockThemeBtn.transform.SetParent(upToAll.transform, true);
         unlockThemeBtn.transform.SetAsLastSibling();
 
@@ -153,20 +153,20 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
                 targetContainer.GlowUnlockTheme.color = c;
             }
         }
-        
+
         // Bàn tay tap chỉ vào nút UnlockTheme
         StartTapLoop(unlockThemeBtn.transform);
-        
+
         bool unlockUsed = false;
         UnityEngine.Events.UnityAction onUnlockClicked = () =>
         {
             unlockUsed = true;
         };
         unlockThemeBtn.onClick.AddListener(onUnlockClicked);
-        
+
         yield return new WaitUntil(() => unlockUsed);
         unlockThemeBtn.onClick.RemoveListener(onUnlockClicked);
-        
+
         StopDragLoop();
 
         if (targetContainer != null && targetContainer.GlowUnlockTheme != null)
@@ -209,7 +209,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
 
         // --- BƯỚC 2 ---
         step = 2;
-        
+
         // Trả vị trí text về bình thường
         if (textImageTrans != null)
         {
@@ -310,7 +310,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
     private IEnumerator DragLoop(Transform from, Transform to)
     {
         if (tutorialHand == null) yield break;
-        
+
         tutorialHand.gameObject.SetActive(true);
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
@@ -321,7 +321,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
             if (from == null || to == null) yield break;
 
             tutorialHand.transform.position = from.position;
-            
+
             Tween.Alpha(tutorialHand, 1f, duration: 0.25f);
             yield return new WaitForSeconds(0.25f);
 
@@ -333,7 +333,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
             yield return new WaitForSeconds(0.4f);
         }
     }
-    
+
     private void StartTapLoop(Transform target)
     {
         StopDragLoop();
@@ -343,19 +343,19 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
     private IEnumerator TapLoop(Transform target)
     {
         if (tutorialHand == null) yield break;
-        
+
         tutorialHand.gameObject.SetActive(true);
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
-        
+
         while (true)
         {
             if (target == null) yield break;
-            
+
             tutorialHand.transform.position = target.position;
             tutorialHand.AnimationState.SetAnimation(0, "action", false);
-            
+
             yield return new WaitForSeconds(1f);
         }
     }

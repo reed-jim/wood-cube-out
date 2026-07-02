@@ -430,6 +430,16 @@ public class SoundManager : MonoBehaviour
             sound.Play();
         }
     }
+    public void PlaySoundBuySuccess()
+    {
+        if (!_isEnableGameSound) return;
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.BUY_SUCCESS_SOUND);
+        if (sound != null)
+        {
+            sound.loop = false;
+            sound.Play();
+        }
+    }
 
     private void FadeOutBackgroundMusic()
     {

@@ -84,7 +84,7 @@ public class ResourceEarnPopup : BasePopup
     private void ShowResourcesEarned(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
     {
         showResourcesEarnPopupEvent?.Invoke(true);
-
+        SoundManager.Instance.PlaySoundBuySuccess();
         Show();
 
         List<RectTransform> validResourceGroups = new List<RectTransform>();

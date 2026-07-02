@@ -190,7 +190,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
                     if (!_timerWarningTween.isAlive)
                     {
                         timerText.color = Color.red;
-                        _timerWarningTween = Tween.Scale(timerText.transform, 1.2f, duration: 0.5f, cycles: -1, cycleMode: CycleMode.Yoyo);
+                        _timerWarningTween = Tween.Scale(timerText.transform, 1.1f, duration: 0.5f, cycles: -1, cycleMode: CycleMode.Yoyo);
                         _screenWarning = Tween.Alpha(warningGroup, 1, duration: 0.5f, cycles: -1, cycleMode: CycleMode.Yoyo);
                     }
                 }

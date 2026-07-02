@@ -200,7 +200,7 @@ public class BoosterUI : MonoBehaviour
         //Tween.LocalPosition(clearAllScrewPortsButtonRT, _initialClearAllScrewPortsButtonPosition, duration: transitionTime);
 
         breakModeContainer.gameObject.SetActive(false);
-        
+
         if (freezeGroup != null)
         {
             freezeGroup.alpha = 0;
@@ -516,7 +516,7 @@ public class BoosterUI : MonoBehaviour
 
         bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme);
 
-        if (TileManager.Ins.remainingSlotContainer <= 0)
+        if (TileManager.Ins.NumLockedTileSlotContainer <= 0)
         {
             ShowWarning("no_unlock_available");
 

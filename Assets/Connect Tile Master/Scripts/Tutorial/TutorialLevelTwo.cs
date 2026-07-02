@@ -24,7 +24,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
     public List<BaseTile> tilesToSelect;
     public int step;
-    
+
     private ItemCategory theme1;
     private ItemCategory theme2;
     private Coroutine tutorialCoroutine;
@@ -117,7 +117,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
             showText("Match text cards too!");
 
@@ -149,7 +149,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             };
 
             yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
-            
+
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
             {
@@ -171,7 +171,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
             showText("Images and words can both match!");
 
@@ -198,7 +198,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             tile2.onInteract = () =>
             {
                 if (clicked2) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -207,7 +207,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
             yield return new WaitUntil(() => clicked2);
             yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
-            
+
             if (container2 != null && origContainerParent != null)
             {
                 container2.transform.SetParent(origContainerParent, true);
@@ -218,13 +218,13 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
         // --- BƯỚC 3 ---
         step = 3;
-        
+
         upToAll.gameObject.SetActive(true);
         upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-        Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
-        
+        Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
+
         showText("Keep matching!");
-        
+
         // Wait 2 seconds then hide text
         yield return new WaitForSeconds(2f);
         if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
@@ -268,7 +268,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
                 return otherCategory;
             }
         }
-        
+
         return defaultCategory;
     }
 
@@ -305,7 +305,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             if (from == null || to == null) yield break;
 
             tutorialHand.transform.position = from.position;
-            
+
             Tween.Alpha(tutorialHand, 1f, duration: 0.25f);
             yield return new WaitForSeconds(0.25f);
 

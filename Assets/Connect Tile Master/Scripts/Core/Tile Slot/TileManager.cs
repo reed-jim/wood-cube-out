@@ -140,6 +140,8 @@ public class TileManager : Singleton<TileManager>
         Input.multiTouchEnabled = false;
 
         RevivePopup.reviveEvent += OnRevive;
+        BasePopup.popupShowEvent += OnPopupShow;
+        BasePopup.popupHideEvent += OnPopupHide;
 
         totalSlotInShelf = 5;
     }
@@ -172,10 +174,29 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
+    private void OnDestroy()
+    {
+        MoreActionOnDestroy();
+    }
 
     protected virtual void MoreActionOnDestroy()
     {
         RevivePopup.reviveEvent -= OnRevive;
+        BasePopup.popupShowEvent -= OnPopupShow;
+        BasePopup.popupHideEvent -= OnPopupHide;
+    }
+
+    private void OnPopupShow()
+    {
+        SoundManager.Instance?.StopSoundCountingTime();
+    }
+
+    private void OnPopupHide()
+    {
+        if (isLevelActive && !isTimeFrozen && !BasePopup.IsAnyPopupOpen && currentLevelTime <= 15f && currentLevelTime > 0)
+        {
+            SoundManager.Instance?.PlaySoundCountingTime();
+        }
     }
     #endregion
 
@@ -1138,21 +1159,19 @@ public class TileManager : Singleton<TileManager>
             isLevelActive = false;
         }
 
-        Tween.Delay(1.2f).OnComplete(() =>
+
+        if (tileSlotContainer == null) return;
+
+        bool isAnyRemainingTileAfterDelay = tiles.Any(item => !item.IsOnSlot);
+
+        if (remainingSlotContainer > 0 && isAnyRemainingTileAfterDelay)
         {
-            if (tileSlotContainer == null) return;
-
-            bool isAnyRemainingTileAfterDelay = tiles.Any(item => !item.IsOnSlot);
-
-            if (remainingSlotContainer > 0 && isAnyRemainingTileAfterDelay)
-            {
-                SpawnSlot(index);
-            }
-            else
-            {
-                HideSlot(index);
-            }
-        });
+            SpawnSlot(index);
+        }
+        else
+        {
+            HideSlot(index);
+        }
     }
 
     #region Move Tiles  

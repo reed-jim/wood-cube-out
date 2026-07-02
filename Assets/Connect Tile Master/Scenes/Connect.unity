@@ -1471,81 +1471,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &162707050
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 162707051}
-  - component: {fileID: 162707053}
-  - component: {fileID: 162707052}
-  m_Layer: 5
-  m_Name: Demo
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &162707051
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162707050}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1165840581}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1080, y: 1920}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &162707052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162707050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.47058824}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b90d0c16fca867240b4f07c176fa8181, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &162707053
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162707050}
-  m_CullTransparentMesh: 1
 --- !u!1 &176027390
 GameObject:
   m_ObjectHideFlags: 0
@@ -3928,7 +3853,8 @@ GameObject:
   - component: {fileID: 419703836}
   - component: {fileID: 419703837}
   - component: {fileID: 419703838}
-  m_Layer: 0
+  - component: {fileID: 419703839}
+  m_Layer: 5
   m_Name: SkeletonGraphic (Hand_video)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4019,6 +3945,29 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!223 &419703839
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419703835}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 120
+  m_TargetDisplay: 0
 --- !u!1001 &425707439
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9439,7 +9388,8 @@ GameObject:
   - component: {fileID: 919010215}
   - component: {fileID: 919010216}
   - component: {fileID: 919010217}
-  m_Layer: 0
+  - component: {fileID: 919010218}
+  m_Layer: 5
   m_Name: SkeletonGraphic (Hand_video)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9530,6 +9480,29 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!223 &919010218
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919010214}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 120
+  m_TargetDisplay: 0
 --- !u!1 &922793923
 GameObject:
   m_ObjectHideFlags: 0
@@ -11073,7 +11046,8 @@ GameObject:
   - component: {fileID: 1108281270}
   - component: {fileID: 1108281271}
   - component: {fileID: 1108281272}
-  m_Layer: 0
+  - component: {fileID: 1108281273}
+  m_Layer: 5
   m_Name: SkeletonGraphic (Hand_video)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11164,6 +11138,29 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!223 &1108281273
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108281269}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 120
+  m_TargetDisplay: 0
 --- !u!1 &1116960215
 GameObject:
   m_ObjectHideFlags: 0
@@ -11478,7 +11475,6 @@ RectTransform:
   - {fileID: 1634581202}
   - {fileID: 1834366905}
   - {fileID: 1527701851}
-  - {fileID: 162707051}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -12570,7 +12566,8 @@ GameObject:
   - component: {fileID: 1276401160}
   - component: {fileID: 1276401161}
   - component: {fileID: 1276401162}
-  m_Layer: 0
+  - component: {fileID: 1276401163}
+  m_Layer: 5
   m_Name: SkeletonGraphic (Hand_video)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12661,6 +12658,29 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!223 &1276401163
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276401159}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 120
+  m_TargetDisplay: 0
 --- !u!1 &1282212396
 GameObject:
   m_ObjectHideFlags: 0
@@ -13341,7 +13361,10 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 7542666186376226645, guid: 59e9926e1ce0d7d44997ea12855e60ca, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5463875968293349520, guid: 59e9926e1ce0d7d44997ea12855e60ca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1315138359}
   m_SourcePrefab: {fileID: 100100000, guid: 59e9926e1ce0d7d44997ea12855e60ca, type: 3}
 --- !u!224 &1315138356 stripped
 RectTransform:
@@ -13359,6 +13382,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1315138358 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5463875968293349520, guid: 59e9926e1ce0d7d44997ea12855e60ca, type: 3}
+  m_PrefabInstance: {fileID: 1315138355}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1315138359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315138358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff5d1d01964d902478d768ff5dcf4341, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScaleUpDownLoop
+  scaleUp: 1.1
+  duration: 0.6
 --- !u!1 &1333630825
 GameObject:
   m_ObjectHideFlags: 0
@@ -14482,13 +14524,35 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2462661810120900210, guid: 34b4ec6dad621c545976b349ebd2784b, type: 3}
       insertIndex: 3
       addedObject: {fileID: 495485933}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1594275000384097021, guid: 34b4ec6dad621c545976b349ebd2784b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1405808125}
   m_SourcePrefab: {fileID: 100100000, guid: 34b4ec6dad621c545976b349ebd2784b, type: 3}
 --- !u!224 &1405808123 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2462661810120900210, guid: 34b4ec6dad621c545976b349ebd2784b, type: 3}
   m_PrefabInstance: {fileID: 1405808122}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1405808124 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1594275000384097021, guid: 34b4ec6dad621c545976b349ebd2784b, type: 3}
+  m_PrefabInstance: {fileID: 1405808122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1405808125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405808124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff5d1d01964d902478d768ff5dcf4341, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScaleUpDownLoop
+  scaleUp: 1.1
+  duration: 0.6
 --- !u!1 &1424689115
 GameObject:
   m_ObjectHideFlags: 0
@@ -14923,7 +14987,8 @@ GameObject:
   - component: {fileID: 1454540364}
   - component: {fileID: 1454540365}
   - component: {fileID: 1454540366}
-  m_Layer: 0
+  - component: {fileID: 1454540367}
+  m_Layer: 5
   m_Name: SkeletonGraphic (Hand_video)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15014,6 +15079,29 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!223 &1454540367
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454540363}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 120
+  m_TargetDisplay: 0
 --- !u!1001 &1477818718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15128,7 +15216,8 @@ GameObject:
   - component: {fileID: 1494403965}
   - component: {fileID: 1494403966}
   - component: {fileID: 1494403967}
-  m_Layer: 0
+  - component: {fileID: 1494403968}
+  m_Layer: 5
   m_Name: SkeletonGraphic (Hand_video)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15219,6 +15308,29 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!223 &1494403968
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494403964}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 120
+  m_TargetDisplay: 0
 --- !u!1001 &1501232873
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17946,8 +18058,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 21.6, y: 2.9}
-  m_SizeDelta: {x: 148.94, y: 60.774}
+  m_AnchoredPosition: {x: 23.0688, y: 2.9}
+  m_SizeDelta: {x: 151.8776, y: 60.774}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1742698958
 MonoBehaviour:
@@ -20794,8 +20906,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20.2213, y: 2.1222}
-  m_SizeDelta: {x: 95.6415, y: 43.9039}
+  m_AnchoredPosition: {x: 20.4, y: 2.1222}
+  m_SizeDelta: {x: 95.6415, y: 47.57}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2034766427
 MonoBehaviour:
@@ -20844,7 +20956,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32.2
+  m_fontSize: 34.9
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1

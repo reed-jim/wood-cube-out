@@ -24,7 +24,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
 
     public List<BaseTile> tilesToSelect;
     public int step;
-    
+
     private ItemCategory theme1;
     private Coroutine tutorialCoroutine;
     private Coroutine dragLoopCoroutine;
@@ -123,7 +123,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
             showText("This calculation equals 5!");
 
@@ -149,7 +149,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             tile1.onInteract = () =>
             {
                 if (clicked) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -158,7 +158,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
-            
+
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
             {
@@ -180,7 +180,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             // Kích hoạt overlay
             upToAll.gameObject.SetActive(true);
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-            Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
+            Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
             showText("This also means 5!");
 
@@ -206,7 +206,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             tile2.onInteract = () =>
             {
                 if (clicked) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -215,7 +215,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
 
             yield return new WaitUntil(() => clicked);
             yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
-            
+
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
             {
@@ -228,13 +228,13 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
         // --- BƯỚC 3 ---
         // Hiện text hướng dẫn Find more that make 5! trong 1.5s rồi kết thúc tut
         step = 3;
-        
+
         upToAll.gameObject.SetActive(true);
         upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-        Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
-        
+        Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
+
         showText("Find more that make 5!");
-        
+
         // Wait 1.5 seconds then hide text
         yield return new WaitForSeconds(1.5f);
         if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
@@ -302,7 +302,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             if (from == null || to == null) yield break;
 
             tutorialHand.transform.position = from.position;
-            
+
             Tween.Alpha(tutorialHand, 1f, duration: 0.25f);
             yield return new WaitForSeconds(0.25f);
 

@@ -193,11 +193,14 @@ public class WinPopup : BasePopup
                 {
                     _currentCollectedCoin = numCoin;
                 }
-
-                _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
+                Tween.Delay(3f, () =>
+                {
+                    _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
+                    continueButton.interactable = true;
+                }
+                );
 
                 // Mở khóa lại các button sau khi đếm số xong
-                continueButton.interactable = true;
                 returnHomeButton.interactable = true;
                 x5CoinButton.interactable = !_isAlreadyWatchRewardedAd;
 

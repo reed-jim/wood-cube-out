@@ -23,19 +23,19 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
 
     private Coroutine tutorialCoroutine;
     private int step = 0;
-    
+
     public void StartTutorial()
     {
         if (tutorialCoroutine != null)
         {
             StopCoroutine(tutorialCoroutine);
         }
-        
+
         step = 0;
         if (tutorialContainer != null) tutorialContainer.gameObject.SetActive(false);
         if (blackOverlay != null) blackOverlay.gameObject.SetActive(false);
         if (tutorialHand != null) tutorialHand.gameObject.SetActive(false);
-        
+
         tutorialCoroutine = StartCoroutine(RunLevelSevenTutorialCoroutine());
     }
 
@@ -66,7 +66,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             HideTutorial();
             yield break;
         }
-        
+
         BoosterUI boosterUI = FindObjectOfType<BoosterUI>();
         if (boosterUI == null || boosterUI.HintButton == null)
         {
@@ -74,7 +74,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             HideTutorial();
             yield break;
         }
-        
+
         Button hintBtn = boosterUI.HintButton;
 
         Transform textImageTrans = upToAll.transform.Find("Image");
@@ -104,11 +104,11 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
 
         // --- BƯỚC 1 ---
         step = 1;
-        
+
         upToAll.gameObject.SetActive(true);
         upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
-        Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
-        
+        Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
+
         if (textImageTrans != null)
         {
             textImageTrans.localPosition += new Vector3(0, 250, 0);
@@ -117,50 +117,50 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
 
         Transform origHintParent = hintBtn.transform.parent;
         int origHintSiblingIndex = hintBtn.transform.GetSiblingIndex();
-        
+
         hintBtn.transform.SetParent(upToAll.transform, true);
         hintBtn.transform.SetAsLastSibling();
-        
+
         // Bàn tay tap
         StartTapLoop(hintBtn.transform);
-        
+
         bool hintUsed = false;
-        
+
         // Capture hint usage
         UnityEngine.Events.UnityAction onHintClicked = () =>
         {
             hintUsed = true;
         };
         hintBtn.onClick.AddListener(onHintClicked);
-        
+
         yield return new WaitUntil(() => hintUsed);
         hintBtn.onClick.RemoveListener(onHintClicked);
-        
+
         StopDragLoop();
-        
+
         // Khôi phục HintButton
         if (hintBtn != null && origHintParent != null)
         {
             hintBtn.transform.SetParent(origHintParent, true);
             hintBtn.transform.SetSiblingIndex(origHintSiblingIndex);
         }
-        
+
         // --- BƯỚC 2 ---
         step = 2;
-        
+
         if (textImageTrans != null)
         {
             textImageTrans.localPosition -= new Vector3(0, 250, 0);
         }
         showText("Try it now!");
-        
+
         // Chờ TileManager xử lý logic UseHintBooster (khoảng 0.5s để hiệu ứng hoàn tất)
         yield return new WaitForSeconds(0.5f);
-        
+
         // Tìm tile và container đang được highlight (TileManager đưa chúng vào upToAll)
         TileSlotContainer activeContainer = null;
         BaseTile highlightedTile = null;
-        
+
         foreach (var container in TileManager.Ins.TileSlotContainers)
         {
             if (container.transform.parent == upToAll.transform)
@@ -169,7 +169,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
                 break;
             }
         }
-        
+
         foreach (var tile in TileManager.Ins.tiles)
         {
             if (tile.transform.parent == upToAll.transform)
@@ -178,17 +178,17 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
                 break;
             }
         }
-        
+
         if (activeContainer != null && highlightedTile != null)
         {
             StartDragLoop(highlightedTile.transform, activeContainer.transform);
-            
+
             Action oldInteract = highlightedTile.onInteract;
             bool cardClicked = false;
             highlightedTile.onInteract = () =>
             {
                 if (cardClicked) return;
-                
+
                 // Ẩn text và bàn tay
                 if (textImageTrans != null) textImageTrans.gameObject.SetActive(false);
                 StopDragLoop();
@@ -196,7 +196,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
 
                 oldInteract?.Invoke();
             };
-            
+
             yield return new WaitUntil(() => cardClicked);
             yield return new WaitUntil(() => highlightedTile == null || highlightedTile.IsOnSlot);
         }
@@ -205,9 +205,9 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             // Fallback nếu có lỗi logic, tự kết thúc sớm
             yield return new WaitForSeconds(2f);
         }
-        
+
         Tween.Alpha(upToAll, 0f, duration: 0.25f).OnComplete(() => upToAll.gameObject.SetActive(false));
-        
+
         // Kết thúc tutorial hoàn toàn
         step = 3;
         if (TileManager.Ins.levelItem != null)
@@ -229,7 +229,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
     private IEnumerator DragLoop(Transform from, Transform to)
     {
         if (tutorialHand == null) yield break;
-        
+
         tutorialHand.gameObject.SetActive(true);
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
@@ -240,7 +240,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             if (from == null || to == null) yield break;
 
             tutorialHand.transform.position = from.position;
-            
+
             Tween.Alpha(tutorialHand, 1f, duration: 0.25f);
             yield return new WaitForSeconds(0.25f);
 
@@ -252,7 +252,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             yield return new WaitForSeconds(0.4f);
         }
     }
-    
+
     private void StartTapLoop(Transform target)
     {
         StopDragLoop();
@@ -262,19 +262,19 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
     private IEnumerator TapLoop(Transform target)
     {
         if (tutorialHand == null) yield break;
-        
+
         tutorialHand.gameObject.SetActive(true);
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
-        
+
         while (true)
         {
             if (target == null) yield break;
-            
+
             tutorialHand.transform.position = target.position;
             tutorialHand.AnimationState.SetAnimation(0, "action", false);
-            
+
             yield return new WaitForSeconds(1f);
         }
     }
