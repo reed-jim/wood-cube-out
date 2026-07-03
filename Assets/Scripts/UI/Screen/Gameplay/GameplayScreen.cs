@@ -24,6 +24,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
     [SerializeField] private TMP_Text timerText;
+    [SerializeField] private GameObject noLimited;
     [SerializeField] private CanvasGroup warningGroup;
     [SerializeField] private float warningTimeLimit = 15f;
     [Header("HARD MODE")]
@@ -185,6 +186,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
             bool hasTimeLimit = TileManager.Ins != null && TileManager.Ins.levelItem != null && TileManager.Ins.levelItem.timeLimit > 0;
             if (hasTimeLimit && TileManager.Ins.isLevelActive)
             {
+                noLimited.SetActive(false);
+                timerText.gameObject.SetActive(true);
                 if (timeToDisplay <= warningTimeLimit && timeToDisplay > 0)
                 {
                     if (!_timerWarningTween.isAlive)
@@ -201,6 +204,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
             }
             else
             {
+                noLimited.SetActive(true);
+                timerText.gameObject.SetActive(false);
                 StopTimerWarning();
             }
         }
