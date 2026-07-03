@@ -30,7 +30,7 @@ public class SpecialElementIntroductionPopup : BasePopup
     private void ShowSpecialElementIntroduction(int index)
     {
         specialElementIcon.sprite = specialElementSprites[index];
-        specialElementIcon.SetNativeSize();
+        UIUtil.SetSizeKeepRatioY(specialElementIcon, 512);
 
         specialElementName.TranslationName = specialElementNames[index];
         specialElementDescription.TranslationName = specialElementDescriptions[index];
