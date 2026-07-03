@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
@@ -16,7 +17,6 @@ public enum LevelElement
 
 namespace AntsFlow
 {
-
     public class SpecialElementManager : Singleton<SpecialElementManager>
     {
         public LevelElement nextLevelElement;
@@ -28,6 +28,11 @@ namespace AntsFlow
         public Sprite hiddenTileSprite;
         public Sprite wallTileSprite;
 
+        public IntVariable currentLevel;
+        public int[] levelsShowSpecialElementIntroduction;
+
+        public static event Action<int> showSpecialElementIntroduction;
+
         public void Setup(AntsFlow.LevelItem levelItem)
         {
             specialElementConfig = levelItem.specialElementConfig;
@@ -38,6 +43,11 @@ namespace AntsFlow
             }
 
             antBoxLinks.Clear();
+
+            if (levelsShowSpecialElementIntroduction.Contains(currentLevel.Value))
+            {
+                showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
+            }
         }
 
         public void SpawnAntBoxLink()
@@ -281,7 +291,7 @@ namespace AntsFlow
             HashSet<int> visited = new();
             List<int> frontier = new();
 
-            int start = Random.Range(0, totalTiles);
+            int start = UnityEngine.Random.Range(0, totalTiles);
 
             cluster.Add(start);
             visited.Add(start);
@@ -289,7 +299,7 @@ namespace AntsFlow
 
             while (cluster.Count < clusterSize && frontier.Count > 0)
             {
-                int current = frontier[Random.Range(0, frontier.Count)];
+                int current = frontier[UnityEngine.Random.Range(0, frontier.Count)];
 
                 int x = current % width;
                 int y = current / width;
@@ -305,7 +315,7 @@ namespace AntsFlow
                 // Shuffle neighbors
                 for (int i = neighbors.Length - 1; i > 0; i--)
                 {
-                    int j = Random.Range(0, i + 1);
+                    int j = UnityEngine.Random.Range(0, i + 1);
                     (neighbors[i], neighbors[j]) = (neighbors[j], neighbors[i]);
                 }
 

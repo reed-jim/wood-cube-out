@@ -34,9 +34,10 @@ namespace AntsFlow
 
                 Tween.Delay(1).OnComplete(() =>
                 {
-                    SaferioTween.AlphaHide(spriteRenderers[index]);
-
-                    gameObject.SetActive(false);
+                    SaferioTween.AlphaHide(spriteRenderers[index], onCompleteAction: () =>
+                    {
+                        gameObject.SetActive(false);
+                    });
                 });
             }
         }
