@@ -178,7 +178,7 @@ namespace AntsFlow
                 {
                     WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
 
-                    if (antBox != null && antBox is not FreezedAntBox)
+                    if (antBox != null && !antBox.isDouble && antBox is not FreezedAntBox)
                     {
                         maxFreezedAntBoxRequiredNumberToUnfreeze++;
                     }
@@ -187,7 +187,7 @@ namespace AntsFlow
                 {
                     WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
 
-                    if (antBox != null && antBox is not FreezedAntBox)
+                    if (antBox != null && !antBox.isDouble && antBox is not FreezedAntBox)
                     {
                         maxFreezedAntBoxRequiredNumberToUnfreeze++;
                     }
@@ -260,7 +260,7 @@ namespace AntsFlow
             {
                 Node node = nodes[i];
 
-                if (node.x == 1 || node.x == maxX - 1 || node.y == maxY - 1)
+                if (node.x == 1 || node.x == maxX - 1 || node.y == 1 || node.y == maxY - 1)
                 {
                     if (node.x > 0 && node.x < maxX && node.y > 0 && node.y < maxY)
                     {

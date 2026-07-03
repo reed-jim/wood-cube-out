@@ -396,11 +396,6 @@ namespace NamPhuThuy.GamePlay
 
                     // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
                 }
-
-                if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
-                {
-                    SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
-                }
             }
             else
             {
@@ -436,6 +431,11 @@ namespace NamPhuThuy.GamePlay
                         // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
                     }
                 }
+            }
+
+            if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
+            {
+                SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
             }
         }
 

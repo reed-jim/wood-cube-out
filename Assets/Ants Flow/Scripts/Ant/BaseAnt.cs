@@ -620,36 +620,25 @@ namespace AntsFlow
 
             if (count == 2)
             {
-                // List<Vector3> toRemovePoints = new List<Vector3>();
+                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 0.7f);
 
-                // for (int i = 0; i < points.Count; i++)
-                // {
-                //     if (Mathf.Abs(points[i].y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f)
-                //     {
-                //         if (
-                //             Mathf.Abs(points[i].x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f ||
-                //             Mathf.Abs(points[i].x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f
-                //         )
-                //         {
+                for (int i = 0; i < points.Count; i++)
+                {
+                    Vector3 point = points[i];
 
-                //         }
-                //         else
-                //         {
-                //             toRemovePoints.Add(points[i]);
-                //         }
-                //     }
-                // }
+                    bool isNearLeftMost = Mathf.Abs(point.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f;
+                    bool isNearRightMost = Mathf.Abs(point.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f;
 
-                // Node closestBottomBoardNode = TileManager.Ins.nodes
-                //     .OrderBy(node => Mathf.Abs(node.initialPosition.x - transform.position.x))
-                //     .First();
+                    if (isNearLeftMost)
+                    {
+                        points[i] = points[i].AddX(-randomWiggleMagnitude);
+                    }
 
-                // for (int i = 0; i < toRemovePoints.Count; i++)
-                // {
-                //     points.Remove(toRemovePoints[i]);
-                // }
-
-                // points.Add(closestBottomBoardNode.initialPosition);
+                    if (isNearRightMost)
+                    {
+                        points[i] = points[i].AddX(randomWiggleMagnitude);
+                    }
+                }
 
                 List<Vector3> pointInFirstRow = new List<Vector3>();
 
