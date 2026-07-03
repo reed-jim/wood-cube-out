@@ -21,6 +21,11 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     private IExtensionProvider extensions;
     private IAppleExtensions m_AppleExtensions;
 
+    // True once OnInitialized has fired with a valid controller
+    private bool _isInitialized;
+    // Prevents multiple simultaneous internet-monitor coroutines
+    private bool _isMonitoringInternet;
+
     #region EVENT
     public static event Action iapProductPurchasedCompletedEvent;
     public static event Action removeAdPurchasedCompletedEvent;
@@ -98,7 +103,16 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         yield return new WaitForSeconds(6);
 
-        Init();
+        if (Application.internetReachability != NetworkReachability.NotReachable)
+        {
+            Init();
+        }
+        else
+        {
+            // No internet at startup — wait for connection then init
+            Debug.Log("[SaferioIAP] No internet at startup. Will retry IAP init when connection is available.");
+            StartInternetMonitor();
+        }
     }
 
     private void Init()
@@ -172,6 +186,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         this.controller = controller;
         this.extensions = extensions;
+        _isInitialized = true;
+        _isMonitoringInternet = false; // stop any pending monitor
 
         m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
 
@@ -206,6 +222,9 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         GamePersistentVariable.iapInitializeFailReason = error.ToString();
+        Debug.LogWarning($"[SaferioIAP] IAP init failed: {error}. Will retry when internet is available.");
+        // Init failed (possibly no internet) — monitor and retry automatically
+        StartInternetMonitor();
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
@@ -364,13 +383,53 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         }
         else
         {
+            // controller is null — IAP hasn't initialized yet
             if (Application.internetReachability != NetworkReachability.NotReachable)
             {
-                Init();
+                // Internet is available now: trigger Init if not already monitoring/initializing
+                StartInternetMonitor();
             }
 
             return new List<Product>();
         }
+    }
+
+    /// <summary>
+    /// Starts the internet monitor coroutine if it isn't already running.
+    /// The monitor waits for internet connectivity then calls Init().
+    /// Once Init succeeds (OnInitialized fires), the monitor stops and
+    /// FetchLocalizedPrice refreshes all shop UI with localized prices.
+    /// </summary>
+    private void StartInternetMonitor()
+    {
+        if (_isInitialized || _isMonitoringInternet) return;
+        _isMonitoringInternet = true;
+        StartCoroutine(MonitorInternetAndRetryInit());
+    }
+
+    private IEnumerator MonitorInternetAndRetryInit()
+    {
+        Debug.Log("[SaferioIAP] Monitoring internet for IAP re-init...");
+
+        // Wait until internet becomes available
+        while (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            yield return new WaitForSecondsRealtime(3f);
+        }
+
+        if (_isInitialized)
+        {
+            // Already initialized by another path — just refresh prices
+            _isMonitoringInternet = false;
+            FetchLocalizedPrice();
+            yield break;
+        }
+
+        Debug.Log("[SaferioIAP] Internet restored. Retrying IAP initialization...");
+        Init();
+
+        // Wait for OnInitialized (or failure) — _isMonitoringInternet is cleared in OnInitialized
+        // If Init fails again, OnInitializeFailed will call StartInternetMonitor() to retry
     }
 
     public string GetLocalizedPrice(Product product)

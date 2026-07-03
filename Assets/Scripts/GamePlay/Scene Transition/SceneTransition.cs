@@ -16,6 +16,7 @@ public class SceneTransition : MonoBehaviour
     public static SceneTransition Instance { get; private set; }
 
     [SerializeField] private RectTransform canvas;
+    // NOTE: blackBackground field kept for Inspector compatibility but is no longer used in logic.
     [SerializeField] private CanvasGroup blackBackground;
 
     [Header("LOADING LEVEL IN PROGRESS")]
@@ -59,16 +60,14 @@ public class SceneTransition : MonoBehaviour
         _isFirstTimeEnterScene = true;
         _isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
 
-        if (!_isFirstTimeOpenApp)
+        if (_isFirstTimeOpenApp)
         {
-            // BlackScreenTransition();
-        }
-        else
-        {
-            blackBackground.gameObject.SetActive(false);
-
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
+
+        // blackBackground is no longer used — keep it hidden at all times
+        if (blackBackground != null)
+            blackBackground.gameObject.SetActive(false);
 
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
         loadLevelInProgressContainer.gameObject.SetActive(false);
@@ -111,43 +110,6 @@ public class SceneTransition : MonoBehaviour
 
     #endregion
 
-    private void BlackScreenTransition(float delay, Action onCompletedAction)
-    {
-        if (_isFirstTimeOpenApp)
-        {
-            _isFirstTimeOpenApp = false;
-
-            transitionCompletedEvent?.Invoke();
-
-            return;
-        }
-
-        blackBackground.alpha = 1;
-
-        blackBackground.gameObject.SetActive(true);
-
-        CommonUtil.StopAllTweens(_tweens);
-
-        _tweens.Add(Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
-        {
-            blackBackground.gameObject.SetActive(false);
-
-            onCompletedAction?.Invoke();
-
-            if (!loadLevelInProgressContainer.gameObject.activeSelf)
-            {
-                transitionCompletedEvent?.Invoke();
-            }
-        }));
-    }
-
-    private void ShowBlackScreenImmediately()
-    {
-        blackBackground.gameObject.SetActive(true);
-
-        blackBackground.alpha = 1;
-    }
-
     private void TransitionOnLevelStarted()
     {
         if (_waitForLevelLoadedCoroutine != null)
@@ -170,28 +132,17 @@ public class SceneTransition : MonoBehaviour
             yield return new WaitUntil(() => GamePersistentVariable.isLoadingComplete);
         }
 
-        ShowBlackScreenImmediately();
+        // Show loadLevelInProgressContainer immediately (replaces the old ShowBlackScreenImmediately + BlackScreenTransition)
+        ShowLoadingScreenImmediately();
 
         yield return new WaitUntil(() => _isLevelLoaded);
 
-        BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
+        // Now run the loading screen with minWaitTime and ads (same logic as before)
+        LoadingLevelInProgress();
 
         if (GamePersistentVariable.isLoadingLevelInProgress)
         {
-            LoadingLevelInProgress();
-
             GamePersistentVariable.isLoadingLevelInProgress = false;
-        }
-        else
-        {
-            if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
-            {
-                LoadingLevelInProgress();
-            }
-            else
-            {
-                loadLevelInProgressContainer.gameObject.SetActive(false);
-            }
         }
 
         _isLevelLoaded = false;
@@ -200,6 +151,16 @@ public class SceneTransition : MonoBehaviour
     private void SetIsLevelLoaded()
     {
         _isLevelLoaded = true;
+    }
+
+    /// <summary>
+    /// Shows the loading screen immediately at full opacity.
+    /// This replaces the old ShowBlackScreenImmediately() + BlackScreenTransition() pair.
+    /// </summary>
+    private void ShowLoadingScreenImmediately()
+    {
+        loadLevelInProgressContainer.gameObject.SetActive(true);
+        loadLevelInProgressCanvasGroup.alpha = 1;
     }
 
     #region LOADING LEVEL IN PROGRESS
