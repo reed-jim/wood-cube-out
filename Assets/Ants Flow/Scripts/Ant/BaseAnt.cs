@@ -472,6 +472,59 @@ namespace AntsFlow
         }
 #endif
 
+        public static List<Vector3> RemoveNearbyPoints(List<Vector3> points, float minDistance)
+        {
+            float cellSize = minDistance;
+            float minDistSqr = minDistance * minDistance;
+
+            var grid = new Dictionary<Vector3Int, List<Vector3>>();
+            var result = new List<Vector3>();
+
+            foreach (var p in points)
+            {
+                Vector3Int cell = new Vector3Int(
+                    Mathf.FloorToInt(p.x / cellSize),
+                    Mathf.FloorToInt(p.y / cellSize),
+                    Mathf.FloorToInt(p.z / cellSize));
+
+                bool tooClose = false;
+
+                // Check neighboring cells only
+                for (int x = -1; x <= 1 && !tooClose; x++)
+                    for (int y = -1; y <= 1 && !tooClose; y++)
+                    {
+                        var neighbor = cell + new Vector3Int(x, y, 0);
+
+                        if (!grid.TryGetValue(neighbor, out var list))
+                            continue;
+
+                        foreach (var other in list)
+                        {
+                            if ((p - other).sqrMagnitude < minDistSqr)
+                            {
+                                tooClose = true;
+                                break;
+                            }
+                        }
+                    }
+
+                if (!tooClose)
+                {
+                    result.Add(p);
+
+                    if (!grid.TryGetValue(cell, out var list))
+                    {
+                        list = new List<Vector3>();
+                        grid[cell] = list;
+                    }
+
+                    list.Add(p);
+                }
+            }
+
+            return result;
+        }
+
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
             float moveSpeed = 5f;
@@ -514,9 +567,7 @@ namespace AntsFlow
                     firstBottomMostPointIndex = 0;
                 }
 
-                // points = Simplify(points);
-
-                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 1f);
+                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 0.7f);
 
                 Vector3 cachePoint = Vector3.zero;
                 int cachePointIndex = -1;
@@ -563,6 +614,8 @@ namespace AntsFlow
                 {
                     points.RemoveAt(firstBottomMostPointIndex + 1);
                 }
+
+                points = RemoveNearbyPoints(points, 0.5f);
             }
 
             if (count == 2)
@@ -640,6 +693,7 @@ namespace AntsFlow
             int zigZagSign = siblingIndex % 2 == 0 ? 1 : -1;
             float zigzagControl = zigZagSign * zigZagFrequency * Mathf.PI * 2f;
             float zPosition = -3 - 0.001f * siblingIndex;
+            Quaternion targetRotation;
 
             WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
 
@@ -651,6 +705,8 @@ namespace AntsFlow
                 Vector3 end = points[i];
 
                 direction = (end - start).normalized;
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
                 float distance = Vector3.Distance(start, end);
 
@@ -661,8 +717,6 @@ namespace AntsFlow
                 //        zigZagWidth;
 
                 // end = points[i] + perp * offset;
-
-                direction = (end - start).normalized;
 
                 float t = 0f;
                 float timeNeeded = distance / totalDistance * totalTime;
@@ -692,7 +746,7 @@ namespace AntsFlow
                     pos = Vector3.Lerp(start, end, t);
 
                     transform.position = pos.ChangeZ(zPosition);
-                    Rotate(progress: 2 * t);
+                    Rotate(targetRotation, progress: 2 * t);
 
                     yield return waitForSeconds;
                 }
@@ -714,12 +768,8 @@ namespace AntsFlow
                 OnAntMovedToNest();
             }
 
-            void Rotate(float progress)
+            void Rotate(Quaternion targetRotation, float progress)
             {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
                 transform.rotation = Quaternion.Lerp(
                     transform.rotation,
                     targetRotation,

@@ -2,13 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CandyCoded.HapticFeedback;
-using EPOOutline;
-using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
-using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Tilemaps;
 
 namespace AntsFlow
@@ -16,10 +12,6 @@ namespace AntsFlow
     [Serializable]
     public class BaseTile
     {
-        // public Transform coordinate;
-        // public SpriteRenderer spriteRenderer;
-        // public SpriteRenderer outline;
-
         public Tilemap tilemap;
         public Vector3Int tilemapPosition;
         public TileObstacle tileObstacle;
@@ -187,36 +179,24 @@ namespace AntsFlow
 
         public void MoveToAnt(BaseAnt ant, Action onCompleteAction = null)
         {
-            // boxCollider.enabled = false;
-            // navMeshModifierVolume.enabled = false;
-            // outline.gameObject.SetActive(false);
-            // shadow.gameObject.SetActive(false);
-
-            // Tween.Color(outline, CommonUtil.GetHighContrastComplementary(spriteRenderer.color), duration: 0.3f);
-
-            // transform.SetParent(ant.transform);
-            // Tween.LocalPosition(transform, new Vector3(0, 0.6f, -1), duration: 0.3f);
-            // // Tween.Scale(transform, 0.45f, duration: 0.3f);
-            // Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
-
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
             fakeTile.Init(ant, faction);
 
-            // fakeTile.transform.position = TileManager.Ins.GetTilePosition(this).AddZ(-0.0001f * (100 - position.y) - 3);
-            // fakeTile.transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
-            // fakeTile.transform.localRotation = Quaternion.identity;
+            fakeTile.transform.position = TileManager.Ins.GetTilePosition(this);
+            fakeTile.transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
+            fakeTile.transform.localRotation = Quaternion.identity;
 
-            // Tween.LocalPosition(fakeTile.transform, fakeTile.positionInAnt, duration: 0.3f);
-            // Tween.Scale(fakeTile.transform, fakeTile.scaleInAnt, duration: 0.3f);
-            // Tween.LocalRotation(fakeTile.transform, Quaternion.identity, duration: 0.3f)
-            // .OnComplete(() =>
-            // {
-            //     onCompleteAction?.Invoke();
-            // });
+            Tween.LocalPosition(fakeTile.transform, fakeTile.positionInAnt, duration: 0.3f);
+            Tween.Scale(fakeTile.transform, fakeTile.scaleInAnt, duration: 0.3f);
+            Tween.LocalRotation(fakeTile.transform, Quaternion.identity, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                onCompleteAction?.Invoke();
+            });
 
             ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            fx.transform.position = TileManager.Ins.GetTilePosition(this).AddZ(-0.0001f * (100 - position.y) - 3);
+            fx.transform.position = TileManager.Ins.GetTilePosition(this).AddZ(-9.1f);
             var main = fx.main;
             main.startColor = faction;
             fx.Play();
@@ -241,25 +221,6 @@ namespace AntsFlow
         {
             tilemap.SetTile(tilemapPosition, null);
             TileManager.Ins.shadowTilemap.SetTile(tilemapPosition, null);
-        }
-
-        public void Highlight(Action onComplete)
-        {
-            // outline.gameObject.SetActive(true);
-
-            // outline.color = ColorUtil.WithAlpha(Color.white, 0);
-
-            // Tween.Alpha(outline, 0.75f, duration: 0.3f)
-            // .OnComplete(() =>
-            // {
-            //     Tween.Alpha(outline, 0, duration: 0.5f)
-            //     .OnComplete(() =>
-            //     {
-            //         outline.gameObject.SetActive(false);
-
-            //         onComplete?.Invoke();
-            //     });
-            // });
         }
 
         public void Complete()
