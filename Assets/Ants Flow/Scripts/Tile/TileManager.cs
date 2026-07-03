@@ -144,7 +144,7 @@ namespace AntsFlow
                 {
                     float extraColumn = 0;
                     float extraRow = 0;
-                    float extra = 0.8f;
+                    float extra = 1.3f;
 
                     if (x == 0)
                     {

@@ -639,6 +639,7 @@ namespace AntsFlow
             float totalTimePassed = 0;
             int zigZagSign = siblingIndex % 2 == 0 ? 1 : -1;
             float zigzagControl = zigZagSign * zigZagFrequency * Mathf.PI * 2f;
+            float zPosition = -3 - 0.001f * siblingIndex;
 
             WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
 
@@ -690,7 +691,7 @@ namespace AntsFlow
 
                     pos = Vector3.Lerp(start, end, t);
 
-                    transform.position = pos.ChangeZ(-3 - 0.001f * siblingIndex);
+                    transform.position = pos.ChangeZ(zPosition);
                     Rotate(progress: 2 * t);
 
                     yield return waitForSeconds;
@@ -790,6 +791,7 @@ namespace AntsFlow
             float speed = 10;
             float distance;
             float duration;
+            float zPosition = -7 - 0.001f * siblingIndex;
 
             Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
 
@@ -799,7 +801,7 @@ namespace AntsFlow
 
             Rotate(direction);
 
-            tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(-3 - 0.001f * siblingIndex), duration: duration, ease: Ease.Linear)
+            tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(zPosition), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
                 if (tile != null)
@@ -813,7 +815,7 @@ namespace AntsFlow
 
                 Rotate(direction);
 
-                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
+                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f).ChangeZ(zPosition), duration: duration, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     OnAntMovedToNest();

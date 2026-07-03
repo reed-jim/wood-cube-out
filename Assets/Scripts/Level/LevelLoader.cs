@@ -30,6 +30,7 @@ namespace NamPhuThuy.GamePlay
         [Header("Customize")]
         [SerializeField] private float levelScaleXRatio = 18f;
         [SerializeField] private float levelScaleYRatio = 15f;
+        [SerializeField] private float finalLevelScaleMultilier = 1f;
         [SerializeField] private float levelYOffsetRatio = 0.175f;
         [SerializeField] private float multiplierScaleX = 54f;
         [SerializeField] private float multiplierScaleY = 54f;
@@ -322,7 +323,7 @@ namespace NamPhuThuy.GamePlay
 
             float scaleByX = levelScaleXRatio / numCols;
             float scaleByY = levelScaleYRatio / numRows;
-            float finalScale = Mathf.Min(scaleByX, scaleByY);
+            float finalScale = finalLevelScaleMultilier * Mathf.Min(scaleByX, scaleByY);
             float safeAreaRatio = 1 - GetTopUnsafeRatio();
 
             GamePersistentVariable.obstacleScaleFactor = finalScale * safeAreaRatio;

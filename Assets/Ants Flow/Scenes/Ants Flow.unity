@@ -4570,6 +4570,8 @@ MonoBehaviour:
   tileGlowTilemap: {fileID: 1605944948}
   tilemap: {fileID: 0}
   tileGlowSprite: {fileID: 21300000, guid: dea13c183864f3848ba60f8df67a6ea6, type: 3}
+  numColumn: 0
+  numRow: 0
   lastTimeUpdateNavmesh: 0
   intervalUpdateNavmesh: 2
   isDebug: 0
@@ -6869,8 +6871,9 @@ MonoBehaviour:
   levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
-  levelScaleXRatio: 16.5
-  levelScaleYRatio: 14.5
+  levelScaleXRatio: 17
+  levelScaleYRatio: 16
+  finalLevelScaleMultilier: 0.97
   levelYOffsetRatio: 0.16
   multiplierScaleX: 54
   multiplierScaleY: 60
@@ -9168,6 +9171,8 @@ MonoBehaviour:
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
       spawnOrder: 
+    isContainsHiddenTiles: 0
+    isContainsWallTiles: 0
   nextFreezeAntBoxRequiredNumber: 0
   antBoxLinks: []
   hiddenTileSprite: {fileID: 21300000, guid: a83721868d9594b4a9c9b7e3a0d52692, type: 3}
