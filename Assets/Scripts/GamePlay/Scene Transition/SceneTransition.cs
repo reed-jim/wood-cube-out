@@ -192,10 +192,10 @@ public class SceneTransition : MonoBehaviour
 
         float minWaitTime = 2;
 
-        if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
-        {
-            minWaitTime = 4.5f;
-        }
+        // if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
+        // {
+        //     minWaitTime = 4.5f;
+        // }
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {

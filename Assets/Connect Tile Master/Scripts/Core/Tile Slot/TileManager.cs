@@ -138,6 +138,12 @@ public class TileManager : Singleton<TileManager>
     private const int PREFETCH_LEVELS_PER_ENTRY = 3;
     // Prevents multiple simultaneous internet-monitor coroutines (instance field, reset on new TileManager)
     private bool _isMonitoringForPrefetch;
+    // Delay (seconds) between each level-prefab probe in BackgroundPrefetchCoroutine (Option C throttle)
+    private const float PREFETCH_LEVEL_CHECK_INTERVAL = 1.0f;
+    // Delay (seconds) between each individual CDN sprite download kick-off (Option C throttle)
+    private const float PREFETCH_SPRITE_DOWNLOAD_INTERVAL = 0.3f;
+    // Flag set to true while a scene transition loading screen is visible — prefetch waits until clear
+    private static bool _isTransitioning = false;
     #endregion
 
     #region Life Cycle
@@ -156,7 +162,15 @@ public class TileManager : Singleton<TileManager>
         BasePopup.popupShowEvent += OnPopupShow;
         BasePopup.popupHideEvent += OnPopupHide;
 
+        // Track scene transition state so prefetch can pause during loading screens
+        SceneTransition.transitionCompletedEvent += OnTransitionCompleted;
+
         totalSlotInShelf = 5;
+    }
+
+    private void OnTransitionCompleted()
+    {
+        _isTransitioning = false;
     }
 
     private void Update()
@@ -197,6 +211,7 @@ public class TileManager : Singleton<TileManager>
         RevivePopup.reviveEvent -= OnRevive;
         BasePopup.popupShowEvent -= OnPopupShow;
         BasePopup.popupHideEvent -= OnPopupHide;
+        SceneTransition.transitionCompletedEvent -= OnTransitionCompleted;
     }
 
     private void OnPopupShow()
@@ -271,9 +286,12 @@ public class TileManager : Singleton<TileManager>
 
         if (!currentLevelNeedsCdn)
         {
+            // Mark that a transition is in progress — prefetch will wait until it clears
+            _isTransitioning = true;
+
             if (Application.internetReachability != NetworkReachability.NotReachable)
             {
-                // Internet available: start prefetch immediately
+                // Internet available: start prefetch but it will wait for transition to finish first
                 StartCoroutine(BackgroundPrefetchCoroutine(GamePersistentVariable.currentLevel));
             }
             else
@@ -367,6 +385,14 @@ public class TileManager : Singleton<TileManager>
         if (CdnDownloader.Instance == null) yield break;
         if (Application.internetReachability == NetworkReachability.NotReachable) yield break;
 
+        // [Option C] Wait until the scene transition / loading screen has fully finished
+        // before touching Addressables or network — avoids competing with level load I/O.
+        if (_isTransitioning)
+        {
+            Debug.Log($"[Prefetch] Waiting for transition to complete before prefetching...");
+            yield return new WaitUntil(() => !_isTransitioning);
+        }
+
         // Initialize or advance the global cursor past the current level
         if (_nextPrefetchLevelIndex <= currentLevelNum)
             _nextPrefetchLevelIndex = currentLevelNum + 1;
@@ -382,6 +408,13 @@ public class TileManager : Singleton<TileManager>
             {
                 Debug.Log($"[Prefetch] Internet lost, pausing prefetch at level {levelToCheck}.");
                 yield break;
+            }
+
+            // [Option C] Pause if a new transition starts mid-run (e.g. user wins quickly)
+            if (_isTransitioning)
+            {
+                Debug.Log($"[Prefetch] New transition detected, pausing prefetch at level {levelToCheck}.");
+                yield return new WaitUntil(() => !_isTransitioning);
             }
 
             string address = $"Level {levelToCheck}";
@@ -421,9 +454,9 @@ public class TileManager : Singleton<TileManager>
                     {
                         levelFullyCached = false;
 
-                        // Queue missing icon downloads (fire-and-forget)
+                        // [Option C] Stagger icon downloads: PrefetchIconSet now uses a throttled coroutine
                         if (!categoryFullyCached && iconSet.iconCdnKeys != null)
-                            PrefetchIconSet(iconSet, levelToCheck);
+                            StartCoroutine(PrefetchIconSetThrottled(iconSet, levelToCheck));
 
                         // Queue missing spriteOrder download
                         if (!spriteOrderCached)
@@ -472,7 +505,9 @@ public class TileManager : Singleton<TileManager>
             // Always advance the local pointer so we don't recheck the same level in this run
             levelToCheck++;
 
-            yield return null;
+            // [Option C] Yield for PREFETCH_LEVEL_CHECK_INTERVAL seconds between level probes
+            // so we don't hammer Addressables/CPU in consecutive frames.
+            yield return new WaitForSecondsRealtime(PREFETCH_LEVEL_CHECK_INTERVAL);
         }
 
         if (cdnLevelsQueued > 0)
@@ -500,9 +535,14 @@ public class TileManager : Singleton<TileManager>
     /// Logs when each sprite starts downloading, and logs a summary when ALL sprites
     /// in this set have been successfully cached (level fully loaded in background).
     /// </summary>
-    private void PrefetchIconSet(CategoryIconSet iconSet, int levelNumber)
+    /// <summary>
+    /// [Option C] Throttled version of PrefetchIconSet — kicks off each sprite download
+    /// with a WaitForSecondsRealtime gap so CDN traffic is spread out over time
+    /// and doesn't compete with gameplay or the active level load.
+    /// </summary>
+    private IEnumerator PrefetchIconSetThrottled(CategoryIconSet iconSet, int levelNumber)
     {
-        if (iconSet.iconCdnKeys == null || iconSet.iconCdnKeys.Length == 0) return;
+        if (iconSet.iconCdnKeys == null || iconSet.iconCdnKeys.Length == 0) yield break;
 
         // Ensure icons array is sized correctly
         if (iconSet.icons == null || iconSet.icons.Length != iconSet.iconCdnKeys.Length)
@@ -520,10 +560,10 @@ public class TileManager : Singleton<TileManager>
         if (totalToDownload == 0)
         {
             Debug.Log($"[Prefetch] Level {levelNumber} | '{iconSet.itemCategory}': all {iconSet.iconCdnKeys.Length} sprites already cached.");
-            return;
+            yield break;
         }
 
-        Debug.Log($"[Prefetch] Level {levelNumber} | '{iconSet.itemCategory}': starting download of {totalToDownload} sprite(s).");
+        Debug.Log($"[Prefetch] Level {levelNumber} | '{iconSet.itemCategory}': starting throttled download of {totalToDownload} sprite(s).");
 
         // Shared counter to detect when all sprites for this category finish
         int[] completedCount = { 0 };
@@ -533,6 +573,13 @@ public class TileManager : Singleton<TileManager>
             string key = iconSet.iconCdnKeys[i];
             if (string.IsNullOrEmpty(key)) continue;
             if (CdnDownloader.Instance.IsResourceCached(key)) continue; // Already cached
+
+            // [Option C] Pause if a transition started while we were iterating sprites
+            if (_isTransitioning)
+            {
+                Debug.Log($"[Prefetch] Sprite download paused (transition) for Level {levelNumber} | '{iconSet.itemCategory}' sprite [{i}].");
+                yield return new WaitUntil(() => !_isTransitioning);
+            }
 
             int capturedIndex = i;
             CategoryIconSet capturedSet = iconSet;
@@ -556,6 +603,9 @@ public class TileManager : Singleton<TileManager>
                     Debug.LogWarning($"[Prefetch] ✘ Level {levelNumber} | '{iconSet.itemCategory}' sprite [{capturedIndex}] FAILED. ({completedCount[0]}/{totalToDownload})");
                 }
             );
+
+            // [Option C] Stagger each download kick-off to spread network load
+            yield return new WaitForSecondsRealtime(PREFETCH_SPRITE_DOWNLOAD_INTERVAL);
         }
     }
 
