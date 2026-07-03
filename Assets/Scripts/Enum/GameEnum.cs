@@ -72,7 +72,8 @@ public class GameEnum : MonoBehaviour
         ChangeTheme,
         Language,
         SpeedUpTutorial,
-        None
+        None,
+        SpecialElementIntroduction
     }
 
     public enum GameFaction
