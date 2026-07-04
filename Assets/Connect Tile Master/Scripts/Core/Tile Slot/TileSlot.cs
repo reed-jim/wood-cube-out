@@ -182,6 +182,8 @@ public enum ItemCategory
     Coffee_Shop,
     Cars,
     Number_10,
+    Cats,
+    Cards,
     None
 
 }
