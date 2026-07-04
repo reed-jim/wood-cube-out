@@ -240,6 +240,30 @@ namespace AntsFlow
 
         public void FillHiddenTiles(Tilemap tilemap, int width, int height, int manualStart = -1)
         {
+            if (manualStart != -1)
+            {
+                Color targetColor = ColorUtil.HexToColor("#B04AFD");
+
+                for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+                {
+                    BaseTile tile = TileManager.Ins.tiles[i];
+
+                    if (tile.Faction == targetColor)
+                    {
+                        Vector3Int cellPos = tile.tilemapPosition;
+
+                        Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
+                        tilemapTile.sprite = hiddenTileSprite;
+
+                        tilemap.SetTile(cellPos, tilemapTile);
+
+                        tile.isHidden = true;
+                    }
+                }
+
+                return;
+            }
+
             int clusterSize = 100;
             int[] indexesToFill = GetRandomCluster(width, height, clusterSize, manualStart);
 
