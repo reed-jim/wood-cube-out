@@ -538,8 +538,6 @@ namespace AntsFlow
             float zPosition = -3 - 0.001f * siblingIndex;
             Quaternion targetRotation;
 
-            WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
-
             for (int i = 0; i < points.Count; i++)
             {
                 int index = i;
@@ -573,25 +571,12 @@ namespace AntsFlow
 
                     Vector3 pos;
 
-                    // if (isZigzag)
-                    // {
-                    // float offset =
-                    //     Mathf.Sin(totalTimePassed / totalTime * zigzagControl) *
-                    //     zigZagWidth;
-
-                    //     pos = Vector3.Lerp(start, end, t) + perp * offset;
-                    // }
-                    // else
-                    // {
-                    //     pos = Vector3.Lerp(start, end, t);
-                    // }
-
                     pos = Vector3.Lerp(start, end, t);
 
                     transform.position = pos.ChangeZ(zPosition);
                     Rotate(targetRotation, progress: 2 * t);
 
-                    yield return waitForSeconds;
+                    yield return null;
                 }
 
                 transform.position = end;
@@ -660,6 +645,8 @@ namespace AntsFlow
             duration = distance / speed;
 
             Rotate(direction);
+
+            transform.position = transform.position.ChangeZ(zPosition);
 
             tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(zPosition), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
