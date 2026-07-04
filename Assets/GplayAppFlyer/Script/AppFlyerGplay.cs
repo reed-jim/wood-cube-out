@@ -36,6 +36,7 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
 
         AppsFlyer.setIsDebug(isDebug);
         AppsFlyer.initSDK(devKey, appId, getConversionData ? this : null);
+        AppsFlyer.setCustomerUserId(Falcon.FalconCore.Scripts.Repositories.News.FDeviceInfoRepo.DeviceId);
 // #if UNITY_IOS && !UNITY_EDITOR
 //         AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(60);
 // #endif

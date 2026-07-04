@@ -270,7 +270,7 @@ public class AdmobAdsMax : MonoBehaviour
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/8872065539"; // check here
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875~8976007313"; // check here
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
@@ -1624,14 +1624,15 @@ public class AdmobAdsMax : MonoBehaviour
         FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
         double revenue = adInfo.Revenue;
-
+   
         AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
             adInfo.AdFormat, revenue, "USD");
-
         AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
             adInfo.AdFormat, revenue, "USD");
         AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
             adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+        
+
     }
     #endregion
 
