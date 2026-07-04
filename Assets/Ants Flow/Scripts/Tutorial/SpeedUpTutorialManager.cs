@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using AntsFlow;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
@@ -37,12 +38,14 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
         x2SpeedButton.onClick.AddListener(X2Speed);
 
+        LevelLoader.startLevelEvent += OnLevelStarted;
         TileManager.winLevelEvent += OnLevelWon;
         tutorialHand.AnimationState.Event += OnSpineEvent;
     }
 
     void OnDestroy()
     {
+        LevelLoader.startLevelEvent -= OnLevelStarted;
         TileManager.winLevelEvent -= OnLevelWon;
         tutorialHand.AnimationState.Event -= OnSpineEvent;
     }
@@ -100,13 +103,6 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
         while (!isLevelWon)
         {
-            if (!GamePersistentVariable.isTutorialLevelOneDone)
-            {
-                yield return waitForSeconds;
-
-                continue;
-            }
-
             if (!isTutorialStarted)
             {
                 if (GamePersistentVariable.numActiveAnt > numAntToShow)
@@ -170,6 +166,11 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
         SaferioTween.AlphaHide(canvasGroup);
         SaferioTween.AlphaHide(nonSafeAreaCanvasGroup);
         Tween.Alpha(tutorialHand, 0, 0.3f);
+    }
+
+    private void OnLevelStarted()
+    {
+        isLevelWon = false;
     }
 
     private void OnLevelWon()

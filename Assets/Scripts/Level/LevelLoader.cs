@@ -288,7 +288,7 @@ namespace NamPhuThuy.GamePlay
                 FillTileMap(antLevelData, levelTransform);
                 // // BuildMesh(levelTransform);   
 
-                if (currentLevel.Value == 1)
+                if (currentLevel.Value == 2)
                 {
                     levelItem.isTutorialSpeedUpLevel = true;
                 }
