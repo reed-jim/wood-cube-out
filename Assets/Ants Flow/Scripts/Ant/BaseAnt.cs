@@ -567,7 +567,7 @@ namespace AntsFlow
                     firstBottomMostPointIndex = 0;
                 }
 
-                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 0.7f);
+                float randomWiggleMagnitude = 0.5f * UnityEngine.Random.Range(0, 2);
 
                 Vector3 cachePoint = Vector3.zero;
                 int cachePointIndex = -1;
@@ -582,8 +582,10 @@ namespace AntsFlow
 
                     if (isNearBottomMost)
                     {
-                        cachePoint = point;
-                        cachePointIndex = i;
+                        // cachePoint = point;
+                        // cachePointIndex = i;
+
+                        continue;
                     }
 
                     if (isNearLeftMost)
@@ -620,7 +622,7 @@ namespace AntsFlow
 
             if (count == 2)
             {
-                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 0.7f);
+                float randomWiggleMagnitude = 0.5f * UnityEngine.Random.Range(0, 2);
 
                 for (int i = 0; i < points.Count; i++)
                 {
