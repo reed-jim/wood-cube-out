@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine.Unity;
@@ -32,7 +33,7 @@ namespace AntsFlow
             materialPropertyBlock = new MaterialPropertyBlock();
         }
 
-        public override void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
+        public override void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number, Action onCompleteAction = null)
         {
             base.Init(washingMachineStartSlot, faction, number);
 

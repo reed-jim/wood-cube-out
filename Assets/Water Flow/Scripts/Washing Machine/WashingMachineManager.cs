@@ -50,11 +50,6 @@ namespace AntsFlow
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
             TileManager.winLevelEvent += OnLevelReplayed;
-
-            if (currentLevel.Value < 10)
-            {
-                maxAntNumberThreshold = 50;
-            }
         }
 
         void OnDestroy()
@@ -209,6 +204,8 @@ namespace AntsFlow
 
             for (int i = 0; i < numStartAntBoxes; i++)
             {
+                int index = i;
+
                 WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
                 if (washingMachineStartSlot.washingMachine != null)
@@ -239,7 +236,10 @@ namespace AntsFlow
                     numAnt = levelItem.levelFactionConfig.items[i].numAnt;
                 }
 
-                washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+                washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt, onCompleteAction: () =>
+                {
+                    SpecialElementManager.Ins.SpawnAntBoxLinkFirstAntBoxes(index);
+                });
             }
 
             return washingMachineItems;
@@ -939,6 +939,19 @@ namespace AntsFlow
             ghostAntBoxes.Clear();
 
             GamePersistentVariable.numActiveAnt = 0;
+
+            if (currentLevel.Value < 10)
+            {
+                maxAntNumberThreshold = 80;
+            }
+            if (currentLevel.Value <= 5)
+            {
+                minAntNumberThreshold = 50;
+            }
+            else if (currentLevel.Value <= 10)
+            {
+                minAntNumberThreshold = 40;
+            }
         }
 
         #region Util

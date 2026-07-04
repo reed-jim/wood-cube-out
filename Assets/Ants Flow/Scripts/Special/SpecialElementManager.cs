@@ -50,6 +50,49 @@ namespace AntsFlow
             }
         }
 
+        public void SpawnAntBoxLinkFirstAntBoxes(int order)
+        {
+            if (!specialElementConfig.doubleAntBoxConfig.IsValidToSpawn(order))
+            {
+                return;
+            }
+
+            if (antBoxLinks.Count >= 5)
+            {
+                return;
+            }
+
+            List<WashingMachineItem> validAntBoxesToLink = new List<WashingMachineItem>();
+
+            for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
+
+                if (
+                    washingMachine != null &&
+                    washingMachine is not HiddenAntBox &&
+                    washingMachine is not FreezedAntBox
+                )
+                {
+                    if (washingMachine.numSlotRequired == 1)
+                    {
+                        validAntBoxesToLink.Add(washingMachine);
+                    }
+                }
+            }
+
+            if (validAntBoxesToLink.Count >= 2)
+            {
+                AntBoxLink antBoxLink = ObjectPoolingEverything.GetFromPool<AntBoxLink>(GameConstants.antBoxLink);
+
+                antBoxLink.Setup(validAntBoxesToLink.Take(2).ToArray());
+
+                antBoxLinks.Add(antBoxLink);
+
+                specialElementConfig.doubleAntBoxConfig.RemoveOneSpecialElementInPool();
+            }
+        }
+
         public void SpawnAntBoxLink()
         {
             if (!specialElementConfig.doubleAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
@@ -91,8 +134,6 @@ namespace AntsFlow
             if (validAntBoxesToLink.Count >= 2)
             {
                 AntBoxLink antBoxLink = ObjectPoolingEverything.GetFromPool<AntBoxLink>(GameConstants.antBoxLink);
-
-                validAntBoxesToLink.Shuffle();
 
                 antBoxLink.Setup(validAntBoxesToLink.Take(2).ToArray());
 
@@ -197,10 +238,10 @@ namespace AntsFlow
             return maxFreezedAntBoxRequiredNumberToUnfreeze;
         }
 
-        public void FillHiddenTiles(Tilemap tilemap, int width, int height)
+        public void FillHiddenTiles(Tilemap tilemap, int width, int height, int manualStart = -1)
         {
-            int clusterSize = 50;
-            int[] indexesToFill = GetRandomCluster(width, height, clusterSize);
+            int clusterSize = 100;
+            int[] indexesToFill = GetRandomCluster(width, height, clusterSize, manualStart);
 
             for (int i = 0; i < indexesToFill.Length; i++)
             {
@@ -282,7 +323,7 @@ namespace AntsFlow
             }
         }
 
-        public static int[] GetRandomCluster(int width, int height, int clusterSize)
+        public static int[] GetRandomCluster(int width, int height, int clusterSize, int manualStart)
         {
             int totalTiles = width * height;
             clusterSize = Mathf.Min(clusterSize, totalTiles);
@@ -292,6 +333,11 @@ namespace AntsFlow
             List<int> frontier = new();
 
             int start = UnityEngine.Random.Range(0, totalTiles);
+
+            if (manualStart != -1)
+            {
+                start = manualStart;
+            }
 
             cluster.Add(start);
             visited.Add(start);
