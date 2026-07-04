@@ -150,7 +150,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
                 SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
                 Tween.Position(worldTutorialHand.transform,
-                    AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-3), duration: 0.3f);
+                    AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-6.1f), duration: 0.3f);
                 SaferioTween.AlphaHide(canvasGroup);
                 Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
                 {

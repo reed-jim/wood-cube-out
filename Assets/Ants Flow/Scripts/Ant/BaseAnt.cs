@@ -14,7 +14,6 @@ namespace AntsFlow
 {
     public class BaseAnt : MonoBehaviour
     {
-        [SerializeField] private NavMeshAgent navMeshAgent;
         [SerializeField] private Renderer antRenderer;
         [SerializeField] private SkeletonAnimation skeletonAnimation;
         private MaterialPropertyBlock materialPropertyBlock;
@@ -56,11 +55,6 @@ namespace AntsFlow
         #endregion
 
         #region Wiggle
-        private int wiggleCount;
-        private int numHalfWiggleDone;
-        public float wiggleMagnitude;
-        public int wiggleFrequency;
-        private bool isWiggleLeft;
         private Vector3 skeletonAnimationInitialPosition;
         #endregion
 
@@ -83,11 +77,6 @@ namespace AntsFlow
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
             TileManager.winLevelEvent += OnLevelWon;
-            IAPShopPopup.pauseNavmeshEvent += OnNavmeshPaused;
-            SettingPopup.pauseNavmeshEvent += OnNavmeshPaused;
-
-            navMeshAgent.updateRotation = false;
-            navMeshAgent.updateUpAxis = false;
 
             path = new NavMeshPath();
 
@@ -116,8 +105,6 @@ namespace AntsFlow
             LosePopup.replayLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
             TileManager.winLevelEvent -= OnLevelWon;
-            IAPShopPopup.pauseNavmeshEvent -= OnNavmeshPaused;
-            SettingPopup.pauseNavmeshEvent -= OnNavmeshPaused;
         }
 
         private void Start()
@@ -136,113 +123,8 @@ namespace AntsFlow
             GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
         }
 
-        void Update()
-        {
-            // transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
-
-            // if (!isDroppingTile)
-            // {
-            //     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-            //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-            //     transform.rotation = Quaternion.Lerp(
-            //         transform.rotation,
-            //         targetRotation,
-            //         rotationSpeed * Time.deltaTime
-            //     );
-
-            //     // transform.rotation = targetRotation;
-            // }
-
-            return;
-
-            if (!isMovingToSideTile)
-            {
-                Vector2 direction = navMeshAgent.velocity;
-
-                // Avoid jitter when nearly stopped
-                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
-                {
-                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-                    transform.rotation = Quaternion.Lerp(
-                        transform.rotation,
-                        targetRotation,
-                        rotationSpeed * Time.deltaTime
-                    );
-                }
-
-                //if (navMeshAgent.hasPath && navMeshAgent.velocity.sqrMagnitude > 0.1f)
-                //{
-                //    ApplyAntJitter();
-                //}
-            }
-
-            if (isMovingToTile)
-            {
-                if (stuckTime > stuckThreshold)
-                {
-                    stuckTime = 0;
-
-                    if (tile != null)
-                    {
-                        tile.MoveToAnt(this);
-                    }
-
-                    MoveToNest();
-                }
-            }
-            else if (isMovingToNest && !isDroppingTile)
-            {
-                if (ReachedDestination(1f))
-                {
-                    OnAntMovedToNest();
-                }
-            }
-
-            if (isMovingToTile || isMovingToNest)
-            {
-                if (navMeshAgent.isOnNavMesh && navMeshAgent.velocity.sqrMagnitude < 0.2f)
-                {
-                    if (ReachedDestination(1f))
-                    {
-                        stuckTime += Time.deltaTime;
-                    }
-                    else
-                    {
-                        stuckTimeNoReachDestination += Time.deltaTime;
-                    }
-
-                    if (stuckTimeNoReachDestination > stuckNoReachDestinationThreshold)
-                    {
-                        requestUpdateNavmeshEvent?.Invoke();
-
-                        ReturnToNavMesh();
-
-                        if (navMeshAgent.isOnNavMesh)
-                        {
-                            navMeshAgent.destination = destination;
-                        }
-
-                        stuckTimeNoReachDestination = 0;
-                    }
-                }
-            }
-        }
-
         private void Reset()
         {
-            if (navMeshAgent.isOnNavMesh)
-            {
-                navMeshAgent.ResetPath();
-            }
-
-            navMeshAgent.enabled = true;
-            navMeshAgent.areaMask = walkableMask;
-
             transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
             transform.localScale = Vector3.one;
@@ -286,8 +168,6 @@ namespace AntsFlow
 
                 transform.localScale = antScale;
 
-                navMeshAgent.enabled = true;
-
                 isMovingToNest = false;
                 isDroppingTile = false;
                 tile = null;
@@ -298,8 +178,6 @@ namespace AntsFlow
             GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
 
             isDroppingTile = true;
-
-            navMeshAgent.enabled = false;
         }
 
         private void OnLevelStarted()
@@ -323,23 +201,6 @@ namespace AntsFlow
             ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
         }
 
-        private void OnNavmeshPaused(bool isPaused)
-        {
-            if (gameObject.activeInHierarchy && navMeshAgent.isOnNavMesh)
-            {
-                // navMeshAgent.isStopped = isPaused;
-
-                if (isPaused)
-                {
-                    navMeshAgent.speed = 0;
-                }
-                else
-                {
-                    navMeshAgent.speed = speedMove;
-                }
-            }
-        }
-
         public void Init(Color faction)
         {
             materialPropertyBlock.SetColor("_Color", faction);
@@ -355,8 +216,6 @@ namespace AntsFlow
             isMovingToSideTile = false;
 
             skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
-
-            navMeshAgent.speed = speedMove;
         }
 
         public void SetGhostMode()
@@ -365,16 +224,9 @@ namespace AntsFlow
             antRenderer.SetPropertyBlock(materialPropertyBlock);
         }
 
-        public void EnableNavmesh(bool isEnable)
-        {
-            navMeshAgent.enabled = isEnable;
-        }
-
         public void MoveTo(BaseTile tile, int index)
         {
             List<Node> path = tile.path;
-
-            navMeshAgent.enabled = false;
 
             if (movingCoroutine != null)
             {
@@ -567,7 +419,7 @@ namespace AntsFlow
                     firstBottomMostPointIndex = 0;
                 }
 
-                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 0.7f);
+                float randomWiggleMagnitude = 0.5f * UnityEngine.Random.Range(0, 2);
 
                 Vector3 cachePoint = Vector3.zero;
                 int cachePointIndex = -1;
@@ -582,8 +434,10 @@ namespace AntsFlow
 
                     if (isNearBottomMost)
                     {
-                        cachePoint = point;
-                        cachePointIndex = i;
+                        // cachePoint = point;
+                        // cachePointIndex = i;
+
+                        continue;
                     }
 
                     if (isNearLeftMost)
@@ -620,7 +474,7 @@ namespace AntsFlow
 
             if (count == 2)
             {
-                float randomWiggleMagnitude = UnityEngine.Random.RandomRange(0, 0.7f);
+                float randomWiggleMagnitude = 0.5f * UnityEngine.Random.Range(0, 2);
 
                 for (int i = 0; i < points.Count; i++)
                 {
@@ -769,41 +623,8 @@ namespace AntsFlow
             }
         }
 
-        public void MoveToTile(BaseTile tile)
-        {
-            tile.isAntApproaching = true;
-            tile.InvokeAntStartMoveToTileEvent();
-
-            this.tile = tile;
-
-            destination = TileManager.Ins.GetTilePosition(tile).ChangeZ(0);
-            stuckTime = 0;
-            navMeshAgent.enabled = false;
-            navMeshAgent.areaMask = walkableMask;
-            navMeshAgent.enabled = true;
-
-            if (GamePersistentVariable.isPauseGame)
-            {
-                navMeshAgent.speed = 0;
-            }
-
-            if (navMeshAgent.isOnNavMesh)
-            {
-                navMeshAgent.destination = destination;
-            }
-            else
-            {
-                MoveToNest();
-            }
-
-            isMovingToSideTile = false;
-            isMovingToTile = true;
-        }
-
         public void MoveToTileGhostMode(BaseTile tile)
         {
-            navMeshAgent.enabled = false;
-
             tile.isAntApproaching = true;
 
             if (tile.blockages.Count < 4)
@@ -874,137 +695,6 @@ namespace AntsFlow
             }
         }
 
-        public void MoveToNest()
-        {
-            navMeshAgent.enabled = false;
-            navMeshAgent.areaMask = walkableAndNestMask;
-            navMeshAgent.enabled = true;
-
-            if (navMeshAgent.isOnNavMesh)
-            {
-                navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(0.3f);
-            }
-            else
-            {
-                OnAntMovedToNest();
-            }
-
-            destination = TileManager.Ins.antNest.position.AddY(0.2f);
-
-            isMovingToTile = false;
-            isMovingToNest = true;
-        }
-
-        public void MoveTo(Vector3 position, Action onCompleteAction = null)
-        {
-            bool isNearLeft = transform.position.x < 0;
-
-            Vector3 nextPosition = isNearLeft ? transform.position.ChangeX(-9.5f) : transform.position.ChangeX(9.5f);
-            Vector2 direction = nextPosition - transform.position;
-            float moveSpeed = 6;
-
-            Rotate(direction);
-
-            tweens.Add(Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
-            .OnComplete(() =>
-            {
-                nextPosition = transform.position.ChangeY(position.y);
-                direction = nextPosition - transform.position;
-
-                Rotate(direction);
-
-                tweens.Add(Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
-                .OnComplete(() =>
-                {
-                    // // onCompleteAction?.Invoke();
-                    // navMeshAgent.enabled = false;
-                    // navMeshAgent.areaMask = walkableMask;
-                    // navMeshAgent.enabled = true;
-
-                    // navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
-
-                    // isMovingToSideTile = false;
-                    // isMovingToTile = true;
-                }));
-            }));
-
-            void Rotate(Vector2 direction)
-            {
-                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
-                {
-                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-                    transform.rotation = targetRotation;
-                }
-            }
-        }
-
-        void ReturnToNavMesh()
-        {
-            NavMeshHit hit;
-
-            float searchRadius = 1;
-
-            if (NavMesh.SamplePosition(
-                            transform.position,
-                            out hit,
-                            searchRadius,
-                            NavMesh.AllAreas))
-            {
-                // Instantly place the agent on the NavMesh
-                navMeshAgent.Warp(hit.position);
-
-                // Optional: continue moving somewhere
-                // agent.SetDestination(target.position);
-            }
-        }
-
-        public bool ReachedDestination(float threshold = 1f)
-        {
-            float tileSize = GamePersistentVariable.obstacleScaleFactor;
-
-            return Vector2.Distance(transform.position, destination) < tileSize;
-            // return AIPath.remainingDistance < 0.01f;
-            // float distance = Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position);
-
-            // return distance < 0.05f;
-        }
-
-        void ApplyAntJitter()
-        {
-            // 1. Lấy hướng di chuyển mong muốn gốc của NavMesh (chưa bị can thiệp)
-            Vector3 desiredVelocity = navMeshAgent.desiredVelocity;
-
-            // Nếu NavMesh đang không muốn di chuyển con kiến đi đâu cả, thoát hàm để tránh tự dịch chuyển
-            if (desiredVelocity.sqrMagnitude < 0.1f) return;
-
-            Vector3 forwardDirection = desiredVelocity.normalized;
-
-            // 2. Tính toán Vector vuông góc với hướng đi trong 2D (trên mặt phẳng XY)
-            Vector3 sidewaysDirection = new Vector3(-forwardDirection.y, forwardDirection.x, 0f);
-
-            // 3. Sử dụng Perlin Noise để tính độ lắc lư
-            float timeParam = Time.time * noiseFrequency + randomNoiseOffset;
-            float noiseValue = Mathf.PerlinNoise(timeParam, 0f) - 0.5f;
-
-            // 4. Tính toán vận tốc nhiễu loạn cuối cùng
-            Vector3 jitterVelocity = sidewaysDirection * noiseValue * noiseMagnitude;
-            Vector3 finalVelocity = desiredVelocity + jitterVelocity;
-            finalVelocity.z = 0f; // Khóa trục Z cho game 2D
-
-            // 5. THAY ĐỔI QUAN TRỌNG: Dùng agent.Move thay vì gán agent.velocity
-            // agent.Move nhận vào một khoảng cách dịch chuyển trong Frame đó (Velocity * DeltaTime)
-            navMeshAgent.Move(finalVelocity * Time.deltaTime);
-
-            // 6. Quay mặt con kiến theo hướng di chuyển thực tế
-            if (finalVelocity.sqrMagnitude > 0.1f)
-            {
-                float angle = Mathf.Atan2(finalVelocity.y, finalVelocity.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, 0f, angle);
-            }
-        }
 
         private void OnEnable()
         {

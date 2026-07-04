@@ -92,13 +92,13 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
-            BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
+            // BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
         }
 
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
-            BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
+            // BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
         }
 
         #region Grid
@@ -144,7 +144,7 @@ namespace AntsFlow
                 {
                     float extraColumn = 0;
                     float extraRow = 0;
-                    float extra = 1.16f;
+                    float extra = 0.5f;
 
                     if (x == 0)
                     {

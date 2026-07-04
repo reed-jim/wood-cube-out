@@ -52,7 +52,7 @@ MonoBehaviour:
   levelScaleXRatio: 20
   levelScaleYRatio: 20
   multiplierScaleX: 54
-  multiplierScaleY: 60
+  multiplierScaleY: 57
   poolFaction:
   - {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
   - {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
@@ -13057,13 +13057,31 @@ MonoBehaviour:
     worldSize: 0
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
-  difficulty: 4
+    items:
+    - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+      numAnt: 50
+    - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+      numAnt: 30
+    - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+      numAnt: 50
+    - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+      numAnt: 50
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 35
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 50
+    - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+      numAnt: 50
+    - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+      numAnt: 25
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 30
+  difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0
-  numStartAntBoxes: 6
+  numStartAntBoxes: 9
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 06000000090000000c0000000d0000000e0000001000000014000000170000001a0000001e000000
