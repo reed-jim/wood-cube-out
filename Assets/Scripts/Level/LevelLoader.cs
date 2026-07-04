@@ -435,7 +435,9 @@ namespace NamPhuThuy.GamePlay
 
             if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
             {
-                SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows);
+                int manualStart = currentLevel.Value == 40 ? 0 : -1;
+
+                SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows, manualStart);
             }
         }
 
