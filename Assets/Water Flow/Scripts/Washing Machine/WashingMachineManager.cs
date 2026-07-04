@@ -944,6 +944,11 @@ namespace AntsFlow
             {
                 maxAntNumberThreshold = 80;
             }
+            else
+            {
+                maxAntNumberThreshold = 35;
+            }
+
             if (currentLevel.Value <= 5)
             {
                 minAntNumberThreshold = 50;
@@ -951,6 +956,10 @@ namespace AntsFlow
             else if (currentLevel.Value <= 10)
             {
                 minAntNumberThreshold = 40;
+            }
+            else
+            {
+                minAntNumberThreshold = 10;
             }
         }
 

@@ -117,7 +117,7 @@ public class WashingMachineItem : MonoBehaviour
 
     }
 
-    public virtual void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
+    public virtual void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number, Action onCompleteAction = null)
     {
         this.faction = faction;
         this.number = number;
@@ -136,7 +136,15 @@ public class WashingMachineItem : MonoBehaviour
         transform.localScale = Vector3.zero;
         numberText.transform.localPosition = numberTextInitialPosition;
 
-        Tween.Scale(transform, 2.3f, duration: 0.3f);
+        Tween.Scale(transform, 2.3f, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            isAnimating = false;
+
+            onCompleteAction?.Invoke();
+        });
+
+        isAnimating = true;
 
         shadow.sprite = shadows[0];
 
@@ -150,7 +158,6 @@ public class WashingMachineItem : MonoBehaviour
         Setup(washingMachineStartSlot);
 
         isMoving = false;
-        isAnimating = false;
         isInSlot = false;
         isGhostMode = false;
         isDouble = false;
@@ -229,6 +236,11 @@ public class WashingMachineItem : MonoBehaviour
 
     public void Select(int numSlotRequired)
     {
+        if (isAnimating)
+        {
+            return;
+        }
+
         if (!IsValidToSelect(numSlotRequired))
         {
             PlayInvalidSelectAnimation();
