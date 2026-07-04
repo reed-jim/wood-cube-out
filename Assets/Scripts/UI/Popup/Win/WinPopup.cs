@@ -50,6 +50,7 @@ public class WinPopup : BasePopup
     private int _currentCollectedCoin;
     private bool _isAlreadyWatchRewardedAd;
     private int coinClaimDefault = 40;
+    private bool _isAtLastLevel;
     #region EVENT
     private bool _isCoinChallengeClaimable;
     #endregion
@@ -152,15 +153,24 @@ public class WinPopup : BasePopup
 
         TrackLevelWin();
 
-        if (currentLevel.Value - UserData.NumLevelLoop >= LevelManager.Ins.LevelDataContainer.MaxLevel)
-        {
-            await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
-        }
-        currentLevel.Value++;
-        currentLevel.Save();
-        DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
+        _isAtLastLevel = GamePersistentVariable.isDisableLoopLevel
+                             && currentLevel.Value >= LevelManager.Ins.LevelDataContainer.MaxLevel;
+        Debug.Log($"[WinPopup] OnLevelWinAsync: currentLevel={currentLevel.Value}, MaxLevel={LevelManager.Ins.LevelDataContainer.MaxLevel}, isDisableLoopLevel={GamePersistentVariable.isDisableLoopLevel}, _isAtLastLevel={_isAtLastLevel}");
 
-        GamePersistentVariable.currentLevel = currentLevel.Value;
+        if (!_isAtLastLevel)
+        {
+            if (currentLevel.Value - UserData.NumLevelLoop >= LevelManager.Ins.LevelDataContainer.MaxLevel)
+            {
+                await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
+            }
+            currentLevel.Value++;
+            currentLevel.Save();
+            DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
+
+            GamePersistentVariable.currentLevel = currentLevel.Value;
+        }
+        // If at the last level with loop disabled, keep currentLevel as-is so LevelLoader
+        // will reload the same last level and show the "Level Coming Soon" popup.
 
         _isAlreadyWatchRewardedAd = false;
 
@@ -227,37 +237,7 @@ public class WinPopup : BasePopup
         }
     }
 
-    private async void Continue()
-    {
-        // collectCoinEvent?.Invoke(coinContainer.localPosition - new Vector3(0, coinContainer.sizeDelta.y), 500);
-
-        // await Task.Delay(3000);
-
-        if (_isAlreadyWatchRewardedAd)
-        {
-            OnInterstitialAdCompleted();
-        }
-        else
-        {
-            continueButton.interactable = false;
-
-            DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
-
-            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
-            {
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds
-                (
-                    OnInterstitialAdCompleted, isShowBreakAds: true
-                );
-            }
-            else
-            {
-                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
-            }
-        }
-    }
-
-    private void OnInterstitialAdCompleted()
+    private void Continue()
     {
         continueButton.interactable = false;
         returnHomeButton.interactable = false;
@@ -310,27 +290,63 @@ public class WinPopup : BasePopup
                         SaferioTracking.TrackResourceSource(
                             currentLevel.Value, "Coin", _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
                     }
-                    goLevelEvent?.Invoke(currentLevel.Value);
-                    HideImmediately();
-                    //bool isBackHome = HandleSuggestFeature();
 
-                    //if (!isBackHome)
-                    //{
-                    //    goLevelEvent?.Invoke(currentLevel.Value);
-                    //    HideImmediately();
-                    //}
-                    //else
-                    //{
-                    //    HideImmediately();
-                    //}
-
-                    SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
-
-                    AdsDurationObserver.duration = 0;
-                    GamePersistentVariable.isAutoTestingLevel = false;
+                    ShowInterstitialOrTransition();
                 }));
             }
         });
+    }
+
+    private void ShowInterstitialOrTransition()
+    {
+        if (_isAlreadyWatchRewardedAd)
+        {
+            ExecuteTransition();
+        }
+        else
+        {
+            DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
+
+            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
+            {
+                AdmobAdsMax.Instance.ShowDoubleInterstitialAds
+                (
+                    ExecuteTransition, isShowBreakAds: true
+                );
+            }
+            else
+            {
+                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: ExecuteTransition);
+            }
+        }
+    }
+
+    private void ExecuteTransition()
+    {
+        Debug.Log($"[WinPopup] ExecuteTransition: _isAtLastLevel={_isAtLastLevel}, currentLevel={currentLevel.Value}");
+        if (_isAtLastLevel)
+        {
+            if (AdsBreakScreen.Instance != null)
+            {
+                AdsBreakScreen.Instance.Hide();
+            }
+            LevelLoader.TriggerLevelComingSoon();
+        }
+        else
+        {
+            goLevelEvent?.Invoke(currentLevel.Value);
+        }
+        HideImmediately();
+
+        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
+
+        AdsDurationObserver.duration = 0;
+        GamePersistentVariable.isAutoTestingLevel = false;
+    }
+
+    public static void TriggerGoLevel(int level)
+    {
+        goLevelEvent?.Invoke(level);
     }
 
     public Vector2 GetWinCoinTextCanvasLocalPosition()
@@ -348,10 +364,10 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
-        OnRewaredAdCompleted();
-        //comment de test
-        //AdmobAdsMax.Instance.ShowVideoReward(
-        //    OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        //OnRewaredAdCompleted();
+        ////comment de test
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
     }
 
     private void OnRewaredAdCompleted()

@@ -1,0 +1,87 @@
+# ============================================================
+# proguard-user.txt
+# Keep rules for all third-party SDKs used in this project
+# Add this file to Assets/Plugins/Android/ and enable
+# "Custom Proguard File" in Unity Player Settings > Android
+# ============================================================
+
+# ---- AppsFlyer SDK ----------------------------------------
+-keep class com.appsflyer.** { *; }
+-keep interface com.appsflyer.** { *; }
+-keepnames class com.appsflyer.** { *; }
+-dontwarn com.appsflyer.**
+
+# Unity AppsFlyer wrapper
+-keep class com.appsflyer.unity.** { *; }
+
+# ---- AppLovin MAX ------------------------------------------
+-keep class com.applovin.** { *; }
+-keep interface com.applovin.** { *; }
+-dontwarn com.applovin.**
+
+# ---- Google Mobile Ads / AdMob ----------------------------
+-keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.ads.** { *; }
+-dontwarn com.google.android.gms.ads.**
+
+# ---- Firebase ---------------------------------------------
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.firebase.**
+-dontwarn com.google.android.gms.**
+
+# ---- Android Install Referrer (used by AppsFlyer) ---------
+-keep class com.android.installreferrer.** { *; }
+-dontwarn com.android.installreferrer.**
+
+# ---- Unity Purchasing / Google Play Billing ---------------
+-keep class com.unity3d.player.** { *; }
+-keep class com.android.billingclient.** { *; }
+-keep class com.amazon.** { *; }
+-dontwarn com.android.billingclient.**
+
+# ---- ironSource / LevelPlay --------------------------------
+-keep class com.ironsource.** { *; }
+-keep class com.ironsource.mediationsdk.** { *; }
+-dontwarn com.ironsource.**
+
+# ---- Meta / Facebook Audience Network ----------------------
+-keep class com.facebook.ads.** { *; }
+-dontwarn com.facebook.ads.**
+
+# ---- Mintegral ---------------------------------------------
+-keep class com.mbridge.** { *; }
+-keep class com.mintegral.** { *; }
+-dontwarn com.mbridge.**
+-dontwarn com.mintegral.**
+
+# ---- ByteDance / Pangle ------------------------------------
+-keep class com.bytedance.** { *; }
+-dontwarn com.bytedance.**
+
+# ---- Yandex ------------------------------------------------
+-keep class com.yandex.mobile.ads.** { *; }
+-dontwarn com.yandex.mobile.ads.**
+
+# ---- Fyber / Digital Turbine --------------------------------
+-keep class com.fyber.** { *; }
+-dontwarn com.fyber.**
+
+# ---- Google Play Games -------------------------------------
+-keep class com.google.android.play.** { *; }
+-dontwarn com.google.android.play.**
+
+# ---- UnityAds ----------------------------------------------
+-keep class com.unity3d.ads.** { *; }
+-dontwarn com.unity3d.ads.**
+
+# ---- Advertising ID (used in IAP obfuscation) -------------
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient { *; }
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info { *; }
+
+# ---- General reflection safety ----------------------------
+# Prevents stripping of classes accessed via JNI/reflection
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses

@@ -51,6 +51,11 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             tutorialCoroutine = null;
         }
 
+        if (TileManager.Ins != null)
+        {
+            TileManager.Ins.isCurrentLevelTutorialActive = false;
+        }
+
         if (tutorialContainer != null) tutorialContainer.gameObject.SetActive(false);
         if (blackOverlay != null) blackOverlay.gameObject.SetActive(false);
         gameObject.SetActive(false);

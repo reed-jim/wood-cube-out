@@ -31,15 +31,19 @@ public class AdmobAdsMax : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
 
     public static bool isAdmobInitDone;
+    public static bool isMaxInitDone;
+
 
 #if UNITY_ANDROID
     private const string MaxSdkKey =
         "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
 
-    private const string InterstitialAdUnitId = "948e190d8c5cd11d"; // check here
-    private const string RewardedAdUnitId = "34ea7232532db3db"; // check here
-    private const string BanerAdUnitId = "efc1069b84f4656f"; // check here
-    private const string mrecAdUnitId = "195ff2a11b92285d"; // check here
+    private const string InterstitialAdUnitId = "bec4bdcda2642318"; // check here
+    private const string RewardedAdUnitId = "61d48d2e157a8bc9"; // check here
+    private const string BanerAdUnitId = "981f021b2168a9a3"; // check here
+    private const string mrecAdUnitId = "773cd1f30f808da7"; // check here
+    private const string
+      AppOpenAdUnitId = "f53e69cb9f51f46a";
 #elif UNITY_IOS
     private const string MaxSdkKey =
 "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
@@ -155,7 +159,7 @@ public class AdmobAdsMax : MonoBehaviour
             InitInterstitial();
             InitRewardVideo();
             //InitializeBannerAds();
-
+            isMaxInitDone = true;
             // MaxSdk.ShowMediationDebugger();
             InitializeBannerMax();
             InitializeMRecAds();
@@ -265,13 +269,13 @@ public class AdmobAdsMax : MonoBehaviour
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-8467610367562059/2446388915"; // check here
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/8872065539"; // check here
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
     // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/2014213617";
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/8079118845"; // check here
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/7027666677"; // check here
 #endif
 #elif UNITY_IOS
 #if TESTER
@@ -1435,26 +1439,50 @@ public class AdmobAdsMax : MonoBehaviour
     #region Open App Ads
     DateTime oldTime = DateTime.MinValue;
 
+    //public void OnAppStateChanged(AppState state)
+    //{
+    //    if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false))
+    //    {
+    //        return;
+    //    }
+
+    //    if (isAdmobInitDone && SceneManager.GetActiveScene().name != "Gameplay")
+    //    {
+    //        if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
+    //        {
+    //            // COMPLETE: Show an app open ad if available.
+
+    //            GamePersistentVariable.currentLevel = currentLevel.Value;
+
+    //            AppOpenAdManager.Instance.ShowAdIfAvailable();
+    //            oldTime = DateTime.Now;
+    //            countdownAds = 0;
+    //        }
+    //    }
+    //}
+
+
     public void OnAppStateChanged(AppState state)
     {
-        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false))
-        {
-            return;
-        }
-
-        if (isAdmobInitDone && SceneManager.GetActiveScene().name != "Gameplay")
-        {
-            if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
+        bool isFsnShowing = FsnAdOverlay.Instance != null && FsnAdOverlay.Instance.gameObject.activeSelf;
+        if (isMaxInitDone && SceneManager.GetActiveScene().name != "Loading")
+            if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds && !isFsnShowing)
             {
-                // COMPLETE: Show an app open ad if available.
-
-                GamePersistentVariable.currentLevel = currentLevel.Value;
-
-                AppOpenAdManager.Instance.ShowAdIfAvailable();
                 oldTime = DateTime.Now;
-                countdownAds = 0;
+                // Bước 4: Show FSN Native (AppOpen) trước, sau đó fallback về quảng cáo thật
+                // FsnAdManager.Instance.ShowTrackedNativeWithFallback(FsnAdType.Aoa, onDone: () =>
+                // {
+                if (MaxSdk.IsAppOpenAdReady(AppOpenAdUnitId))
+                {
+                    MaxSdk.ShowAppOpenAd(AppOpenAdUnitId);
+                }
+                else
+                {
+                    AppOpenAdManager.Instance.ShowAdIfAvailable();
+                    //MaxSdk.LoadAppOpenAd(AppOpenAdUnitId);
+                }
+                // });
             }
-        }
     }
     #endregion
 
@@ -1572,6 +1600,16 @@ public class AdmobAdsMax : MonoBehaviour
     {
         if (adInfo == null) return;
         if (adInfo.Revenue < 0) return;
+
+        Firebase.Analytics.Parameter[] adParameters = {
+        new Firebase.Analytics.Parameter("ad_platform", "Applovin"),
+        new Firebase.Analytics.Parameter("ad_source", adInfo.NetworkName),
+        new Firebase.Analytics.Parameter("ad_unit_name", adInfo.AdUnitIdentifier),
+        new Firebase.Analytics.Parameter("ad_format", adInfo.AdFormat),
+        new Firebase.Analytics.Parameter("currency","USD"),
+        new Firebase.Analytics.Parameter("value", adInfo.Revenue)
+    };
+        FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
         double revenue = adInfo.Revenue;
 

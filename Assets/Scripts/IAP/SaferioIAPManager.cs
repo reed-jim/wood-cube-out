@@ -314,16 +314,19 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             unlockScrewBoxesPurchasedCompletedEvent?.Invoke();
                         }
 
-                        SaferioTracking.TrackIAPEvent(productData.ProductId);
-                        SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
-                        SaferioTracking.TrackIAPCompleteEventAppsflyer($"{productData.Price}");
+                        // Tracking — bọc try-catch để crash AppsFlyer không ảnh hưởng reward
+                        try
+                        {
+                            SaferioTracking.TrackIAPEvent(productData.ProductId);
+                            SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
+                            SaferioTracking.TrackIAPCompleteEventAppsflyer($"{productData.Price}");
+                        }
+                        catch (Exception trackingEx)
+                        {
+                            Debug.LogWarning($"[SaferioIAP] Tracking error (non-fatal): {trackingEx.Message}");
+                        }
 
-                        // // Simulate DELAY on iOS    
-                        // Tween.Delay(3).OnComplete(() =>
-                        // {
-                        //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
-                        // });
-
+                        // Luôn hiện popup reward dù tracking có lỗi hay không
                         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
 
                         break;

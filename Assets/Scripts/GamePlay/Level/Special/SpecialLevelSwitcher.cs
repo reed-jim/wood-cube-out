@@ -53,14 +53,14 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
         {
             if (currentLevel.Value - 1 < levelDataContainer.LevelsData.Length)
             {
-                if (manager.levelMode == levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode)
-                {
-                    StartCoroutine(DelayRunSpecialLevel(manager));
+                //if (manager.levelMode == levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode)
+                //{
+                //    StartCoroutine(DelayRunSpecialLevel(manager));
 
-                    _currentSpecialLevelManager = manager;
+                //    _currentSpecialLevelManager = manager;
 
-                    break;
-                }
+                //    break;
+                //}
             }
         }
     }

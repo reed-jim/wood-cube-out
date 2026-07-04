@@ -38,7 +38,7 @@ namespace NamPhuThuy.GamePlay
         private List<Tween> _tweens;
         private List<Tween> _autoCenterLevelTweens;
         private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
-        private int _maxLevel;
+        public int _maxLevel;
         private BasicObjectPart[] _pieces;
         private Transform _currentLevelContainer;
         private Transform _pivotAdjust;
@@ -68,11 +68,42 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> showLoadLevelErrorEvent;
 
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
+
+        /// <summary>Fired after the last level is fully loaded, to show the "Level Coming Soon" popup before hiding the loading screen.</summary>
+        public static event Action showLevelComingSoonEvent;
         #endregion
 
-        public static void NotifyLevelLoaded()
+        private static bool _pendingShowComingSoon = false;
+        public static bool IsWaitingForLevelComingSoonOk { get; private set; }
+        public static bool IsLevelComingSoonGateActive { get; private set; }
+
+
+
+        public static bool NotifyLevelLoaded()
         {
+            if (_pendingShowComingSoon)
+            {
+                _pendingShowComingSoon = false;
+                IsWaitingForLevelComingSoonOk = true;
+                showLevelComingSoonEvent?.Invoke();
+                return false;
+            }
+
             setIsLevelLoadedEvent?.Invoke();
+            return true;
+        }
+
+        /// <summary>Called by LevelComingSoonPopup when user taps OK, to finally hide the loading screen.</summary>
+        public static void NotifyLevelLoadedForReal()
+        {
+            IsWaitingForLevelComingSoonOk = false;
+            setIsLevelLoadedEvent?.Invoke();
+        }
+
+        public static void TriggerLevelComingSoon()
+        {
+            Debug.Log($"[LevelLoader] TriggerLevelComingSoon called. showLevelComingSoonEvent has listener: {showLevelComingSoonEvent != null}");
+            showLevelComingSoonEvent?.Invoke();
         }
 
         private void Awake()
@@ -98,7 +129,7 @@ namespace NamPhuThuy.GamePlay
 
             _mainCamera = Camera.main;
 
-            _maxLevel = levelDataContainer.MaxLevel;
+            _maxLevel = 15;
 
             GoLevel(currentLevel.Value);
 
@@ -169,38 +200,28 @@ namespace NamPhuThuy.GamePlay
             }
             else
             {
-                if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
-                {
-                    nextLevel = GetLoopLevel();
-                }
-                else
-                {
-                    nextLevel = currentLevel.Value - UserData.NumLevelLoop;
-                }
+                //if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+                //{
+                //    nextLevel = GetLoopLevel();
+                //}
+                //else
+                //{
+                //    nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+                //}
 
                 // isLoopLevel = true;
                 SetIsLoopLevel(true);
             }
 
-            // NOT LOOP
-            if (GamePersistentVariable.isDisableLoopLevel)
+            // LAST LEVEL - Coming Soon
+            IsLevelComingSoonGateActive = GamePersistentVariable.isDisableLoopLevel && currentLevel.Value > _maxLevel;
+            if (IsLevelComingSoonGateActive)
             {
-                if (currentLevel.Value > _maxLevel)
-                {
-                    isLoopLevel = true;
-                }
-
-                if (isLoopLevel)
-                {
-                    showSceneTransitionEvent?.Invoke();
-                    setIsLevelLoadedEvent?.Invoke();
-                    switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
-                    setLevelNumberEvent?.Invoke();
-
-                    return;
-                }
+                // Do NOT return early — load the last level normally, but intercept NotifyLevelLoaded
+                // to show the "Level Coming Soon" popup instead of hiding the loading screen immediately.
+                _pendingShowComingSoon = true;
             }
-            // NOT LOOP
+            // LAST LEVEL - Coming Soon
 
             nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -208,10 +229,10 @@ namespace NamPhuThuy.GamePlay
 
             setLevelNumberEvent?.Invoke();
 
-            nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndexInGroup(nextLevel);
-            nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
+            //nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndexInGroup(nextLevel);
+            //nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
-            GamePersistentVariable.currentLevelMode = levelDataContainer.LevelsData.First(item => item.levelId + 1 == nextLevel).levelMode;
+            //GamePersistentVariable.currentLevelMode = levelDataContainer.LevelsData.First(item => item.levelId + 1 == nextLevel).levelMode;
 
             string levelName = $"Level {nextLevel}";
             levelName = ModifyNameInFixedLevel(levelName, nextLevel);
@@ -395,7 +416,10 @@ namespace NamPhuThuy.GamePlay
             {
                 Destroy(gameObject.transform.GetChild(0).gameObject);
             }
-
+            if (level >= _maxLevel)
+            {
+                level = _maxLevel;
+            }
             currentLevel.Value = level;
 
             currentLevel.Save();
@@ -437,20 +461,20 @@ namespace NamPhuThuy.GamePlay
             if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
             if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
 
-            LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
+            //LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
 
-            // find level to replace MultipleLayers & ProtectedObjectPart levels
-            if (mode == LevelMode.MultipleLayers || mode == LevelMode.ProtectedObjectPart)
-            {
-                // int replaceLevelIndex = levelDataContainer.LevelsData.First(item => item.levelId > 20 && item.levelMode == LevelMode.Normal).levelId;
-                int replaceLevelIndex = levelDataContainer.LevelsData
-                    .Where(i => i.levelId > 20 && i.levelMode == LevelMode.Normal)
-                    .OrderBy(_ => UnityEngine.Random.value)
-                    .Select(i => i.levelId + 1)
-                    .FirstOrDefault();
+            //// find level to replace MultipleLayers & ProtectedObjectPart levels
+            //if (mode == LevelMode.MultipleLayers || mode == LevelMode.ProtectedObjectPart)
+            //{
+            //    // int replaceLevelIndex = levelDataContainer.LevelsData.First(item => item.levelId > 20 && item.levelMode == LevelMode.Normal).levelId;
+            //    int replaceLevelIndex = levelDataContainer.LevelsData
+            //        .Where(i => i.levelId > 20 && i.levelMode == LevelMode.Normal)
+            //        .OrderBy(_ => UnityEngine.Random.value)
+            //        .Select(i => i.levelId + 1)
+            //        .FirstOrDefault();
 
-                res = $"Level {replaceLevelIndex}";
-            }
+            //    res = $"Level {replaceLevelIndex}";
+            //}
 
             return res;
         }
@@ -916,20 +940,20 @@ namespace NamPhuThuy.GamePlay
 
             try
             {
-                LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
+                //LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
 
-                if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
-                {
-                    GamePersistentVariable.currentTutLevelMode = currentLevelMode;
+                //if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
+                //{
+                //    GamePersistentVariable.currentTutLevelMode = currentLevelMode;
 
-                    specialTutIntroduceEvent?.Invoke(true);
-                    DelayShowTutorialSuggestion();
-                    return;
-                }
-                else
-                {
-                    specialTutIntroduceEvent?.Invoke(false);
-                }
+                //    specialTutIntroduceEvent?.Invoke(true);
+                //    DelayShowTutorialSuggestion();
+                //    return;
+                //}
+                //else
+                //{
+                //    specialTutIntroduceEvent?.Invoke(false);
+                //}
             }
             catch (Exception e)
             {
@@ -1114,7 +1138,8 @@ namespace NamPhuThuy.GamePlay
 
             if (currentLoopLevel == -1)
             {
-                int randomLoopLevel = UnityEngine.Random.Range(6, _maxLevel);
+                //int randomLoopLevel = UnityEngine.Random.Range(6, _maxLevel);
+                int randomLoopLevel = _maxLevel;
 
                 DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, randomLoopLevel);
 

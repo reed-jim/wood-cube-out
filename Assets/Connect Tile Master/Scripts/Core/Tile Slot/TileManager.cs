@@ -182,7 +182,7 @@ public class TileManager : Singleton<TileManager>
         }
 #endif
 
-        if (isLevelActive && !isTimeFrozen && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
+        if (isLevelActive && !isTimeFrozen && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
         {
             currentLevelTime -= Time.deltaTime;
 
@@ -206,6 +206,44 @@ public class TileManager : Singleton<TileManager>
         MoreActionOnDestroy();
     }
 
+    private bool ShouldPauseLevelTimerForTutorial()
+    {
+        if (!isCurrentLevelTutorialActive)
+        {
+            return false;
+        }
+
+        return IsCurrentLevelTutorialVisible();
+    }
+
+    private bool IsCurrentLevelTutorialVisible()
+    {
+        switch (GamePersistentVariable.currentLevel)
+        {
+            case 1:
+            case 13:
+                return IsTutorialObjectActive(TutorialLevelOne.Ins);
+            case 2:
+                return IsTutorialObjectActive(TutorialLevelTwo.Ins);
+            case 5:
+                return IsTutorialObjectActive(TutorialLevelFive.Ins);
+            case 7:
+                return IsTutorialObjectActive(TutorialLevelSeven.Ins);
+            case 10:
+                return IsTutorialObjectActive(TutorialLevelTen.Ins);
+            case 15:
+                return IsTutorialObjectActive(TutorialLevelSixteen.Ins);
+            default:
+                return false;
+        }
+    }
+
+    private bool IsTutorialObjectActive(Component tutorial)
+    {
+        return tutorial != null && tutorial.gameObject.activeInHierarchy;
+    }
+
+
     protected virtual void MoreActionOnDestroy()
     {
         RevivePopup.reviveEvent -= OnRevive;
@@ -221,7 +259,7 @@ public class TileManager : Singleton<TileManager>
 
     private void OnPopupHide()
     {
-        if (isLevelActive && !isTimeFrozen && !BasePopup.IsAnyPopupOpen && currentLevelTime <= 15f && currentLevelTime > 0)
+        if (isLevelActive && !isTimeFrozen && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime <= 15f && currentLevelTime > 0)
         {
             SoundManager.Instance?.PlaySoundCountingTime();
         }
@@ -270,8 +308,13 @@ public class TileManager : Singleton<TileManager>
             Debug.Log("[TileManager] CDN sprites download complete.");
         }
 
-        // Notify that the level (including assets/sprites download) is fully loaded
-        NamPhuThuy.GamePlay.LevelLoader.NotifyLevelLoaded();
+        // Notify that the level (including assets/sprites download) is ready.
+        // If the final-level Coming Soon popup appears, wait for OK before setting up and dealing cards.
+        bool canSetupLevel = NamPhuThuy.GamePlay.LevelLoader.NotifyLevelLoaded();
+        if (!canSetupLevel)
+        {
+            yield return new WaitUntil(() => !NamPhuThuy.GamePlay.LevelLoader.IsWaitingForLevelComingSoonOk);
+        }
 
         // Continue with normal setup
         SetupLevelInternal(levelItem);
@@ -284,7 +327,7 @@ public class TileManager : Singleton<TileManager>
             return s != null && s.isOnServer;
         });
 
-        if (!currentLevelNeedsCdn)
+        if (!currentLevelNeedsCdn && !NamPhuThuy.GamePlay.LevelLoader.IsLevelComingSoonGateActive)
         {
             // Mark that a transition is in progress — prefetch will wait until it clears
             _isTransitioning = true;
@@ -346,7 +389,7 @@ public class TileManager : Singleton<TileManager>
                 return s != null && s.isOnServer;
             });
 
-        if (!currentLevelNeedsCdn)
+        if (!currentLevelNeedsCdn && !NamPhuThuy.GamePlay.LevelLoader.IsLevelComingSoonGateActive)
         {
             Debug.Log($"[Prefetch] Internet restored at level {levelAtRestoration}. Starting prefetch immediately.");
             StartCoroutine(BackgroundPrefetchCoroutine(levelAtRestoration));

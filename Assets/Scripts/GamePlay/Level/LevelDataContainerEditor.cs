@@ -478,8 +478,8 @@ namespace NamPhuThuy.Data
 
             foreach (var level in levelDataContainer.LevelsData)
             {
-                sb.AppendLine($"level {level.levelId + 1}");
-                sb.AppendLine($"mode: {level.levelMode}");
+                //sb.AppendLine($"level {level.levelId + 1}");
+                //sb.AppendLine($"mode: {level.levelMode}");
                 sb.AppendLine(); // empty line between levels
             }
 

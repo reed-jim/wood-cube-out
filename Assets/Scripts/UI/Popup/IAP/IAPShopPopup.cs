@@ -110,7 +110,7 @@ public class IAPShopPopup : BasePopup
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
-            popupCanvasGroup.alpha = newVal;
+            //popupCanvasGroup.alpha = newVal;
         }));
     }
 }
