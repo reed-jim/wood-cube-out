@@ -190,7 +190,7 @@ public class SceneTransition : MonoBehaviour
 
         AdmobAdsMax.Instance.ShowMRec();
 
-        float minWaitTime = 2;
+        float minWaitTime = 0;
 
         // if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
         // {
@@ -210,6 +210,17 @@ public class SceneTransition : MonoBehaviour
                     onDoubleInterClosed: () =>
                     {
                         blackBackgroundToPassPolicy.gameObject.SetActive(false);
+
+                        _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+                        {
+                            loadLevelInProgressCanvasGroup.alpha = newVal;
+                        })
+                        .OnComplete(() =>
+                            {
+                                loadLevelInProgressContainer.gameObject.SetActive(false);
+                                transitionCompletedEvent?.Invoke();
+                            })
+                        );
                     },
                     isShowBreakAds: true
                 );
@@ -217,18 +228,18 @@ public class SceneTransition : MonoBehaviour
             else
             {
                 _isFirstTimeEnterScene = false;
-            }
 
-            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
-            {
-                loadLevelInProgressCanvasGroup.alpha = newVal;
-            })
-            .OnComplete(() =>
+                _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
                 {
-                    loadLevelInProgressContainer.gameObject.SetActive(false);
-                    transitionCompletedEvent?.Invoke();
+                    loadLevelInProgressCanvasGroup.alpha = newVal;
                 })
-            );
+                .OnComplete(() =>
+                    {
+                        loadLevelInProgressContainer.gameObject.SetActive(false);
+                        transitionCompletedEvent?.Invoke();
+                    })
+                );
+            }
 
             StopCoroutine(_loadingLevelInProgressCoroutine);
         }));

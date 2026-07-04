@@ -9,10 +9,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [Header("CONTAINER")]
     [SerializeField] private Transform screwBoxContainer;
 
-    [SerializeField] private GameObject screwBox;
-    [SerializeField] private GameObject screwPortPrefab;
-    [SerializeField] private GameObject fakeScrewPrefab;
-    [SerializeField] private GameObject hammerPrefab;
+    //[SerializeField] private GameObject screwBox;
+    //[SerializeField] private GameObject screwPortPrefab;
+    //[SerializeField] private GameObject fakeScrewPrefab;
+    //[SerializeField] private GameObject hammerPrefab;
 
     [Header("Sounds")]
     [SerializeField] private GameObject loosenScrewSoundPrefab;
@@ -104,10 +104,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void InitPool()
     {
-        RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);
-        RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);
-        RegisterPool<FakeScrew>(GameConstants.FAKE_SCREW, fakeScrewPrefab, 3);
-        RegisterPool<BoosterHammer>(GameConstants.HAMMER, hammerPrefab, 3);
+        //RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);
+        //RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);
+        //RegisterPool<FakeScrew>(GameConstants.FAKE_SCREW, fakeScrewPrefab, 3);
+        //RegisterPool<BoosterHammer>(GameConstants.HAMMER, hammerPrefab, 3);
 
         RegisterPool<AudioSource>(GameConstants.LOOSEN_SCREW_SOUND, loosenScrewSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.TIGHTEN_SCREW_SOUND, tightenScrewSoundPrefab, 3);

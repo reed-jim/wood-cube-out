@@ -275,7 +275,7 @@ public class WinPopup : BasePopup
 
             if (coinsLandedCount == coinsToSpawn)
             {
-                _tweens.Add(Tween.Delay(1f).OnComplete(() =>
+                _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
                 {
                     if (_isCollectCoinRemoteConfig)
                     {

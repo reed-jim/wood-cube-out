@@ -36,7 +36,7 @@ public class AdmobAdsMax : MonoBehaviour
 
 #if UNITY_ANDROID
     private const string MaxSdkKey =
-        "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
+        "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
 
     private const string InterstitialAdUnitId = "bec4bdcda2642318"; // check here
     private const string RewardedAdUnitId = "61d48d2e157a8bc9"; // check here
@@ -70,6 +70,7 @@ public class AdmobAdsMax : MonoBehaviour
     private bool _isInited;
     private IEnumerator reloadBannerCoru;
     public UnityAction actionInterstitialClose;
+    private Action _actionInterFailed;
     private bool _isLoading;
     private UnityAction _actionClose;
     private UnityAction _actionRewardVideo;
@@ -164,7 +165,7 @@ public class AdmobAdsMax : MonoBehaviour
             InitializeBannerMax();
             InitializeMRecAds();
             IsFsnCollapseEnabled();
-
+            FsnAdManager.Instance.InitFsnAd();
         };
 
         SetupUserConsentUMP();
@@ -649,7 +650,9 @@ public class AdmobAdsMax : MonoBehaviour
         }
         else
         {
-            if (countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
+            bool isAdAvailable = IsLoadedInterstitial() || (_interstitialAdmob != null && _interstitialAdmob.CanShowAd());
+
+            if (isAdAvailable && countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
             {
                 if (isShowBreakAds)
                 {
@@ -831,6 +834,7 @@ public class AdmobAdsMax : MonoBehaviour
         };
         interstitialAd.OnAdFullScreenContentClosed += () =>
         {
+            Time.timeScale = 1;
             _actionInterAdmobClosed?.Invoke();
 
             AdsBreakScreen.Instance.HideAnim();
@@ -839,6 +843,7 @@ public class AdmobAdsMax : MonoBehaviour
         };
         interstitialAd.OnAdFullScreenContentFailed += (AdError error) =>
         {
+            Time.timeScale = 1;
             _actionInterAdmobClosed?.Invoke();
 
             AdsBreakScreen.Instance.HideAnim();
@@ -883,8 +888,16 @@ public class AdmobAdsMax : MonoBehaviour
     {
         // Debug.Log($"LongTH_ Interstitial - InterstitialFailedToDisplayEvent ++ {errInfo} ++ {adInfo} \n");
         _isLoading = false;
-        actionInterstitialClose?.Invoke();
-        actionInterstitialClose = null;
+        if (_actionInterFailed != null)
+        {
+            _actionInterFailed.Invoke();
+            _actionInterFailed = null;
+        }
+        else
+        {
+            actionInterstitialClose?.Invoke();
+            actionInterstitialClose = null;
+        }
         RequestInterstitial();
     }
 
@@ -902,6 +915,8 @@ public class AdmobAdsMax : MonoBehaviour
 
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
+
+        _actionInterFailed = null;
 
         countdownAds = 0;
         RequestInterstitial();
@@ -961,10 +976,10 @@ public class AdmobAdsMax : MonoBehaviour
             return false;
         }
 
-        if ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
+        if (IsLoadedInterstitial() && ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
                 .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController
                 .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
-            isShowImmediatly)
+            isShowImmediatly))
         {
             if (isShowAdBreak)
             {
@@ -1007,49 +1022,32 @@ public class AdmobAdsMax : MonoBehaviour
             isShowingAds = true;
             oldTime = DateTime.Now;
 
-            if (isInGame)
-            {
-                // Debug.Log("show inter ======");
-                // AdBreakBox.Setup().Show(() =>
-                // {
-                //     actionInterstitialClose = actionIniterClose;
-                //     IsCooldownAdmobBanner = false;
-                //     MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-                //     countdownAds = 0;
-                //     GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+            AdsDurationObserver.startTime = DateTime.Now;
 
-                //     UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
-                //     UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
-                // });
+            FsnAdManager.Instance.ShowInterstitialThenNative(
+                showInterstitial: callbacks =>
+                {
+                    actionInterstitialClose = () => callbacks.OnHidden();
+                    _actionInterFailed = () => callbacks.OnDisplayFailed();
 
-                actionInterstitialClose = actionIniterClose;
-                IsCooldownAdmobBanner = false;
+                    IsCooldownAdmobBanner = false;
+                    MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
 
-                AdsDurationObserver.startTime = DateTime.Now;
+                    countdownAds = 0;
+                    GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
 
-                MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-
-                countdownAds = 0;
-                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
-
-                UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
-                UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
-            }
-            else
-            {
-                actionInterstitialClose = actionIniterClose;
-                IsCooldownAdmobBanner = false;
-
-                AdsDurationObserver.startTime = DateTime.Now;
-
-                MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-
-                countdownAds = 0;
-                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
-
-                UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
-                UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
-            }
+                    UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
+                    UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
+                },
+                onSuccess: () =>
+                {
+                    actionIniterClose?.Invoke();
+                },
+                onFailed: () =>
+                {
+                    actionIniterClose?.Invoke();
+                }
+            );
         }
         else
         {
@@ -1116,6 +1114,8 @@ public class AdmobAdsMax : MonoBehaviour
         //{
         //    //ConfirmBox.Setup().AddMessageYes(Localization.Get("s_noti"), Localization.Get("s_TryAgain"), () => { });
         //}
+        _actionNotLoadedVideo?.Invoke();
+        _actionNotLoadedVideo = null;
         LoadRewardedAd();
     }
 
@@ -1222,17 +1222,31 @@ public class AdmobAdsMax : MonoBehaviour
             isShowingAds = true;
             countdownAds = 0;
             oldTime = DateTime.Now;
-            this._actionNotLoadedVideo = actionNotLoadedVideo;
-            this._actionClose = actionClose;
-            this._actionRewardVideo = actionReward;
 
             AdsDurationObserver.startTime = DateTime.Now;
 
-            MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
+            FsnAdManager.Instance.ShowRewardedThenNative(
+                showRewarded: callbacks =>
+                {
+                    this._actionNotLoadedVideo = () => callbacks.OnDisplayFailed();
+                    this._actionClose = () => callbacks.OnHidden();
+                    this._actionRewardVideo = () => callbacks.OnRewardReceived();
 
-            GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                UserData.CurrentLevel.ToString());
-            GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
+                    MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
+
+                    GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
+                        UserData.CurrentLevel.ToString());
+                    GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
+                },
+                onSuccess: () =>
+                {
+                    actionReward?.Invoke();
+                },
+                onFailed: () =>
+                {
+                    actionNotLoadedVideo?.Invoke();
+                }
+            );
         }
         else
         {
@@ -1469,19 +1483,17 @@ public class AdmobAdsMax : MonoBehaviour
             if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds && !isFsnShowing)
             {
                 oldTime = DateTime.Now;
-                // Bước 4: Show FSN Native (AppOpen) trước, sau đó fallback về quảng cáo thật
-                // FsnAdManager.Instance.ShowTrackedNativeWithFallback(FsnAdType.Aoa, onDone: () =>
-                // {
-                if (MaxSdk.IsAppOpenAdReady(AppOpenAdUnitId))
+                FsnAdManager.Instance.ShowTrackedNativeWithFallback(FsnAdType.Aoa, onDone: () =>
                 {
-                    MaxSdk.ShowAppOpenAd(AppOpenAdUnitId);
-                }
-                else
-                {
-                    AppOpenAdManager.Instance.ShowAdIfAvailable();
-                    //MaxSdk.LoadAppOpenAd(AppOpenAdUnitId);
-                }
-                // });
+                    if (MaxSdk.IsAppOpenAdReady(AppOpenAdUnitId))
+                    {
+                        MaxSdk.ShowAppOpenAd(AppOpenAdUnitId);
+                    }
+                    else
+                    {
+                        AppOpenAdManager.Instance.ShowAdIfAvailable();
+                    }
+                });
             }
     }
     #endregion

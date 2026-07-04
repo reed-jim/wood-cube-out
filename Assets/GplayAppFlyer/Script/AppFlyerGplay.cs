@@ -15,7 +15,7 @@ using UnityEngine;
 
 public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
 {
-    private static string devKey = "XM6HPCReBAqLH5uCaQHRDY";
+    private static string devKey = "UAVHtuYSgwSPXxXQVDGA65";
     [SerializeField] private string appId;
     [SerializeField] private bool isDebug;
     [SerializeField] private bool getConversionData;

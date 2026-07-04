@@ -48,6 +48,7 @@ public class TileManager : Singleton<TileManager>
     [HideInInspector] public bool isCurrentLevelTutorialActive;
     private Tween freezeTimeTween;
     private Tween gridPositionTween;
+    private bool _isTransitionCompleted;
 
     public static ItemCategory targetThemeLevel10 = ItemCategory.None;
 
@@ -171,6 +172,7 @@ public class TileManager : Singleton<TileManager>
     private void OnTransitionCompleted()
     {
         _isTransitioning = false;
+        _isTransitionCompleted = true;
     }
 
     private void Update()
@@ -847,6 +849,7 @@ public class TileManager : Singleton<TileManager>
 
     private void SetupLevelInternal(LevelItem levelItem)
     {
+        _isTransitionCompleted = false;
         if (levelItem != null && levelItem.themeDataList != null && levelItem.tileIconContainer != null)
         {
             foreach (var theme in levelItem.themeDataList)
@@ -2104,6 +2107,11 @@ public class TileManager : Singleton<TileManager>
 
     private IEnumerator WaitForTransitionCompleted()
     {
+        if (_isTransitionCompleted)
+        {
+            yield break;
+        }
+
         bool isTransitionDone = false;
         Action onTransitionDone = () => isTransitionDone = true;
         SceneTransition.transitionCompletedEvent += onTransitionDone;
