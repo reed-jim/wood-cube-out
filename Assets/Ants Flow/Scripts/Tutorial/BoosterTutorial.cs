@@ -101,7 +101,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
                 worldTutorialHand.transform.position = WashingMachineManager.Ins.washingMachineStartSlots[6].transform.position.AddZ(-5f);
 
-                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
+                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.9f);
                 SaferioTween.AlphaHide(canvasGroup);
                 Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
                 {
@@ -150,7 +150,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
                 worldTutorialHand.transform.position = AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-6.1f);
 
-                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
+                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.9f);
                 SaferioTween.AlphaHide(canvasGroup);
                 Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
                 {
