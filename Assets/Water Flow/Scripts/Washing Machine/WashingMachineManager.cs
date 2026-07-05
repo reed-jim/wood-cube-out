@@ -226,6 +226,11 @@ namespace AntsFlow
                 if (currentLevel.Value <= 10)
                 {
                     difficulty = 0;
+
+                    if (i == 5)
+                    {
+                        difficulty = 1;
+                    }
                 }
 
                 if (levelItem.overrideInitialDifficulty)
@@ -252,6 +257,8 @@ namespace AntsFlow
 
         public void MoveAntBoxTop()
         {
+            bool isAlreadySpawnNewBox = false;
+
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
                 WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
@@ -305,9 +312,21 @@ namespace AntsFlow
                         }
                     }
 
-                    if (!isFound)
+                    if (!isFound && !isAlreadySpawnNewBox)
                     {
-                        SpawnNewWashingMachine();
+                        if (washingMachineStartSlot.row < 2)
+                        {
+                            SpawnNewWashingMachine();
+                        }
+                        else
+                        {
+                            if (!isAlreadySpawnNewBox)
+                            {
+                                SpawnNewWashingMachine();
+
+                                isAlreadySpawnNewBox = true;
+                            }
+                        }
                     }
                 }
             }
@@ -945,27 +964,27 @@ namespace AntsFlow
 
             GamePersistentVariable.numActiveAnt = 0;
 
-            if (currentLevel.Value < 10)
-            {
-                maxAntNumberThreshold = 80;
-            }
-            else
-            {
-                maxAntNumberThreshold = 35;
-            }
+            // if (currentLevel.Value < 10)
+            // {
+            //     maxAntNumberThreshold = 80;
+            // }
+            // else
+            // {
+            //     maxAntNumberThreshold = 35;
+            // }
 
-            if (currentLevel.Value <= 5)
-            {
-                minAntNumberThreshold = 50;
-            }
-            else if (currentLevel.Value <= 10)
-            {
-                minAntNumberThreshold = 40;
-            }
-            else
-            {
-                minAntNumberThreshold = 10;
-            }
+            // if (currentLevel.Value <= 5)
+            // {
+            //     minAntNumberThreshold = 50;
+            // }
+            // else if (currentLevel.Value <= 10)
+            // {
+            //     minAntNumberThreshold = 40;
+            // }
+            // else
+            // {
+            //     minAntNumberThreshold = 10;
+            // }
         }
 
         #region Util

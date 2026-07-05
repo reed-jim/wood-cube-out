@@ -532,7 +532,7 @@ public class WashingMachineItem : MonoBehaviour
 
     private IEnumerator SpawningAnts()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.4f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.35f);
 
         int currentAntIndex = 0;
 
