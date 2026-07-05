@@ -29,6 +29,8 @@ public class IAPShopPopup : BasePopup
         LivesShopPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         LosePopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+        ResourceEarnPopup.removeAdsEvent += RebuildLayout;
+        SaferioIAPManager.removeAdsEvent += RebuildLayout;
     }
 
     protected override void UnregisterMoreEvent()
@@ -38,6 +40,16 @@ public class IAPShopPopup : BasePopup
         LivesShopPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         LosePopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+        ResourceEarnPopup.removeAdsEvent -= RebuildLayout;
+        SaferioIAPManager.removeAdsEvent -= RebuildLayout;
+    }
+
+    private void RebuildLayout()
+    {
+        if (scrollContent != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(scrollContent);
+        }
     }
 
     protected override void Show(Action onCompletedAction = null)

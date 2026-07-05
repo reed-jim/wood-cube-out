@@ -148,20 +148,24 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void Pause()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.Pause);
     }
 
     private void OpenNoAdsPopup()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
     }
     private void OpenShopPopup()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.IAPShopPopup);
     }
 
     private void OpenInventoryPopup()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.Inventory);
     }
 
@@ -230,6 +234,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     }
     private void OpenDebugPopupButton()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.Debug);
     }
 

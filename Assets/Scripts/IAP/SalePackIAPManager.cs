@@ -78,13 +78,13 @@ public class SalePackIAPManager : MonoBehaviour
 
         Tween.Delay(0.3f).OnComplete(() =>
         {
-            ShowSaleIAPSuggestion();
+            //ShowSaleIAPSuggestion();
         });
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ShowSaleIAPSuggestion();
+        //ShowSaleIAPSuggestion();
     }
 
     public SaleIAPPackType GetSuggestionPack()
