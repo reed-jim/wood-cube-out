@@ -158,7 +158,7 @@ namespace AntsFlow
         {
             foreach (var tile in blockedByMe)
             {
-                if (tile.isHidden && !tile.isMovedToAnt)
+                if (tile.isHidden && !tile.isMovedToAnt && !tile.isDone)
                 {
                     TileManager.Ins.RevealTile(tile);
 
@@ -290,7 +290,7 @@ namespace AntsFlow
 
         public int GetNumBlockages()
         {
-            return blockages.Where(tile => !tile.isDone && !tile.isAntApproaching).Count();
+            return blockages.Count(tile => !tile.isDone && !tile.isAntApproaching);
         }
 
         public bool IsBlocked()

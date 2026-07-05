@@ -352,6 +352,11 @@ namespace AntsFlow
                 node.EdgePriority = node.neighbors.Count;
             }
 
+            foreach (var node in nodes)
+            {
+                node.neighbors = node.neighbors.OrderBy(n => n.EdgePriority).ToList();
+            }
+
             boardMinX = nodes.Min(n => n.initialPosition.x);
             boardMaxX = nodes.Max(n => n.initialPosition.x);
             boardMinY = nodes.Min(n => n.initialPosition.y);
@@ -612,7 +617,7 @@ namespace AntsFlow
 
         public List<BaseTile> GetFirstNMovableTiles(Color faction, int count, Vector2 antBoxPosition)
         {
-            Node start = nodes
+            Node start = bottomMostNodes
                     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
                     .First();
 
@@ -663,9 +668,7 @@ namespace AntsFlow
                     continue;
                 }
 
-                foreach (var neighbor in current.neighbors
-                        .OrderBy(n => n.EdgePriority)
-                        )
+                foreach (var neighbor in current.neighbors)
                 {
                     if (visited.Contains(neighbor))
                     {
