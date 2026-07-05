@@ -223,6 +223,11 @@ namespace AntsFlow
 
                 int difficulty = i / 3;
 
+                if (currentLevel.Value <= 10)
+                {
+                    difficulty = 0;
+                }
+
                 if (levelItem.overrideInitialDifficulty)
                 {
                     difficulty = levelItem.initialDifficulty;
@@ -1120,7 +1125,7 @@ namespace AntsFlow
             return result;
         }
 
-        public Dictionary<Color, int> GetNumNotBlockedTilePerFaction()
+        public Dictionary<Color, int> GetNumNotBlockedTilePerFaction(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
 
@@ -1133,9 +1138,7 @@ namespace AntsFlow
                     continue;
                 }
 
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.IsBlocked() ? 0 : 1);
-                // CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count < 4 ? 50 : 0);
-                // CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.ring);
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.IsBlocked() ? 0 : 50);
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
@@ -1144,7 +1147,19 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
-                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    if (isIncludeStartSlot)
+                    {
+                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        {
+                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
+                    }
                 }
             }
 
@@ -1160,13 +1175,18 @@ namespace AntsFlow
 
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
+            // foreach (var item in sortedPoolFaction)
+            // {
+            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            // }
+
             return sortedPoolFaction;
         }
 
         public Dictionary<Color, int> GetNumAntSpawnPerFactionOrderByDifficulty(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> result = new Dictionary<Color, int>();
-            Dictionary<Color, int> numNotBlockedTilePerFaction = GetNumNotBlockedTilePerFaction();
+            Dictionary<Color, int> numNotBlockedTilePerFaction = GetNumNotBlockedTilePerFaction(isIncludeStartSlot);
             Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction(isIncludeStartSlot);
 
             foreach (var faction in numNotBlockedTilePerFaction.Keys)
