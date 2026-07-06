@@ -219,13 +219,7 @@ public class AdmobAdsMax : MonoBehaviour
     }
     public bool IsFsnCollapseEnabled()
     {
-        // int levelRequired = RemoteConfigController.GetIntConfig(FirebaseConfig.COMPLETE_LEVEL_SHOW_COLLAPSE, 1);
-        // bool result = UseProfile.CompletedLevelsCount >= levelRequired;
-        // // Debug.Log($"[AdsController] IsFsnCollapseEnabled() = {result} (RC key: '{FirebaseConfig.USE_FSN_COLLAPSE}')");
-        // Debug.Log($"[Firebase] Connected: {AnalyticsController.firebaseInitialized} | CompletedLevels: {UseProfile.CompletedLevelsCount} | Required: {levelRequired} | show_collapse: {result}");
-        // return result;
-
-        return true;
+        return RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false);
     }
     private void SetupUserConsentUMP()
     {
@@ -604,7 +598,8 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void ShowDoubleInterstitialAds(UnityAction onDoubleInterClosed, bool isShowBreakAds = true, string actionWatchLog = "other", bool isShowImmediatly = false)
     {
-        if (UserData.IsRemoveAds)
+        int minLevelShowInter = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_START_SHOW_INITSTIALL, 10);
+        if (UserData.IsRemoveAds || UserData.CurrentLevel <= minLevelShowInter)
         {
             onDoubleInterClosed?.Invoke();
 
@@ -653,7 +648,8 @@ public class AdmobAdsMax : MonoBehaviour
         {
             bool isAdAvailable = IsLoadedInterstitial() || (_interstitialAdmob != null && _interstitialAdmob.CanShowAd());
 
-            if (isAdAvailable && countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
+            int delayInter = RemoteConfigController.GetIntConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 120);
+            if (isAdAvailable && countdownAds > delayInter)
             {
                 if (isShowBreakAds)
                 {
@@ -755,14 +751,16 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void ShowInterstitialAdmob(Action onAdClosed = null, bool isShowAdBreak = true, bool isIgnoreCooldown = false)
     {
-        if (UserData.IsRemoveAds)
+        int minLevelShowInter = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_START_SHOW_INITSTIALL, 10);
+        if (UserData.IsRemoveAds || UserData.CurrentLevel <= minLevelShowInter)
         {
             onAdClosed?.Invoke();
 
             return;
         }
 
-        bool isInCooldown = countdownAds <= GamePersistentVariable.doubleInterAdsConfig.cooldown && !isIgnoreCooldown;
+        int delayInter = RemoteConfigController.GetIntConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 120);
+        bool isInCooldown = countdownAds <= delayInter && !isIgnoreCooldown;
 
         if (!isInCooldown)
         {
@@ -970,6 +968,14 @@ public class AdmobAdsMax : MonoBehaviour
             return false;
         }
 
+        int minLevelShowInter = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_START_SHOW_INITSTIALL, 10);
+        if (UserData.CurrentLevel <= minLevelShowInter)
+        {
+            actionIniterClose?.Invoke();
+
+            return false;
+        }
+
         if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
         {
             actionIniterClose?.Invoke();
@@ -977,9 +983,10 @@ public class AdmobAdsMax : MonoBehaviour
             return false;
         }
 
+        int delayInter = RemoteConfigController.GetIntConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 120);
+
         if (IsLoadedInterstitial() && ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
-                .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController
-                .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
+                .interstitials.minimumLevel && countdownAds > delayInter) ||
             isShowImmediatly))
         {
             if (isShowAdBreak)
@@ -1479,6 +1486,10 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnAppStateChanged(AppState state)
     {
+        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false))
+        {
+            return;
+        }
         bool isFsnShowing = FsnAdOverlay.Instance != null && FsnAdOverlay.Instance.gameObject.activeSelf;
         if (isMaxInitDone && SceneManager.GetActiveScene().name != "Loading")
             if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds && !isFsnShowing)
