@@ -281,6 +281,11 @@ public class SceneTransition : MonoBehaviour
             })
             .OnComplete(() =>
                 {
+                    for (int i = 0; i < scrollingAntBoxes.Length; i++)
+                    {
+                        scrollingAntBoxes[i].localPosition = scrollingAntBoxInitialPositions[i];
+                    }
+
                     loadLevelInProgressContainer.gameObject.SetActive(false);
 
                     levelSceneTransitionCompleteEvent?.Invoke();
