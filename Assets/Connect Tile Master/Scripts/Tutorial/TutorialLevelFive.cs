@@ -67,7 +67,6 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
     {
         // Step 0: Đợi chia bài ban đầu hoàn thành
         yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
-        yield return new WaitForSeconds(0.2f);
 
         if (TileManager.Ins.TileSlotContainers.Count < 1)
         {

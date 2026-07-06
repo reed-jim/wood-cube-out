@@ -87,7 +87,6 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         // Step 0: Đợi chia bài ban đầu hoàn thành
         yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
-        yield return new WaitForSeconds(0.2f);
 
         if (TileManager.Ins.TileSlotContainers.Count < 2)
         {
@@ -495,7 +494,6 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         // Step 0: Đợi game bắt đầu hoạt động
         yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
-        yield return new WaitForSeconds(0.2f);
 
         BoosterUI boosterUI = FindObjectOfType<BoosterUI>();
         Button freezeBtn = null;

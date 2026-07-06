@@ -63,9 +63,10 @@ public class TileManager : Singleton<TileManager>
             {
                 for (int i = 0; i < tiles.Count; i++)
                 {
-                    if (tiles[i] != null && tiles[i].IsMoving)
+                    if (tiles[i] != null)
                     {
-                        return true;
+                        if (tiles[i].IsMoving || tiles[i].isFlipping)
+                            return true;
                     }
                 }
             }
@@ -2298,7 +2299,7 @@ public class TileManager : Singleton<TileManager>
 
             if (availableItemIdsPerCategory.ContainsKey(category))
             {
-                int targetIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id < spCount);
+                int targetIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id >= spCount);
                 if (targetIdIndex != -1)
                 {
                     int itemId = availableItemIdsPerCategory[category][targetIdIndex];

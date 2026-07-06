@@ -261,19 +261,6 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
     public ItemCategory GetTutorialForcedCategory(ItemCategory defaultCategory)
     {
-        // Chặn không cho theme 2 (Gaming) xuất hiện ở ngay lần chia bài đầu tiên (khi step == 1)
-        // để đảm bảo 2 tutorial không bị dính liền nhau.
-        if (step <= 1 && defaultCategory == theme2)
-        {
-            ItemCategory otherCategory = TileManager.Ins.itemCategoryPool.FirstOrDefault(c => c != theme2 && c != ItemCategory.None);
-            if (otherCategory != ItemCategory.None)
-            {
-                TileManager.Ins.itemCategoryPool.Add(defaultCategory);
-                TileManager.Ins.itemCategoryPool.Remove(otherCategory);
-                return otherCategory;
-            }
-        }
-
         return defaultCategory;
     }
 
