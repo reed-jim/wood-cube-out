@@ -153,7 +153,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
                 clicked = true;
             };
 
-            yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
+            yield return new WaitUntil(() => tile1 == null || tile1.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
@@ -211,7 +211,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             };
 
             yield return new WaitUntil(() => clicked2);
-            yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
+            yield return new WaitUntil(() => tile2 == null || tile2.IsDone);
 
             if (container2 != null && origContainerParent != null)
             {

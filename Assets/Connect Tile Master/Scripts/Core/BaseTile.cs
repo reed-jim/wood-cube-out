@@ -21,6 +21,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isMoving;
+    public bool isFlipping;
     [SerializeField] private bool isOnValidSlot;
     [SerializeField] private bool isOnSlot;
     [SerializeField] private bool isOutside;
@@ -146,6 +147,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         IsOnSlot = false;
         IsOutside = false;
         IsDone = false;
+        isFlipping = false;
         _isDragging = false;
 
         if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
@@ -167,6 +169,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     public void PrepareForShuffle()
     {
         isMoving = true;
+        isFlipping = true;
         if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
         if (_highlightShakeTween.isAlive) _highlightShakeTween.Stop();
         if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();
@@ -184,13 +187,13 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         PrepareForShuffle();
 
         float flipDuration = 0.12f;
-        // Lật bài góc Y sang 90 độ để úp mặt
-        Tween.Delay(delay).OnComplete(() => SoundManager.Instance.PlaySoundFlipCard());
+        Tween.Delay(delay).OnComplete(() => SoundManager.Instance.PlaySoundFlipCard(), warnIfTargetDestroyed: false);
         Tween.LocalEulerAngles(transform, Vector3.zero, new Vector3(0, valueRotateWhenShuffling, 0), flipDuration, startDelay: delay)
             .OnComplete(() =>
             {
                 if (gameObject == null)
                 {
+                    isFlipping = false;
                     onComplete?.Invoke();
                     return;
                 }
@@ -199,9 +202,10 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
                 Tween.LocalEulerAngles(transform, new Vector3(0, valueRotateWhenShuffling, 0), Vector3.zero, flipDuration)
                     .OnComplete(() =>
                     {
+                        isFlipping = false;
                         onComplete?.Invoke();
-                    });
-            });
+                    }, warnIfTargetDestroyed: false);
+            }, warnIfTargetDestroyed: false);
     }
 
     public void FlyToDeck(Vector3 deckLocalPos, Action onComplete)
@@ -227,20 +231,23 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
 
         float halfDuration = moveDuration / 2f;
+        isFlipping = true;
         Tween.LocalEulerAngles(transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
             .OnComplete(() =>
             {
                 if (gameObject == null)
                 {
+                    isFlipping = false;
                     onComplete?.Invoke();
                     return;
                 }
                 Tween.LocalEulerAngles(transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad)
                     .OnComplete(() =>
                     {
+                        isFlipping = false;
                         onComplete?.Invoke();
-                    });
-            });
+                    }, warnIfTargetDestroyed: false);
+            }, warnIfTargetDestroyed: false);
     }
 
     public void Select()
@@ -257,7 +264,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (TileManager.Ins != null && !TileManager.Ins.isLevelActive) return;
-        if (IsMoving || IsOnSlot || IsDone) return;
+        if (isFlipping || IsMoving || IsOnSlot || IsDone) return;
+        if (ObjHide != null && ObjHide.gameObject.activeSelf) return; // Prevent dragging when card is face down (not flipped yet)
         if (TileManager.Ins != null && TileManager.Ins.IsAnyTileDragging()) return;
 
         SoundManager.Instance.PlaySoundTakeCardFromGrid();
@@ -407,6 +415,12 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             TileManager.Ins.CurrentlyDraggedTile = null;
         }
         ResetSorting();
+        Tween.StopAll(transform);
+    }
+
+    private void OnDestroy()
+    {
+        Tween.StopAll(transform);
     }
 
     public void MoveToOutsideBox()

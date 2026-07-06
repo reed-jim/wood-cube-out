@@ -203,7 +203,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             };
 
             yield return new WaitUntil(() => cardClicked);
-            yield return new WaitUntil(() => highlightedTile == null || highlightedTile.IsOnSlot);
+            yield return new WaitUntil(() => highlightedTile == null || highlightedTile.IsDone);
         }
         else
         {

@@ -188,11 +188,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
             bool hasTimeLimit = TileManager.Ins != null && TileManager.Ins.levelItem != null && TileManager.Ins.levelItem.timeLimit > 0;
-            if (hasTimeLimit && TileManager.Ins.isLevelActive)
+            if (hasTimeLimit)
             {
                 noLimited.SetActive(false);
                 timerText.gameObject.SetActive(true);
-                if (timeToDisplay <= warningTimeLimit && timeToDisplay > 0)
+                if (TileManager.Ins.isLevelActive && timeToDisplay <= warningTimeLimit && timeToDisplay > 0)
                 {
                     if (!_timerWarningTween.isAlive)
                     {

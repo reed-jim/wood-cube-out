@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AppsFlyerSDK;
 using Firebase.Analytics;
@@ -215,6 +216,22 @@ public static class SaferioTracking
         string reason
     )
     {
+        try
+        {
+            FalconAnalyticsHelper.LogResource(
+                Falcon.FalconAnalytics.Scripts.Enum.FlowType.source,
+                reason,
+                resourceName,
+                reason,
+                amount,
+                level
+            );
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("Falcon LogResource (Source) error: " + ex.Message);
+        }
+
 #if !UNITY_EDITOR
         try
         {
@@ -247,6 +264,22 @@ public static class SaferioTracking
         string reason
     )
     {
+        try
+        {
+            FalconAnalyticsHelper.LogResource(
+                Falcon.FalconAnalytics.Scripts.Enum.FlowType.sink,
+                reason,
+                resourceName,
+                reason,
+                amount,
+                level
+            );
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("Falcon LogResource (Sink) error: " + ex.Message);
+        }
+
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
@@ -266,6 +299,20 @@ public static class SaferioTracking
 
     public static void TrackLevelStart(int level)
     {
+        try
+        {
+            string difficulty = "default";
+            if (TileManager.Ins != null && TileManager.Ins.levelItem != null)
+            {
+                difficulty = TileManager.Ins.levelItem.isHard ? "hard" : "default";
+            }
+            FalconAnalyticsHelper.LogLevel(level, difficulty, Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.Start, TimeSpan.Zero);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("Falcon LogStartLevel error: " + ex.Message);
+        }
+
         if (!GamePersistentVariable.isFirebaseAvailable)
         {
             return;
@@ -284,6 +331,34 @@ public static class SaferioTracking
 
     public static void TrackLevelEnd(int level, bool isSuccess, string reason)
     {
+        try
+        {
+            string difficulty = "default";
+            float elapsed = 0f;
+            if (TileManager.Ins != null && TileManager.Ins.levelItem != null)
+            {
+                difficulty = TileManager.Ins.levelItem.isHard ? "hard" : "default";
+                elapsed = UnityEngine.Mathf.Max(0, TileManager.Ins.levelItem.timeLimit - TileManager.Ins.currentLevelTime);
+            }
+            bool isFirstWin = DataUtility.Load($"{GameConstants.IS_FIRST_WIN_LEVEL}_{level}", true);
+            Falcon.FalconAnalytics.Scripts.Enum.LevelStatus status;
+            if (isSuccess)
+            {
+                status = isFirstWin ? Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.Pass : Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.ReplayPass;
+            }
+            else
+            {
+                status = isFirstWin ? Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.Fail : Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.ReplayFail;
+            }
+
+            FalconAnalyticsHelper.LogLevel(level, difficulty, status, TimeSpan.FromSeconds(elapsed));
+            FalconAnalyticsHelper.LogSession("daily_gameplay", TimeSpan.FromSeconds(elapsed), level);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("Falcon TrackLevelEnd error: " + ex.Message);
+        }
+
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
