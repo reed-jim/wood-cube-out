@@ -373,13 +373,6 @@ public class WinPopup : BasePopup
             .OnComplete(() => _tweens.Add(Tween.Scale(x5CoinButton.transform, 0, duration: 0.3f)))
         );
 
-        //continueButton.transform.localScale = Vector3.zero;
-        _tweens.Add(Tween.Scale(continueButton.transform, 1.1f, duration: 0.3f)
-            .OnComplete(() => _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: 0.15f)
-            .OnComplete(() => continueButton.interactable = true)
-            ))
-        );
-
         // Claim rewarded coins (80 coins) starting from imgCoinX5
         ClaimCoins(_multiplierCoinWinLevel * coinClaimDefault, imgCoinX5);
 
