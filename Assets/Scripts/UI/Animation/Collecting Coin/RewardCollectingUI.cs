@@ -118,12 +118,27 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         // }
     }
 
+    public Vector2 WorldToCanvasPosition(Vector3 worldPosition)
+    {
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(worldPosition);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            GetComponent<RectTransform>(),
+            screenPoint,
+            null, // null for Screen Space - Overlay
+            out Vector2 localPoint);
+
+        return localPoint;
+    }
+
     public async void CollectItem
     (
         ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, float itemSizeX
     )
     {
-        Vector3 startPosition = new Vector3(-50, -150, 0);
+        Vector3 startPosition = GamePersistentVariable.spawnFlyingCoinPosition;
+
+        Debug.Log($"GamePersistentVariable.spawnFlyingCoinPosition {GamePersistentVariable.spawnFlyingCoinPosition} {startPosition}");
 
         for (int i = 0; i < _rewards.Length; i++)
         {

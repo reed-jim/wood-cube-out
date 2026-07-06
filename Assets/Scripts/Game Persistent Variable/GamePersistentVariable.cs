@@ -206,5 +206,6 @@ public static class GamePersistentVariable
     public static bool isHideUI;
     public static Vector2 tileDistance;
     public static float ratioXY;
+    public static Vector2 spawnFlyingCoinPosition;
     #endregion
 }

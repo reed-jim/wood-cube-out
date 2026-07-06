@@ -29,6 +29,8 @@ public class WinPopup : BasePopup
     [SerializeField] private RectTransform starGroup;
     [SerializeField] private RectTransform eventItemGroup;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
+    [SerializeField] private RectTransform coinContinueButton;
+    [SerializeField] private RectTransform coinX2Button;
 
     [SerializeField] private ParticleSystem completeFx;
 
@@ -41,9 +43,10 @@ public class WinPopup : BasePopup
     [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
 
     [Header("CUSTOMIZE")]
+    [SerializeField] private int numCoinNormal;
+    [SerializeField] private int numCoinRewardedAd;
     [SerializeField] private float timeCollectCoin;
     [SerializeField] private float timeDelayShowContinueButton;
-    [SerializeField] private CanvasGroup nextLevelCG;
 
     private bool _isCollectCoinRemoteConfig;
     private int _multiplierCoinWinLevel;
@@ -58,12 +61,6 @@ public class WinPopup : BasePopup
     public static event Action nextLevelEvent;
     // public static event Action<Vector3, int> collectCoinEvent;
     public static event Action<int> collectCoinEvent;
-
-    private void OnEnable()
-    {
-        nextLevelCG.alpha = 0;
-        Tween.Alpha(nextLevelCG, 1, duration: 0.3f, startDelay: 1);
-    }
 
     protected override void RegisterMoreEvent()
     {
@@ -90,9 +87,8 @@ public class WinPopup : BasePopup
         coinText.text = $"{0}";
         starText.text = $"{0}";
         goldPassKeyText.text = $"{0}";
-        continueButton.transform.localScale = Vector3.zero;
 
-        continueButton.interactable = false;
+        continueButton.interactable = true;
         returnHomeButton.interactable = true;
         x5CoinButton.interactable = true;
 
@@ -111,18 +107,18 @@ public class WinPopup : BasePopup
         }
         else
         {
-            localizedMultiplyCoinText.transform.localScale = Vector3.zero;
+            // localizedMultiplyCoinText.transform.localScale = Vector3.zero;
 
-            _tweens.Add(Tween.Delay(0.2f).OnComplete(() =>
-            {
-                localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
+            // _tweens.Add(Tween.Delay(0.2f).OnComplete(() =>
+            // {
+            //     localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
 
-                _tweens.Add(Tween.Scale(localizedMultiplyCoinText.transform, 1, duration: 0.3f));
-            }));
+            //     _tweens.Add(Tween.Scale(localizedMultiplyCoinText.transform, 1, duration: 0.3f));
+            // }));
         }
         //
 
-        CheckEvent();
+        // CheckEvent();
 
         Show();
 
@@ -133,8 +129,6 @@ public class WinPopup : BasePopup
         _currentCollectedCoin = 0;
 
         int coinQuantity = GamePersistentVariable.isHardMode ? 30 : 10;
-
-        CollectCoin(coinQuantity);
 
         completeFx.Play();
 
@@ -166,6 +160,17 @@ public class WinPopup : BasePopup
 
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
     {
+        userResourcesObserver.UserResources.CoinQuantity += numCoin - _currentCollectedCoin;
+
+        userResourcesObserver.Save();
+
+        _currentCollectedCoin = numCoin;
+
+        SaferioTracking.TrackResourceSource(
+            currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
+
+        return;
+
         coinText.text = $"{_currentCollectedCoin}";
 
         int deltaCoin = (int)(numCoin / 10f);
@@ -188,12 +193,12 @@ public class WinPopup : BasePopup
                         currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
                 }
 
-                _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin, startDelay: timeDelayShowContinueButton)
-                .OnComplete(() =>
-                {
-                    continueButton.interactable = true;
-                })
-                );
+                // _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin, startDelay: timeDelayShowContinueButton)
+                // .OnComplete(() =>
+                // {
+                //     continueButton.interactable = true;
+                // })
+                // );
 
                 onCompletedAction?.Invoke();
             })
@@ -203,7 +208,6 @@ public class WinPopup : BasePopup
         {
             starText.text = $"{(int)newVal}";
         }));
-
 
         CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
@@ -220,7 +224,12 @@ public class WinPopup : BasePopup
 
     private void Continue()
     {
+        x5CoinButton.interactable = false;
         continueButton.interactable = false;
+
+        CollectCoin(numCoinNormal);
+
+        GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinContinueButton.position);
 
         collectCoinEvent?.Invoke(_currentCollectedCoin);
 
@@ -289,6 +298,20 @@ public class WinPopup : BasePopup
 
     private void OnRewaredAdCompleted()
     {
+        x5CoinButton.interactable = false;
+        continueButton.interactable = false;
+
+        CollectCoin(numCoinRewardedAd);
+
+        GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinX2Button.position);
+
+        collectCoinEvent?.Invoke(_currentCollectedCoin);
+
+        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
+        SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
+
+        return;
+
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
