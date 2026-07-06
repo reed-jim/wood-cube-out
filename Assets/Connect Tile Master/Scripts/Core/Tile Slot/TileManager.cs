@@ -63,9 +63,10 @@ public class TileManager : Singleton<TileManager>
             {
                 for (int i = 0; i < tiles.Count; i++)
                 {
-                    if (tiles[i] != null && tiles[i].IsMoving)
+                    if (tiles[i] != null)
                     {
-                        return true;
+                        if (tiles[i].IsMoving || tiles[i].isFlipping)
+                            return true;
                     }
                 }
             }
@@ -1888,6 +1889,10 @@ public class TileManager : Singleton<TileManager>
     #region Spawn Tiles
     private void SpawnTilesForEmptyGrid()
     {
+        if (!isLevelActive || _hasTriggeredWin)
+        {
+            return;
+        }
         //SoundManager.Instance.PlaySoundDealCards();
         if (itemCategoryPool.Count <= 0)
         {
@@ -1944,6 +1949,7 @@ public class TileManager : Singleton<TileManager>
                     tile.transform.localScale = Vector3.one;
 
                     tile.IsMoving = true;
+                    tile.isFlipping = true;
 
                     float distance = Vector3.Distance(tile.transform.localPosition, grids[i].position);
                     float dealSpeed = 1500f;
@@ -1972,12 +1978,16 @@ public class TileManager : Singleton<TileManager>
                                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration)
                                     .OnComplete(() =>
                                     {
-                                        if (tile != null) tile.IsMoving = false;
-                                    });
+                                        if (tile != null)
+                                        {
+                                            tile.IsMoving = false;
+                                            tile.isFlipping = false;
+                                        }
+                                    }, warnIfTargetDestroyed: false);
                                 }
-                            });
-                        });
-                    });
+                            }, warnIfTargetDestroyed: false);
+                        }, warnIfTargetDestroyed: false);
+                    }, warnIfTargetDestroyed: false);
 
                     grids[i].tile = tile;
 
@@ -2161,6 +2171,8 @@ public class TileManager : Singleton<TileManager>
         foreach (var grid in sortedGrids)
         {
             BaseTile tile = grid.tile;
+            tile.IsMoving = true;
+            tile.isFlipping = true;
 
             float distance = Vector3.Distance(tile.transform.localPosition, grid.position);
             float dealSpeed = 1500f;
@@ -2176,7 +2188,7 @@ public class TileManager : Singleton<TileManager>
                 {
                     if (tile == null) return;
                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad);
-                });
+                }, warnIfTargetDestroyed: false);
 
             yield return new WaitForSeconds(0.15f);
         }
@@ -2197,10 +2209,14 @@ public class TileManager : Singleton<TileManager>
                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration)
                         .OnComplete(() =>
                         {
-                            if (tile != null) tile.IsMoving = false;
-                        });
+                            if (tile != null)
+                            {
+                                tile.IsMoving = false;
+                                tile.isFlipping = false;
+                            }
+                        }, warnIfTargetDestroyed: false);
                 }
-            });
+            }, warnIfTargetDestroyed: false);
 
             yield return new WaitForSeconds(0.15f);
         }
@@ -2283,7 +2299,7 @@ public class TileManager : Singleton<TileManager>
 
             if (availableItemIdsPerCategory.ContainsKey(category))
             {
-                int targetIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id < spCount);
+                int targetIdIndex = availableItemIdsPerCategory[category].FindIndex(id => id >= spCount);
                 if (targetIdIndex != -1)
                 {
                     int itemId = availableItemIdsPerCategory[category][targetIdIndex];
@@ -2891,6 +2907,9 @@ public class TileManager : Singleton<TileManager>
             BaseTile tile = target.tile;
             if (tile == null) continue;
 
+            tile.IsMoving = true;
+            tile.isFlipping = true;
+
             float distance = Vector3.Distance(tile.transform.localPosition, target.targetLocalPos);
             float dealSpeed = 1500f;
             float dealDuration = distance / dealSpeed;
@@ -2905,7 +2924,7 @@ public class TileManager : Singleton<TileManager>
                 {
                     if (tile == null) return;
                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, valueRotateWhenShuffling, -valueRotateWhenShuffling), Vector3.zero, halfDuration * 2, ease: Ease.InQuad);
-                });
+                }, warnIfTargetDestroyed: false);
 
             yield return new WaitForSeconds(0.15f);
         }
@@ -2929,10 +2948,14 @@ public class TileManager : Singleton<TileManager>
                     tile.SetFaceUp(true);
                     Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration).OnComplete(() =>
                     {
-                        if (tile != null) tile.IsMoving = false;
-                    });
+                        if (tile != null)
+                        {
+                            tile.IsMoving = false;
+                            tile.isFlipping = false;
+                        }
+                    }, warnIfTargetDestroyed: false);
                 }
-            });
+            }, warnIfTargetDestroyed: false);
 
             yield return new WaitForSeconds(0.15f);
         }

@@ -197,6 +197,20 @@ public class AnalyticsController : MonoBehaviour
     {
         try
         {
+            string difficulty = "default";
+            if (TileManager.Ins != null && TileManager.Ins.levelItem != null)
+            {
+                difficulty = TileManager.Ins.levelItem.isHard ? "hard" : "default";
+            }
+            FalconAnalyticsHelper.LogLevel(level, difficulty, Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.Start, TimeSpan.Zero);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("Falcon LogStartLevel error: " + ex.Message);
+        }
+
+        try
+        {
             if (!firebaseInitialized) return;
 
             Parameter[] parameters = new Parameter[1]
@@ -257,17 +271,45 @@ public class AnalyticsController : MonoBehaviour
 
         try
         {
-            //DWHLog.Log.LevelLog(UseProfile.CurrentLevel, UseProfile.CurrentLevel, timePlayLevel, 0, "", LevelStatus.pass);//Gọi khi pass level
-            //Debug.Log
-        }
-        catch
-        {
+            string difficulty = "default";
+            if (TileManager.Ins != null && TileManager.Ins.levelItem != null)
+            {
+                difficulty = TileManager.Ins.levelItem.isHard ? "hard" : "default";
+            }
+            bool isFirstWin = DataUtility.Load($"{GameConstants.IS_FIRST_WIN_LEVEL}_{level}", true);
+            Falcon.FalconAnalytics.Scripts.Enum.LevelStatus status = isFirstWin ? Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.Pass : Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.ReplayPass;
 
+            FalconAnalyticsHelper.LogLevel(level, difficulty, status, TimeSpan.FromSeconds(timePlayLevel));
+            FalconAnalyticsHelper.LogSession("daily_gameplay", TimeSpan.FromSeconds(timePlayLevel), level);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("Falcon LogLevelComplet error: " + ex.Message);
         }
     }
 
     public void LogLevelFail(int level)
     {
+        try
+        {
+            string difficulty = "default";
+            float elapsed = 0f;
+            if (TileManager.Ins != null && TileManager.Ins.levelItem != null)
+            {
+                difficulty = TileManager.Ins.levelItem.isHard ? "hard" : "default";
+                elapsed = UnityEngine.Mathf.Max(0, TileManager.Ins.levelItem.timeLimit - TileManager.Ins.currentLevelTime);
+            }
+            bool isFirstWin = DataUtility.Load($"{GameConstants.IS_FIRST_WIN_LEVEL}_{level}", true);
+            Falcon.FalconAnalytics.Scripts.Enum.LevelStatus status = isFirstWin ? Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.Fail : Falcon.FalconAnalytics.Scripts.Enum.LevelStatus.ReplayFail;
+
+            FalconAnalyticsHelper.LogLevel(level, difficulty, status, TimeSpan.FromSeconds(elapsed));
+            FalconAnalyticsHelper.LogSession("daily_gameplay", TimeSpan.FromSeconds(elapsed), level);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("Falcon LogLevelFail error: " + ex.Message);
+        }
+
         if (!firebaseInitialized) return;
         Parameter[] parameters = new Parameter[1]
        {
@@ -400,12 +442,11 @@ public class AnalyticsController : MonoBehaviour
 
         try
         {
-            //DWHLog.Log.AdsLog("", AdsType.VideoReward.ToString(), AdmobAds.RewardedAdUnitId.ToString(), "", "", placement, StateAds.Rewarded.ToString());
-            //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.reward, placement);
+            FalconAnalyticsHelper.LogAd(Falcon.FalconAnalytics.Scripts.Enum.AdType.Reward, placement, UserData.CurrentLevel);
         }
-        catch
+        catch (Exception ex)
         {
-
+            Debug.LogWarning("Falcon LogAd (Reward) error: " + ex.Message);
         }
     }
 
@@ -466,12 +507,11 @@ public class AnalyticsController : MonoBehaviour
 
         try
         {
-            Dictionary<string, string> paramas = new Dictionary<string, string>();
-            AppsFlyer.sendEvent("af_inters_displayed", paramas);
+            FalconAnalyticsHelper.LogAd(Falcon.FalconAnalytics.Scripts.Enum.AdType.Interstitial, actionWatchLog, UserData.CurrentLevel);
         }
-        catch
+        catch (Exception ex)
         {
-
+            Debug.LogWarning("Falcon LogAd (Inters) error: " + ex.Message);
         }
     }
 

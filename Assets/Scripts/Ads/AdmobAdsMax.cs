@@ -37,7 +37,8 @@ public class AdmobAdsMax : MonoBehaviour
 #if UNITY_ANDROID
     private const string MaxSdkKey =
         "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
-
+    //GplaySdk eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52
+    //FalconSdk M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad
     private const string InterstitialAdUnitId = "bec4bdcda2642318"; // check here
     private const string RewardedAdUnitId = "61d48d2e157a8bc9"; // check here
     private const string BanerAdUnitId = "981f021b2168a9a3"; // check here
@@ -1624,14 +1625,14 @@ public class AdmobAdsMax : MonoBehaviour
         FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
         double revenue = adInfo.Revenue;
-   
+
         AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
             adInfo.AdFormat, revenue, "USD");
         AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
             adInfo.AdFormat, revenue, "USD");
         AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
             adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
-        
+
 
     }
     #endregion

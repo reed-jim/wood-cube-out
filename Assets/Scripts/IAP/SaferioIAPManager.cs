@@ -267,6 +267,23 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                 removeAdPurchasedCompletedEvent?.Invoke();
 
                 UserData.IsRemoveAds = true;
+
+                try
+                {
+                    FalconAnalyticsHelper.LogInApp(
+                        e.purchasedProduct.definition.id,
+                        e.purchasedProduct.metadata.localizedPrice,
+                        e.purchasedProduct.metadata.isoCurrencyCode,
+                        GamePersistentVariable.IAPLocation,
+                        e.purchasedProduct.transactionID,
+                        e.purchasedProduct.receipt,
+                        currentLevel.Value
+                    );
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("Falcon LogInApp (RemoveAd) error: " + ex.Message);
+                }
             }
             else
             {
@@ -320,6 +337,17 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             SaferioTracking.TrackIAPEvent(productData.ProductId);
                             SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
                             SaferioTracking.TrackIAPCompleteEventAppsflyer($"{productData.Price}");
+
+                            // Falcon InApp Log
+                            FalconAnalyticsHelper.LogInApp(
+                                productData.ProductId,
+                                e.purchasedProduct.metadata.localizedPrice,
+                                e.purchasedProduct.metadata.isoCurrencyCode,
+                                GamePersistentVariable.IAPLocation,
+                                e.purchasedProduct.transactionID,
+                                e.purchasedProduct.receipt,
+                                currentLevel.Value
+                            );
                         }
                         catch (Exception trackingEx)
                         {

@@ -67,7 +67,6 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
     {
         // Step 0: Đợi chia bài ban đầu hoàn thành
         yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
-        yield return new WaitForSeconds(0.2f);
 
         if (TileManager.Ins.TileSlotContainers.Count < 1)
         {
@@ -162,7 +161,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             };
 
             yield return new WaitUntil(() => clicked);
-            yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
+            yield return new WaitUntil(() => tile1 == null || tile1.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
@@ -219,7 +218,7 @@ public class TutorialLevelFive : Singleton<TutorialLevelFive>
             };
 
             yield return new WaitUntil(() => clicked);
-            yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
+            yield return new WaitUntil(() => tile2 == null || tile2.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)

@@ -62,7 +62,6 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
     {
         // Step 0: Đợi chia bài ban đầu hoàn thành
         yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
-        yield return new WaitForSeconds(0.2f);
 
         Image upToAll = TileManager.Ins.UpToAll;
         if (upToAll == null)
@@ -203,7 +202,7 @@ public class TutorialLevelSeven : Singleton<TutorialLevelSeven>
             };
 
             yield return new WaitUntil(() => cardClicked);
-            yield return new WaitUntil(() => highlightedTile == null || highlightedTile.IsOnSlot);
+            yield return new WaitUntil(() => highlightedTile == null || highlightedTile.IsDone);
         }
         else
         {

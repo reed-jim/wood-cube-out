@@ -87,7 +87,6 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         // Step 0: Đợi chia bài ban đầu hoàn thành
         yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
-        yield return new WaitForSeconds(0.2f);
 
         if (TileManager.Ins.TileSlotContainers.Count < 2)
         {
@@ -177,7 +176,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             };
 
             yield return new WaitUntil(() => clicked);
-            yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
+            yield return new WaitUntil(() => tile1 == null || tile1.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
@@ -233,7 +232,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             };
 
             yield return new WaitUntil(() => clicked);
-            yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
+            yield return new WaitUntil(() => tile2 == null || tile2.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
@@ -289,7 +288,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             };
 
             yield return new WaitUntil(() => clicked);
-            yield return new WaitUntil(() => tile3 == null || tile3.IsOnSlot);
+            yield return new WaitUntil(() => tile3 == null || tile3.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container2 != null && origContainerParent != null)
@@ -345,7 +344,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             };
 
             yield return new WaitUntil(() => clicked);
-            yield return new WaitUntil(() => tile4 == null || tile4.IsOnSlot);
+            yield return new WaitUntil(() => tile4 == null || tile4.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container2 != null && origContainerParent != null)
@@ -495,7 +494,6 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         // Step 0: Đợi game bắt đầu hoạt động
         yield return new WaitUntil(() => TileManager.Ins.isLevelActive && !TileManager.Ins.IsDealingCards);
-        yield return new WaitForSeconds(0.2f);
 
         BoosterUI boosterUI = FindObjectOfType<BoosterUI>();
         Button freezeBtn = null;

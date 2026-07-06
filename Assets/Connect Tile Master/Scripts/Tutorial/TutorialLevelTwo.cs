@@ -153,7 +153,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
                 clicked = true;
             };
 
-            yield return new WaitUntil(() => tile1 == null || tile1.IsOnSlot);
+            yield return new WaitUntil(() => tile1 == null || tile1.IsDone);
 
             // Khôi phục parent của container sau khi tile đã vào slot
             if (container1 != null && origContainerParent != null)
@@ -211,7 +211,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
             };
 
             yield return new WaitUntil(() => clicked2);
-            yield return new WaitUntil(() => tile2 == null || tile2.IsOnSlot);
+            yield return new WaitUntil(() => tile2 == null || tile2.IsDone);
 
             if (container2 != null && origContainerParent != null)
             {
@@ -261,19 +261,6 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
 
     public ItemCategory GetTutorialForcedCategory(ItemCategory defaultCategory)
     {
-        // Chặn không cho theme 2 (Gaming) xuất hiện ở ngay lần chia bài đầu tiên (khi step == 1)
-        // để đảm bảo 2 tutorial không bị dính liền nhau.
-        if (step <= 1 && defaultCategory == theme2)
-        {
-            ItemCategory otherCategory = TileManager.Ins.itemCategoryPool.FirstOrDefault(c => c != theme2 && c != ItemCategory.None);
-            if (otherCategory != ItemCategory.None)
-            {
-                TileManager.Ins.itemCategoryPool.Add(defaultCategory);
-                TileManager.Ins.itemCategoryPool.Remove(otherCategory);
-                return otherCategory;
-            }
-        }
-
         return defaultCategory;
     }
 
