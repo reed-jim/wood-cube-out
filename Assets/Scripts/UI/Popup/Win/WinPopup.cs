@@ -93,10 +93,10 @@ public class WinPopup : BasePopup
 
         AdmobAdsMax.Instance.ShowBannerCollap();
 
-        coinTextAds.text = $"{0}";
-        coinTextNormal.text = $"{0}";
-        starText.text = $"{0}";
-        goldPassKeyText.text = $"{0}";
+        coinTextAds.text = "x0";
+        coinTextNormal.text = "x0";
+        starText.text = "0";
+        goldPassKeyText.text = "0";
         txLevel.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
         //continueButton.transform.localScale = Vector3.zero;
 
@@ -150,9 +150,6 @@ public class WinPopup : BasePopup
 
         _currentCollectedCoin = coinClaimDefault;
 
-        coinTextNormal.text = $"x{coinClaimDefault}";
-        coinTextAds.text = $"x{_multiplierCoinWinLevel * coinClaimDefault}";
-
         AnimateOtherResources();
 
         continueButton.interactable = true;
@@ -199,6 +196,18 @@ public class WinPopup : BasePopup
         _tweens.Add(Tween.Custom(0, 3, duration: timeCollectCoin, onValueChange: newVal =>
         {
             starText.text = $"{(int)newVal}";
+        }));
+
+        int targetNormal = coinClaimDefault;
+        _tweens.Add(Tween.Custom(0, targetNormal, duration: timeCollectCoin, onValueChange: newVal =>
+        {
+            coinTextNormal.text = $"x{(int)newVal}";
+        }));
+
+        int targetAds = _multiplierCoinWinLevel * coinClaimDefault;
+        _tweens.Add(Tween.Custom(0, targetAds, duration: timeCollectCoin, onValueChange: newVal =>
+        {
+            coinTextAds.text = $"x{(int)newVal}";
         }));
 
         CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
@@ -349,10 +358,10 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
-        //OnRewaredAdCompleted();
+        OnRewaredAdCompleted();
         ////comment de test
-        AdmobAdsMax.Instance.ShowVideoReward(
-            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        //AdmobAdsMax.Instance.ShowVideoReward(
+        //    OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
     }
 
     private void OnRewaredAdCompleted()

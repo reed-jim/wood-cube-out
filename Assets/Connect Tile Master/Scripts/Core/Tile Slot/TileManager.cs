@@ -23,6 +23,7 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private Grid[] grids;
     [SerializeField] private TileIconContainer tileIconContainer;
     [SerializeField] private Image upToAll;
+    [SerializeField] private Button btWin;
     public Image UpToAll => upToAll;
     [SerializeField] private RectTransform head;
     public RectTransform tileContainer;
@@ -159,7 +160,7 @@ public class TileManager : Singleton<TileManager>
         }
 
         Input.multiTouchEnabled = false;
-
+        btWin.onClick.AddListener(InstantWin);
         RevivePopup.reviveEvent += OnRevive;
         BasePopup.popupShowEvent += OnPopupShow;
         BasePopup.popupHideEvent += OnPopupHide;
