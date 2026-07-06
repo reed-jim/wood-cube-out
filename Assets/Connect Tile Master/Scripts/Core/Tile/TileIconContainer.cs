@@ -92,6 +92,8 @@ public class TileIconContainerEditor : UnityEditor.Editor
 {
     private DefaultAsset spriteFolder;
     private DefaultAsset parentSpritesFolder;
+    private int clearStartIndex = 0;
+    private int clearEndIndex = 0;
 
     public override void OnInspectorGUI()
     {
@@ -125,6 +127,49 @@ public class TileIconContainerEditor : UnityEditor.Editor
             container.categoryIconSets = newCategorySets.ToArray();
             EditorUtility.SetDirty(container);
             Debug.Log($"Successfully generated {newCategorySets.Count} categories based on ItemCategory Enum.");
+        }
+
+        GUILayout.Space(15);
+        GUILayout.Label("CDN Clean Helper", EditorStyles.boldLabel);
+        clearStartIndex = EditorGUILayout.IntField("Clear Start Index", clearStartIndex);
+        clearEndIndex = EditorGUILayout.IntField("Clear End Index", clearEndIndex);
+
+        if (GUILayout.Button("Clear CDN Data For Range"))
+        {
+            if (container.categoryIconSets == null || container.categoryIconSets.Length == 0)
+            {
+                Debug.LogWarning("categoryIconSets is empty.");
+            }
+            else
+            {
+                int start = Mathf.Clamp(clearStartIndex, 0, container.categoryIconSets.Length - 1);
+                int end = Mathf.Clamp(clearEndIndex, 0, container.categoryIconSets.Length - 1);
+
+                if (start > end)
+                {
+                    int temp = start;
+                    start = end;
+                    end = temp;
+                }
+
+                Undo.RecordObject(container, "Clear CDN Data Range");
+                int clearedCount = 0;
+                for (int i = start; i <= end; i++)
+                {
+                    var set = container.categoryIconSets[i];
+                    if (set != null)
+                    {
+                        set.iconCdnKeys = null;
+                        set.spriteOrderCdnKey = null;
+                        set.isOnServer = false;
+                        clearedCount++;
+                    }
+                }
+
+                EditorUtility.SetDirty(container);
+                AssetDatabase.SaveAssets();
+                Debug.Log($"Successfully cleared CDN data for {clearedCount} categories (Index {start} to {end}).");
+            }
         }
 
         GUILayout.Space(15);
