@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AppsFlyerSDK;
-using Falcon.FalconAnalytics.Scripts.Enum;
 using Falcon.FalconCore.Scripts.FalconABTesting.Scripts.Model;
 using Firebase.Analytics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
 {
@@ -15,6 +14,14 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
         private static FsnAdManager _instance;
         private FsnAdsConfigsData _fsnAdsConfigsData;
         private bool _getConfigFromServer;
+        private string _campaignID;
+        private bool _enableFsn;
+
+        private const string _CampaignID = "falcon.module.core.thirdparty.mediation.appsflyer_campaign_id";
+        private const string _CampaignIdAppsflyer = "campaign_id";
+
+        public event Action<FsnAdType> OnNativeAdHidden;
+        public event Action<FsnAdType> OnNativeAdReady;
 
         public static FsnAdManager Instance
         {
@@ -22,7 +29,7 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
             {
                 if (_instance == null)
                 {
-                    var go = new GameObject { name = "FSN Object" };
+                    var go = new GameObject { name = "FsnAdManager" };
                     _instance = go.AddComponent<FsnAdManager>();
                     DontDestroyOnLoad(go);
 
@@ -65,15 +72,49 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
         private const float _TIME_OUT = 7f;
         private float _startTime;
 
+        // iOS/Unity native overlay does not pause the Unity loop by itself.
+        // Keep a small guard so nested ads cannot restore Time.timeScale too early.
+        private int _fsnNativePauseDepth;
+        private float _fsnSavedTimeScale = 1f;
+        private bool _fsnSavedAudioPause;
+
         // Class lưu trữ thông tin của lượt Ad đang được chuẩn bị (Lazy Load)
         private class PreparedAdInfo
         {
+            // Instance đang preload / ready cho lượt show kế tiếp.
             public FsnAd adInstance;
+
+            // Instance đang thực sự hiển thị trên màn hình.
+            // HideTrackedNative chỉ được đụng vào instance này.
+            public FsnAd showingAdInstance;
+
+            // Token chống callback show cũ đụng nhầm lượt show mới.
+            public int showSequence;
+
+            // Token chống callback load cũ đụng nhầm lượt load mới.
+            // currentAdUnitId không đủ an toàn nếu 2 lượt load dùng cùng 1 ad unit id.
+            public int loadSequence;
+
+            // Trạng thái load ở tầng Unity để không tạo request mới khi request cũ còn đang chạy.
+            public bool isLoading;
+
+            // Chỉ là cache trạng thái để debug/guard. Trạng thái thật vẫn hỏi IsNativeAdReady().
+            public bool isReady;
+
             public string currentAdUnitId; // ID hiện tại đang chạy (chính hoặc dự phòng)
             public int styleIndex;
+            public string layoutDebugName;
+            public FsnNativeAdType nativeType;
+            public FsnNativeAdRatio nativeRatio;
             public int openStorePosition;
             public int closePosition;
             public bool isUsingFallbackId; // Đánh dấu xem lượt này có đang phải dùng ID dự phòng hay không
+
+            public string GetDebugSummary()
+            {
+                return
+                    $"AdUnitId={currentAdUnitId}, NativeType={nativeType}, Ratio={nativeRatio}, Style={styleIndex}({layoutDebugName}), OpenStoreUI={openStorePosition}, CloseUI={closePosition}, IsFallback={isUsingFallbackId}, IsLoading={isLoading}, IsReady={isReady}";
+            }
         }
 
         // Quản lý riêng biệt instance cho từng loại Ad
@@ -90,22 +131,16 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
         public void InitFsnAd()
         {
             Debug.Log($"{_Tag}[FSN] ========== InitFsnAd START ==========");
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
             StartCoroutine(WaitFromServer());
 
             IEnumerator WaitFromServer()
             {
                 _startTime = Time.time;
                 yield return new WaitUntil(() => _getConfigFromServer || Time.time - _startTime >= _TIME_OUT);
-
                 Debug.Log(_getConfigFromServer ? "_getConfigFromServer = true" : "TIMEOUT GET FROM SERVER = true");
-
-                // Kích hoạt chuẩn bị ad lần đầu tiên cho từng vị trí
-                PrepareNextAd(FsnAdType.Interstitial);
-                PrepareNextAd(FsnAdType.Rewarded);
-                PrepareNextAd(FsnAdType.Collapsible);
-                PrepareNextAd(FsnAdType.Aoa);
-                PrepareNextAd(FsnAdType.AdBreak);
+                _getConfigFromServer = true;
+                CheckAfterGetFromServer();
             }
 #else
             Debug.Log($"{_Tag}[FSN] Platform: NOT ANDROID - Skipping FSN init");
@@ -113,12 +148,75 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
             Debug.Log($"{_Tag}[FSN] ========== InitFsnAd END ==========");
         }
 
+        private void CheckAfterGetFromServer()
+        {
+            if (_getConfigFromServer)
+            {
+                _campaignID = PlayerPrefs.GetString(_CampaignID, "");
+                var isEnableFilter = FalconConfig.Instance<FsnAdsConfig>().moMulEnableCampaignFilter;
+                if (!isEnableFilter)
+                {
+                    _enableFsn = true;
+                    CallPrepare();
+                }
+                else if (!string.IsNullOrEmpty(_campaignID))
+                {
+                    var moMulListCampaignIdsConfigs = FalconConfig.Instance<FsnAdsConfig>().moMulListCampaignIdsConfigs;
+                    var list = moMulListCampaignIdsConfigs.Split(';').ToList();
+
+                    if (list.Contains(_campaignID))
+                    {
+                        // Kích hoạt chuẩn bị ad lần đầu tiên cho từng vị trí
+                        _enableFsn = true;
+                        CallPrepare();
+                    }
+                }
+            }
+        }
+
+        private bool _isPrepareAll;
+
+        private void CallPrepare()
+        {
+            if (_isPrepareAll)
+            {
+                return;
+            }
+
+            _isPrepareAll = true;
+            PrepareNextAd(FsnAdType.Interstitial);
+            PrepareNextAd(FsnAdType.Rewarded);
+            PrepareNextAd(FsnAdType.Collapsible);
+            PrepareNextAd(FsnAdType.Aoa);
+            PrepareNextAd(FsnAdType.AdBreak);
+        }
+
+        public void ProcessConversionDataFromAppsflyer(string conversionData)
+        {
+            Dictionary<string, object> conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
+            foreach (var o in conversionDataDictionary)
+            {
+                if (o.Key.Equals(_CampaignIdAppsflyer))
+                {
+                    SetCampaignIdFromAppsflyer(o.Value.ToString());
+                    break;
+                }
+            }
+        }
+
+        public void SetCampaignIdFromAppsflyer(string campaignId)
+        {
+            _campaignID = campaignId;
+            PlayerPrefs.SetString(_CampaignID, _campaignID);
+            CheckAfterGetFromServer();
+        }
+
         /// <summary>
         /// BƯỚC 1: Tính toán tỷ lệ Random Style, UI và bắt đầu Load ID CHÍNH của cặp đó.
         /// </summary>
         private void PrepareNextAd(FsnAdType adType)
         {
-            if (_fsnAdsConfigsData == null) return;
+            if (_fsnAdsConfigsData == null || !_enableFsn) return;
             var config = _fsnAdsConfigsData.GetConfig(adType);
             if (config == null || !config.isEnable || config.adIds == null || config.adIds.Count == 0)
             {
@@ -127,7 +225,36 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
             }
 
             PreparedAdInfo info = _preparedAds[adType];
-            info.adInstance = null; // Hủy instance cũ hoàn toàn
+
+            // Không tạo request mới khi ad đang hiển thị.
+            // Đặc biệt với Collapsible: close/hide callback sẽ là nơi bắt đầu load lượt kế tiếp.
+            if (info.showingAdInstance != null)
+            {
+                Debug.Log(
+                    $"{_Tag}[FSN][{adType}] Bỏ qua PrepareNextAd vì vẫn còn ad đang hiển thị. {info.GetDebugSummary()}");
+                return;
+            }
+
+            // Không đạp vào request đang load.
+            // Đây là fix chính cho case: show khi chưa load kịp -> hide -> mất state load.
+            if (info.isLoading)
+            {
+                Debug.Log(
+                    $"{_Tag}[FSN][{adType}] Bỏ qua PrepareNextAd vì ad đang load. {info.GetDebugSummary()}");
+                return;
+            }
+
+            // Nếu đã có ad ready thì không cần load lại.
+            if (info.adInstance != null && info.adInstance.IsNativeAdReady())
+            {
+                info.isReady = true;
+                Debug.Log(
+                    $"{_Tag}[FSN][{adType}] Bỏ qua PrepareNextAd vì đã có ad ready. {info.GetDebugSummary()}");
+                return;
+            }
+
+            info.adInstance = null;
+            info.isReady = false;
             info.isUsingFallbackId = false; // Reset trạng thái dự phòng về mặc định
 
             // 1. Random Style Index (0 -> 3) từ ratioStyle
@@ -136,11 +263,11 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
                 config.ratioTemplate.style0, config.ratioTemplate.style1, config.ratioTemplate.style2,
                 config.ratioTemplate.style3
             };
-            Debug.Log("config.ratioTemplate.style0 : " + config.ratioTemplate.style0 + " - " +
-                      config.ratioTemplate.style1 + " - " + config.ratioTemplate.style2 + " - " +
-                      config.ratioTemplate.style3);
+            Debug.Log(
+                $"{_Tag}[FSN][{adType}] Style weights: S0={config.ratioTemplate.style0}, S1={config.ratioTemplate.style1}, S2={config.ratioTemplate.style2}, S3={config.ratioTemplate.style3}");
             info.styleIndex = GetRandomWeightedIndex(styleWeights);
-            Debug.Log("============ style index : " + info.styleIndex);
+            info.layoutDebugName = GetStyleDebugName(info.styleIndex);
+            Debug.Log($"{_Tag}[FSN][{adType}] Selected layout style: {info.styleIndex}({info.layoutDebugName})");
 
             // 2. Lấy ID CHÍNH ứng với Style Index (Style 0 -> Index 0, Style 1 -> Index 2, Style 2 -> Index 4, Style 3 -> Index 6)
             int primaryIdIndex = info.styleIndex * 2;
@@ -181,12 +308,15 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
         /// </summary>
         private void TryLoadFallbackAd(FsnAdType adType)
         {
-            if (_fsnAdsConfigsData == null) return;
+            if (_fsnAdsConfigsData == null || !_enableFsn) return;
             var config = _fsnAdsConfigsData.GetConfig(adType);
             PreparedAdInfo info = _preparedAds[adType];
 
             info.adInstance = null; // Giải phóng instance lỗi vừa rồi
+            info.isReady = false;
+            info.isLoading = false;
             info.isUsingFallbackId = true; // Đánh dấu đã chuyển sang dùng ID dự phòng
+            info.layoutDebugName = GetStyleDebugName(info.styleIndex);
 
             // Lấy ID DỰ PHÒNG ứng với Style Index (Style 0 -> Index 1, Style 1 -> Index 3, Style 2 -> Index 5, Style 3 -> Index 7)
             int fallbackIdIndex = (info.styleIndex * 2) + 1;
@@ -214,12 +344,19 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
             if (string.IsNullOrWhiteSpace(info.currentAdUnitId))
             {
                 Debug.LogWarning($"{_Tag}[FSN] AdUnitID của {adType} bị rỗng.");
+                info.isLoading = false;
+                info.isReady = false;
                 return;
             }
 
             FsnNativeAdType nativeType = adType == FsnAdType.Collapsible
                 ? FsnNativeAdType.Collapsible
                 : (FsnNativeAdType)config.styleOpenStore;
+
+            FsnNativeAdRatio nativeRatio = (FsnNativeAdRatio)config.ratioAds;
+            info.nativeType = nativeType;
+            info.nativeRatio = nativeRatio;
+            info.layoutDebugName = GetStyleDebugName(info.styleIndex);
 
             string placementName = adType switch
             {
@@ -231,20 +368,25 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
                 _ => "fsn_rewarded"
             };
 
+            int loadSequence = ++info.loadSequence;
+            info.isLoading = true;
+            info.isReady = false;
+
             info.adInstance = new FsnAd();
-            info.adInstance.InitNative(nativeType, (FsnNativeAdRatio)config.ratioAds, info.currentAdUnitId,
+            info.adInstance.InitNative(nativeType, nativeRatio, info.currentAdUnitId,
                 config.timeShowCloseButton, info.styleIndex, config.delayTimeForCountdown);
 
-            // Lưu lại ID tại thời điểm bắt đầu load này vào một biến cục bộ để bắt đóng băng (Closure) trong Lambda
+            // Lưu lại ID và sequence tại thời điểm bắt đầu load này.
+            // Sequence cần thiết vì nhiều lượt load có thể dùng cùng adUnitId.
             string adIdOfThisRequest = info.currentAdUnitId;
 
             info.adInstance.SetNativeListener(
-                // TRUYỀN THÊM adIdOfThisRequest VÀO HÀM CALLBACK
                 onLoadingCompleted: (errorCode, errorMsg) =>
-                    OnFsnAdLoadingCompleted(adType, errorCode, errorMsg, adIdOfThisRequest),
+                    OnFsnAdLoadingCompleted(adType, errorCode, errorMsg, adIdOfThisRequest, loadSequence),
                 onLoadingStarted: () =>
                 {
-                    Debug.Log($"{_Tag}[FSN][{adType}] Khởi động quá trình Load Ad cho ID: {adIdOfThisRequest}");
+                    Debug.Log(
+                        $"{_Tag}[FSN][{adType}] Khởi động Load Native. ID={adIdOfThisRequest}, LoadSeq={loadSequence}, Style={info.styleIndex}({info.layoutDebugName}), NativeType={info.nativeType}, Ratio={info.nativeRatio}");
                 },
                 onAdPaid: (src, id, val, cur) =>
                 {
@@ -254,18 +396,28 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
             );
 
             Debug.Log(
-                $"{_Tag}[FSN][{adType}] Đang Load ID: {info.currentAdUnitId} (Style={info.styleIndex}, OpenStoreUI={info.openStorePosition}, CloseUI={info.closePosition})");
+                $"{_Tag}[FSN][{adType}] Đang Load Native Layout. LoadSeq={loadSequence}, {info.GetDebugSummary()}, OpenStorePosName={GetPositionDebugName(info.openStorePosition)}, ClosePosName={GetPositionDebugName(info.closePosition)}");
             info.adInstance.LoadNativeAd();
         }
 
         /// <summary>
         /// XỬ LÝ CALLBACK KHI LOAD XONG (HOẶC LỖI)
         /// </summary>
-        private void OnFsnAdLoadingCompleted(FsnAdType adType, int errorCode, string errorMessage, string respondedAdId)
+        private void OnFsnAdLoadingCompleted(
+            FsnAdType adType, int errorCode, string errorMessage, string respondedAdId, int respondedLoadSequence)
         {
-            if (_fsnAdsConfigsData == null) return;
+            if (_fsnAdsConfigsData == null || !_enableFsn) return;
             var config = _fsnAdsConfigsData.GetConfig(adType);
             PreparedAdInfo info = _preparedAds[adType];
+
+            // KIỂM TRA CHÉO: Nếu callback không thuộc lượt load hiện tại thì bỏ qua.
+            // Cần check sequence vì cùng một adUnitId có thể bị load lại nhiều lần.
+            if (info.loadSequence != respondedLoadSequence)
+            {
+                Debug.LogWarning(
+                    $"{_Tag}[FSN][{adType}] Từ chối callback muộn. CallbackLoadSeq={respondedLoadSequence}, CurrentLoadSeq={info.loadSequence}, RespondedId={respondedAdId}, CurrentId={info.currentAdUnitId}");
+                return;
+            }
 
             // KIỂM TRA CHÉO: Nếu ID báo kết quả về KHÔNG TRÙNG với ID hiện tại mà info đang nắm giữ
             // Nghĩa là đây là callback "rác/muộn" của lượt load cũ. Bỏ qua ngay lập tức để tránh sai lệch logic.
@@ -276,15 +428,22 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
                 return;
             }
 
+            info.isLoading = false;
+
             if (errorCode == 0 || string.IsNullOrEmpty(errorMessage))
             {
-                Debug.Log($"{_Tag}[FSN][{adType}] Tải quảng cáo THÀNH CÔNG! ID đang giữ: {info.currentAdUnitId}");
+                info.isReady = true;
+                OnNativeAdReady?.Invoke(adType);
+                Debug.Log($"{_Tag}[FSN][{adType}] Tải quảng cáo THÀNH CÔNG. LoadSeq={respondedLoadSequence}, {info.GetDebugSummary()}");
                 return;
             }
 
+            info.isReady = false;
+            info.adInstance = null;
+
             // XỬ LÝ KHI CÓ LỖI XẢY RA THỰC SỰ CHO ID HIỆN TẠI
             Debug.LogWarning(
-                $"{_Tag}[FSN][{adType}] Tải thất bại cho ID [{respondedAdId}]! Code: {errorCode} | Msg: {errorMessage}");
+                $"{_Tag}[FSN][{adType}] Tải thất bại cho ID [{respondedAdId}]! LoadSeq={respondedLoadSequence}, Code: {errorCode} | Msg: {errorMessage}");
 
             if (!info.isUsingFallbackId)
             {
@@ -306,6 +465,30 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
                 Debug.LogError(
                     $"{_Tag}[FSN][{adType}] Cả ID Chính và ID Dự phòng của Style {info.styleIndex} đều lỗi. Bỏ qua lượt này!");
             }
+        }
+
+        private string GetStyleDebugName(int styleIndex)
+        {
+            return styleIndex switch
+            {
+                0 => "Style1-FullMediaDark",
+                1 => "Style2-TopMediaWhite",
+                2 => "Style3-FullscreenVideoBottomInfo",
+                3 => "Style4-CenteredPopup",
+                _ => "Unknown-FallbackStyle3"
+            };
+        }
+
+        private string GetPositionDebugName(int position)
+        {
+            return position switch
+            {
+                0 => "TopRight",
+                1 => "TopLeft",
+                2 => "BottomLeft",
+                3 => "BottomRight",
+                _ => "Unknown"
+            };
         }
 
         // Thuật toán chọn ngẫu nhiên theo trọng số
@@ -334,6 +517,15 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
             return 0;
         }
 
+        public bool IsNativeReady(FsnAdType type)
+        {
+            PreparedAdInfo info = _preparedAds[type];
+
+            bool isReady = info.adInstance != null && info.adInstance.IsNativeAdReady();
+            info.isReady = isReady;
+            return isReady;
+        }
+
         // ==========================================
         // SHOW NATIVE & LÀM MỚI KHI HOÀN THÀNH
         // ==========================================
@@ -345,90 +537,266 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
 
         private void ShowTrackedNativeByType(FsnAdType adType, Action onDone)
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
             PreparedAdInfo info = _preparedAds[adType];
 
-            if (info.adInstance != null && info.adInstance.IsNativeAdReady())
+            if (info.showingAdInstance != null)
             {
-                Debug.Log($"{_Tag}[FSN][{adType}] Sẵn sàng hiển thị.");
+                Debug.Log(
+                    $"{_Tag}[FSN][{adType}] Bỏ qua ShowTrackedNative vì ad đang hiển thị. {info.GetDebugSummary()}");
+                onDone?.Invoke();
+                return;
+            }
+
+            bool hasReadyAd = info.adInstance != null && info.adInstance.IsNativeAdReady();
+            info.isReady = hasReadyAd;
+
+            if (hasReadyAd)
+            {
+                Debug.Log(
+                    $"{_Tag}[FSN][{adType}] Sẵn sàng hiển thị Native Layout. {info.GetDebugSummary()}, OpenStorePosName={GetPositionDebugName(info.openStorePosition)}, ClosePosName={GetPositionDebugName(info.closePosition)}");
                 info.isUsingFallbackId = false;
 
-                // Tách riêng hành động onDone để tránh gọi trùng
-                Action nativeShowedCallback = onDone;
+                Action nativeFinishedCallback = onDone;
                 onDone = null;
 
-                // Gọi hiển thị Ad
-                info.adInstance.ShowNativeAd(errorMessage =>
+                bool shouldPauseUnityGameplay = adType != FsnAdType.Collapsible;
+
+                // Chốt instance tại thời điểm show.
+                // Không dùng trực tiếp info.adInstance trong callback/hide,
+                // vì info.adInstance có thể được clear để đánh dấu ad đã bị consume.
+                FsnAd showingAdInstance = info.adInstance;
+                info.showingAdInstance = showingAdInstance;
+                info.isReady = false;
+                info.isLoading = false;
+
+                int showSequence = ++info.showSequence;
+                bool completionHandled = false;
+
+                if (shouldPauseUnityGameplay)
                 {
-                    // Luồng callback chạy khi Ad kết thúc hiển thị (User bấm tắt/đóng Ad)
-                    if (string.IsNullOrEmpty(errorMessage))
+                    PauseUnityGameplayForFsnNative();
+                }
+
+                try
+                {
+                    Debug.Log(
+                        $"{_Tag}[FSN][{adType}] Gọi ShowNativeAd với layout: {info.GetDebugSummary()}. Instance={showingAdInstance.GetDebugSummary()}");
+
+                    showingAdInstance.ShowNativeAd(errorMessage =>
                     {
-                        Debug.Log($"{_Tag}[FSN][{adType}] Quảng cáo đã kết thúc và đóng thành công.");
+                        if (completionHandled)
+                        {
+                            Debug.Log($"{_Tag}[FSN][{adType}] Bỏ qua callback đóng bị lặp. Seq={showSequence}");
+                            return;
+                        }
+
+                        completionHandled = true;
+                        bool shouldNotifyHidden = false;
+
+                        try
+                        {
+                            if (adType == FsnAdType.Collapsible)
+                            {
+                                // Callback của lượt show cũ thì bỏ qua hoàn toàn.
+                                // Quan trọng: không Invoke OnNativeAdHidden trước đoạn check này.
+                                if (info.showSequence != showSequence)
+                                {
+                                    Debug.Log(
+                                        $"{_Tag}[FSN][Collapsible] Bỏ qua callback đóng của lượt show cũ. CallbackSeq={showSequence}, CurrentSeq={info.showSequence}");
+                                    return;
+                                }
+                            }
+
+                            if (string.IsNullOrEmpty(errorMessage))
+                            {
+                                Debug.Log($"{_Tag}[FSN][{adType}] Quảng cáo đã kết thúc và đóng thành công.");
+                            }
+                            else
+                            {
+                                Debug.LogWarning(
+                                    $"{_Tag}[FSN][{adType}] Quảng cáo kết thúc với thông báo: {errorMessage}");
+                            }
+
+                            // Clear ad đang hiển thị trước khi load lượt mới.
+                            if (ReferenceEquals(info.showingAdInstance, showingAdInstance))
+                            {
+                                info.showingAdInstance = null;
+                            }
+
+                            if (ReferenceEquals(info.adInstance, showingAdInstance))
+                            {
+                                info.adInstance = null;
+                            }
+
+                            info.isReady = false;
+                            info.isLoading = false;
+
+                            Debug.Log($"{_Tag}[FSN][{adType}] Bắt đầu nạp ad kế tiếp sau khi ad đã đóng. Seq={showSequence}");
+                            PrepareNextAd(adType);
+
+                            shouldNotifyHidden = true;
+                        }
+                        finally
+                        {
+                            if (shouldPauseUnityGameplay)
+                            {
+                                ResumeUnityGameplayAfterFsnNative();
+                            }
+
+                            if (shouldNotifyHidden)
+                            {
+                                OnNativeAdHidden?.Invoke(adType);
+                            }
+
+                            if (adType != FsnAdType.Collapsible)
+                            {
+                                nativeFinishedCallback?.Invoke();
+                            }
+                        }
+                    }, info.openStorePosition, info.closePosition);
+
+                    if (adType != FsnAdType.Collapsible)
+                    {
+                        // Ẩn màn đen sau vài frame, nhưng KHÔNG gọi onDone ở đây.
+                        // onDone phải đợi user đóng Native Ad.
+                        StartCoroutine(DelayHideOverlay());
                     }
                     else
                     {
-                        Debug.LogWarning($"{_Tag}[FSN][{adType}] Quảng cáo kết thúc với thông báo: {errorMessage}");
+                        // Collapsible không khóa flow chính; báo xong ngay sau khi show.
+                        nativeFinishedCallback?.Invoke();
+
+                        // Ad này đã được consume để hiển thị.
+                        // Không preload gối đầu ở đây nữa; ad kế tiếp sẽ chỉ load trong callback đóng.
+                        if (ReferenceEquals(info.adInstance, showingAdInstance))
+                        {
+                            info.adInstance = null;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+
+                    if (ReferenceEquals(info.showingAdInstance, showingAdInstance))
+                    {
+                        info.showingAdInstance = null;
                     }
 
-                    // XỬ LÝ NẠP GỐI ĐẦU KHI QUẢNG CÁO ĐÃ BỊ TẮT HOÀN TOÀN
-                    PrepareNextAd(adType);
-                }, info.openStorePosition, info.closePosition);
+                    if (ReferenceEquals(info.adInstance, showingAdInstance))
+                    {
+                        info.adInstance = null;
+                    }
 
-                // GIẢI PHÁP CHỐNG CHỚP + CHỐNG KẸT MÀN ĐEN: 
-                // Thay vì ẩn ngay lập tức hoặc ẩn khi ĐÓNG quảng cáo, ta sẽ ẩn SAU KHI Native Ad vừa được kích hoạt hiển thị vài frame.
-                if (adType != FsnAdType.Collapsible)
-                {
-                    // Chạy Coroutine trì hoãn một khoảng cực ngắn (đủ để AdMob vẽ UI đè lên Game) rồi tắt overlay đen
-                    StartCoroutine(DelayHideOverlay(nativeShowedCallback));
-                }
-                else
-                {
-                    nativeShowedCallback?.Invoke();
-                    StartCoroutine(DelayPrepareCollapsible());
+                    info.isReady = false;
+                    info.isLoading = false;
+
+                    if (shouldPauseUnityGameplay)
+                    {
+                        ResumeUnityGameplayAfterFsnNative();
+                    }
+
+                    nativeFinishedCallback?.Invoke();
+                    PrepareNextAd(adType);
                 }
             }
             else
             {
-                Debug.LogWarning($"{_Tag}[FSN] Không có Ad nào của {adType} sẵn sàng để hiển thị. Gọi Fallback UI.");
+                Debug.LogWarning(
+                    $"{_Tag}[FSN][{adType}] Không có ad sẵn sàng để hiển thị. IsLoading={info.isLoading}, HasInstance={info.adInstance != null}. Không gọi Hide/Show xuống native.");
+
                 onDone?.Invoke();
                 info.isUsingFallbackId = false;
-                PrepareNextAd(adType);
+                info.isReady = false;
+
+                // Nếu đang load thì không được tạo request mới, vì sẽ đạp mất instance đang chờ callback.
+                // Nếu chưa có request nào chạy thì mới bắt đầu load.
+                if (!info.isLoading)
+                {
+                    PrepareNextAd(adType);
+                }
+                else
+                {
+                    Debug.Log($"{_Tag}[FSN][{adType}] Giữ nguyên request đang load, chờ OnNativeAdReady.");
+                }
             }
 #else
-    onDone?.Invoke();
+            onDone?.Invoke();
 #endif
         }
 
-// Thêm hàm bổ trợ Coroutine này vào class FsnAdManager
-        private IEnumerator DelayHideOverlay(Action onDoneAction)
+        private IEnumerator DelayHideOverlay()
         {
-            // Chờ 2 frame đồ họa của Unity để đảm bảo lệnh ShowNativeAd bên Android/iOS đã xử lý xong việc đè view
+            // Chờ vài frame để native view được add/draw lên trên Unity rồi mới bỏ màn đen.
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
-
-            // Bạn cũng có thể dùng thời gian thực nếu máy cấu hình yếu bị khựng: yield return new WaitForSecondsRealtime(0.1f);
 
             Debug.Log($"{_Tag}[FSN] Ẩn màn hình overlay đen - Native Ad đã đè lên thành công.");
-            onDoneAction?.Invoke();
+            FsnAdOverlay.Instance.Hide();
         }
 
-        // Hàm phụ trợ giải phóng tiến trình tránh xung đột callback AdMob
-        private IEnumerator DelayPrepareCollapsible()
+        private void PauseUnityGameplayForFsnNative()
         {
-            yield return new WaitForSeconds(1.5f);
-            Debug.Log($"{_Tag}[FSN][Collapsible] Đã hết thời gian delay an toàn. Tiến hành nạp ad gối đầu.");
-            PrepareNextAd(FsnAdType.Collapsible);
+            if (_fsnNativePauseDepth == 0)
+            {
+                _fsnSavedTimeScale = Time.timeScale;
+                _fsnSavedAudioPause = AudioListener.pause;
+
+                Time.timeScale = 0f;
+                AudioListener.pause = true;
+
+                Debug.Log($"{_Tag}[FSN] Unity gameplay paused for FSN Native Ad.");
+            }
+
+            _fsnNativePauseDepth++;
+        }
+
+        private void ResumeUnityGameplayAfterFsnNative()
+        {
+            if (_fsnNativePauseDepth <= 0)
+            {
+                return;
+            }
+
+            _fsnNativePauseDepth--;
+
+            if (_fsnNativePauseDepth == 0)
+            {
+                Time.timeScale = _fsnSavedTimeScale;
+                AudioListener.pause = _fsnSavedAudioPause;
+
+                Debug.Log($"{_Tag}[FSN] Unity gameplay resumed after FSN Native Ad.");
+            }
         }
 
         public void HideTrackedNative(FsnAdType type)
         {
-            if (_preparedAds.TryGetValue(type, out var info) && info.adInstance != null)
+            if (!_preparedAds.TryGetValue(type, out var info))
             {
-                info.adInstance.HideNativeAd();
+                return;
             }
+
+            // Chỉ hide ad đang thật sự hiển thị.
+            // Không được hide info.adInstance khi nó chỉ đang load/ready.
+            // Đây là fix chính cho case:
+            // show lúc chưa ready -> không có showingAdInstance -> hide phải bỏ qua,
+            // nếu không native state của request đang load có thể bị clear và làm kẹt collapsible.
+            FsnAd targetAd = info.showingAdInstance;
+
+            if (targetAd == null)
+            {
+                Debug.Log(
+                    $"{_Tag}[FSN][{type}] HideTrackedNative ignored vì không có ad đang hiển thị. {info.GetDebugSummary()}");
+                return;
+            }
+
+            Debug.Log(
+                $"{_Tag}[FSN][{type}] HideTrackedNative target đang hiển thị. Prepared={info.GetDebugSummary()}, Target={targetAd.GetDebugSummary()}");
+            targetAd.HideNativeAd();
         }
 
         // ==========================================
@@ -594,6 +962,8 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
     public class FsnAdsConfig : FalconConfig
     {
         public string moMulFsnAdsConfigs;
+        public string moMulListCampaignIdsConfigs;
+        public bool moMulEnableCampaignFilter;
     }
 
     [Serializable]

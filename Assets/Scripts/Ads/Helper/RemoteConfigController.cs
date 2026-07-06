@@ -250,7 +250,7 @@ public class RemoteConfigController : MonoBehaviour
         #endregion
 
         #region LOOP LEVEL
-        GamePersistentVariable.isDisableLoopLevel = GetBoolConfig(FirebaseConfig.isDisableLoopLevel, false);
+        GamePersistentVariable.isDisableLoopLevel = /*GetBoolConfig(FirebaseConfig.isDisableLoopLevel, true)*/true;
 
         // if (Application.systemLanguage == SystemLanguage.Vietnamese)
         // {

@@ -24,6 +24,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
     [SerializeField] private TMP_Text timerText;
+    [SerializeField] private GameObject noLimited;
     [SerializeField] private CanvasGroup warningGroup;
     [SerializeField] private float warningTimeLimit = 15f;
     [Header("HARD MODE")]
@@ -147,20 +148,24 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void Pause()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.Pause);
     }
 
     private void OpenNoAdsPopup()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
     }
     private void OpenShopPopup()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.IAPShopPopup);
     }
 
     private void OpenInventoryPopup()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.Inventory);
     }
 
@@ -185,6 +190,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
             bool hasTimeLimit = TileManager.Ins != null && TileManager.Ins.levelItem != null && TileManager.Ins.levelItem.timeLimit > 0;
             if (hasTimeLimit && TileManager.Ins.isLevelActive)
             {
+                noLimited.SetActive(false);
+                timerText.gameObject.SetActive(true);
                 if (timeToDisplay <= warningTimeLimit && timeToDisplay > 0)
                 {
                     if (!_timerWarningTween.isAlive)
@@ -201,6 +208,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
             }
             else
             {
+                noLimited.SetActive(true);
+                timerText.gameObject.SetActive(false);
                 StopTimerWarning();
             }
         }
@@ -225,6 +234,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     }
     private void OpenDebugPopupButton()
     {
+        if (TileManager.Ins != null && TileManager.Ins.isCurrentLevelTutorialActive) return;
         switchRouteEvent?.Invoke(ScreenRoute.Debug);
     }
 

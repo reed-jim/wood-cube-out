@@ -8,7 +8,9 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 using static GameEnum;
 
@@ -46,6 +48,7 @@ public class TileManager : Singleton<TileManager>
     [HideInInspector] public bool isCurrentLevelTutorialActive;
     private Tween freezeTimeTween;
     private Tween gridPositionTween;
+    private bool _isTransitionCompleted;
 
     public static ItemCategory targetThemeLevel10 = ItemCategory.None;
 
@@ -127,6 +130,23 @@ public class TileManager : Singleton<TileManager>
     private float valueRotateWhenShuffling = 60f;
     private float originalHeadY;
 
+    #region Background CDN Prefetch
+    // Tracks the next level index to attempt prefetching (static persists across level loads)
+    private static int _nextPrefetchLevelIndex = -1;
+    // Set to true when we've reached a level that couldn't be loaded (past max level)
+    private static bool _prefetchAllDone = false;
+    // Number of CDN levels to prefetch per new level entry
+    private const int PREFETCH_LEVELS_PER_ENTRY = 3;
+    // Prevents multiple simultaneous internet-monitor coroutines (instance field, reset on new TileManager)
+    private bool _isMonitoringForPrefetch;
+    // Delay (seconds) between each level-prefab probe in BackgroundPrefetchCoroutine (Option C throttle)
+    private const float PREFETCH_LEVEL_CHECK_INTERVAL = 1.0f;
+    // Delay (seconds) between each individual CDN sprite download kick-off (Option C throttle)
+    private const float PREFETCH_SPRITE_DOWNLOAD_INTERVAL = 0.3f;
+    // Flag set to true while a scene transition loading screen is visible — prefetch waits until clear
+    private static bool _isTransitioning = false;
+    #endregion
+
     #region Life Cycle
     protected override void MoreActionOnAwake()
     {
@@ -143,7 +163,16 @@ public class TileManager : Singleton<TileManager>
         BasePopup.popupShowEvent += OnPopupShow;
         BasePopup.popupHideEvent += OnPopupHide;
 
+        // Track scene transition state so prefetch can pause during loading screens
+        SceneTransition.transitionCompletedEvent += OnTransitionCompleted;
+
         totalSlotInShelf = 5;
+    }
+
+    private void OnTransitionCompleted()
+    {
+        _isTransitioning = false;
+        _isTransitionCompleted = true;
     }
 
     private void Update()
@@ -155,7 +184,7 @@ public class TileManager : Singleton<TileManager>
         }
 #endif
 
-        if (isLevelActive && !isTimeFrozen && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
+        if (isLevelActive && !isTimeFrozen && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
         {
             currentLevelTime -= Time.deltaTime;
 
@@ -179,11 +208,50 @@ public class TileManager : Singleton<TileManager>
         MoreActionOnDestroy();
     }
 
+    private bool ShouldPauseLevelTimerForTutorial()
+    {
+        if (!isCurrentLevelTutorialActive)
+        {
+            return false;
+        }
+
+        return IsCurrentLevelTutorialVisible();
+    }
+
+    private bool IsCurrentLevelTutorialVisible()
+    {
+        switch (GamePersistentVariable.currentLevel)
+        {
+            case 1:
+            case 13:
+                return IsTutorialObjectActive(TutorialLevelOne.Ins);
+            case 2:
+                return IsTutorialObjectActive(TutorialLevelTwo.Ins);
+            case 5:
+                return IsTutorialObjectActive(TutorialLevelFive.Ins);
+            case 7:
+                return IsTutorialObjectActive(TutorialLevelSeven.Ins);
+            case 10:
+                return IsTutorialObjectActive(TutorialLevelTen.Ins);
+            case 15:
+                return IsTutorialObjectActive(TutorialLevelSixteen.Ins);
+            default:
+                return false;
+        }
+    }
+
+    private bool IsTutorialObjectActive(Component tutorial)
+    {
+        return tutorial != null && tutorial.gameObject.activeInHierarchy;
+    }
+
+
     protected virtual void MoreActionOnDestroy()
     {
         RevivePopup.reviveEvent -= OnRevive;
         BasePopup.popupShowEvent -= OnPopupShow;
         BasePopup.popupHideEvent -= OnPopupHide;
+        SceneTransition.transitionCompletedEvent -= OnTransitionCompleted;
     }
 
     private void OnPopupShow()
@@ -193,7 +261,7 @@ public class TileManager : Singleton<TileManager>
 
     private void OnPopupHide()
     {
-        if (isLevelActive && !isTimeFrozen && !BasePopup.IsAnyPopupOpen && currentLevelTime <= 15f && currentLevelTime > 0)
+        if (isLevelActive && !isTimeFrozen && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime <= 15f && currentLevelTime > 0)
         {
             SoundManager.Instance?.PlaySoundCountingTime();
         }
@@ -242,13 +310,351 @@ public class TileManager : Singleton<TileManager>
             Debug.Log("[TileManager] CDN sprites download complete.");
         }
 
-        // Notify that the level (including assets/sprites download) is fully loaded
-        NamPhuThuy.GamePlay.LevelLoader.NotifyLevelLoaded();
+        // Notify that the level (including assets/sprites download) is ready.
+        // If the final-level Coming Soon popup appears, wait for OK before setting up and dealing cards.
+        bool canSetupLevel = NamPhuThuy.GamePlay.LevelLoader.NotifyLevelLoaded();
+        if (!canSetupLevel)
+        {
+            yield return new WaitUntil(() => !NamPhuThuy.GamePlay.LevelLoader.IsWaitingForLevelComingSoonOk);
+        }
 
         // Continue with normal setup
         SetupLevelInternal(levelItem);
         startLevelEvent?.Invoke();
+
+        // Kick off background prefetch for upcoming CDN levels (only when current level is local)
+        bool currentLevelNeedsCdn = levelItem.themeDataList != null && levelItem.themeDataList.Any(t =>
+        {
+            var s = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == t.category);
+            return s != null && s.isOnServer;
+        });
+
+        if (!currentLevelNeedsCdn && !NamPhuThuy.GamePlay.LevelLoader.IsLevelComingSoonGateActive)
+        {
+            // Mark that a transition is in progress — prefetch will wait until it clears
+            _isTransitioning = true;
+
+            if (Application.internetReachability != NetworkReachability.NotReachable)
+            {
+                // Internet available: start prefetch but it will wait for transition to finish first
+                StartCoroutine(BackgroundPrefetchCoroutine(GamePersistentVariable.currentLevel));
+            }
+            else
+            {
+                // No internet right now: monitor and trigger prefetch the moment it comes back
+                Debug.Log($"[Prefetch] Level {GamePersistentVariable.currentLevel} is local but no internet. Monitoring for connection...");
+                StartMonitorInternetForPrefetch();
+            }
+        }
     }
+
+    #region Background CDN Prefetch
+
+    /// <summary>
+    /// Starts the internet-monitor coroutine if it isn't already running.
+    /// Safe to call repeatedly — the _isMonitoringForPrefetch guard prevents duplicate coroutines.
+    /// </summary>
+    private void StartMonitorInternetForPrefetch()
+    {
+        if (_prefetchAllDone || _isMonitoringForPrefetch) return;
+        _isMonitoringForPrefetch = true;
+        StartCoroutine(WaitForInternetAndPrefetch());
+    }
+
+    /// <summary>
+    /// Polls internet reachability every 3 seconds.
+    /// As soon as a connection is available, immediately triggers BackgroundPrefetchCoroutine
+    /// using the CURRENT level at that moment (GamePersistentVariable.currentLevel).
+    /// This fixes the scenario where the player was offline for levels 1-7 and
+    /// turns on internet at level 8 — prefetch starts right then instead of waiting
+    /// for the next level, giving more time before CDN levels are reached.
+    /// </summary>
+    private IEnumerator WaitForInternetAndPrefetch()
+    {
+        // Poll until internet is reachable
+        while (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            yield return new WaitForSecondsRealtime(3f);
+        }
+
+        _isMonitoringForPrefetch = false;
+
+        if (_prefetchAllDone) yield break;
+
+        int levelAtRestoration = GamePersistentVariable.currentLevel;
+
+        // Only prefetch if the current level at the time of restoration is still local (no CDN)
+        bool currentLevelNeedsCdn = levelItem != null && levelItem.themeDataList != null &&
+            levelItem.themeDataList.Any(t =>
+            {
+                var s = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == t.category);
+                return s != null && s.isOnServer;
+            });
+
+        if (!currentLevelNeedsCdn && !NamPhuThuy.GamePlay.LevelLoader.IsLevelComingSoonGateActive)
+        {
+            Debug.Log($"[Prefetch] Internet restored at level {levelAtRestoration}. Starting prefetch immediately.");
+            StartCoroutine(BackgroundPrefetchCoroutine(levelAtRestoration));
+        }
+        else
+        {
+            Debug.Log($"[Prefetch] Internet restored but current level {levelAtRestoration} needs CDN itself. Prefetch skipped.");
+        }
+    }
+
+    /// <summary>
+    /// Runs in background when the current level does not need CDN.
+    /// Finds the next 3 upcoming CDN-required levels with missing sprites and downloads them silently.
+    ///
+    /// Key design: TWO pointers:
+    ///   - _nextPrefetchLevelIndex (static/global): only advances when a CDN level is CONFIRMED fully cached.
+    ///     Stays behind if downloads are still pending/failed so the next call retries those levels first.
+    ///   - levelToCheck (local, per-run): always advances every iteration to avoid re-checking
+    ///     the same level multiple times in a single coroutine run.
+    ///
+    /// Example:
+    ///   Level 1 prefetch → scans 2..10 (local, global cursor advances to 11)
+    ///                     → 11 CDN, downloads queued, count 1 (global stays at 11)
+    ///                     → 12 CDN, downloads queued, count 2 (global stays at 11)
+    ///                     → 13 CDN, downloads queued, count 3, stop (global stays at 11)
+    ///   Suppose 11 downloaded OK, 12 and 13 failed.
+    ///   Level 2 prefetch → starts from global=11.
+    ///                     → 11: IsResourceCached=true → global advances to 12, don't count.
+    ///                     → 12: not cached → re-queue, count 1, global stays at 12.
+    ///                     → 13: not cached → re-queue, count 2, global stays at 12.
+    ///                     → 14: not cached → download, count 3, stop.
+    /// </summary>
+    private IEnumerator BackgroundPrefetchCoroutine(int currentLevelNum)
+    {
+        if (_prefetchAllDone) yield break;
+        if (CdnDownloader.Instance == null) yield break;
+        if (Application.internetReachability == NetworkReachability.NotReachable) yield break;
+
+        // [Option C] Wait until the scene transition / loading screen has fully finished
+        // before touching Addressables or network — avoids competing with level load I/O.
+        if (_isTransitioning)
+        {
+            Debug.Log($"[Prefetch] Waiting for transition to complete before prefetching...");
+            yield return new WaitUntil(() => !_isTransitioning);
+        }
+
+        // Initialize or advance the global cursor past the current level
+        if (_nextPrefetchLevelIndex <= currentLevelNum)
+            _nextPrefetchLevelIndex = currentLevelNum + 1;
+
+        int cdnLevelsQueued = 0;
+        // Local pointer advances every iteration; global pointer only advances when confirmed cached.
+        int levelToCheck = _nextPrefetchLevelIndex;
+
+        while (cdnLevelsQueued < PREFETCH_LEVELS_PER_ENTRY && !_prefetchAllDone)
+        {
+            // Stop if internet dropped mid-prefetch
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                Debug.Log($"[Prefetch] Internet lost, pausing prefetch at level {levelToCheck}.");
+                yield break;
+            }
+
+            // [Option C] Pause if a new transition starts mid-run (e.g. user wins quickly)
+            if (_isTransitioning)
+            {
+                Debug.Log($"[Prefetch] New transition detected, pausing prefetch at level {levelToCheck}.");
+                yield return new WaitUntil(() => !_isTransitioning);
+            }
+
+            string address = $"Level {levelToCheck}";
+
+            // Load the level prefab just to read its themeDataList
+            var handle = Addressables.LoadAssetAsync<GameObject>(address);
+            yield return handle;
+
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                // No more levels exist
+                Debug.Log($"[Prefetch] Level {levelToCheck} not found — all levels have been prefetched.");
+                _prefetchAllDone = true;
+                Addressables.Release(handle);
+                yield break;
+            }
+
+            LevelItem prefetchLevelItem = handle.Result.GetComponent<LevelItem>();
+            bool levelHasCdn = false;
+            bool levelFullyCached = true;  // becomes false if any sprite is missing
+
+            if (prefetchLevelItem != null && prefetchLevelItem.themeDataList != null)
+            {
+                foreach (var theme in prefetchLevelItem.themeDataList)
+                {
+                    var iconSet = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == theme.category);
+                    if (iconSet == null || !iconSet.isOnServer) continue;
+
+                    levelHasCdn = true;
+
+                    // Check if all icons for this category are already on disk/memory
+                    bool categoryFullyCached = IsCategoryIconsCached(iconSet);
+                    bool spriteOrderCached = string.IsNullOrEmpty(iconSet.spriteOrderCdnKey)
+                                            || CdnDownloader.Instance.IsResourceCached(iconSet.spriteOrderCdnKey);
+
+                    if (!categoryFullyCached || !spriteOrderCached)
+                    {
+                        levelFullyCached = false;
+
+                        // [Option C] Stagger icon downloads: PrefetchIconSet now uses a throttled coroutine
+                        if (!categoryFullyCached && iconSet.iconCdnKeys != null)
+                            StartCoroutine(PrefetchIconSetThrottled(iconSet, levelToCheck));
+
+                        // Queue missing spriteOrder download
+                        if (!spriteOrderCached)
+                        {
+                            int capturedLevel = levelToCheck;
+                            string spriteOrderKey = iconSet.spriteOrderCdnKey;
+                            CdnDownloader.Instance.LoadSprite(spriteOrderKey,
+                                sprite =>
+                                {
+                                    if (iconSet.spriteOrder == null)
+                                        iconSet.spriteOrder = sprite;
+                                    Debug.Log($"[Prefetch] ✔ Level {capturedLevel} | spriteOrder for '{iconSet.itemCategory}' cached.");
+                                },
+                                () => Debug.LogWarning($"[Prefetch] ✘ Level {capturedLevel} | spriteOrder for '{iconSet.itemCategory}' FAILED.")
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Release prefab reference immediately — we only needed themeDataList
+            Addressables.Release(handle);
+
+            if (!levelHasCdn)
+            {
+                // Local level: advance global cursor past it (nothing to download)
+                if (_nextPrefetchLevelIndex <= levelToCheck)
+                    _nextPrefetchLevelIndex = levelToCheck + 1;
+            }
+            else if (levelFullyCached)
+            {
+                // CDN level but sprites already on disk: advance global cursor, don't count toward quota
+                if (_nextPrefetchLevelIndex <= levelToCheck)
+                    _nextPrefetchLevelIndex = levelToCheck + 1;
+                Debug.Log($"[Prefetch] Level {levelToCheck} already fully cached, skipping.");
+            }
+            else
+            {
+                // CDN level with missing sprites: downloads queued, count toward quota.
+                // Global cursor intentionally NOT advanced so the next call retries this level
+                // if downloads haven't completed yet.
+                cdnLevelsQueued++;
+                Debug.Log($"[Prefetch] ▶ START background download for level {levelToCheck} ({cdnLevelsQueued}/{PREFETCH_LEVELS_PER_ENTRY}).");
+            }
+
+            // Always advance the local pointer so we don't recheck the same level in this run
+            levelToCheck++;
+
+            // [Option C] Yield for PREFETCH_LEVEL_CHECK_INTERVAL seconds between level probes
+            // so we don't hammer Addressables/CPU in consecutive frames.
+            yield return new WaitForSecondsRealtime(PREFETCH_LEVEL_CHECK_INTERVAL);
+        }
+
+        if (cdnLevelsQueued > 0)
+            Debug.Log($"[Prefetch] === Run complete (from level {currentLevelNum}). Queued {cdnLevelsQueued} CDN levels for background download. Global cursor now at level {_nextPrefetchLevelIndex}. ===");
+        else
+            Debug.Log($"[Prefetch] Run complete (from level {currentLevelNum}). Nothing new to download.");
+    }
+
+    /// <summary>
+    /// Returns true if every CDN icon key for this icon set is already cached on disk or in memory.
+    /// </summary>
+    private bool IsCategoryIconsCached(CategoryIconSet iconSet)
+    {
+        if (iconSet.iconCdnKeys == null || iconSet.iconCdnKeys.Length == 0) return true;
+        foreach (var key in iconSet.iconCdnKeys)
+        {
+            if (!string.IsNullOrEmpty(key) && !CdnDownloader.Instance.IsResourceCached(key))
+                return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Fires background downloads for all missing icon CDN keys in an icon set.
+    /// Logs when each sprite starts downloading, and logs a summary when ALL sprites
+    /// in this set have been successfully cached (level fully loaded in background).
+    /// </summary>
+    /// <summary>
+    /// [Option C] Throttled version of PrefetchIconSet — kicks off each sprite download
+    /// with a WaitForSecondsRealtime gap so CDN traffic is spread out over time
+    /// and doesn't compete with gameplay or the active level load.
+    /// </summary>
+    private IEnumerator PrefetchIconSetThrottled(CategoryIconSet iconSet, int levelNumber)
+    {
+        if (iconSet.iconCdnKeys == null || iconSet.iconCdnKeys.Length == 0) yield break;
+
+        // Ensure icons array is sized correctly
+        if (iconSet.icons == null || iconSet.icons.Length != iconSet.iconCdnKeys.Length)
+            iconSet.icons = new Sprite[iconSet.iconCdnKeys.Length];
+
+        // Count only the sprites that actually need downloading
+        int totalToDownload = 0;
+        for (int i = 0; i < iconSet.iconCdnKeys.Length; i++)
+        {
+            string k = iconSet.iconCdnKeys[i];
+            if (!string.IsNullOrEmpty(k) && !CdnDownloader.Instance.IsResourceCached(k))
+                totalToDownload++;
+        }
+
+        if (totalToDownload == 0)
+        {
+            Debug.Log($"[Prefetch] Level {levelNumber} | '{iconSet.itemCategory}': all {iconSet.iconCdnKeys.Length} sprites already cached.");
+            yield break;
+        }
+
+        Debug.Log($"[Prefetch] Level {levelNumber} | '{iconSet.itemCategory}': starting throttled download of {totalToDownload} sprite(s).");
+
+        // Shared counter to detect when all sprites for this category finish
+        int[] completedCount = { 0 };
+
+        for (int i = 0; i < iconSet.iconCdnKeys.Length; i++)
+        {
+            string key = iconSet.iconCdnKeys[i];
+            if (string.IsNullOrEmpty(key)) continue;
+            if (CdnDownloader.Instance.IsResourceCached(key)) continue; // Already cached
+
+            // [Option C] Pause if a transition started while we were iterating sprites
+            if (_isTransitioning)
+            {
+                Debug.Log($"[Prefetch] Sprite download paused (transition) for Level {levelNumber} | '{iconSet.itemCategory}' sprite [{i}].");
+                yield return new WaitUntil(() => !_isTransitioning);
+            }
+
+            int capturedIndex = i;
+            CategoryIconSet capturedSet = iconSet;
+
+            CdnDownloader.Instance.LoadSprite(key,
+                sprite =>
+                {
+                    // Populate the sprite slot so SetupLevelWithCdnDownload skips it
+                    if (capturedSet.icons != null && capturedIndex < capturedSet.icons.Length)
+                        capturedSet.icons[capturedIndex] = sprite;
+
+                    completedCount[0]++;
+                    Debug.Log($"[Prefetch] ✔ Level {levelNumber} | '{capturedSet.itemCategory}' sprite [{capturedIndex}] cached. ({completedCount[0]}/{totalToDownload})");
+
+                    if (completedCount[0] >= totalToDownload)
+                        Debug.Log($"[Prefetch] ✅ Level {levelNumber} | '{capturedSet.itemCategory}' ALL {totalToDownload} sprites cached successfully!");
+                },
+                () =>
+                {
+                    completedCount[0]++;
+                    Debug.LogWarning($"[Prefetch] ✘ Level {levelNumber} | '{iconSet.itemCategory}' sprite [{capturedIndex}] FAILED. ({completedCount[0]}/{totalToDownload})");
+                }
+            );
+
+            // [Option C] Stagger each download kick-off to spread network load
+            yield return new WaitForSecondsRealtime(PREFETCH_SPRITE_DOWNLOAD_INTERVAL);
+        }
+    }
+
+    #endregion
 
     private void ShowNoInternetPopup()
     {
@@ -443,6 +849,7 @@ public class TileManager : Singleton<TileManager>
 
     private void SetupLevelInternal(LevelItem levelItem)
     {
+        _isTransitionCompleted = false;
         if (levelItem != null && levelItem.themeDataList != null && levelItem.tileIconContainer != null)
         {
             foreach (var theme in levelItem.themeDataList)
@@ -1700,6 +2107,11 @@ public class TileManager : Singleton<TileManager>
 
     private IEnumerator WaitForTransitionCompleted()
     {
+        if (_isTransitionCompleted)
+        {
+            yield break;
+        }
+
         bool isTransitionDone = false;
         Action onTransitionDone = () => isTransitionDone = true;
         SceneTransition.transitionCompletedEvent += onTransitionDone;

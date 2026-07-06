@@ -18,6 +18,7 @@ public class IAPPackageUI : MonoBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isContainRemoveAd;
+    [SerializeField] private bool isRemoveAdsPlus;
 
     [SerializeField] private IAPPackageData _packageData;
     [SerializeField] private bool isSalePack;
@@ -32,6 +33,7 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
         SalePackIAPManager.updateSalePackVisibilityEvent += UpdateVisibility;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
 
@@ -46,6 +48,7 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
         SalePackIAPManager.updateSalePackVisibilityEvent -= UpdateVisibility;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
     }
@@ -58,6 +61,7 @@ public class IAPPackageUI : MonoBehaviour
 
             return;
         }
+        
 
         if (coinQuantityText != null)
         {
@@ -112,10 +116,14 @@ public class IAPPackageUI : MonoBehaviour
 
     private void OnAdsRemoved()
     {
-        // if (isContainRemoveAd)
-        // {
-        //     gameObject.SetActive(false);
-        // }
+        if (isContainRemoveAd)
+        {
+            gameObject.SetActive(false);
+        }
+        if(isRemoveAdsPlus)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void UpdateVisibility()

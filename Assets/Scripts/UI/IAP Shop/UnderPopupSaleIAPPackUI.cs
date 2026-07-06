@@ -33,6 +33,8 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShown;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
+        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
 
         buyButton.onClick.AddListener(Buy);
 
@@ -44,6 +46,8 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShown;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
+        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
     }
 
     public void Setup(IAPPackageData data)
@@ -153,6 +157,14 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
             {
 
             }
+        }
+    }
+
+    private void OnAdsRemoved()
+    {
+        if (isContainRemoveAd)
+        {
+            gameObject.SetActive(false);
         }
     }
 }

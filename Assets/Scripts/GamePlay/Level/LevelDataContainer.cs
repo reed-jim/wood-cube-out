@@ -20,14 +20,14 @@ namespace NamPhuThuy.Data
     public class LevelDataContainer : ScriptableObject
     {
         [SerializeField] private int maxLevel;
-        [SerializeField] private LevelData[] levelsData;
+        [SerializeField] private LevelItem[] levelsData;
 
         public int MaxLevel
         {
             get => maxLevel;
         }
 
-        public LevelData[] LevelsData
+        public LevelItem[] LevelsData
         {
             get => levelsData;
         }
@@ -60,40 +60,37 @@ namespace NamPhuThuy.Data
                 {
                     int expectedLevelId = i; // Level IDs start from 1
 
-                    if (levelsData[i].levelId != expectedLevelId)
-                    {
-                        levelsData[i].levelId = expectedLevelId;
-                        hasChanges = true;
-                    }
+                    //if (levelsData[i].levelId != expectedLevelId)
+                    //{
+                    //    levelsData[i].levelId = expectedLevelId;
+                    //    hasChanges = true;
+                    //}
                 }
 
-                if (levelsData[i].isHasTutorial)
-                {
-                    var mode = levelsData[i].levelMode;
-                    if (tutorialSeen.ContainsKey(mode))
-                    {
-                        // Disable duplicate tutorial flags (keep the first one)
-                        levelsData[i].isHasTutorial = false;
-                        hasChanges = true;
-#if UNITY_EDITOR
-                        DebugLogger.LogWarning($"Multiple tutorials {mode}, duplicated on level {tutorialSeen[mode]} ");
-#else
-                    DebugLogger.LogWarning($"Multiple tutorials {mode}, Disable tutorial on level index {i} ");
-#endif
-                    }
-                    else
-                    {
-                        tutorialSeen[mode] = i;
-                    }
-                }
+                //                if (levelsData[i].isHasTutorial)
+                //                {
+                //                    var mode = levelsData[i].levelMode;
+                //                    if (tutorialSeen.ContainsKey(mode))
+                //                    {
+                //                        // Disable duplicate tutorial flags (keep the first one)
+                //                        levelsData[i].isHasTutorial = false;
+                //                        hasChanges = true;
+                //#if UNITY_EDITOR
+                //                        DebugLogger.LogWarning($"Multiple tutorials {mode}, duplicated on level {tutorialSeen[mode]} ");
+                //#else
+                //                    DebugLogger.LogWarning($"Multiple tutorials {mode}, Disable tutorial on level index {i} ");
+                //#endif
+                //                    }
+                //                    else
+                //                    {
+                //                        tutorialSeen[mode] = i;
+                //                    }
+                //                }
             }
 
             // Update maxLevel to match array length
-            if (maxLevel != levelsData.Length)
-            {
-                maxLevel = levelsData.Length;
-                hasChanges = true;
-            }
+            maxLevel = 15;
+
 
 #if UNITY_EDITOR
             if (hasChanges)
@@ -149,7 +146,7 @@ namespace NamPhuThuy.Data
 
                 if ((i + 1) % 3 != 0) continue;
 
-                d.levelMode = PickWeightedMode(options, totalWeight, rng);
+                //d.levelMode = PickWeightedMode(options, totalWeight, rng);
             }
         }
 

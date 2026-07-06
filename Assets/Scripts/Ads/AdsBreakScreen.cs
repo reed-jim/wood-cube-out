@@ -31,10 +31,10 @@ public class AdsBreakScreen : SaferioTweenBehaviour
 
         canvasGroup.alpha = 0;
 
-        AddTween(Tween.Alpha(canvasGroup, 1, duration: 0.3f)
+        AddTween(Tween.Alpha(canvasGroup, 1, duration: 0.3f, useUnscaledTime: true)
             .OnComplete(() =>
             {
-                AddTween(Tween.Delay(1).OnComplete(() =>
+                AddTween(Tween.Delay(1, useUnscaledTime: true).OnComplete(() =>
                 {
                     onCompleteAction?.Invoke();
 
@@ -53,7 +53,7 @@ public class AdsBreakScreen : SaferioTweenBehaviour
             return;
         }
 
-        AddTween(Tween.Alpha(canvasGroup, 0, startDelay: 0.7f, duration: 0.3f)
+        AddTween(Tween.Alpha(canvasGroup, 0, startDelay: 0.7f, duration: 0.3f, useUnscaledTime: true)
             .OnComplete(() =>
             {
                 container.gameObject.SetActive(false);
@@ -68,7 +68,7 @@ public class AdsBreakScreen : SaferioTweenBehaviour
             return;
         }
 
-        AddTween(Tween.Alpha(canvasGroup, 0, startDelay: 0.7f, duration: 0.3f)
+        AddTween(Tween.Alpha(canvasGroup, 0, startDelay: 0.7f, duration: 0.3f, useUnscaledTime: true)
             .OnComplete(() =>
             {
                 container.gameObject.SetActive(false);

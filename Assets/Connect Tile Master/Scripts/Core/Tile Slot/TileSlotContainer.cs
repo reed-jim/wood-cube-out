@@ -15,8 +15,6 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private RectTransform categoryContainer;
     [SerializeField] public TMP_Text category;
     [SerializeField] private TMP_Text tileCountText;
-
-    [SerializeField] private Button unlockButton;
     [SerializeField] private Image currentTileImage;
     [SerializeField] private Image fakeTileImage;
     [SerializeField] private TMP_Text currentTileText;
@@ -99,6 +97,7 @@ public class TileSlotContainer : MonoBehaviour
         //    canvas.overrideSorting = true;
         //    canvas.sortingOrder = 2;
         //}
+
         if (wrongGlow == null)
         {
             wrongGlow = GetComponentsInChildren<Image>(true).FirstOrDefault(img => img.gameObject.name == "Wrong");
