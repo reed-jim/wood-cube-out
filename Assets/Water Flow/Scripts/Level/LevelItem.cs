@@ -157,6 +157,8 @@ namespace AntsFlow
     [CustomEditor(typeof(LevelItem))]
     public class LevelItemEditor : Editor
     {
+        private string hexInput;
+
         // Change these to match your enum values
         private int startX = 0;
         private int startY = 0;
@@ -182,6 +184,11 @@ namespace AntsFlow
             // startY = EditorGUILayout.IntField("StartY", startY);
             // size = EditorGUILayout.IntField("Size", size);
             tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
+
+            EditorGUILayout.LabelField("Import Color Palette", EditorStyles.boldLabel);
+
+            hexInput = EditorGUILayout.TextArea(hexInput, GUILayout.MinHeight(180));
+
             // colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
             // moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
             // factionMapper = (FactionMapper)EditorGUILayout.ObjectField("Faction Mapper", factionMapper, typeof(FactionMapper), true);
@@ -199,6 +206,11 @@ namespace AntsFlow
             // {
             //     GenerateLevelFromJson(levelItem, json);
             // }
+
+            if (GUILayout.Button("Auto Fill Factions"))
+            {
+                FillFactionPool();
+            }
 
             if (GUILayout.Button("GENERATE LEVEL"))
             {
@@ -263,6 +275,37 @@ namespace AntsFlow
             // {
             //     FillTheRestOfLevel(levelItem);
             // }
+        }
+
+        private void FillFactionPool()
+        {
+            var item = (LevelItem)target;
+
+            Undo.RecordObject(item, "Import Color Palette");
+
+            item.factions.Clear();
+
+            foreach (var line in hexInput.Split('\n'))
+            {
+                string hex = line.Trim();
+
+                if (string.IsNullOrEmpty(hex))
+                    continue;
+
+                if (!hex.StartsWith("#"))
+                    hex = "#" + hex;
+
+                if (ColorUtility.TryParseHtmlString(hex, out Color color))
+                {
+                    item.factions.Add(color);
+                }
+                else
+                {
+                    Debug.LogWarning($"Invalid color: {line}");
+                }
+            }
+
+            EditorUtility.SetDirty(item);
         }
 
         private void GetPoolFaction(LevelItem levelItem)
