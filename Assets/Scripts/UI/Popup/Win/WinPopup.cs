@@ -66,7 +66,7 @@ public class WinPopup : BasePopup
     {
         GameStateWin.winLevelEvent += OnLevelWinAsync;
         DebugPopup.winLevelEvent += OnLevelWinAsync;
-        RewardCollectingUI.collectCoinCompleteEvent += OnCollectCoinCompleted;
+        // RewardCollectingUI.collectCoinCompleteEvent += OnCollectCoinCompleted;
 
         continueButton.onClick.AddListener(Continue);
         returnHomeButton.onClick.AddListener(ReturnHome);
@@ -77,7 +77,7 @@ public class WinPopup : BasePopup
     {
         GameStateWin.winLevelEvent -= OnLevelWinAsync;
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
-        RewardCollectingUI.collectCoinCompleteEvent -= OnCollectCoinCompleted;
+        // RewardCollectingUI.collectCoinCompleteEvent -= OnCollectCoinCompleted;
     }
 
     private async void OnLevelWinAsync()
@@ -234,6 +234,11 @@ public class WinPopup : BasePopup
         collectCoinEvent?.Invoke(_currentCollectedCoin);
 
         new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
+
+        Tween.Delay(2.8f).OnComplete(() =>
+        {
+            OnCollectCoinCompleted();
+        });
     }
 
     private void OnCollectCoinCompleted()
@@ -310,6 +315,11 @@ public class WinPopup : BasePopup
         new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
 
+        Tween.Delay(2.8f).OnComplete(() =>
+        {
+            OnCollectCoinCompleted();
+        });
+
         return;
 
         x5CoinButton.interactable = false;
@@ -354,15 +364,6 @@ public class WinPopup : BasePopup
 
     private async void TrackLevelWin()
     {
-        bool isFirstWinLevel = DataUtility.LoadAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", true);
-
-        if (isFirstWinLevel)
-        {
-            SaferioTracking.TrackLevelFirstWin(currentLevel.Value, GamePersistentVariable.levelPrefab, levelBoosterObserver);
-
-            DataUtility.SaveAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
-        }
-
         SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
