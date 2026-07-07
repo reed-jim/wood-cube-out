@@ -122,7 +122,7 @@ public class TutorialLevelTen : Singleton<TutorialLevelTen>
         {
             textImageTrans.localPosition += new Vector3(0, 250, 0);
         }
-        showText("<color=#FBC201>Shuffle</color> mixes <color=#FBC201>the board!</color>");
+        showText("<color=#FF7E00>Shuffle</color> mixes <color=#FF7E00>the board!</color>");
 
         Transform origShuffleParent = shuffleBtn.transform.parent;
         int origShuffleSiblingIndex = shuffleBtn.transform.GetSiblingIndex();
@@ -179,7 +179,7 @@ public class TutorialLevelTen : Singleton<TutorialLevelTen>
         upToAll.gameObject.SetActive(true);
         Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-        showText("Find <color=#FBC201>new matches!</color>");
+        showText("Find <color=#FF7E00>new matches!</color>");
 
         // Hiện text trong 2 giây
         yield return new WaitForSeconds(2f);

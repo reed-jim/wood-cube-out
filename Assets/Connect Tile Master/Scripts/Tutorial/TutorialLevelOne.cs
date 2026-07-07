@@ -144,7 +144,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
             Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-            showText("Match cards with the <color=#FBC201>same theme!</color>");
+            showText("Match cards with the <color=#FF7E00>same theme!</color>");
 
             // Highlight container và tile
             container1.SetHighlight(true);
@@ -200,7 +200,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
             Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-            showText("Match cards with the <color=#FBC201>same theme!</color>");
+            showText("Match cards with the <color=#FF7E00>same theme!</color>");
 
             // Highlight container và tile
             container1.SetHighlight(true);
@@ -256,7 +256,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
             upToAll.color = new Color(upToAll.color.r, upToAll.color.g, upToAll.color.b, 0f);
             Tween.Alpha(upToAll, 0.87f, duration: 0.25f);
 
-            showText("Match the <color=#FBC201>card next!</color>");
+            showText("Match the <color=#FF7E00>card next!</color>");
 
             // Highlight container và tile
             container2.SetHighlight(true);
@@ -561,7 +561,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         {
             textImageTrans.localPosition += new Vector3(0, 250, 0);
         }
-        showText("Freeze <color=#FBC201>stops</color> the <color=#FBC201>timer!</color>");
+        showText("Freeze <color=#FF7E00>stops</color> the <color=#FF7E00>timer!</color>");
 
         // Highlight nút Freeze bằng cách đưa lên overlay
         Transform origParent = freezeBtn.transform.parent;
@@ -596,7 +596,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         }
 
         // Hiển thị text mới
-        showText("Use it when <color=#FBC201>time</color> is <color=#FBC201>low</color>!");
+        showText("Use it when <color=#FF7E00>time</color> is <color=#FF7E00>low</color>!");
 
         // Đợi 1.5s
         yield return new WaitForSeconds(1.5f);
