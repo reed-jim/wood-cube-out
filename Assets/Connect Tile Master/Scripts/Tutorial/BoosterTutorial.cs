@@ -85,6 +85,8 @@ public class BoosterTutorial : MonoBehaviour
 
                 tutorialHand.transform.SetParent(boosterButton);
                 tutorialHand.transform.localPosition = Vector3.zero;
+                tutorialHand.gameObject.SetActive(true);
+                tutorialHand.AnimationState.SetAnimation(0, "action", true);
 
                 break;
             }

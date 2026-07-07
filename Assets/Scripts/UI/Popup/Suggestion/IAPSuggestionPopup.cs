@@ -217,6 +217,7 @@ public class IAPSuggestionPopup : BasePopup
             GamePersistentVariable.IAPLocation = "IAP Suggestion";
             GamePersistentVariable.IAPAddition = 2;
 
+            GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
             buyIAPEvent?.Invoke(packageData.ProductId);
         }
     }

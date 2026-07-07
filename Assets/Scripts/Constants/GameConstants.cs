@@ -178,10 +178,10 @@ public static class GameConstants
             //case BoosterType.AddScrewPort: return 3;
             //case BoosterType.BreakObject: return 6;
             //case BoosterType.ClearScrewPorts: return 9;
-            case BoosterType.AddScrewPort: return 1;
-            case BoosterType.Shuffle: return 1;
-            case BoosterType.ClearScrewPorts: return 1;
-            case BoosterType.FreezeTime: return 1;
+            case BoosterType.Hint: return 7;
+            case BoosterType.Shuffle: return 10;
+            case BoosterType.FreezeTime: return 13;
+            case BoosterType.UnlockTheme: return 16;
             //default: return 3;
             default: return 1;
 

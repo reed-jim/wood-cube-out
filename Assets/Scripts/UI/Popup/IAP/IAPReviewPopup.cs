@@ -75,6 +75,7 @@ public class IAPReviewPopup : BasePopup
         }
         else
         {
+            GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
             buyIAPEvent?.Invoke(packagesIAP[_currentPackIndex].ProductId);
         }
 

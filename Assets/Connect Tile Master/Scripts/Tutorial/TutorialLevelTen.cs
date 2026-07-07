@@ -212,6 +212,7 @@ public class TutorialLevelTen : Singleton<TutorialLevelTen>
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
+        tutorialHand.AnimationState.SetAnimation(0, "begin", true);
 
         while (true)
         {
@@ -245,13 +246,13 @@ public class TutorialLevelTen : Singleton<TutorialLevelTen>
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
+        tutorialHand.AnimationState.SetAnimation(0, "action", true);
 
         while (true)
         {
             if (target == null) yield break;
 
             tutorialHand.transform.position = target.position + new Vector3(30f, -30f, 0f);
-            tutorialHand.AnimationState.SetAnimation(0, "action", false);
 
             yield return new WaitForSeconds(1f);
         }

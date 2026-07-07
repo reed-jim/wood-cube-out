@@ -588,6 +588,13 @@ public class BoosterUI : MonoBehaviour
         if (unlockThemeButton == null) return;
         if (TileManager.Ins == null) return;
 
+        BoosterItemUI unlockItemUI = unlockThemeButton.GetComponentInParent<BoosterItemUI>();
+        if (unlockItemUI != null && currentLevel.Value < unlockItemUI.LevelToUnlock)
+        {
+            unlockThemeButton.interactable = false;
+            return;
+        }
+
         bool canUseUnlockThemeBooster = TileManager.Ins.CanUseUnlockThemeBooster();
         if (!canUseUnlockThemeBooster)
         {

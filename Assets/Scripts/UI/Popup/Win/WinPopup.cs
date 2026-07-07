@@ -154,8 +154,8 @@ public class WinPopup : BasePopup
 
         continueButton.interactable = true;
         returnHomeButton.interactable = true;
-        x5CoinButton.interactable = !_isAlreadyWatchRewardedAd;
-
+        x5CoinButton.interactable = true;
+        //x5CoinButton.interactable =!_isAlreadyWatchRewardedAd;
         TrackLevelWin();
 
         _isAtLastLevel = GamePersistentVariable.isDisableLoopLevel
@@ -371,13 +371,6 @@ public class WinPopup : BasePopup
 
         _tweens.Add(Tween.Scale(x5CoinButton.transform, 1.1f, duration: 0.15f)
             .OnComplete(() => _tweens.Add(Tween.Scale(x5CoinButton.transform, 0, duration: 0.3f)))
-        );
-
-        //continueButton.transform.localScale = Vector3.zero;
-        _tweens.Add(Tween.Scale(continueButton.transform, 1.1f, duration: 0.3f)
-            .OnComplete(() => _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: 0.15f)
-            .OnComplete(() => continueButton.interactable = true)
-            ))
         );
 
         // Claim rewarded coins (80 coins) starting from imgCoinX5
