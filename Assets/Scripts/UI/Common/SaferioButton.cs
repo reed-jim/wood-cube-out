@@ -67,9 +67,11 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
             _sequence.Stop();
         }
 
-        _sequence = Tween.Scale(transform, scaleMultiplier, duration: animationDuration)
-        .Chain(Tween.Scale(transform, 1 / scaleMultiplier, duration: animationDuration))
-        .Chain(Tween.Scale(transform, 1f, duration: animationDuration));
+        float currentScale = transform.localScale.x;
+
+        _sequence = Tween.Scale(transform, scaleMultiplier * currentScale, duration: animationDuration)
+        .Chain(Tween.Scale(transform, 1 / scaleMultiplier * currentScale, duration: animationDuration))
+        .Chain(Tween.Scale(transform, 1f * currentScale, duration: animationDuration));
     }
 
     private void PlaySoundOnClick()
