@@ -89,7 +89,7 @@ namespace NamPhuThuy.Data
             }
 
             // Update maxLevel to match array length
-            maxLevel = 15;
+            maxLevel = 60;
 
 
 #if UNITY_EDITOR
