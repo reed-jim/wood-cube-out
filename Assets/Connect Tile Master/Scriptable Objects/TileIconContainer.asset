@@ -4175,12 +4175,16 @@ MonoBehaviour:
   - itemCategory: 296
     icons:
     - {fileID: 21300000, guid: 52c035fc64df8644f83e6b8455e5920e, type: 3}
-    - {fileID: 21300000, guid: b22a566d4f43acf469bcc12b46441598, type: 3}
+    - {fileID: 21300000, guid: 89c14dce13a1fe143b6f7dff88114da5, type: 3}
+    - {fileID: 21300000, guid: 5d51eda7b09ae014b9d3973f2c155760, type: 3}
+    - {fileID: 21300000, guid: f03cc4aa9f9bf16468e3f780a0b3c7d3, type: 3}
+    - {fileID: 21300000, guid: 949d6d6cecbbd41438dedc84bd845dc4, type: 3}
     text:
     - Powder
     - Pods
-    textOrder: Robusta
-    spriteOrder: {fileID: 0}
+    - Robusta
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: b22a566d4f43acf469bcc12b46441598, type: 3}
     iconCdnKeys: []
     spriteOrderCdnKey: 
     isOnServer: 0
@@ -4236,7 +4240,10 @@ MonoBehaviour:
     - {fileID: 21300000, guid: b9230afcba8067741b8ff3701978ce25, type: 3}
     - {fileID: 21300000, guid: f463252d93864804bbe6bcdca94069cd, type: 3}
     - {fileID: 21300000, guid: 6b2046b93c52fd24ca91f040b91d289b, type: 3}
-    text: []
+    text:
+    - Spoon
+    - Stick
+    - Straw
     textOrder: 
     spriteOrder: {fileID: 21300000, guid: 48bd69489c4bfc94ab3a5cde1c107434, type: 3}
     iconCdnKeys: []
@@ -4360,13 +4367,18 @@ MonoBehaviour:
     spriteOrderCdnKey: 
     isOnServer: 0
   - itemCategory: 309
-    icons: []
+    icons:
+    - {fileID: 21300000, guid: c44048b36255efe47bc236eed7083085, type: 3}
+    - {fileID: 21300000, guid: ffbe3afaf9af048449bb125ba2cd5848, type: 3}
+    - {fileID: 21300000, guid: aa621d93c338e424aa843b9d605498fb, type: 3}
+    - {fileID: 21300000, guid: 097601ffdc95b01449c4aed0d220b466, type: 3}
+    - {fileID: 21300000, guid: 256e73be3aa144a4a90ebf6354dda675, type: 3}
     text:
     - Spray
     - Face
     - Wipes
     textOrder: 
-    spriteOrder: {fileID: 0}
+    spriteOrder: {fileID: 21300000, guid: 7e37265b194d2f5428752e2e31255ba9, type: 3}
     iconCdnKeys: []
     spriteOrderCdnKey: 
     isOnServer: 0
@@ -4566,7 +4578,11 @@ MonoBehaviour:
     spriteOrderCdnKey: 
     isOnServer: 0
   - itemCategory: 323
-    icons: []
+    icons:
+    - {fileID: 21300000, guid: ebdcae39c520654418bfb78fa2228751, type: 3}
+    - {fileID: 21300000, guid: fc37ca4ee33301b4f931f27dacc07cc6, type: 3}
+    - {fileID: 21300000, guid: 1b099cfa4c5c2584c902d111e0ae857e, type: 3}
+    - {fileID: 21300000, guid: 165c30052723f92439066aabc89ef55c, type: 3}
     text:
     - Fence
     - Trough
@@ -4689,13 +4705,17 @@ MonoBehaviour:
     spriteOrderCdnKey: 
     isOnServer: 0
   - itemCategory: 332
-    icons: []
+    icons:
+    - {fileID: 21300000, guid: 8795c28535ad05045894eb292c555255, type: 3}
+    - {fileID: 21300000, guid: 1319155ab536db443b2f1176ea2f641e, type: 3}
+    - {fileID: 21300000, guid: cfe5dd9b0155c6e4aadb2f64ae224cb6, type: 3}
+    - {fileID: 21300000, guid: 9e58db393b399fd4cae6efe2899a093b, type: 3}
     text:
     - Lantern
     - Battery
     - Cable
     textOrder: 
-    spriteOrder: {fileID: 0}
+    spriteOrder: {fileID: 21300000, guid: 4934f6e9ae215744fafdb31c48eadfff, type: 3}
     iconCdnKeys: []
     spriteOrderCdnKey: 
     isOnServer: 0
@@ -4936,8 +4956,7 @@ MonoBehaviour:
     - Stand
     - Travel
     - Back Leg
-    - 1 Big + 1 Mini
-    textOrder: Big Stand
+    textOrder: Easels
     spriteOrder: {fileID: 0}
     iconCdnKeys: []
     spriteOrderCdnKey: 
@@ -4961,7 +4980,7 @@ MonoBehaviour:
     text:
     - Sketch
     - Paper
-    - Art Paper
+    - Art
     textOrder: 
     spriteOrder: {fileID: 21300000, guid: cb78509067b41aa4a9cbeb61cd528764, type: 3}
     iconCdnKeys: []
@@ -4970,6 +4989,8 @@ MonoBehaviour:
   - itemCategory: 351
     icons:
     - {fileID: 21300000, guid: 51d25939ee2dc574eb8bfda42ee80978, type: 3}
+    - {fileID: 21300000, guid: 3dc10ace40c2c694b8e55cf9f1b8e107, type: 3}
+    - {fileID: 21300000, guid: b656ddd9eaf3f434b99930d99fc78eaa, type: 3}
     text:
     - 6B
     - Leads
@@ -4989,6 +5010,525 @@ MonoBehaviour:
     - White
     - Brush
     textOrder: Eraser
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 353
+    icons: []
+    text:
+    - 2x6
+    - 20-8
+    - 12
+    - 24/2
+    - 60/5
+    - 10+2
+    textOrder: 6+6
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 354
+    icons:
+    - {fileID: 21300000, guid: 00443aa85d393f749959800c1cf9d33a, type: 3}
+    - {fileID: 21300000, guid: 2f78330d69a70144ca3d786eeb9f48d4, type: 3}
+    - {fileID: 21300000, guid: 481a8893b69420c44839802d6b5ddece, type: 3}
+    text:
+    - Glass
+    - Hook
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: 55e6a6afd8b87c140b9185b46589a2f3, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 355
+    icons:
+    - {fileID: 21300000, guid: d3f825bbb0d90024da19369a771257e8, type: 3}
+    - {fileID: 21300000, guid: f63e3b3b19092c944bf6c9a56e494465, type: 3}
+    - {fileID: 21300000, guid: 0a9b4946109627c449aff95a78dcdce6, type: 3}
+    - {fileID: 21300000, guid: 66f48f159c810e745a75532bb7729a47, type: 3}
+    - {fileID: 21300000, guid: 528d85aecad9b6d4891f398d8503190b, type: 3}
+    text:
+    - Ceramic
+    - Saucer
+    textOrder: Clay Pot
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 356
+    icons:
+    - {fileID: 21300000, guid: 3db9feed851b67b4299f47a18d4165ac, type: 3}
+    - {fileID: 21300000, guid: 30ab68c3d07c25245968c182c416576f, type: 3}
+    - {fileID: 21300000, guid: c59d80fa91b244942a45fa619bee49a2, type: 3}
+    - {fileID: 21300000, guid: 650522250cde8c641ba4338b53886d85, type: 3}
+    - {fileID: 21300000, guid: d464f04f110b1e949ae1a659dec5a6d7, type: 3}
+    text:
+    - Rake
+    - Grip
+    - Pouch
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: 60baa26f452c0cf4cb045c21f3575cb2, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 357
+    icons:
+    - {fileID: 21300000, guid: f01eba5337136f74d88abc8093501b90, type: 3}
+    - {fileID: 21300000, guid: f52ff93ca48c2a44e970d04a2bf1e6cd, type: 3}
+    - {fileID: 21300000, guid: 2087b2f21c33e2c448a342bc4960f6d2, type: 3}
+    - {fileID: 21300000, guid: e6104c23ff342274fb0c98975a0b8579, type: 3}
+    text:
+    - Sprayer
+    - Pump
+    - Nozzle
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: 3b1592c8e2436414dabdd1d5dc6a18cd, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 358
+    icons:
+    - {fileID: 21300000, guid: 5635d9125b3f7664683ba011c4b660d1, type: 3}
+    - {fileID: 21300000, guid: b444d7833565ea048be9b0b247a6f844, type: 3}
+    - {fileID: 21300000, guid: 96bfaae2e2163014b9eaac5837744f89, type: 3}
+    text:
+    - Cabbage
+    - Lettuce
+    - Pellet
+    textOrder: Seeds
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 359
+    icons:
+    - {fileID: 21300000, guid: 214a9c63fcc0f8143a37782e919d2fdc, type: 3}
+    - {fileID: 21300000, guid: 11311f5d2341a1344b8d7c1cc8101a06, type: 3}
+    - {fileID: 21300000, guid: 3fb67f43c05da5e4f9df8e945ddb2a71, type: 3}
+    text:
+    - Ash Bag
+    - Flower
+    - Garden
+    textOrder: Soil
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 360
+    icons:
+    - {fileID: 21300000, guid: 9148218825905e4488b0a8743a676e8c, type: 3}
+    - {fileID: 21300000, guid: c4086f80b4ea2374cbd3e6f905acf1da, type: 3}
+    - {fileID: 21300000, guid: d031d644759228349a6083c9b6cac0eb, type: 3}
+    - {fileID: 21300000, guid: 9c20bd8a29bd35440a548767f4267526, type: 3}
+    - {fileID: 21300000, guid: 53b3b59be42faa14ca82ad62f675c0f3, type: 3}
+    - {fileID: 21300000, guid: 43f312163f6ea1943ba96238eaebda83, type: 3}
+    - {fileID: 21300000, guid: e471c51cb554bf04f89ea7ea3d0db39f, type: 3}
+    text: []
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: a0fb8e9ddbaaa234c9b8ef55072af793, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 361
+    icons:
+    - {fileID: 21300000, guid: e31d74a2bc5d068448084fd3e15bbfa0, type: 3}
+    - {fileID: 21300000, guid: 6cb2715325885d3418fda290e765a6ff, type: 3}
+    - {fileID: 21300000, guid: 76a10a207a333104486054b627cd92c3, type: 3}
+    - {fileID: 21300000, guid: 11b11ab999b993648b2a682e4d997b66, type: 3}
+    text:
+    - NeckPad
+    - Snaps
+    - Rack
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: 5f484976ba0601f4b9aecb3481859827, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 362
+    icons:
+    - {fileID: 21300000, guid: 20953e5cfb0b12a43ab8c39623db9297, type: 3}
+    - {fileID: 21300000, guid: 53bdd6e3695d6bb4fa1ac9891ddc28f8, type: 3}
+    - {fileID: 21300000, guid: eb55d05b9ddb3e84e9c89d3ae985da88, type: 3}
+    - {fileID: 21300000, guid: 567a1204bcdfee94ba98b9d5ff3f0186, type: 3}
+    - {fileID: 21300000, guid: 1e12f88329c7b2f439fd5d410699b948, type: 3}
+    text:
+    - Wax
+    - Duster
+    - Serum
+    textOrder: Spray
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 363
+    icons:
+    - {fileID: 21300000, guid: 70aa737220738494fa20f3c928026fc3, type: 3}
+    - {fileID: 21300000, guid: 0c29a66f6832f3a4eb493d5cbc9c633e, type: 3}
+    text:
+    - Chair
+    - Headrest
+    - Cushion
+    textOrder: Salon
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 364
+    icons:
+    - {fileID: 21300000, guid: 089513cb3ef24a1438b8770ca7ca25f7, type: 3}
+    - {fileID: 21300000, guid: e5cebea4c2cc00e4790586c68a36c862, type: 3}
+    - {fileID: 21300000, guid: c7d9996fa20787249a5f7273c5774433, type: 3}
+    - {fileID: 21300000, guid: 81396b7110bfcf0479268fecede58096, type: 3}
+    text:
+    - Holder
+    - FlatIron
+    textOrder: Dryer
+    spriteOrder: {fileID: 21300000, guid: 7d9d36abf785045469d049790b92e5f2, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 365
+    icons:
+    - {fileID: 21300000, guid: f28561973c2b1b74496d51ace05083e6, type: 3}
+    - {fileID: 21300000, guid: 696dbf7899fd2b14f8205d047bfcda09, type: 3}
+    - {fileID: 21300000, guid: 53f67f941530de445afb315a0090608f, type: 3}
+    - {fileID: 21300000, guid: ad2b5c385dafc31498dbd17df5505b2f, type: 3}
+    text:
+    - Sleeve
+    - Switch
+    textOrder: Keycard
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 366
+    icons:
+    - {fileID: 21300000, guid: c46ce1cf2fb63fe4bb3b412ed221eafc, type: 3}
+    - {fileID: 21300000, guid: 1b1259ab5d329c2469672dc2f50017e7, type: 3}
+    - {fileID: 21300000, guid: 81aa22db69a7f744b848704c23e3e765, type: 3}
+    - {fileID: 21300000, guid: 1b9c3b51d36a8e447af02fc12a8e77c5, type: 3}
+    text:
+    - Pillow
+    - Sheet
+    textOrder: Bed
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 367
+    icons: []
+    text:
+    - 9
+    - Nine
+    - 10-1
+    - 20-11
+    - 3x3
+    - 27/3
+    - 81/9
+    textOrder: 5+4
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 368
+    icons:
+    - {fileID: 21300000, guid: 2bd842838e50cd4438056844ba04d9f0, type: 3}
+    - {fileID: 21300000, guid: 73ca25e3f580cd54b8a732f88ae9ab86, type: 3}
+    - {fileID: 21300000, guid: 391b4aa143538b44086fbc1269353e24, type: 3}
+    - {fileID: 21300000, guid: 46dd3291ce14e494090ba231e52aedeb, type: 3}
+    text:
+    - Lock
+    - Holster
+    textOrder: Shears
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 369
+    icons:
+    - {fileID: 21300000, guid: 4f427b2d185451048aad80580acba835, type: 3}
+    - {fileID: 21300000, guid: b78f173b1bf0e5340b1b432e480e6eeb, type: 3}
+    text:
+    - Fertil
+    - Compost
+    - Pellets
+    textOrder: Fertilize
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 370
+    icons:
+    - {fileID: 21300000, guid: 90a13ffc24dcb07439cf397410eae702, type: 3}
+    - {fileID: 21300000, guid: 572c35818fc901b468edd4e72dd77ed1, type: 3}
+    - {fileID: 21300000, guid: 10bf076da91c53d41b074ec24e877613, type: 3}
+    - {fileID: 21300000, guid: 3a16d02ab960c0c4c876cc54e4d9dad4, type: 3}
+    - {fileID: 21300000, guid: ea4bbb5bf2728624e8fa0ce3a3ca18f9, type: 3}
+    - {fileID: 21300000, guid: 9d46b80fb8f02d846a336090db7cc1d2, type: 3}
+    text:
+    - Wrist
+    - Box
+    textOrder: Gloves
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 371
+    icons:
+    - {fileID: 21300000, guid: 7cf0a763b423cf94ebff17ae91266435, type: 3}
+    - {fileID: 21300000, guid: d2128ae2a16bd634a9374e6bb829d257, type: 3}
+    - {fileID: 21300000, guid: 0d97b4988df7c8847bf3101c1b42ac74, type: 3}
+    - {fileID: 21300000, guid: 2bbfbb800c0b0f54eb9e0cfee4445976, type: 3}
+    text:
+    - Screw
+    - Styling
+    textOrder: Scissor
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 372
+    icons:
+    - {fileID: 21300000, guid: 6dbe150640cef3a46a81c560ed6bc236, type: 3}
+    - {fileID: 21300000, guid: f3e8549188377bb45922b878cf0bcc28, type: 3}
+    - {fileID: 21300000, guid: 5c15a963b57c86c40bac1bf3c675791e, type: 3}
+    text:
+    - Guard
+    - Brush
+    - Trimmer
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: 31760631050454a44b8316ab517a92de, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 373
+    icons:
+    - {fileID: 21300000, guid: 6401d4f9551dc8d4795859c00d80f8f6, type: 3}
+    - {fileID: 21300000, guid: 460425d8fbefaeb4e9132f58be2adb81, type: 3}
+    - {fileID: 21300000, guid: d9e153da2fc8bd545a46adbe5ecc1bab, type: 3}
+    text:
+    - Brush
+    - WideComb
+    - Holder
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: 8a7db281137dee64aab3654cfd391610, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 374
+    icons:
+    - {fileID: 21300000, guid: 2eb1cb8521784b443950259f5e110312, type: 3}
+    - {fileID: 21300000, guid: f9747337d5b9afb42bcdd60d6ec621fa, type: 3}
+    - {fileID: 21300000, guid: 1d01a76b39bb7674da6a58c050d14982, type: 3}
+    - {fileID: 21300000, guid: ee7aa9fc0db96bf439554af024233b4b, type: 3}
+    text:
+    - Vanity
+    - LED
+    textOrder: Mirror
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 375
+    icons:
+    - {fileID: 21300000, guid: 35b685b4df3ef4a4da30664f941f4edd, type: 3}
+    - {fileID: 21300000, guid: b11a8e06c3ead3d4fb1e9acaea8bdb25, type: 3}
+    - {fileID: 21300000, guid: b1d3f80d80ef7c8428865b09222cc572, type: 3}
+    - {fileID: 21300000, guid: 9abff884a77510141b73b2388d6df023, type: 3}
+    text:
+    - Cover
+    - Cable
+    - OutTray
+    textOrder: Printers
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 376
+    icons:
+    - {fileID: 21300000, guid: ce49b12e31afe564788f3cfba001414d, type: 3}
+    - {fileID: 21300000, guid: f61a9a77f2e7f314c9c6fcc902dd01bf, type: 3}
+    - {fileID: 21300000, guid: aff46283ea672e04f86dbc759a94b0f5, type: 3}
+    text:
+    - Backrest
+    - Lever
+    - Lift
+    textOrder: Chair
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 377
+    icons:
+    - {fileID: 21300000, guid: f019e78f5fe82d942a1139da29d96eba, type: 3}
+    - {fileID: 21300000, guid: 9fcd3702cba38a241a0746ea418bb1b5, type: 3}
+    - {fileID: 21300000, guid: 4146e7479283d7d489adf3f25835c99c, type: 3}
+    - {fileID: 21300000, guid: eecd1a79c7ab5424280b535724996b1f, type: 3}
+    text:
+    - Keyboard
+    - Charger
+    - CardSlot
+    textOrder: Laptop
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 378
+    icons:
+    - {fileID: 21300000, guid: c73874f93570a9046897b62bd650915c, type: 3}
+    - {fileID: 21300000, guid: ba7c7b86feceb8d4c9f1bd9391aa77a2, type: 3}
+    text:
+    - Frame
+    - Release
+    textOrder: Poster
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 379
+    icons:
+    - {fileID: 21300000, guid: 86b45332de5f5124eb05f2ad29331f42, type: 3}
+    - {fileID: 21300000, guid: 2e9dde21c39e0ad41af97dc5ad23edb3, type: 3}
+    - {fileID: 21300000, guid: 99051cb3dbd27be48b76a0b09394123a, type: 3}
+    - {fileID: 21300000, guid: ce48f7d3cb4da124cb9451d548ca1616, type: 3}
+    text:
+    - Speaker
+    - Sub
+    - Mesh
+    textOrder: Audio
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 380
+    icons:
+    - {fileID: 21300000, guid: e44bd8b60afd24549b945c6745668a27, type: 3}
+    - {fileID: 21300000, guid: 3d3d4e9e9f17466488559aae43a91b31, type: 3}
+    - {fileID: 21300000, guid: 3859604eb81470344b3ffd77cb4134b5, type: 3}
+    - {fileID: 21300000, guid: eb396e0e76d0e28489281a7e03910b4b, type: 3}
+    text:
+    - Screen
+    - Bulb
+    - Wide
+    textOrder: Screen
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 381
+    icons:
+    - {fileID: 21300000, guid: a5aa0c6dea9507a46ab8194e2dc498c8, type: 3}
+    - {fileID: 21300000, guid: 21ddb6453703ae741b3727e24d0e6581, type: 3}
+    - {fileID: 21300000, guid: f9481d5c376e3ab4cb7e7fd4666d6c81, type: 3}
+    - {fileID: 21300000, guid: 8e3a0029b68abc0448e4a45c06ab5b6c, type: 3}
+    - {fileID: 21300000, guid: 3eff6a46e1bf65e4ea1cc32ce780901b, type: 3}
+    text:
+    - Screen
+    - Title
+    textOrder: Ticket
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 382
+    icons:
+    - {fileID: 21300000, guid: fe93cac36bd5784478f4b197bf98e174, type: 3}
+    - {fileID: 21300000, guid: 4c0b389d83507324a98ad71faa21e668, type: 3}
+    - {fileID: 21300000, guid: 3d3394f134587ba4abc7b611fcfe1735, type: 3}
+    - {fileID: 21300000, guid: a0fa61703d2fcc14d896d58403bd84e7, type: 3}
+    - {fileID: 21300000, guid: 5086b689989da064899f13b02eaa2edb, type: 3}
+    - {fileID: 21300000, guid: d5e94321ca857034b83c2805864ec141, type: 3}
+    - {fileID: 21300000, guid: 44f4a29398e0bd44295f5f09f60af022, type: 3}
+    - {fileID: 21300000, guid: e22d679ac9ca1a546be5cd38112cc545, type: 3}
+    text: []
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: 8ccd4a8747282a346ab23483eb9679a5, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 383
+    icons:
+    - {fileID: 21300000, guid: 22d7f7564fb16dd4187840d70bc629d9, type: 3}
+    - {fileID: 21300000, guid: afab3a26a0297ae4b8d72604eb368a47, type: 3}
+    - {fileID: 21300000, guid: e7486f9a72c9f35478f6313211320c28, type: 3}
+    - {fileID: 21300000, guid: 809fd4aaf10bc5f428b3b7a4cf799098, type: 3}
+    text:
+    - Screen
+    - Button
+    - Camera
+    textOrder: Phone
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 384
+    icons:
+    - {fileID: 21300000, guid: c6320e9f20cbca44f9098c8dba3e5d29, type: 3}
+    - {fileID: 21300000, guid: 22a416ba5e290a04ab3c0bbab598f2ce, type: 3}
+    - {fileID: 21300000, guid: dcc701b93abae5e47b0d97c47b730ce2, type: 3}
+    - {fileID: 21300000, guid: 5995804e4b255d4458c249edb9ae6ba4, type: 3}
+    - {fileID: 21300000, guid: eab1e9d6010963348b35c1077dbcb5bb, type: 3}
+    text:
+    - Stylus
+    - Port
+    - Shield
+    textOrder: Tablets
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 385
+    icons:
+    - {fileID: 21300000, guid: 241a69253256d8e4f8d342798a4f0207, type: 3}
+    - {fileID: 21300000, guid: 6591cc7b2bb42d84bab725bf01f789d1, type: 3}
+    - {fileID: 21300000, guid: 4a9f665ddfab6a84887ac87a3f1bb19a, type: 3}
+    - {fileID: 21300000, guid: 9d5c6a229c381ee4ca907a4ae2c1cfcd, type: 3}
+    - {fileID: 21300000, guid: 198bd3460de7ddd4f8f4e6f0b8760ed6, type: 3}
+    text:
+    - Face
+    - Magnet
+    - Bezel
+    textOrder: 
+    spriteOrder: {fileID: 21300000, guid: d3e5584a3e079614f8978726885f8045, type: 3}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 386
+    icons:
+    - {fileID: 21300000, guid: e561c0dc51c923549b8072ae3786f9ee, type: 3}
+    - {fileID: 21300000, guid: 305df9aa66ad27c4ca68937603eed3be, type: 3}
+    - {fileID: 21300000, guid: 2ba1765d3773d8a47ae5e40a18a5d318, type: 3}
+    text:
+    - Case
+    - Tips
+    - Cable
+    textOrder: Earbuds
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 387
+    icons: []
+    text:
+    - USB
+    - Pouch
+    - Pouch
+    textOrder: 
+    spriteOrder: {fileID: 0}
+    iconCdnKeys: []
+    spriteOrderCdnKey: 
+    isOnServer: 0
+  - itemCategory: 388
+    icons:
+    - {fileID: 21300000, guid: 5e3ae3171bb8ac2459219e727c08088a, type: 3}
+    - {fileID: 21300000, guid: e7812f20f84db4b41841b6cd4105cef4, type: 3}
+    - {fileID: 21300000, guid: 3e7c6a7dcfbda4a438a17ce39b13c5a1, type: 3}
+    text:
+    - Pomelo
+    - Kumquat
+    - Papaya
+    textOrder: Fruit
     spriteOrder: {fileID: 0}
     iconCdnKeys: []
     spriteOrderCdnKey: 
