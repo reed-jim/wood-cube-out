@@ -61,6 +61,7 @@ public class WinPopup : BasePopup
     public static event Action nextLevelEvent;
     // public static event Action<Vector3, int> collectCoinEvent;
     public static event Action<int> collectCoinEvent;
+    public static event Action fetchLocalizedPriceIAPEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -121,6 +122,10 @@ public class WinPopup : BasePopup
         // CheckEvent();
 
         Show();
+
+        fetchLocalizedPriceIAPEvent?.Invoke();
+
+        GamePersistentVariable.IAPLocation = "Win Popup";
 
         SoundManager.Instance.PlaySoundWin();
 
@@ -235,7 +240,7 @@ public class WinPopup : BasePopup
 
         new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
 
-        Tween.Delay(2.8f).OnComplete(() =>
+        Tween.Delay(3f).OnComplete(() =>
         {
             OnCollectCoinCompleted();
         });
@@ -315,7 +320,7 @@ public class WinPopup : BasePopup
         new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
 
-        Tween.Delay(2.8f).OnComplete(() =>
+        Tween.Delay(3f).OnComplete(() =>
         {
             OnCollectCoinCompleted();
         });

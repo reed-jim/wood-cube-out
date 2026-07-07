@@ -47,6 +47,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnderPopupSaleIAPPackUI.buyIAPEvent += BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
+        WinPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         IAPSuggestionPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice += FetchLocalizedPrice;
@@ -89,6 +90,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnderPopupSaleIAPPackUI.buyIAPEvent -= BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
+        WinPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         IAPSuggestionPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
