@@ -126,6 +126,7 @@ public class WinPopup : BasePopup
         fetchLocalizedPriceIAPEvent?.Invoke();
 
         GamePersistentVariable.IAPLocation = "Win Popup";
+        GamePersistentVariable.collectResourceMode = CollectResourceMode.UpdateText;
 
         SoundManager.Instance.PlaySoundWin();
 
@@ -242,11 +243,11 @@ public class WinPopup : BasePopup
 
         Tween.Delay(3f).OnComplete(() =>
         {
-            OnCollectCoinCompleted();
+            NextLevel();
         });
     }
 
-    private void OnCollectCoinCompleted()
+    private void NextLevel()
     {
         if (!gameObject.activeInHierarchy)
         {
@@ -275,6 +276,8 @@ public class WinPopup : BasePopup
                 GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
             }
         }
+
+        GamePersistentVariable.collectResourceMode = CollectResourceMode.PlayCollectAnimation;
     }
 
     private void OnInterstitialAdCompleted()
@@ -322,7 +325,7 @@ public class WinPopup : BasePopup
 
         Tween.Delay(3f).OnComplete(() =>
         {
-            OnCollectCoinCompleted();
+            NextLevel();
         });
 
         return;

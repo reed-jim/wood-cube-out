@@ -21,6 +21,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
+    [SerializeField] private RectTransform noAdsPack;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
@@ -121,6 +122,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         SaferioTween.AlphaShow(mainUICanvasGroup);
         SaferioTween.AlphaShow(boosterUICanvasGroup);
+
+        if (UserData.IsRemoveAds)
+        {
+            noAdsPack.gameObject.SetActive(false);
+        }
     }
 
     public void HideUINearWinLevel(Action onCompleteAction)

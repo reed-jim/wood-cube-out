@@ -207,5 +207,12 @@ public static class GamePersistentVariable
     public static Vector2 tileDistance;
     public static float ratioXY;
     public static Vector2 spawnFlyingCoinPosition;
+    public static CollectResourceMode collectResourceMode;
     #endregion
+}
+
+public enum CollectResourceMode
+{
+    PlayCollectAnimation,
+    UpdateText
 }

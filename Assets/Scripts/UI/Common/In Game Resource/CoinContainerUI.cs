@@ -43,6 +43,7 @@ public class CoinContainerUI : MonoBehaviour
         LivesShopPopup.updateCoinTextEvent += UpdateCoinText;
         BuyBoosterPopup.updateCoinTextEvent += UpdateCoinText;
         RevivePopup.updateCoinTextEvent += UpdateCoinText;
+        ResourceEarnPopup.updateCoinTextEvent += UpdateCoinText;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
         addButton.onClick.AddListener(ShowIAPShop);
@@ -73,6 +74,7 @@ public class CoinContainerUI : MonoBehaviour
         LivesShopPopup.updateCoinTextEvent -= UpdateCoinText;
         BuyBoosterPopup.updateCoinTextEvent -= UpdateCoinText;
         RevivePopup.updateCoinTextEvent -= UpdateCoinText;
+        ResourceEarnPopup.updateCoinTextEvent -= UpdateCoinText;
 
         CommonUtil.StopAllTweens(_tweens);
     }
