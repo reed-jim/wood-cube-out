@@ -312,20 +312,30 @@ namespace AntsFlow
                         }
                     }
 
-                    if (!isFound && !isAlreadySpawnNewBox)
+                    if (currentLevel.Value <= 10)
                     {
-                        if (washingMachineStartSlot.row < 2)
+                        if (!isFound && !isAlreadySpawnNewBox)
                         {
-                            SpawnNewWashingMachine();
-                        }
-                        else
-                        {
-                            if (!isAlreadySpawnNewBox)
+                            if (washingMachineStartSlot.row < 2)
                             {
                                 SpawnNewWashingMachine();
-
-                                isAlreadySpawnNewBox = true;
                             }
+                            else
+                            {
+                                if (!isAlreadySpawnNewBox)
+                                {
+                                    SpawnNewWashingMachine();
+
+                                    isAlreadySpawnNewBox = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!isFound)
+                        {
+                            SpawnNewWashingMachine();
                         }
                     }
                 }
@@ -1148,6 +1158,8 @@ namespace AntsFlow
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
 
+            int multiplier = currentLevel.Value <= 10 ? 50 : 1;
+
             for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
             {
                 BaseTile tile = TileManager.Ins.tiles[i];
@@ -1157,7 +1169,7 @@ namespace AntsFlow
                     continue;
                 }
 
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.IsBlocked() ? 0 : 50);
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.IsBlocked() ? 0 : multiplier);
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)

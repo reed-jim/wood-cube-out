@@ -85,6 +85,8 @@ namespace AntsFlow
         private AsyncOperation navMeshUpdateOperation;
         private Vector2 levelCenter;
 
+        public IntVariable currentLevel;
+
         public static event Action winLevelEvent;
 
         protected override void MoreActionOnAwake()
@@ -292,7 +294,10 @@ namespace AntsFlow
             {
                 if (node.tile != null)
                 {
-                    node.tile.blockages = new List<BaseTile>();
+                    if (currentLevel.Value <= 10)
+                    {
+                        node.tile.blockages = new List<BaseTile>();
+                    }
                     node.tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
                 }
             }
@@ -306,7 +311,10 @@ namespace AntsFlow
                     {
                         if (neighbor.tile != null)
                         {
-                            node.tile.blockages.Add(neighbor.tile);
+                            if (currentLevel.Value <= 10)
+                            {
+                                node.tile.blockages.Add(neighbor.tile);
+                            }
                             neighbor.tile.blockedByMe.Add(node.tile);
                         }
                     }
