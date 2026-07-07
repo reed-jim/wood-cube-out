@@ -138,7 +138,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
     {
         Vector3 startPosition = GamePersistentVariable.spawnFlyingCoinPosition;
 
-        Debug.Log($"GamePersistentVariable.spawnFlyingCoinPosition {GamePersistentVariable.spawnFlyingCoinPosition} {startPosition}");
+        GamePersistentVariable.spawnFlyingCoinPosition = Vector3.zero;
 
         for (int i = 0; i < _rewards.Length; i++)
         {
@@ -173,10 +173,12 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         isCompleted = false;
 
+        Vector3 delta = position - startPosition;
+
         Vector3[] path =
         {
-            startPosition + new Vector3(150f, -100f, 0f), // curve right & down
-            startPosition + new Vector3(250f,  50f, 0f), // start moving up
+            startPosition + new Vector3(delta.x * 0.4f, -Mathf.Abs(delta.y) * 0.15f, 0),
+            startPosition + new Vector3(delta.x * 0.9f, delta.y * 0.4f, 0),
             position
         };
 

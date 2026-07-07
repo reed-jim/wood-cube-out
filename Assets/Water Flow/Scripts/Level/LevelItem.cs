@@ -1102,7 +1102,7 @@ public class SpecialElementItemConfig
             }
         }
 
-        if (remainingColumns.Count == 0)
+        if (remainingColumns.Count < 2)
         {
             return false;
         }
