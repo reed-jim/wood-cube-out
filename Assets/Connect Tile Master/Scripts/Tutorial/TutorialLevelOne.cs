@@ -444,6 +444,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
+        tutorialHand.AnimationState.SetAnimation(0, "begin", true);
 
         while (true)
         {
@@ -477,6 +478,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         tutorialHand.transform.SetParent(target, false);
         tutorialHand.transform.localPosition = Vector3.zero;
         tutorialHand.transform.localScale = Vector3.one;
+        tutorialHand.AnimationState.SetAnimation(0, "action", true);
 
         while (true)
         {

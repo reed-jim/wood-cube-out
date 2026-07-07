@@ -48,6 +48,7 @@ public class RemoveAdPopup : BasePopup
         }
         else
         {
+            GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
             buyIAPEvent?.Invoke(iapData.ProductId);
 
             buyButton.interactable = false;

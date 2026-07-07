@@ -235,7 +235,7 @@ public class TileManager : Singleton<TileManager>
                 return IsTutorialObjectActive(TutorialLevelSeven.Ins);
             case 10:
                 return IsTutorialObjectActive(TutorialLevelTen.Ins);
-            case 15:
+            case 16:
                 return IsTutorialObjectActive(TutorialLevelSixteen.Ins);
             default:
                 return false;
@@ -1018,7 +1018,7 @@ public class TileManager : Singleton<TileManager>
                     tut10.StartTutorial();
                 }
             }
-            else if (GamePersistentVariable.currentLevel == 15)
+            else if (GamePersistentVariable.currentLevel == 16)
             {
                 TutorialLevelSixteen tut16 = TutorialLevelSixteen.Ins != null ? TutorialLevelSixteen.Ins : FindObjectOfType<TutorialLevelSixteen>(true);
                 if (tut16 != null)

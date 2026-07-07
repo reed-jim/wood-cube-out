@@ -291,6 +291,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
+        tutorialHand.AnimationState.SetAnimation(0, "begin", true);
 
         while (true)
         {

@@ -30,6 +30,7 @@ public class IAPShopItem : MonoBehaviour
 
     private void BuyIAP()
     {
+        GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
         buyIAPEvent?.Invoke(productId);
 
         buyButton.interactable = false;

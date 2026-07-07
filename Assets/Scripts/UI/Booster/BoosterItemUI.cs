@@ -27,6 +27,7 @@ public class BoosterItemUI : MonoBehaviour
     [SerializeField] private CanvasGroup lockCanvasGroup;
     [SerializeField] private TMP_Text levelToUnlockText;
     [SerializeField] private int levelToUnlock;
+    public int LevelToUnlock => levelToUnlock;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private int boosterIndex;

@@ -187,4 +187,6 @@ public static class GamePersistentVariable
     #region Remote Config Gameplay Background
     public static GameplayBackgroundConfig gameplayBackgroundConfig;
     #endregion
+
+    public static Vector3 lastPurchasedPackPosition = Vector3.zero;
 }

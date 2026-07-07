@@ -126,6 +126,7 @@ public class DailyOfferPopup : BasePopup
 
     private void Buy()
     {
+        GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
         buyIAPEvent?.Invoke(packageData.ProductId);
 
         _isProcessingPayment = true;

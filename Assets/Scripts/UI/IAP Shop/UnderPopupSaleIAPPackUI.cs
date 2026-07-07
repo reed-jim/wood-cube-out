@@ -109,6 +109,7 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
         }
         else
         {
+            GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
             _isProcessingPayment = true;
 
             buyIAPEvent?.Invoke(packageData.ProductId);

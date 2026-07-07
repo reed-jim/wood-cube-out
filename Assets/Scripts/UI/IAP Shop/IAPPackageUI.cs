@@ -102,6 +102,7 @@ public class IAPPackageUI : MonoBehaviour
         }
         else
         {
+            GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
             buyIAPEvent?.Invoke(_packageData.ProductId);
         }
     }

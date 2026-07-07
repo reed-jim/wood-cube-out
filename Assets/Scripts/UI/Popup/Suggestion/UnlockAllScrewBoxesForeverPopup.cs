@@ -56,6 +56,7 @@ public class UnlockAllScrewBoxesForeverPopup : BasePopup
         {
             GamePersistentVariable.IAPLocation = "Unlock All Screw Boxes Forever";
 
+            GamePersistentVariable.lastPurchasedPackPosition = buyButton.transform.position;
             buyIAPEvent?.Invoke(packageData.ProductId);
 
             buyButton.interactable = false;

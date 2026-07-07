@@ -117,6 +117,12 @@ public class CoinContainerUI : MonoBehaviour
         Vector3 targetPos = ((Vector2)iconRT.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
         Vector3 startPos = Vector3.zero;
 
+        if (GamePersistentVariable.lastPurchasedPackPosition != Vector3.zero)
+        {
+            startPos = ((Vector2)GamePersistentVariable.lastPurchasedPackPosition - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+            GamePersistentVariable.lastPurchasedPackPosition = Vector3.zero;
+        }
+
         userResourcesObserver.Load();
         int finalCoins = (int)userResourcesObserver.UserResources.CoinQuantity;
         int currentCoins = finalCoins - value;
