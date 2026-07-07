@@ -22,28 +22,6 @@ namespace Unity.Advertisement.IosSupport.Samples
 
         void Start()
         {
-            // #if UNITY_IOS
-            //             // check with iOS to see if the user has accepted or declined tracking
-            //             var status = ATTrackingStatusBinding.GetAuthorizationTrackingStatus();
-
-            //             Debug.Log("SAFERIO Request " + status);
-
-            //             if (status == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
-            //             {
-            //                 Debug.Log("SAFERIO Request");
-
-            //                 ATTrackingStatusBinding.RequestAuthorizationTracking();
-
-            //                 // var contextScreen = Instantiate(contextScreenPrefab).GetComponent<ContextScreenView>();
-
-            //                 // // after the Continue button is pressed, and the tracking request
-            //                 // // has been sent, automatically destroy the popup to conserve memory
-            //                 // contextScreen.sentTrackingAuthorizationRequest += () => Destroy(contextScreen.gameObject);
-            //             }
-            // #else
-            //             Debug.Log("Unity iOS Support: App Tracking Transparency status not checked, because the platform is not iOS.");
-            // #endif
-
             StartCoroutine(LoadNextScene());
         }
 
@@ -57,12 +35,6 @@ namespace Unity.Advertisement.IosSupport.Samples
             if (status == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
             {
                 ATTrackingStatusBinding.RequestAuthorizationTracking();
-
-                // var contextScreen = Instantiate(contextScreenPrefab).GetComponent<ContextScreenView>();
-
-                // // after the Continue button is pressed, and the tracking request
-                // // has been sent, automatically destroy the popup to conserve memory
-                // contextScreen.sentTrackingAuthorizationRequest += () => Destroy(contextScreen.gameObject);
             }
 
             while (status == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
@@ -98,7 +70,7 @@ namespace Unity.Advertisement.IosSupport.Samples
             }
 #endif
 
-            SceneManager.LoadScene("Bootstrap");
+            SceneManager.LoadScene("Loading");
 
             yield return null;
         }
