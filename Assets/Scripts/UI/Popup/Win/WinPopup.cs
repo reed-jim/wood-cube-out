@@ -154,8 +154,8 @@ public class WinPopup : BasePopup
 
         continueButton.interactable = true;
         returnHomeButton.interactable = true;
-        x5CoinButton.interactable = !_isAlreadyWatchRewardedAd;
-
+        x5CoinButton.interactable = true;
+        //x5CoinButton.interactable =!_isAlreadyWatchRewardedAd;
         TrackLevelWin();
 
         _isAtLastLevel = GamePersistentVariable.isDisableLoopLevel
