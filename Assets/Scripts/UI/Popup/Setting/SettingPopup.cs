@@ -17,6 +17,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private SettingItemUI turnSoundToggle;
     [SerializeField] private SettingItemUI vibrationToggle;
     [SerializeField] private Button replayButton;
+    [SerializeField] private Button reviewIAPButton;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
@@ -60,6 +61,7 @@ public class SettingPopup : BasePopup
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
 
         replayButton.onClick.AddListener(Replay);
+        reviewIAPButton.onClick.AddListener(OpenReviewIAPPopup);
         // rateButton.onClick.AddListener(Rate);
         // openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         // openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
@@ -243,6 +245,11 @@ public class SettingPopup : BasePopup
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
         new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Fail, playDuration, GamePersistentVariable.levelRetryTime).Send();
+    }
+
+    private void OpenReviewIAPPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
     }
 
     private void OpenBackupPopup()
