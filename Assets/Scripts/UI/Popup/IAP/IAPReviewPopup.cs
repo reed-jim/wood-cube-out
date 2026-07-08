@@ -78,8 +78,7 @@ public class IAPReviewPopup : BasePopup
             buyIAPEvent?.Invoke(packagesIAP[_currentPackIndex].ProductId);
         }
 
-        // DEBUG
-        // showResourcesEarnPopupEvent?.Invoke(7500, new int[3], false);
+        GamePersistentVariable.collectResourceMode = CollectResourceMode.UpdateText;
     }
 
     private void Next()
