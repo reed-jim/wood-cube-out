@@ -16,7 +16,7 @@ public class LosePopup : BasePopup
     [SerializeField] private Image levelProgressFill;
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private Button buyTimeByCoinButton;
-    //[SerializeField] private Button buyTimeByAdsButton;
+    [SerializeField] private Button buyTimeByAdsButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
@@ -62,7 +62,7 @@ public class LosePopup : BasePopup
         //skipLevelButton.onClick.AddListener(SkipLevel);
         returnHomeButton.onClick.AddListener(ReturnHome);
         buyTimeByCoinButton.onClick.AddListener(BuyTimeByCoin);
-        //buyTimeByAdsButton.onClick.AddListener(BuyTimeByAds);
+        buyTimeByAdsButton.onClick.AddListener(BuyTimeByAds);
         if (buyTimeByCoinButtonAnother != null) buyTimeByCoinButtonAnother.onClick.AddListener(BuyTimeByCoin);
         if (buyTimeByAdsButtonAnother != null) buyTimeByAdsButtonAnother.onClick.AddListener(BuyTimeByAds);
 
@@ -144,23 +144,23 @@ public class LosePopup : BasePopup
         }
 
         #region SKIP LEVEL
-        GamePersistentVariable.isAllowedSkipLevel = false;
+        //GamePersistentVariable.isAllowedSkipLevel = false;
 
-        if (!_isAllowedSkipLevel)
-        {
-            return;
-        }
+        //if (!_isAllowedSkipLevel)
+        //{
+        //    return;
+        //}
 
-        if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
-        {
-            //skipLevelButton.gameObject.SetActive(true);
+        //if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
+        //{
+        //    //skipLevelButton.gameObject.SetActive(true);
 
-            GamePersistentVariable.isAllowedSkipLevel = true;
-        }
-        else
-        {
-            //skipLevelButton.gameObject.SetActive(false);
-        }
+        //    GamePersistentVariable.isAllowedSkipLevel = true;
+        //}
+        //else
+        //{
+        //    //skipLevelButton.gameObject.SetActive(false);
+        //}
         #endregion
 
         GamePersistentVariable.isLevelLost = true;
