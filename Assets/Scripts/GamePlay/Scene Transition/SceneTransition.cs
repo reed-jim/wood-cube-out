@@ -161,6 +161,12 @@ public class SceneTransition : MonoBehaviour
     {
         loadLevelInProgressContainer.gameObject.SetActive(true);
         loadLevelInProgressCanvasGroup.alpha = 1;
+        if (_loadingLevelInProgressCoroutine != null)
+        {
+            StopCoroutine(_loadingLevelInProgressCoroutine);
+        }
+
+        _loadingLevelInProgressCoroutine = StartCoroutine(RotatingIcon());
     }
 
     #region LOADING LEVEL IN PROGRESS
