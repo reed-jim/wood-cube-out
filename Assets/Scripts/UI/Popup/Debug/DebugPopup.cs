@@ -18,6 +18,7 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugAdsButton;
     [SerializeField] private Button debugAddBoostersButton;
     [SerializeField] private Button debugAddCoinButton;
+    [SerializeField] private Button debugAddOneMillionCoinButton;
     [SerializeField] private Button changeBackgroundColorButton;
     [SerializeField] private Button startAutoTestLevelButton;
     [SerializeField] private Button clearAddressablesCacheButton;
@@ -39,29 +40,33 @@ public class DebugPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        debugPlayLevelButton.onClick.AddListener(DebugPlayLevel);
-        debugNextLevelButton.onClick.AddListener(NextLevel);
-        debugPrevLevelButton.onClick.AddListener(PrevLevel);
+        //debugPlayLevelButton.onClick.AddListener(DebugPlayLevel);
+        //debugNextLevelButton.onClick.AddListener(NextLevel);
+        //debugPrevLevelButton.onClick.AddListener(PrevLevel);
         debugWinLevelButton.onClick.AddListener(DebugWinLevel);
-        debugAdsButton.onClick.AddListener(DebugAdsButton);
-        debugAddBoostersButton.onClick.AddListener(AddBooster);
-        debugAddCoinButton.onClick.AddListener(AddCoin);
-        startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
-        clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
+        //debugAdsButton.onClick.AddListener(DebugAdsButton);
+        //debugAddBoostersButton.onClick.AddListener(AddBooster);
+        //debugAddCoinButton.onClick.AddListener(AddCoin);
+        if (debugAddOneMillionCoinButton != null)
+        {
+            debugAddOneMillionCoinButton.onClick.AddListener(AddOneMillionCoins);
+        }
+        //startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
+        //clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
 
-        changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
+        //changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
     }
 
     protected override void MoreActionInAwake()
     {
-        if (UserData.IsRemoveAds)
-        {
-            debugAdsText.text = "Enable Ads";
-        }
-        else
-        {
-            debugAdsText.text = "Disable Ads";
-        }
+        //if (UserData.IsRemoveAds)
+        //{
+        //    debugAdsText.text = "Enable Ads";
+        //}
+        //else
+        //{
+        //    debugAdsText.text = "Disable Ads";
+        //}
     }
 
     private void DebugPlayLevel()
@@ -135,6 +140,13 @@ public class DebugPopup : BasePopup
     private void AddCoin()
     {
         userResourcesObserver.UserResources.CoinQuantity += 9999;
+
+        userResourcesObserver.Save();
+    }
+
+    private void AddOneMillionCoins()
+    {
+        userResourcesObserver.UserResources.CoinQuantity += 1000000;
 
         userResourcesObserver.Save();
     }
