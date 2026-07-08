@@ -753,11 +753,11 @@ public class TileManager : Singleton<TileManager>
                                 Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
                                 ShowNoInternetPopup();
                             }
-                            else if (!success && (Time.unscaledTime - startTime > 5f))
+                            else if (!success && (Time.unscaledTime - startTime > 8f))
                             {
                                 if (!NoAdsLoadedPopup.IsShown)
                                 {
-                                    Debug.LogWarning("[TileManager] Download taking too long (>5s). Showing popup.");
+                                    Debug.LogWarning("[TileManager] Download taking too long (>8s). Showing popup.");
                                     NoAdsLoadedPopup.IsWeakInternetMode = true;
                                     ShowNoInternetPopup();
                                     startTime = Time.unscaledTime;
@@ -814,11 +814,11 @@ public class TileManager : Singleton<TileManager>
                             Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
                             ShowNoInternetPopup();
                         }
-                        else if (!success && (Time.unscaledTime - startTime > 5f))
+                        else if (!success && (Time.unscaledTime - startTime > 8f))
                         {
                             if (!NoAdsLoadedPopup.IsShown)
                             {
-                                Debug.LogWarning("[TileManager] Download taking too long (>5s). Showing popup.");
+                                Debug.LogWarning("[TileManager] Download taking too long (>8s). Showing popup.");
                                 NoAdsLoadedPopup.IsWeakInternetMode = true;
                                 ShowNoInternetPopup();
                                 startTime = Time.unscaledTime;
@@ -1222,7 +1222,7 @@ public class TileManager : Singleton<TileManager>
                 result.Insert(0, targetThemeLevel10);
             }
         }
-        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 15)
+        else if (isCurrentLevelTutorialActive && (GamePersistentVariable.currentLevel == 16))
         {
             if (levelItem.themeDataList.Count > 2)
             {
@@ -1533,7 +1533,7 @@ public class TileManager : Singleton<TileManager>
                 }
             }
         }
-        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 15)
+        else if (isCurrentLevelTutorialActive && (GamePersistentVariable.currentLevel == 16))
         {
             if (levelItem.themeDataList.Count > 2)
             {

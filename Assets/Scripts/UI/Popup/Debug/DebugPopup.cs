@@ -43,7 +43,7 @@ public class DebugPopup : BasePopup
         //debugPlayLevelButton.onClick.AddListener(DebugPlayLevel);
         //debugNextLevelButton.onClick.AddListener(NextLevel);
         //debugPrevLevelButton.onClick.AddListener(PrevLevel);
-        debugWinLevelButton.onClick.AddListener(DebugWinLevel);
+        //debugWinLevelButton.onClick.AddListener(DebugWinLevel);
         //debugAdsButton.onClick.AddListener(DebugAdsButton);
         //debugAddBoostersButton.onClick.AddListener(AddBooster);
         //debugAddCoinButton.onClick.AddListener(AddCoin);

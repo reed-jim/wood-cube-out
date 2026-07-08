@@ -13,8 +13,15 @@ using UnityEngine;
 public class TileIconCdnUploadWindow : EditorWindow
 {
     private TileIconContainer _targetContainer;
+    
+    private enum UploadMode { Range, Specific }
+    private UploadMode _uploadMode = UploadMode.Range;
+    
     private int _startIndex = 21;
+    private int _endIndex = 21;
+    private string _specificIndicesStr = "";
     private string _excludeIndicesStr = "";
+    
     private bool _isUploading;
     private int _currentUploadIndex;
     private int _totalToUpload;
@@ -35,7 +42,18 @@ public class TileIconCdnUploadWindow : EditorWindow
         _targetContainer = (TileIconContainer)EditorGUILayout.ObjectField(
             "TileIconContainer", _targetContainer, typeof(TileIconContainer), false);
 
-        _startIndex = EditorGUILayout.IntField("Start Index (0-based)", _startIndex);
+        _uploadMode = (UploadMode)EditorGUILayout.EnumPopup("Upload Mode", _uploadMode);
+
+        if (_uploadMode == UploadMode.Range)
+        {
+            _startIndex = EditorGUILayout.IntField("Start Index", _startIndex);
+            _endIndex = EditorGUILayout.IntField("End Index", _endIndex);
+        }
+        else
+        {
+            _specificIndicesStr = EditorGUILayout.TextField("Specific IDs (e.g. 21,23,25)", _specificIndicesStr);
+        }
+
         _excludeIndicesStr = EditorGUILayout.TextField("Exclude Indices (e.g. 23,24)", _excludeIndicesStr);
 
         EditorGUILayout.HelpBox(
@@ -48,54 +66,29 @@ public class TileIconCdnUploadWindow : EditorWindow
         if (_targetContainer != null && _targetContainer.categoryIconSets != null)
         {
             int total = _targetContainer.categoryIconSets.Length;
-            var excluded = GetExcludeIndices();
-            
-            int toUpload = 0;
-            for (int i = _startIndex; i < total; i++)
-            {
-                if (!excluded.Contains(i))
-                {
-                    toUpload++;
-                }
-            }
+            var targetIndices = GetTargetIndices(total);
+            int toUpload = targetIndices.Count;
 
             EditorGUILayout.HelpBox(
                 $"Total categories: {total}\n" +
-                $"Categories to upload (from index {_startIndex}, excluding {excluded.Count} items): {toUpload}",
+                $"Categories to upload: {toUpload}",
                 MessageType.Info);
 
             // Show preview of what will be uploaded
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, GUILayout.MaxHeight(300));
-            for (int i = _startIndex; i < total; i++)
+            foreach (int i in targetIndices)
             {
                 var set = _targetContainer.categoryIconSets[i];
                 int iconCount = set.icons != null ? set.icons.Length : 0;
                 bool hasSpriteOrder = set.spriteOrder != null;
                 
-                bool isExcluded = excluded.Contains(i);
-                string status;
-                if (isExcluded)
-                {
-                    status = "🚫 Excluded";
-                }
-                else
-                {
-                    status = set.isOnServer ? "✓ On Server" : "✗ Not uploaded";
-                }
+                string status = set.isOnServer ? "✓ On Server" : "✗ Not uploaded";
 
                 EditorGUILayout.BeginHorizontal();
-                if (isExcluded)
-                {
-                    GUI.enabled = false;
-                }
                 GUILayout.Label($"[{i}] {set.itemCategory}", GUILayout.Width(200));
                 GUILayout.Label($"Icons: {iconCount}", GUILayout.Width(80));
                 GUILayout.Label($"Order: {(hasSpriteOrder ? "Yes" : "No")}", GUILayout.Width(80));
-                GUILayout.Label(status, (set.isOnServer && !isExcluded) ? EditorStyles.boldLabel : EditorStyles.label);
-                if (isExcluded)
-                {
-                    GUI.enabled = true;
-                }
+                GUILayout.Label(status, set.isOnServer ? EditorStyles.boldLabel : EditorStyles.label);
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.EndScrollView();
@@ -122,7 +115,11 @@ public class TileIconCdnUploadWindow : EditorWindow
         {
             GUI.enabled = _targetContainer != null && !_isUploading;
 
-            if (GUILayout.Button("Upload All (from index " + _startIndex + ")", GUILayout.Height(35)))
+            string uploadButtonText = _uploadMode == UploadMode.Range
+                ? $"Upload Range (Index {_startIndex} to {_endIndex})"
+                : "Upload Selected IDs";
+
+            if (GUILayout.Button(uploadButtonText, GUILayout.Height(35)))
             {
                 StartBatchUpload();
             }
@@ -161,6 +158,61 @@ public class TileIconCdnUploadWindow : EditorWindow
         return result;
     }
 
+    private List<int> GetTargetIndices(int totalCount)
+    {
+        var targetIndices = new List<int>();
+        var excluded = GetExcludeIndices();
+
+        if (_uploadMode == UploadMode.Range)
+        {
+            if (totalCount == 0) return targetIndices;
+            int start = Mathf.Clamp(_startIndex, 0, totalCount - 1);
+            int end = Mathf.Clamp(_endIndex, 0, totalCount - 1);
+            int min = Mathf.Min(start, end);
+            int max = Mathf.Max(start, end);
+            for (int i = min; i <= max; i++)
+            {
+                if (!excluded.Contains(i))
+                {
+                    targetIndices.Add(i);
+                }
+            }
+        }
+        else
+        {
+            var specific = GetSpecificIndices();
+            foreach (var idx in specific)
+            {
+                if (idx >= 0 && idx < totalCount && !excluded.Contains(idx))
+                {
+                    targetIndices.Add(idx);
+                }
+            }
+        }
+        return targetIndices;
+    }
+
+    private List<int> GetSpecificIndices()
+    {
+        var result = new List<int>();
+        if (string.IsNullOrEmpty(_specificIndicesStr))
+            return result;
+
+        string[] parts = _specificIndicesStr.Split(',');
+        foreach (var part in parts)
+        {
+            if (int.TryParse(part.Trim(), out int idx))
+            {
+                if (!result.Contains(idx))
+                {
+                    result.Add(idx);
+                }
+            }
+        }
+        result.Sort();
+        return result;
+    }
+
     private void StartBatchUpload(bool skipAlreadyUploaded = false)
     {
         if (_targetContainer == null || _targetContainer.categoryIconSets == null)
@@ -174,13 +226,10 @@ public class TileIconCdnUploadWindow : EditorWindow
 
         // Collect all sprites to upload
         var uploadTasks = new List<UploadTask>();
-        var excluded = GetExcludeIndices();
+        var targetIndices = GetTargetIndices(_targetContainer.categoryIconSets.Length);
 
-        for (int i = _startIndex; i < _targetContainer.categoryIconSets.Length; i++)
+        foreach (int i in targetIndices)
         {
-            if (excluded.Contains(i))
-                continue;
-
             var set = _targetContainer.categoryIconSets[i];
 
             if (skipAlreadyUploaded && set.isOnServer)
