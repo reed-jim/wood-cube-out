@@ -32,9 +32,9 @@ public class AdmobAdsMax
 #elif UNITY_IOS
     private const string MaxSdkKey =
 "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
-    private const string InterstitialAdUnitId = "c8d31e48f08ed31e";
-    private const string RewardedAdUnitId = "02932bb866cbb369";
-    private const string BanerAdUnitId = "ff665c0a75cadcc4";
+    private const string InterstitialAdUnitId = "4cb04cba80fde088";
+    private const string RewardedAdUnitId = "16c2951fee1b064d";
+    private const string BanerAdUnitId = "99d070c80ee598eb";
 #endif
 
     public float countdownAds;
@@ -228,7 +228,7 @@ public class AdmobAdsMax
 #elif UNITY_ANDROID
     private const string MRecAdUnitId = "543735570341644f";
 #elif UNITY_IOS
-    private const string MRecAdUnitId = "6fb959c7b9a69602";
+    private const string MRecAdUnitId = "09497dfadda02b3d";
 #endif
 
     bool isLoadedMrec;
@@ -340,12 +340,12 @@ public class AdmobAdsMax
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/6063245506";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/2630182703";
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9507666490";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/8457224452";
 #endif
 #endif
     private bool _isShowAdmobBanner;
@@ -1445,8 +1445,8 @@ public class AdmobAdsMax
         { "ad_unit_name", adInfo.AdUnitIdentifier },
         { "ad_format", adInfo.AdFormat }
     };
-        AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
-            adInfo.Revenue, "USD", dic);
+        // AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
+        //     adInfo.Revenue, "USD", dic);
         try
         {
             AdType type;

@@ -26,7 +26,7 @@ public class AppOpenAdManager
 #if UNITY_ANDROID
     private const string AD_UNIT_ID = "ca-app-pub-3046520253844875/5729545800";
 #elif UNITY_IOS
-    private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/5619876469";
+    private const string AD_UNIT_ID = "ca-app-pub-3046520253844875/5064774352";
 #else
     private const string AD_UNIT_ID = "unexpected_platform";
 #endif
