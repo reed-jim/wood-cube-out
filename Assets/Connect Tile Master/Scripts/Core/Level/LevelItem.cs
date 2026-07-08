@@ -85,6 +85,38 @@ public class LevelItem : MonoBehaviour
     [Header("Tile Container Config")]
     [Tooltip("Điều chỉnh vị trí Y của Tile Container lúc khởi tạo")]
     private float tileContainerYOffset = -52f;
+
+    public bool AutoFillAllThemes()
+    {
+        if (tileIconContainer == null || tileIconContainer.categoryIconSets == null)
+        {
+            Debug.LogWarning($"[LevelItem] TileIconContainer is missing or empty on {gameObject.name}! Please assign it first.");
+            return false;
+        }
+
+        bool modified = false;
+        foreach (var themeData in themeDataList)
+        {
+            foreach (var iconSet in tileIconContainer.categoryIconSets)
+            {
+                if (iconSet.itemCategory == themeData.category)
+                {
+                    int spritesCount = (iconSet.iconCdnKeys != null && iconSet.iconCdnKeys.Length > 0) ? iconSet.iconCdnKeys.Length : (iconSet.icons != null ? iconSet.icons.Length : 0);
+                    int stringsCount = iconSet.text != null ? iconSet.text.Length : 0;
+
+                    if (themeData.numSprite != spritesCount || themeData.numString != stringsCount)
+                    {
+                        themeData.numSprite = spritesCount;
+                        themeData.numString = stringsCount;
+                        modified = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        return modified;
+    }
 }
 
 #if UNITY_EDITOR
@@ -223,44 +255,15 @@ public class LevelItemEditor : Editor
 
         if (GUILayout.Button("Auto Fill All Themes"))
         {
-            if (levelItem.tileIconContainer != null && levelItem.tileIconContainer.categoryIconSets != null)
+            Undo.RecordObject(levelItem, "Auto Fill Theme Data");
+            if (levelItem.AutoFillAllThemes())
             {
-                Undo.RecordObject(levelItem, "Auto Fill Theme Data");
-                bool modified = false;
-
-                foreach (var themeData in levelItem.themeDataList)
-                {
-                    foreach (var iconSet in levelItem.tileIconContainer.categoryIconSets)
-                    {
-                        if (iconSet.itemCategory == themeData.category)
-                        {
-                            int spritesCount = (iconSet.iconCdnKeys != null && iconSet.iconCdnKeys.Length > 0) ? iconSet.iconCdnKeys.Length : (iconSet.icons != null ? iconSet.icons.Length : 0);
-                            int stringsCount = iconSet.text != null ? iconSet.text.Length : 0;
-
-                            if (themeData.numSprite != spritesCount || themeData.numString != stringsCount)
-                            {
-                                themeData.numSprite = spritesCount;
-                                themeData.numString = stringsCount;
-                                modified = true;
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                if (modified)
-                {
-                    EditorUtility.SetDirty(levelItem);
-                    Debug.Log("Successfully updated numSprite and numString for all themes in LevelItem.");
-                }
-                else
-                {
-                    Debug.Log("Theme data is already up to date.");
-                }
+                EditorUtility.SetDirty(levelItem);
+                Debug.Log("Successfully updated numSprite and numString for all themes in LevelItem.");
             }
             else
             {
-                Debug.LogWarning("TileIconContainer is missing or empty! Please assign it first.");
+                Debug.Log("Theme data is already up to date.");
             }
         }
 
