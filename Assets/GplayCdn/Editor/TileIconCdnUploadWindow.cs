@@ -14,6 +14,7 @@ public class TileIconCdnUploadWindow : EditorWindow
 {
     private TileIconContainer _targetContainer;
     private int _startIndex = 21;
+    private string _excludeIndicesStr = "";
     private bool _isUploading;
     private int _currentUploadIndex;
     private int _totalToUpload;
@@ -35,6 +36,7 @@ public class TileIconCdnUploadWindow : EditorWindow
             "TileIconContainer", _targetContainer, typeof(TileIconContainer), false);
 
         _startIndex = EditorGUILayout.IntField("Start Index (0-based)", _startIndex);
+        _excludeIndicesStr = EditorGUILayout.TextField("Exclude Indices (e.g. 23,24)", _excludeIndicesStr);
 
         EditorGUILayout.HelpBox(
             "Tip: To clear sprite references after upload, use\n" +
@@ -46,10 +48,20 @@ public class TileIconCdnUploadWindow : EditorWindow
         if (_targetContainer != null && _targetContainer.categoryIconSets != null)
         {
             int total = _targetContainer.categoryIconSets.Length;
-            int toUpload = Mathf.Max(0, total - _startIndex);
+            var excluded = GetExcludeIndices();
+            
+            int toUpload = 0;
+            for (int i = _startIndex; i < total; i++)
+            {
+                if (!excluded.Contains(i))
+                {
+                    toUpload++;
+                }
+            }
+
             EditorGUILayout.HelpBox(
                 $"Total categories: {total}\n" +
-                $"Categories to upload (from index {_startIndex}): {toUpload}",
+                $"Categories to upload (from index {_startIndex}, excluding {excluded.Count} items): {toUpload}",
                 MessageType.Info);
 
             // Show preview of what will be uploaded
@@ -59,13 +71,31 @@ public class TileIconCdnUploadWindow : EditorWindow
                 var set = _targetContainer.categoryIconSets[i];
                 int iconCount = set.icons != null ? set.icons.Length : 0;
                 bool hasSpriteOrder = set.spriteOrder != null;
-                string status = set.isOnServer ? "✓ On Server" : "✗ Not uploaded";
+                
+                bool isExcluded = excluded.Contains(i);
+                string status;
+                if (isExcluded)
+                {
+                    status = "🚫 Excluded";
+                }
+                else
+                {
+                    status = set.isOnServer ? "✓ On Server" : "✗ Not uploaded";
+                }
 
                 EditorGUILayout.BeginHorizontal();
+                if (isExcluded)
+                {
+                    GUI.enabled = false;
+                }
                 GUILayout.Label($"[{i}] {set.itemCategory}", GUILayout.Width(200));
                 GUILayout.Label($"Icons: {iconCount}", GUILayout.Width(80));
                 GUILayout.Label($"Order: {(hasSpriteOrder ? "Yes" : "No")}", GUILayout.Width(80));
-                GUILayout.Label(status, set.isOnServer ? EditorStyles.boldLabel : EditorStyles.label);
+                GUILayout.Label(status, (set.isOnServer && !isExcluded) ? EditorStyles.boldLabel : EditorStyles.label);
+                if (isExcluded)
+                {
+                    GUI.enabled = true;
+                }
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.EndScrollView();
@@ -114,6 +144,23 @@ public class TileIconCdnUploadWindow : EditorWindow
         }
     }
 
+    private HashSet<int> GetExcludeIndices()
+    {
+        var result = new HashSet<int>();
+        if (string.IsNullOrEmpty(_excludeIndicesStr))
+            return result;
+
+        string[] parts = _excludeIndicesStr.Split(',');
+        foreach (var part in parts)
+        {
+            if (int.TryParse(part.Trim(), out int idx))
+            {
+                result.Add(idx);
+            }
+        }
+        return result;
+    }
+
     private void StartBatchUpload(bool skipAlreadyUploaded = false)
     {
         if (_targetContainer == null || _targetContainer.categoryIconSets == null)
@@ -127,9 +174,13 @@ public class TileIconCdnUploadWindow : EditorWindow
 
         // Collect all sprites to upload
         var uploadTasks = new List<UploadTask>();
+        var excluded = GetExcludeIndices();
 
         for (int i = _startIndex; i < _targetContainer.categoryIconSets.Length; i++)
         {
+            if (excluded.Contains(i))
+                continue;
+
             var set = _targetContainer.categoryIconSets[i];
 
             if (skipAlreadyUploaded && set.isOnServer)
