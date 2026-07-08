@@ -32,7 +32,6 @@ extern NSString *const FBUnityMessageName_OnLogoutComplete;
 extern NSString *const FBUnityMessageName_OnShareLinkComplete;
 extern NSString *const FBUnityMessageName_OnFetchDeferredAppLinkComplete;
 extern NSString *const FBUnityMessageName_OnRefreshCurrentAccessTokenComplete;
-extern NSString *const FBUnityMessageName_OnRefreshLimitedLoginComplete;
 extern NSString *const FBUnityMessageName_OnUploadImageToMediaLibraryComplete;
 extern NSString *const FBUnityMessageName_OnUploadVideoToMediaLibraryComplete;
 extern NSString *const FBUnityMessageName_OnCreateGamingContextComplete;

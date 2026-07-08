@@ -27,8 +27,6 @@
 #include "FBUnityUtility.h"
 #include "FBSDK+Internal.h"
 
-static BOOL _fastAppSwitchEnabled = NO;
-
 @interface FBUnityInterface()
 
 @property (nonatomic, copy) NSString *openURLString;
@@ -168,9 +166,9 @@ isPublishPermLogin:(BOOL)isPublishPermLogin
   }
   FBSDKLoginConfiguration *config;
   if (nonce) {
-    config = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions tracking:([trackingStr isEqualToString:@"enabled"] ? FBSDKLoginTrackingEnabled : FBSDKLoginTrackingLimited) nonce:nonceStr appSwitch:_fastAppSwitchEnabled ? FBSDKAppSwitchEnabled : FBSDKAppSwitchDisabled];
+    config = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions tracking:([trackingStr isEqualToString:@"enabled"] ? FBSDKLoginTrackingEnabled : FBSDKLoginTrackingLimited) nonce:nonceStr];
   } else {
-    config = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions tracking:([trackingStr isEqualToString:@"enabled"] ? FBSDKLoginTrackingEnabled : FBSDKLoginTrackingLimited) appSwitch:_fastAppSwitchEnabled ? FBSDKAppSwitchEnabled : FBSDKAppSwitchDisabled];
+    config = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions tracking:([trackingStr isEqualToString:@"enabled"] ? FBSDKLoginTrackingEnabled : FBSDKLoginTrackingLimited)];
   }
 
   void (^loginHandler)(FBSDKLoginManagerLoginResult *,NSError *) = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
@@ -380,33 +378,6 @@ isPublishPermLogin:(BOOL)isPublishPermLogin
   }
 
   return nil;
-}
-
-- (void)refreshLimitedLogin:(int)requestId
-             fallbackPolicy:(int)fallbackPolicy
-{
-  FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-  [login refreshLimitedLoginFromViewController:nil
-                               fallbackPolicy:(FBSDKRefreshFallbackPolicy)fallbackPolicy
-                                   completion:^(FBSDKProfile *profile, NSError *error) {
-    if (error) {
-      [FBUnityUtility sendErrorToUnity:FBUnityMessageName_OnRefreshLimitedLoginComplete error:error requestId:requestId];
-      return;
-    }
-
-    // The refreshed Profile is cached as FBSDKProfile.currentProfile and read on
-    // the C# side via FB.Mobile.CurrentProfile(). Send back the refreshed
-    // authentication token so LoginResult can update AuthenticationToken.Current.
-    NSMutableDictionary *userData = [[NSMutableDictionary alloc] init];
-    NSDictionary *authenticationTokenUserData = [self getAuthenticationTokenUserData];
-    if (authenticationTokenUserData) {
-      [userData addEntriesFromDictionary:authenticationTokenUserData];
-    }
-
-    [FBUnityUtility sendMessageToUnity:FBUnityMessageName_OnRefreshLimitedLoginComplete
-                              userData:[userData copy]
-                             requestId:requestId];
-  }];
 }
 
 @end
@@ -685,12 +656,6 @@ extern "C" {
   {
     [FBSDKSettings.sharedSettings setIsDomainErrorEnabled:domainErrorEnabled];
     return [FBSDKSettings.sharedSettings isDomainErrorEnabled];
-  }
-
-  BOOL IOSFBFastAppSwitchEnabled(BOOL fastAppSwitchEnabled)
-  {
-    _fastAppSwitchEnabled = fastAppSwitchEnabled;
-    return _fastAppSwitchEnabled;
   }
 
   char* IOSFBSdkVersion()
@@ -980,10 +945,5 @@ extern "C" {
                                    requestId:requestId];
       };
     [FBSDKAccessToken refreshCurrentAccessTokenWithCompletion: completion];
-  }
-
-  void IOSFBRefreshLimitedLogin(int requestId, int fallbackPolicy)
-  {
-    [[FBUnityInterface sharedInstance] refreshLimitedLogin:requestId fallbackPolicy:fallbackPolicy];
   }
 }
