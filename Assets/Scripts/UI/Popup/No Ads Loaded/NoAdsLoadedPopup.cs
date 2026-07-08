@@ -12,6 +12,7 @@ public class NoAdsLoadedPopup : BasePopup
     public static bool IsShown { get; private set; }
     public static bool IsNoInternetMode { get; set; }
     public static bool IsWeakInternetMode { get; set; }
+    public static Action OnOkClickedNoInternet;
 
     protected override void MoreActionInAwake()
     {
@@ -103,6 +104,15 @@ public class NoAdsLoadedPopup : BasePopup
 
     protected void ClickBtOK()
     {
+        if (OnOkClickedNoInternet != null)
+        {
+            Action callback = OnOkClickedNoInternet;
+            OnOkClickedNoInternet = null;
+            Hide();
+            callback?.Invoke();
+            return;
+        }
+
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR

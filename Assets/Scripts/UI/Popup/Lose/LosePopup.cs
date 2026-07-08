@@ -289,8 +289,16 @@ public class LosePopup : BasePopup
 
     private void BuyTimeByAds()
     {
-        AdmobAdsMax.Instance.ShowVideoReward(
-            OnRewaredAdCompletedToBuyTime, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.BuyTime);
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            NoAdsLoadedPopup.OnOkClickedNoInternet = OnRewaredAdCompletedToBuyTime;
+            SwitchRoute(ScreenRoute.NoInternet);
+        }
+        else
+        {
+            AdmobAdsMax.Instance.ShowVideoReward(
+                OnRewaredAdCompletedToBuyTime, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.BuyTime);
+        }
     }
 
     private void OnRewaredAdCompletedToBuyTime()
@@ -303,7 +311,7 @@ public class LosePopup : BasePopup
         GrantPurchaseRewards(currentPurchaseNumber);
         _revivePurchaseCount++;
 
-        Hide(onCompletedAction: () =>
+        Action reviveAction = () =>
         {
             if (TileManager.Ins != null)
             {
@@ -312,7 +320,16 @@ public class LosePopup : BasePopup
             }
 
             buyTimeReviveEvent?.Invoke();
-        });
+        };
+
+        if (_isShown)
+        {
+            Hide(onCompletedAction: reviveAction);
+        }
+        else
+        {
+            reviveAction();
+        }
     }
 
     private void ReturnHome()

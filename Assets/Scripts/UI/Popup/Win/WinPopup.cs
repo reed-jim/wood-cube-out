@@ -360,8 +360,16 @@ public class WinPopup : BasePopup
     {
         //OnRewaredAdCompleted();
         ////comment de test
-        AdmobAdsMax.Instance.ShowVideoReward(
-            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            NoAdsLoadedPopup.OnOkClickedNoInternet = OnRewaredAdCompleted;
+            SwitchRoute(ScreenRoute.NoInternet);
+        }
+        else
+        {
+            AdmobAdsMax.Instance.ShowVideoReward(
+                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        }
     }
 
     private void OnRewaredAdCompleted()
@@ -371,12 +379,29 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
-        _tweens.Add(Tween.Scale(x5CoinButton.transform, 1.1f, duration: 0.15f)
-            .OnComplete(() => _tweens.Add(Tween.Scale(x5CoinButton.transform, 0, duration: 0.3f)))
-        );
+        if (_isShown)
+        {
+            _tweens.Add(Tween.Scale(x5CoinButton.transform, 1.1f, duration: 0.15f)
+                .OnComplete(() => _tweens.Add(Tween.Scale(x5CoinButton.transform, 0, duration: 0.3f)))
+            );
 
-        // Claim rewarded coins (80 coins) starting from imgCoinX5
-        ClaimCoins(_multiplierCoinWinLevel * coinClaimDefault, imgCoinX5);
+            // Claim rewarded coins (80 coins) starting from imgCoinX5
+            ClaimCoins(_multiplierCoinWinLevel * coinClaimDefault, imgCoinX5);
+        }
+        else
+        {
+            userResourcesObserver.UserResources.CoinQuantity += _multiplierCoinWinLevel * coinClaimDefault;
+            userResourcesObserver.Save();
+            if (UserResourcesManager.Instance != null)
+            {
+                UserResourcesManager.Instance.RefreshCoinText();
+            }
+            SaferioTracking.TrackResourceSource(
+                currentLevel.Value, "Coin", _multiplierCoinWinLevel * coinClaimDefault, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
+            
+            _currentCollectedCoin = 0;
+            ShowInterstitialOrTransition();
+        }
 
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
     }

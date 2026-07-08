@@ -118,6 +118,11 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
 
+                if (UserResourcesManager.Instance != null)
+                {
+                    UserResourcesManager.Instance.RefreshCoinText();
+                }
+
                 SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
                     boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
@@ -133,6 +138,11 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
+
+                if (UserResourcesManager.Instance != null)
+                {
+                    UserResourcesManager.Instance.RefreshCoinText();
+                }
 
                 SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
@@ -172,7 +182,15 @@ public class BuyBoosterPopup : BasePopup
             default: actionWatchVideo = ActionWatchVideo.AddHole; break;
         }
 
-        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            NoAdsLoadedPopup.OnOkClickedNoInternet = OnRewaredAdCompleted;
+            SwitchRoute(ScreenRoute.NoInternet);
+        }
+        else
+        {
+            AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
+        }
     }
 
     private void OnRewaredAdCompleted()
@@ -181,32 +199,56 @@ public class BuyBoosterPopup : BasePopup
 
         updateBoosterQuantityEvent?.Invoke((int)_boosterType);
 
-        Hide(onCompletedAction: () =>
+        Action completeAction = () =>
         {
-            // useBoosterEvent?.Invoke(_boosterType); // Remove auto-use
-
             SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Booster_{_boosterType}");
-        });
+        };
+
+        if (_isShown)
+        {
+            Hide(onCompletedAction: completeAction);
+        }
+        else
+        {
+            completeAction();
+        }
     }
 
     private void UnlockScrewBoxWithAds()
     {
         isAbleToHideOnClickOutside = false;
 
-        AdmobAdsMax.Instance.ShowVideoReward(
-            OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            NoAdsLoadedPopup.OnOkClickedNoInternet = OnRewaredAdCompletedToUnlockBox;
+            SwitchRoute(ScreenRoute.NoInternet);
+        }
+        else
+        {
+            AdmobAdsMax.Instance.ShowVideoReward(
+                OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
+        }
     }
 
     private void OnRewaredAdCompletedToUnlockBox()
     {
-        Hide(onCompletedAction: () =>
+        Action completeAction = () =>
         {
             unlockScrewBoxEvent?.Invoke();
 
             SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "UnlockScrewBox");
 
             isAbleToHideOnClickOutside = true;
-        });
+        };
+
+        if (_isShown)
+        {
+            Hide(onCompletedAction: completeAction);
+        }
+        else
+        {
+            completeAction();
+        }
     }
 
     private void OnConfirmedBreakObject()
@@ -214,6 +256,11 @@ public class BuyBoosterPopup : BasePopup
         if (_isBoughtBreakObjectBoosterByCoin)
         {
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[(int)_boosterType]);
+
+            if (UserResourcesManager.Instance != null)
+            {
+                UserResourcesManager.Instance.RefreshCoinText();
+            }
 
             SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",

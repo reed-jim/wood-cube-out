@@ -117,6 +117,7 @@ public class PausePopup : BasePopup
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Replay.ToString());
         }
         replayLevelEvent?.Invoke();
+        Hide();
     }
 
     private void OnInterstitialAdToReplayCompleted()
