@@ -47,6 +47,7 @@ public class WinPopup : BasePopup
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
+   
 
     private bool _isCollectCoinRemoteConfig;
     private int _multiplierCoinWinLevel;
@@ -362,8 +363,7 @@ public class WinPopup : BasePopup
         ////comment de test
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            NoAdsLoadedPopup.OnOkClickedNoInternet = OnRewaredAdCompleted;
-            SwitchRoute(ScreenRoute.NoInternet);
+            ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
         }
         else
         {

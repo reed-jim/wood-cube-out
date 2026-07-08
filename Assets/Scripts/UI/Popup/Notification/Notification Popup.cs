@@ -20,6 +20,8 @@ public class NotificationPopup : BasePopup
         //BoosterUI.showNotificationWithParamEvent += ShowNotification;
         IAPPackageUI.showNotificationEvent += ShowNotification;
         IAPCoinItemUI.showNotificationEvent += ShowNotification;
+        WinPopup.showNotificationEvent += ShowNotification;
+        LosePopup.showNotificationEvent += ShowNotification;
         RemoveAdPopup.showNotificationEvent += ShowNotification;
         SaferioIAPManager.showNotificationEvent += ShowNotification;
         //IAPReviewPopup.showNotificationEvent += ShowNotification;
@@ -41,6 +43,8 @@ public class NotificationPopup : BasePopup
         IAPCoinItemUI.showNotificationEvent -= ShowNotification;
         RemoveAdPopup.showNotificationEvent -= ShowNotification;
         SaferioIAPManager.showNotificationEvent -= ShowNotification;
+        WinPopup.showNotificationEvent -= ShowNotification;
+        LosePopup.showNotificationEvent -= ShowNotification;
         //IAPReviewPopup.showNotificationEvent -= ShowNotification;
         //CompensatePopup.showNotificationEvent -= ShowNotification;
         //BackupPopup.showNotificationEvent -= ShowNotification;

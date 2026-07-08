@@ -49,6 +49,7 @@ public class LosePopup : BasePopup
     public static event Action<int> updateBoosterQuantityEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
 
+
     protected override void RegisterMoreEvent()
     {
         // GameStateLose.loseLevelEvent += OnLevelLose;
@@ -291,8 +292,7 @@ public class LosePopup : BasePopup
     {
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            NoAdsLoadedPopup.OnOkClickedNoInternet = OnRewaredAdCompletedToBuyTime;
-            SwitchRoute(ScreenRoute.NoInternet);
+            ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
         }
         else
         {
