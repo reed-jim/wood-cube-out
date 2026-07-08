@@ -283,6 +283,21 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
         }
     }
 
+    private void SetHandRotation(Transform target)
+    {
+        if (tutorialHand == null) return;
+        bool isBooster = false;
+        BoosterUI boosterUI = FindObjectOfType<BoosterUI>();
+        if (boosterUI != null && target != null)
+        {
+            isBooster = target == boosterUI.HintButton?.transform ||
+                        target == boosterUI.ShuffleButton?.transform ||
+                        target == boosterUI.FreezeTimeButton?.transform ||
+                        target == boosterUI.UnlockThemeButton?.transform;
+        }
+        tutorialHand.transform.localEulerAngles = isBooster ? new Vector3(0, 0, 180f) : Vector3.zero;
+    }
+
     private IEnumerator DragLoop(Transform from, Transform to)
     {
         if (tutorialHand == null) yield break;
@@ -291,6 +306,7 @@ public class TutorialLevelTwo : Singleton<TutorialLevelTwo>
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
+        tutorialHand.transform.localEulerAngles = Vector3.zero;
         tutorialHand.AnimationState.SetAnimation(0, "begin", true);
 
         while (true)

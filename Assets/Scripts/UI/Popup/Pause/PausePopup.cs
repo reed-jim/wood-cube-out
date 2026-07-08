@@ -101,25 +101,10 @@ public class PausePopup : BasePopup
 
     private void Replay()
     {
-        if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
-        {
-            SwitchRoute(ScreenRoute.Replay);
-        }
-        else
-        {
-            bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
-            if (isShowInterReplayLevel)
-            {
-                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
-            }
-            else
-            {
-                ActualReplay();
-            }
 
-            Hide();
-        }
+        AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+
     }
 
     private void ActualReplay()

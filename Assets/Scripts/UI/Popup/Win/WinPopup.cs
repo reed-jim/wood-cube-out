@@ -358,14 +358,16 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
-        OnRewaredAdCompleted();
+        //OnRewaredAdCompleted();
         ////comment de test
-        //AdmobAdsMax.Instance.ShowVideoReward(
-        //    OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
     }
 
     private void OnRewaredAdCompleted()
     {
+        _isAlreadyWatchRewardedAd = true;
+
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
@@ -377,8 +379,6 @@ public class WinPopup : BasePopup
         ClaimCoins(_multiplierCoinWinLevel * coinClaimDefault, imgCoinX5);
 
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
-
-        _isAlreadyWatchRewardedAd = true;
     }
 
     private void ShowAdsNotLoadedPopup()

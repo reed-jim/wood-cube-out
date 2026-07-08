@@ -109,7 +109,7 @@ public class AdmobAdsMax : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        // StartCoroutine(Init());
+        StartCoroutine(Init());
 
         countdownAds = int.MaxValue;
     }
@@ -976,7 +976,7 @@ public class AdmobAdsMax : MonoBehaviour
             return false;
         }
 
-        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
+        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, true))
         {
             actionIniterClose?.Invoke();
 
@@ -985,9 +985,7 @@ public class AdmobAdsMax : MonoBehaviour
 
         int delayInter = RemoteConfigController.GetIntConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 120);
 
-        if (IsLoadedInterstitial() && ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
-                .interstitials.minimumLevel && countdownAds > delayInter) ||
-            isShowImmediatly))
+        if (IsLoadedInterstitial() && (countdownAds > delayInter || isShowImmediatly))
         {
             if (isShowAdBreak)
             {
@@ -1320,12 +1318,12 @@ public class AdmobAdsMax : MonoBehaviour
             }
             else
             {
-                // ShowBannerMax();
+                ShowBannerMax();
             }
         }
         else
         {
-            // ShowBannerMax();
+            ShowBannerMax();
         }
     }
 
@@ -1340,7 +1338,7 @@ public class AdmobAdsMax : MonoBehaviour
     public void ShowBannerMax()
     {
         MaxSdk.ShowBanner(BanerAdUnitId);
-        // RequestBanner();
+        //RequestBanner();
         _bannerView?.Hide();
 
         TryHideBannerCollap();

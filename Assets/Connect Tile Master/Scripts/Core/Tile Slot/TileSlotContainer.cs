@@ -1000,7 +1000,7 @@ public class TileSlotContainer : MonoBehaviour
             if (isChildOfUpToAll)
             {
                 canvas.overrideSorting = true;
-                canvas.sortingOrder = 100;
+                canvas.sortingOrder = 9;
             }
             else
             {
@@ -1010,7 +1010,7 @@ public class TileSlotContainer : MonoBehaviour
         else
         {
             canvas.overrideSorting = true;
-            canvas.sortingOrder = 100;
+            canvas.sortingOrder = 9;
         }
     }
 }

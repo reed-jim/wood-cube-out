@@ -208,30 +208,7 @@ public class LosePopup : BasePopup
 
     private void Replay()
     {
-        if (
-            GamePersistentVariable.livesConfig.isActive &&
-            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0
-        )
-        {
-            GamePersistentVariable.isPendingReplay = true;
-
-            SwitchRoute(ScreenRoute.LivesShop);
-
-            return;
-        }
-
-        if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
-        {
-            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
-        }
-        else
-        {
-            replayLevelEvent?.Invoke();
-
-            SaferioTracking.TrackReplayLevel(currentLevel.Value);
-
-            Hide();
-        }
+        AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
     }
 
     private void OnInterstitialAdCompleted()

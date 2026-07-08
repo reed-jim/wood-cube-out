@@ -452,7 +452,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             if (isChildOfUpToAll)
             {
                 canvas.overrideSorting = true;
-                canvas.sortingOrder = 100;
+                canvas.sortingOrder = 9;
             }
             else
             {
@@ -463,7 +463,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         else
         {
             canvas.overrideSorting = true;
-            canvas.sortingOrder = 100;
+            canvas.sortingOrder = 9;
         }
     }
     public void SetHighlight(bool isHighlight)
@@ -579,7 +579,6 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         if (_wrongShakeTween.isAlive) _wrongShakeTween.Stop();
 
-        // Rung nhẹ quân bài sau khi đã bay về chỗ trên grid
         _wrongShakeTween = Tween.ShakeLocalPosition(transform, strength: new Vector3(10f, 10f, 0f), duration: 0.2f, frequency: 15)
             .OnComplete(() =>
             {

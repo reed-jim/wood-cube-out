@@ -305,6 +305,21 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
     private Coroutine dragLoopCoroutine;
     private Coroutine tapLoopCoroutine;
 
+    private void SetHandRotation(Transform target)
+    {
+        if (tutorialHand == null) return;
+        bool isBooster = false;
+        BoosterUI boosterUI = FindObjectOfType<BoosterUI>();
+        if (boosterUI != null && target != null)
+        {
+            isBooster = target == boosterUI.HintButton?.transform ||
+                        target == boosterUI.ShuffleButton?.transform ||
+                        target == boosterUI.FreezeTimeButton?.transform ||
+                        target == boosterUI.UnlockThemeButton?.transform;
+        }
+        tutorialHand.transform.localEulerAngles = isBooster ? new Vector3(0, 0, 180f) : Vector3.zero;
+    }
+
     private void StartDragLoop(Transform from, Transform to)
     {
         StopDragLoop();
@@ -319,6 +334,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
+        tutorialHand.transform.localEulerAngles = Vector3.zero;
         tutorialHand.AnimationState.SetAnimation(0, "begin", true);
 
         while (true)
@@ -353,13 +369,14 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
         tutorialHand.transform.SetParent(TileManager.Ins.UpToAll.transform, true);
         tutorialHand.transform.SetAsLastSibling();
         tutorialHand.transform.localScale = Vector3.one;
+        SetHandRotation(target);
         tutorialHand.AnimationState.SetAnimation(0, "action", true);
 
         while (true)
         {
             if (target == null) yield break;
 
-            tutorialHand.transform.position = target.position;
+            tutorialHand.transform.position = target.position + new Vector3(30f, -30f, 0f);
 
             yield return new WaitForSeconds(1f);
         }

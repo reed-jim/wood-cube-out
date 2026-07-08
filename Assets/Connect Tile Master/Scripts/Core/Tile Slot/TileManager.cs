@@ -973,7 +973,7 @@ public class TileManager : Singleton<TileManager>
 
         if (isCurrentLevelTutorialActive)
         {
-            if (GamePersistentVariable.currentLevel == 1 || GamePersistentVariable.currentLevel == 13)
+            if (GamePersistentVariable.currentLevel == 1 || GamePersistentVariable.currentLevel == 9)
             {
                 TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
                 if (tut1 != null)
@@ -1000,7 +1000,7 @@ public class TileManager : Singleton<TileManager>
                     tut5.StartTutorial();
                 }
             }
-            else if (GamePersistentVariable.currentLevel == 7)
+            else if (GamePersistentVariable.currentLevel == 3)
             {
                 TutorialLevelSeven tut7 = TutorialLevelSeven.Ins != null ? TutorialLevelSeven.Ins : FindObjectOfType<TutorialLevelSeven>(true);
                 if (tut7 != null)
@@ -1009,7 +1009,7 @@ public class TileManager : Singleton<TileManager>
                     tut7.StartTutorial();
                 }
             }
-            else if (GamePersistentVariable.currentLevel == 10)
+            else if (GamePersistentVariable.currentLevel == 7)
             {
                 TutorialLevelTen tut10 = TutorialLevelTen.Ins != null ? TutorialLevelTen.Ins : FindObjectOfType<TutorialLevelTen>(true);
                 if (tut10 != null)
@@ -1018,7 +1018,7 @@ public class TileManager : Singleton<TileManager>
                     tut10.StartTutorial();
                 }
             }
-            else if (GamePersistentVariable.currentLevel == 16)
+            else if (GamePersistentVariable.currentLevel == 12)
             {
                 TutorialLevelSixteen tut16 = TutorialLevelSixteen.Ins != null ? TutorialLevelSixteen.Ins : FindObjectOfType<TutorialLevelSixteen>(true);
                 if (tut16 != null)
@@ -1214,7 +1214,7 @@ public class TileManager : Singleton<TileManager>
             result.Insert(0, ItemCategory.Number_5);
         }
 
-        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 10)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 7)
         {
             if (targetThemeLevel10 != ItemCategory.None)
             {
@@ -1222,7 +1222,7 @@ public class TileManager : Singleton<TileManager>
                 result.Insert(0, targetThemeLevel10);
             }
         }
-        else if (isCurrentLevelTutorialActive && (GamePersistentVariable.currentLevel == 16))
+        else if (isCurrentLevelTutorialActive && (GamePersistentVariable.currentLevel == 12))
         {
             if (levelItem.themeDataList.Count > 2)
             {
@@ -1508,7 +1508,7 @@ public class TileManager : Singleton<TileManager>
                 itemCategoryPool.Insert(0, ItemCategory.Number_5);
             }
         }
-        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 10)
+        else if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 7)
         {
             if (itemCategoryPool.Count > 0)
             {
@@ -1533,7 +1533,7 @@ public class TileManager : Singleton<TileManager>
                 }
             }
         }
-        else if (isCurrentLevelTutorialActive && (GamePersistentVariable.currentLevel == 16))
+        else if (isCurrentLevelTutorialActive && (GamePersistentVariable.currentLevel == 12))
         {
             if (levelItem.themeDataList.Count > 2)
             {
@@ -2703,7 +2703,7 @@ public class TileManager : Singleton<TileManager>
         shuffledGridCategories.Shuffle();
         tilesToShuffle.Shuffle();
 
-        if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 10)
+        if (isCurrentLevelTutorialActive && GamePersistentVariable.currentLevel == 7)
         {
             if (targetThemeLevel10 != ItemCategory.None)
             {
