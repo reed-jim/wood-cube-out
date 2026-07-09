@@ -231,7 +231,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards || TileManager.Ins.IsAnyTileDragging()))
+        if (TileManager.Ins != null && (TileManager.Ins.IsShuffling || TileManager.Ins.IsDealingCards || TileManager.Ins.IsAnyTileDragging() || TileManager.Ins.IsAnyThemeCompleting()))
         {
             return;
         }
@@ -507,6 +507,11 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBoosterUnlockTheme()
     {
+        if (TileManager.Ins != null && TileManager.Ins.IsAnyThemeCompleting())
+        {
+            return;
+        }
+
         //if (TileManager.Ins == null || !TileManager.Ins.CanUseUnlockThemeBooster())
         //{
         //    ShowWarning("no_unlock_available");
