@@ -248,24 +248,7 @@ public class WinPopup : BasePopup
             return;
         }
 
-        if (_isAlreadyWatchRewardedAd)
-        {
-            OnInterstitialAdCompleted();
-        }
-        else
-        {
-            continueButton.interactable = false;
-
-            DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
-
-            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
-            {
-
-            }
-            else
-            {
-            }
-        }
+        OnInterstitialAdCompleted();
 
         GamePersistentVariable.collectResourceMode = CollectResourceMode.PlayCollectAnimation;
     }

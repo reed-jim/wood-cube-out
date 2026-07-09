@@ -261,14 +261,7 @@ public class SceneTransition : MonoBehaviour
             // double inter
             if (!_isFirstTimeEnterScene)
             {
-                blackBackgroundToPassPolicy.gameObject.SetActive(true);
-
-            //     GameController.Instance.admobAds.ShowInterstitial(
-            //       actionIniterClose: () =>
-            //        {
-            //            blackBackgroundToPassPolicy.gameObject.SetActive(false);
-            //        }
-            //    );
+                blackBackgroundToPassPolicy.gameObject.SetActive(false);
             }
             else
             {
