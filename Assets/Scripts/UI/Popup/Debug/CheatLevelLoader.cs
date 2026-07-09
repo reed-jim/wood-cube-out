@@ -13,6 +13,8 @@ public class CheatLevelLoader : MonoBehaviour
 
     [Tooltip("The Button that will trigger the level load when clicked.")]
     [SerializeField] private Button loadButton;
+    [SerializeField] private DebugPopup debugPopupController;
+
 
     private void Start()
     {
@@ -64,6 +66,7 @@ public class CheatLevelLoader : MonoBehaviour
                 Debug.Log($"CheatLevelLoader: Requesting load of level {levelNum}...");
                 // Trigger the existing static debug event that LevelLoader subscribes to.
                 DebugPopup.TriggerToLevelEvent(levelNum);
+                debugPopupController.HidePopup();   
             }
             else
             {
