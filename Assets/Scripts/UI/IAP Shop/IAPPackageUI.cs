@@ -24,6 +24,8 @@ public class IAPPackageUI : MonoBehaviour
     [SerializeField] private bool isSalePack;
     [SerializeField] private SaleIAPPackType packType;
 
+    private string RemoveAdsPlusPurchasedKey => $"Remove Ads Plus Purchased {_packageData.ProductId}";
+
     #region EVENT
     public static event Action<string> buyIAPEvent;
     public static event Action<string, string> showNotificationEvent;
@@ -55,13 +57,12 @@ public class IAPPackageUI : MonoBehaviour
 
     public void Setup(IAPPackageData data)
     {
-        if (isContainRemoveAd && UserData.IsRemoveAds)
+        if (ShouldHideAfterRemoveAds())
         {
             gameObject.SetActive(false);
 
             return;
         }
-        
 
         if (coinQuantityText != null)
         {
@@ -117,14 +118,41 @@ public class IAPPackageUI : MonoBehaviour
 
     private void OnAdsRemoved()
     {
+        if (isRemoveAdsPlus && IsLastPurchasedPackage())
+        {
+            DataUtility.Save(RemoveAdsPlusPurchasedKey, true);
+        }
+
+        if (ShouldHideAfterRemoveAds())
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private bool ShouldHideAfterRemoveAds()
+    {
+        if (!UserData.IsRemoveAds)
+        {
+            return false;
+        }
+
         if (isContainRemoveAd)
         {
-            gameObject.SetActive(false);
+            return true;
         }
-        if(isRemoveAdsPlus)
-        {
-            gameObject.SetActive(false);
-        }
+
+        return isRemoveAdsPlus && (IsRemoveAdsPlusPurchased() || IsLastPurchasedPackage());
+    }
+
+    private bool IsRemoveAdsPlusPurchased()
+    {
+        return _packageData != null && DataUtility.Load(RemoveAdsPlusPurchasedKey, false);
+    }
+
+    private bool IsLastPurchasedPackage()
+    {
+        return _packageData != null &&
+               SaferioIAPManager.LastPurchasedRemoveAdsProductId == _packageData.ProductId;
     }
 
     private void UpdateVisibility()
@@ -136,7 +164,7 @@ public class IAPPackageUI : MonoBehaviour
 
         try
         {
-            gameObject.SetActive(GamePersistentVariable.isShowSalePacks[packType]);
+            gameObject.SetActive(!ShouldHideAfterRemoveAds() && GamePersistentVariable.isShowSalePacks[packType]);
         }
         catch (System.Exception)
         {

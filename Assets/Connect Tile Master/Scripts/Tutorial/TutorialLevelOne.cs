@@ -492,7 +492,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
         tutorialHand.gameObject.SetActive(true);
         tutorialHand.transform.SetParent(target, false);
-        tutorialHand.transform.localPosition = Vector3.zero;
+        tutorialHand.transform.localPosition = new Vector3(0f, 30f, 0f);
         tutorialHand.transform.localScale = Vector3.one;
         SetHandRotation(target);
         tutorialHand.AnimationState.SetAnimation(0, "action", true);

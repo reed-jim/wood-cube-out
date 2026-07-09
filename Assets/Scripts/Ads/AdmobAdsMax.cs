@@ -596,7 +596,8 @@ public class AdmobAdsMax : MonoBehaviour
     UnityAction _actionTwoIniterClose;
     UnityAction _actionShowSecondInterAd;
 
-    public void ShowDoubleInterstitialAds(UnityAction onDoubleInterClosed, bool isShowBreakAds = true, string actionWatchLog = "other", bool isShowImmediatly = false)
+    public void
+        ShowDoubleInterstitialAds(UnityAction onDoubleInterClosed, bool isShowBreakAds = true, string actionWatchLog = "other", bool isShowImmediatly = false)
     {
         int minLevelShowInter = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_START_SHOW_INITSTIALL, 10);
         if (UserData.IsRemoveAds || UserData.CurrentLevel <= minLevelShowInter)

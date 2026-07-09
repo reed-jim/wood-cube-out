@@ -1314,20 +1314,17 @@ public class TileManager : Singleton<TileManager>
                 if (randVal <= ratio || nonMatchingInPool.Count == 0)
                 {
                     chosenCategory = matchingInPool[UnityEngine.Random.Range(0, matchingInPool.Count)];
-                    itemCategoryPool.Remove(chosenCategory);
                     return chosenCategory;
                 }
                 else
                 {
                     chosenCategory = nonMatchingInPool[UnityEngine.Random.Range(0, nonMatchingInPool.Count)];
-                    itemCategoryPool.Remove(chosenCategory);
                     return chosenCategory;
                 }
             }
             else if (nonMatchingInPool.Count > 0)
             {
                 chosenCategory = nonMatchingInPool[UnityEngine.Random.Range(0, nonMatchingInPool.Count)];
-                itemCategoryPool.Remove(chosenCategory);
                 return chosenCategory;
             }
         }
@@ -1372,16 +1369,12 @@ public class TileManager : Singleton<TileManager>
         {
             if (itemCategoryPool.Contains(sortedCategory[i]))
             {
-                itemCategoryPool.Remove(sortedCategory[i]);
-
                 return sortedCategory[i];
             }
         }
 
         // fallback return first value of itemCategoryPool
         ItemCategory nextCategory = itemCategoryPool.First();
-
-        itemCategoryPool.RemoveAt(0);
 
         return nextCategory;
     }
@@ -1650,6 +1643,8 @@ public class TileManager : Singleton<TileManager>
 
                         tileSlotContainer.SwitchItem(tile);
 
+                        EmptyTile(tile);
+
                         if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                         {
                             OnSlotCompleted(tileSlotContainer, index);
@@ -1658,7 +1653,6 @@ public class TileManager : Singleton<TileManager>
                         onCompleteAction?.Invoke();
 
                         // DropTileDown(tile);
-                        EmptyTile(tile);
                         SpawnTilesForEmptyGrid();
                     });
 
@@ -1945,18 +1939,21 @@ public class TileManager : Singleton<TileManager>
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
                 if (tile != null)
                 {
-                    tile.gameObject.SetActive(true);
-                    tile.txCount.gameObject.SetActive(false);
+                    ItemCategory originalCategory = ItemCategory.None;
+                    ItemCategory finalCategory = ItemCategory.None;
+                    bool removedFromPool = false;
 
-                    tiles.Add(tile);
-
-                    tile.transform.SetParent(tileContainer);
-                    tile.transform.position = CardStockPile.Ins.transform.position;
-
-                    ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
-                    
                     try
                     {
+                        Tween.StopAll(tile.transform);
+                        tile.gameObject.SetActive(true);
+                        tile.txCount.gameObject.SetActive(false);
+                        tile.transform.SetParent(tileContainer);
+                        tile.transform.position = CardStockPile.Ins.transform.position;
+
+                        originalCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
+                        finalCategory = originalCategory;
+
                         if (isCurrentLevelTutorialActive)
                         {
                             if (GamePersistentVariable.currentLevel == 2)
@@ -1964,7 +1961,7 @@ public class TileManager : Singleton<TileManager>
                                 TutorialLevelTwo tut2 = TutorialLevelTwo.Ins != null ? TutorialLevelTwo.Ins : FindObjectOfType<TutorialLevelTwo>(true);
                                 if (tut2 != null && tut2.gameObject.activeSelf)
                                 {
-                                    nextCategory = tut2.GetTutorialForcedCategory(nextCategory);
+                                    finalCategory = tut2.GetTutorialForcedCategory(originalCategory);
                                 }
                             }
                             else
@@ -1972,12 +1969,20 @@ public class TileManager : Singleton<TileManager>
                                 TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
                                 if (tut1 != null && tut1.gameObject.activeSelf)
                                 {
-                                    nextCategory = tut1.GetTutorialForcedCategory(nextCategory);
+                                    finalCategory = tut1.GetTutorialForcedCategory(originalCategory);
                                 }
                             }
                         }
 
-                        InitTileWithSpriteOrString(tile, nextCategory);
+                        InitTileWithSpriteOrString(tile, finalCategory);
+
+                        removedFromPool = itemCategoryPool.Remove(originalCategory);
+                        if (!removedFromPool)
+                        {
+                            throw new InvalidOperationException($"Cannot commit spawned card. Category {originalCategory} is no longer in itemCategoryPool.");
+                        }
+
+                        tiles.Add(tile);
 
                         tile.SetFaceUp(false);
                         tile.transform.localEulerAngles = Vector3.zero;
@@ -1992,17 +1997,23 @@ public class TileManager : Singleton<TileManager>
 
                         tile.transform.SetAsLastSibling();
 
+                        grids[i].tile = tile;
+
+                        CardStockPile.Ins.DrawNewCard(tile);
+
+                        if (float.IsNaN(dealDuration) || float.IsInfinity(dealDuration)) dealDuration = 0.5f;
+
                         Tween.LocalPosition(tile.transform, grids[i].position, dealDuration);
 
                         float halfDuration = dealDuration / 2f;
+                        if (float.IsNaN(halfDuration) || float.IsInfinity(halfDuration)) halfDuration = 0.25f;
+
                         Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
                         .OnComplete(() =>
                         {
-                            if (tile == null) return;
                             Tween.LocalEulerAngles(tile.transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad)
                             .OnComplete(() =>
                             {
-                                if (tile == null) return;
                                 float flipDuration = 0.15f;
                                 Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 90f, 0), flipDuration).OnComplete(() =>
                                 {
@@ -2024,21 +2035,30 @@ public class TileManager : Singleton<TileManager>
                             }, warnIfTargetDestroyed: false);
                         }, warnIfTargetDestroyed: false);
 
-                        grids[i].tile = tile;
-
-                        CardStockPile.Ins.DrawNewCard(tile);
                     }
                     catch (System.Exception ex)
                     {
-                        // Log the error explicitly so it's not swallowed by DOTween's SafeMode
-                        UnityEngine.Debug.LogError($"[SpawnTilesForEmptyGrid] Hidden Exception caught! Failed to initialize tile with category {nextCategory}. Exception: {ex}");
-                        
-                        // Revert the pool count to avoid desync
-                        itemCategoryPool.Add(nextCategory);
-                        
-                        // Clean up the broken tile
+                        UnityEngine.Debug.LogError($"[SpawnTilesForEmptyGrid] Failed to spawn tile for category {finalCategory}. Exception: {ex}");
+
+                        if (removedFromPool)
+                        {
+                            itemCategoryPool.Insert(0, originalCategory);
+                        }
+
+                        if (grids[i].tile == tile)
+                        {
+                            grids[i].tile = null;
+                        }
+
                         tiles.Remove(tile);
+                        tile.IsMoving = false;
+                        tile.isFlipping = false;
+                        Tween.StopAll(tile.transform);
                         tile.gameObject.SetActive(false);
+                        if (CardStockPile.Ins != null)
+                        {
+                            CardStockPile.Ins.UpdateText();
+                        }
                     }
                 }
 

@@ -376,7 +376,7 @@ public class TutorialLevelSixteen : Singleton<TutorialLevelSixteen>
         {
             if (target == null) yield break;
 
-            tutorialHand.transform.position = target.position + new Vector3(30f, -30f, 0f);
+            tutorialHand.transform.position = target.position + new Vector3(0f, 30f, 0f);
 
             yield return new WaitForSeconds(1f);
         }

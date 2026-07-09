@@ -37,6 +37,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action<string, string> showNotificationEvent;
     #endregion
 
+    public static string LastPurchasedRemoveAdsProductId { get; private set; }
+
     private void Awake()
     {
         IAPPackageUI.buyIAPEvent += BuyProduct;
@@ -264,6 +266,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         {
             if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
             {
+                LastPurchasedRemoveAdsProductId = e.purchasedProduct.definition.id;
+
                 removeAdPurchasedCompletedEvent?.Invoke();
 
                 UserData.IsRemoveAds = true;
@@ -314,6 +318,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         if (productData.IsRemoveAd)
                         {
+                            LastPurchasedRemoveAdsProductId = productData.ProductId;
+
                             AdmobAdsMax.Instance.HideBanner();
                             AdmobAdsMax.Instance.DestroyBanner();
 

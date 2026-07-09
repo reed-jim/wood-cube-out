@@ -167,7 +167,7 @@ public class CardStockPile : Singleton<CardStockPile>
         UpdateText(false);
         int numCardLeft = TileManager.Ins.itemCategoryPool.Count;
         ApplyCardVisibility(numCardLeft, true);
-        SoundManager.Instance?.PlaySoundTakeCardFromGrid();
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySoundTakeCardFromGrid();
 
         if (numCardLeft >= 2 && listCards.Count > 1)
         {

@@ -645,6 +645,7 @@ public class TileSlotContainer : MonoBehaviour
                     {
                         Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory), resetLockState: false);
                         category.alpha = 1f;
+                        isMoving = true;
 
                         Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
                         .OnComplete(() =>

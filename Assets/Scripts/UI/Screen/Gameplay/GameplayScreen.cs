@@ -71,9 +71,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
         {
             openInventoryPopupButton.onClick.AddListener(OpenInventoryPopup);
         }
-
+#if TESTER
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
+        openDebugPopupButton.gameObject.SetActive(true);
 
+#endif
         if (UserData.IsRemoveAds)
         {
             noAdsButton.gameObject.SetActive(false);
@@ -407,5 +409,5 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
         Tween.Alpha(hardModeCanvasGroup, 1, duration: 0.3f);
     }
-    #endregion      
+    #endregion
 }
