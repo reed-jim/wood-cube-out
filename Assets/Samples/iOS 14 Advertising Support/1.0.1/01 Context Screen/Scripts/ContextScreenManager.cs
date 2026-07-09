@@ -45,7 +45,9 @@ namespace Unity.Advertisement.IosSupport.Samples
             }
 #endif
 
-            StartCoroutine(RequestNotificationAuthorization());
+            SceneManager.LoadScene("Loading");
+
+            // StartCoroutine(RequestNotificationAuthorization());
 
             yield return null;
         }
