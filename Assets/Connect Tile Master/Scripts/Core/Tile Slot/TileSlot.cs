@@ -395,9 +395,28 @@ public enum ItemCategory
     Earbuds,
     Power,
     FruitTray,
-
-
-
+    Number_11,
+    Number_21,
+    Number_22,
+    Number_23,
+    Number_25,
+    Number_26,
+    Number_28,
+    Number_31,
+    Number_32,
+    Number_33,
+    Emotions,
+    Weather,
+    Seasons,
+    Directions,
+    Materials,
+    Jobs,
+    Plant,
+    Taste,
+    Time,
+    Gemstones,
+    Jewelry,
+    Fabrics,
 }
 
 public class TileSlot : MonoBehaviour
