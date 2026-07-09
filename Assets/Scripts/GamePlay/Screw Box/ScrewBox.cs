@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using CandyCoded.HapticFeedback;
-using Firebase.RemoteConfig;
+using System.Threading.Tasks;
 using NamPhuThuy;
 using PrimeTween;
 using Saferio.Util.SaferioTween;

@@ -16,7 +16,6 @@ public class SimpleSceneTransition : MonoBehaviour
 
     private void Awake()
     {
-        MenuScreen.showMenuBlackScreenEvent += Show;
 
         _tweens = new List<Tween>();
 
@@ -30,7 +29,6 @@ public class SimpleSceneTransition : MonoBehaviour
 
     private void OnDestroy()
     {
-        MenuScreen.showMenuBlackScreenEvent -= Show;
 
         CommonUtil.StopAllTweens(_tweens);
     }

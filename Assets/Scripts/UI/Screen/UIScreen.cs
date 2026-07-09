@@ -38,7 +38,6 @@ public class UIScreen : MonoBehaviour
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         BottomBarItem.switchRouteEvent += OnRouteSwitched;
         SwipingScreen.hideOutsideScreenEvent += HideOutsideScreen;
-        MenuScreen.switchRouteEvent += OnRouteSwitched;
 
         _tweens = new List<Tween>();
 
@@ -64,7 +63,6 @@ public class UIScreen : MonoBehaviour
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         BottomBarItem.switchRouteEvent -= OnRouteSwitched;
         SwipingScreen.hideOutsideScreenEvent -= HideOutsideScreen;
-        MenuScreen.switchRouteEvent -= OnRouteSwitched;
 
         CommonUtil.StopAllTweens(_tweens);
 

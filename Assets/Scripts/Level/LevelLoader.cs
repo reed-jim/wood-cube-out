@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Firebase.RemoteConfig;
 using NamPhuThuy;
 using NamPhuThuy.Data;
 using NamPhuThuy.GamePlay;
@@ -457,8 +456,8 @@ namespace NamPhuThuy.GamePlay
         private string ModifyNameInFixedLevel(string levelName, int levelId)
         {
             string res = levelName;
-
-            if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
+            return res;
+            //if (GamePersistentVariable.specialLevelConfig.isEnable) 
             if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
 
             //LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;

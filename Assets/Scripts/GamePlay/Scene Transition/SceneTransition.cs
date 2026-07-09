@@ -71,6 +71,12 @@ public class SceneTransition : MonoBehaviour
 
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
         loadLevelInProgressContainer.gameObject.SetActive(false);
+
+        string activeSceneName = SceneManager.GetActiveScene().name;
+        if (activeSceneName != "Loading" && activeSceneName != "Bootstrap")
+        {
+            GamePersistentVariable.isLoadingComplete = true;
+        }
     }
 
     private void OnDestroy()

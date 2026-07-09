@@ -1,5 +1,4 @@
 using System;
-using Firebase.RemoteConfig;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using TMPro;

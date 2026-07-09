@@ -37,7 +37,7 @@ namespace NamPhuThuy.GamePlay
             //ScrewManager.winLevelEvent += EnterWinState;
             TileManager.winLevelEvent += EnterWinState;
             //ScrewBoxManager.loseLevelEvent += EnterLoseState;
-            SituationManager.loseLevelEvent += EnterLoseState;
+            //SituationManager.loseLevelEvent += EnterLoseState;
             TileManager.loseLevelEvent += EnterLoseState;
             //RevivePopup.reviveEvent += OnRevived;
             LosePopup.buyTimeReviveEvent += EnterPlayingState;
@@ -51,7 +51,7 @@ namespace NamPhuThuy.GamePlay
             //ScrewManager.winLevelEvent -= EnterWinState;
             TileManager.winLevelEvent -= EnterWinState;
             //ScrewBoxManager.loseLevelEvent -= EnterLoseState;
-            SituationManager.loseLevelEvent -= EnterLoseState;
+            //SituationManager.loseLevelEvent -= EnterLoseState;
             TileManager.loseLevelEvent -= EnterLoseState;
             //RevivePopup.reviveEvent -= OnRevived;
             LosePopup.buyTimeReviveEvent -= EnterPlayingState;

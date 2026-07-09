@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Firebase.RemoteConfig;
 using Lean.Localization;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
