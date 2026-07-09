@@ -109,18 +109,7 @@ namespace AntsFlow
 
         private void Start()
         {
-            ActionLimitQueue.ActionLimit actionAntToNest = new ActionLimitQueue.ActionLimit(() =>
-            {
 
-                ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
-
-                antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
-                antDissappearFx.Play();
-
-                SoundManager.Instance.PlaySoundCubeLand();
-            }, 0.15f);
-
-            GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
         }
 
         private void Reset()
@@ -175,7 +164,22 @@ namespace AntsFlow
                 GamePersistentVariable.numActiveAnt--;
             }));
 
-            GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
+            if (!GamePersistentVariable.isDelayPLayingAntMoveToNestFx)
+            {
+                ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+                antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
+                antDissappearFx.Play();
+
+                SoundManager.Instance.PlaySoundCubeLand();
+
+                GamePersistentVariable.isDelayPLayingAntMoveToNestFx = true;
+
+                Tween.Delay(0.15f).OnComplete(() =>
+                {
+                    GamePersistentVariable.isDelayPLayingAntMoveToNestFx = false;
+                });
+            }
 
             isDroppingTile = true;
         }
