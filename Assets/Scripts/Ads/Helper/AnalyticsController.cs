@@ -756,6 +756,13 @@ public enum ActionClick
 public enum ActionWatchVideo
 {
     None = 0,
+
+    Hint,
+    Shuffle,
+    Freeze,
+    UnlockTheme,
+
+
     AddHole,
     BreakObject,
     ClearHoles,

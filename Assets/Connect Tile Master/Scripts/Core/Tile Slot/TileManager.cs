@@ -54,6 +54,7 @@ public class TileManager : Singleton<TileManager>
     public static ItemCategory targetThemeLevel10 = ItemCategory.None;
 
     public bool IsShuffling { get; private set; }
+    public bool IsUnlockingTheme { get; private set; }
     private bool _isDealingStartCards;
     public bool IsDealingCards
     {
@@ -186,7 +187,7 @@ public class TileManager : Singleton<TileManager>
         }
 #endif
 
-        if (isLevelActive && !isTimeFrozen && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
+        if (isLevelActive && !isTimeFrozen && !IsShuffling && !IsUnlockingTheme && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
         {
             currentLevelTime -= Time.deltaTime;
 
@@ -660,6 +661,11 @@ public class TileManager : Singleton<TileManager>
 
     private void ShowNoInternetPopup()
     {
+        if (GamePersistentVariable.currentLevel <= 10)
+        {
+            return;
+        }
+
         if (!NoAdsLoadedPopup.IsShown)
         {
             NoAdsLoadedPopup.IsNoInternetMode = true;
@@ -693,6 +699,13 @@ public class TileManager : Singleton<TileManager>
 
         if (!allCached && Application.internetReachability == NetworkReachability.NotReachable)
         {
+            if (GamePersistentVariable.currentLevel <= 10)
+            {
+                Debug.Log("[TileManager] Level <= 10 and no internet. Skipping CDN download.");
+                onComplete?.Invoke();
+                yield break;
+            }
+
             Debug.Log("[TileManager] No internet and assets not cached. Showing popup.");
             ShowNoInternetPopup();
 
@@ -729,6 +742,12 @@ public class TileManager : Singleton<TileManager>
                     {
                         if (Application.internetReachability == NetworkReachability.NotReachable)
                         {
+                            if (GamePersistentVariable.currentLevel <= 10)
+                            {
+                                Debug.LogWarning("[TileManager] Level <= 10 and no internet. Skipping icon download.");
+                                break;
+                            }
+
                             ShowNoInternetPopup();
                             yield return new WaitUntil(() => Application.internetReachability != NetworkReachability.NotReachable);
                             startTime = Time.unscaledTime;
@@ -750,12 +769,15 @@ public class TileManager : Singleton<TileManager>
                         {
                             if (Application.internetReachability == NetworkReachability.NotReachable)
                             {
-                                Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
-                                ShowNoInternetPopup();
+                                if (GamePersistentVariable.currentLevel > 10)
+                                {
+                                    Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
+                                    ShowNoInternetPopup();
+                                }
                             }
                             else if (!success && (Time.unscaledTime - startTime > 8f))
                             {
-                                if (!NoAdsLoadedPopup.IsShown)
+                                if (!NoAdsLoadedPopup.IsShown && GamePersistentVariable.currentLevel > 10)
                                 {
                                     Debug.LogWarning("[TileManager] Download taking too long (>8s). Showing popup.");
                                     NoAdsLoadedPopup.IsWeakInternetMode = true;
@@ -790,6 +812,12 @@ public class TileManager : Singleton<TileManager>
                 {
                     if (Application.internetReachability == NetworkReachability.NotReachable)
                     {
+                        if (GamePersistentVariable.currentLevel <= 10)
+                        {
+                            Debug.LogWarning("[TileManager] Level <= 10 and no internet. Skipping spriteOrder download.");
+                            break;
+                        }
+
                         ShowNoInternetPopup();
                         yield return new WaitUntil(() => Application.internetReachability != NetworkReachability.NotReachable);
                         startTime = Time.unscaledTime;
@@ -811,12 +839,15 @@ public class TileManager : Singleton<TileManager>
                     {
                         if (Application.internetReachability == NetworkReachability.NotReachable)
                         {
-                            Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
-                            ShowNoInternetPopup();
+                            if (GamePersistentVariable.currentLevel > 10)
+                            {
+                                Debug.LogWarning("[TileManager] Internet disconnected during download. Showing popup.");
+                                ShowNoInternetPopup();
+                            }
                         }
                         else if (!success && (Time.unscaledTime - startTime > 8f))
                         {
-                            if (!NoAdsLoadedPopup.IsShown)
+                            if (!NoAdsLoadedPopup.IsShown && GamePersistentVariable.currentLevel > 10)
                             {
                                 Debug.LogWarning("[TileManager] Download taking too long (>8s). Showing popup.");
                                 NoAdsLoadedPopup.IsWeakInternetMode = true;
@@ -1163,10 +1194,12 @@ public class TileManager : Singleton<TileManager>
         {
             if (tileSlotContainers[i].isLocked)
             {
+                IsUnlockingTheme = true;
                 tileSlotContainers[i].Unlock(onCompleteAction: () =>
                 {
                     remainingSlotContainer--;
                     updateActiveSlotsEvent?.Invoke();
+                    IsUnlockingTheme = false;
                 });
                 break;
             }
@@ -1917,82 +1950,96 @@ public class TileManager : Singleton<TileManager>
 
                     tiles.Add(tile);
 
-                    // Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition + 200);
-
                     tile.transform.SetParent(tileContainer);
                     tile.transform.position = CardStockPile.Ins.transform.position;
 
                     ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
-                    if (isCurrentLevelTutorialActive)
+                    
+                    try
                     {
-                        if (GamePersistentVariable.currentLevel == 2)
+                        if (isCurrentLevelTutorialActive)
                         {
-                            TutorialLevelTwo tut2 = TutorialLevelTwo.Ins != null ? TutorialLevelTwo.Ins : FindObjectOfType<TutorialLevelTwo>(true);
-                            if (tut2 != null && tut2.gameObject.activeSelf)
+                            if (GamePersistentVariable.currentLevel == 2)
                             {
-                                nextCategory = tut2.GetTutorialForcedCategory(nextCategory);
+                                TutorialLevelTwo tut2 = TutorialLevelTwo.Ins != null ? TutorialLevelTwo.Ins : FindObjectOfType<TutorialLevelTwo>(true);
+                                if (tut2 != null && tut2.gameObject.activeSelf)
+                                {
+                                    nextCategory = tut2.GetTutorialForcedCategory(nextCategory);
+                                }
+                            }
+                            else
+                            {
+                                TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
+                                if (tut1 != null && tut1.gameObject.activeSelf)
+                                {
+                                    nextCategory = tut1.GetTutorialForcedCategory(nextCategory);
+                                }
                             }
                         }
-                        else
-                        {
-                            TutorialLevelOne tut1 = TutorialLevelOne.Ins != null ? TutorialLevelOne.Ins : FindObjectOfType<TutorialLevelOne>(true);
-                            if (tut1 != null && tut1.gameObject.activeSelf)
-                            {
-                                nextCategory = tut1.GetTutorialForcedCategory(nextCategory);
-                            }
-                        }
-                    }
 
-                    InitTileWithSpriteOrString(tile, nextCategory);
+                        InitTileWithSpriteOrString(tile, nextCategory);
 
-                    tile.SetFaceUp(false);
-                    tile.transform.localEulerAngles = Vector3.zero;
-                    tile.transform.localScale = Vector3.one;
+                        tile.SetFaceUp(false);
+                        tile.transform.localEulerAngles = Vector3.zero;
+                        tile.transform.localScale = Vector3.one;
 
-                    tile.IsMoving = true;
-                    tile.isFlipping = true;
+                        tile.IsMoving = true;
+                        tile.isFlipping = true;
 
-                    float distance = Vector3.Distance(tile.transform.localPosition, grids[i].position);
-                    float dealSpeed = 1500f;
-                    float dealDuration = distance / dealSpeed;
+                        float distance = Vector3.Distance(tile.transform.localPosition, grids[i].position);
+                        float dealSpeed = 1500f;
+                        float dealDuration = distance / dealSpeed;
 
-                    tile.transform.SetAsLastSibling();
+                        tile.transform.SetAsLastSibling();
 
-                    Tween.LocalPosition(tile.transform, grids[i].position, dealDuration);
+                        Tween.LocalPosition(tile.transform, grids[i].position, dealDuration);
 
-                    float halfDuration = dealDuration / 2f;
-                    Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
-                    .OnComplete(() =>
-                    {
-                        if (tile == null) return;
-                        Tween.LocalEulerAngles(tile.transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad)
+                        float halfDuration = dealDuration / 2f;
+                        Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
                         .OnComplete(() =>
                         {
                             if (tile == null) return;
-                            float flipDuration = 0.15f;
-                            Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 90f, 0), flipDuration).OnComplete(() =>
+                            Tween.LocalEulerAngles(tile.transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad)
+                            .OnComplete(() =>
                             {
-                                if (tile != null)
+                                if (tile == null) return;
+                                float flipDuration = 0.15f;
+                                Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 90f, 0), flipDuration).OnComplete(() =>
                                 {
-                                    SoundManager.Instance?.PlaySoundFlipCard();
-                                    tile.SetFaceUp(true);
-                                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration)
-                                    .OnComplete(() =>
+                                    if (tile != null)
                                     {
-                                        if (tile != null)
+                                        SoundManager.Instance?.PlaySoundFlipCard();
+                                        tile.SetFaceUp(true);
+                                        Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration)
+                                        .OnComplete(() =>
                                         {
-                                            tile.IsMoving = false;
-                                            tile.isFlipping = false;
-                                        }
-                                    }, warnIfTargetDestroyed: false);
-                                }
+                                            if (tile != null)
+                                            {
+                                                tile.IsMoving = false;
+                                                tile.isFlipping = false;
+                                            }
+                                        }, warnIfTargetDestroyed: false);
+                                    }
+                                }, warnIfTargetDestroyed: false);
                             }, warnIfTargetDestroyed: false);
                         }, warnIfTargetDestroyed: false);
-                    }, warnIfTargetDestroyed: false);
 
-                    grids[i].tile = tile;
+                        grids[i].tile = tile;
 
-                    CardStockPile.Ins.DrawNewCard(tile);
+                        CardStockPile.Ins.DrawNewCard(tile);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        // Log the error explicitly so it's not swallowed by DOTween's SafeMode
+                        UnityEngine.Debug.LogError($"[SpawnTilesForEmptyGrid] Hidden Exception caught! Failed to initialize tile with category {nextCategory}. Exception: {ex}");
+                        
+                        // Revert the pool count to avoid desync
+                        itemCategoryPool.Add(nextCategory);
+                        
+                        // Clean up the broken tile
+                        tiles.Remove(tile);
+                        tile.gameObject.SetActive(false);
+                    }
                 }
 
             }
@@ -2231,7 +2278,20 @@ public class TileManager : Singleton<TileManager>
 
     private void InitTileWithSpriteOrString(BaseTile tile, ItemCategory nextCategory)
     {
-        CategoryIconSet iconSet = tileIconContainer.categoryIconSets.First(x => x.itemCategory == nextCategory);
+        CategoryIconSet iconSet = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == nextCategory);
+
+        if (iconSet == null)
+        {
+            UnityEngine.Debug.LogError($"[TileManager] LỖI NGHIÊM TRỌNG: Không tìm thấy CategoryIconSet cho {nextCategory}! Đang dùng IconSet mặc định để tránh lỗi mất bài.");
+            if (tileIconContainer.categoryIconSets.Length > 0)
+            {
+                iconSet = tileIconContainer.categoryIconSets[0];
+            }
+            else
+            {
+                return; // Cannot recover if no icons exist at all
+            }
+        }
 
         int itemId = GetUniqueItemId(nextCategory, iconSet);
 
@@ -2959,6 +3019,11 @@ public class TileManager : Singleton<TileManager>
             }, warnIfTargetDestroyed: false);
 
             yield return new WaitForSeconds(0.15f);
+        }
+
+        while (sortedTargets.Any(t => t.tile != null && t.tile.isFlipping))
+        {
+            yield return null;
         }
 
         IsShuffling = false;

@@ -47,7 +47,7 @@ public class WinPopup : BasePopup
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
-   
+
 
     private bool _isCollectCoinRemoteConfig;
     private int _multiplierCoinWinLevel;
@@ -361,15 +361,10 @@ public class WinPopup : BasePopup
     {
         //OnRewaredAdCompleted();
         ////comment de test
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
-        }
-        else
-        {
-            AdmobAdsMax.Instance.ShowVideoReward(
-                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
-        }
+
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+
     }
 
     private void OnRewaredAdCompleted()
@@ -398,7 +393,7 @@ public class WinPopup : BasePopup
             }
             SaferioTracking.TrackResourceSource(
                 currentLevel.Value, "Coin", _multiplierCoinWinLevel * coinClaimDefault, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
-            
+
             _currentCollectedCoin = 0;
             ShowInterstitialOrTransition();
         }
@@ -408,7 +403,8 @@ public class WinPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
-        InvokeShowAdNotLoadedPopupEvent();
+        ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
+
     }
 
     private void OnMultiplyCoinTextTranslated()

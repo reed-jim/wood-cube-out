@@ -539,6 +539,7 @@ public class TileSlotContainer : MonoBehaviour
     {
         if (isLocked)
         {
+            isLocked = false;
             category.gameObject.SetActive(true);
             category.alpha = 0;
 
@@ -551,11 +552,9 @@ public class TileSlotContainer : MonoBehaviour
                 lockObject.gameObject.SetActive(false);
                 //SettingLayerTextCount();
                 //ScaleCountTextWithTween();
+                
+                onCompleteAction?.Invoke();
             });
-
-            isLocked = false;
-
-            onCompleteAction?.Invoke();
         }
     }
 

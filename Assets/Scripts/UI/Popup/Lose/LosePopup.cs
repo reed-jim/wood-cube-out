@@ -241,7 +241,8 @@ public class LosePopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
-        InvokeShowAdNotLoadedPopupEvent();
+        ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
+
     }
 
     private void BuyTimeByCoin()
@@ -290,15 +291,10 @@ public class LosePopup : BasePopup
 
     private void BuyTimeByAds()
     {
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
-        }
-        else
-        {
-            AdmobAdsMax.Instance.ShowVideoReward(
-                OnRewaredAdCompletedToBuyTime, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.BuyTime);
-        }
+
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompletedToBuyTime, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.BuyTime);
+
     }
 
     private void OnRewaredAdCompletedToBuyTime()

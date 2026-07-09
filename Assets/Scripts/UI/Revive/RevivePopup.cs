@@ -201,7 +201,7 @@ public class RevivePopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
-        InvokeShowAdNotLoadedPopupEvent();
+        ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
 
         // switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
     }

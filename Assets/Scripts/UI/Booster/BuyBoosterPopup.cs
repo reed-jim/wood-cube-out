@@ -176,21 +176,14 @@ public class BuyBoosterPopup : BasePopup
 
         switch (_boosterType)
         {
-            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.Shuffle: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
+            case BoosterType.Hint: actionWatchVideo = ActionWatchVideo.Hint; break;
+            case BoosterType.Shuffle: actionWatchVideo = ActionWatchVideo.Shuffle; break;
+            case BoosterType.FreezeTime: actionWatchVideo = ActionWatchVideo.Freeze; break;
+            case BoosterType.UnlockTheme: actionWatchVideo = ActionWatchVideo.UnlockTheme; break;
             default: actionWatchVideo = ActionWatchVideo.AddHole; break;
         }
 
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            NoAdsLoadedPopup.OnOkClickedNoInternet = OnRewaredAdCompleted;
-            SwitchRoute(ScreenRoute.NoInternet);
-        }
-        else
-        {
-            AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
-        }
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()
@@ -272,9 +265,7 @@ public class BuyBoosterPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
-        SwitchRoute(ScreenRoute.NoInternet);
-
-        isAbleToHideOnClickOutside = true;
+        ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)
