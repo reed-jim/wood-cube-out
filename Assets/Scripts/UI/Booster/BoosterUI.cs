@@ -82,6 +82,8 @@ public class BoosterUI : MonoBehaviour
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
+        WashingMachineItem.selectWashingMachineEvent += ConfirmUseEnableAllBoxes;
+        WaterFlowGameInput.useClearOneColorBoosterEvent += ConfirmClearOneColor;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         BoosterTutorial.useTutorialBoosterEvent += UseBooster;
@@ -90,6 +92,7 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
         RevivePopup.reviveEvent += OnRevived;
+        WashingMachineManager.finishUsingEnableAllAntBoxesBoosterEvent += ShowBooster;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
@@ -116,6 +119,8 @@ public class BoosterUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
+        WashingMachineItem.selectWashingMachineEvent -= ConfirmUseEnableAllBoxes;
+        WaterFlowGameInput.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         BoosterTutorial.useTutorialBoosterEvent -= UseBooster;
@@ -124,6 +129,7 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
         RevivePopup.reviveEvent -= OnRevived;
+        WashingMachineManager.finishUsingEnableAllAntBoxesBoosterEvent -= ShowBooster;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -339,6 +345,8 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 2);
 
+        WashingMachineManager.Ins.UseBoosterShuffle();
+
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {
             _isInTransition = false;
@@ -383,10 +391,20 @@ public class BoosterUI : MonoBehaviour
         Tween.LocalPositionY(breakModeContainer, -breakModeContainer.sizeDelta.y, duration: transitionTime)
         .OnComplete(() =>
         {
+            WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
+
             AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
 
             _isInTransition = false;
         });
+    }
+
+    private void ConfirmUseEnableAllBoxes(WashingMachineItem antBox)
+    {
+        if (breakModeContainer.gameObject.activeInHierarchy)
+        {
+            DisableBreakObjectMode();
+        }
     }
 
     private void ConfirmClearOneColor(Color faction)
@@ -454,6 +472,8 @@ public class BoosterUI : MonoBehaviour
         {
             _isInTransition = false;
         });
+
+        WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
 

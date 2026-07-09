@@ -24,10 +24,10 @@ namespace AntsFlow
 
         void OnDestroy()
         {
-            LevelLoader.startLevelEvent += OnLevelReplayed;
-            SettingPopup.replayLevelEvent += OnLevelReplayed;
-            LosePopup.replayLevelEvent += OnLevelReplayed;
-            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
         }
 
         public void Init(BaseAnt ant, Color faction)
@@ -55,7 +55,7 @@ namespace AntsFlow
 
         private void OnLevelReplayed()
         {
-            ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+            ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, gameObject);
         }
     }
 }

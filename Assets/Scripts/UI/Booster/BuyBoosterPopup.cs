@@ -60,6 +60,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterItemUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         TileSlotContainer.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
+        WashingMachineSlot.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent += OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
@@ -73,6 +74,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterItemUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         TileSlotContainer.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
+        WashingMachineSlot.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent -= OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
@@ -203,7 +205,7 @@ public class BuyBoosterPopup : BasePopup
 
     private void GetWithAds()
     {
-
+        
     }
 
     private void OnRewaredAdCompleted()
