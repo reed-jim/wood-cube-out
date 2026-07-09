@@ -57,6 +57,8 @@ public class ScrewBoxSlot : MonoBehaviour
 
     private void SetScale()
     {
+        return;
+        
         if (!isScrewPort || spriteRenderer == null)
         {
             return;

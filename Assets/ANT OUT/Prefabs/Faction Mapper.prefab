@@ -1,0 +1,245 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4071185426488668694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1082957882188782735}
+  - component: {fileID: 299328947885205127}
+  m_Layer: 0
+  m_Name: Faction Mapper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1082957882188782735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071185426488668694}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &299328947885205127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071185426488668694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8abf3575588b974cbed7e1e88325822, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FactionMapper
+  mapper:
+  - color: {r: 0, g: 0.7137255, b: 0.30980393, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 3b7c252bdf1f8bf459b040e3a4cf8c9a, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 41f262ba2f986d74b85a5d15f8012705, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 0c4c21d1ec2c42d4f96b0834bb1e4c21, type: 3}
+      antBoxSkin: 00b64f
+  - color: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 1b3c2897fcc9984489f2723f45f424c6, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 9801e751774c516409b44819f7ccc593, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 9fb98170b81ecad4ab8ceb15cf48b15a, type: 3}
+      antBoxSkin: 0e51c9
+  - color: {r: 0.16470589, g: 0.8117647, b: 0.85882354, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 60d7100e297b59a4cad17e1569e37b83, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 272aba34ba80a304aa49c59d7d537bf5, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: a759c677439cc1a488533a37f85d02d2, type: 3}
+      antBoxSkin: 2acfdb
+  - color: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 931459d9370b6c046afb102bfccd5cec, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 57212409eda9fdb49a5317922c153039, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 85d73ea62a1918f41b57f0ea858ddac0, type: 3}
+      antBoxSkin: 7fe73a
+  - color: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 9f74be6fc93110d49bfabec2d313ac53, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 70d9f3e497073994cadd29d9b23f8a09, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 0f2713135a0953144b2692e0fb297216, type: 3}
+      antBoxSkin: 15db21
+  - color: {r: 0.15686275, g: 0.84313726, b: 0.63529414, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 7aa356a0e8ec27e4c8bb8e2bde3f6a0d, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: ce45a433965408946befd1e6357d81fe, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 538a4edff70bccb4eb10fe8b45c563e7, type: 3}
+      antBoxSkin: 28d7a2
+  - color: {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: e246fa263d42d2444a2a55ea28b5c6cb, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 02453928f2d770e45818146f2c4c2e41, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 7ef1e624afcda624cb4b8b2f906e6ee9, type: 3}
+      antBoxSkin: 45b5f2
+  - color: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 79fac0efbc4ebc148a22f87264f5f738, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: ff3a6011d4b7d464b9ba6f57e47145f4, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 3ae18e0d029977843b4612dec2ad96f0, type: 3}
+      antBoxSkin: 2071fa
+  - color: {r: 0.5176471, g: 0.16078432, b: 0.79607844, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 1f4687d11bbbdda479baf4b533d3555c, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 12fc84bb70b8ff9459f2478022713e37, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 0a677d3c85f71cb458674b434d287192, type: 3}
+      antBoxSkin: 8429cb
+  - color: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 8916e1026e583524b9fb6134e3fc1843, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 0d7a19747fd59024f9961e992b0cea33, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 47cb4cb1568515144b74b44bab017e01, type: 3}
+      antBoxSkin: 393939
+  - color: {r: 0.4627451, g: 0.4627451, b: 0.4627451, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 5bf1bfea59728704c8a7ea391e8f5b45, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: a5b29b5c5e1d25d40a8afe5bbb82c445, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 5b0b82d62799ce54f85a6217999e06b4, type: 3}
+      antBoxSkin: 767676
+  - color: {r: 0.627451, g: 0.03529412, b: 0.37254903, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 0c1eb756717558f489e7b1d38584d8cc, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 4675bdbdef580fd4abb2b155fc2315db, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 2658a864d3fe7aa47a73683f2412ef17, type: 3}
+      antBoxSkin: a0095f
+  - color: {r: 0.67058825, g: 0.8509804, b: 0.98039216, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: cf9f7f931de7ae542a6e9972a5578a78, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 0ca3bac745f87ac4eb32bb6d71cc00ed, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 3bf7e2c72f8e3af46b452b4a766fb962, type: 3}
+      antBoxSkin: abd9fa
+  - color: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: c22d48a0a68e1354784680e750524336, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: e5bff8b1236265944a2a1752eea8ec23, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: bd7f6c8be0e7e0c4da2ffb0384d36fc4, type: 3}
+      antBoxSkin: b04afd
+  - color: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 7d3c8845a9417644fa5be55c1c5da8d7, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 2996f7113b4b898428cc7091618110b5, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 9a38d25bba821f547bed03f1ff8dd227, type: 3}
+      antBoxSkin: b792fa
+  - color: {r: 0.7882353, g: 0.92156863, b: 0.078431375, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 6373b35370fea734f9c0a88554219728, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 4a6fb35aeb4fbc84e8c201935a70555e, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 221ce9004f2ae1e4d935b70acd2199d2, type: 3}
+      antBoxSkin: c9eb14
+  - color: {r: 0.8666667, g: 0.22745098, b: 0.96862745, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 3efee06a1677d7943a08ab289d334e9c, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: d5856651fb226964ca913314a654bdcd, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 7fc4d13e327dae04fa4a8f50281052c0, type: 3}
+      antBoxSkin: dd3af7
+  - color: {r: 0.88235295, g: 0.654902, b: 0.9882353, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: ce13d13266277864ab5dfc31aab31bc8, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 864a58ae7314a3940af04735e3ad027e, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 0fa829a2e09a8a346a1ea4136665d46a, type: 3}
+      antBoxSkin: e1a7fc
+  - color: {r: 0.9137255, g: 0.9137255, b: 0.9137255, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 66753326e33243c4baf13d3cd34d0303, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 52084a1db2ccacd46b1a32e214fe0723, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: daef644745247a741ba3c807282687f3, type: 3}
+      antBoxSkin: e9e9e9
+  - color: {r: 0.9490196, g: 0.4392157, b: 0.95686275, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: f370bd810864f3644ba96822b641a332, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: a0ba1f8ba5a31f548b7c9bd9c223d1ed, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 279db49b2158b6c4e96c00f243cf7fdb, type: 3}
+      antBoxSkin: f270f4
+  - color: {r: 0.9764706, g: 0.46666667, b: 0.45490196, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 3b6b10d3df1e8ff4fb89bce9dc494feb, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: d6ef626f90e5384408c491439644175c, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 0e4f6543f3a60864198d8b5013395f5f, type: 3}
+      antBoxSkin: f97774
+  - color: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: bd9a383c05eb2b246ae543a9c3b4ea6e, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 66c171b5accf1a3428d888904234d7f0, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: e6cb39f653f3f894e83313fa4577fdc3, type: 3}
+      antBoxSkin: fc3339
+  - color: {r: 0.99215686, g: 0.62352943, b: 0.06666667, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: da885447422914143ba5315b30e5b026, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 1c4b81839ffbafc4384e7cc0a8cbb3bd, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: f0dcc15a34ed1c247a924d08007f592e, type: 3}
+      antBoxSkin: fd9f11
+  - color: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: bd51d860ef9d5bf4894a711b68f282b4, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 7b12b930c3a32aa47a3759423ff5f28f, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: c4c77b32afa6845498e60476175fd289, type: 3}
+      antBoxSkin: fedd03
+  - color: {r: 1, g: 0.37254903, b: 0.14117648, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: ec3b6ae26e40c5749a8bb470ddd2b2d3, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 8feea75fdbdb0b041a1953cf37dfd9c4, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 99cc6da1421d66d42956d115cfe33177, type: 3}
+      antBoxSkin: ff5f24
+  - color: {r: 1, g: 0.3882353, b: 0.61960787, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 8bfcec1f349f37648a63332260408666, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 978993ae1b0989e47b736d0bc628e6ae, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 2dbd7898024e63d43a21fe525dd9ffec, type: 3}
+      antBoxSkin: ff639e
+  - color: {r: 1, g: 0.9411765, b: 0.29411766, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 1bda27c43262e354fb69b5d419594518, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: e4f21f761a8ea594e80dea2f14127cde, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 904533fa04c5b204ba96755a72804ada, type: 3}
+      antBoxSkin: fff04b
+  - color: {r: 0.03137255, g: 0.47058824, b: 0.22352941, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 52105807a4df44b439c750091e4f2ae4, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: d2b9676e9dda3714eadc36afba623905, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: f4d5eab28bdca7d429d2887cc8d34e12, type: 3}
+      antBoxSkin: 087839
+  - color: {r: 0.99215686, g: 0.6039216, b: 0.827451, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 5fce252fc4fb5e649910b0f48bc0b883, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: b2451a37884a7bf4cb0ee13d3afcb8a9, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 81d42c92cdfa4e0439ea8b233ebafca6, type: 3}
+      antBoxSkin: fd9ad3
+  - color: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: cc18e14e9c3cc33468638d3badad9836, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 5028f2bbddae31048b0c90addfed0189, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: d5d8b792bffdafe48bac49e21a229ee4, type: 3}
+      antBoxSkin: 8e4325
+  - color: {r: 0.7490196, g: 0.12156863, b: 0.1254902, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 866b27cb940138141bfe571536564fd3, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: 453a3bae22f5fe845a35e9b1df8464ec, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: add24c545cb09374d9f5a0d97346f9fa, type: 3}
+      antBoxSkin: bf1f20
+  - color: {r: 0.79607844, g: 0.43137255, b: 0.25882354, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 60dfaf2e91e721e4ca6639deb3ce1e7f, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: d13acc9e83e20d745818db782bf9d8f5, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: e33c562e180094c4aaa142f1aa13a779, type: 3}
+      antBoxSkin: cb6e42
+  - color: {r: 1, g: 0.6627451, b: 0.5803922, a: 1}
+    spriteContainer:
+      tileSprite: {fileID: 21300000, guid: 2f3d20038e63dc2458bb0da90aa52296, type: 3}
+      doubleBoxLink: {fileID: 21300000, guid: e81f29586c46b254c8073bbbc1f29f8c, type: 3}
+      doubleBoxHole: {fileID: 21300000, guid: 99db5d1f1aaf054469bb806820cef404, type: 3}
+      antBoxSkin: ffa994
