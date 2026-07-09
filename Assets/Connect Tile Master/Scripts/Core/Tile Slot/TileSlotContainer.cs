@@ -179,6 +179,11 @@ public class TileSlotContainer : MonoBehaviour
             }
         }
 
+        if (itemCategory == ItemCategory.None)
+        {
+            return;
+        }
+
         TileIconContainer containerToUse = tileIconContainer;
         if (TileManager.Ins != null && TileManager.Ins.levelItem != null && TileManager.Ins.levelItem.tileIconContainer != null)
         {
@@ -540,6 +545,16 @@ public class TileSlotContainer : MonoBehaviour
         if (isLocked)
         {
             isLocked = false;
+
+            if (TileManager.Ins != null)
+            {
+                ItemCategory nextCategory = TileManager.Ins.GetNextCategoryForSlotBasedOnDifficulty(TileManager.Ins.difficultyLevel, this);
+                if (nextCategory != ItemCategory.None)
+                {
+                    Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory), resetLockState: false);
+                }
+            }
+
             category.gameObject.SetActive(true);
             category.alpha = 0;
 
