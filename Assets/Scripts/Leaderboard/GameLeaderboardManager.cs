@@ -52,10 +52,10 @@ public class GameLeaderboardManager : MonoBehaviour
 
     private async void AddTestScoreEntryAsync(int index)
     {
-        // enter different username and password
-        await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync($"user{index}", $"Password{index}!");
+        // // enter different username and password
+        // await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync($"user{index}", $"Password{index}!");
 
-        AddPlayerScoreToLeaderboardTest(index + 1);
+        // AddPlayerScoreToLeaderboardTest(index + 1);
     }
 
     private void AddTestScoreEntries()
@@ -70,79 +70,79 @@ public class GameLeaderboardManager : MonoBehaviour
 
     public async Task GetLeaderboardData()
     {
-        if (LeaderboardDataContainer.Items != null)
-        {
-            if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Local)
-            {
-                LoadLocalLeaderboardData();
-            }
+        // if (LeaderboardDataContainer.Items != null)
+        // {
+        //     if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Local)
+        //     {
+        //         LoadLocalLeaderboardData();
+        //     }
 
-            fetchLeaderboardDataCompletedEvent?.Invoke();
+        //     fetchLeaderboardDataCompletedEvent?.Invoke();
 
-            return;
-        }
+        //     return;
+        // }
 
-        var selfScoreResponse = await LeaderboardsService.Instance.GetPlayerScoreAsync("wood_cube_out");
+        // var selfScoreResponse = await LeaderboardsService.Instance.GetPlayerScoreAsync("wood_cube_out");
 
-        LeaderboardUserData selfScore = new LeaderboardUserData()
-        {
-            id = selfScoreResponse.PlayerId,
-            name = selfScoreResponse.PlayerName,
-            score = selfScoreResponse.Score,
-            countryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1)
-        };
+        // LeaderboardUserData selfScore = new LeaderboardUserData()
+        // {
+        //     id = selfScoreResponse.PlayerId,
+        //     name = selfScoreResponse.PlayerName,
+        //     score = selfScoreResponse.Score,
+        //     countryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1)
+        // };
 
-        GamePersistentVariable.selfScore = selfScore;
+        // GamePersistentVariable.selfScore = selfScore;
 
-        var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
-            "wood_cube_out",
-            new GetScoresOptions { Offset = 0, Limit = 100, IncludeMetadata = true }
-        );
+        // var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
+        //     "wood_cube_out",
+        //     new GetScoresOptions { Offset = 0, Limit = 100, IncludeMetadata = true }
+        // );
 
-        List<LeaderboardUserData> items = new List<LeaderboardUserData>();
+        // List<LeaderboardUserData> items = new List<LeaderboardUserData>();
 
-        LeaderboardUserData currentPlayerData = new LeaderboardUserData();
+        // LeaderboardUserData currentPlayerData = new LeaderboardUserData();
 
-        foreach (var item in scoresResponse.Results)
-        {
-            ScoreMetadata scoreMetadata = new ScoreMetadata()
-            {
-                countryIndex = 244
-            };
+        // foreach (var item in scoresResponse.Results)
+        // {
+        //     ScoreMetadata scoreMetadata = new ScoreMetadata()
+        //     {
+        //         countryIndex = 244
+        //     };
 
-            try
-            {
-                scoreMetadata = JsonUtility.FromJson<ScoreMetadata>(item.Metadata);
-            }
-            catch (System.Exception)
-            {
+        //     try
+        //     {
+        //         scoreMetadata = JsonUtility.FromJson<ScoreMetadata>(item.Metadata);
+        //     }
+        //     catch (System.Exception)
+        //     {
 
-            }
+        //     }
 
-            LeaderboardUserData leaderboardUserData = new LeaderboardUserData()
-            {
-                id = item.PlayerId,
-                name = item.PlayerName,
-                score = item.Score,
-                countryIndex = scoreMetadata.countryIndex
-            };
+        //     LeaderboardUserData leaderboardUserData = new LeaderboardUserData()
+        //     {
+        //         id = item.PlayerId,
+        //         name = item.PlayerName,
+        //         score = item.Score,
+        //         countryIndex = scoreMetadata.countryIndex
+        //     };
 
-            if (item.PlayerId == AuthenticationService.Instance.PlayerId)
-            {
-                currentPlayerData = leaderboardUserData;
-            }
+        //     if (item.PlayerId == AuthenticationService.Instance.PlayerId)
+        //     {
+        //         currentPlayerData = leaderboardUserData;
+        //     }
 
-            items.Add(leaderboardUserData);
-        }
+        //     items.Add(leaderboardUserData);
+        // }
 
-        LeaderboardDataContainer.Items = items.ToArray();
+        // LeaderboardDataContainer.Items = items.ToArray();
 
-        if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Local)
-        {
-            LoadLocalLeaderboardData();
-        }
+        // if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Local)
+        // {
+        //     LoadLocalLeaderboardData();
+        // }
 
-        fetchLeaderboardDataCompletedEvent?.Invoke();
+        // fetchLeaderboardDataCompletedEvent?.Invoke();
     }
 
     private void LoadLocalLeaderboardData()
@@ -164,9 +164,9 @@ public class GameLeaderboardManager : MonoBehaviour
 
     public async Task AddPlayerScoreToLeaderboard()
     {
-        var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
+        // var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 
-        await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", GamePersistentVariable.currentLevel, new AddPlayerScoreOptions { Metadata = scoreMetadata });
+        // await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", GamePersistentVariable.currentLevel, new AddPlayerScoreOptions { Metadata = scoreMetadata });
     }
 
     private async void AddPlayerScoreToLeaderboardTest(int testScore)

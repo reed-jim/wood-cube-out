@@ -1,5 +1,4 @@
 using Firebase;
-using Firebase.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -189,25 +188,6 @@ public class GameServices : SingletonClass<GameServices>, IService
     #region Private Methods
 
     private bool SendToken = false;
-    private void OnTokenReceived(object sender, TokenReceivedEventArgs token)
-    {
-        Debug.LogError("Received Registration Token: " + token.Token);
-#if UNITY_ANDROID
-        //AppsFlyerAndroid.updateServerUninstallToken(token.Token);
-#endif
-        if (!SendToken)
-        {
-            SendToken = true;
-        }
-
-        //Adjust.setDeviceToken(token.Token);
-    }
-
-
-    public void OnMessageReceived(object sender, MessageReceivedEventArgs e)
-    {
-        Debug.LogError("Received a new message");
-    }
 
     #endregion
 
