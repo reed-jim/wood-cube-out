@@ -512,30 +512,13 @@ public class BoosterUI : MonoBehaviour
             return;
         }
 
-        //if (TileManager.Ins == null || !TileManager.Ins.CanUseUnlockThemeBooster())
-        //{
-        //    ShowWarning("no_unlock_available");
-        //    return;
-        //}
-
-        bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme);
-
-        if (TileManager.Ins.NumLockedTileSlotContainer <= 0)
+        if (TileManager.Ins == null || !TileManager.Ins.CanUseUnlockThemeBooster())
         {
             ShowWarning("no_unlock_available");
-
-            if (isBoosterAvailable)
-            {
-                // Khi có booster nhưng đã mở khóa hết thì mới ko cho ấn vào nữa
-                return;
-            }
-            else
-            {
-                // Khi hết booster nhưng đã mở khóa hết thì vẫn phải ấn được nút để mua booster
-                showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockTheme);
-                return;
-            }
+            return;
         }
+
+        bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme);
 
         if (!isBoosterAvailable)
         {
@@ -600,36 +583,7 @@ public class BoosterUI : MonoBehaviour
             return;
         }
 
-        bool canUseUnlockThemeBooster = TileManager.Ins.CanUseUnlockThemeBooster();
-        if (!canUseUnlockThemeBooster)
-        {
-            //unlockThemeButton.interactable = false;
-            //Show thong bao
-            return;
-        }
-
-        bool hasLockedTheme = TileManager.Ins.NumLockedTileSlotContainer > 0;
-        bool isBoosterAvailable = IsBoosterAvailable((int)BoosterType.UnlockTheme);
-
-        if (!hasLockedTheme)
-        {
-            if (isBoosterAvailable)
-            {
-                //Show thong bao
-                // Khi có booster nhưng đã mở khóa hết thì mới ko cho ấn vào nữa
-                //unlockThemeButton.interactable = false;
-            }
-            else
-            {
-                // Khi hết booster nhưng đã mở khóa hết thì vẫn phải ấn được nút để mua booster
-                unlockThemeButton.interactable = true;
-            }
-        }
-        else
-        {
-            // Nếu vẫn còn theme bị khóa, nút luôn luôn ấn được (dùng booster hoặc mua booster)
-            unlockThemeButton.interactable = true;
-        }
+        unlockThemeButton.interactable = true;
     }
 
     private void OnBoosterQuantityChanged(int boosterIndex)

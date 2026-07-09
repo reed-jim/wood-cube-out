@@ -10,7 +10,8 @@ public class DebugPopup : BasePopup
 
     [SerializeField] private TMP_InputField levelInput;
     [SerializeField] private TMP_InputField backgroundColorInput;
-
+    [SerializeField] private Button btUI;
+    [SerializeField] private Button btShowBooster;
     [SerializeField] private Button debugPlayLevelButton;
     [SerializeField] private Button debugNextLevelButton;
     [SerializeField] private Button debugPrevLevelButton;
@@ -31,20 +32,35 @@ public class DebugPopup : BasePopup
     public static event Action prevLevelEvent;
     public static event Action winLevelEvent;
     public static event Action startAutoTestLevelEvent;
+    private bool isShowUI = true;
+    private bool isShowBooster       = true;
+
+
+
+    [SerializeField] private GameObject[] uiContainer;
+    [SerializeField] private GameObject[] boosterContainer;
 
     public static void TriggerToLevelEvent(int level)
     {
         toLevelEvent?.Invoke(level);
     }
 
+    public void HidePopup()
+    {
+        Hide();
+    }
+   
 
     protected override void RegisterMoreEvent()
     {
         //debugPlayLevelButton.onClick.AddListener(DebugPlayLevel);
         //debugNextLevelButton.onClick.AddListener(NextLevel);
         //debugPrevLevelButton.onClick.AddListener(PrevLevel);
-        //debugWinLevelButton.onClick.AddListener(DebugWinLevel);
+        debugWinLevelButton.onClick.AddListener(DebugWinLevel);
         debugAdsButton.onClick.AddListener(DebugAdsButton);
+        btUI.onClick.AddListener(ShowUI);
+        btShowBooster.onClick.AddListener(ShowBooster);
+
         //debugAddBoostersButton.onClick.AddListener(AddBooster);
         //debugAddCoinButton.onClick.AddListener(AddCoin);
         if (debugAddOneMillionCoinButton != null)
@@ -67,6 +83,44 @@ public class DebugPopup : BasePopup
         //{
         //    debugAdsText.text = "Disable Ads";
         //}
+    }
+    private void ShowBooster()
+    {
+        if (isShowBooster)
+        {
+            foreach (GameObject container in boosterContainer)
+            {
+                container.SetActive(false);
+            }
+            isShowBooster = false;
+        }
+        else
+        {
+            foreach (GameObject container in boosterContainer)
+            {
+                container.SetActive(true);
+            }
+            isShowBooster = true;
+        }
+    }
+    protected void ShowUI()
+    {
+        if(isShowUI)
+        {
+            foreach (GameObject container in uiContainer)
+            {
+                container.SetActive(false);
+            }
+            isShowUI = false;
+        }
+        else
+        {
+            foreach (GameObject container in uiContainer)
+            {
+                container.SetActive(true);
+            }
+            isShowUI = true;
+        }
     }
 
     private void DebugPlayLevel()
@@ -95,10 +149,7 @@ public class DebugPopup : BasePopup
     private async void DebugWinLevel()
     {
         Hide();
-
-        await Task.Delay(500);
-
-        winLevelEvent?.Invoke();
+        TileManager.Ins.InstantWin();
     }
 
     private void StartAutoTestLevel()
@@ -149,6 +200,7 @@ public class DebugPopup : BasePopup
         userResourcesObserver.UserResources.CoinQuantity += 1000000;
 
         userResourcesObserver.Save();
+        Hide();
     }
 
     private void ChangeBackgroundColor()

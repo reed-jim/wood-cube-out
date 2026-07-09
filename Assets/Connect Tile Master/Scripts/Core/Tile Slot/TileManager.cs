@@ -23,7 +23,6 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private Grid[] grids;
     [SerializeField] private TileIconContainer tileIconContainer;
     [SerializeField] private Image upToAll;
-    [SerializeField] private Button btWin;
     public Image UpToAll => upToAll;
     [SerializeField] private RectTransform head;
     public RectTransform tileContainer;
@@ -161,7 +160,6 @@ public class TileManager : Singleton<TileManager>
         }
 
         Input.multiTouchEnabled = false;
-        btWin.onClick.AddListener(InstantWin);
         RevivePopup.reviveEvent += OnRevive;
         BasePopup.popupShowEvent += OnPopupShow;
         BasePopup.popupHideEvent += OnPopupHide;
@@ -1163,7 +1161,12 @@ public class TileManager : Singleton<TileManager>
         {
             TileSlotContainer tileSlotContainer = tileSlotContainers[i];
 
-            if (categories.Count > 0)
+            if (tileSlotContainer.isLocked)
+            {
+                tileSlotContainer.gameObject.SetActive(true);
+                tileSlotContainer.Init(ItemCategory.None, 0);
+            }
+            else if (categories.Count > 0)
             {
                 tileSlotContainer.gameObject.SetActive(true);
                 tileSlotContainer.Init(categories[0], GetTargetCardAmount(categories[0]));
@@ -1379,7 +1382,7 @@ public class TileManager : Singleton<TileManager>
         return nextCategory;
     }
 
-    private ItemCategory GetNextCategoryForSlotBasedOnDifficulty(int difficultyLevel, TileSlotContainer requestingContainer)
+    public ItemCategory GetNextCategoryForSlotBasedOnDifficulty(int difficultyLevel, TileSlotContainer requestingContainer)
     {
         Dictionary<ItemCategory, int> numTilePerCategory = new Dictionary<ItemCategory, int>();
 
@@ -1420,7 +1423,7 @@ public class TileManager : Singleton<TileManager>
         foreach (var category in numTilePerCategory.Keys)
         {
             int activeContainersForCategory = tileSlotContainers.Count(item =>
-                item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
+                item != requestingContainer && !item.isHidden && item.ItemCategory == category);
             int totalNotDone = numTilePerCategory[category];
             int targetCardAmount = GetTargetCardAmount(category);
 
@@ -1437,7 +1440,7 @@ public class TileManager : Singleton<TileManager>
         foreach (var cat in candidates)
         {
             int activeContainersForCategory = tileSlotContainers.Count(item =>
-                item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == cat);
+                item != requestingContainer && !item.isHidden && item.ItemCategory == cat);
             if (activeContainersForCategory == 0)
                 groupA.Add(cat);
             else
@@ -1984,6 +1987,23 @@ public class TileManager : Singleton<TileManager>
 
                         tiles.Add(tile);
 
+                        if (!isCurrentLevelTutorialActive)
+                        {
+                            Canvas tileCanvas = tile.GetComponent<Canvas>();
+                            if (tileCanvas == null)
+                            {
+                                tileCanvas = tile.gameObject.AddComponent<Canvas>();
+                            }
+                            tileCanvas.overrideSorting = true;
+                            tileCanvas.sortingOrder = 3;
+
+                            GraphicRaycaster tileRaycaster = tile.GetComponent<GraphicRaycaster>();
+                            if (tileRaycaster == null)
+                            {
+                                tileRaycaster = tile.gameObject.AddComponent<GraphicRaycaster>();
+                            }
+                        }
+
                         tile.SetFaceUp(false);
                         tile.transform.localEulerAngles = Vector3.zero;
                         tile.transform.localScale = Vector3.one;
@@ -2028,6 +2048,15 @@ public class TileManager : Singleton<TileManager>
                                             {
                                                 tile.IsMoving = false;
                                                 tile.isFlipping = false;
+
+                                                if (!isCurrentLevelTutorialActive)
+                                                {
+                                                    Canvas tc = tile.GetComponent<Canvas>();
+                                                    if (tc != null)
+                                                    {
+                                                        tc.overrideSorting = false;
+                                                    }
+                                                }
                                             }
                                         }, warnIfTargetDestroyed: false);
                                     }
@@ -2039,6 +2068,18 @@ public class TileManager : Singleton<TileManager>
                     catch (System.Exception ex)
                     {
                         UnityEngine.Debug.LogError($"[SpawnTilesForEmptyGrid] Failed to spawn tile for category {finalCategory}. Exception: {ex}");
+
+                        if (tile != null)
+                        {
+                            if (!isCurrentLevelTutorialActive)
+                            {
+                                Canvas tc = tile.GetComponent<Canvas>();
+                                if (tc != null)
+                                {
+                                    tc.overrideSorting = false;
+                                }
+                            }
+                        }
 
                         if (removedFromPool)
                         {
