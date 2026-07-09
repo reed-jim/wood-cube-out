@@ -15,7 +15,6 @@ using Firebase.Analytics;
 //using Facebook.Unity;
 using System.Text;
 //using com.adjust.sdk;
-using AppsFlyerSDK;
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
@@ -169,10 +168,6 @@ public class GameServices : SingletonClass<GameServices>, IService
         InitProperty();
 
         RemoteConfigController.RemoteConfigFirebaseInit();
-        AnalyticsController.firebaseInitialized = true;
-        //todo
-        //RocketRemoteConfig.FetchData().ToObservable();
-        GameController.SetUserProperties();
     }
 
     private void InitProperty()

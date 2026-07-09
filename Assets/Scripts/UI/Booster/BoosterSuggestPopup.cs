@@ -54,9 +54,7 @@ public class BoosterSuggestPopup : BasePopup
 
     private void ClaimReward()
     {
-        ActionWatchVideo actionWatchVideo = ActionWatchVideo.BoosterSuggestion;
 
-         GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()

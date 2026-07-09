@@ -73,7 +73,6 @@ public class BasePopup : MonoBehaviour
 
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
-        ContractCalculator.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -122,7 +121,6 @@ public class BasePopup : MonoBehaviour
 
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
-        ContractCalculator.switchRouteEvent -= OnRouteSwitched;
 
         PausePopup.switchRouteEvent -= OnRouteSwitched;
         SettingPopup.switchRouteEvent -= OnRouteSwitched;

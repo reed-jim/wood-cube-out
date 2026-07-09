@@ -86,26 +86,11 @@ public class PopupRewardBase : BaseBox
 
             if (reward[i].icon == null)
             {
-                if (reward[i].rewardAnim == null)
-                {
-                    elem.Init(GetIcon(reward[i].type), reward[i].amount, GetAnim(reward[i].type), isUnlimitedItem: reward[i].isUnlimited);
-                }
-                else
-                {
-                    elem.Init(GetIcon(reward[i].type), reward[i].amount, reward[i].rewardAnim, isUnlimitedItem: reward[i].isUnlimited);
-                }
+
             }
             else
-
             {
-                if (reward[i].rewardAnim != null)
-                {
-                    elem.Init(reward[i].icon, reward[i].amount, reward[i].rewardAnim, isUnlimitedItem: reward[i].isUnlimited);
-                }
-                else
-                {
-                    elem.Init(reward[i].icon, reward[i].amount, GetAnim(reward[i].type), isUnlimitedItem: reward[i].isUnlimited);
-                }
+
             }
 
             if (GiftDatabase.IsCharacter(reward[i].type))
@@ -198,15 +183,6 @@ public class PopupRewardBase : BaseBox
         if (_actionClaim != null)
             _actionClaim();
         claimBtn.interactable = false;
-    }
-
-    private Sprite GetIcon(GiftType type)
-    {
-        return GameController.Instance.dataContain.giftDatabase.GetIconItem(type);
-    }
-    private GameObject GetAnim(GiftType type)
-    {
-        return GameController.Instance.dataContain.giftDatabase.GetAnimItem(type);
     }
 }
 

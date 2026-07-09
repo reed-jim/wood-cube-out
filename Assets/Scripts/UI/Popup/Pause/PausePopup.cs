@@ -114,14 +114,7 @@ public class PausePopup : BasePopup
             DebugLogger.LogSimple(message:$"second");
             bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
-            if (isShowInterReplayLevel)
-            {
-                 GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
-            }
-            else
-            {
-                ActualReplay();
-            }
+            ActualReplay();
 
             Hide();
         }

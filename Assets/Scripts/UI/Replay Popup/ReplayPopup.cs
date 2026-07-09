@@ -46,14 +46,7 @@ public class ReplayPopup : BasePopup
 
         bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
-        if (isShowInterReplayLevel)
-        {
-             GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: ActualReplay);
-        }
-        else
-        {
-            ActualReplay();
-        }
+        ActualReplay();
 
         Hide();
     }

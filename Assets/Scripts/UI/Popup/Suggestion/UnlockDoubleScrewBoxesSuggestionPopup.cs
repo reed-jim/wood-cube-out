@@ -98,9 +98,6 @@ public class UnlockDoubleScrewBoxesSuggestionPopup : BasePopup
 
     private void Claim()
     {
-         GameController.Instance.admobAds.ShowVideoReward(
-            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.ClaimDoubleScrewBoxes);
-
         if (_countingCoroutine != null)
         {
             StopCoroutine(_countingCoroutine);

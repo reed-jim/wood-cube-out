@@ -108,7 +108,6 @@ public static class GamePersistentVariable
     public static int bannerCooldown = 30;
     public static bool isEnableRewardedAds;
     public static int minLevelDisableRewardedAds;
-    public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
     public static bool isUMPPersonalizedAdsConsent;
     #endregion
@@ -208,6 +207,7 @@ public static class GamePersistentVariable
     public static float ratioXY;
     public static Vector2 spawnFlyingCoinPosition;
     public static CollectResourceMode collectResourceMode;
+    public static bool isDelayPLayingAntMoveToNestFx;
     #endregion
 }
 

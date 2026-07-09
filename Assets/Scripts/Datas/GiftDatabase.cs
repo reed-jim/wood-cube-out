@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 
 [CreateAssetMenu(menuName = "Datas/GiftDatabase", fileName = "GiftDatabase.asset")]
 public class GiftDatabase : SerializedScriptableObject
@@ -61,8 +59,6 @@ public class GiftDatabase : SerializedScriptableObject
                 type = "health";
                 break;
             case GiftType.RemoveAds:
-                GameController.Instance.useProfile.IsRemoveAds = true;
-                GameController.Instance.admobAds.DestroyBanner();
                 currency = "special_items";
                 type = "remove_ads";
                 break;
@@ -122,11 +118,7 @@ public class GiftDatabase : SerializedScriptableObject
         }
         try
         {
-            if (amount == 0 || currency.Equals("")|| type.Equals("")) return;
-            if (amount > 0)
-                new FResourceLog(FlowType.Source, type, currency, giftType.ToString(), amount, GameController.Instance.useProfile.CurrentLevel).Send();
-            else
-                new FResourceLog(FlowType.Sink, type, currency, giftType.ToString(),Math.Abs(amount), GameController.Instance.useProfile.CurrentLevel).Send();
+
         }
         catch
         {

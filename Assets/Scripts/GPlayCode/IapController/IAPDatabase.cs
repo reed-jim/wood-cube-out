@@ -201,8 +201,6 @@ public class IAPPack
             List<GiftRewardShow> lstReward = new List<GiftRewardShow>();
             foreach (var item in itemsResult)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(item.Key, item.Value.amount, isUnlimited: item.Value.isUnlimited);
-
                 GiftRewardShow rw = new GiftRewardShow();
                 rw.type = item.Key;
                 rw.amount = item.Value.amount;
@@ -225,12 +223,6 @@ public class IAPPack
             List<GiftRewardShow> lstReward = new List<GiftRewardShow>();
             foreach (var item in itemsResult)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(item.Key, item.Value.amount, reasonBuy, isUnlimited: item.Value.isUnlimited);
-                EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.BUYED_ITEM, item.Key);
-                if (item.Key == GiftType.RemoveAds && GameController.Instance.useProfile.IsRemoveAds)
-                {
-                    continue;
-                }
                 GiftRewardShow rw = new GiftRewardShow();
                 rw.type = item.Key;
                 rw.amount = item.Value.amount;

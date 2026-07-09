@@ -483,10 +483,6 @@ public class AdsNewSegmentData : BaseDataSegemnt
         {
             if (isActive)
             {
-                if (GameController.Instance.useProfile.CurrentLevel <= minimumLevel)
-                {
-                    return false;
-                }
                 switch (type)
                 {
                     case MrecType.Loading: return activeLoading;

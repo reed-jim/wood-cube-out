@@ -287,8 +287,6 @@ public class SpaceRacePopup : BasePopup
 
             showClaimRewardPopupEvent?.Invoke(rewardData);
 
-            GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.SpaceRace;
-
             return;
         }
 

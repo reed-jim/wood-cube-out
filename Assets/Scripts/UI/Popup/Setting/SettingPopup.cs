@@ -1,7 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Lean.Localization;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
@@ -216,7 +214,6 @@ public class SettingPopup : BasePopup
 
         if (isShowInterReplayLevel)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
         }
         else
         {
@@ -242,7 +239,6 @@ public class SettingPopup : BasePopup
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
-        new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Fail, playDuration, GamePersistentVariable.levelRetryTime).Send();
     }
 
     private void OpenBackupPopup()

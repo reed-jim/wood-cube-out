@@ -152,7 +152,6 @@ public class StarChestPopup : BasePopup
 
     private void ShowReward()
     {
-        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.StarChest;
         GamePersistentVariable.currentChestReason = "Star Chest";
 
         _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;

@@ -99,8 +99,6 @@ public class MenuScreenTransition : MonoBehaviour
 
         _fakeLoadingCoroutine = StartCoroutine(RotatingIcon());
 
-       GameController.Instance.admobAds.ShowMRec();
-
         float minWaitTime = 2;
 
         if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
@@ -110,20 +108,7 @@ public class MenuScreenTransition : MonoBehaviour
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
-            GameController.Instance.admobAds.HideMRec();
-
             blackBackgroundToPassPolicy.gameObject.SetActive(true);
-
-            GameController.Instance.admobAds.ShowInterstitial(
-                actionIniterClose: () =>
-                {
-                    blackBackgroundToPassPolicy.gameObject.SetActive(false);
-
-                    SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "Switch to Menu");
-
-                    GamePersistentVariable.isMenuLoading = false;
-                }
-            );
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
             {

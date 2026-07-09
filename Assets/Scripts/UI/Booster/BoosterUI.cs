@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using AntsFlow;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Lean.Localization;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
@@ -84,8 +82,6 @@ public class BoosterUI : MonoBehaviour
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
-        WashingMachineItem.selectWashingMachineEvent += ConfirmUseEnableAllBoxes;
-        WaterFlowGameInput.useClearOneColorBoosterEvent += ConfirmClearOneColor;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         BoosterTutorial.useTutorialBoosterEvent += UseBooster;
@@ -94,7 +90,6 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
         RevivePopup.reviveEvent += OnRevived;
-        WashingMachineManager.finishUsingEnableAllAntBoxesBoosterEvent += ShowBooster;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
@@ -121,8 +116,6 @@ public class BoosterUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
-        WashingMachineItem.selectWashingMachineEvent -= ConfirmUseEnableAllBoxes;
-        WaterFlowGameInput.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         BoosterTutorial.useTutorialBoosterEvent -= UseBooster;
@@ -131,7 +124,6 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
         RevivePopup.reviveEvent -= OnRevived;
-        WashingMachineManager.finishUsingEnableAllAntBoxesBoosterEvent -= ShowBooster;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -309,8 +301,6 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 0);
 
-        WashingMachineManager.Ins.UnlockWashingMachineSlot();
-
         // _numScrewPortsAdded++;
 
         // if (_numScrewPortsAdded == 2)
@@ -348,8 +338,6 @@ public class BoosterUI : MonoBehaviour
         }
 
         ConsumeBooster(boosterIndex: 2);
-
-        WashingMachineManager.Ins.UseBoosterShuffle();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {
@@ -395,20 +383,10 @@ public class BoosterUI : MonoBehaviour
         Tween.LocalPositionY(breakModeContainer, -breakModeContainer.sizeDelta.y, duration: transitionTime)
         .OnComplete(() =>
         {
-            WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
-
             AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
 
             _isInTransition = false;
         });
-    }
-
-    private void ConfirmUseEnableAllBoxes(WashingMachineItem antBox)
-    {
-        if (breakModeContainer.gameObject.activeInHierarchy)
-        {
-            DisableBreakObjectMode();
-        }
     }
 
     private void ConfirmClearOneColor(Color faction)
@@ -477,9 +455,6 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = false;
         });
 
-        WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
-        // WashingMachineManager.Ins.UseMagicBooster();
-
         SoundManager.Instance.PlaySoundClearScrewPorts();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
@@ -517,8 +492,6 @@ public class BoosterUI : MonoBehaviour
         SaferioTracking.TrackResourceSink(
             currentLevel.Value, boosterType.ToString(),
             1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], $"Consume_Booster_{boosterType}");
-
-        new FResourceLog(FlowType.Sink, boosterType.ToString(), boosterType.ToString(), $"Consume_Booster_{boosterType}", 1, currentLevel.Value);
     }
 
     private void UseBreakObjectBooster()

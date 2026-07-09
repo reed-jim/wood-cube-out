@@ -1,6 +1,4 @@
 using System;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.RemoteConfig;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
@@ -130,7 +128,6 @@ public class LosePopup : BasePopup
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
-        new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Fail, playDuration, GamePersistentVariable.levelRetryTime).Send();
     }
 
     private void Replay()
@@ -149,7 +146,6 @@ public class LosePopup : BasePopup
 
         if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
         else
         {
@@ -173,8 +169,7 @@ public class LosePopup : BasePopup
 
     private void SkipLevel()
     {
-        GameController.Instance.admobAds.ShowVideoReward(
-           OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
+
     }
 
     private void OnRewaredAdCompletedToSkipLevel()

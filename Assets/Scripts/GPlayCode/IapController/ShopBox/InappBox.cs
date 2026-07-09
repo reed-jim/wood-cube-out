@@ -31,8 +31,6 @@ public class InappBox : BaseBox
     public override void Show()
     {
         base.Show();
-        GameController.Instance.admobAds.DestroyBanner();
-        OnCloseBox = () => { GameController.Instance.admobAds.ShowBanner(); OnCloseBox = null; };
     }
 
     private void InitData()
