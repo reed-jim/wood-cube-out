@@ -24,10 +24,10 @@ namespace AntsFlow
 
         void OnDestroy()
         {
-            LevelLoader.startLevelEvent += OnLevelReplayed;
-            SettingPopup.replayLevelEvent += OnLevelReplayed;
-            LosePopup.replayLevelEvent += OnLevelReplayed;
-            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
         }
 
         public void Init(BaseAnt ant, Color faction)
