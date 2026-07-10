@@ -6,7 +6,6 @@ using PrimeTween;
 using Saferio.Util;
 using Spine.Unity;
 using TMPro;
-using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,57 +55,6 @@ public class MedalTournamentPopup : BasePopup
     // {
     //     CheckShowLeaderboardAsync();
     // }
-
-    private async Task CheckShowLeaderboardAsync()
-    {
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        await GameLeaderboardManager.Instance.GetLeaderboardData();
-
-        scrollView.Refresh();
-    }
-
-    private async Task ShowRewardScreen()
-    {
-        int rank = await GameLeaderboardManager.Instance.GetCurrentPlayerRankAsync();
-
-        rank = 2;
-
-        rewardCanvasGroup.gameObject.SetActive(true);
-
-        rewardCanvasGroup.alpha = 0;
-
-        SkeletonGraphic giftByRank;
-
-        if (rank == 1)
-        {
-            giftByRank = giftRankOne;
-        }
-        else if (rank == 2)
-        {
-            giftByRank = giftRankTwo;
-        }
-        else if (rank == 3)
-        {
-            giftByRank = giftRankThree;
-        }
-        else
-        {
-            giftByRank = giftRankOther;
-        }
-
-        giftByRank.gameObject.SetActive(true);
-
-        _tweens.Add(Tween.Alpha(rewardCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
-        {
-
-            giftByRank.AnimationState.SetAnimation(0, "open", false);
-
-            _tweens.Add(Tween.Delay(1).OnComplete(() =>
-            {
-                Claim();
-            }));
-        }));
-    }
 
     private void Claim()
     {

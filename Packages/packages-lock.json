@@ -48,24 +48,8 @@
         "com.google.external-dependency-manager": "1.2.186"
       }
     },
-    "com.google.firebase.auth": {
-      "version": "file:../GooglePackages/Firebase/com.google.firebase.auth-12.10.1.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.google.firebase.app": "12.10.1"
-      }
-    },
     "com.google.firebase.crashlytics": {
       "version": "file:../GooglePackages/Firebase/com.google.firebase.crashlytics-12.10.1.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.google.firebase.app": "12.10.1"
-      }
-    },
-    "com.google.firebase.messaging": {
-      "version": "file:../GooglePackages/Firebase/com.google.firebase.messaging-12.10.1.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -78,14 +62,6 @@
       "source": "local-tarball",
       "dependencies": {
         "com.google.firebase.app": "12.10.1"
-      }
-    },
-    "com.google.firebase.storage": {
-      "version": "file:../GooglePackages/Firebase/com.google.firebase.storage-12.10.1.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.google.firebase.auth": "12.10.1"
       }
     },
     "com.h8man.2d.navmeshplus": {
@@ -406,18 +382,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.services.authentication": {
-      "version": "3.6.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.services.core": "1.15.1",
-        "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.modules.unitywebrequest": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.services.core": {
       "version": "1.16.0",
       "depth": 0,
@@ -426,16 +390,6 @@
         "com.unity.modules.androidjni": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "com.unity.modules.unitywebrequest": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.services.leaderboards": {
-      "version": "2.3.3",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.services.core": "1.15.1",
-        "com.unity.services.authentication": "3.3.3"
       },
       "url": "https://packages.unity.com"
     },

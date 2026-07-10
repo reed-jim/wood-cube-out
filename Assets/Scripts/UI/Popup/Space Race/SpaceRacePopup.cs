@@ -8,7 +8,6 @@ using Lean.Localization;
 using PrimeTween;
 using Spine.Unity;
 using TMPro;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -133,26 +132,6 @@ public class SpaceRacePopup : BasePopup
 
         randomList.AddRange(LeaderboardDataContainer.Items);
         randomList.Shuffle();
-
-        for (int i = 0; i < randomList.Count; i++)
-        {
-            if (randomList[i].id == AuthenticationService.Instance.PlayerId)
-            {
-                SpaceRacePlayerData spaceRacePlayerData = new SpaceRacePlayerData()
-                {
-                    id = randomList[i].id,
-                    name = randomList[i].name,
-                    scoreSinceRaceBegin = 0,
-                    isSelf = true
-                };
-
-                spaceRaceData.spaceRacePlayerGroup[0] = spaceRacePlayerData;
-
-                randomList.Remove(randomList[i]);
-
-                break;
-            }
-        }
 
         for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length - 1; i++)
         {

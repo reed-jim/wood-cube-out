@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using PrimeTween;
 using Saferio.Util;
 using TMPro;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -72,7 +71,6 @@ public class LeaderboardUI : Singleton<LeaderboardUI>
         {
             leaderboardCanvasGroup.gameObject.SetActive(true);
 
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
             await GameLeaderboardManager.Instance.GetLeaderboardData();
 
             leaderboardScrollView.Refresh();

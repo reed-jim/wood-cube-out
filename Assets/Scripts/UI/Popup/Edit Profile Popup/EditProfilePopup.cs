@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using PrimeTween;
 using Saferio.Util;
 using TMPro;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -157,11 +156,6 @@ public class EditProfilePopup : BasePopup
 
         GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
 
-        if (!AuthenticationService.Instance.IsSignedIn)
-        {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        }
-        await AuthenticationService.Instance.UpdatePlayerNameAsync(nameInput.text);
         await GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
 
         // await GameLeaderboardManager.Instance.GetLeaderboardData();

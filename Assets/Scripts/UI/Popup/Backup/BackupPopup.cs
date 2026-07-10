@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Firebase.Auth;
 using Google;
 using Lean.Localization;
 using PrimeTween;

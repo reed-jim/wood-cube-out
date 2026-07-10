@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using PrimeTween;
 using Saferio.Util;
 using TMPro;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -60,7 +59,6 @@ public class LeaderboardScreen : UIScreen
         {
             leaderboardCanvasGroup.gameObject.SetActive(true);
 
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
             await GameLeaderboardManager.Instance.GetLeaderboardData();
 
             leaderboardScrollView.Refresh();

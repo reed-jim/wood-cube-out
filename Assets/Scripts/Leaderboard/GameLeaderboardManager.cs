@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lean.Localization;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
-using Unity.Services.Leaderboards;
-using Unity.Services.Leaderboards.Models;
+// using Unity.Services.Authentication;
+// using Unity.Services.Core;
+// using Unity.Services.Leaderboards;
+// using Unity.Services.Leaderboards.Models;
 using UnityEngine;
 using UnityEngine.Android;
 
@@ -64,7 +64,7 @@ public class GameLeaderboardManager : MonoBehaviour
         {
             AddTestScoreEntryAsync(i);
 
-            AuthenticationService.Instance.SignOut();
+            // AuthenticationService.Instance.SignOut();
         }
     }
 
@@ -145,44 +145,11 @@ public class GameLeaderboardManager : MonoBehaviour
         // fetchLeaderboardDataCompletedEvent?.Invoke();
     }
 
-    private void LoadLocalLeaderboardData()
-    {
-        int currentPlayerCountryIndex = LeaderboardDataContainer.Items.First(item => item.id == AuthenticationService.Instance.PlayerId).countryIndex;
-
-        List<LeaderboardUserData> localLeaderboard = new List<LeaderboardUserData>();
-
-        for (int i = 0; i < LeaderboardDataContainer.Items.Length; i++)
-        {
-            if (LeaderboardDataContainer.Items[i].countryIndex == currentPlayerCountryIndex)
-            {
-                localLeaderboard.Add(LeaderboardDataContainer.Items[i]);
-            }
-        }
-
-        LeaderboardDataContainer.LocalLeaderboardItems = localLeaderboard.ToArray();
-    }
-
     public async Task AddPlayerScoreToLeaderboard()
     {
         // var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 
         // await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", GamePersistentVariable.currentLevel, new AddPlayerScoreOptions { Metadata = scoreMetadata });
-    }
-
-    private async void AddPlayerScoreToLeaderboardTest(int testScore)
-    {
-        GamePersistentVariable.selectedCountryIndex = UnityEngine.Random.Range(1, 250);
-
-        var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
-
-        await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", testScore, new AddPlayerScoreOptions { Metadata = scoreMetadata });
-    }
-
-    public async Task<int> GetCurrentPlayerRankAsync()
-    {
-        var playerEntry = await LeaderboardsService.Instance.GetPlayerScoreAsync("wood_cube_out");
-
-        return playerEntry.Rank;
     }
 }
 
