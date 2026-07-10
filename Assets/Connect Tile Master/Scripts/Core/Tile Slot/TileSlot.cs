@@ -417,6 +417,11 @@ public enum ItemCategory
     Gemstones,
     Jewelry,
     Fabrics,
+    Zodiac,
+    Languages,
+    Metals,
+    Elements,
+
 }
 
 public class TileSlot : MonoBehaviour
