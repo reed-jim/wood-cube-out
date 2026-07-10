@@ -579,10 +579,10 @@ public class AnalyticsController : MonoBehaviour
         }
     }
 
-    public static void LogAdRevenueAppsflyer(string monetizationNetwork, AppsFlyerAdRevenueMediationNetworkType mediationNetwork, double revenue, string revenueCurrency, Dictionary<string, string> parameters)
-    {
-        AppsFlyerAdRevenue.logAdRevenue(monetizationNetwork, mediationNetwork, revenue, revenueCurrency, parameters);
-    }
+    // public static void LogAdRevenueAppsflyer(string monetizationNetwork, AppsFlyerAdRevenueMediationNetworkType mediationNetwork, double revenue, string revenueCurrency, Dictionary<string, string> parameters)
+    // {
+    //     AppsFlyerAdRevenue.logAdRevenue(monetizationNetwork, mediationNetwork, revenue, revenueCurrency, parameters);
+    // }
     //public static void LogAdRevenueAppsflyer(IronSourceImpressionData impressionData)
     //{
     //    Dictionary<string, string> afParams = new Dictionary<string, string>

@@ -109,8 +109,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-        builder.Configure<IAppleConfiguration>().
-            SetApplePromotionalPurchaseInterceptorCallback(OnPromotionalPurchase);
+        // builder.Configure<IAppleConfiguration>().
+        //     SetApplePromotionalPurchaseInterceptorCallback(OnPromotionalPurchase);
 
         foreach (var product in googlePlayStoreProducts)
         {
@@ -180,18 +180,18 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
 
         // Restore transactions
-        m_AppleExtensions.RestoreTransactions((result, error) =>
-        {
-            if (result)
-            {
-                // This does not mean anything was restored,
-                // merely that the restoration process succeeded.
-            }
-            else
-            {
-                // Restoration failed. `error` contains the failure reason.
-            }
-        });
+        // m_AppleExtensions.RestoreTransactions((result, error) =>
+        // {
+        //     if (result)
+        //     {
+        //         // This does not mean anything was restored,
+        //         // merely that the restoration process succeeded.
+        //     }
+        //     else
+        //     {
+        //         // Restoration failed. `error` contains the failure reason.
+        //     }
+        // });
 
         foreach (var item in controller.products.all)
         {
@@ -214,115 +214,81 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
     {
-        bool validPurchase = true; // Presume valid for platforms with no R.V.
-
-#if !UNITY_EDITOR
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
-        // Choose one Apple certificate. NOTE AppleStoreKitTestTangle requires
-        // the active Xcode Scheme set to use a StoreKit Configuration file.
-        // Here we use a symbol, defined either in code or Project Settings >
-        // Player > Scripting Define Symbols, to choose which Apple IAP system
-        // we intend to test with in Xcode, next.
-
-#if !DEBUG_STOREKIT_TEST
-        var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
-            AppleTangle.Data(), Application.identifier);
-#else
-            var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
-                AppleStoreKitTestTangle.Data(), Application.identifier);
-#endif
-#endif
-
-        try
+        if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
         {
-            validator.Validate(e.purchasedProduct.receipt);
+            removeAdPurchasedCompletedEvent?.Invoke();
+
+            UserData.IsRemoveAds = true;
+            GameController.Instance.useProfile.IsRemoveAds = true;
         }
-        catch (IAPSecurityException exception)
+        else
         {
-            SaferioTracking.TrackInvalidIAPEvent(exception.Message);
-
-            validPurchase = false;
-        }
-#endif
-
-        if (validPurchase)
-        {
-            if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
+            foreach (var productData in IAPDataContainer.ProductsData)
             {
-                removeAdPurchasedCompletedEvent?.Invoke();
-
-                UserData.IsRemoveAds = true;
-                GameController.Instance.useProfile.IsRemoveAds = true;
-            }
-            else
-            {
-                foreach (var productData in IAPDataContainer.ProductsData)
+                if (productData.ProductId == e.purchasedProduct.definition.id)
                 {
-                    if (productData.ProductId == e.purchasedProduct.definition.id)
-                    {
-                        // collectCoinEvent?.Invoke(productData.CoinQuantity);
+                    // collectCoinEvent?.Invoke(productData.CoinQuantity);
 
-                        int multiplier = 1 + GamePersistentVariable.IAPAddition;
+                    int multiplier = 1 + GamePersistentVariable.IAPAddition;
 
-                        int coinQuantity = multiplier * productData.CoinQuantity;
+                    int coinQuantity = multiplier * productData.CoinQuantity;
 
-                        int[] boosterQuantites = new int[4] {
+                    int[] boosterQuantites = new int[4] {
                             multiplier * productData.AddHoleBoosterQuantity,
                             multiplier * productData.BreakObjectBoosterQuantity,
                             multiplier * productData.ClearHolesBoosterQuantity,
                             multiplier * productData.ClearOneColorBoosterQuantity
                         };
 
-                        userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
-                        userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
-                        userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
-                        userResourcesObserver.ChangeBoosterQuantity(3, boosterQuantites[3]);
+                    userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
+                    userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
+                    userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+                    userResourcesObserver.ChangeBoosterQuantity(3, boosterQuantites[3]);
 
-                        userResourcesObserver.ChangeCoin(coinQuantity);
+                    userResourcesObserver.ChangeCoin(coinQuantity);
 
-                        if (productData.IsRemoveAd)
-                        {
-                            //GameController.Instance.admobAds.Hi();
-                            GameController.Instance.admobAds.DestroyBanner();
+                    if (productData.IsRemoveAd)
+                    {
+                        //GameController.Instance.admobAds.Hi();
+                        GameController.Instance.admobAds.DestroyBanner();
 
-                            UserData.IsRemoveAds = true;
-                            GameController.Instance.useProfile.IsRemoveAds = true;
-                        }
-
-                        if (productData.IsUnlockAllScrewBoxes)
-                        {
-                            DataUtility.Save(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, true);
-
-                            GamePersistentVariable.isUnlockedAllScrewBoxes = true;
-
-                            GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 4;
-
-                            unlockScrewBoxesPurchasedCompletedEvent?.Invoke();
-                        }
-
-                        // // Simulate DELAY on iOS    
-                        // Tween.Delay(3).OnComplete(() =>
-                        // {
-                        //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
-                        // });
-
-                        buyIAPPackageEvent?.Invoke(productData.ProductId);
-                        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
-
-                        SaferioTracking.TrackIAPEvent(productData.ProductId);
-                        AnalyticsController.AppsFlyerPurchaseEvent(e.purchasedProduct);
-
-                        try
-                        {
-                            new FInAppLog(e.purchasedProduct.definition.id, e.purchasedProduct.metadata.localizedPrice, e.purchasedProduct.metadata.isoCurrencyCode, "shop", e.purchasedProduct.transactionID, "");
-                        }
-                        catch (Exception f)
-                        {
-                            Debug.LogError(f.Message);
-                        }
-
-                        break;
+                        UserData.IsRemoveAds = true;
+                        GameController.Instance.useProfile.IsRemoveAds = true;
                     }
+
+                    if (productData.IsUnlockAllScrewBoxes)
+                    {
+                        DataUtility.Save(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, true);
+
+                        GamePersistentVariable.isUnlockedAllScrewBoxes = true;
+
+                        GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 4;
+
+                        unlockScrewBoxesPurchasedCompletedEvent?.Invoke();
+                    }
+
+                    // // Simulate DELAY on iOS    
+                    // Tween.Delay(3).OnComplete(() =>
+                    // {
+                    //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
+                    // });
+
+                    buyIAPPackageEvent?.Invoke(productData.ProductId);
+                    showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
+
+                    SaferioTracking.TrackIAPEvent(productData.ProductId);
+                    AnalyticsController.AppsFlyerPurchaseEvent(e.purchasedProduct);
+
+                    try
+                    {
+                        new FInAppLog(e.purchasedProduct.definition.id, e.purchasedProduct.metadata.localizedPrice, e.purchasedProduct.metadata.isoCurrencyCode, "shop", e.purchasedProduct.transactionID, "");
+                    }
+                    catch (Exception f)
+                    {
+                        Debug.LogError(f.Message);
+                    }
+
+                    break;
                 }
             }
         }
