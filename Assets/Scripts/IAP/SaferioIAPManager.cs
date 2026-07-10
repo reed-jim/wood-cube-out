@@ -53,6 +53,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         PackageIAPUnderPopupSwiper.requestFetchIAPPrice += FetchLocalizedPrice;
+        SettingPopup.restorePurchasesEvent += RestorePurchases;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
@@ -96,6 +97,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         PackageIAPUnderPopupSwiper.requestFetchIAPPrice -= FetchLocalizedPrice;
+        SettingPopup.restorePurchasesEvent -= RestorePurchases;
     }
 
     private IEnumerator DelayInit()
@@ -210,6 +212,26 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         GamePersistentVariable.iapInitializeFailReason = error.ToString();
+    }
+
+    public void RestorePurchases()
+    {
+        m_AppleExtensions.RestoreTransactions((result, error) =>
+        {
+            if (result)
+            {
+                // This does not mean anything was restored,
+                // merely that the restoration process succeeded.
+
+                showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, "Restore purchases successfully");
+            }
+            else
+            {
+                // Restoration failed. `error` contains the failure reason.
+
+                showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, error);
+            }
+        });
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)

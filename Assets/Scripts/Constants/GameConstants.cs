@@ -186,6 +186,7 @@ public static class GameConstants
     public static string SCREW = "Screw";
     public static string SCREWS = "Screws";
     public static string WARNING = "Warning";
+    public static string NOTIFICATION = "Notification";
     public static string ERROR = "Error";
     public static string TOO_FAST_ACTION = "Too fast action";
     public static string NO_INTERNET = "No internet";

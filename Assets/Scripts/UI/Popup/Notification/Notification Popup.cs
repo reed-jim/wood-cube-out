@@ -46,7 +46,7 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationEvent -= ShowNotification;
         MenuScreen.showNotificationWithParamEvent -= ShowNotification;
         BoosterUI.showNotificationWithParamEvent -= ShowNotification;
-        
+
         showNotificationEvent -= ShowNotification;
     }
 
@@ -70,7 +70,7 @@ public class NotificationPopup : BasePopup
 
                 blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 0);
 
-                _tweens.Add(Tween.Alpha(blackBackground, 0.95f, duration: 0.3f));
+                _tweens.Add(Tween.Alpha(blackBackground, 200f / 255, duration: 0.3f));
             })
         );
     }
@@ -91,6 +91,7 @@ public class NotificationPopup : BasePopup
     private void ShowNotification(string titleTranslation, string descriptionTranslation)
     {
         localizedTitle.TranslationName = titleTranslation;
+        localizedDescription.FallbackText = descriptionTranslation;
         localizedDescription.TranslationName = descriptionTranslation;
 
         Show();
