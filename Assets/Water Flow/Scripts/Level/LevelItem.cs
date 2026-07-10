@@ -1061,6 +1061,7 @@ public class SpecialElementConfig
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;
+    public SpawningTileBoxConfig spawningTileBoxConfig;
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
 }

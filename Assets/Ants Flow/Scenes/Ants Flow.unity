@@ -2308,6 +2308,87 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1001 &496648609
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1552864237}
+    m_Modifications:
+    - target: {fileID: 1148281578818409660, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_Name
+      value: Spawning Tile Box
+      objectReference: {fileID: 0}
+    - target: {fileID: 1148281578818409660, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+--- !u!114 &496648610 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8351011208383126484, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+  m_PrefabInstance: {fileID: 496648609}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01274fcee2946247aa40731ecdba587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawningTileBox
+--- !u!4 &496648611 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8294210404724703356, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
+  m_PrefabInstance: {fileID: 496648609}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &510946578
 GameObject:
   m_ObjectHideFlags: 0
@@ -9159,10 +9240,13 @@ MonoBehaviour:
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
       spawnOrder: 
+    spawningTileBoxConfig:
+      items: []
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   nextFreezeAntBoxRequiredNumber: 0
   antBoxLinks: []
+  spawningTileBox: {fileID: 496648610}
   hiddenTileSprite: {fileID: 21300000, guid: a83721868d9594b4a9c9b7e3a0d52692, type: 3}
   wallTileSprite: {fileID: 21300000, guid: c58282e3c91f2524e94c5b5260a7661a, type: 3}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
@@ -9179,7 +9263,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 496648611}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1572347950

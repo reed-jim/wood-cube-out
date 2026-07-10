@@ -24,6 +24,7 @@ namespace AntsFlow
 
         public int nextFreezeAntBoxRequiredNumber;
         public List<AntBoxLink> antBoxLinks;
+        public SpawningTileBox spawningTileBox;
 
         public Sprite hiddenTileSprite;
         public Sprite wallTileSprite;
@@ -48,6 +49,8 @@ namespace AntsFlow
             {
                 showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
             }
+
+            SetupSpawningTileBoxes();
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -411,18 +414,34 @@ namespace AntsFlow
             return cluster.ToArray();
         }
 
-        public void SetupSpawningTileBoxes(SpawningTileBoxConfig config)
+        public void SetupSpawningTileBoxes()
         {
-            for (int i = 0; i < config.items.Count; i++)
+            if (specialElementConfig.spawningTileBoxConfig.items == null)
             {
-                SpawningTileBoxItemConfig item = config.items[i];
-
-                SpawningTileBox spawningTileBox = ObjectPoolingEverything.GetFromPool<SpawningTileBox>(GameConstants.spawningTileBox);
-
-                spawningTileBox.transform.position = new Vector3(5, 5, -5 + 0.01f * i);
-
-                spawningTileBox.Setup(item.faction, item.number);
+                return;
             }
+
+            NextSpawningTileBoxes();
+        }
+
+        public void NextSpawningTileBoxes()
+        {
+            if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
+            {
+                return;
+            }
+
+            Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
+
+            SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[0];
+
+            specialElementConfig.spawningTileBoxConfig.items.RemoveAt(0);
+
+            spawningTileBox.gameObject.SetActive(true);
+
+            spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.4f * screenSizeWorld.y, -5);
+
+            spawningTileBox.Setup(item.faction, item.number);
         }
     }
 }
