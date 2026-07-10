@@ -1116,3 +1116,16 @@ public class FrozenAntBoxConfig : SpecialElementItemConfig
 {
     public List<int> numBoxToUnfreeze;
 }
+
+[Serializable]
+public class SpawningTileBoxConfig
+{
+    public List<SpawningTileBoxItemConfig> items;
+}
+
+[Serializable]
+public class SpawningTileBoxItemConfig
+{
+    public Color faction;
+    public int number;
+}

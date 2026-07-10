@@ -410,5 +410,19 @@ namespace AntsFlow
 
             return cluster.ToArray();
         }
+
+        public void SetupSpawningTileBoxes(SpawningTileBoxConfig config)
+        {
+            for (int i = 0; i < config.items.Count; i++)
+            {
+                SpawningTileBoxItemConfig item = config.items[i];
+
+                SpawningTileBox spawningTileBox = ObjectPoolingEverything.GetFromPool<SpawningTileBox>(GameConstants.spawningTileBox);
+
+                spawningTileBox.transform.position = new Vector3(5, 5, -5 + 0.01f * i);
+
+                spawningTileBox.Setup(item.faction, item.number);
+            }
+        }
     }
 }

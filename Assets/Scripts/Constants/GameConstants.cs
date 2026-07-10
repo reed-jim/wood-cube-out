@@ -267,5 +267,6 @@ public static class GameConstants
     public static string fakeTile = "fakeTile";
     public static string tileMap = "tileMap";
     public static string tileObstacle = "tileObstacle";
+    public static string spawningTileBox = "spawningTileBox";
     #endregion
 }
