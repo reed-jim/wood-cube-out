@@ -32,9 +32,9 @@ public class AdmobAdsMax
 #elif UNITY_IOS
     private const string MaxSdkKey =
 "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
-    private const string InterstitialAdUnitId = "4cb04cba80fde088";
-    private const string RewardedAdUnitId = "16c2951fee1b064d";
-    private const string BanerAdUnitId = "99d070c80ee598eb";
+    private const string InterstitialAdUnitId = "4cb04cba80fde088"; // check this
+    private const string RewardedAdUnitId = "16c2951fee1b064d"; // check this
+    private const string BanerAdUnitId = "99d070c80ee598eb"; // check this
 #endif
 
     public float countdownAds;
@@ -228,7 +228,7 @@ public class AdmobAdsMax
 #elif UNITY_ANDROID
     private const string MRecAdUnitId = "543735570341644f";
 #elif UNITY_IOS
-    private const string MRecAdUnitId = "09497dfadda02b3d";
+    private const string MRecAdUnitId = "09497dfadda02b3d"; // check this
 #endif
 
     bool isLoadedMrec;
@@ -340,12 +340,12 @@ public class AdmobAdsMax
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/2630182703";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/2630182703"; // check this
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/8457224452";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/8457224452"; // check this
 #endif
 #endif
     private bool _isShowAdmobBanner;
