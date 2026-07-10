@@ -129,7 +129,7 @@ namespace NamPhuThuy.GamePlay
 
             _mainCamera = Camera.main;
 
-            _maxLevel = levelDataContainer != null ? levelDataContainer.MaxLevel : 60;
+            _maxLevel = /*levelDataContainer != null ? */levelDataContainer.MaxLevel;
 
             GoLevel(currentLevel.Value);
 

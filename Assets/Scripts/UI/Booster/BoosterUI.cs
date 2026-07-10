@@ -422,6 +422,11 @@ public class BoosterUI : MonoBehaviour
 
                     e.Complete += (TrackEntry trackEntry) =>
                     {
+                        if (GameplayScreen.Ins != null)
+                        {
+                            GameplayScreen.Ins.PlayTimerPunchAnimation();
+                        }
+
                         freezeGroup.gameObject.SetActive(true);
 
                         Tween.Alpha(freezeGroup, 1f, duration: 2f).OnComplete(() =>

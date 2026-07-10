@@ -165,8 +165,6 @@ public class AdmobAdsMax : MonoBehaviour
             // MaxSdk.ShowMediationDebugger();
             InitializeBannerMax();
             InitializeMRecAds();
-            IsFsnCollapseEnabled();
-            FsnAdManager.Instance.InitFsnAd();
         };
 
         SetupUserConsentUMP();
@@ -216,10 +214,6 @@ public class AdmobAdsMax : MonoBehaviour
             });
         }
         //#endif
-    }
-    public bool IsFsnCollapseEnabled()
-    {
-        return RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false);
     }
     private void SetupUserConsentUMP()
     {
@@ -1031,30 +1025,17 @@ public class AdmobAdsMax : MonoBehaviour
 
             AdsDurationObserver.startTime = DateTime.Now;
 
-            FsnAdManager.Instance.ShowInterstitialThenNative(
-                showInterstitial: callbacks =>
-                {
-                    actionInterstitialClose = () => callbacks.OnHidden();
-                    _actionInterFailed = () => callbacks.OnDisplayFailed();
+            actionInterstitialClose = () => actionIniterClose?.Invoke();
+            _actionInterFailed = () => actionIniterClose?.Invoke();
 
-                    IsCooldownAdmobBanner = false;
-                    MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+            IsCooldownAdmobBanner = false;
+            MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
 
-                    countdownAds = 0;
-                    GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+            countdownAds = 0;
+            GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
 
-                    UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
-                    UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
-                },
-                onSuccess: () =>
-                {
-                    actionIniterClose?.Invoke();
-                },
-                onFailed: () =>
-                {
-                    actionIniterClose?.Invoke();
-                }
-            );
+            UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
+            UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
         }
         else
         {
@@ -1232,28 +1213,15 @@ public class AdmobAdsMax : MonoBehaviour
 
             AdsDurationObserver.startTime = DateTime.Now;
 
-            FsnAdManager.Instance.ShowRewardedThenNative(
-                showRewarded: callbacks =>
-                {
-                    this._actionNotLoadedVideo = () => callbacks.OnDisplayFailed();
-                    this._actionClose = () => callbacks.OnHidden();
-                    this._actionRewardVideo = () => callbacks.OnRewardReceived();
+            this._actionNotLoadedVideo = actionNotLoadedVideo;
+            this._actionClose = actionClose;
+            this._actionRewardVideo = actionReward;
 
-                    MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
+            MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
 
-                    GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                        UserData.CurrentLevel.ToString());
-                    GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
-                },
-                onSuccess: () =>
-                {
-                    actionReward?.Invoke();
-                },
-                onFailed: () =>
-                {
-                    actionNotLoadedVideo?.Invoke();
-                }
-            );
+            GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
+                UserData.CurrentLevel.ToString());
+            GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
         }
         else
         {
@@ -1489,22 +1457,19 @@ public class AdmobAdsMax : MonoBehaviour
         {
             return;
         }
-        bool isFsnShowing = FsnAdOverlay.Instance != null && FsnAdOverlay.Instance.gameObject.activeSelf;
         if (isMaxInitDone && SceneManager.GetActiveScene().name != "Loading")
-            if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds && !isFsnShowing)
+            if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
             {
                 oldTime = DateTime.Now;
-                FsnAdManager.Instance.ShowTrackedNativeWithFallback(FsnAdType.Aoa, onDone: () =>
+
+                if (MaxSdk.IsAppOpenAdReady(AppOpenAdUnitId))
                 {
-                    if (MaxSdk.IsAppOpenAdReady(AppOpenAdUnitId))
-                    {
-                        MaxSdk.ShowAppOpenAd(AppOpenAdUnitId);
-                    }
-                    else
-                    {
-                        AppOpenAdManager.Instance.ShowAdIfAvailable();
-                    }
-                });
+                    MaxSdk.ShowAppOpenAd(AppOpenAdUnitId);
+                }
+                else
+                {
+                    AppOpenAdManager.Instance.ShowAdIfAvailable();
+                }
             }
     }
     #endregion
@@ -1709,54 +1674,6 @@ public class AdmobAdsMax : MonoBehaviour
     public void ResetAdsCooldown()
     {
         countdownAds = 0;
-    }
-    #endregion
-
-    #region FNS
-    private bool _isFsnCollapseShowing;
-    private Coroutine _fsnCollapseCoroutine;
-    public void ShowFsnCollapse()
-    {
-        if (GameController.Instance.isTest) return;
-        if (UserData.IsRemoveAds) return;
-        if (!IsFsnCollapseEnabled()) return;
-
-        Debug.Log("FSN_COLLAPSE======= ShowFsnCollapse called");
-        _isFsnCollapseShowing = true;
-
-        if (_fsnCollapseCoroutine != null)
-            StopCoroutine(_fsnCollapseCoroutine);
-        _fsnCollapseCoroutine = StartCoroutine(IEShowFsnCollapse());
-    }
-
-    private IEnumerator IEShowFsnCollapse()
-    {
-        yield return new WaitForSeconds(0.45f);
-        if (!_isFsnCollapseShowing) yield break;
-
-        Debug.Log("FSN_COLLAPSE======= IEShowFsnCollapse -> ShowTrackedNativeWithFallback(Banner)");
-        FsnAdManager.Instance.ShowTrackedNativeWithFallback(
-            FsnAdType.Collapsible,
-            onDone: () =>
-            {
-                ShowBanner();
-            }
-        );
-        _fsnCollapseCoroutine = null;
-    }
-
-    public void HideFsnCollapse()
-    {
-        if (!IsFsnCollapseEnabled()) return;
-
-        Debug.Log("FSN_COLLAPSE======= HideFsnCollapse called");
-        _isFsnCollapseShowing = false;
-
-        if (_fsnCollapseCoroutine != null)
-        {
-            StopCoroutine(_fsnCollapseCoroutine);
-            _fsnCollapseCoroutine = null;
-        }
     }
     #endregion
 }

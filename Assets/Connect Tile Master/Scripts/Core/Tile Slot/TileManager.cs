@@ -178,12 +178,7 @@ public class TileManager : Singleton<TileManager>
 
     private void Update()
     {
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            InstantWin();
-        }
-#endif
+
 
         if (isLevelActive && !isTimeFrozen && !IsShuffling && !IsUnlockingTheme && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
         {
@@ -196,9 +191,19 @@ public class TileManager : Singleton<TileManager>
 
             if (currentLevelTime <= 0)
             {
+
                 currentLevelTime = 0;
                 isLevelActive = false;
                 SoundManager.Instance?.StopSoundCountingTime();
+                if (_hasTriggeredWin)
+                    return;
+                // If all sets are already completed (e.g. last card dragged in the final second),
+                // trigger win instead of lose to avoid the race condition.
+                if (remainingSet <= 0)
+                {
+                    InstantWin();
+                    return;
+                }
                 loseLevelEvent?.Invoke();
             }
         }
@@ -1789,7 +1794,7 @@ public class TileManager : Singleton<TileManager>
                     SpawnTilesForEmptyGrid();
                     // DropTileDown(tile);
 
-                    if (IsAllShelfFilled())
+                    if (!_hasTriggeredWin && IsAllShelfFilled())
                     {
                         loseLevelEvent?.Invoke();
                     }

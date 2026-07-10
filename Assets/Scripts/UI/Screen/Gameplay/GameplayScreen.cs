@@ -103,6 +103,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     private bool _isWaitingForCoinFlight;
     private Color _originalTimerColor = Color.white;
     private Tween _timerWarningTween;
+    private Tween _timerPunchTween;
     private Tween _screenWarning;
 
 
@@ -223,9 +224,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
         {
             _timerWarningTween.Stop();
         }
-        if (timerText != null)
+        if (timerText != null && !_timerPunchTween.isAlive)
         {
             timerText.transform.localScale = Vector3.one;
+            timerText.color = _originalTimerColor;
+        }
+        else if (timerText != null)
+        {
             timerText.color = _originalTimerColor;
         }
         if (warningGroup != null)
@@ -233,6 +238,19 @@ public class GameplayScreen : Singleton<GameplayScreen>
             Tween.Alpha(warningGroup, 0, duration: 0.5f);
             _screenWarning.Stop();
         }
+    }
+
+    public void PlayTimerPunchAnimation(float targetScale = 1.3f, float duration = 0.2f)
+    {
+        if (timerText == null) return;
+
+        if (_timerPunchTween.isAlive)
+        {
+            _timerPunchTween.Stop();
+        }
+
+        timerText.transform.localScale = Vector3.one;
+        _timerPunchTween = Tween.Scale(timerText.transform, targetScale, duration: duration, cycles: 2, cycleMode: CycleMode.Yoyo);
     }
     private void OpenDebugPopupButton()
     {
