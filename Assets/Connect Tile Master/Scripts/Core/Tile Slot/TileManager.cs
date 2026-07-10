@@ -178,8 +178,12 @@ public class TileManager : Singleton<TileManager>
 
     private void Update()
     {
+#if UNITY_EDITOR
+        if (Input.GetKey(KeyCode.W))
+        {
 
-
+        }
+#endif
         if (isLevelActive && !isTimeFrozen && !IsShuffling && !IsUnlockingTheme && !ShouldPauseLevelTimerForTutorial() && !BasePopup.IsAnyPopupOpen && currentLevelTime > 0)
         {
             currentLevelTime -= Time.deltaTime;

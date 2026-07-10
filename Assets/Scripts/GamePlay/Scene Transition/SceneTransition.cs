@@ -212,8 +212,8 @@ public class SceneTransition : MonoBehaviour
             {
                 blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
-                    onDoubleInterClosed: () =>
+                AdmobAdsMax.Instance.ShowInterstitial(
+                    actionIniterClose: () =>
                     {
                         blackBackgroundToPassPolicy.gameObject.SetActive(false);
 
@@ -228,7 +228,7 @@ public class SceneTransition : MonoBehaviour
                             })
                         );
                     },
-                    isShowBreakAds: true
+                    isShowAdBreak: true
                 );
             }
             else

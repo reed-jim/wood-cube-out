@@ -154,7 +154,6 @@ public class WinPopup : BasePopup
         AnimateOtherResources();
 
         continueButton.interactable = true;
-        returnHomeButton.interactable = true;
         x5CoinButton.interactable = true;
         //x5CoinButton.interactable =!_isAlreadyWatchRewardedAd;
         TrackLevelWin();
@@ -227,6 +226,7 @@ public class WinPopup : BasePopup
     private void Continue()
     {
         ClaimCoins(coinClaimDefault, imgCoinContinue);
+
     }
 
     private void ClaimCoins(int amount, Image startCoinImage)
@@ -300,19 +300,7 @@ public class WinPopup : BasePopup
         }
         else
         {
-            DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
-
-            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
-            {
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds
-                (
-                    ExecuteTransition, isShowBreakAds: true
-                );
-            }
-            else
-            {
-                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: ExecuteTransition);
-            }
+            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: ExecuteTransition);
         }
     }
 
@@ -362,9 +350,23 @@ public class WinPopup : BasePopup
         //OnRewaredAdCompleted();
         ////comment de test
 
-        AdmobAdsMax.Instance.ShowVideoReward(
-            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        // Disable both buttons immediately before showing the ad to prevent spam clicks.
+        // On real device, MaxSDK reward callbacks run on a background thread with delay,
+        // so buttons must be disabled here — not just inside OnRewaredAdCompleted.
+        continueButton.interactable = false;
+        x5CoinButton.interactable = false;
 
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompleted, actionNotLoadedVideo: OnAdsNotLoaded, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+
+    }
+
+    private void OnAdsNotLoaded()
+    {
+        // Re-enable buttons if ad failed to load so user is not stuck
+        continueButton.interactable = true;
+        x5CoinButton.interactable = true;
+        ShowAdsNotLoadedPopup();
     }
 
     private void OnRewaredAdCompleted()
@@ -373,7 +375,6 @@ public class WinPopup : BasePopup
 
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
-
         if (_isShown)
         {
             _tweens.Add(Tween.Scale(x5CoinButton.transform, 1.1f, duration: 0.15f)
