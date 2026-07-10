@@ -34,7 +34,7 @@ namespace Dreamteck.Splines
         public bool preserveUniformSpeedWithOffset = false;
 
         /// <summary>
-        /// Used when follow mode is set to Uniform. Defines the speed of the follower
+        /// Used when follow mode is set to Uniform. Defines the speed of the follower  
         /// </summary>
         public float followSpeed
         {
@@ -50,7 +50,7 @@ namespace Dreamteck.Splines
                     {
                         direction = Spline.Direction.Backward;
                     }
-                    if(_followSpeed > 0f)
+                    if (_followSpeed > 0f)
                     {
                         direction = Spline.Direction.Forward;
                     }
@@ -58,19 +58,23 @@ namespace Dreamteck.Splines
             }
         }
 
-        public override Spline.Direction direction {
-            get {
+        public override Spline.Direction direction
+        {
+            get
+            {
                 return base.direction;
             }
-            set {
+            set
+            {
                 base.direction = value;
-                if(_direction == Spline.Direction.Forward)
+                if (_direction == Spline.Direction.Forward)
                 {
-                    if(_followSpeed < 0f)
+                    if (_followSpeed < 0f)
                     {
                         _followSpeed = -_followSpeed;
                     }
-                } else
+                }
+                else
                 {
                     if (_followSpeed > 0f)
                     {
@@ -101,7 +105,7 @@ namespace Dreamteck.Splines
             get { return _follow; }
             set
             {
-                if(_follow != value)
+                if (_follow != value)
                 {
                     if (autoStartPosition)
                     {
@@ -352,7 +356,8 @@ namespace Dreamteck.Splines
                             break;
                     }
                 }
-            } else
+            }
+            else
             {
                 if (travelPercent <= 0.0)
                 {
@@ -412,7 +417,8 @@ namespace Dreamteck.Splines
             if (preserveUniformSpeedWithOffset && _motion.hasOffset)
             {
                 result = TravelWithOffset(start, distance, _direction, _motion.offset, out moved);
-            } else
+            }
+            else
             {
                 result = Travel(start, distance, _direction, out moved);
             }
