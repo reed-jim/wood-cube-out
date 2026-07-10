@@ -15,6 +15,8 @@ public class SceneTransition : MonoBehaviour
 {
     public static SceneTransition Instance { get; private set; }
 
+    public bool IsTransitionActive => loadLevelInProgressContainer != null && loadLevelInProgressContainer.gameObject.activeSelf;
+
     [SerializeField] private RectTransform canvas;
     // NOTE: blackBackground field kept for Inspector compatibility but is no longer used in logic.
     [SerializeField] private CanvasGroup blackBackground;

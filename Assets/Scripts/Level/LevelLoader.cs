@@ -256,7 +256,7 @@ namespace NamPhuThuy.GamePlay
 
             startLevelEvent?.Invoke();
 
-            showSceneTransitionEvent?.Invoke();
+            //showSceneTransitionEvent?.Invoke();
 
             void ActualLoadLevel(GameObject resultLoad)
             {
@@ -404,7 +404,7 @@ namespace NamPhuThuy.GamePlay
 
         private async void GoLevel(int level)
         {
-            showSceneTransitionEvent?.Invoke();
+            //showSceneTransitionEvent?.Invoke();
 
             endCurrentLevelEvent?.Invoke();
 

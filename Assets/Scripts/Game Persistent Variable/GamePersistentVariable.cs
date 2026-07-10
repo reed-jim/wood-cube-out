@@ -10,9 +10,47 @@ public enum CloudStorageRequest
 
 public static class GamePersistentVariable
 {
-    public static Vector2 canvasSize;
-    public static Vector2 canvasSizeAfterCanvasScaler;
-    public static Vector2 canvasScale;
+    private static Vector2 _canvasSize;
+    public static Vector2 canvasSize
+    {
+        get
+        {
+            if (_canvasSize.x == 0 || _canvasSize.y == 0)
+            {
+                return new Vector2(Screen.width > 0 ? Screen.width : 1080, Screen.height > 0 ? Screen.height : 1920);
+            }
+            return _canvasSize;
+        }
+        set => _canvasSize = value;
+    }
+
+    private static Vector2 _canvasSizeAfterCanvasScaler;
+    public static Vector2 canvasSizeAfterCanvasScaler
+    {
+        get
+        {
+            if (_canvasSizeAfterCanvasScaler.x == 0 || _canvasSizeAfterCanvasScaler.y == 0)
+            {
+                return new Vector2(Screen.width > 0 ? Screen.width : 1080, Screen.height > 0 ? Screen.height : 1920);
+            }
+            return _canvasSizeAfterCanvasScaler;
+        }
+        set => _canvasSizeAfterCanvasScaler = value;
+    }
+
+    private static Vector2 _canvasScale;
+    public static Vector2 canvasScale
+    {
+        get
+        {
+            if (_canvasScale.x == 0 || _canvasScale.y == 0)
+            {
+                return Vector2.one;
+            }
+            return _canvasScale;
+        }
+        set => _canvasScale = value;
+    }
     public static string iapInitializeFailReason;
     public static Vector2 screenSizeWorld;
 

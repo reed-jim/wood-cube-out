@@ -493,7 +493,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SWIMWEAR
+  m_text: Default
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4665cd4ecd37785418b8827e46783b7c, type: 2}
   m_sharedMaterial: {fileID: 3226447321740956456, guid: 4665cd4ecd37785418b8827e46783b7c, type: 2}
@@ -520,7 +520,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.85
+  m_fontSize: 33.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -930,7 +930,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BOOMBOX
+  m_text: DEFAULT
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dd0ce6460808fd34c9bbfedaab5b39d0, type: 2}
   m_sharedMaterial: {fileID: 3644634496598239274, guid: dd0ce6460808fd34c9bbfedaab5b39d0, type: 2}
@@ -957,7 +957,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 29.15
+  m_fontSize: 35.55
   m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1224,7 +1224,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -6863,7 +6863,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -11905,7 +11905,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -17667,6 +17667,10 @@ PrefabInstance:
       value: FxCompleteTheme
       objectReference: {fileID: 0}
     - target: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: SizeModule.enabled
       value: 0
       objectReference: {fileID: 0}
@@ -17845,6 +17849,10 @@ PrefabInstance:
     - target: {fileID: 8481434129074746543, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: m_Name
       value: FxCompleteCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: SizeModule.enabled
@@ -18035,6 +18043,10 @@ PrefabInstance:
       value: FxKey
       objectReference: {fileID: 0}
     - target: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: SizeModule.enabled
       value: 0
       objectReference: {fileID: 0}
@@ -18104,7 +18116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4435589863745364529, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: playOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4637699483745150730, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalScale.x
@@ -18184,7 +18196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7886083802855686305, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: playOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7886083802855686305, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: ShapeModule.type
@@ -18228,7 +18240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8410248725534422528, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: playOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8410248725534422528, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: ShapeModule.type
@@ -18346,7 +18358,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4435589863745364529, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: playOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4637699483745150730, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: m_LocalScale.x
@@ -18446,7 +18458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7886083802855686305, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: playOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7886083802855686305, guid: 727850316cc34044e876983b0f44e7a4, type: 3}
       propertyPath: ShapeModule.type

@@ -2231,6 +2231,12 @@ public class TileManager : Singleton<TileManager>
             yield break;
         }
 
+        if (SceneTransition.Instance == null || !SceneTransition.Instance.IsTransitionActive)
+        {
+            _isTransitionCompleted = true;
+            yield break;
+        }
+
         bool isTransitionDone = false;
         Action onTransitionDone = () => isTransitionDone = true;
         SceneTransition.transitionCompletedEvent += onTransitionDone;

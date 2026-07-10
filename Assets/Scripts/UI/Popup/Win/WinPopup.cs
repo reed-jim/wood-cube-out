@@ -91,7 +91,7 @@ public class WinPopup : BasePopup
             GameplayScreen.Ins.StopTimerWarning();
         }
 
-        AdmobAdsMax.Instance.ShowBannerCollap();
+        //AdmobAdsMax.Instance.ShowBannerCollap();
 
         coinTextAds.text = "x0";
         coinTextNormal.text = "x0";
@@ -346,13 +346,21 @@ public class WinPopup : BasePopup
     public Vector2 GetWinCoinTextCanvasLocalPosition()
     {
         if (imgCoin == null) return Vector2.zero;
-        return ((Vector2)imgCoin.transform.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+        Vector2 size = GamePersistentVariable.canvasSize;
+        Vector2 scale = GamePersistentVariable.canvasScale;
+        if (scale.x == 0) scale.x = 1f;
+        if (scale.y == 0) scale.y = 1f;
+        return ((Vector2)imgCoin.transform.position - 0.5f * size) / scale;
     }
 
     public Vector2 GetCoinStartGainCanvasLocalPosition(Image coinStartGain)
     {
         if (coinStartGain == null) return Vector2.zero;
-        return ((Vector2)coinStartGain.transform.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+        Vector2 size = GamePersistentVariable.canvasSize;
+        Vector2 scale = GamePersistentVariable.canvasScale;
+        if (scale.x == 0) scale.x = 1f;
+        if (scale.y == 0) scale.y = 1f;
+        return ((Vector2)coinStartGain.transform.position - 0.5f * size) / scale;
     }
 
     #region X5 Coin
