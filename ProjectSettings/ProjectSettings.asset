@@ -173,11 +173,11 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.fc.p.gpl.ant.out.pixel.color
     Standalone: com.Unity-Technologies.com.unity.template.urp-blank
-    iPhone: com.gplay.wood.cube.out
+    iPhone: com.fc.p.gpl.ant.out.pixel.color
   buildNumber:
     Standalone: 0
     VisionOS: 0
-    iPhone: 2025081501
+    iPhone: 2026071001
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 2026062801
@@ -538,6 +538,9 @@ PlayerSettings:
       m_SubKind: 
   m_BuildTargetBatching:
   - m_BuildTarget: Android
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: iPhone
     m_StaticBatching: 1
     m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
