@@ -7,6 +7,8 @@ namespace AntsFlow
 {
     public class SpawningTileBox : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer icon;
+        [SerializeField] private SpriteRenderer top;
         [SerializeField] private TMP_Text numberText;
 
         public Color faction;
@@ -31,6 +33,9 @@ namespace AntsFlow
             this.totalNumber = totalNumber;
 
             numberLeft = totalNumber;
+
+            icon.sprite = FactionMapper.Ins.GetTileSprite(faction);
+            top.sprite = FactionMapper.Ins.GetSpawningTileBoxTop(faction);
 
             UpdateNumberText();
         }
