@@ -25,6 +25,7 @@ namespace AntsFlow
         public int nextFreezeAntBoxRequiredNumber;
         public List<AntBoxLink> antBoxLinks;
         public SpawningTileBox spawningTileBox;
+        public BossArea bossArea;
 
         public Sprite hiddenTileSprite;
         public Sprite wallTileSprite;
@@ -51,6 +52,7 @@ namespace AntsFlow
             }
 
             SetupSpawningTileBoxes();
+            SetupBossArea();
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -432,6 +434,27 @@ namespace AntsFlow
             }
 
             NextSpawningTileBoxes();
+        }
+
+        public void SetupBossArea()
+        {
+            bossArea.gameObject.SetActive(true);
+
+            int startIndex = UnityEngine.Random.Range(0, TileManager.Ins.tiles.Count - 1 - GamePersistentVariable.numColumn);
+
+            int x = startIndex % GamePersistentVariable.numColumn;
+            int y = startIndex / GamePersistentVariable.numColumn;
+
+            x = Mathf.Min(x, GamePersistentVariable.numColumn - 2);
+
+            List<BaseTile> tiles = new List<BaseTile>();
+
+            tiles.Add(TileManager.Ins.tiles[x + y * GamePersistentVariable.numColumn]);
+            tiles.Add(TileManager.Ins.tiles[x + 1 + y * GamePersistentVariable.numColumn]);
+            tiles.Add(TileManager.Ins.tiles[x + (y + 1) * GamePersistentVariable.numColumn]);
+            tiles.Add(TileManager.Ins.tiles[x + 1 + (y + 1) * GamePersistentVariable.numColumn]);
+
+            bossArea.Setup(tiles);
         }
 
         public bool NextSpawningTileBoxes()

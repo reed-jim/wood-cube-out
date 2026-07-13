@@ -119,6 +119,79 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &13602855
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1552864237}
+    m_Modifications:
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7633806343919385861, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+      propertyPath: m_Name
+      value: Boss Area
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+--- !u!114 &13602856 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2711817824894264641, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+  m_PrefabInstance: {fileID: 13602855}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb3f99c7ff1d2c4db7b779368b9ab59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.BossArea
+--- !u!4 &13602857 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
+  m_PrefabInstance: {fileID: 13602855}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &17099541
 GameObject:
   m_ObjectHideFlags: 0
@@ -4782,6 +4855,7 @@ MonoBehaviour:
   shadowTilemap: {fileID: 1451543133}
   tileGlowTilemap: {fileID: 1605944948}
   tilemap: {fileID: 0}
+  shadowTile: {fileID: 0}
   tileGlowSprite: {fileID: 21300000, guid: dea13c183864f3848ba60f8df67a6ea6, type: 3}
   numColumn: 0
   numRow: 0
@@ -9247,6 +9321,7 @@ MonoBehaviour:
   nextFreezeAntBoxRequiredNumber: 0
   antBoxLinks: []
   spawningTileBox: {fileID: 496648610}
+  bossArea: {fileID: 13602856}
   hiddenTileSprite: {fileID: 21300000, guid: a83721868d9594b4a9c9b7e3a0d52692, type: 3}
   wallTileSprite: {fileID: 21300000, guid: c58282e3c91f2524e94c5b5260a7661a, type: 3}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
@@ -9265,6 +9340,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 496648611}
+  - {fileID: 13602857}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1572347950

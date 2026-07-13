@@ -519,6 +519,16 @@ namespace AntsFlow
                     continue;
                 }
 
+                if (node.tile != null && node.tile.isLocked)
+                {
+                    Gizmos.color = Color.green;
+
+                    Gizmos.DrawSphere(node.initialPosition, 0.1f);
+                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
+
+                    continue;
+                }
+
                 if (node.tile == null)
                 {
                     Gizmos.color = Color.green;
