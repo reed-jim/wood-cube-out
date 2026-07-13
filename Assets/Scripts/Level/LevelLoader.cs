@@ -376,17 +376,20 @@ namespace NamPhuThuy.GamePlay
 
             tilemapGrids.Add(spawnedTileMapGrid);
 
+            Tile tile = ScriptableObject.CreateInstance<Tile>();
+            Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
+            shadowTile.sprite = shadowSprite;
+
+            AntsFlow.TileManager.Ins.shadowTile = shadowTile;
+
             if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
             {
                 for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
                 {
                     Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[i].position.MultiplyX(54).MultiplyY(ratioXY));
 
-                    Tile tile = ScriptableObject.CreateInstance<Tile>();
-                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[i].factionIndex]);
 
-                    Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
-                    shadowTile.sprite = shadowSprite;
+                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[i].factionIndex]);
 
                     spawnedTileMap.SetTile(cellPos, tile);
                     shadowTilemap.SetTile(cellPos, shadowTile);
@@ -416,11 +419,8 @@ namespace NamPhuThuy.GamePlay
 
                         Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
 
-                        Tile tile = ScriptableObject.CreateInstance<Tile>();
+                        // Tile tile = ScriptableObject.CreateInstance<Tile>();
                         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
-
-                        Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
-                        shadowTile.sprite = shadowSprite;
 
                         spawnedTileMap.SetTile(cellPos, tile);
                         shadowTilemap.SetTile(cellPos, shadowTile);
@@ -553,9 +553,6 @@ namespace NamPhuThuy.GamePlay
                 {
                     tile.blockages.Add(tiles[leftIndex]);
                 }
-
-                tile.actualBlockages = new List<AntsFlow.BaseTile>();
-                tile.actualBlockages.AddRange(tile.blockages);
 
                 // if (topRightIndex >= 0 && topRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
                 // {

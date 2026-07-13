@@ -57,29 +57,40 @@ namespace AntsFlow
                 return;
             }
 
+            tile.isSpawningAgain = true;
+
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
             fakeTile.Init(tile);
 
-            fakeTile.transform.position = transform.position;
-
             Vector3 start = transform.position;
-            Vector3 end = TileManager.Ins.GetTilePosition(tile).AddZ(-1);
-            Vector3 control = (start + end) * 0.5f + Vector3.up * 3f;
+            Vector3 end = TileManager.Ins.GetTilePosition(tile).ChangeZ(TileManager.Ins.tilemap.transform.position.z - 1);
+            start.z = end.z;
+            Vector3 control = (start + end) * 0.5f + Vector3.up * 2f;
+
+            fakeTile.transform.position = start;
 
             fakeTile.transform.DOPath(
                 new Vector3[] { start, control, end },
-                1f,
+                0.6f,
                 PathType.CatmullRom
             ).SetEase(Ease.Linear)
             .OnComplete(() =>
             {
+                tile.Reset();
+                tile.Show();
+
                 ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
             });
 
             numberLeft--;
 
             UpdateNumberText();
+
+            if (numberLeft <= 0)
+            {
+                SaferioTween.ScaleDownWithPunch(transform);
+            }
         }
     }
 }

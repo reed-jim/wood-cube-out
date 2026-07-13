@@ -47,6 +47,7 @@ namespace AntsFlow
         public Tilemap shadowTilemap;
         public Tilemap tileGlowTilemap;
         public Tilemap tilemap;
+        public Tile shadowTile;
         public Sprite tileGlowSprite;
         public int numColumn;
         public int numRow;
@@ -525,7 +526,7 @@ namespace AntsFlow
                     Gizmos.DrawSphere(node.initialPosition, 0.1f);
                     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
 
-                    DrawConnectors(node);
+                    // DrawConnectors(node);
                 }
                 else
                 {
@@ -537,7 +538,7 @@ namespace AntsFlow
                         Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
                         // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} ({node.tile.tileName})");
 
-                        DrawConnectors(node);
+                        // DrawConnectors(node);
                     }
                     // else
                     // {

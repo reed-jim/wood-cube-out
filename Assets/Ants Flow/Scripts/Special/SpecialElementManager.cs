@@ -421,6 +421,16 @@ namespace AntsFlow
                 return;
             }
 
+            for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
+            {
+                SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
+
+                for (int j = 0; j < item.number; j++)
+                {
+                    WashingMachineManager.Ins.poolFaction.Add(item.faction);
+                }
+            }
+
             NextSpawningTileBoxes();
         }
 

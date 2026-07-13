@@ -799,18 +799,6 @@ public class WashingMachineItem : MonoBehaviour
 
         // BFS
         return true;
-        return tile.IsMovable();
-        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
-
-        // if (path == null || path.Count == 0)
-        // {
-        //     return false;
-        // }
-
-        // return true;
-
-        return tile.blockages.Count < 4;
-        return tile.actualBlockages.Count < 4;
     }
 
     public Vector3 GetNearestMovableNavMeshPoint(Vector3 targetPosition, float maxDistance)
