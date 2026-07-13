@@ -116,6 +116,8 @@ namespace NamPhuThuy.GamePlay
         private void Start()
         {
             // GoLevel(currentLevel.Value);
+
+            GamePersistentVariable.screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
         }
 
         void OnDestroy()
@@ -387,7 +389,6 @@ namespace NamPhuThuy.GamePlay
                 for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
                 {
                     Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[i].position.MultiplyX(54).MultiplyY(ratioXY));
-
 
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[i].factionIndex]);
 

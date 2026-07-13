@@ -434,11 +434,11 @@ namespace AntsFlow
             NextSpawningTileBoxes();
         }
 
-        public void NextSpawningTileBoxes()
+        public bool NextSpawningTileBoxes()
         {
             if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
             {
-                return;
+                return false;
             }
 
             Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
@@ -449,9 +449,13 @@ namespace AntsFlow
 
             spawningTileBox.gameObject.SetActive(true);
 
-            spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.4f * screenSizeWorld.y, -5);
+            spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.35f * screenSizeWorld.y, -5);
 
             spawningTileBox.Setup(item.faction, item.number);
+
+            SaferioTween.ScaleUpWithPunch(spawningTileBox.transform, 1.1f);
+
+            return true;
         }
     }
 }

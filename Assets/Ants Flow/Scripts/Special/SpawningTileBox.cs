@@ -62,22 +62,29 @@ namespace AntsFlow
                 return;
             }
 
+            if (tile.Faction != faction)
+            {
+                return;
+            }
+
             tile.isSpawningAgain = true;
 
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
             fakeTile.Init(tile);
 
-            Vector3 start = transform.position;
-            Vector3 end = TileManager.Ins.GetTilePosition(tile).ChangeZ(TileManager.Ins.tilemap.transform.position.z - 1);
-            start.z = end.z;
-            Vector3 control = (start + end) * 0.5f + Vector3.up * 2f;
+            Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
+
+            Vector3 start = top.transform.position.ChangeZ(TileManager.Ins.tilemap.transform.position.z - 1);
+            Vector3 end = tilePosition.ChangeZ(start.z);
+            Vector3 control = (start + end) * 0.5f;
+            control = control.ChangeY(start.y + 1.5f);
 
             fakeTile.transform.position = start;
 
             fakeTile.transform.DOPath(
                 new Vector3[] { start, control, end },
-                0.6f,
+                1f,
                 PathType.CatmullRom
             ).SetEase(Ease.Linear)
             .OnComplete(() =>
@@ -86,6 +93,21 @@ namespace AntsFlow
                 tile.Show();
 
                 ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
+
+                // float fakeTileScaleY = fakeTile.transform.localScale.y;
+
+                // fakeTile.transform.DOScaleY(1.15f * fakeTileScaleY, duration: 0.2f);
+                // fakeTile.transform.DOMoveY(end.y + 0.15f, 0.2f).OnComplete(() =>
+                // {
+                //     fakeTile.transform.DOScaleY(fakeTileScaleY, duration: 0.2f);
+                //     fakeTile.transform.DOMoveY(end.y, 0.1f).OnComplete(() =>
+                //     {
+                //         tile.Reset();
+                //         tile.Show();
+
+                //         ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
+                //     });
+                // });
             });
 
             numberLeft--;
@@ -94,7 +116,12 @@ namespace AntsFlow
 
             if (numberLeft <= 0)
             {
-                SaferioTween.ScaleDownWithPunch(transform);
+                bool isNextBoxAvailable = SpecialElementManager.Ins.NextSpawningTileBoxes();
+
+                if (!isNextBoxAvailable)
+                {
+                    SaferioTween.ScaleDownWithPunch(transform);
+                }
             }
         }
     }
