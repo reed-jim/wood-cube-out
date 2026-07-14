@@ -8,8 +8,12 @@ namespace AntsFlow
     public class BossArea : MonoBehaviour
     {
         public List<BaseTile> coveredTiles;
+        public List<int> numAntPerBox;
 
         public TMP_Text healthText;
+
+        private int currentHealth;
+        private bool isAnimating;
 
         public void Setup(List<BaseTile> tiles, BossAreaConfig bossAreaConfig)
         {
@@ -37,7 +41,73 @@ namespace AntsFlow
             transform.position = averagePosition;
             transform.localScale = GamePersistentVariable.tileDistance * new Vector2(bossAreaConfig.numCoverColumn, bossAreaConfig.numCoverRow);
 
-            healthText.text = $"{bossAreaConfig.bossHealth}";
+            currentHealth = bossAreaConfig.bossHealth;
+            healthText.text = $"{currentHealth}";
+
+            GenerateAntNumberPerBox(bossAreaConfig.spawnOrder.Count, currentHealth);
+        }
+
+        private void UpdateHealth()
+        {
+            healthText.text = $"{currentHealth}";
+
+            if (!isAnimating)
+            {
+                SaferioTween.Punch(healthText.transform, 1.1f, onCompleteAction: () =>
+                {
+                    isAnimating = false;
+                });
+
+                isAnimating = true;
+            }
+        }
+
+        public void Hit()
+        {
+            currentHealth--;
+
+            UpdateHealth();
+
+            if (currentHealth <= 0)
+            {
+                SaferioTween.ScaleDownWithPunch(transform, 0);
+
+                for (int i = 0; i < coveredTiles.Count; i++)
+                {
+                    coveredTiles[i].isLocked = false;
+                }
+            }
+        }
+
+        public void GenerateAntNumberPerBox(int totalBox, int maxHealth)
+        {
+            numAntPerBox = new List<int>();
+
+            int totalUnits = maxHealth / 5;
+
+            // Base units per number
+            int baseUnits = totalUnits / totalBox;
+            int remainder = totalUnits % totalBox;
+
+            for (int i = 0; i < totalBox; i++)
+            {
+                int units = baseUnits;
+
+                // Distribute remaining units
+                if (i < remainder)
+                    units++;
+
+                numAntPerBox.Add(units * 5);
+            }
+        }
+
+        public int GetNextAntNumberOfBox()
+        {
+            int antNumber = numAntPerBox[0];
+
+            numAntPerBox.RemoveAt(0);
+
+            return antNumber;
         }
     }
 }

@@ -121,6 +121,11 @@ namespace AntsFlow
             tilemap.SetTile(cellPos, tilemapTile);
         }
 
+        public void SetShadowTile(Vector3Int tilemapPosition)
+        {
+            shadowTilemap.SetTile(tilemapPosition, shadowTile);
+        }
+
         public void BuildMap(List<BaseTile> tiles)
         {
             Vector2 tileDistance = GamePersistentVariable.tileDistance;
@@ -742,7 +747,7 @@ namespace AntsFlow
             return result;
         }
 
-        public List<BaseTile> GetFirstNMovableTilesForWarrioAnts(int count, Vector2 antBoxPosition)
+        public List<BaseTile> GetFirstNMovableTilesForWarriorAnts(int count, Vector2 antBoxPosition)
         {
             Node start = bottomMostNodes
                     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)

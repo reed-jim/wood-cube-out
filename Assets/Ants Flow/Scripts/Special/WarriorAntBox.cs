@@ -8,6 +8,16 @@ namespace AntsFlow
 {
     public class WarriorAntBox : WashingMachineItem
     {
+        public override void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number, Action onCompleteAction = null)
+        {
+            base.Init(washingMachineStartSlot, faction, number, onCompleteAction);
+
+            number = SpecialElementManager.Ins.bossArea.GetNextAntNumberOfBox();
+            remainingNumber = number;
+
+            numberText.text = $"{number}";
+        }
+
         public override void CheckAntsPath(bool isAlsoCheckLose = true)
         {
             if (remainingNumber <= 0)
@@ -22,7 +32,7 @@ namespace AntsFlow
 
             int addedTile = 0;
 
-            int max = TileManager.Ins.tiles.Count(tile => tile.isDone && tile.Faction == faction);
+            int max = remainingNumber;
 
             bool isCenter = Math.Abs(transform.position.x) < 0.1f;
             Vector3 antBoxPosition = transform.position;
@@ -32,7 +42,7 @@ namespace AntsFlow
                 antBoxPosition = antBoxPosition.AddX(3);
             }
 
-            List<BaseTile> foundTiles = TileManager.Ins.GetFirstNMovableTilesForWarrioAnts(max, antBoxPosition);
+            List<BaseTile> foundTiles = TileManager.Ins.GetFirstNMovableTilesForWarriorAnts(max, antBoxPosition);
 
             foundTiles = foundTiles
                 // .Where(item => item.numStepToReach < 5)

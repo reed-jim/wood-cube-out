@@ -37,8 +37,8 @@ namespace AntsFlow
         private List<Node> reversePath;
         private Coroutine movingCoroutine;
 
-        private List<Tween> tweens;
-        private List<Sequence> sequences;
+        protected List<Tween> tweens;
+        protected List<Sequence> sequences;
         private int siblingIndex;
         private float stuckTime;
         private float stuckTimeNoReachDestination;
@@ -143,7 +143,7 @@ namespace AntsFlow
             CommonUtil.StopAllSequences(sequences);
         }
 
-        private void OnAntMovedToNest()
+        protected virtual void OnAntMovedToNest()
         {
             stuckTime = 0;
 

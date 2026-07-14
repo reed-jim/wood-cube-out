@@ -352,6 +352,7 @@ namespace AntsFlow
                         tilemapTile.sprite = wallTileSprite;
 
                         tilemap.SetTile(cellPos, tilemapTile);
+                        TileManager.Ins.SetShadowTile(cellPos);
 
                         node.isObstacle = true;
                     }
