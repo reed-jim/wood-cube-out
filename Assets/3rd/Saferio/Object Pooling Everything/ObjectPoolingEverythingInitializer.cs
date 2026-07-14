@@ -74,6 +74,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     public GameObject warriorAntBoxPrefab;
     public GameObject tileRemainingPrefab;
     public GameObject missilePrefab;
+    public GameObject damageTextPrefab;
 
     private bool _isInitialized;
 
@@ -173,6 +174,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);
         RegisterPool<Transform>(GameConstants.tileMap, tilemapPrefab, 40);
         RegisterPool<Transform>(GameConstants.missile, missilePrefab, 50);
+        RegisterPool<DamageText>(GameConstants.damageText, damageTextPrefab, 10);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

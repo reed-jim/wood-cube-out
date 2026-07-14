@@ -271,5 +271,6 @@ public static class GameConstants
     public static string tileObstacle = "tileObstacle";
     public static string spawningTileBox = "spawningTileBox";
     public static string missile = "missile";
+    public static string damageText = "damageText";
     #endregion
 }

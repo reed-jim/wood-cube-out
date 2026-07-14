@@ -755,6 +755,11 @@ namespace Saferio.Util.SaferioTween
             return new Vector3(currentValue.x, currentValue.y, currentValue.z + value);
         }
 
+        public static Vector3 MinusZALittle(this Vector3 currentValue)
+        {
+            return new Vector3(currentValue.x, currentValue.y, currentValue.z - 0.01f);
+        }
+
         public static Vector3 MultiplyX(this Vector3 currentValue, float value)
         {
             return new Vector3(currentValue.x * value, currentValue.y, currentValue.z);

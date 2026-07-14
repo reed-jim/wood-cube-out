@@ -11,7 +11,9 @@ namespace AntsFlow
         public List<int> numAntPerBox;
 
         public TMP_Text healthText;
+        public LazyHealthBar lazyHealthBar;
 
+        private int maxHealth;
         private int currentHealth;
         private bool isAnimating;
 
@@ -41,8 +43,11 @@ namespace AntsFlow
             transform.position = averagePosition;
             transform.localScale = GamePersistentVariable.tileDistance * new Vector2(bossAreaConfig.numCoverColumn, bossAreaConfig.numCoverRow);
 
-            currentHealth = bossAreaConfig.bossHealth;
+            maxHealth = bossAreaConfig.bossHealth;
+            currentHealth = maxHealth;
             healthText.text = $"{currentHealth}";
+
+            lazyHealthBar.SetProgress((float)currentHealth / maxHealth);
 
             GenerateAntNumberPerBox(bossAreaConfig.spawnOrder.Count, currentHealth);
         }
@@ -67,6 +72,11 @@ namespace AntsFlow
             currentHealth--;
 
             UpdateHealth();
+
+            DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+
+            damageText.ShowDamage(1, transform.position.MinusZALittle());
+            lazyHealthBar.SetProgress((float)currentHealth / maxHealth);
 
             if (currentHealth <= 0)
             {

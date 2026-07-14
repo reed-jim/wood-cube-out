@@ -151,6 +151,16 @@ namespace AntsFlow
             AssetDatabase.Refresh();
 #endif
         }
+
+        public void ClearAllSpecialElements()
+        {
+            specialElementConfig = new SpecialElementConfig();
+        }
+
+        public void RandomizeSpecialElements()
+        {
+            specialElementConfig = new SpecialElementConfig();
+        }
     }
 
 #if UNITY_EDITOR
@@ -220,6 +230,11 @@ namespace AntsFlow
             if (GUILayout.Button("Convert to JSON"))
             {
                 levelItem.ConvertToJson();
+            }
+
+            if (GUILayout.Button("Clear All Special Elements"))
+            {
+                levelItem.ClearAllSpecialElements();
             }
 
             // if (GUILayout.Button("Step 1: ReadLevel"))
