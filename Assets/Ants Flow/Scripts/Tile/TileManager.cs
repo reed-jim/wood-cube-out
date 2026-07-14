@@ -742,6 +742,110 @@ namespace AntsFlow
             return result;
         }
 
+        public List<BaseTile> GetFirstNMovableTilesForWarrioAnts(int count, Vector2 antBoxPosition)
+        {
+            Node start = bottomMostNodes
+                    .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
+                    .First();
+
+            var result = new List<BaseTile>();
+            Queue<Node> edgeQueue = new();
+            Queue<Node> normalQueue = new();
+            var visited = new HashSet<Node>();
+            var parent = new Dictionary<Node, Node>();
+
+            edgeQueue.Enqueue(start);
+            visited.Add(start);
+            parent[start] = null;
+
+            while ((edgeQueue.Count > 0 || normalQueue.Count > 0) && result.Count < count)
+            {
+                Node current = edgeQueue.Count > 0
+                    ? edgeQueue.Dequeue()
+                    : normalQueue.Dequeue();
+
+                if (current.tile != null && current.tile.isDone)
+                {
+                    current.tile.path = ReconstructPath(current, parent);
+
+                    result.Add(current.tile);
+                }
+
+                if (current.tile != null)
+                {
+                    if (
+                        !current.isStarter &&
+                        !current.tile.isMovedToAnt &&
+                        !current.tile.isDone
+                    )
+                    {
+                        continue;
+                    }
+                }
+
+                if (current.isObstacle)
+                {
+                    continue;
+                }
+
+                foreach (var neighbor in current.neighbors)
+                {
+                    if (visited.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    bool isBlocked = true;
+
+                    if (neighbor.tile == null)
+                    {
+                        isBlocked = false;
+                    }
+                    else
+                    {
+                        if (neighbor.tile.isMovedToAnt || neighbor.tile.isDone)
+                        {
+                            isBlocked = false;
+                        }
+                    }
+
+                    if
+                    (
+                        current.tile != null &&
+                        !current.tile.isMovedToAnt &&
+                        !current.tile.isDone
+                    )
+                    {
+                        isBlocked = true;
+                    }
+
+                    if (neighbor.isObstacle)
+                    {
+                        isBlocked = true;
+                    }
+
+                    if (isBlocked)
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor);
+                    parent[neighbor] = current;
+
+                    if (neighbor.EdgePriority <= 3)
+                    {
+                        edgeQueue.Enqueue(neighbor);
+                    }
+                    else
+                    {
+                        normalQueue.Enqueue(neighbor);
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public void FindSingleAntPath(BaseTile tile)
         {
             Node start = bottomMostNodes

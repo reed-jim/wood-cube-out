@@ -1133,8 +1133,10 @@ public class SpawningTileBoxItemConfig
 }
 
 [Serializable]
-public class BossAreaConfig
+public class BossAreaConfig : SpecialElementItemConfig
 {
     public Vector2Int startTileCoordinate;
+    public int numCoverColumn;
+    public int numCoverRow;
     public int bossHealth;
 }

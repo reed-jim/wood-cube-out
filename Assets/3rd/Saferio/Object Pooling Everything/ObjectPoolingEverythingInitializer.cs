@@ -70,6 +70,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     public GameObject antBoxLink;
     public GameObject hiddenAntBoxPrefab;
     public GameObject freezedAntBoxPrefab;
+    public GameObject warriorAntBoxPrefab;
     public GameObject tileRemainingPrefab;
 
     private bool _isInitialized;
@@ -164,6 +165,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 20);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 20);
+        RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);
         RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
         RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);
         RegisterPool<Transform>(GameConstants.tileMap, tilemapPrefab, 40);

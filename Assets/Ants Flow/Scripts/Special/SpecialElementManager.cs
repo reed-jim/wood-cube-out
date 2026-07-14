@@ -12,7 +12,8 @@ public enum LevelElement
     NormalAntBox,
     HiddenAntBox,
     AntBoxLink,
-    FreezedAntBox
+    FreezedAntBox,
+    WarriorAntBox
 }
 
 namespace AntsFlow
@@ -205,6 +206,12 @@ namespace AntsFlow
                 specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
 
                 return LevelElement.FreezedAntBox;
+            }
+            else if (specialElementConfig.bossAreaConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                specialElementConfig.bossAreaConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.WarriorAntBox;
             }
             else
             {
@@ -440,13 +447,6 @@ namespace AntsFlow
         {
             bossArea.gameObject.SetActive(true);
 
-            // int startIndex = UnityEngine.Random.Range(0, TileManager.Ins.tiles.Count - 1 - GamePersistentVariable.numColumn);
-
-            // int x = startIndex % GamePersistentVariable.numColumn;
-            // int y = startIndex / GamePersistentVariable.numColumn;
-
-            // x = Mathf.Min(x, GamePersistentVariable.numColumn - 2);
-
             int x = bossAreaConfig.startTileCoordinate.x;
             int y = bossAreaConfig.startTileCoordinate.y;
 
@@ -454,12 +454,15 @@ namespace AntsFlow
 
             int numNodeColumn = GamePersistentVariable.numColumn + 2;
 
-            tiles.Add(TileManager.Ins.nodes[x + y * numNodeColumn].tile);
-            tiles.Add(TileManager.Ins.nodes[x + 1 + y * numNodeColumn].tile);
-            tiles.Add(TileManager.Ins.nodes[x + (y + 1) * numNodeColumn].tile);
-            tiles.Add(TileManager.Ins.nodes[x + 1 + (y + 1) * numNodeColumn].tile);
+            for (int i = y; i < y + bossAreaConfig.numCoverRow; i++)
+            {
+                for (int j = x; j < x + bossAreaConfig.numCoverColumn; j++)
+                {
+                    tiles.Add(TileManager.Ins.nodes[j + i * numNodeColumn].tile);
+                }
+            }
 
-            bossArea.Setup(tiles);
+            bossArea.Setup(tiles, bossAreaConfig);
         }
 
         public bool NextSpawningTileBoxes()

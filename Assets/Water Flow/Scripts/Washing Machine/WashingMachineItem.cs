@@ -17,7 +17,6 @@ using static GameEnum;
 
 public class WashingMachineItem : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
     public SpriteRenderer lid;
     public SpriteRenderer shadow;
     public SpriteRenderer doubleAntBoxHole;
@@ -52,7 +51,7 @@ public class WashingMachineItem : MonoBehaviour
     public WashingMachineSlot washingMachineSlot;
 
     private Vector3 numberTextInitialPosition;
-    private Coroutine spawningAntCoroutine;
+    protected Coroutine spawningAntCoroutine;
 
     public GameSetting gameSetting;
 
@@ -122,7 +121,6 @@ public class WashingMachineItem : MonoBehaviour
         this.faction = faction;
         this.number = number;
 
-        spriteRenderer.color = faction;
         lid.color = faction;
         numberText.text = $"{number}";
 
@@ -402,7 +400,7 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
-    public void CheckAntsPath(bool isAlsoCheckLose = true)
+    public virtual void CheckAntsPath(bool isAlsoCheckLose = true)
     {
         if (remainingNumber <= 0)
         {
@@ -530,7 +528,7 @@ public class WashingMachineItem : MonoBehaviour
         isGhostMode = true;
     }
 
-    private IEnumerator SpawningAnts()
+    protected IEnumerator SpawningAnts()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.35f);
 

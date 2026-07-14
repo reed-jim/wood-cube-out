@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Saferio.Util.SaferioTween;
+using TMPro;
 using UnityEngine;
 
 namespace AntsFlow
@@ -8,7 +9,9 @@ namespace AntsFlow
     {
         public List<BaseTile> coveredTiles;
 
-        public void Setup(List<BaseTile> tiles)
+        public TMP_Text healthText;
+
+        public void Setup(List<BaseTile> tiles, BossAreaConfig bossAreaConfig)
         {
             coveredTiles = tiles;
 
@@ -32,7 +35,9 @@ namespace AntsFlow
             averagePosition = averagePosition.ChangeZ(transform.position.z);
 
             transform.position = averagePosition;
-            transform.localScale = 2 * GamePersistentVariable.tileDistance;
+            transform.localScale = GamePersistentVariable.tileDistance * new Vector2(bossAreaConfig.numCoverColumn, bossAreaConfig.numCoverRow);
+
+            healthText.text = $"{bossAreaConfig.bossHealth}";
         }
     }
 }
