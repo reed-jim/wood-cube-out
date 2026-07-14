@@ -498,7 +498,7 @@ public class WashingMachineItem : MonoBehaviour
 
             if (spawningAntCoroutine == null)
             {
-                spawningAntCoroutine = StartCoroutine(SpawningAnts());
+                spawningAntCoroutine = StartCoroutine(SpawningAnts(antType: GameConstants.ant));
             }
         }
         else if (isAlsoCheckLose)
@@ -528,7 +528,7 @@ public class WashingMachineItem : MonoBehaviour
         isGhostMode = true;
     }
 
-    protected IEnumerator SpawningAnts()
+    protected IEnumerator SpawningAnts(string antType)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.35f);
 
@@ -557,7 +557,7 @@ public class WashingMachineItem : MonoBehaviour
                 continue;
             }
 
-            BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
+            BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(antType);
 
             ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
             ant.transform.eulerAngles = Vector3.zero;

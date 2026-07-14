@@ -68,7 +68,7 @@ namespace AntsFlow
 
                 if (spawningAntCoroutine == null)
                 {
-                    spawningAntCoroutine = StartCoroutine(SpawningAnts());
+                    spawningAntCoroutine = StartCoroutine(SpawningAnts(antType: GameConstants.warriorAnt));
                 }
             }
             else if (isAlsoCheckLose)
