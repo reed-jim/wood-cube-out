@@ -12,10 +12,10 @@ namespace AntsFlow
         {
             base.Init(washingMachineStartSlot, faction, number, onCompleteAction);
 
-            number = SpecialElementManager.Ins.bossArea.GetNextAntNumberOfBox();
-            remainingNumber = number;
+            this.number = SpecialElementManager.Ins.bossArea.GetNextAntNumberOfBox();
+            remainingNumber = this.number;
 
-            numberText.text = $"{number}";
+            numberText.text = $"{this.number}";
         }
 
         public override void CheckAntsPath(bool isAlsoCheckLose = true)
