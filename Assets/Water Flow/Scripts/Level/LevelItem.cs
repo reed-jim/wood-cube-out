@@ -1062,6 +1062,7 @@ public class SpecialElementConfig
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;
     public SpawningTileBoxConfig spawningTileBoxConfig;
+    public BossAreaConfig bossAreaConfig;
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
 }
@@ -1129,4 +1130,11 @@ public class SpawningTileBoxItemConfig
 {
     public Color faction;
     public int number;
+}
+
+[Serializable]
+public class BossAreaConfig
+{
+    public Vector2Int startTileCoordinate;
+    public int bossHealth;
 }

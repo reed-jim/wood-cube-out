@@ -18,13 +18,18 @@ namespace AntsFlow
             {
                 BaseTile coveredTile = coveredTiles[i];
 
+                if (coveredTile == null)
+                {
+                    continue;
+                }
+
                 coveredTile.isLocked = true;
 
                 averagePosition += TileManager.Ins.GetTilePosition(coveredTile);
             }
 
             averagePosition /= coveredTiles.Count;
-            averagePosition = averagePosition.AddZ(-1);
+            averagePosition = averagePosition.ChangeZ(transform.position.z);
 
             transform.position = averagePosition;
             transform.localScale = 2 * GamePersistentVariable.tileDistance;

@@ -52,7 +52,7 @@ namespace AntsFlow
             }
 
             SetupSpawningTileBoxes();
-            SetupBossArea();
+            SetupBossArea(levelItem.specialElementConfig.bossAreaConfig);
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -436,23 +436,28 @@ namespace AntsFlow
             NextSpawningTileBoxes();
         }
 
-        public void SetupBossArea()
+        public void SetupBossArea(BossAreaConfig bossAreaConfig)
         {
             bossArea.gameObject.SetActive(true);
 
-            int startIndex = UnityEngine.Random.Range(0, TileManager.Ins.tiles.Count - 1 - GamePersistentVariable.numColumn);
+            // int startIndex = UnityEngine.Random.Range(0, TileManager.Ins.tiles.Count - 1 - GamePersistentVariable.numColumn);
 
-            int x = startIndex % GamePersistentVariable.numColumn;
-            int y = startIndex / GamePersistentVariable.numColumn;
+            // int x = startIndex % GamePersistentVariable.numColumn;
+            // int y = startIndex / GamePersistentVariable.numColumn;
 
-            x = Mathf.Min(x, GamePersistentVariable.numColumn - 2);
+            // x = Mathf.Min(x, GamePersistentVariable.numColumn - 2);
+
+            int x = bossAreaConfig.startTileCoordinate.x;
+            int y = bossAreaConfig.startTileCoordinate.y;
 
             List<BaseTile> tiles = new List<BaseTile>();
 
-            tiles.Add(TileManager.Ins.tiles[x + y * GamePersistentVariable.numColumn]);
-            tiles.Add(TileManager.Ins.tiles[x + 1 + y * GamePersistentVariable.numColumn]);
-            tiles.Add(TileManager.Ins.tiles[x + (y + 1) * GamePersistentVariable.numColumn]);
-            tiles.Add(TileManager.Ins.tiles[x + 1 + (y + 1) * GamePersistentVariable.numColumn]);
+            int numNodeColumn = GamePersistentVariable.numColumn + 2;
+
+            tiles.Add(TileManager.Ins.nodes[x + y * numNodeColumn].tile);
+            tiles.Add(TileManager.Ins.nodes[x + 1 + y * numNodeColumn].tile);
+            tiles.Add(TileManager.Ins.nodes[x + (y + 1) * numNodeColumn].tile);
+            tiles.Add(TileManager.Ins.nodes[x + 1 + (y + 1) * numNodeColumn].tile);
 
             bossArea.Setup(tiles);
         }

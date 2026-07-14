@@ -137,7 +137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9316,6 +9316,9 @@ MonoBehaviour:
       spawnOrder: 
     spawningTileBoxConfig:
       items: []
+    bossAreaConfig:
+      startTileCoordinate: {x: 0, y: 0}
+      bossHealth: 0
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   nextFreezeAntBoxRequiredNumber: 0
@@ -13295,7 +13298,7 @@ RectTransform:
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0.44444445, y: 0.16216215}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15622,6 +15625,14 @@ PrefabInstance:
     - target: {fileID: 3882482620061423132, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5632855477226629754, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.44444445
+      objectReference: {fileID: 0}
+    - target: {fileID: 5632855477226629754, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.16216215
       objectReference: {fileID: 0}
     - target: {fileID: 6297379854574794480, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
       propertyPath: m_Mesh

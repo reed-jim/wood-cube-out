@@ -500,26 +500,8 @@ namespace NamPhuThuy.GamePlay
                 tiles.Add(tile);
             }
 
-            // find num column
-            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
-            float tolerance = 0.01f;
-
-            GamePersistentVariable.numColumn = 0;
-
-            foreach (var tile in antLevelData.antLevelDataItems)
-            {
-                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
-                {
-                    GamePersistentVariable.numColumn++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            GamePersistentVariable.numRow = antLevelData.antLevelDataItems.Count / GamePersistentVariable.numColumn;
-            //
+            GamePersistentVariable.numColumn = antLevelData.levelItemData.numColumn;
+            GamePersistentVariable.numRow = antLevelData.levelItemData.numRow;
 
             for (int i = 0; i < tiles.Count; i++)
             {

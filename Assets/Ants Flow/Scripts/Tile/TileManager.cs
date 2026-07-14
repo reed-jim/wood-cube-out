@@ -519,53 +519,37 @@ namespace AntsFlow
                     continue;
                 }
 
+                Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
+
                 if (node.tile != null && node.tile.isLocked)
                 {
                     Gizmos.color = Color.green;
 
                     Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
-
-                    continue;
+                    // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
                 }
 
-                if (node.tile == null)
-                {
-                    Gizmos.color = Color.green;
+                // if (node.tile == null)
+                // {
+                //     Gizmos.color = Color.green;
 
-                    Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
+                //     Gizmos.DrawSphere(node.initialPosition, 0.1f);
+                //     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
 
-                    // DrawConnectors(node);
-                }
-                else
-                {
-                    if (node.tile.isMovedToAnt || node.tile.isDone || node.isStarter)
-                    {
-                        Gizmos.color = Color.green;
+                //     // DrawConnectors(node);
+                // }
+                // else
+                // {
+                //     if (node.tile.isMovedToAnt || node.tile.isDone || node.isStarter)
+                //     {
+                //         Gizmos.color = Color.green;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                        Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
-                        // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} ({node.tile.tileName})");
+                //         Gizmos.DrawSphere(node.initialPosition, 0.1f);
+                //         Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
 
-                        // DrawConnectors(node);
-                    }
-                    // else
-                    // {
-                    //     Gizmos.color = Color.red;
-
-                    //     Gizmos.DrawSphere(node.initialPosition, 0.15f);
-                    //     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
-                    // }
-
-                    // if (node.tile.isAntApproaching)
-                    // {
-                    //     Gizmos.color = Color.yellow;
-
-                    //     Gizmos.DrawSphere(node.initialPosition.AddY(0.31f), 0.15f);
-                    //     Handles.Label(node.initialPosition.AddY(0.61f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
-                    // }
-                }
+                //         // DrawConnectors(node);
+                //     }
+                // }
 
                 // Gizmos.DrawSphere(node.initialPosition, 0.2f);
 
