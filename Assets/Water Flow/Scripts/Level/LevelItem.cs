@@ -1089,6 +1089,11 @@ public class SpecialElementItemConfig
 
     public bool IsValidToSpawn(int numAntBoxesSpawned)
     {
+        if (spawnOrder == null)
+        {
+            return false;
+        }
+
         List<int> remainingColumns = new List<int>() { 0, 1, 2 };
 
         for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)

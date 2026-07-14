@@ -445,6 +445,16 @@ namespace AntsFlow
 
         public void SetupBossArea(BossAreaConfig bossAreaConfig)
         {
+            if (bossAreaConfig == null)
+            {
+                return;
+            }
+
+            if (bossAreaConfig.spawnOrder == null)
+            {
+                return;
+            }
+
             bossArea.gameObject.SetActive(true);
 
             int x = bossAreaConfig.startTileCoordinate.x;
