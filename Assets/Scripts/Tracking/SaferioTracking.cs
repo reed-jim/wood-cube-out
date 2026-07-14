@@ -325,7 +325,7 @@ public static class SaferioTracking
 
                 FirebaseAnalytics.LogEvent("resource_source", parameters);
 
-                parameters =
+                parameters = new Parameter[]
                 {
                     new Parameter("virtual_currency_name", resourceName),
                     new Parameter("value", amount),
@@ -364,7 +364,7 @@ public static class SaferioTracking
 
         FirebaseAnalytics.LogEvent("resource_sink", parameters);
 
-        parameters =
+        parameters = new Parameter[]
         {
             new Parameter("virtual_currency_name", resourceName),
             new Parameter("value", amount),
@@ -385,7 +385,7 @@ public static class SaferioTracking
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
-            new Parameter("level", level.ToString())
+            new Parameter("level", level.ToString()),
             new Parameter("current_gold", currentGold.ToString()),
         };
 
