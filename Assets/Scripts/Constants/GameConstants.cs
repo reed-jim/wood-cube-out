@@ -254,11 +254,12 @@ public static class GameConstants
     public static string tile = "tile";
     #endregion
 
-    #region Washing Machine
+    #region Ant Out
     public static string washingMachine = "washingMachine";
     public static string clothingPiece = "clothingPiece";
     public static string pathSlot = "pathSlot";
     public static string ant = "ant";
+    public static string warriorAnt = "warriorAnt";
     public static string antDissapearFxPrefab = "antDissapearFxPrefab";
     public static string antBoxLink = "antBoxLink";
     public static string hiddenAntBox = "hiddenAntBox";
@@ -269,5 +270,6 @@ public static class GameConstants
     public static string tileMap = "tileMap";
     public static string tileObstacle = "tileObstacle";
     public static string spawningTileBox = "spawningTileBox";
+    public static string missile = "missile";
     #endregion
 }

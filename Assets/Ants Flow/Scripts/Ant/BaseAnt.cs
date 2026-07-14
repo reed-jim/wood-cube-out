@@ -584,12 +584,7 @@ namespace AntsFlow
 
             if (count < 2)
             {
-                if (tile != null)
-                {
-                    tile.MoveToAnt(this);
-
-                    ReverseMove();
-                }
+                OnAntReachTarget();
             }
             else
             {
@@ -603,8 +598,16 @@ namespace AntsFlow
                     targetRotation,
                     progress
                 );
+            }
+        }
 
-                // transform.rotation = targetRotation;
+        protected virtual void OnAntReachTarget()
+        {
+            if (tile != null)
+            {
+                tile.MoveToAnt(this);
+
+                ReverseMove();
             }
         }
 
@@ -681,7 +684,6 @@ namespace AntsFlow
                 }
             }
         }
-
 
         private void OnEnable()
         {
