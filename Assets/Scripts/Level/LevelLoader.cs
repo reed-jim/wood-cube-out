@@ -23,6 +23,7 @@ namespace NamPhuThuy.GamePlay
     {
         [Header("SCRIPTABLE OBJECT")]
         [SerializeField] private IntVariable currentLevel;
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
         [SerializeField] private LevelDataContainer levelDataContainer;
         [SerializeField] private LevelBoosterObserver levelBoosterObserver;
         [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
@@ -302,6 +303,8 @@ namespace NamPhuThuy.GamePlay
 
                 GamePersistentVariable.startLevelTime = Time.time;
                 GamePersistentVariable.levelRetryTime++;
+
+                SaferioTracking.TrackLevelStart(currentLevel.Value, (int)userResourcesObserver.UserResources.CoinQuantity);
             }
 
             void SetIsLoopLevel(bool isLoop)

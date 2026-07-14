@@ -8,6 +8,97 @@ using static GameEnum;
 
 public static class SaferioTracking
 {
+    #region FALCON
+    public static void TrackLevelComplete(int level, int timePlayed)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("level", level.ToString()),
+            new Parameter("timeplayed", timePlayed.ToString())
+        };
+
+        FirebaseAnalytics.LogEvent("level_complete", parameters);
+#endif
+    }
+
+    public static void TrackLevelFail(int level, int failCount)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("level", level.ToString()),
+            new Parameter("failcount", failCount.ToString())
+        };
+
+        FirebaseAnalytics.LogEvent("level_fail", parameters);
+#endif
+    }
+
+    public static void TrackAdsRewardLoad()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ads_reward_load");
+#endif
+    }
+
+    public static void TrackAdsRewardClick()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ads_reward_click");
+#endif
+    }
+
+    public static void TrackAdsRewardShowSuccess()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ads_reward_show_success");
+#endif
+    }
+
+    public static void TrackAdsRewardShowFail()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ads_reward_show_fail");
+#endif
+    }
+
+    public static void TrackAdsRewardComplete()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ads_reward_complete");
+#endif
+    }
+
+    public static void TrackAdsInterLoadFail()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ad_inter_load_fail");
+#endif
+    }
+
+    public static void TrackAdsInterLoadSuccess()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ad_inter_load_success");
+#endif
+    }
+
+    public static void TrackAdsInterShow()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ad_inter_show");
+#endif
+    }
+
+    public static void TrackAdsInterClick()
+    {
+#if !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("ad_inter_click");
+#endif
+    }
+    #endregion
+
     public static void TrackLevelFirstWin(int level, int levelPrefab, LevelBoosterObserver levelBoosterObserver)
     {
 #if !UNITY_EDITOR
@@ -233,6 +324,15 @@ public static class SaferioTracking
                 };
 
                 FirebaseAnalytics.LogEvent("resource_source", parameters);
+
+                parameters =
+                {
+                    new Parameter("virtual_currency_name", resourceName),
+                    new Parameter("value", amount),
+                    new Parameter("source", reason)
+                };
+
+                FirebaseAnalytics.LogEvent("earn_virtual_currency", parameters);
         }
         catch (System.Exception)
         {
@@ -263,10 +363,19 @@ public static class SaferioTracking
         };
 
         FirebaseAnalytics.LogEvent("resource_sink", parameters);
+
+        parameters =
+        {
+            new Parameter("virtual_currency_name", resourceName),
+            new Parameter("value", amount),
+            new Parameter("item_name", reason)
+        };
+
+        FirebaseAnalytics.LogEvent("spend_virtual_currency", parameters);
 #endif
     }
 
-    public static void TrackLevelStart(int level)
+    public static void TrackLevelStart(int level, int currentGold)
     {
         if (!GamePersistentVariable.isFirebaseAvailable)
         {
@@ -276,8 +385,8 @@ public static class SaferioTracking
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
-            new Parameter("play_mode", "normal"),
             new Parameter("level", level.ToString())
+            new Parameter("current_gold", currentGold.ToString()),
         };
 
         FirebaseAnalytics.LogEvent("level_start", parameters);

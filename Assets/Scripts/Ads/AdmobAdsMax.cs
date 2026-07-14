@@ -673,6 +673,8 @@ public class AdmobAdsMax
         Debug.Log($"LongTH_ Interstitial - OnInterstitialLoadedEvent ++ {adInfo} \n");
         _isLoading = true;
         GameController.Instance.AnalyticsController.LogInterReady();
+
+        SaferioTracking.TrackAdsInterLoadSuccess();
     }
 
     private void OnInterstitialFailedEvent(string adUnitId, MaxSdk.ErrorInfo errInfo)
@@ -682,6 +684,8 @@ public class AdmobAdsMax
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
         Invoke("RequestInterstitial", 3);
+
+        SaferioTracking.TrackAdsInterLoadFail();
     }
 
     void RefeshCloseAds()
@@ -739,6 +743,8 @@ public class AdmobAdsMax
         Debug.Log("InterstitialAdOpenedEvent");
         _isLoading = false;
         Time.timeScale = 0;
+
+        SaferioTracking.TrackAdsInterShow();
     }
 
     private void MaxSdkCallbacks_OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
@@ -789,6 +795,8 @@ public class AdmobAdsMax
             if (actionIniterClose != null)
                 actionIniterClose();
         }
+
+        SaferioTracking.TrackAdsInterClick();
 
         return true;
     }
@@ -1066,13 +1074,12 @@ public class AdmobAdsMax
 
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdLoadedEvent  ++ {adInfo} \n");
         GameController.Instance.AnalyticsController.LogVideoRewardReady();
+        SaferioTracking.TrackAdsRewardLoad();
     }
 
     private void OnRewardedAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedEvent  ++ {errInfo} \n");
         Invoke("LoadRewardedAd", 15);
         GameController.Instance.AnalyticsController.LogVideoRewardLoadFail(actionWatchVideo.ToString(),
             errInfo.Message.ToString());
@@ -1080,7 +1087,6 @@ public class AdmobAdsMax
 
     private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedToDisplayEvent  ++ {errInfo} ++ {adInfo} \n");
         isVideoDone = false;
 
         //if (IsLoadedInterstitial())
@@ -1092,17 +1098,19 @@ public class AdmobAdsMax
         //    //ConfirmBox.Setup().AddMessageYes(Localization.Get("s_noti"), Localization.Get("s_TryAgain"), () => { });
         //}
         LoadRewardedAd();
+
+        SaferioTracking.TrackAdsInterLoadFail();
     }
 
     private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo} \n");
         isVideoDone = false;
+
+        SaferioTracking.TrackAdsRewardShowSuccess();
     }
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdClickedEvent ++ {adInfo} \n");
         isVideoDone = true;
         GameController.Instance.AnalyticsController.LogClickToVideoReward(actionWatchVideo.ToString());
     }
@@ -1115,7 +1123,6 @@ public class AdmobAdsMax
         //}
 
         // Rewarded ad is hidden. Pre-load the next ad
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDismissedEvent ++ {adInfo} \n");
         _actionClose?.Invoke();
         _actionClose = null;
         if (_actionRewardVideo != null)
@@ -1130,12 +1137,13 @@ public class AdmobAdsMax
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
     {
         // Rewarded ad was displayed and user should receive the reward
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdReceivedRewardEvent ++ {adInfo} ++ {reward} \n");
         isVideoDone = true;
         _actionRewardVideo?.Invoke();
         _actionRewardVideo = null;
         countdownAds = 0;
         GameController.Instance.AnalyticsController.LogVideoRewardShowDone(actionWatchVideo.ToString());
+
+        SaferioTracking.TrackAdsRewardComplete();
     }
 
     private void InitializeRewardedAds()
@@ -1244,6 +1252,8 @@ public class AdmobAdsMax
                       GameController.Instance.useProfile.CurrentLevel.ToString());
             }
         }
+
+        SaferioTracking.TrackAdsRewardClick();
     }
 
     #endregion

@@ -372,11 +372,12 @@ public class WinPopup : BasePopup
 
     private async void TrackLevelWin()
     {
-        SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
+        // SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
         new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime).Send();
         SaferioTracking.LogLevelComplete(currentLevel.Value);
+        SaferioTracking.TrackLevelComplete(currentLevel.Value, (int)playDuration.TotalSeconds);
 
         GamePersistentVariable.levelRetryTime = 0;
 
