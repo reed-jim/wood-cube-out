@@ -50,7 +50,7 @@ namespace AntsFlow
                 showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
             }
 
-            SetupSpawningTileBoxes();
+            // SetupSpawningTileBoxes();
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -181,8 +181,9 @@ namespace AntsFlow
             {
                 try
                 {
-                    nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
-                    specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+                    int index = specialElementConfig.frozenAntBoxConfig.spawnOrder.IndexOf(WashingMachineManager.Ins.numAntBoxSpawned);
+
+                    nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[index];
                 }
                 catch (System.Exception)
                 {
@@ -343,6 +344,7 @@ namespace AntsFlow
                         tilemapTile.sprite = wallTileSprite;
 
                         tilemap.SetTile(cellPos, tilemapTile);
+                        TileManager.Ins.SetShadowTile(cellPos);
 
                         node.isObstacle = true;
                     }
