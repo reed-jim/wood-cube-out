@@ -168,7 +168,6 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
         RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);
         RegisterPool<Transform>(GameConstants.tileMap, tilemapPrefab, 40);
-        RegisterPool<SpawningTileBox>(GameConstants.spawningTileBox, spawningTileBoxPrefab, 10);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
