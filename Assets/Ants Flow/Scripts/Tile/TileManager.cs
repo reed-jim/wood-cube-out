@@ -1196,8 +1196,8 @@ namespace AntsFlow
 
                 if (!tile.isDone &&
                     tile.Faction == faction &&
-                    !tile.isAntApproaching &&
-                    !tile.isLocked
+                    !tile.isAntApproaching
+                //&&!tile.isLocked
                 )
                 {
                     validTiles.Add(tile);
@@ -1213,6 +1213,7 @@ namespace AntsFlow
         {
             UpdateTileCount();
             CheckWinLevel();
+            HardPixelManager.Ins.OnTileCompleted();
         }
 
         public void UpdateNavMesh(BaseTile tile)

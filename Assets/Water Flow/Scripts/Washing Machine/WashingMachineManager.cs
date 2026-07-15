@@ -101,6 +101,11 @@ namespace AntsFlow
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             SpecialElementManager.Ins.Setup(levelItem);
+            if (HardPixelManager.Ins != null)
+            {
+                HardPixelManager.Ins.Setup(levelItem);
+
+            }
             if (GamePersistentVariable.levelItem.specialElementConfig.isContainsWallTiles)
             {
                 SpecialElementManager.Ins.FillWallTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow);
@@ -627,6 +632,7 @@ namespace AntsFlow
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
+            HardPixelManager.Ins.CheckBoosterClear();
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
             {

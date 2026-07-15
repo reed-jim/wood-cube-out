@@ -1056,6 +1056,16 @@ public class LevelItemData
 
 
 [Serializable]
+public class HardPixelConfig
+{
+    public int id;
+    public int startNodeId;
+    public int numRows;
+    public int numCols;
+    public int requiredEatCount;
+}
+
+[Serializable]
 public class SpecialElementConfig
 {
     public SpecialElementItemConfig hiddenAntBoxConfig;
@@ -1063,9 +1073,12 @@ public class SpecialElementConfig
     public SpecialElementItemConfig doubleAntBoxConfig;
     public SpawningTileBoxConfig spawningTileBoxConfig;
     public BossAreaConfig bossAreaConfig;
+    public List<HardPixelConfig> hardPixelConfigs;
+
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
 }
+
 
 [Serializable]
 public class SpecialElementItemConfig
@@ -1089,6 +1102,10 @@ public class SpecialElementItemConfig
 
     public bool IsValidToSpawn(int numAntBoxesSpawned)
     {
+        if (spawnOrder == null)
+        {
+            return false;
+        }
         List<int> remainingColumns = new List<int>() { 0, 1, 2 };
 
         for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
