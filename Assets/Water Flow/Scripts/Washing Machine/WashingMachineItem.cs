@@ -46,6 +46,8 @@ public class WashingMachineItem : MonoBehaviour
     public bool isStucking;
     public bool isPlayingWarningLoseAnimation;
     public bool isShuffled;
+    public bool isOpen = true;
+    public bool isOpenCloseType = false;
 
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
@@ -179,6 +181,8 @@ public class WashingMachineItem : MonoBehaviour
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
         isShuffled = false;
+        isOpenCloseType = false;
+        isOpen = true;
 
         washingMachineStartSlot = null;
         washingMachineSlot = null;
@@ -283,7 +287,11 @@ public class WashingMachineItem : MonoBehaviour
             return;
         }
 
-        if (isDouble)
+        if (isOpenCloseType && !isOpen)
+        {
+            Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+        }
+        else if (isDouble)
         {
             Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
         }
@@ -366,18 +374,28 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect()
     {
-        return !isInSlot && !isDisable &&
+        bool isValid = !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
             !GamePersistentVariable.isPreventSelectAntBox;
+        if (isOpenCloseType)
+        {
+            isValid = isValid && isOpen;
+        }
+        return isValid;
     }
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
-        return !isInSlot && !isDisable &&
+        bool isValid = !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= currentNumSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
             !GamePersistentVariable.isPreventSelectAntBox;
+        if (isOpenCloseType)
+        {
+            isValid = isValid && isOpen;
+        }
+        return isValid;
     }
 
     public void OpenTheBox()

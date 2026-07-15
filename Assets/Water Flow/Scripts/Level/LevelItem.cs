@@ -1073,6 +1073,7 @@ public class SpecialElementConfig
     public SpecialElementItemConfig doubleAntBoxConfig;
     public SpawningTileBoxConfig spawningTileBoxConfig;
     public BossAreaConfig bossAreaConfig;
+    public OpenCloseAntBoxConfig openCloseAntBoxConfig;
     public List<HardPixelConfig> hardPixelConfigs;
 
     public bool isContainsHiddenTiles;
@@ -1100,7 +1101,7 @@ public class SpecialElementItemConfig
         return spawnOrder.Contains(numAntBoxesSpawned);
     }
 
-    public bool IsValidToSpawn(int numAntBoxesSpawned)
+    public bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
     {
         if (spawnOrder == null)
         {
@@ -1125,7 +1126,6 @@ public class SpecialElementItemConfig
         {
             return false;
         }
-
         return GetNumLeft() > 0 && IsCorrectOrder(numAntBoxesSpawned);
     }
 }
@@ -1156,4 +1156,10 @@ public class BossAreaConfig : SpecialElementItemConfig
     public int numCoverColumn;
     public int numCoverRow;
     public int bossHealth;
+}
+
+[Serializable]
+public class OpenCloseAntBoxConfig : SpecialElementItemConfig
+{
+    public List<bool> initialStates;
 }

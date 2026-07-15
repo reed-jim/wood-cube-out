@@ -32,6 +32,7 @@ namespace AntsFlow
         public Coroutine pendingLoseLevelCoroutine;
 
         public IntVariable currentLevel;
+        private int lastToggleFrame = -1;
 
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
@@ -73,6 +74,18 @@ namespace AntsFlow
                 GamePersistentVariable.boosterMode = BoosterMode.None;
 
                 finishUsingEnableAllAntBoxesBoosterEvent?.Invoke();
+            }
+
+            if (Time.frameCount != lastToggleFrame)
+            {
+                lastToggleFrame = Time.frameCount;
+                foreach (var startSlot in washingMachineStartSlots)
+                {
+                    if (startSlot.washingMachine != null && startSlot.washingMachine.isOpenCloseType)
+                    {
+                        startSlot.washingMachine.isOpen = !startSlot.washingMachine.isOpen;
+                    }
+                }
             }
 
             CheckNoAntBoxLeftOnStartSlots();
@@ -410,8 +423,23 @@ namespace AntsFlow
             {
                 key = GameConstants.warriorAntBox;
             }
+            else if (levelElement == LevelElement.OpenCloseAntBox)
+            {
+                key = GameConstants.washingMachine;
+            }
 
             WashingMachineItem antBox = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(key);
+
+            if (levelElement == LevelElement.OpenCloseAntBox)
+            {
+                antBox.isOpenCloseType = true;
+                antBox.isOpen = SpecialElementManager.Ins.nextOpenCloseAntBoxInitialState;
+            }
+            else
+            {
+                antBox.isOpenCloseType = false;
+                antBox.isOpen = true;
+            }
 
             return antBox;
         }

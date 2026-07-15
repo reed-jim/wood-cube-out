@@ -1,6 +1,8 @@
 using AntsFlow;
+using PrimeTween;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using static GameEnum;
 
@@ -230,14 +232,14 @@ namespace AntsFlow
 
             Transform textTransform = null;
 
-            var tmp = textVisual.GetComponentInChildren<TMPro.TMP_Text>();
+            var tmp = textVisual.GetComponentInChildren<TMP_Text>();
             if (tmp != null)
             {
                 tmp.text = count.ToString();
                 tmp.enableAutoSizing = true;
                 tmp.fontSizeMin = 0;
                 tmp.fontSizeMax = 1;
-                tmp.alignment = TMPro.TextAlignmentOptions.Center;
+                tmp.alignment = TextAlignmentOptions.Center;
 
                 RectTransform tmpRect = tmp.GetComponent<RectTransform>();
                 if (tmpRect != null)
@@ -249,24 +251,13 @@ namespace AntsFlow
                 }
                 textTransform = tmp.transform;
             }
-            else
-            {
-                var tm = textVisual.GetComponentInChildren<TextMesh>();
-                if (tm != null)
-                {
-                    tm.text = count.ToString();
-                    tm.alignment = TextAlignment.Center;
-                    tm.anchor = TextAnchor.MiddleCenter;
-                    tm.characterSize = GamePersistentVariable.tileMapScaleFactor * 0.12f;
-                    textTransform = tm.transform;
-                }
-            }
+
 
             if (textTransform != null)
             {
-                PrimeTween.Tween.StopAll(textTransform);
+                Tween.StopAll(textTransform);
                 textTransform.localScale = Vector3.one;
-                PrimeTween.Tween.Scale(textTransform, endValue: Vector3.one * 1.3f, duration: 0.12f, cycles: 2, cycleMode: PrimeTween.CycleMode.Yoyo);
+                Tween.Scale(textTransform, endValue: Vector3.one * 1.3f, duration: 0.12f, cycles: 2, cycleMode: PrimeTween.CycleMode.Yoyo);
             }
         }
 
@@ -326,7 +317,7 @@ namespace AntsFlow
 
                     idToRemainingEatCount[hpId] = 0;
 
-                    PrimeTween.Tween.Custom(startCount, 0, duration: 0.5f, onValueChange: (val) =>
+                    Tween.Custom(startCount, 0, duration: 0.5f, onValueChange: (val) =>
                     {
                         UpdateVisualText(hpId);
                     }).OnComplete(() =>
@@ -359,7 +350,7 @@ namespace AntsFlow
                     {
                         if (visual != null)
                         {
-                            PrimeTween.Tween.Scale(visual.transform, Vector3.zero, 0.3f)
+                            Tween.Scale(visual.transform, Vector3.zero, 0.3f)
                                 .OnComplete(() => Destroy(visual));
                         }
                     }

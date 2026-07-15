@@ -13,7 +13,8 @@ public enum LevelElement
     HiddenAntBox,
     AntBoxLink,
     FreezedAntBox,
-    WarriorAntBox
+    WarriorAntBox,
+    OpenCloseAntBox
 }
 
 namespace AntsFlow
@@ -24,6 +25,7 @@ namespace AntsFlow
         public SpecialElementConfig specialElementConfig;
 
         public int nextFreezeAntBoxRequiredNumber;
+        public bool nextOpenCloseAntBoxInitialState = true;
         public List<AntBoxLink> antBoxLinks;
         public SpawningTileBox spawningTileBox;
         public BossArea bossArea;
@@ -77,7 +79,8 @@ namespace AntsFlow
                 if (
                     washingMachine != null &&
                     washingMachine is not HiddenAntBox &&
-                    washingMachine is not FreezedAntBox
+                    washingMachine is not FreezedAntBox &&
+                    !washingMachine.isOpenCloseType
                 )
                 {
                     if (washingMachine.numSlotRequired == 1)
@@ -127,7 +130,8 @@ namespace AntsFlow
                 if (
                     washingMachine != null &&
                     washingMachine is not HiddenAntBox &&
-                    washingMachine is not FreezedAntBox
+                    washingMachine is not FreezedAntBox &&
+                    !washingMachine.isOpenCloseType
                 )
                 {
                     if (washingMachine.numSlotRequired == 1)
@@ -212,6 +216,22 @@ namespace AntsFlow
                 specialElementConfig.bossAreaConfig.RemoveOneSpecialElementInPool();
 
                 return LevelElement.WarriorAntBox;
+            }
+            else if (specialElementConfig.openCloseAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned, true))
+            {
+                var config = specialElementConfig.openCloseAntBoxConfig;
+                if (config != null && config.initialStates != null && config.initialStates.Count > 0)
+                {
+                    nextOpenCloseAntBoxInitialState = config.initialStates[0];
+                    config.initialStates.RemoveAt(0);
+                }
+                else
+                {
+                    nextOpenCloseAntBoxInitialState = true;
+                }
+                specialElementConfig.openCloseAntBoxConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.OpenCloseAntBox;
             }
             else
             {
