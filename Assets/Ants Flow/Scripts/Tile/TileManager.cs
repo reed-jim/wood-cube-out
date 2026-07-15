@@ -47,6 +47,7 @@ namespace AntsFlow
         public Tilemap shadowTilemap;
         public Tilemap tileGlowTilemap;
         public Tilemap tilemap;
+        public Tile shadowTile;
         public Sprite tileGlowSprite;
         public int numColumn;
         public int numRow;
@@ -118,6 +119,11 @@ namespace AntsFlow
             tilemapTile.sprite = FactionMapper.Ins.GetTileSprite(tile.Faction);
 
             tilemap.SetTile(cellPos, tilemapTile);
+        }
+
+        public void SetShadowTile(Vector3Int tilemapPosition)
+        {
+            shadowTilemap.SetTile(tilemapPosition, shadowTile);
         }
 
         public void BuildMap(List<BaseTile> tiles)
