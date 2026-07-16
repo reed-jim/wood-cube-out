@@ -781,7 +781,7 @@ namespace AntsFlow
         {
             int numAntBoxLeftOnStartSlots = washingMachineStartSlots.Count(item => item.washingMachine != null);
 
-            if (numAntBoxLeftOnStartSlots <= 1)
+            if (numAntBoxLeftOnStartSlots <= 0)
             {
                 UpSpeedAnt.Ins.UpSpeedNearEndLevel();
             }
