@@ -139,6 +139,7 @@ namespace AntsFlow
             // bool isLose = CheckLoseLevel();
 
             washingMachineItem.isMoving = true;
+            washingMachineItem.washingMachineStartSlot.washingMachine = null;
 
             // Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
             Vector3 initialScale = washingMachineItem.transform.localScale;
@@ -152,7 +153,6 @@ namespace AntsFlow
                 .OnComplete(() =>
                 {
                     washingMachineItem.isMoving = false;
-                    washingMachineItem.washingMachineStartSlot.washingMachine = null;
 
                     washingMachineItem.OpenTheBox();
                     washingMachineItem.CheckAntsPath();
