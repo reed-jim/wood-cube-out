@@ -42,6 +42,8 @@ public class WashingMachineItem : MonoBehaviour
     public bool isAnimating;
     public bool isInSlot;
     public bool isDouble;
+    public bool isMagnet;
+    public WashingMachineItem magnetPartner;
     public bool isGhostMode;
     public bool isStucking;
     public bool isPlayingWarningLoseAnimation;
@@ -59,6 +61,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
+    public static event Action<WashingMachineItem> magnetBoxCountZeroEvent;
     public static event Action<WashingMachineItem> moveUpEvent;
     public static event Action spawnAntEvent;
     public static event Action loseLevelEvent;
@@ -161,6 +164,8 @@ public class WashingMachineItem : MonoBehaviour
         isInSlot = false;
         isGhostMode = false;
         isDouble = false;
+        isMagnet = false;
+        magnetPartner = null;
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
         remainingNumber = number;
@@ -178,6 +183,8 @@ public class WashingMachineItem : MonoBehaviour
         isInSlot = false;
         isGhostMode = false;
         isDouble = false;
+        isMagnet = false;
+        magnetPartner = null;
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
         isShuffled = false;
@@ -267,6 +274,11 @@ public class WashingMachineItem : MonoBehaviour
 
     public void ForceSelect()
     {
+        if (isMagnet)
+        {
+            return;
+        }
+
         Enable();
 
         SwitchShadow();
@@ -278,6 +290,45 @@ public class WashingMachineItem : MonoBehaviour
         this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
+    }
+
+    public void ForceSelectToSlot(WashingMachineSlot slot)
+    {
+        Enable();
+
+        SwitchShadow();
+
+        MoveToSlotDirect(slot);
+
+        SoundManager.Instance.PlaySoundBoxTap();
+
+        this.washingMachineSlot = slot;
+
+        selectWashingMachineEvent?.Invoke(this);
+    }
+
+    public void MoveToSlotDirect(WashingMachineSlot targetSlot)
+    {
+        isMoving = true;
+        Vector3 initialScale = transform.localScale;
+        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
+        Tween.ScaleY(transform, 1.3f * transform.localScale.y, duration: 0.2f)
+        .OnComplete(() =>
+        {
+            Tween.Scale(transform, initialScale, duration: 0.2f);
+
+            Tween.Position(transform, targetSlot.transform.position.AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                isMoving = false;
+                washingMachineStartSlot.washingMachine = null;
+
+                OpenTheBox();
+                CheckAntsPath();
+
+                WashingMachineManager.Ins.MoveAntBoxTop();
+            });
+        });
     }
 
     protected virtual void PlayInvalidSelectAnimation()
@@ -294,6 +345,14 @@ public class WashingMachineItem : MonoBehaviour
         else if (isDouble)
         {
             Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+        }
+        else if (isMagnet)
+        {
+            Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+            if (magnetPartner != null && !magnetPartner.isInSlot)
+            {
+                Tween.ShakeScale(magnetPartner.transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+            }
         }
         else
         {
@@ -382,6 +441,13 @@ public class WashingMachineItem : MonoBehaviour
         {
             isValid = isValid && isOpen;
         }
+        if (isMagnet)
+        {
+            isValid = isValid &&
+                magnetPartner != null &&
+                !magnetPartner.isDisable &&
+                WashingMachineManager.Ins.HasAdjacentAvailableSlotPair();
+        }
         return isValid;
     }
 
@@ -394,6 +460,13 @@ public class WashingMachineItem : MonoBehaviour
         if (isOpenCloseType)
         {
             isValid = isValid && isOpen;
+        }
+        if (isMagnet)
+        {
+            isValid = isValid &&
+                magnetPartner != null &&
+                !magnetPartner.isDisable &&
+                WashingMachineManager.Ins.HasAdjacentAvailableSlotPair();
         }
         return isValid;
     }
@@ -422,6 +495,10 @@ public class WashingMachineItem : MonoBehaviour
     {
         if (remainingNumber <= 0)
         {
+            if (isInSlot)
+            {
+                isStucking = true;
+            }
             return;
         }
 
@@ -614,17 +691,24 @@ public class WashingMachineItem : MonoBehaviour
 
         if (number == 0)
         {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            if (isMagnet)
             {
-                if (washingMachineSlot != null)
+                magnetBoxCountZeroEvent?.Invoke(this);
+            }
+            else
+            {
+                SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
                 {
-                    washingMachineSlot.washingMachineItem = null;
-                }
+                    if (washingMachineSlot != null)
+                    {
+                        washingMachineSlot.washingMachineItem = null;
+                    }
 
-                antBoxDoneEvent?.Invoke(this);
-            });
+                    antBoxDoneEvent?.Invoke(this);
+                });
 
-            isInSlot = false;
+                isInSlot = false;
+            }
         }
 
         spawningAntCoroutine = null;
@@ -751,14 +835,36 @@ public class WashingMachineItem : MonoBehaviour
         moveUpEvent?.Invoke(this);
     }
 
+    public static void InvokeAntBoxDoneEvent(WashingMachineItem antBox)
+    {
+        antBoxDoneEvent?.Invoke(antBox);
+    }
+
     private void OnSelectTrueCompleted()
     {
         SwitchShadow();
 
-        WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
+        WashingMachineSlot washingMachineSlot = null;
+        if (isMagnet && magnetPartner != null && !magnetPartner.isInSlot)
         {
+            var pair = WashingMachineManager.Ins.GetAdjacentAvailableSlotPair();
+            if (pair.Item1 != null && pair.Item2 != null)
+            {
 
-        });
+                pair.Item1.washingMachineItem = this;
+                pair.Item2.washingMachineItem = magnetPartner;
+
+
+                magnetPartner.ForceSelectToSlot(pair.Item2);
+                washingMachineSlot = pair.Item1;
+                MoveToSlotDirect(washingMachineSlot);
+            }
+        }
+
+        if (washingMachineSlot == null)
+        {
+            washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
+        }
 
         SoundManager.Instance.PlaySoundBoxTap();
 

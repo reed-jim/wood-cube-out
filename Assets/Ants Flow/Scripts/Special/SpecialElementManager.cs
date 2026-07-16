@@ -14,7 +14,8 @@ public enum LevelElement
     AntBoxLink,
     FreezedAntBox,
     WarriorAntBox,
-    OpenCloseAntBox
+    OpenCloseAntBox,
+    MagnetAntBox
 }
 
 namespace AntsFlow
@@ -27,6 +28,7 @@ namespace AntsFlow
         public int nextFreezeAntBoxRequiredNumber;
         public bool nextOpenCloseAntBoxInitialState = true;
         public List<AntBoxLink> antBoxLinks;
+        public List<MagnetAntBoxLink> magnetAntBoxLinks;
         public SpawningTileBox spawningTileBox;
         public BossArea bossArea;
 
@@ -48,6 +50,13 @@ namespace AntsFlow
             }
 
             antBoxLinks.Clear();
+
+            for (int i = 0; i < magnetAntBoxLinks.Count; i++)
+            {
+                ObjectPoolingEverything.ReturnToPool(GameConstants.magnetAntBoxLink, magnetAntBoxLinks[i].gameObject);
+            }
+
+            magnetAntBoxLinks.Clear();
 
             if (levelsShowSpecialElementIntroduction.Contains(currentLevel.Value))
             {
@@ -76,12 +85,9 @@ namespace AntsFlow
             {
                 WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
 
-                if (
-                    washingMachine != null &&
-                    washingMachine is not HiddenAntBox &&
-                    washingMachine is not FreezedAntBox &&
-                    !washingMachine.isOpenCloseType
-                )
+                if (washingMachine != null && washingMachine is not HiddenAntBox &&
+                    washingMachine is not FreezedAntBox && !washingMachine.isOpenCloseType &&
+                    !washingMachine.isMagnet)
                 {
                     if (washingMachine.numSlotRequired == 1)
                     {
@@ -131,7 +137,8 @@ namespace AntsFlow
                     washingMachine != null &&
                     washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox &&
-                    !washingMachine.isOpenCloseType
+                    !washingMachine.isOpenCloseType &&
+                    !washingMachine.isMagnet
                 )
                 {
                     if (washingMachine.numSlotRequired == 1)
@@ -150,6 +157,144 @@ namespace AntsFlow
                 antBoxLinks.Add(antBoxLink);
 
                 specialElementConfig.doubleAntBoxConfig.RemoveOneSpecialElementInPool();
+            }
+        }
+
+        public void SpawnMagnetAntBoxLinkFirstAntBoxes(int order)
+        {
+            if (specialElementConfig.magnetAntBoxConfig == null ||
+                !specialElementConfig.magnetAntBoxConfig.IsValidToSpawn(order))
+            {
+                return;
+            }
+
+            //if (magnetAntBoxLinks.Count >= 5)
+            //{
+            //    return;
+            //}
+
+            List<WashingMachineItem> validAntBoxesToLink = new List<WashingMachineItem>();
+
+            for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
+
+                if (washingMachine != null && washingMachine is not HiddenAntBox &&
+                    washingMachine is not FreezedAntBox && !washingMachine.isOpenCloseType &&
+                    !washingMachine.isDouble && !washingMachine.isMagnet)
+                {
+                    if (washingMachine.numSlotRequired == 1)
+                    {
+                        validAntBoxesToLink.Add(washingMachine);
+                    }
+                }
+            }
+
+            WashingMachineItem box1 = null;
+            WashingMachineItem box2 = null;
+            bool foundPair = false;
+
+            for (int i = 0; i < validAntBoxesToLink.Count; i++)
+            {
+                for (int j = i + 1; j < validAntBoxesToLink.Count; j++)
+                {
+                    int col1 = validAntBoxesToLink[i].washingMachineStartSlot.column;
+                    int col2 = validAntBoxesToLink[j].washingMachineStartSlot.column;
+                    if (Mathf.Abs(col1 - col2) == 1)
+                    {
+                        box1 = validAntBoxesToLink[i];
+                        box2 = validAntBoxesToLink[j];
+                        foundPair = true;
+                        break;
+                    }
+                }
+                if (foundPair) break;
+            }
+
+            if (foundPair)
+            {
+                MagnetAntBoxLink magnetAntBoxLink = ObjectPoolingEverything.GetFromPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink);
+
+                magnetAntBoxLink.Setup(new WashingMachineItem[] { box1, box2 });
+
+                magnetAntBoxLinks.Add(magnetAntBoxLink);
+
+                specialElementConfig.magnetAntBoxConfig.RemoveOneSpecialElementInPool();
+            }
+        }
+
+        public void SpawnMagnetAntBoxLink()
+        {
+            if (specialElementConfig.magnetAntBoxConfig == null ||
+                !specialElementConfig.magnetAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                return;
+            }
+
+            //if (magnetAntBoxLinks.Count >= 5)
+            //{
+            //    return;
+            //}
+
+            List<WashingMachineItem> validAntBoxesToLink = new List<WashingMachineItem>();
+
+            for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.row < 2)
+                {
+                    continue;
+                }
+
+                WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
+
+                if (
+                    washingMachine != null &&
+                    washingMachine is not HiddenAntBox &&
+                    washingMachine is not FreezedAntBox &&
+                    !washingMachine.isOpenCloseType &&
+                    !washingMachine.isDouble &&
+                    !washingMachine.isMagnet
+                )
+                {
+                    if (washingMachine.numSlotRequired == 1)
+                    {
+                        validAntBoxesToLink.Add(washingMachine);
+                    }
+                }
+            }
+
+            WashingMachineItem box1 = null;
+            WashingMachineItem box2 = null;
+            bool foundPair = false;
+
+            for (int i = 0; i < validAntBoxesToLink.Count; i++)
+            {
+                for (int j = i + 1; j < validAntBoxesToLink.Count; j++)
+                {
+                    int col1 = validAntBoxesToLink[i].washingMachineStartSlot.column;
+                    int col2 = validAntBoxesToLink[j].washingMachineStartSlot.column;
+                    if (Mathf.Abs(col1 - col2) == 1)
+                    {
+                        box1 = validAntBoxesToLink[i];
+                        box2 = validAntBoxesToLink[j];
+                        foundPair = true;
+                        break;
+                    }
+                }
+                if (foundPair) break;
+            }
+
+            if (foundPair)
+            {
+                MagnetAntBoxLink magnetAntBoxLink = ObjectPoolingEverything.GetFromPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink);
+
+                magnetAntBoxLink.Setup(new WashingMachineItem[] { box1, box2 });
+
+                magnetAntBoxLinks.Add(magnetAntBoxLink);
+
+                specialElementConfig.magnetAntBoxConfig.RemoveOneSpecialElementInPool();
             }
         }
 

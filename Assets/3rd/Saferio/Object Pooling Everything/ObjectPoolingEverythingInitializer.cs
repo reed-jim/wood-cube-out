@@ -69,6 +69,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     public GameObject warriorAntPrefab;
     public GameObject antDissapearFxPrefab;
     public GameObject antBoxLink;
+    public GameObject magnetAntBoxLink;
     public GameObject hiddenAntBoxPrefab;
     public GameObject freezedAntBoxPrefab;
     public GameObject warriorAntBoxPrefab;
@@ -166,6 +167,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<BaseAnt>(GameConstants.warriorAnt, warriorAntPrefab, 50);
         RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
+        RegisterPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink, magnetAntBoxLink, 5);
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 20);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 20);
         RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);

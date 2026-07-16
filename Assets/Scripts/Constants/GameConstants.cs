@@ -262,6 +262,7 @@ public static class GameConstants
     public static string warriorAnt = "warriorAnt";
     public static string antDissapearFxPrefab = "antDissapearFxPrefab";
     public static string antBoxLink = "antBoxLink";
+    public static string magnetAntBoxLink = "magnetAntBoxLink";
     public static string hiddenAntBox = "hiddenAntBox";
     public static string freezedAntBox = "freezedAntBox";
     public static string warriorAntBox = "warriorAntBox";

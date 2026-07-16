@@ -1071,6 +1071,7 @@ public class SpecialElementConfig
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;
+    public SpecialElementItemConfig magnetAntBoxConfig;
     public SpawningTileBoxConfig spawningTileBoxConfig;
     public BossAreaConfig bossAreaConfig;
     public OpenCloseAntBoxConfig openCloseAntBoxConfig;
