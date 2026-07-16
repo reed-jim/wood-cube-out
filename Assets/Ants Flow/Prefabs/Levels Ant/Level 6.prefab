@@ -7997,9 +7997,21 @@ MonoBehaviour:
     worldSize: 0
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
+    items:
+    - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+      numAnt: 20
+    - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+      numAnt: 30
+    - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+      numAnt: 20
+    - faction: {r: 0.99215686, g: 0.62352943, b: 0.06666667, a: 1}
+      numAnt: 15
+    - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+      numAnt: 30
+    - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+      numAnt: 20
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0
@@ -8012,6 +8024,8 @@ MonoBehaviour:
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
       spawnOrder: 
+    spawningTileBoxConfig:
+      items: []
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 0.5, z: 0}
