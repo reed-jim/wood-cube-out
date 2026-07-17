@@ -19,9 +19,18 @@ public class Snake : MonoBehaviour
         RebuildSpline(shrink);
     }
 
-    void Update()
+    // void Update()
+    // {
+    //     RebuildSpline(shrink);
+    // }
+
+    public void Setup(List<Vector2> points)
     {
-        RebuildSpline(shrink);
+        allPoints = new List<Vector2>();
+
+        allPoints.AddRange(points);
+
+        RebuildSpline(1);
     }
 
     public void RebuildSpline(float t)

@@ -1435,6 +1435,13 @@ namespace AntsFlow
         }
 
         public List<GridNode> grids;
+
+        #region Util
+        public Vector3 GetTilemapPostionWithLowerZ()
+        {
+            return tilemap.transform.position.AddZ(-1);
+        }
+        #endregion
     }
 }
 

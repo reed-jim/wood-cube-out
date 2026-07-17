@@ -27,6 +27,7 @@ namespace AntsFlow
         public List<AntBoxLink> antBoxLinks;
         public SpawningTileBox spawningTileBox;
         public BossArea bossArea;
+        public Snake snake;
 
         public Sprite hiddenTileSprite;
         public Sprite wallTileSprite;
@@ -54,6 +55,7 @@ namespace AntsFlow
 
             SetupSpawningTileBoxes();
             SetupBossArea(levelItem.specialElementConfig.bossAreaConfig);
+            SetupSnake();
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -476,6 +478,24 @@ namespace AntsFlow
             bossArea.Setup(tiles, bossAreaConfig);
         }
 
+        public void SetupSnake()
+        {
+            List<int> indexes = GenerateSpiralIndexes(GamePersistentVariable.numColumn + 2, GamePersistentVariable.numRow + 2, 3);
+
+            List<Vector2> points = new List<Vector2>();
+
+            for (int i = 0; i < indexes.Count; i++)
+            {
+                int index = indexes[i];
+
+                points.Add(TileManager.Ins.nodes[index].initialPosition);
+            }
+
+            snake.transform.position = TileManager.Ins.GetTilemapPostionWithLowerZ();
+
+            snake.Setup(points);
+        }
+
         public bool NextSpawningTileBoxes()
         {
             if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
@@ -499,5 +519,115 @@ namespace AntsFlow
 
             return true;
         }
+
+        #region Util
+        List<int> GenerateSpiralIndexes(int width, int height, int unit)
+        {
+            List<int> result = new();
+
+            int left = 0;
+            int right = width - 1;
+            int top = 0;
+            int bottom = height - 1;
+
+            while (left <= right && top <= bottom)
+            {
+                // top row
+                for (int x = left; x <= right; x += unit)
+                    result.Add(top * width + x);
+
+                // add missing right corner
+                if ((right - left) % unit != 0)
+                    result.Add(top * width + right);
+
+                top += unit;
+
+
+                // right column
+                for (int y = top; y <= bottom; y += unit)
+                    result.Add(y * width + right);
+
+                // add missing bottom corner
+                if ((bottom - top) % unit != 0)
+                    result.Add(bottom * width + right);
+
+                right -= unit;
+
+
+                // bottom row
+                if (top <= bottom)
+                {
+                    for (int x = right; x >= left; x -= unit)
+                        result.Add(bottom * width + x);
+
+                    // add missing left corner
+                    if ((right - left) % unit != 0)
+                        result.Add(bottom * width + left);
+
+                    bottom -= unit;
+                }
+
+
+                // left column
+                if (left <= right)
+                {
+                    for (int y = bottom; y >= top; y -= unit)
+                        result.Add(y * width + left);
+
+                    // add missing top corner
+                    if ((bottom - top) % unit != 0)
+                        result.Add(top * width + left);
+
+                    left += unit;
+                }
+            }
+
+            result = RemoveUnnecessaryPoints(result, width);
+            result.Reverse();
+
+            return result;
+
+
+            List<int> RemoveUnnecessaryPoints(List<int> indexes, int width)
+            {
+                if (indexes.Count <= 2)
+                    return indexes;
+
+                List<int> result = new();
+
+                result.Add(indexes[0]);
+
+                Vector2Int oldDir = Vector2Int.zero;
+
+                for (int i = 1; i < indexes.Count - 1; i++)
+                {
+                    Vector2Int a = IndexToXY(indexes[i - 1], width);
+                    Vector2Int b = IndexToXY(indexes[i], width);
+                    Vector2Int c = IndexToXY(indexes[i + 1], width);
+
+                    Vector2Int dir1 = (b - a);
+                    Vector2Int dir2 = (c - b);
+
+                    // direction changed = keep corner
+                    if (dir1 != dir2)
+                    {
+                        result.Add(indexes[i]);
+                    }
+                }
+
+                result.Add(indexes[^1]);
+
+                return result;
+            }
+
+            Vector2Int IndexToXY(int index, int width)
+            {
+                return new Vector2Int(
+                    index % width,
+                    index / width
+                );
+            }
+        }
+        #endregion
     }
 }
