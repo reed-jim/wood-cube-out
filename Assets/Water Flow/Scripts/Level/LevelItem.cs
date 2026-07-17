@@ -1078,6 +1078,7 @@ public class SpecialElementConfig
     public SpecialElementItemConfig doubleAntBoxConfig;
     public SpawningTileBoxConfig spawningTileBoxConfig;
     public BossAreaConfig bossAreaConfig;
+    public SnakeConfig snakeConfig;
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
 }
@@ -1159,4 +1160,10 @@ public class BossAreaConfig : SpecialElementItemConfig
     public int numCoverColumn;
     public int numCoverRow;
     public int bossHealth;
+}
+
+[Serializable]
+public class SnakeConfig : SpecialElementItemConfig
+{
+    public int health;
 }

@@ -405,6 +405,10 @@ namespace AntsFlow
             {
                 key = GameConstants.warriorAntBox;
             }
+            else if (levelElement == LevelElement.SnakeAntBox)
+            {
+                key = GameConstants.snakeAntBox;
+            }
 
             WashingMachineItem antBox = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(key);
 
