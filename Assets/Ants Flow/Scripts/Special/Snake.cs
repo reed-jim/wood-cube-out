@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Saferio.Util.SaferioTween;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -6,6 +7,7 @@ using UnityEngine.U2D;
 public class Snake : MonoBehaviour
 {
     [SerializeField] private SpriteShapeController spriteShape;
+    [SerializeField] private Transform head;
 
     // Head -> Tail
     public List<Vector2> allPoints = new();
@@ -18,11 +20,6 @@ public class Snake : MonoBehaviour
     {
         RebuildSpline(shrink);
     }
-
-    // void Update()
-    // {
-    //     RebuildSpline(shrink);
-    // }
 
     public void Setup(List<Vector2> points)
     {
@@ -94,6 +91,23 @@ public class Snake : MonoBehaviour
             spline.InsertPointAt(i, visible[i]);
             spline.SetTangentMode(i, ShapeTangentMode.Continuous);
             spline.SetHeight(i, width);
+        }
+
+        // Head
+        head.position = visible[0];
+
+        if (visible.Count > 1)
+        {
+            Vector2 dir = visible[1] - visible[0];
+
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            head.SetPositionAndRotation(
+                visible[0],
+                Quaternion.Euler(0, 0, angle + 90f)
+            );
+
+            head.localPosition = head.localPosition.ChangeZ(-0.1f);
         }
     }
 
