@@ -108,7 +108,6 @@ namespace AntsFlow
         public Vector3 GetTilePosition(BaseTile tile)
         {
             return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1);
-            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.3f, 0.3f);
         }
 
         public void RevealTile(BaseTile tile)
@@ -519,19 +518,26 @@ namespace AntsFlow
         {
             foreach (var node in nodes)
             {
+                // if (node.isObstacle)
+                // {
+                //     continue;
+                // }
+
+                // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
+
+                // if (node.tile != null && node.tile.isLocked)
+                // {
+                //     Gizmos.color = Color.green;
+
+                //     Gizmos.DrawSphere(node.initialPosition, 0.1f);
+                //     // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
+                // }
+
                 if (node.isObstacle)
                 {
-                    continue;
-                }
-
-                Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
-
-                if (node.tile != null && node.tile.isLocked)
-                {
                     Gizmos.color = Color.green;
-
                     Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                    // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
+                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
                 }
 
                 // if (node.tile == null)
@@ -850,7 +856,7 @@ namespace AntsFlow
 
             return result;
         }
-        
+
         public void FindSingleAntPath(BaseTile tile)
         {
             Node start = bottomMostNodes

@@ -30,11 +30,11 @@ namespace AntsFlow
                 return;
             }
 
-            TileManager.Ins.FindSingleAntPath(TileManager.Ins.tiles[0]);
+            TileManager.Ins.FindSingleAntPath(SpecialElementManager.Ins.snake.snakeNestTile);
 
             for (int i = 0; i < remainingNumber; i++)
             {
-                BaseTile tile = TileManager.Ins.tiles[0];
+                BaseTile tile = SpecialElementManager.Ins.snake.snakeNestTile;
 
                 tilesToMove.Add(tile);
             }

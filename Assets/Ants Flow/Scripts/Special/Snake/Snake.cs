@@ -7,7 +7,6 @@ using UnityEngine.U2D;
 
 namespace AntsFlow
 {
-
     public class Snake : MonoBehaviour
     {
         [SerializeField] private SpriteShapeController spriteShape;
@@ -23,6 +22,9 @@ namespace AntsFlow
         public int maxHealth;
         public int health;
         public List<int> numAntPerBox;
+        public BaseTile snakeNestTile;
+
+        public List<Node> affectedNodes;
 
         private Tween updateSnakeLengthTween;
 
@@ -34,6 +36,7 @@ namespace AntsFlow
         public void Setup(SnakeConfig snakeConfig)
         {
             List<int> indexes = GenerateSpiralIndexes(GamePersistentVariable.numColumn + 2, GamePersistentVariable.numRow + 2, 3);
+            List<int> allAffectedIndexes = ExpandIndexes(indexes, GamePersistentVariable.numColumn + 2);
 
             List<Vector2> points = new List<Vector2>();
 
@@ -41,7 +44,32 @@ namespace AntsFlow
             {
                 int index = indexes[i];
 
-                points.Add(TileManager.Ins.nodes[index].initialPosition);
+                Node node = TileManager.Ins.nodes[index];
+
+                points.Add(node.initialPosition);
+
+                if (i == indexes.Count - 1)
+                {
+                    if (node.tile == null)
+                    {
+                        node.tile = new BaseTile()
+                        {
+                            tilemapPosition =
+                                CommonUtil.GetVector3Int(
+                                    (node.initialPosition - (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1)) / GamePersistentVariable.tileMapScaleFactor),
+                            isDone = true
+                        };
+                    }
+
+                    snakeNestTile = node.tile;
+                }
+            }
+
+            for (int i = 0; i < allAffectedIndexes.Count; i++)
+            {
+                Node node = TileManager.Ins.nodes[allAffectedIndexes[i]];
+
+                node.isObstacle = true;
             }
 
             transform.position = TileManager.Ins.GetTilemapPostionWithLowerZ();
@@ -228,7 +256,6 @@ namespace AntsFlow
 
                 top += unit;
 
-
                 // right column
                 for (int y = top; y <= bottom; y += unit)
                     result.Add(y * width + right);
@@ -313,6 +340,44 @@ namespace AntsFlow
                     index / width
                 );
             }
+        }
+
+        List<int> ExpandIndexes(List<int> path, int width)
+        {
+            List<int> result = new();
+
+            if (path.Count == 0)
+                return result;
+
+            result.Add(path[0]);
+
+            for (int i = 1; i < path.Count; i++)
+            {
+                int from = path[i - 1];
+                int to = path[i];
+
+                int x1 = from % width;
+                int y1 = from / width;
+
+                int x2 = to % width;
+                int y2 = to / width;
+
+                int dx = Mathf.Clamp(x2 - x1, -1, 1);
+                int dy = Mathf.Clamp(y2 - y1, -1, 1);
+
+                int x = x1;
+                int y = y1;
+
+                while (x != x2 || y != y2)
+                {
+                    x += dx;
+                    y += dy;
+
+                    result.Add(y * width + x);
+                }
+            }
+
+            return result;
         }
     }
 
