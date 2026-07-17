@@ -17,8 +17,6 @@ namespace AntsFlow
 
     public class HardPixelManager : MonoBehaviour
     {
-        public Sprite defaultVisualSprite;
-
         private static HardPixelManager ins;
         public static HardPixelManager Ins
         {
@@ -173,8 +171,8 @@ namespace AntsFlow
             float cellWidth = GamePersistentVariable.tileDistance.x > 0 ? GamePersistentVariable.tileDistance.x : GamePersistentVariable.tileMapScaleFactor;
             float cellHeight = GamePersistentVariable.tileDistance.y > 0 ? GamePersistentVariable.tileDistance.y : GamePersistentVariable.tileMapScaleFactor;
 
-            float width = inst.config.numCols * cellWidth;
-            float height = inst.config.numRows * cellHeight;
+            float width = inst.config.numCols * cellWidth * 1.01f;
+            float height = inst.config.numRows * cellHeight * 1.07f;
 
             RectTransform rectTransform = visual.GetComponent<RectTransform>();
             if (rectTransform != null)
@@ -186,7 +184,7 @@ namespace AntsFlow
                 visual.transform.localScale = new Vector3(width, height, 1f);
             }
 
-            var tmp = visual.GetComponentInChildren<TMPro.TMP_Text>();
+            var tmp = visual.GetComponentInChildren<TMP_Text>();
             if (tmp != null) tmp.gameObject.SetActive(false);
             var tm = visual.GetComponentInChildren<TextMesh>();
             if (tm != null) tm.gameObject.SetActive(false);
@@ -209,8 +207,6 @@ namespace AntsFlow
             GameObject visual = Instantiate(visualPrefab, combinedAveragePos, Quaternion.identity);
             visual.name = "HardPixel_Text_" + id;
 
-            var sr = visual.GetComponent<SpriteRenderer>();
-            if (sr != null) sr.enabled = false;
             var img = visual.GetComponent<UnityEngine.UI.Image>();
             if (img != null) img.enabled = false;
             var r = visual.GetComponent<Renderer>();

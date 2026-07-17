@@ -238,13 +238,11 @@ public class MagnetAntBoxLink : MonoBehaviour
 
     private void CompleteAllBoxes()
     {
-        // Lưu copy vì Unlink sẽ xóa mảng và reset trạng thái
         WashingMachineItem[] boxesToComplete = new WashingMachineItem[antBoxes.Length];
         System.Array.Copy(antBoxes, boxesToComplete, antBoxes.Length);
 
         HideLink();
 
-        // Unlink ngay lập tức để tránh OnAntBoxDone re-entrant
         Unlink();
 
         for (int i = 0; i < boxesToComplete.Length; i++)
@@ -271,11 +269,9 @@ public class MagnetAntBoxLink : MonoBehaviour
 
         if (isDone)
         {
-            // Lưu copy trước khi Unlink vì Unlink sẽ xóa mảng
             WashingMachineItem[] boxesCopy = new WashingMachineItem[antBoxes.Length];
             System.Array.Copy(antBoxes, boxesCopy, antBoxes.Length);
 
-            // Unlink trước để tránh re-entrant callback
             Unlink();
 
             foreach (var box in boxesCopy)

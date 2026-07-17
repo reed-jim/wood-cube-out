@@ -30492,6 +30492,8 @@ MonoBehaviour:
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
       spawnOrder: 01000000040000000c0000001000000013000000160000001d000000210000002300000027000000280000002c000000310000003700000038000000
+    magnetAntBoxConfig:
+      spawnOrder: 
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -30503,7 +30505,12 @@ MonoBehaviour:
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
-    hardPixelConfigs: []
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 42
+      numRows: 8
+      numCols: 8
+      requiredEatCount: 500
     isContainsHiddenTiles: 1
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
