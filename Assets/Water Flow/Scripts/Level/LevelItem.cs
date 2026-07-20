@@ -182,6 +182,9 @@ namespace AntsFlow
 
         #region Snake
         private bool snakeConfigMode;
+        private bool isPainting;
+        private bool paintValue; // true = add, false = remove
+        private readonly HashSet<int> paintedThisDrag = new();
         #endregion
 
         public override void OnInspectorGUI()
@@ -321,6 +324,14 @@ namespace AntsFlow
 
             Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
 
+            Event e = Event.current;
+
+            if (e.type == EventType.MouseUp && e.button == 0)
+            {
+                isPainting = false;
+                paintedThisDrag.Clear();
+            }
+
             int index = 0;
 
             float tileDistance = 0.1f;
@@ -330,24 +341,24 @@ namespace AntsFlow
             for (int i = 0; i < level.tiles.Count; i++)
             {
                 BaseTile tile = level.tiles[i];
-
                 tileAtCoordinate[(int)tile.position.x, (int)tile.position.y] = tile;
             }
 
             // Background
+            float backgroundWidth = 10;
+
             Vector3[] background =
             {
-                new Vector3( - 10,   - 10,1),
-                new Vector3( - 10,   + 10,1),
-                new Vector3( + 10,   + 10,1),
-                new Vector3( + 10,   - 10,1),
-            };
+        new Vector3(-backgroundWidth, -backgroundWidth, 1),
+        new Vector3(-backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, -backgroundWidth, 1),
+    };
 
             Handles.DrawSolidRectangleWithOutline(
                 background,
-                new Color(0f, 0f, 0f, 0.85f), // Fill
-                Color.white                   // Outline (optional)
-            );
+                new Color(0f, 0f, 0f, 0.85f),
+                Color.white);
 
             for (int y = 0; y < level.numRow; y++)
             {
@@ -363,45 +374,71 @@ namespace AntsFlow
 
                     if (tile != null)
                     {
-                        // Draw the tile
-                        Handles.color = tile.Faction; // your tile color
+                        Handles.color = tile.Faction;
                         Handles.DrawSolidDisc(
                             worldPos,
                             SceneView.currentDrawingSceneView.camera.transform.forward,
                             0.75f * size);
                     }
 
-                    // Optional outline
                     Handles.color = selected ? Color.green : Color.black;
                     Handles.DrawWireDisc(
                         worldPos,
                         SceneView.currentDrawingSceneView.camera.transform.forward,
                         size);
 
-                    // Clickable button (cap is invisible because size = 0)
-                    if (Handles.Button(
-                            worldPos,
-                            Quaternion.identity,
-                            0f,
-                            size,
-                            Handles.CircleHandleCap))
+                    // Detect mouse over this circle
+                    if (HandleUtility.DistanceToCircle(worldPos, size) == 0)
                     {
-                        Undo.RecordObject(level, "Snake Cell");
+                        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
-                        if (selected)
-                            level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
-                        else
-                            level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
+                        if (e.type == EventType.MouseDown && e.button == 0)
+                        {
+                            Undo.RecordObject(level, "Snake Paint");
 
-                        EditorUtility.SetDirty(level);
+                            paintValue = !selected;
+                            isPainting = true;
+                            paintedThisDrag.Clear();
+
+                            if (paintValue)
+                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
+                            else
+                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
+
+                            paintedThisDrag.Add(index);
+
+                            EditorUtility.SetDirty(level);
+                            e.Use();
+                        }
+                        else if (isPainting &&
+                                 e.type == EventType.MouseDrag &&
+                                 !paintedThisDrag.Contains(index))
+                        {
+                            Undo.RecordObject(level, "Snake Paint");
+
+                            if (paintValue)
+                            {
+                                if (!level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index))
+                                    level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
+                            }
+                            else
+                            {
+                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
+                            }
+
+                            paintedThisDrag.Add(index);
+
+                            EditorUtility.SetDirty(level);
+                            e.Use();
+                        }
                     }
-
-
-                    // Handles.Label(worldPos + Vector3.up * 0.2f, index.ToString());
 
                     index++;
                 }
             }
+
+            if (GUI.changed)
+                SceneView.RepaintAll();
         }
 
         private void FillFactionPool()
