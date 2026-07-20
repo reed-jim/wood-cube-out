@@ -180,6 +180,10 @@ namespace AntsFlow
         public float moveTilesCloserFactor = 0.9f;
         public FactionMapper factionMapper;
 
+        #region Snake
+        private bool snakeConfigMode;
+        #endregion
+
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
@@ -237,6 +241,17 @@ namespace AntsFlow
                 levelItem.ClearAllSpecialElements();
             }
 
+            if (GUILayout.Button(
+            snakeConfigMode
+                ? "Disable Snake Config Mode"
+                : "Enable Snake Config Mode"))
+            {
+                snakeConfigMode = !snakeConfigMode;
+
+                // Force Scene view repaint
+                SceneView.RepaintAll();
+            }
+
             // if (GUILayout.Button("Step 1: ReadLevel"))
             // {
             //     ReadLevel(levelItem);
@@ -290,6 +305,103 @@ namespace AntsFlow
             // {
             //     FillTheRestOfLevel(levelItem);
             // }
+        }
+
+        private void OnSceneGUI()
+        {
+            ConfiguringSnake();
+        }
+
+        private void ConfiguringSnake()
+        {
+            if (!snakeConfigMode)
+                return;
+
+            LevelItem level = (LevelItem)target;
+
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+
+            int index = 0;
+
+            float tileDistance = 0.1f;
+
+            BaseTile[,] tileAtCoordinate = new BaseTile[level.numColumn, level.numRow];
+
+            for (int i = 0; i < level.tiles.Count; i++)
+            {
+                BaseTile tile = level.tiles[i];
+
+                tileAtCoordinate[(int)tile.position.x, (int)tile.position.y] = tile;
+            }
+
+            // Background
+            Vector3[] background =
+            {
+                new Vector3( - 10,   - 10,1),
+                new Vector3( - 10,   + 10,1),
+                new Vector3( + 10,   + 10,1),
+                new Vector3( + 10,   - 10,1),
+            };
+
+            Handles.DrawSolidRectangleWithOutline(
+                background,
+                new Color(0f, 0f, 0f, 0.85f), // Fill
+                Color.white                   // Outline (optional)
+            );
+
+            for (int y = 0; y < level.numRow; y++)
+            {
+                for (int x = 0; x < level.numColumn; x++)
+                {
+                    Vector3 worldPos = tileDistance * new Vector2(x, y);
+
+                    bool selected = level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index);
+
+                    float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
+
+                    BaseTile tile = tileAtCoordinate[x, y];
+
+                    if (tile != null)
+                    {
+                        // Draw the tile
+                        Handles.color = tile.Faction; // your tile color
+                        Handles.DrawSolidDisc(
+                            worldPos,
+                            SceneView.currentDrawingSceneView.camera.transform.forward,
+                            0.75f * size);
+                    }
+
+                    // Optional outline
+                    Handles.color = selected ? Color.green : Color.black;
+                    Handles.DrawWireDisc(
+                        worldPos,
+                        SceneView.currentDrawingSceneView.camera.transform.forward,
+                        size);
+
+                    // Clickable button (cap is invisible because size = 0)
+                    if (Handles.Button(
+                            worldPos,
+                            Quaternion.identity,
+                            0f,
+                            size,
+                            Handles.CircleHandleCap))
+                    {
+                        Undo.RecordObject(level, "Snake Cell");
+
+                        if (selected)
+                            level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
+                        else
+                            level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
+
+                        EditorUtility.SetDirty(level);
+                    }
+
+
+                    // Handles.Label(worldPos + Vector3.up * 0.2f, index.ToString());
+
+                    index++;
+                }
+            }
         }
 
         private void FillFactionPool()
@@ -1164,6 +1276,8 @@ public class BossAreaConfig : SpecialElementItemConfig
 
 [Serializable]
 public class SnakeConfig : SpecialElementItemConfig
+
 {
+    public List<int> snakeSegmentIndexes;
     public int health;
 }

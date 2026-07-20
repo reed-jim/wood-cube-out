@@ -148,6 +148,11 @@ namespace AntsFlow
         {
             if (allPoints.Count < 2)
             {
+                if (spriteShape.enabled)
+                {
+                    SaferioTween.ScaleDownWithPunch(head);
+                }
+
                 spriteShape.enabled = false;
                 return;
             }

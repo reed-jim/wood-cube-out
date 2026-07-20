@@ -492,6 +492,16 @@ namespace AntsFlow
 
         public void SetupSnake(SnakeConfig snakeConfig)
         {
+            if (snakeConfig.spawnOrder == null)
+            {
+                return;
+            }
+
+            if (snakeConfig.spawnOrder.Count == 0)
+            {
+                return;
+            }
+
             snake.Setup(snakeConfig);
         }
 
