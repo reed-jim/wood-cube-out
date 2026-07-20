@@ -39,6 +39,8 @@ namespace AntsFlow
                 tilesToMove.Add(tile);
             }
 
+            remainingNumber -= tilesToMove.Count;
+
             if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
             {
                 TurnOffWarningLoseAnimation();

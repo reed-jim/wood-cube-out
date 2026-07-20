@@ -25,6 +25,7 @@ namespace AntsFlow
         public BaseTile snakeNestTile;
 
         public List<Node> affectedNodes;
+        List<int> allAffectedNodeIndexes;
 
         private Tween updateSnakeLengthTween;
 
@@ -36,9 +37,22 @@ namespace AntsFlow
         public void Setup(SnakeConfig snakeConfig)
         {
             List<int> indexes = GenerateSpiralIndexes(GamePersistentVariable.numColumn + 2, GamePersistentVariable.numRow + 2, 3);
-            List<int> allAffectedIndexes = ExpandIndexes(indexes, GamePersistentVariable.numColumn + 2);
+            allAffectedNodeIndexes = ExpandIndexes(indexes, GamePersistentVariable.numColumn + 2);
 
             List<Vector2> points = new List<Vector2>();
+
+            for (int i = 0; i < allAffectedNodeIndexes.Count; i++)
+            {
+                int index = allAffectedNodeIndexes[i];
+
+                BaseTile tile = TileManager.Ins.nodes[index].tile;
+
+                if (tile != null)
+                {
+                    tile.Hide();
+                    tile.ActualComplete();
+                }
+            }
 
             for (int i = 0; i < indexes.Count; i++)
             {
@@ -65,20 +79,13 @@ namespace AntsFlow
                 }
             }
 
-            for (int i = 0; i < allAffectedIndexes.Count; i++)
-            {
-                Node node = TileManager.Ins.nodes[allAffectedIndexes[i]];
-
-                node.isObstacle = true;
-            }
-
             transform.position = TileManager.Ins.GetTilemapPostionWithLowerZ();
 
             allPoints = new List<Vector2>();
-
             allPoints.AddRange(points);
 
             RebuildSpline(1);
+            UpdateNodeObstacleState(1);
 
             maxHealth = snakeConfig.health;
             health = maxHealth;
@@ -102,6 +109,8 @@ namespace AntsFlow
             {
                 RebuildSpline(newVal);
             });
+
+            UpdateNodeObstacleState(snakeLength);
         }
 
         public void GenerateAntNumberPerBox(int totalBox, int maxHealth)
@@ -213,6 +222,27 @@ namespace AntsFlow
                 );
 
                 head.localPosition = head.localPosition.ChangeZ(-0.1f);
+            }
+        }
+
+        private void UpdateNodeObstacleState(float snakeLengthRatio)
+        {
+            int obstacleIndex = (int)(allAffectedNodeIndexes.Count * (1 - snakeLengthRatio));
+
+            for (int i = 0; i < allAffectedNodeIndexes.Count; i++)
+            {
+                int index = allAffectedNodeIndexes[i];
+
+                Node node = TileManager.Ins.nodes[index];
+
+                if (i >= obstacleIndex)
+                {
+                    node.isObstacle = true;
+                }
+                else
+                {
+                    node.isObstacle = false;
+                }
             }
         }
 
