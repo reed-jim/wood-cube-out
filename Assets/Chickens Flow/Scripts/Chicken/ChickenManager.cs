@@ -39,7 +39,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 }
 
                 position.x = (j - numColumn / 2f + 0.5f * (i % 2)) * distance;
-                position.y = i * distance;
+                position.y = 2 + i * distance;
                 position.z = -1;
 
                 chicken.transform.position = position;

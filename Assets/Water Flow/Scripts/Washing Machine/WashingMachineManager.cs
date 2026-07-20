@@ -18,6 +18,7 @@ namespace AntsFlow
 
         public List<WashingMachineSlot> washingMachineSlots;
         public List<WashingMachineStartSlot> washingMachineStartSlots;
+        public Transform grainPool;
 
         public List<Color> poolFaction;
 
@@ -150,7 +151,7 @@ namespace AntsFlow
                     washingMachineItem.washingMachineStartSlot.washingMachine = null;
 
                     washingMachineItem.OpenTheBox();
-                    washingMachineItem.CheckAntsPath();
+                    washingMachineItem.PourGrainOur();
 
                     MoveAntBoxTop();
 
@@ -1209,6 +1210,8 @@ namespace AntsFlow
 
         private float GetLevelProgress()
         {
+            return 0;
+            
             int numDoneTile = TileManager.Ins.tiles.Count(tile => tile.isDone);
 
             return numDoneTile / (float)totalTile;

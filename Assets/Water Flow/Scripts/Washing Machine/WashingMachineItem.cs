@@ -193,6 +193,29 @@ public class WashingMachineItem : MonoBehaviour
         numberText.alpha = isDisable ? 0.2f : 1;
     }
 
+    #region Chicken Feed
+    public void PourGrainOur()
+    {
+        Vector3 position;
+
+        position.x = UnityEngine.Random.RandomRange(-5, 5);
+        position.y = UnityEngine.Random.RandomRange(-2, 2);
+        position.z = -1;
+
+        Tween.Position(transform, position, duration: 0.3f).OnComplete(() =>
+        {
+            GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
+
+            grainPile.transform.SetParent(WashingMachineManager.Ins.grainPool.transform);
+            grainPile.transform.localPosition = position;
+
+            grainPile.SetFaction(faction);
+
+            gameObject.SetActive(false);
+        });
+    }
+    #endregion
+
     public void MinusClothingPiece()
     {
         number--;
@@ -714,7 +737,7 @@ public class WashingMachineItem : MonoBehaviour
         {
             if (isInSlot)
             {
-                CheckAntsPath();
+
             }
         }
         else

@@ -257,6 +257,7 @@ public static class GameConstants
     #region Chicken Flow
     public static string chicken = "chicken";
     public static string waitingChickenSlot = "waitingChickenSlot";
+    public static string grainPile = "grainPile";
     #endregion
 
     #region Ant Out
