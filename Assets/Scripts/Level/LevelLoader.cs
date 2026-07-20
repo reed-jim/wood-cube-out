@@ -255,11 +255,7 @@ namespace NamPhuThuy.GamePlay
 
             void ActualLoadLevel(TextAsset resultLoad)
             {
-                // GameObject level = resultLoad;
-                // AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
-                // Transform levelTransform = level.transform;
-
-                // load from json
+                // // load from json
                 string json = resultLoad.text;
                 AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
 
@@ -267,33 +263,30 @@ namespace NamPhuThuy.GamePlay
 
                 AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
 
-                GamePersistentVariable.levelItem = levelItem;
-                GamePersistentVariable.isLevelLost = false;
+                // GamePersistentVariable.levelItem = levelItem;
+                // GamePersistentVariable.isLevelLost = false;
 
-                if (levelItem.isOverrideLevelScale)
-                {
-                    if (levelItem.levelScaleXRatio > 1 && levelItem.levelScaleYRatio > 1)
-                    {
-                        levelScaleXRatio = levelItem.levelScaleXRatio;
-                        levelScaleYRatio = levelItem.levelScaleYRatio;
-                    }
-                    multiplierScaleX = levelItem.multiplierScaleX;
-                    multiplierScaleY = levelItem.multiplierScaleY;
-                }
+                // if (levelItem.isOverrideLevelScale)
+                // {
+                //     if (levelItem.levelScaleXRatio > 1 && levelItem.levelScaleYRatio > 1)
+                //     {
+                //         levelScaleXRatio = levelItem.levelScaleXRatio;
+                //         levelScaleYRatio = levelItem.levelScaleYRatio;
+                //     }
+                //     multiplierScaleX = levelItem.multiplierScaleX;
+                //     multiplierScaleY = levelItem.multiplierScaleY;
+                // }
 
-                CalculateLevelScale(levelItem);
+                // CalculateLevelScale(levelItem);
 
-                antLevelData = AutoSpacingAllTiles(antLevelData);
-                // FitLevelToScreenArea(levelTransform);
-                // CenterLevel(levelTransform);
+                // antLevelData = AutoSpacingAllTiles(antLevelData);
 
-                FillTileMap(antLevelData, levelTransform);
-                // // BuildMesh(levelTransform);   
+                // FillTileMap(antLevelData, levelTransform);
 
-                if (currentLevel.Value == 2)
-                {
-                    levelItem.isTutorialSpeedUpLevel = true;
-                }
+                // if (currentLevel.Value == 2)
+                // {
+                //     levelItem.isTutorialSpeedUpLevel = true;
+                // }
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
@@ -577,10 +570,6 @@ namespace NamPhuThuy.GamePlay
             //     {
             //         blockage.blockedByMe.Add(tile);
             //     }
-            // }
-
-            AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
-            AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
 
             return spawnedLevelItem;
 

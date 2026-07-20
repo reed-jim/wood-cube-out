@@ -96,15 +96,10 @@ namespace AntsFlow
 
             numAntBoxSpawned = 0;
 
-            // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
-            TileManager.Ins.UpdateTileCount();
-            TileManager.Ins.BuildMap(TileManager.Ins.tiles);
+            ChickenManager.Ins.GenerateAllFactions();
+            ChickenManager.Ins.SpawnFirstChickens();
 
-            SpecialElementManager.Ins.Setup(levelItem);
-            if (GamePersistentVariable.levelItem.specialElementConfig.isContainsWallTiles)
-            {
-                SpecialElementManager.Ins.FillWallTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow);
-            }
+            // SpecialElementManager.Ins.Setup(levelItem);
 
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
 
@@ -117,10 +112,10 @@ namespace AntsFlow
                 TutorialLevelOne.Ins.HideTutorial();
             }
 
-            if (levelItem.isTutorialSpeedUpLevel)
-            {
-                SpeedUpTutorialManager.Ins.StartTutorial();
-            }
+            // if (levelItem.isTutorialSpeedUpLevel)
+            // {
+            //     SpeedUpTutorialManager.Ins.StartTutorial();
+            // }
         }
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem, Action onCompleteAction = null)
@@ -1101,16 +1096,9 @@ namespace AntsFlow
         {
             Dictionary<Color, int> result = new Dictionary<Color, int>();
 
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            for (int i = 0; i < ChickenManager.Ins.allFactions.Count; i++)
             {
-                BaseTile tile = TileManager.Ins.tiles[i];
-
-                if (tile.isDone || tile.isAntApproaching)
-                {
-                    continue;
-                }
-
-                CommonUtil.SumValueOfDictionary(result, tile.Faction, 1);
+                CommonUtil.SumValueOfDictionary(result, ChickenManager.Ins.allFactions[i], 1);
             }
 
             return result;
@@ -1166,53 +1154,10 @@ namespace AntsFlow
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
 
-            int multiplier = currentLevel.Value <= 10 ? 50 : 1;
-
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            for (int i = 0; i < ChickenManager.Ins.allFactions.Count; i++)
             {
-                BaseTile tile = TileManager.Ins.tiles[i];
-
-                if (tile.isDone || tile.isAntApproaching)
-                {
-                    continue;
-                }
-
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.IsBlocked() ? 0 : multiplier);
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, ChickenManager.Ins.allFactions[i], 1);
             }
-
-            for (int i = 0; i < washingMachineStartSlots.Count; i++)
-            {
-                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
-
-                if (washingMachineStartSlot.washingMachine != null)
-                {
-                    if (isIncludeStartSlot)
-                    {
-                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                    }
-                    else
-                    {
-                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
-
-                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
-                        {
-                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < washingMachineSlots.Count; i++)
-            {
-                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
-
-                if (washingMachineSlot.washingMachineItem != null)
-                {
-                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.remainingNumber);
-                }
-            }
-
-            sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             // foreach (var item in sortedPoolFaction)
             // {

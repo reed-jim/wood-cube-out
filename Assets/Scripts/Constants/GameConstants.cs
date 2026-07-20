@@ -254,6 +254,11 @@ public static class GameConstants
     public static string tile = "tile";
     #endregion
 
+    #region Chicken Flow
+    public static string chicken = "chicken";
+    public static string waitingChickenSlot = "waitingChickenSlot";
+    #endregion
+
     #region Ant Out
     public static string washingMachine = "washingMachine";
     public static string clothingPiece = "clothingPiece";

@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class ObjectPoolingEverythingInitializer : MonoBehaviour
 {
+    [Header("Chicken Feed")]
+    [SerializeField] private GameObject baseChicken;
+    [SerializeField] private GameObject waitingChickenSlot;
+    
     public static ObjectPoolingEverythingInitializer Instance;
 
     [Header("CONTAINER")]
@@ -115,6 +119,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void InitPool()
     {
+        RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 50);
+        RegisterPool<WaitingChickenSlot>(GameConstants.waitingChickenSlot, waitingChickenSlot, 50);
+
+
+
         RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);
         RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);
         RegisterPool<FakeScrew>(GameConstants.FAKE_SCREW, fakeScrewPrefab, 3);
