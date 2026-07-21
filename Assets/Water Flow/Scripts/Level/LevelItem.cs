@@ -334,14 +334,16 @@ namespace AntsFlow
 
             int index = 0;
 
+            int numColumn = level.numColumn + 2;
+            int numRow = level.numRow + 2;
             float tileDistance = 0.1f;
 
-            BaseTile[,] tileAtCoordinate = new BaseTile[level.numColumn, level.numRow];
+            BaseTile[,] tileAtCoordinate = new BaseTile[numColumn, numRow];
 
             for (int i = 0; i < level.tiles.Count; i++)
             {
                 BaseTile tile = level.tiles[i];
-                tileAtCoordinate[(int)tile.position.x, (int)tile.position.y] = tile;
+                tileAtCoordinate[(int)tile.position.x + 1, (int)tile.position.y + 1] = tile;
             }
 
             // Background
@@ -360,11 +362,16 @@ namespace AntsFlow
                 new Color(0f, 0f, 0f, 0.85f),
                 Color.white);
 
-            for (int y = 0; y < level.numRow; y++)
+            for (int y = 0; y < numRow; y++)
             {
-                for (int x = 0; x < level.numColumn; x++)
+                for (int x = 0; x < numColumn; x++)
                 {
                     Vector3 worldPos = tileDistance * new Vector2(x, y);
+
+                    if (level.specialElementConfig.snakeConfig.snakeSegmentIndexes == null)
+                    {
+                        level.specialElementConfig.snakeConfig.snakeSegmentIndexes = new List<int>();
+                    }
 
                     bool selected = level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index);
 
@@ -381,7 +388,7 @@ namespace AntsFlow
                             0.75f * size);
                     }
 
-                    Handles.color = selected ? Color.green : Color.black;
+                    Handles.color = selected ? Color.green : Color.gray;
                     Handles.DrawWireDisc(
                         worldPos,
                         SceneView.currentDrawingSceneView.camera.transform.forward,
@@ -437,8 +444,54 @@ namespace AntsFlow
                 }
             }
 
+            Vector3 previousPos = Vector3.zero;
+            bool hasPrevious = false;
+
+            for (int i = 0; i < level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Count; i++)
+            {
+                index = level.specialElementConfig.snakeConfig.snakeSegmentIndexes[i];
+
+                int x = index % numColumn;
+                int y = index / numColumn;
+
+                Vector3 worldPos = new Vector3(x * tileDistance, y * tileDistance, 0);
+
+                if (hasPrevious)
+                    DrawArrow(previousPos, worldPos, 0.05f, 20f);
+
+                previousPos = worldPos;
+                hasPrevious = true;
+            }
+
             if (GUI.changed)
                 SceneView.RepaintAll();
+        }
+
+        private void DrawArrow(Vector3 from, Vector3 to, float headLength, float headAngle)
+        {
+            float lineWidth = 5f; // thickness
+
+            // Thick line
+            Handles.color = Color.green;
+            Handles.DrawAAPolyLine(lineWidth, from, to);
+
+            Vector3 direction = (to - from).normalized;
+
+            Vector3 left = Quaternion.Euler(0, 0, headAngle) * -direction;
+            Vector3 right = Quaternion.Euler(0, 0, -headAngle) * -direction;
+
+            // Thicker arrow head
+            Handles.DrawAAPolyLine(
+                lineWidth,
+                to,
+                to + left * headLength
+            );
+
+            Handles.DrawAAPolyLine(
+                lineWidth,
+                to,
+                to + right * headLength
+            );
         }
 
         private void FillFactionPool()

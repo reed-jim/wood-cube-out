@@ -45,9 +45,19 @@ namespace AntsFlow
         {
             gameObject.SetActive(true);
 
-            List<int> indexes = GenerateSpiralIndexes(GamePersistentVariable.numColumn + 2, GamePersistentVariable.numRow + 2, 3);
-            // remove first point (too short distance)
-            indexes.RemoveAt(0);
+            List<int> indexes;
+
+            if (snakeConfig.snakeSegmentIndexes.Count == 0)
+            {
+                indexes = GenerateSpiralIndexes(GamePersistentVariable.numColumn + 2, GamePersistentVariable.numRow + 2, 3);
+                // remove first point (too short distance)
+                indexes.RemoveAt(0);
+            }
+            else
+            {
+                indexes = snakeConfig.snakeSegmentIndexes;
+                indexes.Reverse();
+            }
             allAffectedNodeIndexes = ExpandIndexes(indexes, GamePersistentVariable.numColumn + 2);
 
             List<Vector2> points = new List<Vector2>();
