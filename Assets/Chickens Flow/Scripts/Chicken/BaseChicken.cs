@@ -1,3 +1,5 @@
+using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class BaseChicken : MonoBehaviour
@@ -8,6 +10,11 @@ public class BaseChicken : MonoBehaviour
     public int column;
     public int row;
 
+    [Header("State")]
+    public bool isEating;
+    public bool isDone;
+    public bool isStuck;
+
     public float Size => transform.localScale.x;
 
     public void SetFaction(Color faction)
@@ -15,5 +22,19 @@ public class BaseChicken : MonoBehaviour
         spriteRenderer.color = faction;
 
         this.faction = faction;
+    }
+
+    public void Feed(GrainPile grainPile)
+    {
+        Tween.Position(transform, grainPile.transform.position, duration: 0.6f, ease: Ease.Linear)
+        .OnComplete(() =>
+        {
+            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            {
+                isDone = true;
+            });
+        });
+
+        isEating = true;
     }
 }

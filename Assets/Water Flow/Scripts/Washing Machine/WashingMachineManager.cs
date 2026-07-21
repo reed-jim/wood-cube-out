@@ -162,29 +162,6 @@ namespace AntsFlow
             return washingMachineSlot;
         }
 
-        public void MoveClothesToWashingMachine(ClothingPiece clothingPiece, WashingMachineStartSlot washingMachineStartSlot)
-        {
-            washingMachineStartSlot.washingMachine.MinusClothingPiece();
-
-            clothingPiece.MoveToWashingMachine(washingMachineStartSlot.washingMachine, onCompleteAction: () =>
-            {
-                washingMachineStartSlot.washingMachine.ReceiveClothes(onCompleteAction: () =>
-                {
-                    if (washingMachineStartSlot.washingMachine.number == 0)
-                    {
-                        washingMachineStartSlot.washingMachine = null;
-
-                        MoveAntBoxTop();
-                        CheckWinLevel();
-                    }
-                });
-            });
-
-            ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
-
-            ClothesManager.Ins.UpdateClothesCount();
-        }
-
         #region Spawn
         public List<WashingMachineItem> SpawnFirstWashingMachines(int numStartAntBoxes)
         {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ChickenManager : Singleton<ChickenManager>
@@ -57,6 +58,55 @@ public class ChickenManager : Singleton<ChickenManager>
                 waitingChickenSlot.chicken = chicken;
 
                 chickens.Add(chicken);
+            }
+        }
+    }
+
+    public void FeedTheChicken(GrainPile grainPile)
+    {
+        CheckChickensStuck();
+        
+        for (int i = 0; i < chickens.Count; i++)
+        {
+            BaseChicken chicken = chickens[i];
+
+            if (!chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction)
+            {
+                chicken.Feed(grainPile);
+
+                break;
+            }
+        }
+    }
+
+    public void CheckChickensStuck()
+    {
+        Dictionary<int, List<BaseChicken>> chickenByColumn = new Dictionary<int, List<BaseChicken>>();
+
+        for (int i = 0; i < chickens.Count; i++)
+        {
+            BaseChicken chicken = chickens[i];
+
+            CommonUtil.AddValueOfDictionary(chickenByColumn, chicken.column, chicken);
+        }
+
+        foreach (var column in chickenByColumn.Keys)
+        {
+            chickenByColumn[column][0].isStuck = false;
+
+            for (int i = 1; i < chickenByColumn[column].Count; i++)
+            {
+                BaseChicken frontChicken = chickenByColumn[column][i - 1];
+
+                if (!frontChicken.isEating && !frontChicken.isDone)
+                {
+                    chickenByColumn[column]
+                        .Skip(i)
+                        .ToList()
+                        .ForEach(chicken => chicken.isStuck = true);
+
+                    break;
+                }
             }
         }
     }

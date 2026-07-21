@@ -211,7 +211,10 @@ public class WashingMachineItem : MonoBehaviour
 
             grainPile.SetFaction(faction);
 
-            gameObject.SetActive(false);
+            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            {
+                ChickenManager.Ins.FeedTheChicken(grainPile);
+            });
         });
     }
     #endregion
@@ -758,18 +761,31 @@ public class WashingMachineItem : MonoBehaviour
 
     private void OnSelectTrueCompleted()
     {
-        SwitchShadow();
-
-        WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
+        if (washingMachineStartSlot != null)
         {
+            washingMachineStartSlot.washingMachine = null;
+        }
 
-        });
+        WashingMachineManager.Ins.MoveAntBoxTop();
+
+        PourGrainOur();
 
         SoundManager.Instance.PlaySoundBoxTap();
 
-        this.washingMachineSlot = washingMachineSlot;
-
         selectWashingMachineEvent?.Invoke(this);
+
+        // SwitchShadow();
+
+        // WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
+        // {
+
+        // });
+
+        // SoundManager.Instance.PlaySoundBoxTap();
+
+        // this.washingMachineSlot = washingMachineSlot;
+
+        // selectWashingMachineEvent?.Invoke(this);
     }
 
     // private void OnTileCompleted(AntsFlow.BaseTile tile)
