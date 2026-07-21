@@ -183,6 +183,7 @@ namespace AntsFlow
         #region Snake
         private bool snakeConfigMode;
         private bool isPainting;
+        private bool isShowingNodeId;
         private bool paintValue; // true = add, false = remove
         private readonly HashSet<int> paintedThisDrag = new();
         #endregion
@@ -250,6 +251,17 @@ namespace AntsFlow
                 : "Enable Snake Config Mode"))
             {
                 snakeConfigMode = !snakeConfigMode;
+
+                // Force Scene view repaint
+                SceneView.RepaintAll();
+            }
+
+            if (GUILayout.Button(
+            isShowingNodeId
+                ? "Hide Node Id"
+                : "Show Node Id"))
+            {
+                isShowingNodeId = !isShowingNodeId;
 
                 // Force Scene view repaint
                 SceneView.RepaintAll();
@@ -393,6 +405,19 @@ namespace AntsFlow
                         worldPos,
                         SceneView.currentDrawingSceneView.camera.transform.forward,
                         size);
+
+                    // Node id
+                    if (isShowingNodeId)
+                    {
+                        GUIStyle style = new GUIStyle(EditorStyles.whiteBoldLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 11
+                        };
+                        style.normal.textColor = Color.yellow;
+
+                        Handles.Label(worldPos + Vector3.up * 0.05f, $"{x + y * numColumn}", style);
+                    }
 
                     // Detect mouse over this circle
                     if (HandleUtility.DistanceToCircle(worldPos, size) == 0)
