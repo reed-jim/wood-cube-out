@@ -8,6 +8,8 @@ public class OpenCloseAntBox : WashingMachineItem
     [Header("Box Animations (skeletonAnimation)")]
     [SpineAnimation(dataField = "skeletonAnimation")] public string closedIdleAnimation = "idle2";
     [SpineAnimation(dataField = "skeletonAnimation")] public string appearAnimation = "appear";
+    [SpineAnimation(dataField = "skeletonAnimation")] public string disappearAnimation = "appear-re";
+
 
     [Header("Door Animations (skeletonOpenClose)")]
     public SkeletonAnimation skeletonOpenClose;
@@ -48,16 +50,6 @@ public class OpenCloseAntBox : WashingMachineItem
             }
             ClearAnimationListeners();
             return;
-        }
-
-        if (boxAppearCloseEntry != null && boxAppearCloseEntry.TimeScale < 0f)
-        {
-            if (boxAppearCloseEntry.TrackTime <= 0f)
-            {
-                var entry = boxAppearCloseEntry;
-                boxAppearCloseEntry = null;
-                OnBoxAppearCloseComplete(entry);
-            }
         }
 
         if (isOpen != lastOpenState)
@@ -230,13 +222,11 @@ public class OpenCloseAntBox : WashingMachineItem
 
     private void StartAnimateClose()
     {
-        if (skeletonAnimation != null && !string.IsNullOrEmpty(appearAnimation))
+        if (skeletonAnimation != null && !string.IsNullOrEmpty(disappearAnimation))
         {
-            boxAppearCloseEntry = skeletonAnimation.AnimationState.SetAnimation(0, appearAnimation, false);
-            if (boxAppearCloseEntry != null && boxAppearCloseEntry.Animation != null)
+            boxAppearCloseEntry = skeletonAnimation.AnimationState.SetAnimation(0, disappearAnimation, false);
+            if (boxAppearCloseEntry != null)
             {
-                boxAppearCloseEntry.TimeScale = -1f;
-                boxAppearCloseEntry.TrackTime = boxAppearCloseEntry.Animation.Duration;
                 boxAppearCloseEntry.Complete += OnBoxAppearCloseComplete;
             }
             else
