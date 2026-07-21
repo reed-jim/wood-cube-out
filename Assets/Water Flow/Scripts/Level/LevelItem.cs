@@ -1063,6 +1063,9 @@ public class HardPixelConfig
     public int numRows;
     public int numCols;
     public int requiredEatCount;
+    public GameObject prefab;
+    public bool isShowText;
+    public float rotationAngle;
 }
 
 [Serializable]
@@ -1076,9 +1079,12 @@ public class SpecialElementConfig
     public BossAreaConfig bossAreaConfig;
     public OpenCloseAntBoxConfig openCloseAntBoxConfig;
     public List<HardPixelConfig> hardPixelConfigs;
+    public LockedSlotConfig lockedSlotConfig;
 
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
+
+
 }
 
 
@@ -1163,4 +1169,11 @@ public class BossAreaConfig : SpecialElementItemConfig
 public class OpenCloseAntBoxConfig : SpecialElementItemConfig
 {
     public List<bool> initialStates;
+}
+
+[Serializable]
+public class LockedSlotConfig
+{
+    public List<int> lockedSlotIndices;
+    public SpecialElementItemConfig keyAntBoxConfig;
 }

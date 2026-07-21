@@ -7240,8 +7240,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec2d6b73af8f30547965c97fce17e2f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.HardPixelManager
-  defaultVisualSprite: {fileID: 21300000, guid: 0ce96aa6462620e47ac56eccbb027deb, type: 3}
   visualPrefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+  visualPrefabs:
+  - {fileID: 0}
+  - {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+  - {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+  - {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+  - {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
 --- !u!1 &1297156992
 GameObject:
   m_ObjectHideFlags: 0
@@ -9361,6 +9366,8 @@ MonoBehaviour:
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
       spawnOrder: 
+    magnetAntBoxConfig:
+      spawnOrder: 
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -9369,11 +9376,16 @@ MonoBehaviour:
       numCoverColumn: 0
       numCoverRow: 0
       bossHealth: 0
+    openCloseAntBoxConfig:
+      spawnOrder: 
+      initialStates: 
     hardPixelConfigs: []
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   nextFreezeAntBoxRequiredNumber: 0
+  nextOpenCloseAntBoxInitialState: 1
   antBoxLinks: []
+  magnetAntBoxLinks: []
   spawningTileBox: {fileID: 496648610}
   bossArea: {fileID: 13602856}
   hiddenTileSprite: {fileID: 21300000, guid: a83721868d9594b4a9c9b7e3a0d52692, type: 3}

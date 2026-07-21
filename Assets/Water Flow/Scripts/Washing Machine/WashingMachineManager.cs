@@ -95,6 +95,25 @@ namespace AntsFlow
         {
             this.levelItem = levelItem;
 
+            if (washingMachineSlots != null)
+            {
+                for (int i = 0; i < washingMachineSlots.Count; i++)
+                {
+                    if (i < 5)
+                    {
+                        washingMachineSlots[i].SetLocked(false);
+                    }
+
+                    if (levelItem.specialElementConfig != null &&
+                        levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices != null &&
+                        levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices.Contains(i))
+                    {
+                        washingMachineSlots[i].SetLocked(true, showUnlockButton: false);
+                    }
+                }
+            }
+
+
             try
             {
                 int difficultyMultiplier = RemoteConfigController.GetIntConfig("difficultyMultiplier", 1);
@@ -424,7 +443,11 @@ namespace AntsFlow
             }
             else if (levelElement == LevelElement.OpenCloseAntBox)
             {
-                key = GameConstants.washingMachine;
+                key = GameConstants.openCloseAntBox;
+            }
+            else if (levelElement == LevelElement.KeyAntBox)
+            {
+                key = GameConstants.keyAntBox;
             }
 
             WashingMachineItem antBox = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(key);
@@ -471,6 +494,20 @@ namespace AntsFlow
                 {
                     washingMachineSlot.Unlock();
 
+                    break;
+                }
+            }
+        }
+
+        public void UnlockOneLockedSlot()
+        {
+            for (int i = 0; i < washingMachineSlots.Count; i++)
+            {
+                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+                if (washingMachineSlot.isLocked)
+                {
+                    washingMachineSlot.Unlock();
                     break;
                 }
             }

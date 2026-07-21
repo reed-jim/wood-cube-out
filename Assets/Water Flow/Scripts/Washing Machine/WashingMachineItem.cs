@@ -69,7 +69,7 @@ public class WashingMachineItem : MonoBehaviour
     public List<AntsFlow.BaseTile> tilesToMove;
     private int walkableMask;
 
-    void Awake()
+    protected virtual void Awake()
     {
         selectWashingMachineEvent += OnAntBoxSelected;
         antBoxDoneEvent += OnAntBoxCompleted;
@@ -93,9 +93,10 @@ public class WashingMachineItem : MonoBehaviour
         walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
     }
 
-    void OnDestroy()
+    protected virtual void OnDestroy()
     {
         selectWashingMachineEvent -= OnAntBoxSelected;
+
         antBoxDoneEvent -= OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent -= OnLevelLose;
         AntsFlow.BaseTile.tileMoveToAntEvent -= OnTileMoveToAnt;
@@ -788,21 +789,24 @@ public class WashingMachineItem : MonoBehaviour
     {
         Reset();
 
-        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+        string key = isOpenCloseType ? GameConstants.openCloseAntBox : GameConstants.washingMachine;
+        ObjectPoolingEverything.ReturnToPool(key, gameObject);
     }
 
     private void OnLevelReplayed()
     {
         Reset();
 
-        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+        string key = isOpenCloseType ? GameConstants.openCloseAntBox : GameConstants.washingMachine;
+        ObjectPoolingEverything.ReturnToPool(key, gameObject);
     }
 
     private void OnLevelWon()
     {
         Reset();
 
-        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+        string key = isOpenCloseType ? GameConstants.openCloseAntBox : GameConstants.washingMachine;
+        ObjectPoolingEverything.ReturnToPool(key, gameObject);
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)

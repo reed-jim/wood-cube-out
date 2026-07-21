@@ -30491,9 +30491,9 @@ MonoBehaviour:
       spawnOrder: 
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
-      spawnOrder: 01000000040000000c0000001000000013000000160000001d000000210000002300000027000000280000002c000000310000003700000038000000
-    magnetAntBoxConfig:
       spawnOrder: 
+    magnetAntBoxConfig:
+      spawnOrder: 01000000040000000c0000001000000013000000160000001d000000210000002300000027000000280000002c000000310000003700000038000000
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -30507,10 +30507,49 @@ MonoBehaviour:
       initialStates: 
     hardPixelConfigs:
     - id: 0
-      startNodeId: 42
-      numRows: 8
-      numCols: 8
-      requiredEatCount: 500
+      startNodeId: 749
+      numRows: 3
+      numCols: 3
+      requiredEatCount: 150
+      prefab: {fileID: 2108898710330274750, guid: 53d5cb3c1ace330409a7957f943e6006, type: 3}
+      isShowText: 0
+      rotationAngle: -90
+    - id: 0
+      startNodeId: 752
+      numRows: 3
+      numCols: 3
+      requiredEatCount: 150
+      prefab: {fileID: 2108898710330274750, guid: d0d31c0d148dad947bb34aa0224e1ab9, type: 3}
+      isShowText: 1
+      rotationAngle: 0
+    - id: 0
+      startNodeId: 629
+      numRows: 3
+      numCols: 3
+      requiredEatCount: 150
+      prefab: {fileID: 2108898710330274750, guid: 53d5cb3c1ace330409a7957f943e6006, type: 3}
+      isShowText: 0
+      rotationAngle: 0
+    - id: 0
+      startNodeId: 755
+      numRows: 3
+      numCols: 3
+      requiredEatCount: 150
+      prefab: {fileID: 2108898710330274750, guid: 53d5cb3c1ace330409a7957f943e6006, type: 3}
+      isShowText: 0
+      rotationAngle: 90
+    - id: 0
+      startNodeId: 875
+      numRows: 3
+      numCols: 3
+      requiredEatCount: 150
+      prefab: {fileID: 2108898710330274750, guid: 53d5cb3c1ace330409a7957f943e6006, type: 3}
+      isShowText: 0
+      rotationAngle: -180
+    lockedSlotConfig:
+      lockedSlotIndices: 04000000
+      keyAntBoxConfig:
+        spawnOrder: 08000000
     isContainsHiddenTiles: 1
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}

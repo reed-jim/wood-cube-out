@@ -267,7 +267,9 @@ public static class GameConstants
     public static string freezedAntBox = "freezedAntBox";
     public static string warriorAntBox = "warriorAntBox";
     public static string openCloseAntBox = "openCloseAntBox";
+    public static string keyAntBox = "keyAntBox";
     public static string tileRemaining = "tileRemaining";
+
     public static string fakeTile = "fakeTile";
     public static string tileMap = "tileMap";
     public static string tileObstacle = "tileObstacle";

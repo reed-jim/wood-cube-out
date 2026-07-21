@@ -4,14 +4,24 @@ using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MagnetAntBoxLink : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer linkRenderer;
+    [SerializeField] private Image linkImage;
+    [SerializeField] private Sprite[] linkSprites;
+    [SerializeField] private float frameRate = 0.1f;
+
+    [SerializeField] private Image blur1;
+    [SerializeField] private Image blur2;
+    [SerializeField] private Image bubble1;
+    [SerializeField] private Image bubble2;
+    [SerializeField] private float bubbleRadius = 0.5f;
 
     [SerializeField] private WashingMachineItem[] antBoxes;
 
     private bool[] boxCountReachedZero;
+    private Coroutine animationCoroutine;
 
     void Awake()
     {
@@ -31,8 +41,13 @@ public class MagnetAntBoxLink : MonoBehaviour
 
     public void Setup(WashingMachineItem[] antBoxes)
     {
-        linkRenderer.gameObject.SetActive(true);
-        linkRenderer.color = Color.white;
+        linkImage.gameObject.SetActive(true);
+        linkImage.color = Color.white;
+
+        if (blur1 != null) { blur1.gameObject.SetActive(true); blur1.color = Color.white; }
+        if (blur2 != null) { blur2.gameObject.SetActive(true); blur2.color = Color.white; }
+        if (bubble1 != null) { bubble1.gameObject.SetActive(true); bubble1.color = Color.white; }
+        if (bubble2 != null) { bubble2.gameObject.SetActive(true); bubble2.color = Color.white; }
 
         boxCountReachedZero = new bool[antBoxes.Length];
 
@@ -59,6 +74,49 @@ public class MagnetAntBoxLink : MonoBehaviour
         this.antBoxes = antBoxes;
 
         PlaceTheLink();
+        StartCoroutine(AnimateBlurs());
+        IEnumerator AnimateBlurs()
+        {
+            if (blur1 != null)
+            {
+                Tween.StopAll(blur1.transform);
+                blur1.transform.localScale = Vector3.one;
+                Tween.Scale(blur1.transform, startValue: Vector3.one * 0.8f, endValue: Vector3.one * 1.2f, duration: 0.4f, cycles: -1, cycleMode: CycleMode.Yoyo);
+            }
+
+            yield return new WaitForSeconds(0.2f);
+
+            if (blur2 != null)
+            {
+                Tween.StopAll(blur2.transform);
+                blur2.transform.localScale = Vector3.one;
+                Tween.Scale(blur2.transform, startValue: Vector3.one * 0.8f, endValue: Vector3.one * 1.2f, duration: 0.4f, cycles: -1, cycleMode: CycleMode.Yoyo);
+            }
+        }
+
+
+
+        if (animationCoroutine != null)
+        {
+            StopCoroutine(animationCoroutine);
+        }
+        animationCoroutine = StartCoroutine(AnimateLink());
+    }
+
+    private IEnumerator AnimateLink()
+    {
+        if (linkSprites == null || linkSprites.Length == 0)
+        {
+            yield break;
+        }
+
+        int currentFrame = 0;
+        while (true)
+        {
+            linkImage.sprite = linkSprites[currentFrame];
+            currentFrame = (currentFrame + 1) % linkSprites.Length;
+            yield return new WaitForSeconds(frameRate);
+        }
     }
 
     private IEnumerator UpdateLinkPositions()
@@ -82,34 +140,83 @@ public class MagnetAntBoxLink : MonoBehaviour
             return;
         }
 
-        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
-        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
+        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-2f);
+        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-2f);
 
-        Vector2 dir = b - a;
-        float distance = dir.magnitude;
-        Vector3 mid = (a + b) * 0.5f;
+        Vector3 startPos;
+        Vector3 endPos;
+        float distance;
+        Vector3 mid;
 
+        // --- PHƯƠNG ÁN CŨ: Nối trực tiếp từ viền bong bóng này sang viền bong bóng kia (dọc theo vector hướng) ---
+
+        Vector3 dirRef = b - a;
+        Vector3 dirNormalized = dirRef.normalized;
+        float totalDistance = dirRef.magnitude;
+        startPos = a + dirNormalized * bubbleRadius;
+        endPos = b - dirNormalized * bubbleRadius;
+        distance = Mathf.Max(0f, totalDistance - 2f * bubbleRadius);
+        mid = (startPos + endPos) * 0.5f;
+
+
+        // --- PHƯƠNG ÁN MỚI: Trừ Y đi một khoảng bằng bán kính (ở dưới bong bóng) ---
+        //startPos = a - new Vector3(0, bubbleRadius, 0);
+        //endPos = b - new Vector3(0, bubbleRadius, 0);
+        //distance = Vector3.Distance(startPos, endPos);
+        //mid = (startPos + endPos) * 0.5f;
+        // end moi
+        Vector3 dir = endPos - startPos;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         Quaternion rot = Quaternion.Euler(0, 0, angle);
 
-        linkRenderer.transform.position = mid;
-        linkRenderer.transform.rotation = rot;
+        linkImage.rectTransform.position = mid;
+        linkImage.rectTransform.rotation = rot;
 
-        Vector2 size = linkRenderer.size;
+        Vector2 size = linkImage.rectTransform.sizeDelta;
         size.x = distance;
-        linkRenderer.size = size;
+        linkImage.rectTransform.sizeDelta = size;
+
+        if (blur1 != null)
+        {
+            blur1.rectTransform.position = startPos;
+            blur1.gameObject.SetActive(distance > 0f);
+        }
+        if (blur2 != null)
+        {
+            blur2.rectTransform.position = endPos;
+            blur2.gameObject.SetActive(distance > 0f);
+        }
+
+        if (bubble1 != null)
+        {
+            bubble1.rectTransform.position = a;
+        }
+        if (bubble2 != null)
+        {
+            bubble2.rectTransform.position = b;
+        }
     }
 
     private void HideLink()
     {
-        SaferioTween.AlphaHide(linkRenderer, onCompleteAction: () =>
+        SaferioTween.AlphaHide(linkImage, onCompleteAction: () =>
         {
-            linkRenderer.color = Color.white;
+            linkImage.color = Color.white;
         });
+        if (blur1 != null) SaferioTween.AlphaHide(blur1, onCompleteAction: () => blur1.color = Color.white);
+        if (blur2 != null) SaferioTween.AlphaHide(blur2, onCompleteAction: () => blur2.color = Color.white);
+        if (bubble1 != null) SaferioTween.AlphaHide(bubble1, onCompleteAction: () => bubble1.color = Color.white);
+        if (bubble2 != null) SaferioTween.AlphaHide(bubble2, onCompleteAction: () => bubble2.color = Color.white);
     }
 
     private void Unlink()
     {
+        if (animationCoroutine != null)
+        {
+            StopCoroutine(animationCoroutine);
+            animationCoroutine = null;
+        }
+
         // Reset trạng thái magnet cho tất cả box trước khi deactivate
         for (int i = 0; i < antBoxes.Length; i++)
         {
@@ -123,6 +230,19 @@ public class MagnetAntBoxLink : MonoBehaviour
 
         antBoxes = new WashingMachineItem[0];
         boxCountReachedZero = new bool[0];
+
+        if (blur1 != null)
+        {
+            Tween.StopAll(blur1.transform);
+            blur1.gameObject.SetActive(false);
+        }
+        if (blur2 != null)
+        {
+            Tween.StopAll(blur2.transform);
+            blur2.gameObject.SetActive(false);
+        }
+        if (bubble1 != null) bubble1.gameObject.SetActive(false);
+        if (bubble2 != null) bubble2.gameObject.SetActive(false);
 
         gameObject.SetActive(false);
     }

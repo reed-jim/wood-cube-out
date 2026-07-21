@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 414193616078938092}
   - component: {fileID: 586042799098670556}
   - component: {fileID: 7359643091936818865}
+  - component: {fileID: 8481135038553464210}
   m_Layer: 0
   m_Name: HardPixel
   m_TagString: Untagged
@@ -100,6 +101,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8481135038553464210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108898710330274750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4825aa042a3a7214fa30a78d26d709ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.HardPixelVisual
+  imgHardPixel: {fileID: 7359643091936818865}
+  textMesh: {fileID: 6758101041874724590}
 --- !u!1 &3486311575919172469
 GameObject:
   m_ObjectHideFlags: 0

@@ -61,6 +61,7 @@ namespace AntsFlow
             CheckBoosterClear();
         }
         public GameObject visualPrefab;
+        public List<GameObject> visualPrefabs = new List<GameObject>();
 
         private List<HardPixelInstance> listHardPixels = new List<HardPixelInstance>();
         private Dictionary<int, int> idToRemainingEatCount = new Dictionary<int, int>();
@@ -144,10 +145,13 @@ namespace AntsFlow
                     }
                 }
 
+                // Combined text visual is no longer needed since text is now displayed directly on the HardPixelVisual instance having isShowText = true
+                /*
                 if (allGroupNodes.Count > 0)
                 {
                     CreateCombinedTextVisual(hpId, allGroupNodes, groupInstances);
                 }
+                */
             }
 
             CheckAndOpenCompletedGroups();
@@ -155,7 +159,8 @@ namespace AntsFlow
 
         private void CreateRegionBackgroundVisual(HardPixelInstance inst)
         {
-            if (visualPrefab == null) return;
+            GameObject prefab = inst.config.prefab != null ? inst.config.prefab : visualPrefab;
+            if (prefab == null) return;
 
             Vector3 averagePos = Vector3.zero;
             foreach (var node in inst.nodes)
@@ -165,14 +170,14 @@ namespace AntsFlow
             averagePos /= inst.nodes.Count;
             averagePos.z = -5f;
 
-            GameObject visual = Instantiate(visualPrefab, averagePos, Quaternion.identity);
+            GameObject visual = Instantiate(prefab, averagePos, Quaternion.Euler(0, 0, inst.config.rotationAngle));
             visual.name = "HardPixel_Bg_" + inst.config.id;
 
             float cellWidth = GamePersistentVariable.tileDistance.x > 0 ? GamePersistentVariable.tileDistance.x : GamePersistentVariable.tileMapScaleFactor;
             float cellHeight = GamePersistentVariable.tileDistance.y > 0 ? GamePersistentVariable.tileDistance.y : GamePersistentVariable.tileMapScaleFactor;
 
             float width = inst.config.numCols * cellWidth * 1.01f;
-            float height = inst.config.numRows * cellHeight * 1.07f;
+            float height = inst.config.numRows * cellHeight * 1.1f;
 
             RectTransform rectTransform = visual.GetComponent<RectTransform>();
             if (rectTransform != null)
@@ -184,10 +189,30 @@ namespace AntsFlow
                 visual.transform.localScale = new Vector3(width, height, 1f);
             }
 
-            var tmp = visual.GetComponentInChildren<TMP_Text>();
-            if (tmp != null) tmp.gameObject.SetActive(false);
-            var tm = visual.GetComponentInChildren<TextMesh>();
-            if (tm != null) tm.gameObject.SetActive(false);
+            var hpVisual = visual.GetComponent<HardPixelVisual>();
+            if (hpVisual != null)
+            {
+                int remaining = idToRemainingEatCount.ContainsKey(inst.config.id) ? idToRemainingEatCount[inst.config.id] : inst.config.requiredEatCount;
+                hpVisual.SetText(remaining.ToString());
+                hpVisual.SetTextActive(inst.config.isShowText);
+
+                if (inst.config.isShowText)
+                {
+                    var canvas = visual.GetComponent<Canvas>();
+                    if (canvas != null)
+                    {
+                        canvas.overrideSorting = true;
+                        canvas.sortingOrder = 2;
+                    }
+                }
+            }
+            else
+            {
+                var tmp = visual.GetComponentInChildren<TMP_Text>();
+                if (tmp != null) tmp.gameObject.SetActive(false);
+                var tm = visual.GetComponentInChildren<TextMesh>();
+                if (tm != null) tm.gameObject.SetActive(false);
+            }
 
             inst.visualObjects.Add(visual);
         }
@@ -264,9 +289,21 @@ namespace AntsFlow
             {
                 foreach (var visual in inst.visualObjects)
                 {
-                    if (visual != null && visual.name == "HardPixel_Text_" + id)
+                    if (visual != null)
                     {
-                        UpdateGroupText(visual, id);
+                        var hpVisual = visual.GetComponent<HardPixelVisual>();
+                        if (hpVisual != null)
+                        {
+                            if (inst.config.isShowText)
+                            {
+                                hpVisual.SetText(idToRemainingEatCount[id].ToString());
+                                hpVisual.PlayTextTween();
+                            }
+                        }
+                        else if (visual.name == "HardPixel_Text_" + id)
+                        {
+                            UpdateGroupText(visual, id);
+                        }
                     }
                 }
             }

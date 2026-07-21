@@ -15,7 +15,8 @@ public enum LevelElement
     FreezedAntBox,
     WarriorAntBox,
     OpenCloseAntBox,
-    MagnetAntBox
+    MagnetAntBox,
+    KeyAntBox
 }
 
 namespace AntsFlow
@@ -86,8 +87,8 @@ namespace AntsFlow
                 WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
-                    washingMachine is not FreezedAntBox && !washingMachine.isOpenCloseType &&
-                    !washingMachine.isMagnet)
+                    washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
+                    !washingMachine.isOpenCloseType && !washingMachine.isMagnet)
                 {
                     if (washingMachine.numSlotRequired == 1)
                     {
@@ -137,6 +138,7 @@ namespace AntsFlow
                     washingMachine != null &&
                     washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox &&
+                    washingMachine is not KeyAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isMagnet
                 )
@@ -180,8 +182,9 @@ namespace AntsFlow
                 WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
-                    washingMachine is not FreezedAntBox && !washingMachine.isOpenCloseType &&
-                    !washingMachine.isDouble && !washingMachine.isMagnet)
+                    washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
+                    !washingMachine.isOpenCloseType && !washingMachine.isDouble &&
+                    !washingMachine.isMagnet)
                 {
                     if (washingMachine.numSlotRequired == 1)
                     {
@@ -253,6 +256,7 @@ namespace AntsFlow
                     washingMachine != null &&
                     washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox &&
+                    washingMachine is not KeyAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isDouble &&
                     !washingMachine.isMagnet
@@ -377,6 +381,12 @@ namespace AntsFlow
                 specialElementConfig.openCloseAntBoxConfig.RemoveOneSpecialElementInPool();
 
                 return LevelElement.OpenCloseAntBox;
+            }
+            else if (specialElementConfig.lockedSlotConfig.keyAntBoxConfig != null && specialElementConfig.lockedSlotConfig.keyAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                specialElementConfig.lockedSlotConfig.keyAntBoxConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.KeyAntBox;
             }
             else
             {
