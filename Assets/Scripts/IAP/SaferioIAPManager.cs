@@ -1,15 +1,16 @@
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
+using PrimeTween;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
-using PrimeTween;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
 using UnityEngine.Purchasing.Security;
 
-public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
+public class SaferioIAPManager : MonoBehaviour, IStoreListener
 {
     [SerializeField] private GooglePlayStoreProduct[] googlePlayStoreProducts;
     [SerializeField] private IAPDataContainer IAPDataContainer;
@@ -19,8 +20,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     [SerializeField] private string removeAdsProductId;
 
     private IStoreController controller;
-    private IExtensionProvider extensions;
     private IAppleExtensions m_AppleExtensions;
+    private ConfigurationBuilder builder;
 
     #region EVENT
     public static event Action iapProductPurchasedCompletedEvent;
@@ -33,6 +34,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action removeAdsEvent;
     public static event Action<string, string> showNotificationEvent;
     #endregion
+
+    WaitForSeconds wait = new WaitForSeconds(5);
 
     private void Awake()
     {
@@ -58,24 +61,15 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
             googlePlayStoreProducts[i].Id = IAPDataContainer.ProductsData[i].ProductId;
-
-            // if (IAPDataContainer.ProductsData[i].IsRemoveAd)
-            // {
-            //     googlePlayStoreProducts[i].ProductType = ProductType.NonConsumable;
-            // }
-            // else
-            // {
-            //     googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
-            // }
-
             googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
         }
 
-        StartCoroutine(DelayInit());
+        //StartCoroutine(DelayInit());
 
         DontDestroyOnLoad(gameObject);
 
         GamePersistentVariable.iapInitializeFailReason = "IAP Init FAILED";
+        Init();
     }
 
     private void OnDestroy()
@@ -109,7 +103,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     private void Init()
     {
-        var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+        builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
         // builder.Configure<IAppleConfiguration>().
         //     SetApplePromotionalPurchaseInterceptorCallback(OnPromotionalPurchase);
@@ -138,7 +132,39 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 #endif
 
         UnityPurchasing.Initialize(this, builder);
+        StartCoroutine(AutoInit());
     }
+
+
+    private IEnumerator AutoInit()
+    {
+        while (true)
+        {
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                yield return wait;
+            }
+            else
+            {
+                if (IsInitialized())
+                {
+                    yield break;
+                }
+                //if (!isInited)
+                {
+                    UnityPurchasing.Initialize(this, builder);
+                    //isInited = true;
+                }
+                yield return wait;
+            }
+        }
+    }
+
+    private bool IsInitialized()
+    {
+        return controller != null && m_AppleExtensions != null;
+    }
+
 
     // PROMOTIONAL
     private void OnPromotionalPurchase(Product item)
@@ -162,7 +188,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void BuyProduct(string productId)
     {
-        if (controller != null)
+        if (IsInitialized())
         {
             SaferioTracking.TrackStartIAPEvent(productId);
 
@@ -177,10 +203,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
         this.controller = controller;
-        this.extensions = extensions;
-
         m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
-
+        m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);
         // Restore transactions
         // m_AppleExtensions.RestoreTransactions((result, error) =>
         // {
@@ -209,6 +233,11 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         CheckRestoredRemoveAds();
     }
 
+    private void OnDeferred(Product item)
+    {
+        //FunctionHelper.ShowDebug("Purchase deferred: " + item.definition.id);
+    }
+
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         GamePersistentVariable.iapInitializeFailReason = error.ToString();
@@ -216,22 +245,50 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void RestorePurchases()
     {
-        m_AppleExtensions.RestoreTransactions((result, error) =>
+        if (!IsInitialized())
         {
-            if (result)
-            {
-                // This does not mean anything was restored,
-                // merely that the restoration process succeeded.
+            // ... report the situation and stop restoring. Consider either waiting longer, or retrying initialization.
+            Debug.Log("RestorePurchases FAIL. Not initialized.");
+            showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, "RestorePurchases FAIL. Not initialized.");
+            return;
+        }
 
-                showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, "Restore purchases successfully");
-            }
-            else
-            {
-                // Restoration failed. `error` contains the failure reason.
+        // If we are running on an Apple device ... 
+        if (Application.platform == RuntimePlatform.IPhonePlayer ||
+            Application.platform == RuntimePlatform.OSXPlayer)
+        {
+            // ... begin restoring purchases
+            Debug.Log("RestorePurchases started ...");
 
-                showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, error);
-            }
-        });
+            // Fetch the Apple store-specific subsystem.
+            var apple = m_AppleExtensions;
+            // Begin the asynchronous process of restoring purchases. Expect a confirmation response in 
+            // the Action<bool> below, and ProcessPurchase if there are previously purchased products to restore.
+            apple.RestoreTransactions((result, str) =>
+            {
+                // The first phase of restoration. If no more responses are received on ProcessPurchase then 
+                // no purchases are available to be restored.
+                Debug.Log("RestorePurchases continuing: " + result + ". If no further messages, no purchases available to restore. " + str);
+                if (!result)
+                {
+                    showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, "Restore purchases successfully");
+                }
+                else
+                {
+                    showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, str);
+                }
+            });
+        }
+        // Otherwise ...
+        else
+        {
+            // We are not running on an Apple device. No work is necessary to restore purchases.
+            showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, "RestorePurchases FAIL. Not supported on this platform");
+            Debug.Log("RestorePurchases FAIL. Not supported on this platform. Current = " + Application.platform);
+        }
+
+
+       
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
@@ -367,7 +424,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         {
             if (Application.internetReachability != NetworkReachability.NotReachable)
             {
-                Init();
+                //Init();
             }
 
             return new List<Product>();
