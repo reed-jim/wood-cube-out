@@ -81,8 +81,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 29530dd85a664864f8222277aaefa5fd, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4072,7 +4072,7 @@ MonoBehaviour:
   m_SpriteShape: {fileID: 11400000, guid: a9f2357235982c04ca1c7141a2864828, type: 2}
   m_FillPixelPerUnit: 256
   m_StretchTiling: 1
-  m_SplineDetail: 8
+  m_SplineDetail: 4
   m_AdaptiveUV: 1
   m_StretchUV: 0
   m_WorldSpaceUV: 0
@@ -4141,9 +4141,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Snake
   spriteShape: {fileID: 1775547508975034762}
   head: {fileID: 2880112535559265174}
+  snakeTailSprite: {fileID: 21300000, guid: 47651595f973fe24dadaae1fee2ff168, type: 3}
   allPoints: []
-  shrink: 1
+  snakeLength: 1
   width: 0.25
+  cornerSize: 0.1
+  curveResolution: 3
+  maxHealth: 0
+  health: 0
+  numAntPerBox: 
+  snakeNestTile:
+    tilemap: {fileID: 0}
+    tilemapPosition: {x: 0, y: 0, z: 0}
+    tileObstacle: {fileID: 0}
+    tileName: 0
+    position: {x: 0, y: 0, z: 0}
+    isMovable: 0
+    isDone: 0
+    isAntApproaching: 0
+    isTempAntApproaching: 0
+    isAnimating: 0
+    isMovedToAnt: 0
+    isPrepareComplete: 0
+    isLocked: 0
+    isHidden: 0
+    isSpawningAgain: 0
+    ring: 0
+    priority: 0
+    faction: {r: 0, g: 0, b: 0, a: 0}
+    worldSize: 0
 --- !u!1 &8190799322513074564
 GameObject:
   m_ObjectHideFlags: 0

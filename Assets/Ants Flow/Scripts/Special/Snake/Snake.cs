@@ -3,6 +3,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
 
 namespace AntsFlow
@@ -12,12 +13,19 @@ namespace AntsFlow
         [SerializeField] private SpriteShapeController spriteShape;
         [SerializeField] private Transform head;
 
+        public Sprite snakeTailSprite;
+
         // Head -> Tail
         public List<Vector2> allPoints = new();
 
         [Range(0, 1)]
         public float snakeLength = 1f;
         public float width = 1f;
+
+        [Header("Smooth Corner")]
+        public float cornerSize = 0.3f;
+        public int curveResolution = 4;
+        [Space]
 
         public int maxHealth;
         public int health;
@@ -37,6 +45,8 @@ namespace AntsFlow
         public void Setup(SnakeConfig snakeConfig)
         {
             List<int> indexes = GenerateSpiralIndexes(GamePersistentVariable.numColumn + 2, GamePersistentVariable.numRow + 2, 3);
+            // remove first point (too short distance)
+            indexes.RemoveAt(0);
             allAffectedNodeIndexes = ExpandIndexes(indexes, GamePersistentVariable.numColumn + 2);
 
             List<Vector2> points = new List<Vector2>();
@@ -51,6 +61,19 @@ namespace AntsFlow
                 {
                     tile.Hide();
                     tile.ActualComplete();
+                }
+
+                if (i == allAffectedNodeIndexes.Count - 1)
+                {
+                    Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
+                    tilemapTile.sprite = snakeTailSprite;
+
+                    Vector3Int position = CommonUtil.GetVector3Int(
+                            TileManager.Ins.nodes[index].initialPosition / GamePersistentVariable.tileMapScaleFactor);
+
+                    position.y -= (int)(0.6f / GamePersistentVariable.tileMapScaleFactor);
+
+                    TileManager.Ins.tilemap.SetTile(position, tilemapTile);
                 }
             }
 
@@ -83,6 +106,7 @@ namespace AntsFlow
 
             allPoints = new List<Vector2>();
             allPoints.AddRange(points);
+            allPoints = SmoothCorners(allPoints, cornerSize, curveResolution);
 
             RebuildSpline(1);
             UpdateNodeObstacleState(1);
@@ -91,6 +115,67 @@ namespace AntsFlow
             health = maxHealth;
 
             GenerateAntNumberPerBox(snakeConfig.spawnOrder.Count, maxHealth);
+        }
+
+        public static List<Vector2> SmoothCorners(
+            List<Vector2> points,
+            float cornerSize = 0.3f,
+            int curveResolution = 4)
+        {
+            List<Vector2> result = new List<Vector2>();
+
+            if (points == null || points.Count < 3)
+                return new List<Vector2>(points);
+
+            result.Add(points[0]);
+
+            for (int i = 1; i < points.Count - 1; i++)
+            {
+                Vector2 prev = points[i - 1];
+                Vector2 curr = points[i];
+                Vector2 next = points[i + 1];
+
+                Vector2 dirIn = (curr - prev).normalized;
+                Vector2 dirOut = (next - curr).normalized;
+
+                // If almost straight, don't smooth
+                if (Vector2.Dot(dirIn, dirOut) > 0.99f)
+                {
+                    result.Add(curr);
+                    continue;
+                }
+
+                float lenIn = Vector2.Distance(prev, curr);
+                float lenOut = Vector2.Distance(curr, next);
+
+                float radius = Mathf.Min(lenIn, lenOut) * cornerSize;
+
+                Vector2 start = curr - dirIn * radius;
+                Vector2 end = curr + dirOut * radius;
+
+                // End previous straight segment
+                result.Add(start);
+
+                // Quadratic Bezier
+                for (int j = 1; j < curveResolution; j++)
+                {
+                    float t = j / (float)curveResolution;
+
+                    Vector2 p =
+                        (1 - t) * (1 - t) * start +
+                        2 * (1 - t) * t * curr +
+                        t * t * end;
+
+                    result.Add(p);
+                }
+
+                // Start next straight segment
+                result.Add(end);
+            }
+
+            result.Add(points[points.Count - 1]);
+
+            return result;
         }
 
         public void Hit()
@@ -223,7 +308,7 @@ namespace AntsFlow
 
                 head.SetPositionAndRotation(
                     visible[0],
-                    Quaternion.Euler(0, 0, angle + 90f)
+                    Quaternion.Euler(0, 0, angle)
                 );
 
                 head.localPosition = head.localPosition.ChangeZ(-0.1f);
@@ -335,7 +420,6 @@ namespace AntsFlow
 
             return result;
 
-
             List<int> RemoveUnnecessaryPoints(List<int> indexes, int width)
             {
                 if (indexes.Count <= 2)
@@ -345,16 +429,14 @@ namespace AntsFlow
 
                 result.Add(indexes[0]);
 
-                Vector2Int oldDir = Vector2Int.zero;
-
                 for (int i = 1; i < indexes.Count - 1; i++)
                 {
                     Vector2Int a = IndexToXY(indexes[i - 1], width);
                     Vector2Int b = IndexToXY(indexes[i], width);
                     Vector2Int c = IndexToXY(indexes[i + 1], width);
 
-                    Vector2Int dir1 = (b - a);
-                    Vector2Int dir2 = (c - b);
+                    Vector2Int dir1 = Normalize(b - a);
+                    Vector2Int dir2 = Normalize(c - b);
 
                     // direction changed = keep corner
                     if (dir1 != dir2)
@@ -373,6 +455,14 @@ namespace AntsFlow
                 return new Vector2Int(
                     index % width,
                     index / width
+                );
+            }
+
+            Vector2Int Normalize(Vector2Int v)
+            {
+                return new Vector2Int(
+                    System.Math.Sign(v.x),
+                    System.Math.Sign(v.y)
                 );
             }
         }
