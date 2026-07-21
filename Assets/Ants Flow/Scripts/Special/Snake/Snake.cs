@@ -12,8 +12,7 @@ namespace AntsFlow
     {
         [SerializeField] private SpriteShapeController spriteShape;
         [SerializeField] private Transform head;
-
-        public Sprite snakeTailSprite;
+        [SerializeField] private Transform tail;
 
         // Head -> Tail
         public List<Vector2> allPoints = new();
@@ -62,19 +61,6 @@ namespace AntsFlow
                     tile.Hide();
                     tile.ActualComplete();
                 }
-
-                if (i == allAffectedNodeIndexes.Count - 1)
-                {
-                    Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
-                    tilemapTile.sprite = snakeTailSprite;
-
-                    Vector3Int position = CommonUtil.GetVector3Int(
-                            TileManager.Ins.nodes[index].initialPosition / GamePersistentVariable.tileMapScaleFactor);
-
-                    position.y -= (int)(0.6f / GamePersistentVariable.tileMapScaleFactor);
-
-                    TileManager.Ins.tilemap.SetTile(position, tilemapTile);
-                }
             }
 
             for (int i = 0; i < indexes.Count; i++)
@@ -108,6 +94,9 @@ namespace AntsFlow
             allPoints.AddRange(points);
             allPoints = SmoothCorners(allPoints, cornerSize, curveResolution);
 
+            tail.transform.position = allPoints[^1];
+            tail.transform.localPosition = tail.transform.position.ChangeZ(-0.1f);
+
             RebuildSpline(1);
             UpdateNodeObstacleState(1);
 
@@ -115,6 +104,14 @@ namespace AntsFlow
             health = maxHealth;
 
             GenerateAntNumberPerBox(snakeConfig.spawnOrder.Count, maxHealth);
+
+            Reset();
+        }
+
+        public void Reset()
+        {
+            head.transform.localScale = Vector3.one;
+            tail.transform.localScale = Vector3.one;
         }
 
         public static List<Vector2> SmoothCorners(
@@ -236,6 +233,7 @@ namespace AntsFlow
                 if (spriteShape.enabled)
                 {
                     SaferioTween.ScaleDownWithPunch(head);
+                    SaferioTween.ScaleDownWithPunch(tail);
                 }
 
                 spriteShape.enabled = false;
