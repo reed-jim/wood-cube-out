@@ -32,6 +32,7 @@ namespace AntsFlow
         public Coroutine pendingLoseLevelCoroutine;
 
         public IntVariable currentLevel;
+        private int lastToggleFrame = -1;
 
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
@@ -75,12 +76,43 @@ namespace AntsFlow
                 finishUsingEnableAllAntBoxesBoosterEvent?.Invoke();
             }
 
+            if (Time.frameCount != lastToggleFrame)
+            {
+                lastToggleFrame = Time.frameCount;
+                foreach (var startSlot in washingMachineStartSlots)
+                {
+                    if (startSlot.washingMachine != null && startSlot.washingMachine.isOpenCloseType)
+                    {
+                        startSlot.washingMachine.isOpen = !startSlot.washingMachine.isOpen;
+                    }
+                }
+            }
+
             CheckNoAntBoxLeftOnStartSlots();
         }
 
         public void StartLevel(AntsFlow.LevelItem levelItem)
         {
             this.levelItem = levelItem;
+
+            if (washingMachineSlots != null)
+            {
+                for (int i = 0; i < washingMachineSlots.Count; i++)
+                {
+                    if (i < 5)
+                    {
+                        washingMachineSlots[i].SetLocked(false);
+                    }
+
+                    if (levelItem.specialElementConfig != null &&
+                        levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices != null &&
+                        levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices.Contains(i))
+                    {
+                        washingMachineSlots[i].SetLocked(true, showUnlockButton: false);
+                    }
+                }
+            }
+
 
             try
             {
@@ -101,6 +133,11 @@ namespace AntsFlow
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             SpecialElementManager.Ins.Setup(levelItem);
+            if (HardPixelManager.Ins != null)
+            {
+                HardPixelManager.Ins.Setup(levelItem);
+
+            }
             if (GamePersistentVariable.levelItem.specialElementConfig.isContainsWallTiles)
             {
                 SpecialElementManager.Ins.FillWallTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow);
@@ -249,6 +286,7 @@ namespace AntsFlow
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt, onCompleteAction: () =>
                 {
                     SpecialElementManager.Ins.SpawnAntBoxLinkFirstAntBoxes(index);
+                    SpecialElementManager.Ins.SpawnMagnetAntBoxLinkFirstAntBoxes(index);
                 });
             }
 
@@ -290,20 +328,17 @@ namespace AntsFlow
                             }
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
+                            washingMachineItem.isMoving = true;
+                            washingMachineItem.Setup(washingMachineStartSlot);
                             Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
                             .OnComplete(() =>
                             {
-                                washingMachineItem.Setup(washingMachineStartSlot);
-
                                 washingMachineItem.isMoving = false;
                             });
 
                             washingMachineItem.washingMachineStartSlot = washingMachineStartSlot;
                             washingMachineStartSlot.washingMachine = washingMachineItem;
                             otherWashingMachineStartSlot.washingMachine = null;
-
-                            washingMachineItem.isMoving = true;
-
                             isFound = true;
 
                             washingMachineItem?.InvokeMoveUpEvent();
@@ -377,6 +412,7 @@ namespace AntsFlow
                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
                     SpecialElementManager.Ins.SpawnAntBoxLink();
+                    SpecialElementManager.Ins.SpawnMagnetAntBoxLink();
 
                     break;
                 }
@@ -405,12 +441,31 @@ namespace AntsFlow
             {
                 key = GameConstants.warriorAntBox;
             }
+            else if (levelElement == LevelElement.OpenCloseAntBox)
+            {
+                key = GameConstants.openCloseAntBox;
+            }
+            else if (levelElement == LevelElement.KeyAntBox)
+            {
+                key = GameConstants.keyAntBox;
+            }
             else if (levelElement == LevelElement.SnakeAntBox)
             {
                 key = GameConstants.snakeAntBox;
             }
 
             WashingMachineItem antBox = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(key);
+
+            if (levelElement == LevelElement.OpenCloseAntBox)
+            {
+                antBox.isOpenCloseType = true;
+                antBox.isOpen = SpecialElementManager.Ins.nextOpenCloseAntBoxInitialState;
+            }
+            else
+            {
+                antBox.isOpenCloseType = false;
+                antBox.isOpen = true;
+            }
 
             return antBox;
         }
@@ -443,6 +498,20 @@ namespace AntsFlow
                 {
                     washingMachineSlot.Unlock();
 
+                    break;
+                }
+            }
+        }
+
+        public void UnlockOneLockedSlot()
+        {
+            for (int i = 0; i < washingMachineSlots.Count; i++)
+            {
+                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+                if (washingMachineSlot.isLocked)
+                {
+                    washingMachineSlot.Unlock();
                     break;
                 }
             }
@@ -526,7 +595,7 @@ namespace AntsFlow
                 {
                     WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-                    if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                    if (washingMachine.isDouble || washingMachine.isMagnet || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
                     {
                         continue;
                     }
@@ -631,6 +700,7 @@ namespace AntsFlow
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
+            HardPixelManager.Ins.CheckBoosterClear();
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
             {
@@ -825,7 +895,7 @@ namespace AntsFlow
                 {
                     WashingMachineItem antBox = washingMachineSlot.washingMachineItem;
 
-                    if (antBox != null && antBox.isStucking)
+                    if (antBox != null && (antBox.isStucking || (antBox.isMagnet && antBox.number <= 0)))
                     {
                         numAntBoxLeft--;
                     }
@@ -833,6 +903,67 @@ namespace AntsFlow
             }
 
             bool isLose = numAntBoxLeft == 0;
+            if (!isLose)
+            {
+                int numAvailableSlots = GetAvailableWashingMachineSlots().Count;
+
+                bool anyStartBoxCanMove = false;
+                for (int i = 0; i < washingMachineStartSlots.Count; i++)
+                {
+                    WashingMachineStartSlot startSlot = washingMachineStartSlots[i];
+                    if (startSlot.row == 0 && startSlot.washingMachine != null)
+                    {
+                        WashingMachineItem box = startSlot.washingMachine;
+
+                        if (box.isInSlot || box.isDisable) continue;
+
+                        if (box.isOpenCloseType && !box.isOpen) continue;
+
+                        if (box.isMagnet)
+                        {
+                            // Magnet
+                            if (HasAdjacentAvailableSlotPair() &&
+                                box.magnetPartner != null && !box.magnetPartner.isDisable)
+                            {
+                                anyStartBoxCanMove = true;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            //Normal
+                            if (numAvailableSlots >= box.numSlotRequired)
+                            {
+                                anyStartBoxCanMove = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!anyStartBoxCanMove)
+                {
+                    bool allActiveSlotsStuck = true;
+                    for (int i = 0; i < washingMachineSlots.Count; i++)
+                    {
+                        WashingMachineSlot slot = washingMachineSlots[i];
+                        if (!slot.isLocked && slot.washingMachineItem != null)
+                        {
+                            WashingMachineItem item = slot.washingMachineItem;
+                            if (!(item.isStucking || (item.isMagnet && item.number <= 0)))
+                            {
+                                allActiveSlotsStuck = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (allActiveSlotsStuck)
+                    {
+                        isLose = true;
+                    }
+                }
+            }
 
             return isLose;
         }
@@ -1038,6 +1169,40 @@ namespace AntsFlow
             return slots;
         }
 
+        public bool HasAdjacentAvailableSlotPair()
+        {
+            for (int i = 0; i < washingMachineSlots.Count - 1; i++)
+            {
+                var a = washingMachineSlots[i];
+                var b = washingMachineSlots[i + 1];
+
+                if (!a.isLocked && a.washingMachineItem == null &&
+                    !b.isLocked && b.washingMachineItem == null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public (WashingMachineSlot, WashingMachineSlot) GetAdjacentAvailableSlotPair()
+        {
+            for (int i = 0; i < washingMachineSlots.Count - 1; i++)
+            {
+                var a = washingMachineSlots[i];
+                var b = washingMachineSlots[i + 1];
+
+                if (!a.isLocked && a.washingMachineItem == null &&
+                    !b.isLocked && b.washingMachineItem == null)
+                {
+                    return (a, b);
+                }
+            }
+
+            return (null, null);
+        }
+
         private bool GetNextAntSpawnByDifficulty(int difficultyLevel, out Color nextFaction, out int numAnt, bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
@@ -1141,7 +1306,7 @@ namespace AntsFlow
                     {
                         WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
 
-                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        if (antBox.isShuffled || antBox.isDouble || antBox.isMagnet || antBox is HiddenAntBox || antBox is FreezedAntBox)
                         {
                             CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
                         }
@@ -1194,7 +1359,7 @@ namespace AntsFlow
                     {
                         WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
 
-                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        if (antBox.isShuffled || antBox.isDouble || antBox.isMagnet || antBox is HiddenAntBox || antBox is FreezedAntBox)
                         {
                             CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
                         }

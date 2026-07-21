@@ -1273,17 +1273,37 @@ public class LevelItemData
 
 
 [Serializable]
+public class HardPixelConfig
+{
+    public int id;
+    public int startNodeId;
+    public int numRows;
+    public int numCols;
+    public int requiredEatCount;
+    public GameObject prefab;
+    public bool isShowText;
+    public float rotationAngle;
+}
+
+[Serializable]
 public class SpecialElementConfig
 {
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;
+    public SpecialElementItemConfig magnetAntBoxConfig;
     public SpawningTileBoxConfig spawningTileBoxConfig;
     public BossAreaConfig bossAreaConfig;
+    public OpenCloseAntBoxConfig openCloseAntBoxConfig;
+    public List<HardPixelConfig> hardPixelConfigs;
+    public LockedSlotConfig lockedSlotConfig;
     public SnakeConfig snakeConfig;
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
+
+
 }
+
 
 [Serializable]
 public class SpecialElementItemConfig
@@ -1305,7 +1325,7 @@ public class SpecialElementItemConfig
         return spawnOrder.Contains(numAntBoxesSpawned);
     }
 
-    public bool IsValidToSpawn(int numAntBoxesSpawned)
+    public bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
     {
         if (spawnOrder == null)
         {
@@ -1331,7 +1351,6 @@ public class SpecialElementItemConfig
         {
             return false;
         }
-
         return GetNumLeft() > 0 && IsCorrectOrder(numAntBoxesSpawned);
     }
 }
@@ -1370,4 +1389,18 @@ public class SnakeConfig : SpecialElementItemConfig
 {
     public List<int> snakeSegmentIndexes;
     public int health;
+}
+
+
+[Serializable]
+public class OpenCloseAntBoxConfig : SpecialElementItemConfig
+{
+    public List<bool> initialStates;
+}
+
+[Serializable]
+public class LockedSlotConfig
+{
+    public List<int> lockedSlotIndices;
+    public SpecialElementItemConfig keyAntBoxConfig;
 }
