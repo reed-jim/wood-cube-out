@@ -148,7 +148,7 @@ public class MagnetAntBoxLink : MonoBehaviour
         float distance;
         Vector3 mid;
 
-        // --- PHƯƠNG ÁN CŨ: Nối trực tiếp từ viền bong bóng này sang viền bong bóng kia (dọc theo vector hướng) ---
+        //Nối trực tiếp từ viền bong bóng này sang viền bong bóng kia (dọc theo vector hướng) ---
 
         Vector3 dirRef = b - a;
         Vector3 dirNormalized = dirRef.normalized;
@@ -159,7 +159,7 @@ public class MagnetAntBoxLink : MonoBehaviour
         mid = (startPos + endPos) * 0.5f;
 
 
-        // --- PHƯƠNG ÁN MỚI: Trừ Y đi một khoảng bằng bán kính (ở dưới bong bóng) ---
+        //Trừ Y đi một khoảng bằng bán kính (ở dưới bong bóng) ---
         //startPos = a - new Vector3(0, bubbleRadius, 0);
         //endPos = b - new Vector3(0, bubbleRadius, 0);
         //distance = Vector3.Distance(startPos, endPos);
