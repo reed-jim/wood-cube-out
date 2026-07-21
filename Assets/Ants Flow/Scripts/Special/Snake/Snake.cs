@@ -43,6 +43,8 @@ namespace AntsFlow
 
         public void Setup(SnakeConfig snakeConfig)
         {
+            gameObject.SetActive(true);
+
             List<int> indexes = GenerateSpiralIndexes(GamePersistentVariable.numColumn + 2, GamePersistentVariable.numRow + 2, 3);
             // remove first point (too short distance)
             indexes.RemoveAt(0);

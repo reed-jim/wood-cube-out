@@ -40,6 +40,8 @@ namespace AntsFlow
 
         public void Setup(AntsFlow.LevelItem levelItem)
         {
+            Reset();
+
             specialElementConfig = levelItem.specialElementConfig;
 
             for (int i = 0; i < antBoxLinks.Count; i++)
@@ -57,6 +59,13 @@ namespace AntsFlow
             SetupSpawningTileBoxes();
             SetupBossArea(levelItem.specialElementConfig.bossAreaConfig);
             SetupSnake(levelItem.specialElementConfig.snakeConfig);
+        }
+
+        private void Reset()
+        {
+            spawningTileBox.gameObject.SetActive(false);
+            bossArea.gameObject.SetActive(false);
+            snake.gameObject.SetActive(false);
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
