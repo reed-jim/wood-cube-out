@@ -100,6 +100,7 @@ namespace AntsFlow
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
                     !washingMachine.isOpenCloseType && !washingMachine.isMagnet)
                 {
                     if (washingMachine.numSlotRequired == 1)
@@ -151,6 +152,7 @@ namespace AntsFlow
                     washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox &&
                     washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isMagnet
                 )
@@ -195,6 +197,7 @@ namespace AntsFlow
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
                     !washingMachine.isOpenCloseType && !washingMachine.isDouble &&
                     !washingMachine.isMagnet)
                 {
@@ -269,6 +272,7 @@ namespace AntsFlow
                     washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox &&
                     washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isDouble &&
                     !washingMachine.isMagnet
@@ -657,22 +661,34 @@ namespace AntsFlow
 
             bossArea.gameObject.SetActive(true);
 
-            int x = bossAreaConfig.startTileCoordinate.x;
-            int y = bossAreaConfig.startTileCoordinate.y;
+            int startX = 0;
+            int startY = 0;
 
-            List<BaseTile> tiles = new List<BaseTile>();
-
-            int numNodeColumn = GamePersistentVariable.numColumn + 2;
-
-            for (int i = y; i < y + bossAreaConfig.numCoverRow; i++)
+            if (bossAreaConfig.startNodeId >= 0 && bossAreaConfig.startNodeId < TileManager.Ins.nodes.Count)
             {
-                for (int j = x; j < x + bossAreaConfig.numCoverColumn; j++)
+                Node startNode = TileManager.Ins.nodes[bossAreaConfig.startNodeId];
+                startX = startNode.x;
+                startY = startNode.y;
+            }
+
+            List<Node> nodes = new List<Node>();
+
+            for (int r = 0; r < bossAreaConfig.numCoverRow; r++)
+            {
+                for (int c = 0; c < bossAreaConfig.numCoverColumn; c++)
                 {
-                    tiles.Add(TileManager.Ins.nodes[j + i * numNodeColumn].tile);
+                    int targetX = startX + c;
+                    int targetY = startY + r;
+
+                    Node node = TileManager.Ins.nodes.FirstOrDefault(n => n.x == targetX && n.y == targetY);
+                    if (node != null)
+                    {
+                        nodes.Add(node);
+                    }
                 }
             }
 
-            bossArea.Setup(tiles, bossAreaConfig);
+            bossArea.Setup(nodes, bossAreaConfig);
         }
 
         public void SetupSnake(SnakeConfig snakeConfig)

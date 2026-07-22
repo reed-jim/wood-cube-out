@@ -17,31 +17,79 @@ namespace AntsFlow
         private int currentHealth;
         private bool isAnimating;
 
-        public void Setup(List<BaseTile> tiles, BossAreaConfig bossAreaConfig)
+        public void Setup(List<Node> nodes, BossAreaConfig bossAreaConfig)
         {
-            coveredTiles = tiles;
+            coveredTiles = new List<BaseTile>();
 
             Vector3 averagePosition = Vector3.zero;
 
-            for (int i = 0; i < coveredTiles.Count; i++)
+            for (int i = 0; i < nodes.Count; i++)
             {
-                BaseTile coveredTile = coveredTiles[i];
+                Node node = nodes[i];
 
-                if (coveredTile == null)
+                if (node == null)
                 {
                     continue;
                 }
 
-                coveredTile.isLocked = true;
+                averagePosition += node.initialPosition;
 
-                averagePosition += TileManager.Ins.GetTilePosition(coveredTile);
+                if (node.tile != null)
+                {
+                    node.tile.isLocked = true;
+                    coveredTiles.Add(node.tile);
+                }
             }
 
-            averagePosition /= coveredTiles.Count;
+            if (nodes.Count > 0)
+            {
+                averagePosition /= nodes.Count;
+            }
             averagePosition = averagePosition.ChangeZ(transform.position.z);
 
             transform.position = averagePosition;
-            transform.localScale = GamePersistentVariable.tileDistance * new Vector2(bossAreaConfig.numCoverColumn, bossAreaConfig.numCoverRow);
+
+            float cellWidth = GamePersistentVariable.tileDistance.x > 0 ? GamePersistentVariable.tileDistance.x : GamePersistentVariable.tileMapScaleFactor;
+            float cellHeight = GamePersistentVariable.tileDistance.y > 0 ? GamePersistentVariable.tileDistance.y : GamePersistentVariable.tileMapScaleFactor;
+
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            }
+
+            if (spriteRenderer != null)
+            {
+                if (spriteRenderer.drawMode == SpriteDrawMode.Sliced || spriteRenderer.drawMode == SpriteDrawMode.Tiled)
+                {
+                    spriteRenderer.size = new Vector2(bossAreaConfig.numCoverColumn * cellWidth, bossAreaConfig.numCoverRow * cellHeight);
+                    transform.localScale = Vector3.one;
+                }
+                else if (spriteRenderer.sprite != null)
+                {
+                    Vector2 spriteSize = spriteRenderer.sprite.rect.size / spriteRenderer.sprite.pixelsPerUnit;
+                    if (spriteSize.x > 0 && spriteSize.y > 0)
+                    {
+                        transform.localScale = new Vector3(
+                            (bossAreaConfig.numCoverColumn * cellWidth) / spriteSize.x,
+                            (bossAreaConfig.numCoverRow * cellHeight) / spriteSize.y,
+                            1f
+                        );
+                    }
+                    else
+                    {
+                        transform.localScale = new Vector3(bossAreaConfig.numCoverColumn * cellWidth, bossAreaConfig.numCoverRow * cellHeight, 1f);
+                    }
+                }
+                else
+                {
+                    transform.localScale = new Vector3(bossAreaConfig.numCoverColumn * cellWidth, bossAreaConfig.numCoverRow * cellHeight, 1f);
+                }
+            }
+            else
+            {
+                transform.localScale = new Vector3(bossAreaConfig.numCoverColumn * cellWidth, bossAreaConfig.numCoverRow * cellHeight, 1f);
+            }
 
             maxHealth = bossAreaConfig.bossHealth;
             currentHealth = maxHealth;

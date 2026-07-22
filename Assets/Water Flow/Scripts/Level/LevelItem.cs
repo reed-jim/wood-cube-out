@@ -1415,7 +1415,7 @@ public class SpecialElementItemConfig
         return spawnOrder.Contains(numAntBoxesSpawned);
     }
 
-    public bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
+    public virtual bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
     {
         if (spawnOrder == null)
         {
@@ -1467,10 +1467,19 @@ public class SpawningTileBoxItemConfig
 [Serializable]
 public class BossAreaConfig : SpecialElementItemConfig
 {
-    public Vector2Int startTileCoordinate;
+    public int startNodeId;
     public int numCoverColumn;
     public int numCoverRow;
     public int bossHealth;
+
+    public override bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
+    {
+        if (spawnOrder == null)
+        {
+            return false;
+        }
+        return GetNumLeft() > 0 && IsCorrectOrder(numAntBoxesSpawned);
+    }
 }
 
 [Serializable]

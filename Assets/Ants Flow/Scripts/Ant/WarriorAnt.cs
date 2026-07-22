@@ -2,18 +2,60 @@ using System;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
+using Spine.Unity;
 using UnityEngine;
 
 namespace AntsFlow
 {
     public class WarriorAnt : BaseAnt
     {
+        [SpineAnimation] public string attackAnimation;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            skeletonAnimation.AnimationState.Event += OnSpineEvent;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            skeletonAnimation.AnimationState.Event -= OnSpineEvent;
+        }
+
+        public override void Init(Color faction)
+        {
+
+
+            skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+            skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+
+            this.faction = faction;
+
+            stuckTime = 0;
+            isMovingToSideTile = false;
+
+            skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
+        }
+
+        private void OnSpineEvent(TrackEntry trackEntry, Spine.Event e)
+        {
+            if (trackEntry.Animation.Name == attackAnimation && e.Data.Name == "call")
+            {
+                Attack(onCompleteAction: () =>
+                {
+                    ReverseMove();
+                });
+            }
+        }
         protected override void OnAntReachTarget()
         {
-            Attack(onCompleteAction: () =>
-            {
-                ReverseMove();
-            });
+            skeletonAnimation.AnimationState.SetAnimation(0, attackAnimation, false);
+            //Attack(onCompleteAction: () =>
+            //{
+            //    ReverseMove();
+            //});
         }
 
         protected override void OnAntMovedToNest()
