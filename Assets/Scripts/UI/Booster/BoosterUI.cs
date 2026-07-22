@@ -523,7 +523,7 @@ public class BoosterUI : MonoBehaviour
             currentLevel.Value, boosterType.ToString(),
             1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], $"Consume_Booster_{boosterType}");
 
-        new FResourceLog(FlowType.Sink, boosterType.ToString(), boosterType.ToString(), $"Consume_Booster_{boosterType}", 1, currentLevel.Value);
+        new FResourceLog(FlowType.Sink, boosterType.ToString(), boosterType.ToString(), $"Consume_Booster_{boosterType}", 1, currentLevel.Value).Send();
     }
 
     private void UseBreakObjectBooster()

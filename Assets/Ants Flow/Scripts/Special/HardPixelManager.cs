@@ -178,8 +178,11 @@ namespace AntsFlow
             float cellWidth = GamePersistentVariable.tileDistance.x > 0 ? GamePersistentVariable.tileDistance.x : GamePersistentVariable.tileMapScaleFactor;
             float cellHeight = GamePersistentVariable.tileDistance.y > 0 ? GamePersistentVariable.tileDistance.y : GamePersistentVariable.tileMapScaleFactor;
 
-            float width = inst.config.numCols * cellWidth * inst.config.scaleWidth;
-            float height = inst.config.numRows * cellHeight * inst.config.scaleHeight;
+            float scaleW = inst.config.scaleWidth <= 0 ? 1.01f : inst.config.scaleWidth;
+            float scaleH = inst.config.scaleHeight <= 0 ? 1.055f : inst.config.scaleHeight;
+
+            float width = inst.config.numCols * cellWidth * scaleW;
+            float height = inst.config.numRows * cellHeight * scaleH;
 
             RectTransform rectTransform = visual.GetComponent<RectTransform>();
             if (rectTransform != null)
