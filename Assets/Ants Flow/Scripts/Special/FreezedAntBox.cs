@@ -61,7 +61,9 @@ namespace AntsFlow
 
         public void AssignRequirementNumber()
         {
-            totalNumAntBoxToUnfreeze = SpecialElementManager.Ins.GetMaxValueFreezedAntBox(washingMachineStartSlot.row, washingMachineStartSlot.column);
+            totalNumAntBoxToUnfreeze =
+                Mathf.Min(totalNumAntBoxToUnfreeze, SpecialElementManager.Ins.GetMaxValueFreezedAntBox(washingMachineStartSlot.row, washingMachineStartSlot.column));
+
             numAntBoxToUnfreeze = totalNumAntBoxToUnfreeze;
             numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
         }

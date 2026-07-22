@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3868959835746541823
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6159422563476349291}
+  - component: {fileID: 4825028850761451605}
+  m_Layer: 0
+  m_Name: Special Element Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6159422563476349291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3868959835746541823}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4825028850761451605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3868959835746541823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fee74964adf2df2409fcece0f1721986, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpecialElementManager
+  nextLevelElement: 0
+  specialElementConfig:
+    hiddenAntBoxConfig:
+      spawnOrder: 
+    frozenAntBoxConfig:
+      spawnOrder: 
+      numBoxToUnfreeze: 
+    doubleAntBoxConfig:
+      spawnOrder: 
+    spawningTileBoxConfig:
+      items: []
+    isContainsHiddenTiles: 0
+    isContainsWallTiles: 0
+  nextFreezeAntBoxRequiredNumber: 0
+  antBoxLinks: []
+  spawningTileBox: {fileID: 0}
+  hiddenTileSprite: {fileID: 21300000, guid: a83721868d9594b4a9c9b7e3a0d52692, type: 3}
+  wallTileSprite: {fileID: 21300000, guid: c58282e3c91f2524e94c5b5260a7661a, type: 3}
+  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
+  levelsShowSpecialElementIntroduction: 050000000a000000140000001e00000028000000

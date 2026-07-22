@@ -16,6 +16,7 @@ namespace AntsFlow
     {
         [SerializeField] private Renderer antRenderer;
         [SerializeField] private SkeletonAnimation skeletonAnimation;
+        [SpineAttachment] public List<string> antAntennaeAttachments;
         private MaterialPropertyBlock materialPropertyBlock;
 
         private NavMeshPath path;
@@ -232,6 +233,8 @@ namespace AntsFlow
             {
                 StopCoroutine(movingCoroutine);
             }
+
+            ShowAntennaes();
 
             movingCoroutine = StartCoroutine(MovingCurved(path, 1));
 
@@ -469,7 +472,7 @@ namespace AntsFlow
                     points.RemoveAt(firstBottomMostPointIndex + 1);
                 }
 
-                points = RemoveNearbyPoints(points, 0.5f);
+                points = RemoveNearbyPoints(points, 0.8f * GamePersistentVariable.tileDistance.x);
             }
 
             if (count == 2)
@@ -605,6 +608,8 @@ namespace AntsFlow
         {
             if (tile != null)
             {
+                HideAntennaes();
+
                 tile.MoveToAnt(this);
 
                 ReverseMove();
@@ -707,6 +712,22 @@ namespace AntsFlow
         {
             speedMove = initialSpeedMove;
             // Time.timeScale = 1;
+        }
+
+        private void ShowAntennaes()
+        {
+            for (int i = 0; i < antAntennaeAttachments.Count; i++)
+            {
+                skeletonAnimation.Skeleton.SetAttachment(antAntennaeAttachments[i], antAntennaeAttachments[i]);
+            }
+        }
+
+        private void HideAntennaes()
+        {
+            for (int i = 0; i < antAntennaeAttachments.Count; i++)
+            {
+                skeletonAnimation.Skeleton.SetAttachment(antAntennaeAttachments[i], null);
+            }
         }
     }
 }

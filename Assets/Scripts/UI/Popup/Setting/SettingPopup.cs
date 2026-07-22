@@ -16,6 +16,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private SettingItemUI turnMusicToggle;
     [SerializeField] private SettingItemUI turnSoundToggle;
     [SerializeField] private SettingItemUI vibrationToggle;
+    [SerializeField] private SettingItemUI notificationToggle;
     [SerializeField] private Button replayButton;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
@@ -47,6 +48,7 @@ public class SettingPopup : BasePopup
         turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
         turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
         vibrationToggle.SetState(gameSetting.IsVibrate);
+        notificationToggle.SetState(gameSetting.isNotification);
 
         chooseLanguageContainer.gameObject.SetActive(false);
     }
@@ -58,6 +60,7 @@ public class SettingPopup : BasePopup
         turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
+        notificationToggle.RegisterOnSwitchedEvent(EnableNotification);
 
         replayButton.onClick.AddListener(Replay);
         // rateButton.onClick.AddListener(Rate);
@@ -123,11 +126,17 @@ public class SettingPopup : BasePopup
         GamePersistentVariable.IsVibrate = isTurnOn;
     }
 
+    private void EnableNotification(bool isTurnOn)
+    {
+        gameSetting.isNotification = isTurnOn;
+    }
+
     private void OnGameSettingLoaded()
     {
         turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
         turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
         vibrationToggle.SetState(gameSetting.IsVibrate);
+        notificationToggle.SetState(gameSetting.isNotification);
     }
 
     #region LANGUAGE
