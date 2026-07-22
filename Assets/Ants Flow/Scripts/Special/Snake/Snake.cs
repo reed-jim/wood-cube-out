@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
@@ -516,6 +518,7 @@ namespace AntsFlow
         }
     }
 
+#if UNITY_EDITOR
     [CustomEditor(typeof(Snake))]
     public class SnakeEditor : Editor
     {
@@ -577,4 +580,5 @@ namespace AntsFlow
             }
         }
     }
+#endif
 }
