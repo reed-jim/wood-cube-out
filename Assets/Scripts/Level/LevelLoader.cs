@@ -387,12 +387,6 @@ namespace NamPhuThuy.GamePlay
 
             AntsFlow.TileManager.Ins.shadowTile = shadowTile;
 
-            Tile tile = ScriptableObject.CreateInstance<Tile>();
-            Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
-            shadowTile.sprite = shadowSprite;
-
-            AntsFlow.TileManager.Ins.shadowTile = shadowTile;
-
             if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
             {
                 for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
