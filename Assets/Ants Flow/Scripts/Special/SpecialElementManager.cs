@@ -456,7 +456,6 @@ namespace AntsFlow
 
                 for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
                 {
-
                     BaseTile tile = TileManager.Ins.tiles[i];
 
                     if (tile.Faction == targetColor)
@@ -476,11 +475,23 @@ namespace AntsFlow
             }
 
             int clusterSize = 100;
-            int[] indexesToFill = GetRandomCluster(width, height, clusterSize, manualStart);
+
+            List<int> notValidIndexes = new List<int>();
+
+            for (int i = 0; i < width * height; i++)
+            {
+                if (i >= TileManager.Ins.tiles.Count)
+                {
+                    notValidIndexes.Add(i);
+                }
+            }
+
+            int[] indexesToFill = GetRandomCluster(width, height, clusterSize, manualStart, notValidIndexes);
 
             for (int i = 0; i < indexesToFill.Length; i++)
             {
                 int index = indexesToFill[i];
+
                 if (index < 0 || index >= TileManager.Ins.tiles.Count)
                 {
                     continue;
@@ -564,20 +575,52 @@ namespace AntsFlow
             }
         }
 
-        public static int[] GetRandomCluster(int width, int height, int clusterSize, int manualStart)
+        public static int[] GetRandomCluster
+        (
+            int width,
+            int height,
+            int clusterSize,
+            int manualStart,
+            List<int> emptyIndexes
+        )
         {
             int totalTiles = width * height;
-            clusterSize = Mathf.Min(clusterSize, totalTiles);
 
-            List<int> cluster = new();
-            HashSet<int> visited = new();
+            HashSet<int> blocked = new(emptyIndexes);
+
+            List<int> validIndexes = new(totalTiles - blocked.Count);
+            for (int i = 0; i < totalTiles; i++)
+            {
+                if (!blocked.Contains(i))
+                    validIndexes.Add(i);
+            }
+
+            if (validIndexes.Count == 0)
+                return Array.Empty<int>();
+
+            // Available tiles
+            int availableTiles = totalTiles - blocked.Count;
+            clusterSize = Mathf.Min(clusterSize, availableTiles);
+
+            if (clusterSize <= 0)
+                return System.Array.Empty<int>();
+
+            List<int> cluster = new(clusterSize);
+            HashSet<int> visited = new(blocked); // blocked tiles count as already visited
             List<int> frontier = new();
 
-            int start = UnityEngine.Random.Range(0, totalTiles);
+            int start;
 
             if (manualStart != -1)
             {
+                if (blocked.Contains(manualStart))
+                    return Array.Empty<int>();
+
                 start = manualStart;
+            }
+            else
+            {
+                start = validIndexes[UnityEngine.Random.Range(0, validIndexes.Count)];
             }
 
             cluster.Add(start);
@@ -593,13 +636,13 @@ namespace AntsFlow
 
                 int[] neighbors =
                 {
-                    (y > 0) ? current - width : -1,              // Down
-                    (y < height - 1) ? current + width : -1,     // Up
-                    (x > 0) ? current - 1 : -1,                  // Left
-                    (x < width - 1) ? current + 1 : -1           // Right
-                };
+                y > 0 ? current - width : -1,
+                y < height - 1 ? current + width : -1,
+                x > 0 ? current - 1 : -1,
+                x < width - 1 ? current + 1 : -1
+            };
 
-                // Shuffle neighbors
+                // Fisher-Yates shuffle
                 for (int i = neighbors.Length - 1; i > 0; i--)
                 {
                     int j = UnityEngine.Random.Range(0, i + 1);

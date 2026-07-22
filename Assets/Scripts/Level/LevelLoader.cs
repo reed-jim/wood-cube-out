@@ -425,12 +425,12 @@ namespace NamPhuThuy.GamePlay
                 }
             }
 
-            if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
-            {
-                int manualStart = currentLevel.Value == 40 ? 0 : -1;
+            // if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
+            // {
+            //     int manualStart = currentLevel.Value == 40 ? 0 : -1;
 
-                SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows, manualStart);
-            }
+            //     SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows, manualStart);
+            // }
         }
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
