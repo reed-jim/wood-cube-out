@@ -1339,7 +1339,7 @@ public class LevelItemData
 
 
 [Serializable]
-public class HardPixelConfig
+public class HardPixelConfig : ISerializationCallbackReceiver
 {
     public int id;
     public int startNodeId;
@@ -1351,6 +1351,28 @@ public class HardPixelConfig
     public float rotationAngle;
     public float scaleWidth = 1.01f;
     public float scaleHeight = 1.055f;
+
+    public HardPixelConfig()
+    {
+        scaleWidth = 1.01f;
+        scaleHeight = 1.055f;
+    }
+
+    public void OnBeforeSerialize()
+    {
+    }
+
+    public void OnAfterDeserialize()
+    {
+        if (scaleWidth <= 0)
+        {
+            scaleWidth = 1.01f;
+        }
+        if (scaleHeight <= 0)
+        {
+            scaleHeight = 1.055f;
+        }
+    }
 }
 
 [Serializable]

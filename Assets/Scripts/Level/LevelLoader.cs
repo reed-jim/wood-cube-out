@@ -412,7 +412,7 @@ namespace NamPhuThuy.GamePlay
 
                         Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
 
-                        Tile tile = ScriptableObject.CreateInstance<Tile>();
+                        //Tile tile = ScriptableObject.CreateInstance<Tile>();
                         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
                         spawnedTileMap.SetTile(cellPos, tile);
