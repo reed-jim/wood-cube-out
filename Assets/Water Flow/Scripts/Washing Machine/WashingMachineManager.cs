@@ -138,6 +138,14 @@ namespace AntsFlow
                 HardPixelManager.Ins.Setup(levelItem);
 
             }
+
+            if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
+            {
+                int manualStart = currentLevel.Value == 40 ? 0 : -1;
+
+                SpecialElementManager.Ins.FillHiddenTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow, manualStart);
+            }
+            
             if (GamePersistentVariable.levelItem.specialElementConfig.isContainsWallTiles)
             {
                 SpecialElementManager.Ins.FillWallTiles(TileManager.Ins.tilemap, GamePersistentVariable.numColumn, GamePersistentVariable.numRow);
