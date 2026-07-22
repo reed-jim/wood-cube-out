@@ -29,9 +29,12 @@ public class BaseChicken : MonoBehaviour
         Tween.Position(transform, grainPile.transform.position, duration: 0.6f, ease: Ease.Linear)
         .OnComplete(() =>
         {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            grainPile.BeEaten(this, onCompleteAction: () =>
             {
-                isDone = true;
+                SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+                {
+                    isDone = true;
+                });
             });
         });
 

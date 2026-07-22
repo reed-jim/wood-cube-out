@@ -196,20 +196,27 @@ public class WashingMachineItem : MonoBehaviour
     #region Chicken Feed
     public void PourGrainOur()
     {
-        Vector3 position;
+        Vector3 busketDestination;
 
-        position.x = UnityEngine.Random.RandomRange(-5, 5);
-        position.y = UnityEngine.Random.RandomRange(-2, 2);
-        position.z = -1;
+        busketDestination.x = 0;
+        busketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
+        busketDestination.z = -1;
 
-        Tween.Position(transform, position, duration: 0.3f).OnComplete(() =>
+        Vector3 randomPileCenter;
+
+        randomPileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
+        randomPileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-2, 2);
+        randomPileCenter.z = -1;
+
+        Tween.Position(transform, busketDestination, duration: 0.3f).OnComplete(() =>
         {
             GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
 
             grainPile.transform.SetParent(WashingMachineManager.Ins.grainPool.transform);
-            grainPile.transform.localPosition = position;
+            grainPile.transform.position = busketDestination;
 
             grainPile.SetFaction(faction);
+            grainPile.Pour(randomPileCenter);
 
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {

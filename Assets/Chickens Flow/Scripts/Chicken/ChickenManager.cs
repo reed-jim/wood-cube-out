@@ -40,7 +40,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 }
 
                 position.x = (j - numColumn / 2f + 0.5f * (i % 2)) * distance;
-                position.y = 2 + i * distance;
+                position.y = 5 + i * distance;
                 position.z = -1;
 
                 chicken.transform.position = position;
@@ -65,7 +65,7 @@ public class ChickenManager : Singleton<ChickenManager>
     public void FeedTheChicken(GrainPile grainPile)
     {
         CheckChickensStuck();
-        
+
         for (int i = 0; i < chickens.Count; i++)
         {
             BaseChicken chicken = chickens[i];
