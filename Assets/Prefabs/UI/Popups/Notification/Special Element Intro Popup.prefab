@@ -313,13 +313,11 @@ MonoBehaviour:
   - Can't be selected while frozen. Clear all normal Ant Boxes to unfreeze it
   - Blocks the movement of ants
   - Its color is hidden until it is uncovered
-  - Locks a region of tiles. Clear tiles to reduce the counter and break it.
-  - Toggles open or closed every time any Ant Box is selected. Can only be selected
-    when open.
+  - Locks a region of tiles. Clear tiles to reduce the counter and break it
+  - Toggles open or closed whenever any Ant Box is selected
   - Selecting one pulls both linked boxes into the waiting slots. Requires 2 adjacent
-    slots.
-  - Spawns a new tile of the same color when a tile is cleared, until its counter
-    reaches 0.
+    slots
+  - Spawns a matching tile whenever one is cleared until its counter hits zero
 --- !u!114 &2878686236699059345
 MonoBehaviour:
   m_ObjectHideFlags: 0

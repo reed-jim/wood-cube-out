@@ -23,7 +23,6 @@ public class SpecialElementIntroductionPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         base.UnregisterMoreEvent();
-
         SpecialElementManager.showSpecialElementIntroduction -= ShowSpecialElementIntroduction;
     }
 
