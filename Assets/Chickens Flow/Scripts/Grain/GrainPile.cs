@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using AntsFlow;
 using DG.Tweening;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -97,7 +99,7 @@ public class GrainPile : MonoBehaviour
             targets.Add(pileCenter + offset);
 
             position = pileCenter + offset;
-            position.z = -0.01f * (siblingIndex + 1f / amount * i);
+            position.z = -0.01f * (siblingIndex + 1f / amount * (amount - i));
 
             grains[i].transform.localPosition = Vector3.zero;
             grains[i].transform.SetZ(position.z);
@@ -131,6 +133,8 @@ public class GrainPile : MonoBehaviour
 
         endIndex = Mathf.Min(endIndex, grains.Count - 1);
 
+        List<Grain> grainsToBeEaten = new List<Grain>();
+
         for (int i = startIndex; i <= endIndex; i++)
         {
             int index = i;
@@ -139,24 +143,63 @@ public class GrainPile : MonoBehaviour
 
             if (!grain.isBeingEaten && !grain.isDone)
             {
-                grain.transform.DOMove(chicken.transform.position, duration: 0.3f)
-                .SetDelay((i - startIndex) * 0.02f)
-                .OnComplete(() =>
-                {
-                    grain.gameObject.SetActive(false);
+                grainsToBeEaten.Add(grain);
 
-                    grain.isDone = true;
+                // grain.transform.DOMove(chicken.transform.position, duration: 0.3f)
+                // .SetDelay((i - startIndex) * 0.02f)
+                // .OnComplete(() =>
+                // {
+                //     grain.gameObject.SetActive(false);
 
-                    if (index == endIndex)
-                    {
-                        onCompleteAction?.Invoke();
-                    }
-                });
+                //     grain.isDone = true;
+
+                //     if (index == endIndex)
+                //     {
+                //         onCompleteAction?.Invoke();
+                //     }
+                // });
 
                 grain.isBeingEaten = true;
             }
         }
 
+        StartCoroutine(ChickenEatingGrains(chicken, grainsToBeEaten, onCompleteAction));
+
         remainingNumber--;
+
+        WashingMachineManager.Ins.grainPool.AddGrain(-1);
+    }
+
+    private IEnumerator ChickenEatingGrains(BaseChicken chicken, List<Grain> grainToBeEaten, Action onCompleteAction)
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
+
+        int index = 0;
+        bool isMoving = false;
+
+        while (index < grainToBeEaten.Count)
+        {
+            if (!isMoving)
+            {
+                chicken.transform.DOMove(grainToBeEaten[index].transform.position.AddZ(-1), duration: 0.1f).SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    grainToBeEaten[index].transform.DOScale(0, duration: 0.1f).OnComplete(() =>
+                    {
+                        grainToBeEaten[index].gameObject.SetActive(false);
+                    });
+
+                    index++;
+
+                    isMoving = false;
+                });
+
+                isMoving = true;
+            }
+
+            yield return waitForSeconds;
+        }
+
+        onCompleteAction?.Invoke();
     }
 }

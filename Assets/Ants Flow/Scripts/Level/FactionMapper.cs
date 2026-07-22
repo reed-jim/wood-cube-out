@@ -13,7 +13,7 @@ public class FactionMapper : Singleton<FactionMapper>
 {
     public List<ColorSpriteContainerPair> mapper;
 
-    public List<Color> allFactions; 
+    public List<Color> allFactions;
     public Dictionary<Color, SpriteContainer> spriteContainersOfColors;
     public Dictionary<int, Color> indexesOfColors;
     public Dictionary<Color, int> colorsOfIndexes;
@@ -35,6 +35,25 @@ public class FactionMapper : Singleton<FactionMapper>
     public Color GetRandomFaction()
     {
         return allFactions[UnityEngine.Random.Range(0, allFactions.Count)];
+    }
+
+    public List<Color> GetRandomFactions(int maxUniqueFactions, int numFaction)
+    {
+        maxUniqueFactions = Mathf.Clamp(maxUniqueFactions, 1, allFactions.Count);
+
+        List<Color> subPool = allFactions
+            .OrderBy(_ => UnityEngine.Random.value)
+            .Take(maxUniqueFactions)
+            .ToList();
+
+        List<Color> factions = new List<Color>(numFaction);
+
+        for (int i = 0; i < numFaction; i++)
+        {
+            factions.Add(subPool[UnityEngine.Random.Range(0, subPool.Count)]);
+        }
+
+        return factions;
     }
 
     private void BuildSpriteContainersOfColors()

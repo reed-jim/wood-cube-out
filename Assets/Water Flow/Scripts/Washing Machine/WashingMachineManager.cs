@@ -1147,15 +1147,39 @@ namespace AntsFlow
             {
                 BaseChicken chicken = ChickenManager.Ins.chickens[i];
 
+                if (chicken.isEating || chicken.isDone)
+                {
+                    continue;
+                }
+
                 bool isBlocked = chicken.isStuck;
 
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : 1);
             }
 
-            // foreach (var item in sortedPoolFaction)
-            // {
-            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
-            // }
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.washingMachine != null)
+                {
+                    if (isIncludeStartSlot)
+                    {
+                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        {
+                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
+                    }
+                }
+            }
+
+            sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             return sortedPoolFaction;
         }

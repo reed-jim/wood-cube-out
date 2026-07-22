@@ -11,12 +11,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void GenerateAllFactions()
     {
-        allFactions = new List<Color>();
-
-        for (int i = 0; i < 500; i++)
-        {
-            allFactions.Add(FactionMapper.Ins.GetRandomFaction());
-        }
+        allFactions = FactionMapper.Ins.GetRandomFactions(8, 500);
     }
 
     public void SpawnFirstChickens()
