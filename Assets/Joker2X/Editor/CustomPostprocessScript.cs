@@ -406,6 +406,13 @@ skd_140.SetString("SKAdNetworkIdentifier", "a2p9lx4jpn.skadnetwork");
     {
         if (target == BuildTarget.iOS)
         {
+            //using (StreamWriter sw = File.AppendText(path + "/Podfile"))
+            //{
+// E.g. add an app extension
+              //  sw.WriteLine("post_install do |installer|\n problematic_targets = ['AppMetricaLibraryAdapter']\n installer.pods_project.targets.each do |target|\n target.build_configurations.each do |config|\n if problematic_targets.include?(target.name)\n config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'NO'\n end\n end\n end\nend");
+           // }
+            
+            
             // Read.
             var projectPath = PBXProject.GetPBXProjectPath(path);
             var project = new PBXProject();
@@ -417,6 +424,8 @@ skd_140.SetString("SKAdNetworkIdentifier", "a2p9lx4jpn.skadnetwork");
             AddFrameworks(project, targetGUID);
             // Write.
             File.WriteAllText(projectPath, project.WriteToString());
+            
+            
         }
     }
 
