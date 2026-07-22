@@ -374,6 +374,47 @@ namespace AntsFlow
                 new Color(0f, 0f, 0f, 0.85f),
                 Color.white);
 
+            // Highlight Hard Pixels
+            if (level.specialElementConfig != null && level.specialElementConfig.hardPixelConfigs != null)
+            {
+                foreach (var config in level.specialElementConfig.hardPixelConfigs)
+                {
+                    if (config.startNodeId >= 0)
+                    {
+                        int startX = config.startNodeId % numColumn;
+                        int startY = config.startNodeId / numColumn;
+
+                        float left = (startX - 0.5f) * tileDistance;
+                        float right = (startX + config.numCols - 0.5f) * tileDistance;
+                        float bottom = (startY - 0.5f) * tileDistance;
+                        float top = (startY + config.numRows - 0.5f) * tileDistance;
+
+                        Vector3[] corners =
+                        {
+                            new Vector3(left, bottom, 0.5f),
+                            new Vector3(left, top, 0.5f),
+                            new Vector3(right, top, 0.5f),
+                            new Vector3(right, bottom, 0.5f)
+                        };
+
+                        Handles.DrawSolidRectangleWithOutline(
+                            corners,
+                            new Color(1f, 0.5f, 0f, 0.25f), // Orange fill with transparency
+                            new Color(1f, 0.5f, 0f, 1f)    // Solid orange outline
+                        );
+
+                        Vector3 centerPos = new Vector3((left + right) * 0.5f, (bottom + top) * 0.5f, 0);
+                        GUIStyle labelStyle = new GUIStyle(EditorStyles.whiteBoldLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 11
+                        };
+                        labelStyle.normal.textColor = new Color(1f, 0.7f, 0f, 1f);
+                        Handles.Label(centerPos + Vector3.up * 0.02f, $"HP {config.id}\n({config.numCols}x{config.numRows})", labelStyle);
+                    }
+                }
+            }
+
             for (int y = 0; y < numRow; y++)
             {
                 for (int x = 0; x < numColumn; x++)
@@ -1308,6 +1349,8 @@ public class HardPixelConfig
     public GameObject prefab;
     public bool isShowText;
     public float rotationAngle;
+    public float scaleWidth = 1.01f;
+    public float scaleHeight = 1.055f;
 }
 
 [Serializable]
