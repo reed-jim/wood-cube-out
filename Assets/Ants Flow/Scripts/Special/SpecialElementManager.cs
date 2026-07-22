@@ -349,8 +349,9 @@ namespace AntsFlow
             {
                 try
                 {
-                    nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
-                    specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+                    int index = specialElementConfig.frozenAntBoxConfig.spawnOrder.IndexOf(WashingMachineManager.Ins.numAntBoxSpawned);
+
+                    nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[index];
                 }
                 catch (System.Exception)
                 {

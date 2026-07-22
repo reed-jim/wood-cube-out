@@ -23,6 +23,7 @@ namespace NamPhuThuy.GamePlay
     {
         [Header("SCRIPTABLE OBJECT")]
         [SerializeField] private IntVariable currentLevel;
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
         [SerializeField] private LevelDataContainer levelDataContainer;
         [SerializeField] private LevelBoosterObserver levelBoosterObserver;
         [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
@@ -304,6 +305,8 @@ namespace NamPhuThuy.GamePlay
 
                 GamePersistentVariable.startLevelTime = Time.time;
                 GamePersistentVariable.levelRetryTime++;
+
+                SaferioTracking.TrackLevelStart(currentLevel.Value, (int)userResourcesObserver.UserResources.CoinQuantity);
             }
 
             void SetIsLoopLevel(bool isLoop)
@@ -397,30 +400,19 @@ namespace NamPhuThuy.GamePlay
 
                     AntsFlow.TileManager.Ins.tiles[i].tilemap = spawnedTileMap;
                     AntsFlow.TileManager.Ins.tiles[i].tilemapPosition = cellPos;
-
-                    // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[i]);
                 }
             }
             else
             {
                 for (int i = 0; i < numRows; i++)
                 {
-                    // Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
-                    // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
-
-                    // spawnedTileMapGrid.SetParent(levelTransform);
-                    // spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
-                    // spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
-
-                    // tilemapGrids.Add(spawnedTileMapGrid);
-
                     for (int j = 0; j < numCols; j++)
                     {
                         int index = j + i * numCols;
 
                         Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
 
-                        // Tile tile = ScriptableObject.CreateInstance<Tile>();
+                        Tile tile = ScriptableObject.CreateInstance<Tile>();
                         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
                         spawnedTileMap.SetTile(cellPos, tile);
@@ -428,8 +420,6 @@ namespace NamPhuThuy.GamePlay
 
                         AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
                         AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
-
-                        // TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
                     }
                 }
             }

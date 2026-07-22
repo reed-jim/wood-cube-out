@@ -45,6 +45,8 @@ public class GameSetting : ScriptableObject
         }
     }
 
+    public bool isNotification;
+
     public string CurrentLanguage
     {
         get => currentLanguage;
