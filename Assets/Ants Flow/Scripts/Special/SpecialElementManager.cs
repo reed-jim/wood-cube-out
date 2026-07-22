@@ -456,6 +456,7 @@ namespace AntsFlow
 
                 for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
                 {
+
                     BaseTile tile = TileManager.Ins.tiles[i];
 
                     if (tile.Faction == targetColor)
@@ -480,6 +481,11 @@ namespace AntsFlow
             for (int i = 0; i < indexesToFill.Length; i++)
             {
                 int index = indexesToFill[i];
+                if (index < 0 || index >= TileManager.Ins.tiles.Count)
+                {
+                    continue;
+                }
+
                 BaseTile tile = TileManager.Ins.tiles[index];
 
                 Vector3Int cellPos = tile.tilemapPosition;
