@@ -5,6 +5,7 @@ using UnityEngine;
 public class ChickenManager : Singleton<ChickenManager>
 {
     public List<BaseChicken> chickens;
+    public Dictionary<int, List<BaseChicken>> chickenByColumn;
 
     public List<Color> allFactions;
 
@@ -12,7 +13,7 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         allFactions = new List<Color>();
 
-        for (int i = 0; i < 300; i++)
+        for (int i = 0; i < 500; i++)
         {
             allFactions.Add(FactionMapper.Ins.GetRandomFaction());
         }
@@ -20,8 +21,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void SpawnFirstChickens()
     {
-        int numColumn = 5;
-        int numRow = 5;
+        int numColumn = 21;
+        int numRow = 21;
         float distance = 0;
 
         Vector3 position;
@@ -60,11 +61,22 @@ public class ChickenManager : Singleton<ChickenManager>
                 chickens.Add(chicken);
             }
         }
+
+        chickenByColumn = new Dictionary<int, List<BaseChicken>>();
+
+        for (int i = 0; i < chickens.Count; i++)
+        {
+            BaseChicken chicken = chickens[i];
+
+            CommonUtil.AddValueOfDictionary(chickenByColumn, chicken.column, chicken);
+        }
     }
 
     public void FeedTheChicken(GrainPile grainPile)
     {
         CheckChickensStuck();
+
+        int remainingNumber = grainPile.remainingNumber;
 
         for (int i = 0; i < chickens.Count; i++)
         {
@@ -74,22 +86,18 @@ public class ChickenManager : Singleton<ChickenManager>
             {
                 chicken.Feed(grainPile);
 
-                break;
+                remainingNumber--;
+
+                if (remainingNumber == 0)
+                {
+                    break;
+                }
             }
         }
     }
 
     public void CheckChickensStuck()
     {
-        Dictionary<int, List<BaseChicken>> chickenByColumn = new Dictionary<int, List<BaseChicken>>();
-
-        for (int i = 0; i < chickens.Count; i++)
-        {
-            BaseChicken chicken = chickens[i];
-
-            CommonUtil.AddValueOfDictionary(chickenByColumn, chicken.column, chicken);
-        }
-
         foreach (var column in chickenByColumn.Keys)
         {
             chickenByColumn[column][0].isStuck = false;

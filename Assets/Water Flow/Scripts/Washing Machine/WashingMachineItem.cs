@@ -225,6 +225,8 @@ public class WashingMachineItem : MonoBehaviour
                 ChickenManager.Ins.FeedTheChicken(grainPile);
             });
         });
+
+        WashingMachineManager.Ins.grainPool.AddGrain(number);
     }
     #endregion
 
@@ -409,6 +411,11 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
+        if (WashingMachineManager.Ins.grainPool.IsMaxCapacity())
+        {
+            return false;
+        }
+
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= currentNumSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&

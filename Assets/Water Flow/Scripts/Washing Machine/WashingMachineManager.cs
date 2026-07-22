@@ -18,7 +18,7 @@ namespace AntsFlow
 
         public List<WashingMachineSlot> washingMachineSlots;
         public List<WashingMachineStartSlot> washingMachineStartSlots;
-        public Transform grainPool;
+        public GrainPool grainPool;
 
         public List<Color> poolFaction;
 
@@ -121,6 +121,15 @@ namespace AntsFlow
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem, Action onCompleteAction = null)
         {
+            if (grainPool.IsMaxCapacity())
+            {
+                return null;
+            }
+            else
+            {
+                grainPool.AddGrain(washingMachineItem.number);
+            }
+
             WashingMachineSlot washingMachineSlot = GetAvailableWashingMachineSlot();
 
             // if (washingMachineSlot == null)
@@ -1132,9 +1141,15 @@ namespace AntsFlow
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
 
-            for (int i = 0; i < ChickenManager.Ins.allFactions.Count; i++)
+            ChickenManager.Ins.CheckChickensStuck();
+
+            for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
             {
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, ChickenManager.Ins.allFactions[i], 1);
+                BaseChicken chicken = ChickenManager.Ins.chickens[i];
+
+                bool isBlocked = chicken.isStuck;
+
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : 1);
             }
 
             // foreach (var item in sortedPoolFaction)
@@ -1188,7 +1203,7 @@ namespace AntsFlow
         private float GetLevelProgress()
         {
             return 0;
-            
+
             int numDoneTile = TileManager.Ins.tiles.Count(tile => tile.isDone);
 
             return numDoneTile / (float)totalTile;
