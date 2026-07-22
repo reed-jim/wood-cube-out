@@ -170,14 +170,16 @@ namespace AntsFlow
             averagePos /= inst.nodes.Count;
             averagePos.z = -5f;
 
+            averagePos += new Vector3(0, 0.05f, 0);
+
             GameObject visual = Instantiate(prefab, averagePos, Quaternion.Euler(0, 0, inst.config.rotationAngle));
             visual.name = "HardPixel_Bg_" + inst.config.id;
 
             float cellWidth = GamePersistentVariable.tileDistance.x > 0 ? GamePersistentVariable.tileDistance.x : GamePersistentVariable.tileMapScaleFactor;
             float cellHeight = GamePersistentVariable.tileDistance.y > 0 ? GamePersistentVariable.tileDistance.y : GamePersistentVariable.tileMapScaleFactor;
 
-            float width = inst.config.numCols * cellWidth * 1.01f;
-            float height = inst.config.numRows * cellHeight * 1.1f;
+            float width = inst.config.numCols * cellWidth * inst.config.scaleWidth;
+            float height = inst.config.numRows * cellHeight * inst.config.scaleHeight;
 
             RectTransform rectTransform = visual.GetComponent<RectTransform>();
             if (rectTransform != null)
