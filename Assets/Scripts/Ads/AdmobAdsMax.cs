@@ -26,9 +26,9 @@ public class AdmobAdsMax
     private const string MaxSdkKey =
         "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
 
-    private const string InterstitialAdUnitId = "040ac39c872e76f3";
-    private const string RewardedAdUnitId = "1cf078100bda612e";
-    private const string BanerAdUnitId = "b15d9760f47aa099";
+    private const string InterstitialAdUnitId = "040ac39c872e76f3"; // check this
+    private const string RewardedAdUnitId = "1cf078100bda612e"; // check this
+    private const string BanerAdUnitId = "b15d9760f47aa099"; // check this
 #elif UNITY_IOS
     private const string MaxSdkKey =
 "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
@@ -226,7 +226,7 @@ public class AdmobAdsMax
 #if TESTER
     private const string MRecAdUnitId = "6fb959c7b9a69602";
 #elif UNITY_ANDROID
-    private const string MRecAdUnitId = "543735570341644f";
+    private const string MRecAdUnitId = "543735570341644f"; // check this
 #elif UNITY_IOS
     private const string MRecAdUnitId = "09497dfadda02b3d"; // check this
 #endif
@@ -329,12 +329,12 @@ public class AdmobAdsMax
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/1905850868";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/1905850868"; // check this
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2523627104";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2523627104"; // check this
 #endif
 #elif UNITY_IOS
 #if TESTER
@@ -673,6 +673,8 @@ public class AdmobAdsMax
         Debug.Log($"LongTH_ Interstitial - OnInterstitialLoadedEvent ++ {adInfo} \n");
         _isLoading = true;
         GameController.Instance.AnalyticsController.LogInterReady();
+
+        SaferioTracking.TrackAdsInterLoadSuccess();
     }
 
     private void OnInterstitialFailedEvent(string adUnitId, MaxSdk.ErrorInfo errInfo)
@@ -682,6 +684,8 @@ public class AdmobAdsMax
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
         Invoke("RequestInterstitial", 3);
+
+        SaferioTracking.TrackAdsInterLoadFail();
     }
 
     void RefeshCloseAds()
@@ -739,6 +743,8 @@ public class AdmobAdsMax
         Debug.Log("InterstitialAdOpenedEvent");
         _isLoading = false;
         Time.timeScale = 0;
+
+        SaferioTracking.TrackAdsInterShow();
     }
 
     private void MaxSdkCallbacks_OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
@@ -789,6 +795,8 @@ public class AdmobAdsMax
             if (actionIniterClose != null)
                 actionIniterClose();
         }
+
+        SaferioTracking.TrackAdsInterClick();
 
         return true;
     }
@@ -1066,13 +1074,12 @@ public class AdmobAdsMax
 
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdLoadedEvent  ++ {adInfo} \n");
         GameController.Instance.AnalyticsController.LogVideoRewardReady();
+        SaferioTracking.TrackAdsRewardLoad();
     }
 
     private void OnRewardedAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedEvent  ++ {errInfo} \n");
         Invoke("LoadRewardedAd", 15);
         GameController.Instance.AnalyticsController.LogVideoRewardLoadFail(actionWatchVideo.ToString(),
             errInfo.Message.ToString());
@@ -1080,7 +1087,6 @@ public class AdmobAdsMax
 
     private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedToDisplayEvent  ++ {errInfo} ++ {adInfo} \n");
         isVideoDone = false;
 
         //if (IsLoadedInterstitial())
@@ -1092,17 +1098,19 @@ public class AdmobAdsMax
         //    //ConfirmBox.Setup().AddMessageYes(Localization.Get("s_noti"), Localization.Get("s_TryAgain"), () => { });
         //}
         LoadRewardedAd();
+
+        SaferioTracking.TrackAdsInterLoadFail();
     }
 
     private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo} \n");
         isVideoDone = false;
+
+        SaferioTracking.TrackAdsRewardShowSuccess();
     }
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdClickedEvent ++ {adInfo} \n");
         isVideoDone = true;
         GameController.Instance.AnalyticsController.LogClickToVideoReward(actionWatchVideo.ToString());
     }
@@ -1115,7 +1123,6 @@ public class AdmobAdsMax
         //}
 
         // Rewarded ad is hidden. Pre-load the next ad
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDismissedEvent ++ {adInfo} \n");
         _actionClose?.Invoke();
         _actionClose = null;
         if (_actionRewardVideo != null)
@@ -1130,12 +1137,13 @@ public class AdmobAdsMax
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
     {
         // Rewarded ad was displayed and user should receive the reward
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdReceivedRewardEvent ++ {adInfo} ++ {reward} \n");
         isVideoDone = true;
         _actionRewardVideo?.Invoke();
         _actionRewardVideo = null;
         countdownAds = 0;
         GameController.Instance.AnalyticsController.LogVideoRewardShowDone(actionWatchVideo.ToString());
+
+        SaferioTracking.TrackAdsRewardComplete();
     }
 
     private void InitializeRewardedAds()
@@ -1244,6 +1252,8 @@ public class AdmobAdsMax
                       GameController.Instance.useProfile.CurrentLevel.ToString());
             }
         }
+
+        SaferioTracking.TrackAdsRewardClick();
     }
 
     #endregion

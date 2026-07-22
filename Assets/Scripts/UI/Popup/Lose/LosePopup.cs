@@ -128,6 +128,7 @@ public class LosePopup : BasePopup
         GamePersistentVariable.isLevelLost = true;
 
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
+        SaferioTracking.TrackLevelFail(currentLevel.Value, GamePersistentVariable.levelRetryTime);
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
         new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Fail, playDuration, GamePersistentVariable.levelRetryTime).Send();

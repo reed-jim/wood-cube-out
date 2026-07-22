@@ -390,14 +390,17 @@ public class BoosterUI : MonoBehaviour
         breakModeContainerCanvasGroup.alpha = 1;
         localizedDescription.TranslationName = clearOneColorTranslationName;
 
+        GamePersistentVariable.isPreventSelectAntBox = true;
+
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
-        // Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
         Tween.LocalPositionY(breakModeContainer, -breakModeContainer.sizeDelta.y, duration: transitionTime)
         .OnComplete(() =>
         {
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
 
             AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
+
+            GamePersistentVariable.isPreventSelectAntBox = false;
 
             _isInTransition = false;
         });
@@ -465,20 +468,22 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 1);
 
-        // HideBooster();
         breakModeContainer.gameObject.SetActive(true);
         breakModeContainerCanvasGroup.alpha = 1;
         localizedDescription.TranslationName = enableAllAntBoxesTranslationName;
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
 
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
         Tween.LocalPositionY(breakModeContainer, 0, duration: transitionTime)
         .OnComplete(() =>
         {
+            GamePersistentVariable.isPreventSelectAntBox = false;
+
             _isInTransition = false;
         });
 
         WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
-        // WashingMachineManager.Ins.UseMagicBooster();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
 

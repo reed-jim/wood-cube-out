@@ -229,6 +229,11 @@ public class AntBoxLink : MonoBehaviour
 
         if (isDone)
         {
+            for (int i = 0; i < antBoxes.Length; i++)
+            {
+                antBoxes[i].numSlotRequired = 1;
+            }
+
             Unlink();
         }
     }
