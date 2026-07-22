@@ -17,6 +17,10 @@ using static GameEnum;
 
 public class WashingMachineItem : MonoBehaviour
 {
+    #region  Chicken Feed
+    public Vector3 pileCenter;
+    #endregion
+
     public SpriteRenderer lid;
     public SpriteRenderer shadow;
     public SpriteRenderer doubleAntBoxHole;
@@ -202,11 +206,9 @@ public class WashingMachineItem : MonoBehaviour
         busketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
         busketDestination.z = -1;
 
-        Vector3 randomPileCenter;
-
-        randomPileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
-        randomPileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-2, 2);
-        randomPileCenter.z = -1;
+        pileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
+        pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-1, 1);
+        pileCenter.z = -1;
 
         Tween.Position(transform, busketDestination, duration: 0.3f).OnComplete(() =>
         {
@@ -215,8 +217,8 @@ public class WashingMachineItem : MonoBehaviour
             grainPile.transform.SetParent(WashingMachineManager.Ins.grainPool.transform);
             grainPile.transform.position = busketDestination;
 
-            grainPile.SetFaction(faction);
-            grainPile.Pour(randomPileCenter);
+            grainPile.Setup(this);
+            grainPile.Pour(pileCenter);
 
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {

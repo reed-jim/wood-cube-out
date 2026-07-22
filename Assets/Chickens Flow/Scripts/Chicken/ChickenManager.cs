@@ -97,6 +97,7 @@ public class ChickenManager : Singleton<ChickenManager>
             for (int i = 1; i < chickenByColumn[column].Count; i++)
             {
                 BaseChicken frontChicken = chickenByColumn[column][i - 1];
+                BaseChicken currentChicken = chickenByColumn[column][i];
 
                 if (!frontChicken.isEating && !frontChicken.isDone)
                 {
@@ -106,6 +107,10 @@ public class ChickenManager : Singleton<ChickenManager>
                         .ForEach(chicken => chicken.isStuck = true);
 
                     break;
+                }
+                else
+                {
+                    currentChicken.isStuck = false;
                 }
             }
         }

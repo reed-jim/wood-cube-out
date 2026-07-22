@@ -3083,10 +3083,11 @@ MonoBehaviour:
   - {fileID: 1302799476}
   - {fileID: 2024919936}
   - {fileID: 1351706839}
+  grainPool: {fileID: 0}
   poolFaction: []
   difficultyLevel: 0
-  minAntNumberThreshold: 10
-  maxAntNumberThreshold: 35
+  minAntNumberThreshold: 3
+  maxAntNumberThreshold: 8
   difficultyCurve:
     serializedVersion: 2
     m_Curve:
@@ -9427,6 +9428,10 @@ MonoBehaviour:
       numCoverColumn: 0
       numCoverRow: 0
       bossHealth: 0
+    snakeConfig:
+      spawnOrder: 
+      snakeSegmentIndexes: 
+      health: 0
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   nextFreezeAntBoxRequiredNumber: 0

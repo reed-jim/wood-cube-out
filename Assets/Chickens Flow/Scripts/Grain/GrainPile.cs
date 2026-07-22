@@ -11,6 +11,7 @@ public class GrainPile : MonoBehaviour
     #region Grain
     public Grain grainPrefab;
     public List<Grain> grains;
+    public Vector3 pileCenter;
     public float radius = 0.35f;
     public int amount = 50;
     public float dropOffsetY = -3;
@@ -21,11 +22,15 @@ public class GrainPile : MonoBehaviour
     public int remainingNumber;
     #endregion
 
+    public int siblingIndex;
+
     public List<Vector3> positions = new();
 
     void Awake()
     {
         SpawnGrains();
+
+        siblingIndex = transform.GetSiblingIndex();
     }
 
     public void Reset()
@@ -41,6 +46,16 @@ public class GrainPile : MonoBehaviour
         }
     }
 
+    public void Setup(WashingMachineItem grainBusket)
+    {
+        SetFaction(grainBusket.faction);
+
+        totalNumber = grainBusket.number;
+        remainingNumber = totalNumber;
+
+        Reset();
+    }
+
     public void SetFaction(Color faction)
     {
         for (int i = 0; i < amount; i++)
@@ -49,8 +64,6 @@ public class GrainPile : MonoBehaviour
         }
 
         this.faction = faction;
-
-        Reset();
     }
 
     private void SpawnGrains()
@@ -72,7 +85,6 @@ public class GrainPile : MonoBehaviour
         targets.Clear();
 
         Vector3 position;
-        Vector3 initialScale;
 
         for (int i = 0; i < amount; i++)
         {
@@ -85,14 +97,10 @@ public class GrainPile : MonoBehaviour
             targets.Add(pileCenter + offset);
 
             position = pileCenter + offset;
-            position.z = -0.001f * i;
-
-            initialScale = grains[i].transform.localScale;
+            position.z = -0.01f * (siblingIndex + 1f / amount * i);
 
             grains[i].transform.localPosition = Vector3.zero;
-
-            // Tween.Scale(grains[i].transform, initialScale, duration: 0.3f + 0.01f * i);
-            // Tween.Position(grains[i].transform, position, duration: 0.3f + 0.01f * i);
+            grains[i].transform.SetZ(position.z);
 
             Vector3 start = grains[i].transform.localPosition;
             Vector3 end = position;
@@ -109,14 +117,19 @@ public class GrainPile : MonoBehaviour
                 PathType.CatmullRom
             ).SetEase(Ease.InOutSine);
         }
+
+        this.pileCenter = pileCenter;
+        this.pileCenter.z = -0.01f * siblingIndex;
     }
 
     public void BeEaten(BaseChicken chicken, Action onCompleteAction)
     {
-        float progress = 1 - remainingNumber / totalNumber;
-        float nextProgress = 1 - (remainingNumber - 1) / totalNumber;
+        float progress = 1 - (float)remainingNumber / totalNumber;
+        float nextProgress = 1 - (float)(remainingNumber - 1) / totalNumber;
         int startIndex = (int)(progress * grains.Count);
         int endIndex = (int)(nextProgress * grains.Count);
+
+        endIndex = Mathf.Min(endIndex, grains.Count - 1);
 
         for (int i = startIndex; i <= endIndex; i++)
         {

@@ -26,7 +26,7 @@ public class BaseChicken : MonoBehaviour
 
     public void Feed(GrainPile grainPile)
     {
-        Tween.Position(transform, grainPile.transform.position, duration: 0.6f, ease: Ease.Linear)
+        Tween.Position(transform, grainPile.pileCenter.AddZ(-1), duration: 0.6f, ease: Ease.Linear)
         .OnComplete(() =>
         {
             grainPile.BeEaten(this, onCompleteAction: () =>
