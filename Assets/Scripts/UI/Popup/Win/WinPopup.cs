@@ -305,15 +305,15 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
+        x5CoinButton.interactable = false;
+        continueButton.interactable = false;
+
         GameController.Instance.admobAds.ShowVideoReward(
            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
     }
 
     private void OnRewaredAdCompleted()
     {
-        x5CoinButton.interactable = false;
-        continueButton.interactable = false;
-
         CollectCoin(numCoinRewardedAd);
 
         GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinX2Button.position);
@@ -372,11 +372,12 @@ public class WinPopup : BasePopup
 
     private async void TrackLevelWin()
     {
-        SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
+        // SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
         new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime).Send();
         SaferioTracking.LogLevelComplete(currentLevel.Value);
+        SaferioTracking.TrackLevelComplete(currentLevel.Value, (int)playDuration.TotalSeconds);
 
         GamePersistentVariable.levelRetryTime = 0;
 
