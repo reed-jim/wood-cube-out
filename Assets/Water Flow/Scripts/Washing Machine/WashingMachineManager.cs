@@ -164,7 +164,6 @@ namespace AntsFlow
                     washingMachineItem.washingMachineStartSlot.washingMachine = null;
 
                     washingMachineItem.OpenTheBox();
-                    washingMachineItem.PourGrainOur();
 
                     MoveAntBoxTop();
 

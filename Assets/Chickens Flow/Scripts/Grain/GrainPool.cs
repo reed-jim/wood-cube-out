@@ -18,6 +18,8 @@ public class GrainPool : MonoBehaviour
 
     private Tween percentTextTween;
 
+    public int AmountLeft => maxCapacity - currentAmount;
+
     void Awake()
     {
         Reset();

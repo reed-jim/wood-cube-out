@@ -198,8 +198,12 @@ public class WashingMachineItem : MonoBehaviour
     }
 
     #region Chicken Feed
-    public void PourGrainOur(Action<GrainPile> onCompleteAction = null)
+    public void PourGrainOur(out bool isPouringAll, Action<GrainPile> onCompleteAction = null)
     {
+        int maxAddNumber = Mathf.Min(number, WashingMachineManager.Ins.grainPool.AmountLeft);
+
+        isPouringAll = maxAddNumber == number;
+
         Vector3 busketDestination;
 
         busketDestination.x = 0;
@@ -209,6 +213,8 @@ public class WashingMachineItem : MonoBehaviour
         pileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
         pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-1, 1);
         pileCenter.z = -1;
+
+        bool isBusketMoveBack = !isPouringAll;
 
         Tween.Position(transform, busketDestination, duration: 0.3f).OnComplete(() =>
         {
@@ -220,36 +226,28 @@ public class WashingMachineItem : MonoBehaviour
             grainPile.Setup(this);
             grainPile.Pour(pileCenter);
 
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            if (isBusketMoveBack)
             {
                 ChickenManager.Ins.FeedTheChicken(grainPile);
-            });
+            }
+            else
+            {
+                SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+                {
+                    ChickenManager.Ins.FeedTheChicken(grainPile);
+                });
+            }
+
+            number -= maxAddNumber;
+
+            UpdateNumber();
 
             onCompleteAction?.Invoke(grainPile);
         });
 
-        WashingMachineManager.Ins.grainPool.AddGrain(number);
+        WashingMachineManager.Ins.grainPool.AddGrain(maxAddNumber);
     }
     #endregion
-
-    public void MinusClothingPiece()
-    {
-        number--;
-    }
-
-    public void ReceiveClothes(Action onCompleteAction)
-    {
-        numberText.text = $"{number}";
-
-        if (number <= 0)
-        {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
-            {
-                antBoxDoneEvent?.Invoke(this);
-                onCompleteAction?.Invoke();
-            });
-        }
-    }
 
     public void UpdateNumber()
     {
@@ -779,49 +777,41 @@ public class WashingMachineItem : MonoBehaviour
 
     private void OnSelectTrueCompleted()
     {
-        if (washingMachineStartSlot != null)
-        {
-            washingMachineStartSlot.washingMachine = null;
-        }
+        Vector3 initialPosition = transform.position;
 
-        WashingMachineManager.Ins.MoveAntBoxTop();
+        bool isPouringAll = true;
 
-        PourGrainOur(onCompleteAction: grailPile =>
+        PourGrainOur(out isPouringAll, onCompleteAction: grailPile =>
         {
             WashingMachineManager.Ins.grainPool.AddGrainPile(grailPile);
+
+            if (!isPouringAll)
+            {
+                MoveBack();
+            }
         });
+
+        if (isPouringAll)
+        {
+            if (washingMachineStartSlot != null)
+            {
+                washingMachineStartSlot.washingMachine = null;
+            }
+
+            WashingMachineManager.Ins.MoveAntBoxTop();
+        }
 
         SoundManager.Instance.PlaySoundBoxTap();
 
         selectWashingMachineEvent?.Invoke(this);
 
-        // SwitchShadow();
-
-        // WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
-        // {
-
-        // });
-
-        // SoundManager.Instance.PlaySoundBoxTap();
-
-        // this.washingMachineSlot = washingMachineSlot;
-
-        // selectWashingMachineEvent?.Invoke(this);
-    }
-
-    // private void OnTileCompleted(AntsFlow.BaseTile tile)
-    // {
-    //     if (isInSlot)
-    //     {
-    //         CheckAntsPath();
-    //     }
-    // }
-
-    private void OnTileCompleted(AntsFlow.BaseTile tile)
-    {
-        if (isInSlot)
+        void MoveBack()
         {
-            CheckAntsPath();
+            Tween.Position(transform, initialPosition, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                isInSlot = false;
+            });
         }
     }
 
