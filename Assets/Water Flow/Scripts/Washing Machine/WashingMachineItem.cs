@@ -198,7 +198,7 @@ public class WashingMachineItem : MonoBehaviour
     }
 
     #region Chicken Feed
-    public void PourGrainOur()
+    public void PourGrainOur(Action<GrainPile> onCompleteAction = null)
     {
         Vector3 busketDestination;
 
@@ -224,6 +224,8 @@ public class WashingMachineItem : MonoBehaviour
             {
                 ChickenManager.Ins.FeedTheChicken(grainPile);
             });
+
+            onCompleteAction?.Invoke(grainPile);
         });
 
         WashingMachineManager.Ins.grainPool.AddGrain(number);
@@ -784,7 +786,10 @@ public class WashingMachineItem : MonoBehaviour
 
         WashingMachineManager.Ins.MoveAntBoxTop();
 
-        PourGrainOur();
+        PourGrainOur(onCompleteAction: grailPile =>
+        {
+            WashingMachineManager.Ins.grainPool.AddGrainPile(grailPile);
+        });
 
         SoundManager.Instance.PlaySoundBoxTap();
 

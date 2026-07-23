@@ -80,7 +80,7 @@ public class GrainPile : MonoBehaviour
         }
     }
 
-    public void Pour(Vector2 pileCenter)
+    public void Pour(Vector2 pileCenter, Action onCompleteAction = null)
     {
         List<Vector2> targets = new List<Vector2>();
 
@@ -117,7 +117,8 @@ public class GrainPile : MonoBehaviour
                 new[] { mid, end },
                 0.3f + 0.01f * i,
                 PathType.CatmullRom
-            ).SetEase(Ease.InOutSine);
+            ).SetEase(Ease.InOutSine)
+            .OnComplete(() => onCompleteAction?.Invoke());
         }
 
         this.pileCenter = pileCenter;
@@ -126,6 +127,11 @@ public class GrainPile : MonoBehaviour
 
     public void BeEaten(BaseChicken chicken, Action onCompleteAction)
     {
+        if (remainingNumber <= 0)
+        {
+            return;
+        }
+
         float progress = 1 - (float)remainingNumber / totalNumber;
         float nextProgress = 1 - (float)(remainingNumber - 1) / totalNumber;
         int startIndex = (int)(progress * grains.Count);
@@ -167,6 +173,11 @@ public class GrainPile : MonoBehaviour
 
         remainingNumber--;
 
+        if (remainingNumber <= 0)
+        {
+            WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
+        }
+
         WashingMachineManager.Ins.grainPool.AddGrain(-1);
     }
 
@@ -181,6 +192,8 @@ public class GrainPile : MonoBehaviour
         {
             if (!isMoving)
             {
+                Rotate(chicken.transform, grainToBeEaten[index].transform.position - chicken.transform.position);
+
                 chicken.transform.DOMove(grainToBeEaten[index].transform.position.AddZ(-1), duration: 0.1f).SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
@@ -201,5 +214,14 @@ public class GrainPile : MonoBehaviour
         }
 
         onCompleteAction?.Invoke();
+    }
+
+    void Rotate(Transform target, Vector2 direction)
+    {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+        target.rotation = targetRotation;
     }
 }

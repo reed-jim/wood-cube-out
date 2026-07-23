@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
 
 public class GrainPool : MonoBehaviour
 {
+    public List<GrainPile> grainPiles;
+
     public TMP_Text percentText;
     public LazyHealthBar lazyHealthBar;
 
@@ -25,6 +28,29 @@ public class GrainPool : MonoBehaviour
         currentPercent = 0;
 
         UpdatePercent(currentPercent);
+    }
+
+    public void AddGrainPile(GrainPile grainPile)
+    {
+        if (grainPiles == null)
+        {
+            grainPiles = new List<GrainPile>();
+        }
+
+        grainPiles.Add(grainPile);
+    }
+
+    public void RemoveGrainPile(GrainPile grainPile)
+    {
+        grainPiles.Remove(grainPile);
+    }
+
+    public void CheckFeedChickens()
+    {
+        for (int i = 0; i < grainPiles.Count; i++)
+        {
+            ChickenManager.Ins.FeedTheChicken(grainPiles[i]);
+        }
     }
 
     public void AddGrain(int number)
