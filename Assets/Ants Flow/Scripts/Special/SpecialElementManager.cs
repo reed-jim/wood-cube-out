@@ -452,7 +452,7 @@ namespace AntsFlow
         {
             if (manualStart != -1)
             {
-                Color targetColor = ColorUtil.HexToColor("#B04AFD");
+                Color targetColor = ColorUtil.HexToColor("#B792FA");
 
                 for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
                 {

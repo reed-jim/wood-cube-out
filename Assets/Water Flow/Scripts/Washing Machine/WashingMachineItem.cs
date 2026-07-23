@@ -81,6 +81,13 @@ public class WashingMachineItem : MonoBehaviour
         DebugPopup.switchLevelEvent += OnLevelReplayed;
         TileManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
+
+        if (shadow != null)
+        {
+            var localPos = shadow.transform.localPosition;
+            shadow.transform.localPosition = new Vector3(localPos.x, localPos.y, 4f);
+        }
+
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
@@ -92,6 +99,8 @@ public class WashingMachineItem : MonoBehaviour
 
         walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
     }
+
+
 
     protected virtual void OnDestroy()
     {
@@ -158,6 +167,9 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
 
         tilesToMove = new List<AntsFlow.BaseTile>();
+
+        Vector3 pos = transform.position;
+        transform.position = new Vector3(pos.x, pos.y, pos.y * 0.1f);
 
         Setup(washingMachineStartSlot);
 

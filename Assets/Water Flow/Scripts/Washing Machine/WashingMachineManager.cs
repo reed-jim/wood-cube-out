@@ -79,10 +79,71 @@ namespace AntsFlow
             if (Time.frameCount != lastToggleFrame)
             {
                 lastToggleFrame = Time.frameCount;
+
+                // === Check trước: tìm hộp nào sẽ lên hàng đầu (row 0) ===
+                HashSet<WashingMachineItem> boxesMovingToTop = new HashSet<WashingMachineItem>();
+                for (int i = 0; i < washingMachineStartSlots.Count; i++)
+                {
+                    var slot = washingMachineStartSlots[i];
+                    if (slot.row == 0 && slot.washingMachine == null)
+                    {
+                        int x = (int)slot.transform.position.x;
+                        for (int j = i + 1; j < washingMachineStartSlots.Count; j++)
+                        {
+                            var otherSlot = washingMachineStartSlots[j];
+                            if (otherSlot.washingMachine != null
+                                && (int)otherSlot.transform.position.x == x
+                                && !otherSlot.washingMachine.isMoving)
+                            {
+                                boxesMovingToTop.Add(otherSlot.washingMachine);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // === Simulate toggle: check nếu toggle tất cả thì hàng đầu sẽ ra sao ===
+                int numTopBoxesTotal = 0;
+                int numTopOpenCloseBoxes = 0;
+                int numTopOpenCloseWillBeClosed = 0;
+
+                foreach (var slot in washingMachineStartSlots)
+                {
+                    WashingMachineItem box = slot.washingMachine;
+                    if (box == null || box.isInSlot) continue;
+
+                    bool willBeAtTopRow = (slot.row == 0) || boxesMovingToTop.Contains(box);
+                    if (willBeAtTopRow)
+                    {
+                        numTopBoxesTotal++;
+                        if (box.isOpenCloseType)
+                        {
+                            numTopOpenCloseBoxes++;
+                            bool willBeClosedAfterToggle = box.isOpen; // Nếu đang mở thì toggle sẽ thành đóng
+                            if (willBeClosedAfterToggle)
+                            {
+                                numTopOpenCloseWillBeClosed++;
+                            }
+                        }
+                    }
+                }
+
+                // Chỉ áp dụng chống deadlock khi TẤT CẢ hộp ở hàng đầu đều là OpenCloseType và đều sẽ bị đóng
+                bool wouldAllTopBeClosed = (numTopBoxesTotal > 0) 
+                                           && (numTopOpenCloseBoxes == numTopBoxesTotal) 
+                                           && (numTopOpenCloseWillBeClosed == numTopOpenCloseBoxes);
+
+                // === Toggle, nhưng SKIP hộp sẽ lên hàng đầu nếu toggle sẽ gây TH tất cả đóng ===
                 foreach (var startSlot in washingMachineStartSlots)
                 {
                     if (startSlot.washingMachine != null && startSlot.washingMachine.isOpenCloseType)
                     {
+                        // Nếu toggle sẽ gây TH tất cả hàng đầu đều đóng,
+                        // thì ko cho đóng hộp đang ở hàng dưới sắp lên hàng đầu
+                        if (wouldAllTopBeClosed && boxesMovingToTop.Contains(startSlot.washingMachine))
+                        {
+                            continue;
+                        }
                         startSlot.washingMachine.isOpen = !startSlot.washingMachine.isOpen;
                     }
                 }
@@ -334,6 +395,7 @@ namespace AntsFlow
                             {
                                 (washingMachineItem as FreezedAntBox).AssignRequirementNumber();
                             }
+
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
                             washingMachineItem.isMoving = true;
@@ -708,6 +770,7 @@ namespace AntsFlow
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
+            HardPixelManager.Ins.OnBoosterClearTiles(tilesToClear.Count);
             HardPixelManager.Ins.CheckBoosterClear();
 
             void SpawnFakeTile(BaseTile tile, bool isLast)

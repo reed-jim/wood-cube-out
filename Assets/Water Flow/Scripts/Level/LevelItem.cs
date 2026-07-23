@@ -1347,10 +1347,13 @@ public class HardPixelConfig : ISerializationCallbackReceiver
     public int numCols;
     public int requiredEatCount;
     public GameObject prefab;
+    public int prefabIndex;
     public bool isShowText;
     public float rotationAngle;
     public float scaleWidth = 1.01f;
     public float scaleHeight = 1.055f;
+    public float offsetX;
+    public float offsetY;
 
     public HardPixelConfig()
     {

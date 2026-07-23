@@ -159,7 +159,17 @@ namespace AntsFlow
 
         private void CreateRegionBackgroundVisual(HardPixelInstance inst)
         {
-            GameObject prefab = inst.config.prefab != null ? inst.config.prefab : visualPrefab;
+            GameObject prefab = null;
+            if (visualPrefabs != null && inst.config.prefabIndex >= 0 && inst.config.prefabIndex < visualPrefabs.Count)
+            {
+                prefab = visualPrefabs[inst.config.prefabIndex];
+            }
+
+            if (prefab == null)
+            {
+                prefab = visualPrefab;
+            }
+
             if (prefab == null) return;
 
             Vector3 averagePos = Vector3.zero;
@@ -171,6 +181,7 @@ namespace AntsFlow
             averagePos.z = -5f;
 
             averagePos += new Vector3(0, 0.05f, 0);
+            averagePos += new Vector3(inst.config.offsetX, inst.config.offsetY, 0);
 
             GameObject visual = Instantiate(prefab, averagePos, Quaternion.Euler(0, 0, inst.config.rotationAngle));
             visual.name = "HardPixel_Bg_" + inst.config.id;
@@ -333,6 +344,26 @@ namespace AntsFlow
 
             CheckAndOpenCompletedGroups();
             CheckBoosterClear();
+        }
+
+        public void OnBoosterClearTiles(int count)
+        {
+            if (idToRemainingEatCount == null || idToRemainingEatCount.Count == 0)
+            {
+                return;
+            }
+
+            List<int> idsToDecrement = idToRemainingEatCount.Keys.ToList();
+            foreach (int id in idsToDecrement)
+            {
+                if (idToRemainingEatCount[id] > 0)
+                {
+                    idToRemainingEatCount[id] = Mathf.Max(0, idToRemainingEatCount[id] - count);
+                    UpdateVisualText(id);
+                }
+            }
+
+            CheckAndOpenCompletedGroups();
         }
 
         public void CheckBoosterClear()
