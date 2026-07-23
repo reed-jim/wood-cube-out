@@ -168,9 +168,6 @@ public class WashingMachineItem : MonoBehaviour
 
         tilesToMove = new List<AntsFlow.BaseTile>();
 
-        Vector3 pos = transform.position;
-        transform.position = new Vector3(pos.x, pos.y, pos.y * 0.1f);
-
         Setup(washingMachineStartSlot);
 
         isMoving = false;
@@ -215,6 +212,12 @@ public class WashingMachineItem : MonoBehaviour
         isDisable = !(washingMachineStartSlot.row == 0);
 
         numberText.alpha = isDisable ? 0.2f : 1;
+
+        // Apply Z logic based on row for correct sorting, even when reused from pool
+        // Using a 3f multiplier ensures a difference of 3 between rows.
+        // If row 1 has Z = 0, its base (Z=-2) will be overlapped by row 0 (Z=-3).
+        float zOffset = washingMachineStartSlot.row * 3f - 3f;
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
     }
 
     public void MinusClothingPiece()
