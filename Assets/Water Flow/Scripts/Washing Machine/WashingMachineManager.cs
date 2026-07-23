@@ -400,7 +400,10 @@ namespace AntsFlow
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
                             washingMachineItem.isMoving = true;
                             washingMachineItem.Setup(washingMachineStartSlot);
-                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
+                            // Giữ đúng layer Z theo hàng (không ghi đè thành -1 như trước,
+                            // vì đó là lý do box sau khi lên hàng bị sai layer / không đè đúng).
+                            float rowZ = WashingMachineItem.GetRowZOffset(washingMachineStartSlot.row);
+                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(rowZ), duration: 0.3f)
                             .OnComplete(() =>
                             {
                                 washingMachineItem.isMoving = false;

@@ -213,11 +213,21 @@ public class WashingMachineItem : MonoBehaviour
 
         numberText.alpha = isDisable ? 0.2f : 1;
 
-        // Apply Z logic based on row for correct sorting, even when reused from pool
-        // Using a 3f multiplier ensures a difference of 3 between rows.
-        // If row 1 has Z = 0, its base (Z=-2) will be overlapped by row 0 (Z=-3).
-        float zOffset = washingMachineStartSlot.row * 3f - 3f;
+        // Xếp layer theo hàng bằng trục Z. z càng nhỏ => càng nổi lên trên.
+        // Hàng dưới (row index lớn) cần nổi lên => z nhỏ hơn.
+        float zOffset = GetRowZOffset(washingMachineStartSlot.row);
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
+    }
+
+    // Camera ở z = -10, near clip 0.3 => mặt near ≈ -9.7. Giữ z box đủ nhỏ để không bị cắt.
+    // Slot mỗi hàng tăng z +0.1, offset này giảm -1.8 => khoảng cách thực giữa 2 hàng ~1.7.
+    // Cần > độ sâu lớp cửa đã rút gọn (~1.5) để cửa hàng trên không tràn xuống hàng dưới.
+    // Hàng sâu nhất (row 3) ~ -5.4 (vẫn trước mặt near).
+    public const float rowZSeparation = 1.8f;
+
+    public static float GetRowZOffset(int row)
+    {
+        return -row * rowZSeparation;
     }
 
     public void MinusClothingPiece()
@@ -434,7 +444,7 @@ public class WashingMachineItem : MonoBehaviour
         });
     }
 
-    public void TemporarilyEnable()
+    public virtual void TemporarilyEnable()
     {
         if (isDisable)
         {
