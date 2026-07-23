@@ -204,7 +204,7 @@ public class WashingMachineItem : MonoBehaviour
 
         busketDestination.x = 0;
         busketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
-        busketDestination.z = -1;
+        busketDestination.z = -9;
 
         pileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
         pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-1, 1);

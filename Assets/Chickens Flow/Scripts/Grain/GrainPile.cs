@@ -31,8 +31,6 @@ public class GrainPile : MonoBehaviour
     void Awake()
     {
         SpawnGrains();
-
-        siblingIndex = transform.GetSiblingIndex();
     }
 
     public void Reset()
@@ -88,6 +86,8 @@ public class GrainPile : MonoBehaviour
 
         Vector3 position;
 
+        siblingIndex = transform.GetSiblingIndex();
+
         for (int i = 0; i < amount; i++)
         {
             // Random point inside a circle
@@ -99,7 +99,7 @@ public class GrainPile : MonoBehaviour
             targets.Add(pileCenter + offset);
 
             position = pileCenter + offset;
-            position.z = -0.01f * (siblingIndex + 1f / amount * (amount - i));
+            position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
             grains[i].transform.localPosition = Vector3.zero;
             grains[i].transform.SetZ(position.z);
@@ -112,6 +112,8 @@ public class GrainPile : MonoBehaviour
                 end.x > 0 ? 1 : -1,   // sideways variation
                 UnityEngine.Random.Range(2f, 3f),    // arc height
                 0f);
+
+            mid.z = end.z;
 
             grains[i].transform.DOPath(
                 new[] { mid, end },
@@ -197,10 +199,12 @@ public class GrainPile : MonoBehaviour
                 chicken.transform.DOMove(grainToBeEaten[index].transform.position.AddZ(-1), duration: 0.1f).SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
-                    grainToBeEaten[index].transform.DOScale(0, duration: 0.1f).OnComplete(() =>
-                    {
-                        grainToBeEaten[index].gameObject.SetActive(false);
-                    });
+                    // grainToBeEaten[index].transform.DOScale(0, duration: 0.1f).OnComplete(() =>
+                    // {
+                    //     grainToBeEaten[index].gameObject.SetActive(false);
+                    // });
+
+                    grainToBeEaten[index].gameObject.SetActive(false);
 
                     index++;
 

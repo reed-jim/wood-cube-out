@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class ChickenManager : Singleton<ChickenManager>
 {
     public List<BaseChicken> chickens;
+    public List<WaitingChickenSlot> waitingChickenSlots;
     public Dictionary<int, List<BaseChicken>> chickenByColumn;
     public Dictionary<int, List<WaitingChickenSlot>> slotByColumn;
 
@@ -24,6 +27,10 @@ public class ChickenManager : Singleton<ChickenManager>
 
         Vector3 position;
 
+        waitingChickenSlots = new List<WaitingChickenSlot>();
+
+        float radius = 0.1f;
+
         for (int i = 0; i < numRow; i++)
         {
             for (int j = 0; j < numColumn; j++)
@@ -34,29 +41,31 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 if (distance == 0)
                 {
-                    distance = 1.15f * chicken.Size;
+                    distance = 0.82f * chicken.Size;
                 }
 
                 position.x = (j - numColumn / 2f + 0.5f * (i % 2)) * distance;
                 position.y = 5 + i * distance;
-                position.z = -1;
+                position.z = -1 - 0.01f * (numRow - i);
 
                 chicken.transform.position = position;
+                chicken.transform.position = chicken.transform.position.AddX(UnityEngine.Random.Range(-radius, radius));
 
                 chicken.SetFaction(allFactions[index]);
                 chicken.column = j;
                 chicken.row = i;
 
-                WaitingChickenSlot waitingChickenSlot = ObjectPoolingEverything.GetFromPool<WaitingChickenSlot>(GameConstants.waitingChickenSlot);
-
-                waitingChickenSlot.transform.position = position;
+                WaitingChickenSlot waitingChickenSlot = new WaitingChickenSlot();
 
                 waitingChickenSlot.column = j;
                 waitingChickenSlot.row = i;
+                waitingChickenSlot.position = position;
                 waitingChickenSlot.chicken = chicken;
+
                 chicken.waitingChickenSlot = waitingChickenSlot;
 
                 chickens.Add(chicken);
+                waitingChickenSlots.Add(waitingChickenSlot);
             }
         }
 
@@ -147,6 +156,11 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         foreach (var column in slotByColumn.Values)
         {
+            if (column[0].chicken != null)
+            {
+                continue;
+            }
+
             int emptyIndex = 0;
 
             for (int i = 0; i < column.Count; i++)
@@ -158,8 +172,9 @@ public class ChickenManager : Singleton<ChickenManager>
                         column[emptyIndex].chicken = column[i].chicken;
                         column[i].chicken = null;
 
-                        column[emptyIndex].chicken.transform.position =
-                            column[emptyIndex].transform.position;
+                        column[emptyIndex].chicken.waitingChickenSlot = column[emptyIndex];
+
+                        Tween.Position(column[emptyIndex].chicken.transform, column[emptyIndex].GetRandomPosition(), duration: Random.Range(0.3f, 0.6f));
                     }
 
                     emptyIndex++;

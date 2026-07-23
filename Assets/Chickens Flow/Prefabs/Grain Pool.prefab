@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 650128298125637010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -6, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe86088af0fdc0c4d9b12e5c76ca83ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrainPool
+  grainPiles: []
   percentText: {fileID: 2825323857134729662}
   lazyHealthBar: {fileID: 4771344771341006873}
   maxCapacity: 100
@@ -85,7 +86,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -4}
   m_SizeDelta: {x: 3, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3543746263078692651
@@ -301,11 +302,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2325717558551518174, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 6
+      value: 6.4
       objectReference: {fileID: 0}
     - target: {fileID: 2325717558551518174, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.48
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 3008434954984974065, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_Name
@@ -313,19 +314,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4312982210994526704, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 6
+      value: 6.4
       objectReference: {fileID: 0}
     - target: {fileID: 4312982210994526704, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.48
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4982650298244741307, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 6
+      value: 6.4
       objectReference: {fileID: 0}
     - target: {fileID: 4982650298244741307, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.48
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 8874171858884536095, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_Pivot.x
@@ -393,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8874171858884536095, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 8874171858884536095, guid: 43f87b373f94bf84bb9e017b09528458, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

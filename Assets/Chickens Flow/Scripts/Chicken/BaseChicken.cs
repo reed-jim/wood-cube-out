@@ -1,3 +1,4 @@
+using System.Collections;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -10,6 +11,7 @@ public class BaseChicken : MonoBehaviour
 {
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimation;
+    public GameObject eyes;
 
     public Color faction;
     public int column;
@@ -23,6 +25,11 @@ public class BaseChicken : MonoBehaviour
     public WaitingChickenSlot waitingChickenSlot;
 
     public float Size => transform.localScale.x;
+
+    void Start()
+    {
+        StartCoroutine(PlayEyesAnim());
+    }
 
     public void SetFaction(Color faction)
     {
@@ -58,6 +65,8 @@ public class BaseChicken : MonoBehaviour
                     outPosition.x -= 10;
                 }
 
+                Rotate(outPosition - transform.position);
+
                 Tween.Position(transform, outPosition, duration: 0.8f, ease: Ease.Linear).OnComplete(() =>
                 {
                     gameObject.SetActive(false);
@@ -81,6 +90,20 @@ public class BaseChicken : MonoBehaviour
     public void PlayIdleAnim()
     {
         PlayForCycles(skeletonAnimation, idleAnimation, 3, null, false);
+    }
+
+    public IEnumerator PlayEyesAnim()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(Random.Range(0.5f, 1f));
+
+        yield return new WaitForSeconds(Random.Range(0, 1f));
+
+        while (true)
+        {
+            eyes.gameObject.SetActive(!eyes.gameObject.activeSelf);
+
+            yield return waitForSeconds;
+        }
     }
 
     public static void PlayForCycles(
