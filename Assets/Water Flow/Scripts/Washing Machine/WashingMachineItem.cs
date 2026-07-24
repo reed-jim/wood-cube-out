@@ -81,6 +81,13 @@ public class WashingMachineItem : MonoBehaviour
         DebugPopup.switchLevelEvent += OnLevelReplayed;
         TileManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
+
+        if (shadow != null)
+        {
+            var localPos = shadow.transform.localPosition;
+            shadow.transform.localPosition = new Vector3(localPos.x, localPos.y, 4f);
+        }
+
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
@@ -92,6 +99,8 @@ public class WashingMachineItem : MonoBehaviour
 
         walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
     }
+
+
 
     protected virtual void OnDestroy()
     {
@@ -203,6 +212,33 @@ public class WashingMachineItem : MonoBehaviour
         isDisable = !(washingMachineStartSlot.row == 0);
 
         numberText.alpha = isDisable ? 0.2f : 1;
+
+        bool isTut = false;
+        if (WashingMachineManager.Ins != null)
+        {
+            if (WashingMachineManager.Ins.levelItem != null && WashingMachineManager.Ins.levelItem.isTutorialLevel)
+            {
+                isTut = true;
+            }
+            else if (WashingMachineManager.Ins.currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+            {
+                isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(WashingMachineManager.Ins.currentLevel.Value);
+            }
+        }
+
+        if (!isTut)
+        {
+            float zOffset = GetRowZOffset(washingMachineStartSlot.row);
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
+        }
+
+    }
+
+    public const float rowZSeparation = 1.8f;
+
+    public static float GetRowZOffset(int row)
+    {
+        return -row * rowZSeparation;
     }
 
     public void MinusClothingPiece()
@@ -312,7 +348,12 @@ public class WashingMachineItem : MonoBehaviour
     {
         isMoving = true;
         Vector3 initialScale = transform.localScale;
-        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
+        if (skeletonAnimation != null)
+        {
+            var localPos = skeletonAnimation.transform.localPosition;
+            skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
+        }
+        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
         Tween.ScaleY(transform, 1.3f * transform.localScale.y, duration: 0.2f)
         .OnComplete(() =>
         {
@@ -323,6 +364,12 @@ public class WashingMachineItem : MonoBehaviour
             {
                 isMoving = false;
                 washingMachineStartSlot.washingMachine = null;
+
+                if (skeletonAnimation != null)
+                {
+                    var localPos = skeletonAnimation.transform.localPosition;
+                    skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, 0f);
+                }
 
                 OpenTheBox();
                 CheckAntsPath();
@@ -366,6 +413,8 @@ public class WashingMachineItem : MonoBehaviour
         {
             HapticFeedback.MediumFeedback();
         }
+
+        WashingMachineManager.Ins.CheckLoseLevel();
     }
 
     public void TurnOnWarningLoseAnimation()
@@ -387,6 +436,19 @@ public class WashingMachineItem : MonoBehaviour
         }
 
         isPlayingWarningLoseAnimation = false;
+    }
+
+    public bool IsActuallyStuck()
+    {
+        if (isDisable) return false;
+        if (isMagnet)
+        {
+            return isStucking || number <= 0;
+        }
+        else
+        {
+            return remainingNumber > 0 && isStucking;
+        }
     }
 
     private void SwitchShadow()
@@ -419,7 +481,7 @@ public class WashingMachineItem : MonoBehaviour
         });
     }
 
-    public void TemporarilyEnable()
+    public virtual void TemporarilyEnable()
     {
         if (isDisable)
         {

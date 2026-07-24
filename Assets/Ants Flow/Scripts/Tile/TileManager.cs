@@ -96,6 +96,12 @@ namespace AntsFlow
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
             // BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
+
+            if (shadowTilemap != null)
+            {
+                var localPos = shadowTilemap.transform.localPosition;
+                shadowTilemap.transform.localPosition = new Vector3(localPos.x, localPos.y, 4f);
+            }
         }
 
         void OnDestroy()
