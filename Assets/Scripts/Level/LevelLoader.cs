@@ -468,21 +468,11 @@ namespace NamPhuThuy.GamePlay
 
             List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
 
-            GameObject tileComponentHolder = new GameObject();
-            tileComponentHolder.name = "tileComponentHolder";
-
             for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
             {
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
 
-                // AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
-                // AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
-                // AntsFlow.BaseTile tile = tileComponentHolder.AddComponent<AntsFlow.BaseTile>();
                 AntsFlow.BaseTile tile = new AntsFlow.BaseTile();
-
-                // tile.transform.SetParent(levelTransform);
-
-                // tile.transform.position = antLevelDataItem.position;
 
                 tile.tileName = i;
                 tile.position = antLevelDataItem.position;
@@ -496,80 +486,7 @@ namespace NamPhuThuy.GamePlay
             GamePersistentVariable.numColumn = antLevelData.levelItemData.numColumn;
             GamePersistentVariable.numRow = antLevelData.levelItemData.numRow;
 
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                AntsFlow.BaseTile tile = tiles[i];
-                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
-
-                int upIndex = i + GamePersistentVariable.numColumn;
-                int downIndex = i - GamePersistentVariable.numColumn;
-                int rightIndex = i + 1;
-                int leftIndex = i - 1;
-
-                int topRightIndex = i + GamePersistentVariable.numColumn + 1;
-                int topLeftIndex = i + GamePersistentVariable.numColumn - 1;
-                int downRightIndex = i - GamePersistentVariable.numColumn + 1;
-                int downLeftIndex = i - GamePersistentVariable.numColumn - 1;
-
-                tile.blockages = new List<AntsFlow.BaseTile>();
-
-                if (upIndex < tiles.Count)
-                {
-                    tile.blockages.Add(tiles[upIndex]);
-                }
-                if (downIndex >= 0)
-                {
-                    tile.blockages.Add(tiles[downIndex]);
-                }
-                if (rightIndex < tiles.Count && SameRow(i, rightIndex, GamePersistentVariable.numColumn))
-                {
-                    tile.blockages.Add(tiles[rightIndex]);
-                }
-                if (leftIndex >= 0 && SameRow(i, leftIndex, GamePersistentVariable.numColumn))
-                {
-                    tile.blockages.Add(tiles[leftIndex]);
-                }
-
-                // if (topRightIndex >= 0 && topRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
-                // {
-                //     tile.blockages.Add(tiles[topRightIndex]);
-                // }
-                // if (topLeftIndex >= 0 && topLeftIndex < tiles.Count && i - 1 >= 0)
-                // {
-                //     tile.blockages.Add(tiles[topLeftIndex]);
-                // }
-                // if (downRightIndex >= 0 && downRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
-                // {
-                //     tile.blockages.Add(tiles[downRightIndex]);
-                // }
-                // if (downLeftIndex >= 0 && downLeftIndex < tiles.Count && i - 1 >= 0)
-                // {
-                //     tile.blockages.Add(tiles[downLeftIndex]);
-                // }
-
-                // tile.blockages = new List<AntsFlow.BaseTile>();
-
-                // for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
-                // {
-                //     int index = antLevelDataItem.blockageIndexes[j];
-
-                //     tile.blockages.Add(tiles[index]);
-                // }
-            }
-
-            // // Clear in case this is rebuilt
-            // foreach (var tile in tiles)
-            // {
-            //     tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
-            // }
-
-            // // Build reverse references
-            // foreach (var tile in tiles)
-            // {
-            //     foreach (var blockage in tile.blockages)
-            //     {
-            //         blockage.blockedByMe.Add(tile);
-            //     }
+            spawnedLevelItem.tiles = tiles;
 
             return spawnedLevelItem;
 

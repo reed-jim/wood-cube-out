@@ -210,13 +210,14 @@ public class WashingMachineItem : MonoBehaviour
 
         Vector3 bucketDestination;
 
-        bucketDestination.x = 0;
         bucketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
         bucketDestination.z = -9;
 
         pileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
         pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-1, 1);
         pileCenter.z = -1;
+
+        bucketDestination.x = pileCenter.x;
 
         bool isBucketMoveBack = !isPouringAll;
 

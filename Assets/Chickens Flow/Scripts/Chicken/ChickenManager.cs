@@ -15,15 +15,10 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public List<Color> allFactions;
 
-    public void GenerateAllFactions()
+    public void SpawnFirstChickens(AntsFlow.LevelItem levelItem)
     {
-        allFactions = FactionMapper.Ins.GetRandomFactions(8, 500);
-    }
-
-    public void SpawnFirstChickens()
-    {
-        int numColumn = 21;
-        int numRow = 21;
+        int numColumn = levelItem.numColumn;
+        int numRow = levelItem.numRow;
         float distance = 0;
 
         Vector3 position;
@@ -32,42 +27,53 @@ public class ChickenManager : Singleton<ChickenManager>
 
         float radius = 0.1f;
 
-        for (int i = 0; i < numRow; i++)
+        allFactions = levelItem.poolFaction;
+
+        int column;
+        int row;
+
+        for (int i = 0; i < levelItem.tiles.Count; i++)
         {
-            for (int j = 0; j < numColumn; j++)
+            int index = i;
+
+            BaseChicken chicken = ObjectPoolingEverything.GetFromPool<BaseChicken>(GameConstants.chicken);
+
+            if (distance == 0)
             {
-                int index = j + i * numColumn;
-
-                BaseChicken chicken = ObjectPoolingEverything.GetFromPool<BaseChicken>(GameConstants.chicken);
-
-                if (distance == 0)
-                {
-                    distance = 0.82f * chicken.Size;
-                }
-
-                position.x = (j - numColumn / 2f + 0.5f * (i % 2)) * distance;
-                position.y = 5 + i * distance;
-                position.z = -1 - 0.01f * (numRow - i);
-
-                chicken.transform.position = position;
-                chicken.transform.position = chicken.transform.position.AddX(UnityEngine.Random.Range(-radius, radius));
-
-                chicken.SetFaction(allFactions[index]);
-                chicken.column = j;
-                chicken.row = i;
-
-                WaitingChickenSlot waitingChickenSlot = new WaitingChickenSlot();
-
-                waitingChickenSlot.column = j;
-                waitingChickenSlot.row = i;
-                waitingChickenSlot.position = position;
-                waitingChickenSlot.chicken = chicken;
-
-                chicken.waitingChickenSlot = waitingChickenSlot;
-
-                chickens.Add(chicken);
-                waitingChickenSlots.Add(waitingChickenSlot);
+                // distance = 0.8f * chicken.Size;
+                distance = 0.75f;
             }
+
+            column = (int)levelItem.tiles[index].position.x;
+            column -= numColumn / 2;
+            row = (int)levelItem.tiles[index].position.y;
+
+            // position.x = (j - numColumn / 2f + 0.5f * (i % 2)) * distance;
+            // position.y = 5 + i * distance;
+            position = levelItem.tiles[index].position;
+            position.x -= numColumn / 2;
+            position.y += 5;
+            position *= distance;
+            position.z = -1 - 0.01f * (numRow - i);
+
+            chicken.transform.position = position;
+            chicken.transform.position = chicken.transform.position.AddX(UnityEngine.Random.Range(-radius, radius));
+
+            chicken.SetFaction(allFactions[index]);
+            chicken.column = column;
+            chicken.row = row;
+
+            WaitingChickenSlot waitingChickenSlot = new WaitingChickenSlot();
+
+            waitingChickenSlot.column = chicken.column;
+            waitingChickenSlot.row = chicken.row;
+            waitingChickenSlot.position = position;
+            waitingChickenSlot.chicken = chicken;
+
+            chicken.waitingChickenSlot = waitingChickenSlot;
+
+            chickens.Add(chicken);
+            waitingChickenSlots.Add(waitingChickenSlot);
         }
 
         chickenByColumn = new Dictionary<int, List<BaseChicken>>();

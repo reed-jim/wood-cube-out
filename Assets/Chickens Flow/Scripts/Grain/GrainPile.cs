@@ -80,10 +80,6 @@ public class GrainPile : MonoBehaviour
 
     public void Pour(Vector2 pileCenter, Action onFirstGrainHitGround = null, Action onCompleteAction = null)
     {
-        List<Vector2> targets = new List<Vector2>();
-
-        targets.Clear();
-
         Vector3 position;
 
         siblingIndex = transform.GetSiblingIndex();
@@ -101,59 +97,100 @@ public class GrainPile : MonoBehaviour
             grains[i].transform.localPosition = position;
         }
 
-        for (int i = 0; i < grains.Count; i++)
+        int numColumn = 5;
+        int numRow = grains.Count / numColumn;
+
+        Vector2 offset;
+
+        for (int i = 0; i < numRow; i++)
         {
-            int index = i;
-
-            // Random point inside a circle
-            Vector2 offset = UnityEngine.Random.insideUnitCircle * 3 * radius;
-
-            // Optional: flatten the top of the pile
-            offset.y *= 0.6f;
-
-            float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
-
-            targets.Add(pileCenter + offset);
-
-            position = pileCenter + offset;
-            position.z = transform.position.z + zOffset;
-
-            // grains[i].transform.localPosition = Vector3.zero;
-            // grains[i].transform.SetZ(position.z);
-
-            Vector3 start = grains[i].transform.localPosition;
-            Vector3 end = position;
-
-            Vector3 mid = Vector3.Lerp(start, end, 0.5f);
-            mid += new Vector3(
-                end.x > 0 ? 1 : -1,   // sideways variation
-                UnityEngine.Random.Range(2f, 3f),    // arc height
-                0f);
-
-            mid.z = end.z;
-
-            grains[i].transform.DOPath(
-                new[] { mid, end },
-                0.3f + 0.01f * i,
-                PathType.CatmullRom
-            ).SetEase(Ease.InOutSine)
-            .OnComplete(() =>
+            for (int j = 0; j < numColumn; j++)
             {
-                grains[index].transform.SetZ(zOffset);
+                int index = j + numColumn * i;
 
-                if (index == 0)
+                float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+                offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
+                offset.y = 0.3f * radius * i - 1;
+
+                position = pileCenter + offset;
+                position.z = transform.position.z + zOffset;
+
+                Vector3 start = grains[index].transform.localPosition;
+                Vector3 end = position;
+
+                grains[index].transform.DOMove(end, duration: 0.3f + 0.01f * i).SetEase(Ease.InOutSine)
+                .OnComplete(() =>
                 {
-                    ChickenManager.Ins.FeedTheChicken(this);
+                    grains[index].transform.SetZ(zOffset);
 
-                    onFirstGrainHitGround?.Invoke();
-                }
+                    if (index == 0)
+                    {
+                        ChickenManager.Ins.FeedTheChicken(this);
 
-                if (index == grains.Count - 1)
-                {
-                    onCompleteAction?.Invoke();
-                }
-            });
+                        onFirstGrainHitGround?.Invoke();
+                    }
+
+                    if (index == grains.Count - 1)
+                    {
+                        onCompleteAction?.Invoke();
+                    }
+                });
+            }
         }
+
+        // for (int i = 0; i < grains.Count; i++)
+        // {
+        //     int index = i;
+
+        //     // Random point inside a circle
+        //     Vector2 offset = UnityEngine.Random.insideUnitCircle * 3 * radius;
+
+        //     // Optional: flatten the top of the pile
+        //     offset.y *= 0.6f;
+
+        //     float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+        //     position = pileCenter + offset;
+        //     position.z = transform.position.z + zOffset;
+
+        //     // grains[i].transform.localPosition = Vector3.zero;
+        //     // grains[i].transform.SetZ(position.z);
+
+        //     Vector3 start = grains[i].transform.localPosition;
+        //     Vector3 end = position;
+
+        //     Vector3 mid = Vector3.Lerp(start, end, 0.5f);
+        //     mid += new Vector3(
+        //         end.x > 0 ? 1 : -1,   // sideways variation
+        //         UnityEngine.Random.Range(2f, 3f),    // arc height
+        //         0f);
+
+        //     mid.z = end.z;
+
+        //     // grains[i].transform.DOPath(
+        //     //     new[] { mid, end },
+        //     //     0.3f + 0.01f * i,
+        //     //     PathType.CatmullRom
+        //     // ).SetEase(Ease.InOutSine)
+        //     grains[i].transform.DOMove(end, duration: 0.3f + 0.01f * i).SetEase(Ease.InOutSine)
+        //     .OnComplete(() =>
+        //     {
+        //         grains[index].transform.SetZ(zOffset);
+
+        //         if (index == 0)
+        //         {
+        //             ChickenManager.Ins.FeedTheChicken(this);
+
+        //             onFirstGrainHitGround?.Invoke();
+        //         }
+
+        //         if (index == grains.Count - 1)
+        //         {
+        //             onCompleteAction?.Invoke();
+        //         }
+        //     });
+        // }
 
         this.pileCenter = pileCenter;
         this.pileCenter.z = -0.01f * siblingIndex;
