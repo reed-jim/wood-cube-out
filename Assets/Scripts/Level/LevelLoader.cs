@@ -466,9 +466,6 @@ namespace NamPhuThuy.GamePlay
 
             List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
 
-            GameObject tileComponentHolder = new GameObject();
-            tileComponentHolder.name = "tileComponentHolder";
-
             for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
             {
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];

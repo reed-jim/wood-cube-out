@@ -75,6 +75,7 @@ public class BoosterUI : MonoBehaviour
     private bool _isInTransition;
     private bool _isEnable;
     private bool _isPreventShowWarningPopup;
+    private bool _isInBoosterEnableAllBoxesMode;
 
     private Vector2 _initialBoosterContainerPosition;
     private Vector2 _initialAddMoreScrewPortButtonPosition;
@@ -408,10 +409,22 @@ public class BoosterUI : MonoBehaviour
 
     private void ConfirmUseEnableAllBoxes(WashingMachineItem antBox)
     {
+        if (!_isInBoosterEnableAllBoxesMode)
+        {
+            return;
+        }
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
+
         if (breakModeContainer.gameObject.activeInHierarchy)
         {
-            DisableBreakObjectMode();
+            DisableBreakObjectMode(onCompleteAction: () =>
+            {
+                GamePersistentVariable.isPreventSelectAntBox = false;
+            });
         }
+
+        _isInBoosterEnableAllBoxesMode = false;
     }
 
     private void ConfirmClearOneColor(Color faction)
@@ -421,14 +434,21 @@ public class BoosterUI : MonoBehaviour
         DisableBreakObjectMode();
     }
 
-    private void DisableBreakObjectMode()
+    private void DisableBreakObjectMode(Action onCompleteAction = null)
     {
         Tween.LocalPositionY(boosterContainer, _initialBoosterContainerPosition.y, duration: transitionTime);
         SaferioTween.AlphaHide(breakModeContainerCanvasGroup, onCompleteAction: () =>
         {
             breakModeContainer.localPosition = breakModeContainer.localPosition.ChangeY(-canvasSizeOfReferenceDevice.Value.y);
             breakModeContainer.gameObject.SetActive(false);
+
+            onCompleteAction?.Invoke();
         });
+    }
+
+    private void DisableBreakObjectMode()
+    {
+        DisableBreakObjectMode(onCompleteAction: null);
     }
 
     private void DisableBreakObjectModeEarly()
@@ -493,6 +513,8 @@ public class BoosterUI : MonoBehaviour
         });
 
         GamePersistentVariable.boosterMode = BoosterMode.EnableAllAntBoxes;
+
+        _isInBoosterEnableAllBoxesMode = true;
     }
 
     private bool IsBoosterAvailable(int boosterIndex)
