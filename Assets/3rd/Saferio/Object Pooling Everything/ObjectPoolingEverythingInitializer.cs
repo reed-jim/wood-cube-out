@@ -172,11 +172,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<BaseAnt>(GameConstants.warriorAnt, warriorAntPrefab, 50);
         RegisterPool<BaseAnt>(GameConstants.snakeAnt, snakeAntPrefab, 50);
         RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
-        RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
-        RegisterPool<KeyAntBox>(GameConstants.keyAntBox, keyAntBoxPrefab, 5);
-        RegisterPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink, magnetAntBoxLink, 5);
-        RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 20);
-        RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 20);
+        RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 30);
+        RegisterPool<KeyAntBox>(GameConstants.keyAntBox, keyAntBoxPrefab, 10);
+        RegisterPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink, magnetAntBoxLink, 30);
+        RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 30);
+        RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 30);
         RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);
         RegisterPool<OpenCloseAntBox>(GameConstants.openCloseAntBox, openCloseAntBoxPrefab, 20);
         RegisterPool<SnakeAntBox>(GameConstants.snakeAntBox, snakeAntBoxPrefab, 5);
