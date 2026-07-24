@@ -210,6 +210,14 @@ namespace AntsFlow
 
             Hide();
             RevealHiddenTiles();
+            try
+            {
+                SpecialElementManager.Ins.spawningTileBox.SpawnNewTileAt(this);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
 
             tileMoveToAntEvent?.Invoke(this);
         }

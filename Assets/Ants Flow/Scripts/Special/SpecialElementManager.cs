@@ -686,9 +686,11 @@ namespace AntsFlow
                 {
                     WashingMachineManager.Ins.poolFaction.Add(item.faction);
                 }
+
+                spawningTileBox.spawnNumberOfFactions.Add(item.faction, item.number);
             }
 
-            NextSpawningTileBoxes();
+            spawningTileBox.NextSpawningTileBoxes();
         }
 
         public void SetupBossArea(BossAreaConfig bossAreaConfig)
@@ -755,28 +757,28 @@ namespace AntsFlow
             snake.Setup(snakeConfig);
         }
 
-        public bool NextSpawningTileBoxes()
-        {
-            if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
-            {
-                return false;
-            }
+        // public bool NextSpawningTileBoxes()
+        // {
+        //     if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
+        //     {
+        //         return false;
+        //     }
 
-            Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
+        //     Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
 
-            SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[0];
+        //     SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[0];
 
-            specialElementConfig.spawningTileBoxConfig.items.RemoveAt(0);
+        //     specialElementConfig.spawningTileBoxConfig.items.RemoveAt(0);
 
-            spawningTileBox.gameObject.SetActive(true);
+        //     spawningTileBox.gameObject.SetActive(true);
 
-            spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.35f * screenSizeWorld.y, -5);
+        //     spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.35f * screenSizeWorld.y, -5);
 
-            spawningTileBox.Setup(item.faction, item.number);
+        //     spawningTileBox.Setup(item.faction, item.number);
 
-            SaferioTween.ScaleUpWithPunch(spawningTileBox.transform, 1.1f);
+        //     SaferioTween.ScaleUpWithPunch(spawningTileBox.transform, 1.1f);
 
-            return true;
-        }
+        //     return true;
+        // }
     }
 }
