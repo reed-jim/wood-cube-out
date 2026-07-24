@@ -497,14 +497,17 @@ namespace AntsFlow
                     washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
 
                     washingMachineItem.transform.localPosition = new Vector3(0, -5, 0);
-                    Tween.LocalPositionY(washingMachineItem.transform, 0, duration: 0.3f);
+                    Tween.LocalPositionY(washingMachineItem.transform, 0, duration: 0.3f).OnComplete(() =>
+                    {
+                        SpecialElementManager.Ins.SpawnAntBoxLink();
+                        SpecialElementManager.Ins.SpawnMagnetAntBoxLink();
+                    });
 
                     washingMachineStartSlot.washingMachine = washingMachineItem;
 
                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
-                    SpecialElementManager.Ins.SpawnAntBoxLink();
-                    SpecialElementManager.Ins.SpawnMagnetAntBoxLink();
+
 
                     break;
                 }
