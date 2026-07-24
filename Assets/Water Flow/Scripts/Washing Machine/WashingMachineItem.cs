@@ -19,6 +19,7 @@ public class WashingMachineItem : MonoBehaviour
 {
     #region  Chicken Feed
     public Vector3 pileCenter;
+    public SpriteRenderer colorPreview;
     #endregion
 
     public SpriteRenderer lid;
@@ -136,6 +137,7 @@ public class WashingMachineItem : MonoBehaviour
         transform.SetParent(washingMachineStartSlot.transform);
         transform.localPosition = new Vector3(0, 0, -1);
         transform.localScale = Vector3.zero;
+        transform.rotation = Quaternion.identity;
         numberText.transform.localPosition = numberTextInitialPosition;
 
         Tween.Scale(transform, 2.3f, duration: 0.3f)
@@ -154,6 +156,8 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
+
+        colorPreview.color = faction;
 
         tilesToMove = new List<AntsFlow.BaseTile>();
 
@@ -204,39 +208,38 @@ public class WashingMachineItem : MonoBehaviour
 
         isPouringAll = maxAddNumber == number;
 
-        Vector3 busketDestination;
+        Vector3 bucketDestination;
 
-        busketDestination.x = 0;
-        busketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
-        busketDestination.z = -9;
+        bucketDestination.x = 0;
+        bucketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
+        bucketDestination.z = -9;
 
         pileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
         pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-1, 1);
         pileCenter.z = -1;
 
-        bool isBusketMoveBack = !isPouringAll;
+        bool isBucketMoveBack = !isPouringAll;
 
-        Tween.Position(transform, busketDestination, duration: 0.3f).OnComplete(() =>
+        Tween.Position(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
         {
             GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
 
             grainPile.transform.SetParent(WashingMachineManager.Ins.grainPool.transform);
-            grainPile.transform.position = busketDestination;
+            grainPile.transform.position = bucketDestination;
 
             grainPile.Setup(this);
-            grainPile.Pour(pileCenter);
 
-            if (isBusketMoveBack)
+            Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
+            .OnComplete(() =>
             {
-                ChickenManager.Ins.FeedTheChicken(grainPile);
-            }
-            else
-            {
-                SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+                grainPile.Pour(pileCenter, onFirstGrainHitGround: () =>
                 {
-                    ChickenManager.Ins.FeedTheChicken(grainPile);
+                    if (!isBucketMoveBack)
+                    {
+                        SaferioTween.ScaleDownWithPunch(transform);
+                    }
                 });
-            }
+            });
 
             number -= maxAddNumber;
 
@@ -253,15 +256,15 @@ public class WashingMachineItem : MonoBehaviour
     {
         numberText.text = $"{number}";
 
-        if (number <= 0)
-        {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
-            {
-                antBoxDoneEvent?.Invoke(this);
-            });
+        // if (number <= 0)
+        // {
+        //     SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+        //     {
+        //         antBoxDoneEvent?.Invoke(this);
+        //     });
 
-            SoundManager.Instance.PlaySoundSlotDone();
-        }
+        //     SoundManager.Instance.PlaySoundSlotDone();
+        // }
     }
 
     public virtual void Select()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -154,6 +155,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void MoveChickensDown()
     {
+        Dictionary<Transform, Vector3> newDestinationOfChickens = new Dictionary<Transform, Vector3>();
+
         foreach (var column in slotByColumn.Values)
         {
             if (column[0].chicken != null)
@@ -174,12 +177,31 @@ public class ChickenManager : Singleton<ChickenManager>
 
                         column[emptyIndex].chicken.waitingChickenSlot = column[emptyIndex];
 
-                        Tween.Position(column[emptyIndex].chicken.transform, column[emptyIndex].GetRandomPosition(), duration: Random.Range(0.3f, 0.6f));
+                        newDestinationOfChickens.Add(column[emptyIndex].chicken.transform, column[emptyIndex].GetRandomPosition());
                     }
 
                     emptyIndex++;
                 }
             }
+        }
+
+        int count = newDestinationOfChickens.Count;
+        int index = 0;
+
+        foreach (Transform chicken in newDestinationOfChickens.Keys)
+        {
+            bool isLast = index == count - 1;
+
+            Tween.Position(chicken, newDestinationOfChickens[chicken], duration: Random.Range(0.3f, 0.6f))
+            .OnComplete(() =>
+            {
+                if (isLast)
+                {
+                    WashingMachineManager.Ins.grainPool.CheckFeedChickens();
+                }
+            });
+
+            index++;
         }
     }
 

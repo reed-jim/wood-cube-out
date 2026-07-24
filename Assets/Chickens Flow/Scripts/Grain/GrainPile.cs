@@ -78,7 +78,7 @@ public class GrainPile : MonoBehaviour
         }
     }
 
-    public void Pour(Vector2 pileCenter, Action onCompleteAction = null)
+    public void Pour(Vector2 pileCenter, Action onFirstGrainHitGround = null, Action onCompleteAction = null)
     {
         List<Vector2> targets = new List<Vector2>();
 
@@ -88,21 +88,38 @@ public class GrainPile : MonoBehaviour
 
         siblingIndex = transform.GetSiblingIndex();
 
-        for (int i = 0; i < amount; i++)
+        Vector2[] positionsInFilledCircle = SunflowerDistribution(grains.Count, radius);
+
+        for (int i = 0; i < grains.Count; i++)
         {
+            float angle = i * Mathf.PI * 2f / grains.Count;
+
+            position = positionsInFilledCircle[i];
+            position.y += 0.5f;
+            position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+            grains[i].transform.localPosition = position;
+        }
+
+        for (int i = 0; i < grains.Count; i++)
+        {
+            int index = i;
+
             // Random point inside a circle
-            Vector2 offset = UnityEngine.Random.insideUnitCircle * radius;
+            Vector2 offset = UnityEngine.Random.insideUnitCircle * 3 * radius;
 
             // Optional: flatten the top of the pile
             offset.y *= 0.6f;
 
+            float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
             targets.Add(pileCenter + offset);
 
             position = pileCenter + offset;
-            position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
+            position.z = transform.position.z + zOffset;
 
-            grains[i].transform.localPosition = Vector3.zero;
-            grains[i].transform.SetZ(position.z);
+            // grains[i].transform.localPosition = Vector3.zero;
+            // grains[i].transform.SetZ(position.z);
 
             Vector3 start = grains[i].transform.localPosition;
             Vector3 end = position;
@@ -120,7 +137,22 @@ public class GrainPile : MonoBehaviour
                 0.3f + 0.01f * i,
                 PathType.CatmullRom
             ).SetEase(Ease.InOutSine)
-            .OnComplete(() => onCompleteAction?.Invoke());
+            .OnComplete(() =>
+            {
+                grains[index].transform.SetZ(zOffset);
+
+                if (index == 0)
+                {
+                    ChickenManager.Ins.FeedTheChicken(this);
+
+                    onFirstGrainHitGround?.Invoke();
+                }
+
+                if (index == grains.Count - 1)
+                {
+                    onCompleteAction?.Invoke();
+                }
+            });
         }
 
         this.pileCenter = pileCenter;
@@ -228,4 +260,26 @@ public class GrainPile : MonoBehaviour
 
         target.rotation = targetRotation;
     }
+
+    #region Util
+    public static Vector2[] SunflowerDistribution(int count, float radius)
+    {
+        Vector2[] points = new Vector2[count];
+
+        float goldenAngle = Mathf.PI * (3f - Mathf.Sqrt(5f)); // ~2.39996 rad
+
+        for (int i = 0; i < count; i++)
+        {
+            float r = radius * Mathf.Sqrt((i + 0.5f) / count);
+            float theta = i * goldenAngle;
+
+            points[i] = new Vector2(
+                Mathf.Cos(theta) * r,
+                Mathf.Sin(theta) * r
+            );
+        }
+
+        return points;
+    }
+    #endregion
 }
