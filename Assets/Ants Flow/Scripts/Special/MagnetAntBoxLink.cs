@@ -140,8 +140,8 @@ public class MagnetAntBoxLink : MonoBehaviour
             return;
         }
 
-        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-2f);
-        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-2f);
+        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-3f);
+        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-3f);
 
         Vector3 startPos;
         Vector3 endPos;
