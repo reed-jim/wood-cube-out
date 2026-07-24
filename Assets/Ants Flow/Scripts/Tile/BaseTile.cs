@@ -135,7 +135,10 @@ namespace AntsFlow
             isMovedToAnt = false;
             isDone = false;
 
-            path.Clear();
+            if (path != null)
+            {
+                path.Clear();
+            }
         }
 
         public void SetNoLongerBlockages()
