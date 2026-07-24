@@ -128,6 +128,8 @@ namespace AntsFlow
 
             tile.isSpawningAgain = true;
             tile.Reset();
+            SoundManager.Instance.PlaySound(GameConstants.spawnPopSound);
+
 
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 

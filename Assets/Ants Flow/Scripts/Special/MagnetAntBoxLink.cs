@@ -22,6 +22,7 @@ public class MagnetAntBoxLink : MonoBehaviour
 
     private bool[] boxCountReachedZero;
     private Coroutine animationCoroutine;
+    private AudioSource linkSound;
 
     void Awake()
     {
@@ -37,6 +38,21 @@ public class MagnetAntBoxLink : MonoBehaviour
         WashingMachineItem.antBoxDoneEvent -= OnAntBoxDone;
         WashingMachineItem.magnetBoxCountZeroEvent -= OnMagnetBoxCountZero;
         WashingMachineItem.moveUpEvent -= OnAntBoxMovingUp;
+
+        if (linkSound != null && SoundManager.Instance != null)
+        {
+            SoundManager.Instance.StopSoundMagnetLink(linkSound);
+            linkSound = null;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (linkSound != null && SoundManager.Instance != null)
+        {
+            SoundManager.Instance.StopSoundMagnetLink(linkSound);
+            linkSound = null;
+        }
     }
 
     public void Setup(WashingMachineItem[] antBoxes)
@@ -113,6 +129,14 @@ public class MagnetAntBoxLink : MonoBehaviour
         int currentFrame = 0;
         while (true)
         {
+            if (GamePersistentVariable.isLoadingLevel)
+            {
+                if (linkSound == null && SoundManager.Instance != null)
+                {
+                    linkSound = SoundManager.Instance.PlaySoundMagnetLink();
+
+                }
+            }
             linkImage.sprite = linkSprites[currentFrame];
             currentFrame = (currentFrame + 1) % linkSprites.Length;
             yield return new WaitForSeconds(frameRate);
@@ -215,6 +239,12 @@ public class MagnetAntBoxLink : MonoBehaviour
         {
             StopCoroutine(animationCoroutine);
             animationCoroutine = null;
+        }
+
+        if (linkSound != null && SoundManager.Instance != null)
+        {
+            SoundManager.Instance.StopSoundMagnetLink(linkSound);
+            linkSound = null;
         }
 
         // Reset trạng thái magnet cho tất cả box trước khi deactivate

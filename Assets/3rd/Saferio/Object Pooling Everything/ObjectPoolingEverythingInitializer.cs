@@ -46,6 +46,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject iceBreakSoundPrefab;
     [SerializeField] private GameObject boosterAppearSoundPrefab;
 
+    [SerializeField] private GameObject openBoxSoundPrefab;
+    [SerializeField] private GameObject closeBoxSoundPrefab;
+    [SerializeField] private GameObject linkMagnetSoundPrefab;
+    [SerializeField] private GameObject spawnPopSoundPrefab;
+
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
     [SerializeField] private GameObject looseScrewFxPrefab;
@@ -153,6 +158,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.startFreezeSound, startFreezeSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.iceBreakSound, iceBreakSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.boosterAppearSound, boosterAppearSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.openBoxSound, openBoxSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.closeBoxSound, closeBoxSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.linkMagnetSound, linkMagnetSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.spawnPopSound, spawnPopSoundPrefab, 8);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);

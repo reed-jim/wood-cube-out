@@ -367,6 +367,23 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
+    public AudioSource PlaySoundMagnetLink()
+    {
+        if (!_isEnableGameSound) { return null; }
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.linkMagnetSound);
+        sound.loop = true;
+        sound.Play();
+        return sound;
+    }
+
+    public void StopSoundMagnetLink(AudioSource sound)
+    {
+        if (sound != null)
+        {
+            sound.Stop();
+            sound.gameObject.SetActive(false);
+        }
+    }
 
     public void PlaySound(string soundKey)
     {

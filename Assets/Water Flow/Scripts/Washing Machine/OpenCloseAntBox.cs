@@ -224,6 +224,8 @@ public class OpenCloseAntBox : WashingMachineItem
             skeletonOpenClose.gameObject.SetActive(true);
             if (!string.IsNullOrEmpty(doorOpenAnimation))
             {
+                SoundManager.Instance.PlaySound(GameConstants.openBoxSound);
+
                 doorOpenEntry = skeletonOpenClose.AnimationState.SetAnimation(0, doorOpenAnimation, false);
                 if (doorOpenEntry != null)
                 {
@@ -378,6 +380,8 @@ public class OpenCloseAntBox : WashingMachineItem
 
     private void OnDoorCloseComplete(TrackEntry trackEntry)
     {
+        SoundManager.Instance.PlaySound(GameConstants.closeBoxSound);
+
         if (doorCloseEntry != null)
         {
             doorCloseEntry.Complete -= OnDoorCloseComplete;

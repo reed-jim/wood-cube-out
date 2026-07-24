@@ -149,7 +149,7 @@ public class SceneTransition : MonoBehaviour
 
         progressBarFill.fillAmount = 0;
         loadingText.text = "0%";
-
+        GamePersistentVariable.isLoadingLevel = false;
         loadLevelInProgressCanvasGroup.alpha = 0;
         SaferioTween.AlphaShow(loadLevelInProgressCanvasGroup);
     }
@@ -181,7 +181,7 @@ public class SceneTransition : MonoBehaviour
         }
 
         // ShowBlackScreenImmediately();
-
+        GamePersistentVariable.isLoadingLevel = false;
         progressBarFill.fillAmount = 0;
         loadingText.text = "0%";
 
@@ -247,11 +247,15 @@ public class SceneTransition : MonoBehaviour
         {
             minWaitTime = 4.5f;
         }
-
         _tweens.Add(Tween.Custom(0, 1, duration: minWaitTime, onValueChange: newVal =>
         {
+
             progressBarFill.fillAmount = newVal;
             loadingText.text = $"{(int)(newVal * 100)}%";
+        }).OnComplete(() =>
+        {
+            GamePersistentVariable.isLoadingLevel = true;
+
         }));
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
