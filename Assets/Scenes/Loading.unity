@@ -1035,6 +1035,79 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1088737236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1088737237}
+  - component: {fileID: 1088737238}
+  m_Layer: 0
+  m_Name: Spawn Tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1088737237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088737236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1582410616}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1088737238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088737236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawn Tiles
+    Object: {fileID: 0}
+  - Language: French
+    Text: Tuiles d'apparition
+    Object: {fileID: 0}
+  - Language: German
+    Text: Spawn-Kacheln
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Tessere di generazione
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30DD\u30FC\u30F3\u30BF\u30A4\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD0C0\uC77C \\u200b\\u200b\uC0DD\uC131"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Ladrilhos de Gera\xE7\xE3o"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043B\u0438\u0442\u043A\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u044F"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Azulejos de generaci\xF3n"
+    Object: {fileID: 0}
 --- !u!1001 &1139578509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1498,6 +1571,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2075701467}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1088737237}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
 --- !u!4 &1582410616 stripped

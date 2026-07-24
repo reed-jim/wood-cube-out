@@ -48,12 +48,6 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         tutorialCanvasGroup.gameObject.SetActive(true);
         blackOverlay.gameObject.SetActive(true);
 
-        initialGameplayCanvasSortingOrder = gameplayCanvas.sortingOrder;
-
-        gameplayCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        gameplayCanvas.worldCamera = mainCamera;
-        gameplayCanvas.sortingOrder = 0;
-
         SaferioTween.AlphaShow(blackOverlay, 230f / 255);
 
         toSelectWashingMachines = washingMachines.Take(2).ToList();
@@ -153,9 +147,6 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         {
             tutorialHand.gameObject.SetActive(false);
         });
-
-        gameplayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        gameplayCanvas.sortingOrder = initialGameplayCanvasSortingOrder;
 
         GamePersistentVariable.isPreventSelectAntBox = false;
         GamePersistentVariable.isTutorialLevelOneDone = true;
