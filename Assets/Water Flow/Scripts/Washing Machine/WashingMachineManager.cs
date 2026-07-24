@@ -726,62 +726,10 @@ namespace AntsFlow
             List<BaseTile> tilesToClear = TileManager.Ins.tiles
                 .Where(tile => !tile.isDone && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
 
-            // Remove blockages
-            for (int i = 0; i < tilesToClear.Count; i++)
-            {
-                BaseTile tileToClear = tilesToClear[i];
-
-                // if (tileToClear.blockages.Count < 4)
-                // {
-                //     tileToClear.SetNoLongerBlockages();
-                // }
-                // else
-                // {
-                //     // // bool isAllPrepareCompleteTile = tileToClear.blockages.All(item => item.isPrepareComplete);
-                //     // int numPrepareCompleteTileNearby = tileToClear.blockages.Count(item => item.isPrepareComplete);
-
-                //     // if (numPrepareCompleteTileNearby >= 2)
-                //     // {
-                //     //     tileToClear.SetNoLongerBlockages();
-                //     // }
-                //     // else
-                //     // {
-                //     //     tileToClear.isPrepareComplete = true;
-                //     // }
-
-                //     for (int j = 0; j < tileToClear.blockages.Count; j++)
-                //     {
-                //         if (tileToClear.blockages[j].isPrepareComplete)
-                //         {
-                //             tileToClear.blockages[j].ActualComplete();
-                //         }
-                //     }
-
-                //     tileToClear.isPrepareComplete = true;
-                // }
-            }
-
-            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
-            // {
-            //     BaseTile tile = TileManager.Ins.tiles[i];
-
-            //     if (!tile.isAntApproaching && !tilesToClear.Contains(tile))
-            //     {
-            //         List<BaseTile> toRemoveBlockages = tilesToClear.Where(item => tile.blockages.Contains(item)).ToList();
-
-            //         for (int j = 0; j < toRemoveBlockages.Count; j++)
-            //         {
-            //             tile.blockages.Remove(toRemoveBlockages[j]);
-            //             // tile.actualBlockages.Remove(toRemoveBlockages[j]);
-            //         }
-            //     }
-            // }
-
             for (int i = 0; i < tilesToClear.Count; i++)
             {
                 bool isLast = i == tilesToClear.Count - 1;
 
-                // tilesToClear[i].Complete();
                 tilesToClear[i].isDone = true;
                 tilesToClear[i].Hide();
                 tilesToClear[i].HideObstacle();
@@ -794,6 +742,15 @@ namespace AntsFlow
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
             HardPixelManager.Ins.OnBoosterClearTiles(tilesToClear.Count);
             HardPixelManager.Ins.CheckBoosterClear();
+
+            try
+            {
+                SpecialElementManager.Ins.spawningTileBox.ClearSpawningTileBoxesOnUsingClearOneColorBooster(tilesToClear);
+            }
+            catch (System.Exception)
+            {
+
+            }
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
             {
@@ -824,37 +781,6 @@ namespace AntsFlow
                     });
                 });
             }
-
-            // for (int i = 0; i < tilesToClear.Count; i++)
-            // {
-            //     int index = i;
-
-            //     BaseTile tile = tilesToClear[i];
-
-            //     Vector3 initialPosition = tile.transform.position;
-
-            //     tile.isAntApproaching = true;
-
-            //     Tween.ScaleY(tile.transform, 1.6f, duration: 0.3f);
-            //     Tween.PositionY(tile.transform, tile.transform.position.y + 1.6f, duration: 0.3f)
-            //     .OnComplete(() =>
-            //     {
-            //         Tween.ScaleY(tile.transform, 1, duration: 0.15f);
-            //         Tween.Position(tile.transform, initialPosition, duration: 0.15f)
-            //         .OnComplete(() =>
-            //         {
-            //             SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
-            //             {
-            //                 tile.Complete();
-            //             });
-
-            //             if (index == tilesToClear.Count - 1)
-            //             {
-            //                 SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
-            //             }
-            //         });
-            //     });
-            // }
         }
 
         private void AdjustAntBoxAfterClearingOneColor(List<BaseTile> tilesToClear)

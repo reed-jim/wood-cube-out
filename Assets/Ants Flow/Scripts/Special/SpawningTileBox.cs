@@ -176,19 +176,6 @@ namespace AntsFlow
                 return;
             }
 
-            if (tile.isSpawningAgain)
-            {
-                return;
-            }
-
-            if (faction == tile.Faction)
-            {
-                totalNumber--;
-                numberLeft--;
-
-                UpdateNumberText();
-            }
-
             for (int i = 0; i < spawnNumberOfFactions.Count; i++)
             {
                 KeyValuePair<Color, int> spawnNumberOfFaction = spawnNumberOfFactions.ElementAt(i);
@@ -204,6 +191,61 @@ namespace AntsFlow
                         break;
                     }
                 }
+            }
+        }
+
+        public void ClearSpawningTileBoxesOnUsingClearOneColorBooster(List<BaseTile> tilesToClear)
+        {
+            if (!gameObject.activeSelf)
+            {
+                return;
+            }
+
+            for (int i = 0; i < tilesToClear.Count; i++)
+            {
+                BaseTile tileToClear = tilesToClear[i];
+
+                if (tileToClear.isSpawningAgain)
+                {
+                    continue;
+                }
+
+                if (faction == tileToClear.Faction)
+                {
+                    totalNumber--;
+                    numberLeft--;
+                }
+
+                for (int j = 0; j < spawnNumberOfFactions.Count; j++)
+                {
+                    KeyValuePair<Color, int> spawnNumberOfFaction = spawnNumberOfFactions.ElementAt(j);
+
+                    if (spawnNumberOfFaction.Key == tileToClear.Faction)
+                    {
+                        spawnNumberOfFactions[tileToClear.Faction]--;
+
+                        if (spawnNumberOfFactions[tileToClear.Faction] <= 0)
+                        {
+                            spawnNumberOfFactions.Remove(tileToClear.Faction);
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (numberLeft <= 0)
+            {
+                bool isNextBoxAvailable = NextSpawningTileBoxes();
+
+                if (!isNextBoxAvailable)
+                {
+                    SaferioTween.ScaleDownWithPunch(transform);
+                }
+            }
+            else
+            {
+                UpdateNumberText();
             }
         }
     }
