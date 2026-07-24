@@ -678,6 +678,8 @@ namespace AntsFlow
                 return;
             }
 
+            spawningTileBox.spawnNumberOfFactions = new Dictionary<Color, int>();
+
             for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
             {
                 SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];

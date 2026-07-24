@@ -396,9 +396,6 @@ namespace AntsFlow
                 reversePath.AddRange(path);
                 reversePath.Reverse();
 
-                Vector3 tilePosition = path[^1].initialPosition;
-                Vector3 corner = tilePosition.x > 0 ? TileManager.Ins.bottomRightMostNode.initialPosition : TileManager.Ins.bottomLeftMostNode.initialPosition;
-
                 int firstBottomMostPointIndex = 0;
 
                 if (isCenter)

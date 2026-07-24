@@ -189,13 +189,20 @@ namespace AntsFlow
                 UpdateNumberText();
             }
 
-            for (int i = 1; i < spawnNumberOfFactions.Count; i++)
+            for (int i = 0; i < spawnNumberOfFactions.Count; i++)
             {
                 KeyValuePair<Color, int> spawnNumberOfFaction = spawnNumberOfFactions.ElementAt(i);
 
                 if (spawnNumberOfFaction.Key == tile.Faction)
                 {
                     spawnNumberOfFactions[tile.Faction]--;
+
+                    if (spawnNumberOfFactions[tile.Faction] <= 0)
+                    {
+                        spawnNumberOfFactions.Remove(tile.Faction);
+
+                        break;
+                    }
                 }
             }
         }
