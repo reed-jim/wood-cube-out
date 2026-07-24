@@ -12499,14 +12499,26 @@ MonoBehaviour:
   isTutorialSpeedUpLevel: 0
   isUseManualFactionSetupForFirstAntBoxes: 0
   levelFactionConfig:
-    items: []
-  difficulty: 2
+    items:
+    - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+      numAnt: 15
+    - faction: {r: 1, g: 0.37254903, b: 0.14117648, a: 1}
+      numAnt: 20
+    - faction: {r: 0.88235295, g: 0.654902, b: 0.9882353, a: 1}
+      numAnt: 30
+    - faction: {r: 0.9960785, g: 0.86666673, b: 0.011764706, a: 1}
+      numAnt: 40
+    - faction: {r: 1, g: 0.37254903, b: 0.14117648, a: 1}
+      numAnt: 30
+    - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+      numAnt: 30
+  difficulty: 1
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
   specialElementConfig:
     hiddenAntBoxConfig:
-      spawnOrder: 07000000080000000b0000000d000000100000001500000016000000190000001a0000001d0000001f00000021000000280000002c00000032000000
+      spawnOrder: 07000000090000000b0000000d000000100000001500000016000000190000001b0000001d0000001f00000021000000280000002c000000260000002e0000003200000035000000380000003c000000
     frozenAntBoxConfig:
       spawnOrder: 
       numBoxToUnfreeze: 
