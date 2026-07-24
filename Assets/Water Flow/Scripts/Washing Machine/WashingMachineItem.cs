@@ -213,16 +213,27 @@ public class WashingMachineItem : MonoBehaviour
 
         numberText.alpha = isDisable ? 0.2f : 1;
 
-        // Xếp layer theo hàng bằng trục Z. z càng nhỏ => càng nổi lên trên.
-        // Hàng dưới (row index lớn) cần nổi lên => z nhỏ hơn.
-        float zOffset = GetRowZOffset(washingMachineStartSlot.row);
-        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
+        bool isTut = false;
+        if (WashingMachineManager.Ins != null)
+        {
+            if (WashingMachineManager.Ins.levelItem != null && WashingMachineManager.Ins.levelItem.isTutorialLevel)
+            {
+                isTut = true;
+            }
+            else if (WashingMachineManager.Ins.currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+            {
+                isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(WashingMachineManager.Ins.currentLevel.Value);
+            }
+        }
+
+        if (!isTut)
+        {
+            float zOffset = GetRowZOffset(washingMachineStartSlot.row);
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
+        }
+
     }
 
-    // Camera ở z = -10, near clip 0.3 => mặt near ≈ -9.7. Giữ z box đủ nhỏ để không bị cắt.
-    // Slot mỗi hàng tăng z +0.1, offset này giảm -1.8 => khoảng cách thực giữa 2 hàng ~1.7.
-    // Cần > độ sâu lớp cửa đã rút gọn (~1.5) để cửa hàng trên không tràn xuống hàng dưới.
-    // Hàng sâu nhất (row 3) ~ -5.4 (vẫn trước mặt near).
     public const float rowZSeparation = 1.8f;
 
     public static float GetRowZOffset(int row)
@@ -337,7 +348,12 @@ public class WashingMachineItem : MonoBehaviour
     {
         isMoving = true;
         Vector3 initialScale = transform.localScale;
-        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
+        if (skeletonAnimation != null)
+        {
+            var localPos = skeletonAnimation.transform.localPosition;
+            skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
+        }
+        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
         Tween.ScaleY(transform, 1.3f * transform.localScale.y, duration: 0.2f)
         .OnComplete(() =>
         {
@@ -348,6 +364,12 @@ public class WashingMachineItem : MonoBehaviour
             {
                 isMoving = false;
                 washingMachineStartSlot.washingMachine = null;
+
+                if (skeletonAnimation != null)
+                {
+                    var localPos = skeletonAnimation.transform.localPosition;
+                    skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, 0f);
+                }
 
                 OpenTheBox();
                 CheckAntsPath();
@@ -391,6 +413,8 @@ public class WashingMachineItem : MonoBehaviour
         {
             HapticFeedback.MediumFeedback();
         }
+
+        WashingMachineManager.Ins.CheckLoseLevel();
     }
 
     public void TurnOnWarningLoseAnimation()
@@ -412,6 +436,19 @@ public class WashingMachineItem : MonoBehaviour
         }
 
         isPlayingWarningLoseAnimation = false;
+    }
+
+    public bool IsActuallyStuck()
+    {
+        if (isDisable) return false;
+        if (isMagnet)
+        {
+            return isStucking || number <= 0;
+        }
+        else
+        {
+            return remainingNumber > 0 && isStucking;
+        }
     }
 
     private void SwitchShadow()

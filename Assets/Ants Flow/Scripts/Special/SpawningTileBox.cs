@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -15,16 +17,22 @@ namespace AntsFlow
         public int totalNumber;
         public int numberLeft;
 
+        public Dictionary<Color, int> spawnNumberOfFactions;
+
         private bool isAnimating;
 
         void Awake()
         {
-            BaseTile.tileMoveToAntEvent += OnTileMoveToAnt;
+            // BaseTile.antStartMoveToTileEvent += OnAntStartMoveToAnt;
+            // BaseTile.tileMoveToAntEvent += OnTileMoveToAnt;
+            BaseTile.tileCompleteEvent += OnTileCompleted;
         }
 
         void OnDestroy()
         {
-            BaseTile.tileMoveToAntEvent -= OnTileMoveToAnt;
+            // BaseTile.antStartMoveToTileEvent -= OnAntStartMoveToAnt;
+            // BaseTile.tileMoveToAntEvent -= OnTileMoveToAnt;
+            BaseTile.tileCompleteEvent -= OnTileCompleted;
         }
 
         public void Setup(Color faction, int totalNumber)
@@ -55,8 +63,59 @@ namespace AntsFlow
             }
         }
 
-        public void OnTileMoveToAnt(BaseTile tile)
+        public bool NextSpawningTileBoxes()
         {
+            if (spawnNumberOfFactions.Count == 0)
+            {
+                return false;
+            }
+
+            Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
+
+            KeyValuePair<Color, int> spawnNumberOfFaction = spawnNumberOfFactions.ElementAt(0);
+
+            spawnNumberOfFactions.Remove(spawnNumberOfFaction.Key);
+
+            gameObject.SetActive(true);
+
+            transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.35f * screenSizeWorld.y, -5);
+
+            Setup(spawnNumberOfFaction.Key, spawnNumberOfFaction.Value);
+
+            SaferioTween.ScaleUpWithPunch(transform, 1.1f);
+
+            return true;
+        }
+
+        public void OnAntStartMoveToAnt(BaseTile tile)
+        {
+            if (!gameObject.activeSelf)
+            {
+                return;
+            }
+
+            if (numberLeft <= 0)
+            {
+                return;
+            }
+
+            if (tile.Faction != faction)
+            {
+                return;
+            }
+
+            tile.Reset();
+
+            numberLeft--;
+        }
+
+        public void SpawnNewTileAt(BaseTile tile)
+        {
+            if (!gameObject.activeSelf)
+            {
+                return;
+            }
+
             if (numberLeft <= 0)
             {
                 return;
@@ -68,6 +127,7 @@ namespace AntsFlow
             }
 
             tile.isSpawningAgain = true;
+            tile.Reset();
 
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
@@ -89,25 +149,9 @@ namespace AntsFlow
             ).SetEase(Ease.Linear)
             .OnComplete(() =>
             {
-                tile.Reset();
                 tile.Show();
 
                 ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
-
-                // float fakeTileScaleY = fakeTile.transform.localScale.y;
-
-                // fakeTile.transform.DOScaleY(1.15f * fakeTileScaleY, duration: 0.2f);
-                // fakeTile.transform.DOMoveY(end.y + 0.15f, 0.2f).OnComplete(() =>
-                // {
-                //     fakeTile.transform.DOScaleY(fakeTileScaleY, duration: 0.2f);
-                //     fakeTile.transform.DOMoveY(end.y, 0.1f).OnComplete(() =>
-                //     {
-                //         tile.Reset();
-                //         tile.Show();
-
-                //         ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
-                //     });
-                // });
             });
 
             numberLeft--;
@@ -116,11 +160,49 @@ namespace AntsFlow
 
             if (numberLeft <= 0)
             {
-                bool isNextBoxAvailable = SpecialElementManager.Ins.NextSpawningTileBoxes();
+                bool isNextBoxAvailable = NextSpawningTileBoxes();
 
                 if (!isNextBoxAvailable)
                 {
                     SaferioTween.ScaleDownWithPunch(transform);
+                }
+            }
+        }
+
+        public void OnTileCompleted(BaseTile tile)
+        {
+            if (!gameObject.activeSelf)
+            {
+                return;
+            }
+
+            if (tile.isSpawningAgain)
+            {
+                return;
+            }
+
+            if (faction == tile.Faction)
+            {
+                totalNumber--;
+                numberLeft--;
+
+                UpdateNumberText();
+            }
+
+            for (int i = 0; i < spawnNumberOfFactions.Count; i++)
+            {
+                KeyValuePair<Color, int> spawnNumberOfFaction = spawnNumberOfFactions.ElementAt(i);
+
+                if (spawnNumberOfFaction.Key == tile.Faction)
+                {
+                    spawnNumberOfFactions[tile.Faction]--;
+
+                    if (spawnNumberOfFactions[tile.Faction] <= 0)
+                    {
+                        spawnNumberOfFactions.Remove(tile.Faction);
+
+                        break;
+                    }
                 }
             }
         }
