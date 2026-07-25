@@ -417,14 +417,14 @@ public class WashingMachineItem : MonoBehaviour
         WashingMachineManager.Ins.CheckLoseLevel();
     }
 
-    public void TurnOnWarningLoseAnimation()
+    public virtual void TurnOnWarningLoseAnimation()
     {
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, true);
 
         isPlayingWarningLoseAnimation = true;
     }
 
-    public void TurnOffWarningLoseAnimation()
+    public virtual void TurnOffWarningLoseAnimation()
     {
         if (isInSlot)
         {
