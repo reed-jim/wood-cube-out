@@ -4580,6 +4580,10 @@ MonoBehaviour:
   startFreezeSoundPrefab: {fileID: 7606835583939712495, guid: db5b0ffd200286f46a26df36cc43d6a3, type: 3}
   iceBreakSoundPrefab: {fileID: 7606835583939712495, guid: 6b6fb74965827734da56b2c47b379873, type: 3}
   boosterAppearSoundPrefab: {fileID: 7606835583939712495, guid: 33a9f735f0f6ee94e9007ec65df7319d, type: 3}
+  openBoxSoundPrefab: {fileID: 7606835583939712495, guid: 4a7618402fbeca843949650723393a0a, type: 3}
+  closeBoxSoundPrefab: {fileID: 7606835583939712495, guid: eb0118a3943a7004d8d7f20bd1b8bb49, type: 3}
+  linkMagnetSoundPrefab: {fileID: 7606835583939712495, guid: c0d2dd589bb6c884c9fb72bc62a9a669, type: 3}
+  spawnPopSoundPrefab: {fileID: 7606835583939712495, guid: 1eb012d391ae03648986d17b204b7147, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
@@ -5924,6 +5928,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Configurar perfil
+    Object: {fileID: 0}
+--- !u!1 &3596877310943232029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8439072589204572968}
+  - component: {fileID: 3255727249873840383}
+  m_Layer: 0
+  m_Name: Hard Tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8439072589204572968
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3596877310943232029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3255727249873840383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3596877310943232029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Hard Tiles
+    Object: {fileID: 0}
+  - Language: French
+    Text: Tuiles dures
+    Object: {fileID: 0}
+  - Language: German
+    Text: Harte Fliesen
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Piastrelle dure
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30CF\u30FC\u30C9\u30BF\u30A4\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2E8\uB2E8\uD55C \uD0C0\uC77C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Ladrilhos Duros
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0422\u0432\u0435\u0440\u0434\u0430\u044F \u043F\u043B\u0438\u0442\u043A\u0430"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Azulejos duros
     Object: {fileID: 0}
 --- !u!1 &3601538918192833633
 GameObject:
@@ -8070,6 +8147,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Borrar agujeros
     Object: {fileID: 0}
+--- !u!1 &4544136504824563666
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2078312484244912260}
+  - component: {fileID: 6098675983564181167}
+  m_Layer: 0
+  m_Name: Spawn Tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2078312484244912260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544136504824563666}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6098675983564181167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544136504824563666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawn Tiles
+    Object: {fileID: 0}
+  - Language: French
+    Text: Tuiles d'apparition
+    Object: {fileID: 0}
+  - Language: German
+    Text: Spawn-Kacheln
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Tessere di generazione
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30DD\u30FC\u30F3\u30BF\u30A4\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD0C0\uC77C \\u200b\\u200b\uC0DD\uC131"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Ladrilhos de Gera\xE7\xE3o"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043B\u0438\u0442\u043A\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u044F"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Azulejos de generaci\xF3n"
+    Object: {fileID: 0}
 --- !u!1 &4544957826969965292
 GameObject:
   m_ObjectHideFlags: 0
@@ -10026,6 +10176,8 @@ Transform:
   - {fileID: 7590003553181876934}
   - {fileID: 6346743566181737125}
   - {fileID: 357129858098490128}
+  - {fileID: 8439072589204572968}
+  - {fileID: 2078312484244912260}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269

@@ -15,6 +15,8 @@ public class SoundManager : MonoBehaviour
     private bool _isEnableGameSound;
     private bool _isEnableGameMusic;
     #endregion
+    
+    public bool IsEnableGameSound => _isEnableGameSound;
 
     void Awake()
     {

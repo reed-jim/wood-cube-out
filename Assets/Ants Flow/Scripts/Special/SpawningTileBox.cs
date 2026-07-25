@@ -78,7 +78,7 @@ namespace AntsFlow
 
             gameObject.SetActive(true);
 
-            transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.4f * screenSizeWorld.y, -5);
+            transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.38f * screenSizeWorld.y, -5);
 
             Setup(spawnNumberOfFaction.Key, spawnNumberOfFaction.Value);
 

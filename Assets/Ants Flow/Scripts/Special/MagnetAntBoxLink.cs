@@ -129,12 +129,19 @@ public class MagnetAntBoxLink : MonoBehaviour
         int currentFrame = 0;
         while (true)
         {
-            if (GamePersistentVariable.isLoadingLevel)
+            if (GamePersistentVariable.isLoadingLevel && SoundManager.Instance != null && SoundManager.Instance.IsEnableGameSound)
             {
-                if (linkSound == null && SoundManager.Instance != null)
+                if (linkSound == null)
                 {
                     linkSound = SoundManager.Instance.PlaySoundMagnetLink();
-
+                }
+            }
+            else
+            {
+                if (linkSound != null && SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.StopSoundMagnetLink(linkSound);
+                    linkSound = null;
                 }
             }
             linkImage.sprite = linkSprites[currentFrame];
