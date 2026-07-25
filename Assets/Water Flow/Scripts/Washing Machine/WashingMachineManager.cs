@@ -80,71 +80,85 @@ namespace AntsFlow
             {
                 lastToggleFrame = Time.frameCount;
 
-                // === Check trước: tìm hộp nào sẽ lên hàng đầu (row 0) ===
-                HashSet<WashingMachineItem> boxesMovingToTop = new HashSet<WashingMachineItem>();
-                for (int i = 0; i < washingMachineStartSlots.Count; i++)
+                // === 1. Tìm các hộp sẽ kết thúc ở hàng đầu (row 0) sau khi dịch chuyển ===
+                List<WashingMachineItem> predictedRow0Boxes = new List<WashingMachineItem>();
+                foreach (var slot in washingMachineStartSlots)
                 {
-                    var slot = washingMachineStartSlots[i];
-                    if (slot.row == 0 && slot.washingMachine == null)
+                    if (slot.row == 0)
                     {
-                        int x = (int)slot.transform.position.x;
-                        for (int j = i + 1; j < washingMachineStartSlots.Count; j++)
+                        if (slot.washingMachine != null)
                         {
-                            var otherSlot = washingMachineStartSlots[j];
-                            if (otherSlot.washingMachine != null
-                                && (int)otherSlot.transform.position.x == x
-                                && !otherSlot.washingMachine.isMoving)
+                            predictedRow0Boxes.Add(slot.washingMachine);
+                        }
+                        else
+                        {
+                            int x = (int)slot.transform.position.x;
+                            for (int j = 0; j < washingMachineStartSlots.Count; j++)
                             {
-                                boxesMovingToTop.Add(otherSlot.washingMachine);
+                                var otherSlot = washingMachineStartSlots[j];
+                                if (otherSlot.row > 0 && otherSlot.washingMachine != null && (int)otherSlot.transform.position.x == x)
+                                {
+                                    predictedRow0Boxes.Add(otherSlot.washingMachine);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // === 2. Kiểm tra xem nếu toggle bình thường thì hàng đầu có bị deadlock/kẹt hoàn toàn không ===
+                // Hàng đầu bị kẹt hoàn toàn nếu tất cả các hộp ở hàng đầu sau khi toggle đều không thể chọn được.
+                bool wouldBeDeadlocked = true;
+                if (predictedRow0Boxes.Count == 0)
+                {
+                    wouldBeDeadlocked = false;
+                }
+                else
+                {
+                    foreach (var box in predictedRow0Boxes)
+                    {
+                        if (box.isMagnet)
+                        {
+                            if (box.IsValidToSelect())
+                            {
+                                wouldBeDeadlocked = false;
                                 break;
                             }
                         }
-                    }
-                }
-
-                // === Simulate toggle: check nếu toggle tất cả thì hàng đầu sẽ ra sao ===
-                int numTopBoxesTotal = 0;
-                int numTopOpenCloseBoxes = 0;
-                int numTopOpenCloseWillBeClosed = 0;
-
-                foreach (var slot in washingMachineStartSlots)
-                {
-                    WashingMachineItem box = slot.washingMachine;
-                    if (box == null || box.isInSlot) continue;
-
-                    bool willBeAtTopRow = (slot.row == 0) || boxesMovingToTop.Contains(box);
-                    if (willBeAtTopRow)
-                    {
-                        numTopBoxesTotal++;
-                        if (box.isOpenCloseType)
+                        else if (box.isOpenCloseType)
                         {
-                            numTopOpenCloseBoxes++;
-                            bool willBeClosedAfterToggle = box.isOpen; // Nếu đang mở thì toggle sẽ thành đóng
-                            if (willBeClosedAfterToggle)
+                            bool nextOpenState = !box.isOpen;
+                            if (nextOpenState) // Nếu sau khi toggle mà nó mở, thì chọn được -> không bị deadlock
                             {
-                                numTopOpenCloseWillBeClosed++;
+                                wouldBeDeadlocked = false;
+                                break;
                             }
                         }
+                        else
+                        {
+                            // Hộp bình thường hoặc loại khác luôn chọn được
+                            wouldBeDeadlocked = false;
+                            break;
+                        }
                     }
                 }
 
-                // Chỉ áp dụng chống deadlock khi TẤT CẢ hộp ở hàng đầu đều là OpenCloseType và đều sẽ bị đóng
-                bool wouldAllTopBeClosed = (numTopBoxesTotal > 0)
-                                           && (numTopOpenCloseBoxes == numTopBoxesTotal)
-                                           && (numTopOpenCloseWillBeClosed == numTopOpenCloseBoxes);
-
-                // === Toggle, nhưng SKIP hộp sẽ lên hàng đầu nếu toggle sẽ gây TH tất cả đóng ===
+                // === 3. Thực hiện toggle ===
                 foreach (var startSlot in washingMachineStartSlots)
                 {
-                    if (startSlot.washingMachine != null && startSlot.washingMachine.isOpenCloseType)
+                    var box = startSlot.washingMachine;
+                    if (box != null && box.isOpenCloseType)
                     {
-                        // Nếu toggle sẽ gây TH tất cả hàng đầu đều đóng,
-                        // thì ko cho đóng hộp đang ở hàng dưới sắp lên hàng đầu
-                        if (wouldAllTopBeClosed && boxesMovingToTop.Contains(startSlot.washingMachine))
+                        // Nếu xảy ra deadlock và hộp này nằm trong số các hộp sẽ ở hàng đầu,
+                        // ta ép nó phải mở (isOpen = true) và không cho đóng.
+                        if (wouldBeDeadlocked && predictedRow0Boxes.Contains(box))
                         {
-                            continue;
+                            box.isOpen = true;
                         }
-                        startSlot.washingMachine.isOpen = !startSlot.washingMachine.isOpen;
+                        else
+                        {
+                            box.isOpen = !box.isOpen;
+                        }
                     }
                 }
             }
@@ -410,6 +424,26 @@ namespace AntsFlow
                                 (washingMachineItem as FreezedAntBox).AssignRequirementNumber();
                             }
 
+                            if (washingMachineStartSlot.row == 0 && washingMachineItem.isOpenCloseType)
+                            {
+                                List<WashingMachineItem> unselectableRow0Magnets = new List<WashingMachineItem>();
+                                foreach (var startSlot in washingMachineStartSlots)
+                                {
+                                    if (startSlot.row == 0 && startSlot.washingMachine != null && startSlot.washingMachine.isMagnet)
+                                    {
+                                        if (!startSlot.washingMachine.IsValidToSelect())
+                                        {
+                                            unselectableRow0Magnets.Add(startSlot.washingMachine);
+                                        }
+                                    }
+                                }
+
+                                if (unselectableRow0Magnets.Count >= 2)
+                                {
+                                    washingMachineItem.isOpen = true;
+                                }
+                            }
+
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
                             washingMachineItem.isMoving = true;
@@ -463,6 +497,36 @@ namespace AntsFlow
                             SpawnNewWashingMachine();
                         }
                     }
+                }
+            }
+
+            // Kiểm tra deadlock nếu hàng đầu chỉ có các hộp đóng/mở đang đóng và các hộp magnet đang bị kẹt
+            List<WashingMachineItem> closedOpenCloseBoxesOnRow0 = new List<WashingMachineItem>();
+            List<WashingMachineItem> stuckMagnetsOnRow0 = new List<WashingMachineItem>();
+            int totalBoxesOnRow0 = 0;
+
+            foreach (var slot in washingMachineStartSlots)
+            {
+                if (slot.row == 0 && slot.washingMachine != null)
+                {
+                    totalBoxesOnRow0++;
+                    var box = slot.washingMachine;
+                    if (box.isOpenCloseType && !box.isOpen)
+                    {
+                        closedOpenCloseBoxesOnRow0.Add(box);
+                    }
+                    else if (box.isMagnet && !box.IsValidToSelect())
+                    {
+                        stuckMagnetsOnRow0.Add(box);
+                    }
+                }
+            }
+
+            if (closedOpenCloseBoxesOnRow0.Count > 0 && (closedOpenCloseBoxesOnRow0.Count + stuckMagnetsOnRow0.Count == totalBoxesOnRow0))
+            {
+                foreach (var box in closedOpenCloseBoxesOnRow0)
+                {
+                    box.isOpen = true;
                 }
             }
 
