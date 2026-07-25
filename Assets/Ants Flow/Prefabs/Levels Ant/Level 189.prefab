@@ -32073,7 +32073,7 @@ MonoBehaviour:
     doubleAntBoxConfig:
       spawnOrder: 
     magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -32083,8 +32083,8 @@ MonoBehaviour:
       numCoverRow: 0
       bossHealth: 0
     openCloseAntBoxConfig:
-      spawnOrder: 
-      initialStates: 
+      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      initialStates: 01000100000100000100010000010000000100000100000100
     hardPixelConfigs:
     - id: 0
       startNodeId: 1209
@@ -32092,20 +32092,26 @@ MonoBehaviour:
       numCols: 7
       requiredEatCount: 250
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     - id: 1
       startNodeId: 100
       numRows: 7
       numCols: 10
       requiredEatCount: 450
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
