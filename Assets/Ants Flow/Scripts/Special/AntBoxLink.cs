@@ -76,8 +76,8 @@ public class AntBoxLink : MonoBehaviour
 
     private void PlaceTheLink()
     {
-        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
-        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
+        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-1f);
+        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-1f);
 
         // if (a.x > b.x)
         // {

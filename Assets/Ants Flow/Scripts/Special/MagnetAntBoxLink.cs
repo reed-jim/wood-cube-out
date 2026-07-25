@@ -57,13 +57,14 @@ public class MagnetAntBoxLink : MonoBehaviour
 
     public void Setup(WashingMachineItem[] antBoxes)
     {
+        Tween.StopAll(linkImage.transform);
         linkImage.gameObject.SetActive(true);
         linkImage.color = Color.white;
 
         if (blur1 != null) { blur1.gameObject.SetActive(true); blur1.color = Color.white; }
         if (blur2 != null) { blur2.gameObject.SetActive(true); blur2.color = Color.white; }
-        if (bubble1 != null) { bubble1.gameObject.SetActive(true); bubble1.color = Color.white; }
-        if (bubble2 != null) { bubble2.gameObject.SetActive(true); bubble2.color = Color.white; }
+        if (bubble1 != null) { Tween.StopAll(bubble1.transform); bubble1.gameObject.SetActive(true); bubble1.color = Color.white; }
+        if (bubble2 != null) { Tween.StopAll(bubble2.transform); bubble2.gameObject.SetActive(true); bubble2.color = Color.white; }
 
         boxCountReachedZero = new bool[antBoxes.Length];
 
@@ -171,8 +172,10 @@ public class MagnetAntBoxLink : MonoBehaviour
             return;
         }
 
-        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-3f);
-        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-3f);
+        float zOffset = (antBoxes[0].isMoving || antBoxes[1].isMoving) ? -6f : -3f;
+
+        Vector3 a = antBoxes[0].lid.transform.position.AddZ(zOffset);
+        Vector3 b = antBoxes[1].lid.transform.position.AddZ(zOffset);
 
         Vector3 startPos;
         Vector3 endPos;
@@ -310,6 +313,8 @@ public class MagnetAntBoxLink : MonoBehaviour
 
         if (selectedAntBox != null)
         {
+            isNeededToUpdateLinkPosition = true;
+
             List<WashingMachineItem> otherAntBoxes = new List<WashingMachineItem>();
 
             for (int i = 0; i < antBoxes.Length; i++)

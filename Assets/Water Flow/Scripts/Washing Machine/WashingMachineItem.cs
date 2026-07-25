@@ -353,7 +353,7 @@ public class WashingMachineItem : MonoBehaviour
             var localPos = skeletonAnimation.transform.localPosition;
             skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
         }
-        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
+        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-0.5f), duration: 0.2f, ease: Ease.Linear);
         Tween.ScaleY(transform, 1.3f * transform.localScale.y, duration: 0.2f)
         .OnComplete(() =>
         {
