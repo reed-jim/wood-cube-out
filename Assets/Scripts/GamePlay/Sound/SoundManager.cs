@@ -15,7 +15,7 @@ public class SoundManager : MonoBehaviour
     private bool _isEnableGameSound;
     private bool _isEnableGameMusic;
     #endregion
-    
+
     public bool IsEnableGameSound => _isEnableGameSound;
 
     void Awake()
@@ -373,6 +373,7 @@ public class SoundManager : MonoBehaviour
     {
         if (!_isEnableGameSound) { return null; }
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.linkMagnetSound);
+        sound.volume = 0.05f;
         sound.loop = true;
         sound.Play();
         return sound;
