@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -30,6 +31,12 @@ public class MagnetAntBoxLink : MonoBehaviour
         WashingMachineItem.antBoxDoneEvent += OnAntBoxDone;
         WashingMachineItem.magnetBoxCountZeroEvent += OnMagnetBoxCountZero;
         WashingMachineItem.moveUpEvent += OnAntBoxMovingUp;
+
+        LevelLoader.startLevelEvent += OnLevelReplayed;
+        SettingPopup.replayLevelEvent += OnLevelReplayed;
+        LosePopup.replayLevelEvent += OnLevelReplayed;
+        DebugPopup.switchLevelEvent += OnLevelReplayed;
+        TileManager.winLevelEvent += OnLevelReplayed;
     }
 
     void OnDestroy()
@@ -38,6 +45,12 @@ public class MagnetAntBoxLink : MonoBehaviour
         WashingMachineItem.antBoxDoneEvent -= OnAntBoxDone;
         WashingMachineItem.magnetBoxCountZeroEvent -= OnMagnetBoxCountZero;
         WashingMachineItem.moveUpEvent -= OnAntBoxMovingUp;
+
+        LevelLoader.startLevelEvent -= OnLevelReplayed;
+        SettingPopup.replayLevelEvent -= OnLevelReplayed;
+        LosePopup.replayLevelEvent -= OnLevelReplayed;
+        DebugPopup.switchLevelEvent -= OnLevelReplayed;
+        TileManager.winLevelEvent -= OnLevelReplayed;
 
         if (linkSound != null && SoundManager.Instance != null)
         {
@@ -53,6 +66,11 @@ public class MagnetAntBoxLink : MonoBehaviour
             SoundManager.Instance.StopSoundMagnetLink(linkSound);
             linkSound = null;
         }
+    }
+
+    private void OnLevelReplayed()
+    {
+        Unlink();
     }
 
     public void Setup(WashingMachineItem[] antBoxes)

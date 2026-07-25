@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using AntsFlow;
 using Spine;
 using Spine.Unity;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class OpenCloseAntBox : WashingMachineItem
     [SpineAnimation(dataField = "skeletonAnimation")] public string closedIdleAnimation = "idle2";
     [SpineAnimation(dataField = "skeletonAnimation")] public string appearAnimation = "appear";
     [SpineAnimation(dataField = "skeletonAnimation")] public string disappearAnimation = "appear-re";
+    [SpineAnimation(dataField = "skeletonAnimation")] public string selectFailToggleAnimation = "select fail toggle";
+    public bool useNewFailAnimation;
 
 
     [Header("Door Animations (skeletonOpenClose)")]
@@ -395,5 +398,45 @@ public class OpenCloseAntBox : WashingMachineItem
 
         // Đảm bảo số được tắt khi hoàn tất anim đóng.
         SetNumberVisible(false);
+    }
+
+    protected override void PlayInvalidSelectAnimation()
+    {
+        if (isInSlot)
+        {
+            return;
+        }
+
+        if (isOpen && useNewFailAnimation)
+        {
+            if (skeletonAnimation != null && !string.IsNullOrEmpty(selectFailToggleAnimation))
+            {
+                skeletonAnimation.AnimationState.SetAnimation(0, selectFailToggleAnimation, false);
+            }
+
+            if (GamePersistentVariable.IsVibrate)
+            {
+                CandyCoded.HapticFeedback.HapticFeedback.MediumFeedback();
+            }
+
+            WashingMachineManager.Ins.CheckLoseLevel();
+        }
+        else
+        {
+            base.PlayInvalidSelectAnimation();
+        }
+    }
+
+    public override void TurnOnWarningLoseAnimation()
+    {
+        if (isOpen && useNewFailAnimation && skeletonAnimation != null && !string.IsNullOrEmpty(selectFailToggleAnimation))
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, selectFailToggleAnimation, true);
+            isPlayingWarningLoseAnimation = true;
+        }
+        else
+        {
+            base.TurnOnWarningLoseAnimation();
+        }
     }
 }

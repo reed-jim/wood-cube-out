@@ -68,7 +68,7 @@ namespace AntsFlow
                 showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
             }
 
-            SetupSpawningTileBoxes();
+//            SetupSpawningTileBoxes();
             SetupBossArea(levelItem.specialElementConfig.bossAreaConfig);
             SetupSnake(levelItem.specialElementConfig.snakeConfig);
         }
@@ -673,6 +673,7 @@ namespace AntsFlow
 
         public void SetupSpawningTileBoxes()
         {
+            /*
             if (specialElementConfig.spawningTileBoxConfig.items == null)
             {
                 return;
@@ -693,6 +694,7 @@ namespace AntsFlow
             }
 
             spawningTileBox.NextSpawningTileBoxes();
+            */
         }
 
         public void SetupBossArea(BossAreaConfig bossAreaConfig)
