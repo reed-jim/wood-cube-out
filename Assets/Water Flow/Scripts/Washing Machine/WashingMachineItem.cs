@@ -228,7 +228,7 @@ public class WashingMachineItem : MonoBehaviour
             grainPile.transform.SetParent(WashingMachineManager.Ins.grainPool.transform);
             grainPile.transform.position = bucketDestination;
 
-            grainPile.Setup(this);
+            grainPile.Setup(this, maxAddNumber);
 
             Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
             .OnComplete(() =>
@@ -816,6 +816,7 @@ public class WashingMachineItem : MonoBehaviour
             {
                 isInSlot = false;
             });
+            Tween.EulerAngles(transform, transform.eulerAngles, Vector3.zero, duration: 0.3f);
         }
     }
 

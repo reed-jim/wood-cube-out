@@ -46,11 +46,11 @@ public class GrainPile : MonoBehaviour
         }
     }
 
-    public void Setup(WashingMachineItem grainBusket)
+    public void Setup(WashingMachineItem grainBusket, int amount)
     {
         SetFaction(grainBusket.faction);
 
-        totalNumber = grainBusket.number;
+        totalNumber = amount;
         remainingNumber = totalNumber;
 
         Reset();

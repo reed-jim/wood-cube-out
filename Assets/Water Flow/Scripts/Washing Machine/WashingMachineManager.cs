@@ -799,6 +799,13 @@ namespace AntsFlow
             return isLose;
         }
 
+        public void LoseLevel()
+        {
+            loseLevelEvent?.Invoke();
+
+            GamePersistentVariable.isLevelLost = true;
+        }
+
         private IEnumerator PendingLoseLevel()
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
@@ -847,44 +854,35 @@ namespace AntsFlow
 
         private void Revive(BoosterType boosterType)
         {
-            // Revive by unlock ant box
+            grainPool.CheckFeedGhostChickens();
+
+            GamePersistentVariable.isLevelLost = false;
+
+            // List<WashingMachineItem> antBoxesToClear = new List<WashingMachineItem>();
+            // ghostAntBoxes = new List<WashingMachineItem>();
+
             // for (int i = 0; i < washingMachineSlots.Count; i++)
             // {
-            //     WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+            //     WashingMachineSlot slot = washingMachineSlots[i];
 
-            //     if (washingMachineSlot.isLocked)
+            //     if (slot.washingMachineItem != null)
             //     {
-            //         washingMachineSlot.Unlock();
+            //         antBoxesToClear.Add(slot.washingMachineItem);
+            //         ghostAntBoxes.Add(slot.washingMachineItem);
 
-            //         break;
+            //         if (antBoxesToClear.Count == 2)
+            //         {
+            //             break;
+            //         }
             //     }
             // }
 
-            List<WashingMachineItem> antBoxesToClear = new List<WashingMachineItem>();
-            ghostAntBoxes = new List<WashingMachineItem>();
+            // foreach (var item in antBoxesToClear)
+            // {
+            //     item.CheckAntsPathGhostMode();
+            // }
 
-            for (int i = 0; i < washingMachineSlots.Count; i++)
-            {
-                WashingMachineSlot slot = washingMachineSlots[i];
-
-                if (slot.washingMachineItem != null)
-                {
-                    antBoxesToClear.Add(slot.washingMachineItem);
-                    ghostAntBoxes.Add(slot.washingMachineItem);
-
-                    if (antBoxesToClear.Count == 2)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            foreach (var item in antBoxesToClear)
-            {
-                item.CheckAntsPathGhostMode();
-            }
-
-            GamePersistentVariable.isLevelLost = false;
+            // GamePersistentVariable.isLevelLost = false;
         }
         #endregion
 

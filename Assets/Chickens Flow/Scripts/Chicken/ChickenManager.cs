@@ -97,9 +97,9 @@ public class ChickenManager : Singleton<ChickenManager>
         // StartCoroutine(RandomlyAnimateChickens());
     }
 
-    public void FeedTheChicken(GrainPile grainPile)
+    public void FeedTheChicken(GrainPile grainPile, bool isGhostChicken = false)
     {
-        CheckChickensStuck();
+        CheckChickensStuck(isGhostChicken);
 
         int remainingNumber = grainPile.remainingNumber;
 
@@ -131,8 +131,18 @@ public class ChickenManager : Singleton<ChickenManager>
         }
     }
 
-    public void CheckChickensStuck()
+    public void CheckChickensStuck(bool isGhostChicken = false)
     {
+        if(isGhostChicken)
+        {
+            foreach (var chicken in chickens)
+            {
+                chicken.isStuck = false;
+            }
+
+            return;
+        }
+
         foreach (var column in chickenByColumn.Keys)
         {
             chickenByColumn[column][0].isStuck = false;

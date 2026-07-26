@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AntsFlow;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -57,6 +58,14 @@ public class GrainPool : MonoBehaviour
         }
     }
 
+    public void CheckFeedGhostChickens()
+    {
+        for (int i = 0; i < grainPiles.Count; i++)
+        {
+            ChickenManager.Ins.FeedTheChicken(grainPiles[i], isGhostChicken: true);
+        }
+    }
+
     public void AddGrain(int number)
     {
         currentAmount += number;
@@ -73,6 +82,13 @@ public class GrainPool : MonoBehaviour
         percentTextTween = Tween.Custom(currentPercent, percent, duration: 0.3f, onValueChange: newVal =>
         {
             UpdatePercent(newVal);
+        })
+        .OnComplete(() =>
+        {
+            if(currentAmount >= maxCapacity)
+            {
+                WashingMachineManager.Ins.LoseLevel();
+            }
         });
 
         currentPercent = percent;
