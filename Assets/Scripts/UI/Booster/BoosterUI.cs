@@ -397,7 +397,7 @@ public class BoosterUI : MonoBehaviour
         {
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
 
-            AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
+            // AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
 
             _isInTransition = false;
         });

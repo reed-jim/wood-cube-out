@@ -546,75 +546,23 @@ namespace AntsFlow
 
         public void UseBoosterClearOneColor(Color selectedFaction)
         {
-            List<BaseTile> tilesToClear = TileManager.Ins.tiles
-                .Where(tile => !tile.isDone && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
+            List<BaseChicken> chickensToClear = ChickenManager.Ins.chickens
+                .Where(chicken => !chicken.isDone && chicken.faction == selectedFaction && !chicken.isEating).ToList();
 
-            // Remove blockages
-            for (int i = 0; i < tilesToClear.Count; i++)
-            {
-                BaseTile tileToClear = tilesToClear[i];
-
-                // if (tileToClear.blockages.Count < 4)
-                // {
-                //     tileToClear.SetNoLongerBlockages();
-                // }
-                // else
-                // {
-                //     // // bool isAllPrepareCompleteTile = tileToClear.blockages.All(item => item.isPrepareComplete);
-                //     // int numPrepareCompleteTileNearby = tileToClear.blockages.Count(item => item.isPrepareComplete);
-
-                //     // if (numPrepareCompleteTileNearby >= 2)
-                //     // {
-                //     //     tileToClear.SetNoLongerBlockages();
-                //     // }
-                //     // else
-                //     // {
-                //     //     tileToClear.isPrepareComplete = true;
-                //     // }
-
-                //     for (int j = 0; j < tileToClear.blockages.Count; j++)
-                //     {
-                //         if (tileToClear.blockages[j].isPrepareComplete)
-                //         {
-                //             tileToClear.blockages[j].ActualComplete();
-                //         }
-                //     }
-
-                //     tileToClear.isPrepareComplete = true;
-                // }
-            }
-
-            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            // for (int i = 0; i < chickensToClear.Count; i++)
             // {
-            //     BaseTile tile = TileManager.Ins.tiles[i];
+            //     bool isLast = i == chickensToClear.Count - 1;
 
-            //     if (!tile.isAntApproaching && !tilesToClear.Contains(tile))
-            //     {
-            //         List<BaseTile> toRemoveBlockages = tilesToClear.Where(item => tile.blockages.Contains(item)).ToList();
+            //     chickensToClear[i].isDone = true;
+            //     chickensToClear[i].Hide();
+            //     chickensToClear[i].HideObstacle();
 
-            //         for (int j = 0; j < toRemoveBlockages.Count; j++)
-            //         {
-            //             tile.blockages.Remove(toRemoveBlockages[j]);
-            //             // tile.actualBlockages.Remove(toRemoveBlockages[j]);
-            //         }
-            //     }
+            //     SpawnFakeTile(tilesToClear[i], isLast);
             // }
 
-            for (int i = 0; i < tilesToClear.Count; i++)
-            {
-                bool isLast = i == tilesToClear.Count - 1;
+            // TileManager.Ins.CheckWinLevel();
 
-                // tilesToClear[i].Complete();
-                tilesToClear[i].isDone = true;
-                tilesToClear[i].Hide();
-                tilesToClear[i].HideObstacle();
-
-                SpawnFakeTile(tilesToClear[i], isLast);
-            }
-
-            TileManager.Ins.CheckWinLevel();
-
-            AdjustAntBoxAfterClearingOneColor(tilesToClear);
+            AdjustAntBoxAfterClearingOneColor(chickensToClear);
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
             {
@@ -646,46 +594,44 @@ namespace AntsFlow
                 });
             }
 
-            // for (int i = 0; i < tilesToClear.Count; i++)
-            // {
-            //     int index = i;
+            for (int i = 0; i < chickensToClear.Count; i++)
+            {
+                int index = i;
 
-            //     BaseTile tile = tilesToClear[i];
+                BaseChicken tile = chickensToClear[i];
 
-            //     Vector3 initialPosition = tile.transform.position;
+                Vector3 initialPosition = tile.transform.position;
 
-            //     tile.isAntApproaching = true;
+                Tween.ScaleY(tile.transform, 1.6f, duration: 0.3f);
+                Tween.PositionY(tile.transform, tile.transform.position.y + 1.6f, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    Tween.ScaleY(tile.transform, 1, duration: 0.15f);
+                    Tween.Position(tile.transform, initialPosition, duration: 0.15f)
+                    .OnComplete(() =>
+                    {
+                        SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
+                        {
+                            tile.Complete();
+                        });
 
-            //     Tween.ScaleY(tile.transform, 1.6f, duration: 0.3f);
-            //     Tween.PositionY(tile.transform, tile.transform.position.y + 1.6f, duration: 0.3f)
-            //     .OnComplete(() =>
-            //     {
-            //         Tween.ScaleY(tile.transform, 1, duration: 0.15f);
-            //         Tween.Position(tile.transform, initialPosition, duration: 0.15f)
-            //         .OnComplete(() =>
-            //         {
-            //             SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
-            //             {
-            //                 tile.Complete();
-            //             });
-
-            //             if (index == tilesToClear.Count - 1)
-            //             {
-            //                 SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
-            //             }
-            //         });
-            //     });
-            // }
+                        if (index == chickensToClear.Count - 1)
+                        {
+                            SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+                        }
+                    });
+                });
+            }
         }
 
-        private void AdjustAntBoxAfterClearingOneColor(List<BaseTile> tilesToClear)
+        private void AdjustAntBoxAfterClearingOneColor(List<BaseChicken> chickensToClear)
         {
-            if (tilesToClear.Count == 0)
+            if (chickensToClear.Count == 0)
             {
                 return;
             }
 
-            Color factionToClear = tilesToClear[0].Faction;
+            Color factionToClear = chickensToClear[0].faction;
 
             List<WashingMachineItem> antBoxes = new List<WashingMachineItem>();
 
@@ -705,7 +651,7 @@ namespace AntsFlow
                 }
             }
 
-            int numToClear = tilesToClear.Count;
+            int numToClear = chickensToClear.Count;
 
             for (int i = 0; i < antBoxes.Count; i++)
             {
@@ -716,7 +662,7 @@ namespace AntsFlow
                     break;
                 }
 
-                if (antBox.number > 0 && antBox.faction == tilesToClear[0].Faction)
+                if (antBox.number > 0 && antBox.faction == chickensToClear[0].faction)
                 {
                     int numToRemove = Mathf.Min(antBox.number, numToClear) - antBox.tilesToMove.Count;
                     antBox.number -= numToRemove;
@@ -745,7 +691,7 @@ namespace AntsFlow
             {
                 WashingMachineItem antBox = antBoxes[i];
 
-                if (antBox.faction == tilesToClear[0].Faction)
+                if (antBox.faction == chickensToClear[0].faction)
                 {
                     antBox.UpdateNumber();
                 }

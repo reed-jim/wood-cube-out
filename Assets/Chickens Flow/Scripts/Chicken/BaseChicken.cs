@@ -87,6 +87,10 @@ public class BaseChicken : MonoBehaviour
         waitingChickenSlot.chicken = null;
     }
 
+    public void Complete()
+    {
+        isDone = true;
+    }
     public void PlayIdleAnim()
     {
         PlayForCycles(skeletonAnimation, idleAnimation, 3, null, false);
