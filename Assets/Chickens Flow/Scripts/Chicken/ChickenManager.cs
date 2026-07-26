@@ -133,7 +133,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void CheckChickensStuck(bool isGhostChicken = false)
     {
-        if(isGhostChicken)
+        if (isGhostChicken)
         {
             foreach (var chicken in chickens)
             {
@@ -175,14 +175,17 @@ public class ChickenManager : Singleton<ChickenManager>
 
         foreach (var column in slotByColumn.Values)
         {
-            if (column[0].chicken != null)
-            {
-                continue;
-            }
-
             int emptyIndex = 0;
 
             for (int i = 0; i < column.Count; i++)
+            {
+                if (column[i].chicken == null)
+                {
+                    emptyIndex = i;
+                }
+            }
+
+            for (int i = emptyIndex; i < column.Count; i++)
             {
                 if (column[i].chicken != null)
                 {
