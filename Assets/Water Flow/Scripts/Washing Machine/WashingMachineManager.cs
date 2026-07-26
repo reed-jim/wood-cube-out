@@ -598,21 +598,23 @@ namespace AntsFlow
             {
                 int index = i;
 
-                BaseChicken tile = chickensToClear[i];
+                BaseChicken chicken = chickensToClear[i];
 
-                Vector3 initialPosition = tile.transform.position;
+                Vector3 initialPosition = chicken.transform.position;
 
-                Tween.ScaleY(tile.transform, 1.6f, duration: 0.3f);
-                Tween.PositionY(tile.transform, tile.transform.position.y + 1.6f, duration: 0.3f)
+                chicken.isEating = true;
+
+                Tween.ScaleY(chicken.transform, 1.6f, duration: 0.3f);
+                Tween.PositionY(chicken.transform, chicken.transform.position.y + 1.6f, duration: 0.3f)
                 .OnComplete(() =>
                 {
-                    Tween.ScaleY(tile.transform, 1, duration: 0.15f);
-                    Tween.Position(tile.transform, initialPosition, duration: 0.15f)
+                    Tween.ScaleY(chicken.transform, 1, duration: 0.15f);
+                    Tween.Position(chicken.transform, initialPosition, duration: 0.15f)
                     .OnComplete(() =>
                     {
-                        SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
+                        SaferioTween.ScaleDownWithPunch(chicken.transform, onCompleteAction: () =>
                         {
-                            tile.Complete();
+                            chicken.Complete();
                         });
 
                         if (index == chickensToClear.Count - 1)
@@ -622,6 +624,8 @@ namespace AntsFlow
                     });
                 });
             }
+
+            ChickenManager.Ins.MoveChickensDown();
         }
 
         private void AdjustAntBoxAfterClearingOneColor(List<BaseChicken> chickensToClear)

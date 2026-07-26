@@ -38,6 +38,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button breakObjectButton;
     [SerializeField] private Button clearAllScrewPortsButton;
     [SerializeField] private Button clearOneColorButton;
+    [SerializeField] private Button increaseGrainCapacityButton;
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -100,6 +101,7 @@ public class BoosterUI : MonoBehaviour
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
         clearOneColorButton.onClick.AddListener(() => UseBooster(BoosterType.ClearOneColor));
+        increaseGrainCapacityButton.onClick.AddListener(() => UseBooster(BoosterType.IncreaseGrainCapacity));
         // disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
         _tweens = new List<Tween>();
@@ -215,6 +217,14 @@ public class BoosterUI : MonoBehaviour
             else if (boosterType == BoosterType.ClearOneColor)
             {
                 EnableClearOneColorMode();
+            }
+            else if (boosterType == BoosterType.ClearOneColor)
+            {
+                EnableClearOneColorMode();
+            }
+            else if (boosterType == BoosterType.IncreaseGrainCapacity)
+            {
+                IncreaseGrainCapacity();
             }
         }
     }
@@ -401,6 +411,11 @@ public class BoosterUI : MonoBehaviour
 
             _isInTransition = false;
         });
+    }
+
+    private void IncreaseGrainCapacity()
+    {
+        WashingMachineManager.Ins.grainPool.IncreaseGrainCapacity(5);
     }
 
     private void ConfirmUseEnableAllBoxes(WashingMachineItem antBox)

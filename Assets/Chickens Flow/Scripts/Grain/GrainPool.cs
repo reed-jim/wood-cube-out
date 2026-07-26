@@ -10,6 +10,7 @@ public class GrainPool : MonoBehaviour
     public TMP_Text percentText;
     public LazyHealthBar lazyHealthBar;
 
+    public int initialMaxCapacity;
     public int maxCapacity;
     public int currentAmount;
     public float currentPercent;
@@ -27,6 +28,7 @@ public class GrainPool : MonoBehaviour
 
     public void Reset()
     {
+        maxCapacity = initialMaxCapacity;
         currentPercent = 0;
 
         UpdatePercent(currentPercent);
@@ -74,6 +76,13 @@ public class GrainPool : MonoBehaviour
         });
 
         currentPercent = percent;
+    }
+
+    public void IncreaseGrainCapacity(int amount)
+    {
+        maxCapacity += amount;
+
+        AddGrain(0);
     }
 
     public void UpdatePercent(float percent)
