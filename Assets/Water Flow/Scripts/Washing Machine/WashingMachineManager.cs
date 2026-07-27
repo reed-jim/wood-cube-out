@@ -14,6 +14,8 @@ namespace AntsFlow
     public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         public LevelItem levelItem;
+        public bool isLevelContainingNewSpecialElements;
+
         public Camera mainCamera;
 
         public List<WashingMachineSlot> washingMachineSlots;
@@ -75,7 +77,7 @@ namespace AntsFlow
 
                 finishUsingEnableAllAntBoxesBoosterEvent?.Invoke();
             }
-            if (IsLevelContainingNewSpecialElements())
+            if (isLevelContainingNewSpecialElements)
             {
                 if (Time.frameCount != lastToggleFrame)
                 {
@@ -170,6 +172,7 @@ namespace AntsFlow
         public void StartLevel(AntsFlow.LevelItem levelItem)
         {
             this.levelItem = levelItem;
+            isLevelContainingNewSpecialElements = IsLevelContainingNewSpecialElements();
 
             //comment de test
             //if (washingMachineSlots != null)
@@ -210,7 +213,7 @@ namespace AntsFlow
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             SpecialElementManager.Ins.Setup(levelItem);
-            if (IsLevelContainingNewSpecialElements())
+            if (isLevelContainingNewSpecialElements)
             {
                 if (HardPixelManager.Ins != null)
                 {
@@ -247,7 +250,7 @@ namespace AntsFlow
             {
                 SpeedUpTutorialManager.Ins.StartTutorial();
             }
-            if (IsLevelContainingNewSpecialElements())
+            if (isLevelContainingNewSpecialElements)
             {
                 CheckLoseLevel();
             }
@@ -270,16 +273,27 @@ namespace AntsFlow
 
             washingMachineItem.isMoving = true;
             washingMachineItem.washingMachineStartSlot.washingMachine = null;
-
-            if (washingMachineItem.skeletonAnimation != null)
+            if(isLevelContainingNewSpecialElements)
             {
-                var localPos = washingMachineItem.skeletonAnimation.transform.localPosition;
-                washingMachineItem.skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
+                if (washingMachineItem.skeletonAnimation != null)
+                {
+                    var localPos = washingMachineItem.skeletonAnimation.transform.localPosition;
+                    washingMachineItem.skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
+                }
             }
 
             // Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
             Vector3 initialScale = washingMachineItem.transform.localScale;
-            Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
+            if(isLevelContainingNewSpecialElements)
+            {
+                Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
+
+            }
+            else
+            {
+                Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
+
+            }
             Tween.ScaleY(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.y, duration: 0.2f)
             .OnComplete(() =>
             {
@@ -509,7 +523,7 @@ namespace AntsFlow
             }
 
             // Kiểm tra deadlock nếu hàng đầu chỉ có các hộp đóng/mở đang đóng và các hộp magnet đang bị kẹt
-            if (IsLevelContainingNewSpecialElements())
+            if (isLevelContainingNewSpecialElements)
             {
                 List<WashingMachineItem> closedOpenCloseBoxesOnRow0 = new List<WashingMachineItem>();
                 List<WashingMachineItem> stuckMagnetsOnRow0 = new List<WashingMachineItem>();
@@ -819,7 +833,7 @@ namespace AntsFlow
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
-            if (IsLevelContainingNewSpecialElements())
+            if (isLevelContainingNewSpecialElements)
             {
                 HardPixelManager.Ins.OnBoosterClearTiles(tilesToClear.Count);
                 HardPixelManager.Ins.CheckBoosterClear();
@@ -997,7 +1011,6 @@ namespace AntsFlow
             {
                 return true;
             }
-
             if (spec.openCloseAntBoxConfig != null &&
                 spec.openCloseAntBoxConfig.spawnOrder != null &&
                 spec.openCloseAntBoxConfig.spawnOrder.Count > 0)
@@ -1018,7 +1031,7 @@ namespace AntsFlow
         {
             int numAntBoxLeft = washingMachineSlots.Count;
 
-            bool isNewSpecLevel = IsLevelContainingNewSpecialElements();
+            bool isNewSpecLevel = isLevelContainingNewSpecialElements;
 
             for (int i = 0; i < washingMachineSlots.Count; i++)
             {

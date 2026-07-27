@@ -192,7 +192,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 30);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 30);
         RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);
-        RegisterPool<OpenCloseAntBox>(GameConstants.openCloseAntBox, openCloseAntBoxPrefab, 20);
+        RegisterPool<OpenCloseAntBox>(GameConstants.openCloseAntBox, openCloseAntBoxPrefab, 50);
         RegisterPool<SnakeAntBox>(GameConstants.snakeAntBox, snakeAntBoxPrefab, 5);
         RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
         RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);
