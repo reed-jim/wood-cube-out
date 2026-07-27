@@ -413,8 +413,11 @@ public class WashingMachineItem : MonoBehaviour
         {
             HapticFeedback.MediumFeedback();
         }
+        if (WashingMachineManager.Ins.IsLevelContainingNewSpecialElements())
+        {
+            WashingMachineManager.Ins.CheckLoseLevel();
 
-        WashingMachineManager.Ins.CheckLoseLevel();
+        }
     }
 
     public virtual void TurnOnWarningLoseAnimation()
