@@ -85,7 +85,7 @@ public class GrainPool : MonoBehaviour
         })
         .OnComplete(() =>
         {
-            if(currentAmount >= maxCapacity)
+            if (currentAmount >= maxCapacity)
             {
                 WashingMachineManager.Ins.LoseLevel();
             }
@@ -103,7 +103,8 @@ public class GrainPool : MonoBehaviour
 
     public void UpdatePercent(float percent)
     {
-        percentText.text = $"{(int)(percent * 100)}%";
+        // percentText.text = $"{(int)(percent * 100)}%";
+        percentText.text = $"{currentAmount}/{maxCapacity}";
         lazyHealthBar.SetProgress(percent);
     }
 

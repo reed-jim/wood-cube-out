@@ -102,6 +102,24 @@ public class GrainPile : MonoBehaviour
 
         Vector2 offset;
 
+        List<Vector3> grainPositions = new List<Vector3>();
+
+        for (int i = 0; i < numRow; i++)
+        {
+            for (int j = 0; j < numColumn; j++)
+            {
+                float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+                offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
+                offset.y = 0.3f * radius * i - 1;
+
+                position = pileCenter + offset;
+                position.z = transform.position.z + zOffset;
+
+                grainPositions.Add(position);
+            }
+        }
+
         for (int i = 0; i < numRow; i++)
         {
             for (int j = 0; j < numColumn; j++)
@@ -110,11 +128,16 @@ public class GrainPile : MonoBehaviour
 
                 float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
-                offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
-                offset.y = 0.3f * radius * i - 1;
+                // offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
+                // offset.y = 0.3f * radius * i - 1;
 
-                position = pileCenter + offset;
-                position.z = transform.position.z + zOffset;
+                // position = pileCenter + offset;
+                // position.z = transform.position.z + zOffset;
+
+                int randomIndex = UnityEngine.Random.Range(0, grainPositions.Count);
+                position = grainPositions[randomIndex];
+
+                grainPositions.RemoveAt(randomIndex);
 
                 Vector3 start = grains[index].transform.localPosition;
                 Vector3 end = position;

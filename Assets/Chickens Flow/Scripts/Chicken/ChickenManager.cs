@@ -32,6 +32,8 @@ public class ChickenManager : Singleton<ChickenManager>
         int column;
         int row;
 
+        chickens = new List<BaseChicken>();
+
         for (int i = 0; i < levelItem.tiles.Count; i++)
         {
             int index = i;
@@ -182,6 +184,8 @@ public class ChickenManager : Singleton<ChickenManager>
                 if (column[i].chicken == null)
                 {
                     emptyIndex = i;
+
+                    break;
                 }
             }
 
