@@ -12,7 +12,7 @@ public class CustomPostprocessScript : ScriptableObject
     /// [sets NSUserTrackingUsageDescription]
     /// </summary>
     const string TrackingDescription =
-        "This identifier will be used to deliver personalized ads to you. ";
+        "Your data will be used to deliver personalized advertisements and provide a better in-game rewarded ad experience.";
 
     [PostProcessBuild]
     public static void ChangeXcodePlist(BuildTarget buildTarget, string pathToBuiltProject)
@@ -30,9 +30,9 @@ public class CustomPostprocessScript : ScriptableObject
             // add key
             rootDict.SetString("NSAdvertisingAttributionReportEndpoint", "https://appsflyer-skadnetwork.com/");
            // rootDict.SetString("SKAdNetworkIdentifier", "su67r6k2v3.skadnetwork");            
-            rootDict.SetString("NSLocationAlwaysUsageDescription", "Location is required to find out where you are");
-            rootDict.SetString("NSLocationWhenInUseUsageDescription", "Location is required to find out where you are");
-            rootDict.SetString("NSCalendarsUsageDescription", "Share score your friends");
+            rootDict.SetString("NSLocationAlwaysUsageDescription", "This allows us to continuously provide region-specific game events and localized content even when the app is in the background.");
+            rootDict.SetString("NSLocationWhenInUseUsageDescription", "This identifier is used to customize in-game events, content, and offers based on your geographic region.");
+            rootDict.SetString("NSCalendarsUsageDescription", "This allows you to add reminders for upcoming in-game events, tournaments, and special reward claims to your calendar.");
             rootDict.SetString("NSUserTrackingUsageDescription", TrackingDescription);
 
             var appID = "ca-app-pub-9457878244675693~3008927510";
