@@ -212,6 +212,9 @@ namespace AntsFlow
             TileManager.Ins.UpdateTileCount();
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
+            // Level mới đẩy shadowTilemap ra sau (z=4f); level cũ giữ z gốc như ants-flow
+            TileManager.Ins.ApplyShadowTilemapDepth(isLevelContainingNewSpecialElements);
+
             SpecialElementManager.Ins.Setup(levelItem);
             if (isLevelContainingNewSpecialElements)
             {
@@ -469,18 +472,35 @@ namespace AntsFlow
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
                             washingMachineItem.isMoving = true;
-                            washingMachineItem.Setup(washingMachineStartSlot);
-                            bool isTut = (levelItem != null && levelItem.isTutorialLevel);
-                            if (!isTut && currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+
+                            if (isLevelContainingNewSpecialElements)
                             {
-                                isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(currentLevel.Value);
+                                // Logic mới: Setup trước tween để set z-offset theo row, tween về rowZ
+                                washingMachineItem.Setup(washingMachineStartSlot);
+
+                                bool isTut = (levelItem != null && levelItem.isTutorialLevel);
+                                if (!isTut && currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+                                {
+                                    isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(currentLevel.Value);
+                                }
+                                float rowZ = isTut ? 0 : WashingMachineItem.GetRowZOffset(washingMachineStartSlot.row);
+                                Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(rowZ), duration: 0.3f)
+                                .OnComplete(() =>
+                                {
+                                    washingMachineItem.isMoving = false;
+                                });
                             }
-                            float rowZ = isTut ? 0 : WashingMachineItem.GetRowZOffset(washingMachineStartSlot.row);
-                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(rowZ), duration: 0.3f)
-                            .OnComplete(() =>
+                            else
                             {
-                                washingMachineItem.isMoving = false;
-                            });
+                                // Giữ nguyên hành vi nhánh ants-flow: z = -1, Setup gọi trong OnComplete
+                                Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
+                                .OnComplete(() =>
+                                {
+                                    washingMachineItem.Setup(washingMachineStartSlot);
+
+                                    washingMachineItem.isMoving = false;
+                                });
+                            }
 
                             washingMachineItem.washingMachineStartSlot = washingMachineStartSlot;
                             washingMachineStartSlot.washingMachine = washingMachineItem;

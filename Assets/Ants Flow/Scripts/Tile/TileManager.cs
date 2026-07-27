@@ -97,11 +97,29 @@ namespace AntsFlow
             BaseTile.tileCompleteEvent += OnTileCompleted;
             // BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
 
-            if (shadowTilemap != null)
+            // Chụp lại z gốc của shadowTilemap (giá trị nhánh ants-flow) 1 lần.
+            // Không ép z ở đây vì Awake chạy trước khi StartLevel set flag; áp per-level qua ApplyShadowTilemapDepth.
+            if (shadowTilemap != null && !hasShadowTilemapInitialZ)
             {
-                var localPos = shadowTilemap.transform.localPosition;
-                shadowTilemap.transform.localPosition = new Vector3(localPos.x, localPos.y, 4f);
+                shadowTilemapInitialZ = shadowTilemap.transform.localPosition.z;
+                hasShadowTilemapInitialZ = true;
             }
+        }
+
+        private float shadowTilemapInitialZ;
+        private bool hasShadowTilemapInitialZ;
+
+        // Level mới (special element): shadowTilemap về z = 4f. Level cũ (ants-flow): giữ z gốc.
+        public void ApplyShadowTilemapDepth(bool isLevelContainingNewSpecialElements)
+        {
+            if (shadowTilemap == null)
+            {
+                return;
+            }
+
+            var localPos = shadowTilemap.transform.localPosition;
+            float z = isLevelContainingNewSpecialElements ? 4f : shadowTilemapInitialZ;
+            shadowTilemap.transform.localPosition = new Vector3(localPos.x, localPos.y, z);
         }
 
         void OnDestroy()

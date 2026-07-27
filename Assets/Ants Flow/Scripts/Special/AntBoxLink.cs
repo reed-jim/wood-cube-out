@@ -86,8 +86,9 @@ public class AntBoxLink : MonoBehaviour
         }
         else
         {
-             a = antBoxes[0].lid.transform.position.AddZ(-0.1f);
-             b = antBoxes[1].lid.transform.position.AddZ(-0.1f);
+             // Giữ nguyên hành vi nhánh ants-flow: link ở z = -0.2
+             a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
+             b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
         }
         // if (a.x > b.x)
         // {
