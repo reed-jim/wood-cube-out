@@ -208,25 +208,29 @@ public class WashingMachineItem : MonoBehaviour
 
         isPouringAll = maxAddNumber == number;
 
+        GrainPoolSlot grainPoolSlot = WashingMachineManager.Ins.grainPool.GetGrainPoolSlot();
+
         Vector3 bucketDestination;
 
+        bucketDestination.x = 0;
         bucketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
         bucketDestination.z = -9;
 
-        pileCenter.x = UnityEngine.Random.RandomRange(-8, 8);
-        pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y + UnityEngine.Random.RandomRange(-1, 1);
+        pileCenter.x = grainPoolSlot.transform.position.x;
+        pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y;
         pileCenter.z = -1;
-
-        bucketDestination.x = pileCenter.x;
 
         bool isBucketMoveBack = !isPouringAll;
 
-        Tween.Position(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
+        transform.SetParent(grainPoolSlot.transform);
+
+        Tween.LocalPosition(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
         {
             GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
 
-            grainPile.transform.SetParent(WashingMachineManager.Ins.grainPool.transform);
-            grainPile.transform.position = bucketDestination;
+            grainPile.transform.SetParent(grainPoolSlot.transform);
+            grainPile.transform.localPosition = bucketDestination;
+            grainPoolSlot.grainPile = grainPile;
 
             grainPile.Setup(this, maxAddNumber);
 

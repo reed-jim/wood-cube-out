@@ -747,6 +747,13 @@ namespace Saferio.Util.SaferioTween
             transform.position = pos;
         }
 
+        public static void SetLocalX(this Transform transform, float x)
+        {
+            var pos = transform.localPosition;
+            pos.x = x;
+            transform.localPosition = pos;
+        }
+
         public static Vector3 AddX(this Vector3 currentValue, float value)
         {
             return new Vector3(currentValue.x + value, currentValue.y, currentValue.z);

@@ -1,12 +1,25 @@
+using System.Collections;
 using System.Collections.Generic;
 using AntsFlow;
+using Dreamteck.Splines;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 
 public class GrainPool : MonoBehaviour
 {
+    [Header("Loop Path")]
+    public SplineComputer loopPath;
+    public float moveSpeed;
+    public float leftBoundX;
+    public float rightBoundX;
+
+    public List<GrainPoolSlot> grainPoolSlots;
     public List<GrainPile> grainPiles;
+    public GrainPoolSlot grainPoolSlotPrefab;
+    public GrainPoolSlot leftMostGrainPoolSlot;
+    public int maxGrainPoolSlots;
 
     public TMP_Text percentText;
     public LazyHealthBar lazyHealthBar;
@@ -25,6 +38,10 @@ public class GrainPool : MonoBehaviour
     void Awake()
     {
         Reset();
+
+        SetupGrainPoolSlots();
+
+        StartCoroutine(RunTheQueue());
     }
 
     public void Reset()
@@ -35,6 +52,106 @@ public class GrainPool : MonoBehaviour
         UpdatePercent(currentPercent);
     }
 
+    public void SetupGrainPoolSlots()
+    {
+        for (int i = 0; i < maxGrainPoolSlots; i++)
+        {
+            GrainPoolSlot grainPoolSlot = Instantiate(grainPoolSlotPrefab, transform);
+
+            grainPoolSlots.Add(grainPoolSlot);
+        }
+    }
+
+    private IEnumerator RunTheQueue()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
+
+        float normalizedDistance = 1f / grainPoolSlots.Count;
+
+        for (int i = 0; i < grainPoolSlots.Count; i++)
+        {
+            GrainPoolSlot loopPathSlot = grainPoolSlots[i];
+
+            loopPathSlot.percentInLoopPath = i * normalizedDistance;
+        }
+
+        while (true)
+        {
+            for (int i = 0; i < grainPoolSlots.Count; i++)
+            {
+                GrainPoolSlot loopPathSlot = grainPoolSlots[i];
+
+                SplineSample sample = loopPath.Evaluate(loopPathSlot.percentInLoopPath);
+
+                loopPathSlot.transform.position = sample.position.ChangeZ(loopPathSlot.transform.position.z);
+
+                loopPathSlot.percentInLoopPath -= moveSpeed;
+
+                // if (loopPathSlot.percentInLoopPath >= percentMoveClothesOut - moveSpeed && loopPathSlot.percentInLoopPath < percentMoveClothesOut)
+                // {
+
+                // }
+
+                // if (loopPathSlot.percentInLoopPath >= percentPuttingClothesIntoLoopPath - moveSpeed && loopPathSlot.percentInLoopPath < percentPuttingClothesIntoLoopPath)
+                // {
+                //     if (loopPathSlot.clothingPiece == null)
+                //     {
+                //         MoveClothingPieceToLoopPath(loopPathSlot);
+                //     }
+                // }
+
+                if (loopPathSlot.percentInLoopPath < 0)
+                {
+                    loopPathSlot.percentInLoopPath = 1;
+                }
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+
+    private IEnumerator RunTheQueueLoop()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
+
+        Vector3 position;
+
+        while (true)
+        {
+            for (int i = 0; i < grainPoolSlots.Count; i++)
+            {
+                GrainPoolSlot loopPathSlot = grainPoolSlots[i];
+
+                position = loopPathSlot.transform.position;
+                position.x += moveSpeed;
+
+                loopPathSlot.transform.position = position;
+
+                if (loopPathSlot.transform.position.x > rightBoundX)
+                {
+                    // loopPathSlot.transform.position =
+                }
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+
+    public GrainPoolSlot GetGrainPoolSlot()
+    {
+        for (int i = 0; i < grainPoolSlots.Count; i++)
+        {
+            GrainPoolSlot grainPoolSlot = grainPoolSlots[i];
+
+            if (grainPoolSlot.grainPile == null)
+            {
+                return grainPoolSlot;
+            }
+        }
+
+        return null;
+    }
+
     public void AddGrainPile(GrainPile grainPile)
     {
         if (grainPiles == null)
@@ -43,6 +160,21 @@ public class GrainPool : MonoBehaviour
         }
 
         grainPiles.Add(grainPile);
+
+        // for (int i = 0; i < grainPoolSlots.Count; i++)
+        // {
+        //     GrainPoolSlot grainPoolSlot = grainPoolSlots[i];
+
+        //     if (grainPoolSlot.grainPile == null)
+        //     {
+        //         grainPile.transform.SetParent(grainPoolSlot.transform);
+        //         grainPile.transform.SetLocalX(0);
+
+        //         grainPoolSlot.grainPile = grainPile;
+
+        //         break;
+        //     }
+        // }
     }
 
     public void RemoveGrainPile(GrainPile grainPile)

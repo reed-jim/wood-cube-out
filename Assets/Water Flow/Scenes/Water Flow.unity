@@ -320,6 +320,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -622,6 +623,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -874,9 +876,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20caa78a479c65429e059bf736dfbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
+  row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &197209960
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -922,6 +927,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dec3ea647707588408ec0d11ab130b73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -931,7 +937,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &205055999
 GameObject:
@@ -1043,6 +1048,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1507,9 +1513,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20caa78a479c65429e059bf736dfbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
+  row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &345263276
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1555,6 +1564,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dec3ea647707588408ec0d11ab130b73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1564,7 +1574,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &398617223
 GameObject:
@@ -1790,6 +1799,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &517884593
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1835,6 +1845,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 34587324d412940a79d530020c957dc0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1844,7 +1855,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &546235527
 PrefabInstance:
@@ -1971,6 +1981,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &564950120
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2016,6 +2027,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 34587324d412940a79d530020c957dc0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2025,7 +2037,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &564950121
 Transform:
@@ -2073,6 +2084,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e6af2875a379945b2730a149a7ea87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaterFlowGameInput
+  mainCamera: {fileID: 0}
+  inputMode: 0
 --- !u!4 &575931442
 Transform:
   m_ObjectHideFlags: 0
@@ -2215,12 +2228,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseButton: {fileID: 1011284607}
   noAdsButton: {fileID: 316604634}
+  openShopPopupButton: {fileID: 0}
   openDebugPopupButton: {fileID: 760980268}
   remainingScrewText: {fileID: 1440758466}
   localizedLevelText: {fileID: 2033826429}
+  noAdsPack: {fileID: 0}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+  upSpeedButton: {fileID: 0}
+  upSpeedActiveState: {fileID: 0}
+  upSpeedInactiveState: {fileID: 0}
+  increaseGameSpeedButton: {fileID: 0}
+  decreaseGameSpeedButton: {fileID: 0}
+  gameSpeedText: {fileID: 0}
   hardModeCanvasGroup: {fileID: 2081052580}
+  debugContainer: {fileID: 0}
+  mainUI: {fileID: 0}
+  boosterUI: {fileID: 0}
+  mainUICanvasGroup: {fileID: 0}
+  boosterUICanvasGroup: {fileID: 0}
+  iconSkeleton: {fileID: 0}
+  iconLoadingAnimation: 
 --- !u!1001 &669729802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3604,9 +3632,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20caa78a479c65429e059bf736dfbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
+  row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &745718518
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3652,6 +3683,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dec3ea647707588408ec0d11ab130b73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3661,7 +3693,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &758200343
 GameObject:
@@ -4176,7 +4207,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1015
 --- !u!114 &830169499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4432,6 +4463,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &895964359
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4477,6 +4509,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 34587324d412940a79d530020c957dc0, type: 3}
   m_Color: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
   m_FlipX: 0
@@ -4486,7 +4519,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &895964360
 Transform:
@@ -5372,9 +5404,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20caa78a479c65429e059bf736dfbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
+  row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &1193831639
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5420,6 +5455,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dec3ea647707588408ec0d11ab130b73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5429,7 +5465,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1206752709
 GameObject:
@@ -5512,6 +5547,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1206752712
 MeshFilter:
@@ -5744,13 +5780,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a4a47233c1bc1c4ea5bb7e1accd1f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.GamePlay.LevelLoader
-  cloneToCalculateRotation: {fileID: 0}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
-  texturedMaterial: {fileID: 0}
-  tutorialDelay: 0.2
+  levelScaleXRatio: 18
+  levelScaleYRatio: 15
+  finalLevelScaleMultilier: 1
+  levelYOffsetRatio: 0.175
+  multiplierScaleX: 54
+  multiplierScaleY: 54
+  glowTilemapGrid: {fileID: 0}
+  shadowTilemap: {fileID: 0}
+  shadowTilemapGrid: {fileID: 0}
+  shadowSprite: {fileID: 0}
+  tilemapGrids: []
+  scaleFactor: 0
+  shadowTilemapOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &1261068466
 Transform:
   m_ObjectHideFlags: 0
@@ -5921,6 +5967,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6349,6 +6396,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7200,10 +7248,11 @@ MonoBehaviour:
   description: {fileID: 1307108259}
   continueButtonCanvasGroup: {fileID: 1314399260}
   continueButton: {fileID: 1314399256}
-  blackOverlay: {fileID: 742183348}
+  blackOverlay: {fileID: 0}
   mainCamera: {fileID: 2068592855}
   gameplayCanvas: {fileID: 1577199172}
   toSelectWashingMachines: []
+  numAntBoxToSelectLeft: 0
   step: 0
 --- !u!4 &1429613644
 Transform:
@@ -7348,6 +7397,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7427,11 +7477,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.49097222
+      value: 0.44444445
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.3179054
+      value: 0.16216215
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.x
@@ -7533,9 +7583,25 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 4848585691299595930, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_text
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848585691299595930, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_fontSize
+      value: 33.05
+      objectReference: {fileID: 0}
     - target: {fileID: 4895996407172104559, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5012714588658300466, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_text
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5012714588658300466, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_fontSize
+      value: 33.05
       objectReference: {fileID: 0}
     - target: {fileID: 5155357768742764304, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -7544,6 +7610,14 @@ PrefabInstance:
     - target: {fileID: 5370112698612642707, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5858229052829452837, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_text
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5858229052829452837, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_fontSize
+      value: 33.05
       objectReference: {fileID: 0}
     - target: {fileID: 5906238349909462480, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -7596,6 +7670,14 @@ PrefabInstance:
     - target: {fileID: 7437739270208658062, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8214344371029487547, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_text
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8214344371029487547, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_fontSize
+      value: 33.05
       objectReference: {fileID: 0}
     - target: {fileID: 8660683064262498994, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -8032,9 +8114,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20caa78a479c65429e059bf736dfbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
+  row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &1521699847
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -8080,6 +8165,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dec3ea647707588408ec0d11ab130b73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8089,7 +8175,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1523663397
 GameObject:
@@ -9043,6 +9128,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9179,9 +9265,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20caa78a479c65429e059bf736dfbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineStartSlot
+  row: 0
+  column: 0
   washingMachine: {fileID: 0}
 --- !u!212 &1793023638
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -9227,6 +9316,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: dec3ea647707588408ec0d11ab130b73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -9236,7 +9326,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1858663768
 GameObject:
@@ -9548,6 +9637,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9738,6 +9828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineManager
   levelItem: {fileID: 1223785556516249378, guid: 3c5386b11ec50d34c870488b3b363539, type: 3}
+  mainCamera: {fileID: 0}
   washingMachineSlots:
   - {fileID: 2048779156}
   - {fileID: 2049254767}
@@ -9756,7 +9847,20 @@ MonoBehaviour:
   - {fileID: 345263275}
   - {fileID: 1793023637}
   - {fileID: 1193831638}
-  poolFaction: 
+  grainPool: {fileID: 0}
+  poolFaction: []
+  difficultyLevel: 0
+  minAntNumberThreshold: 0
+  maxAntNumberThreshold: 0
+  difficultyCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  numAntBoxSpawned: 0
+  ghostAntBoxes: []
+  currentLevel: {fileID: 0}
 --- !u!1001 &1955203149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10143,6 +10247,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
