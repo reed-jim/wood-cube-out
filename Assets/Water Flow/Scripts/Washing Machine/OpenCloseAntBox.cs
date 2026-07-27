@@ -29,6 +29,7 @@ public class OpenCloseAntBox : WashingMachineItem
     private TrackEntry selectFailEntry;
     private Coroutine toggleNumberCoroutine;
 
+    private bool numberVisible;
     protected override void ExtendAwake()
     {
         base.ExtendAwake();
@@ -54,16 +55,9 @@ public class OpenCloseAntBox : WashingMachineItem
     public override void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {
         base.Setup(washingMachineStartSlot);
-        // Sau khi lên hàng: đồng bộ hiện/ẩn số theo trạng thái đóng/mở hiện tại.
         SetNumberVisible(isOpen);
     }
 
-    // Cửa (Spine pixel_box2) đã rút nông nên không tự che số khi đóng.
-    // => Điều khiển ẩn/hiện số bằng code theo đúng yêu cầu:
-    //    - BẬT số khi anim mở thực hiện được 1/2 thời gian.
-    //    - TẮT số khi anim đóng thực hiện được 1/2 thời gian.
-    // numberVisible là nguồn sự thật duy nhất cho việc số có được hiện hay không.
-    private bool numberVisible;
 
     private void SetNumberVisible(bool visible)
     {
@@ -221,7 +215,7 @@ public class OpenCloseAntBox : WashingMachineItem
 
     private void StartAnimateOpen()
     {
-        
+
         SetNumberVisible(false);
 
         if (skeletonAnimation != null && !string.IsNullOrEmpty(closedIdleAnimation))
