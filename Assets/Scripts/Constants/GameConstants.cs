@@ -90,6 +90,8 @@ public static class GameConstants
     public static string closeBoxSound = "closeBoxSound";
     public static string linkMagnetSound = "linkMagnetSound";
     public static string spawnPopSound = "spawnPopSound";
+    public static string woodBreakStateSound = "woodBreakStateSound";
+    public static string woodBreakEndSound = "woodBreakEndSound";
     #endregion
 
     #region ANIMATION

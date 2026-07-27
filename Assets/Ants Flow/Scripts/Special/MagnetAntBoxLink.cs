@@ -75,14 +75,38 @@ public class MagnetAntBoxLink : MonoBehaviour
 
     public void Setup(WashingMachineItem[] antBoxes)
     {
+
         Tween.StopAll(linkImage.transform);
+        Tween.StopAll(linkImage);
         linkImage.gameObject.SetActive(true);
         linkImage.color = Color.white;
 
-        if (blur1 != null) { blur1.gameObject.SetActive(true); blur1.color = Color.white; }
-        if (blur2 != null) { blur2.gameObject.SetActive(true); blur2.color = Color.white; }
-        if (bubble1 != null) { Tween.StopAll(bubble1.transform); bubble1.gameObject.SetActive(true); bubble1.color = Color.white; }
-        if (bubble2 != null) { Tween.StopAll(bubble2.transform); bubble2.gameObject.SetActive(true); bubble2.color = Color.white; }
+        if (blur1 != null)
+        {
+            Tween.StopAll(blur1);
+            blur1.gameObject.SetActive(true);
+            blur1.color = Color.white;
+        }
+        if (blur2 != null)
+        {
+            Tween.StopAll(blur2);
+            blur2.gameObject.SetActive(true);
+            blur2.color = Color.white;
+        }
+        if (bubble1 != null)
+        {
+            Tween.StopAll(bubble1.transform);
+            Tween.StopAll(bubble1);
+            bubble1.gameObject.SetActive(true);
+            bubble1.color = Color.white;
+        }
+        if (bubble2 != null)
+        {
+            Tween.StopAll(bubble2.transform);
+            Tween.StopAll(bubble2);
+            bubble2.gameObject.SetActive(true);
+            bubble2.color = Color.white;
+        }
 
         boxCountReachedZero = new bool[antBoxes.Length];
 

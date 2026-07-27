@@ -1034,7 +1034,7 @@ public class WashingMachineItem : MonoBehaviour
         // }
     }
 
-    private void OnRevive(BoosterType boosterType)
+    protected virtual void OnRevive(BoosterType boosterType)
     {
         if (isInSlot)
         {

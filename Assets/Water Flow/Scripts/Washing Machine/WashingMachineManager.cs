@@ -80,7 +80,7 @@ namespace AntsFlow
             {
                 lastToggleFrame = Time.frameCount;
 
-                // === 1. Tìm các hộp sẽ kết thúc ở hàng đầu (row 0) sau khi dịch chuyển ===
+             
                 List<WashingMachineItem> predictedRow0Boxes = new List<WashingMachineItem>();
                 foreach (var slot in washingMachineStartSlots)
                 {
@@ -106,8 +106,7 @@ namespace AntsFlow
                     }
                 }
 
-                // === 2. Kiểm tra xem nếu toggle bình thường thì hàng đầu có bị deadlock/kẹt hoàn toàn không ===
-                // Hàng đầu bị kẹt hoàn toàn nếu tất cả các hộp ở hàng đầu sau khi toggle đều không thể chọn được.
+        
                 bool wouldBeDeadlocked = true;
                 if (predictedRow0Boxes.Count == 0)
                 {
@@ -128,7 +127,7 @@ namespace AntsFlow
                         else if (box.isOpenCloseType)
                         {
                             bool nextOpenState = !box.isOpen;
-                            if (nextOpenState) // Nếu sau khi toggle mà nó mở, thì chọn được -> không bị deadlock
+                            if (nextOpenState) 
                             {
                                 wouldBeDeadlocked = false;
                                 break;
@@ -136,21 +135,20 @@ namespace AntsFlow
                         }
                         else
                         {
-                            // Hộp bình thường hoặc loại khác luôn chọn được
+                         
                             wouldBeDeadlocked = false;
                             break;
                         }
                     }
                 }
 
-                // === 3. Thực hiện toggle ===
+               
                 foreach (var startSlot in washingMachineStartSlots)
                 {
                     var box = startSlot.washingMachine;
                     if (box != null && box.isOpenCloseType)
                     {
-                        // Nếu xảy ra deadlock và hộp này nằm trong số các hộp sẽ ở hàng đầu,
-                        // ta ép nó phải mở (isOpen = true) và không cho đóng.
+                     
                         if (wouldBeDeadlocked && predictedRow0Boxes.Contains(box))
                         {
                             box.isOpen = true;
@@ -1017,6 +1015,14 @@ namespace AntsFlow
                         }
                         else
                         {
+                            // Hộp băng (FreezedAntBox) chưa được phá vỡ thì không thể select lên slot
+                            // (chỉ tan băng khi hộp khác hoàn thành), nên không được tính là còn nước đi.
+                            // Nhờ vậy TH hàng đầu gồm 2 magnet đang kẹt + 1 ô băng chưa vỡ sẽ được cho thua.
+                            if (box is FreezedAntBox frozenBox && frozenBox.isFreezed)
+                            {
+                                continue;
+                            }
+
                             //Normal
                             if (numAvailableSlots >= box.numSlotRequired)
                             {
