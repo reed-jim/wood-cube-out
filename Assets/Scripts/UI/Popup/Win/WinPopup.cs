@@ -354,7 +354,10 @@ public class WinPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
+      
         InvokeShowAdNotLoadedPopupEvent();
+        x5CoinButton.interactable = true;
+        continueButton.interactable = true;
     }
 
     private void OnMultiplyCoinTextTranslated()

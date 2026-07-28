@@ -81,14 +81,14 @@ public class AntBoxLink : MonoBehaviour
         Vector3 b = Vector3.zero;
         if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
         {
-             a = antBoxes[0].lid.transform.position.AddZ(-1f);
-             b = antBoxes[1].lid.transform.position.AddZ(-1f);
+            a = antBoxes[0].lid.transform.position.AddZ(-1f);
+            b = antBoxes[1].lid.transform.position.AddZ(-1f);
         }
         else
         {
-             // Giữ nguyên hành vi nhánh ants-flow: link ở z = -0.2
-             a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
-             b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
+            // Giữ nguyên hành vi nhánh ants-flow: link ở z = -0.2
+            a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
+            b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
         }
         // if (a.x > b.x)
         // {
@@ -122,6 +122,25 @@ public class AntBoxLink : MonoBehaviour
 
         leftHalf.size = size;
         rightHalf.size = size;
+
+        //fix Z antbox link luon cho o tren box va duoi text
+        if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+        {
+            const float behindNumberTextZOffset = 0.1f;
+            if (antBoxes[0] != null && antBoxes[0].numberText != null)
+            {
+                Vector3 lp = leftHalf.transform.position;
+                lp.z = Mathf.Max(lp.z, antBoxes[0].numberText.transform.position.z + behindNumberTextZOffset);
+                leftHalf.transform.position = lp;
+            }
+            if (antBoxes[1] != null && antBoxes[1].numberText != null)
+            {
+                Vector3 rp = rightHalf.transform.position;
+                rp.z = Mathf.Max(rp.z, antBoxes[1].numberText.transform.position.z + behindNumberTextZOffset);
+                rightHalf.transform.position = rp;
+            }
+        }
+     
 
         for (int i = 0; i < antBoxes.Length; i++)
         {
