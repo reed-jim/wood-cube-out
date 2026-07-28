@@ -16,6 +16,8 @@ public class BaseChicken : MonoBehaviour
     public Color faction;
     public int column;
     public int row;
+    public int numColumnTaken;
+    public int numRowTaken;
 
     [Header("State")]
     public bool isEating;

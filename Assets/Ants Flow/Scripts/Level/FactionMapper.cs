@@ -32,6 +32,19 @@ public class FactionMapper : Singleton<FactionMapper>
         BuildSpriteContainersOfColors();
     }
 
+    void OnValidate()
+    {
+        if (allFactions.Count == 0)
+        {
+            allFactions = new List<Color>();
+
+            for (int i = 0; i < mapper.Count; i++)
+            {
+                allFactions.Add(mapper[i].color);
+            }
+        }
+    }
+
     public Color GetRandomFaction()
     {
         return allFactions[UnityEngine.Random.Range(0, allFactions.Count)];

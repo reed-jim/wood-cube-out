@@ -31,8 +31,8 @@ namespace AntsFlow
         public float multiplierScaleY;
         public List<Color> poolFaction;
         public List<BaseTile> tiles;
+        public List<AntLevelDataItem> chickenLevelTiles;
         public bool isTutorialLevel;
-        public bool isTutorialSpeedUpLevel;
         public bool isUseManualFactionSetupForFirstAntBoxes;
         public LevelFactionConfig levelFactionConfig;
         public int difficulty;
@@ -40,6 +40,8 @@ namespace AntsFlow
         public bool overrideInitialDifficulty;
         public int numStartAntBoxes = 6;
         public SpecialElementConfig specialElementConfig;
+
+        public FactionMapper factionMapper;
 
         public Vector3 spawnPosition = new Vector3(0, 3, 0);
         public Vector3 spawnScale = 0.6f * Vector3.one;
@@ -169,20 +171,12 @@ namespace AntsFlow
     {
         private string hexInput;
 
-        // Change these to match your enum values
-        private int startX = 0;
-        private int startY = 0;
-        private int size = 16;
         private Vector2 tileSpacing = 1.6f * Vector2.one;
-        private string json;
-        private float colorGroupThreshold = 0.05f;
-        public float difficulty;
-        public float moveTilesCloserFactor = 0.9f;
-        public FactionMapper factionMapper;
 
         #region Snake
         private bool snakeConfigMode;
         private bool isPainting;
+        private bool isShowingNodeId;
         private bool paintValue; // true = add, false = remove
         private readonly HashSet<int> paintedThisDrag = new();
         #endregion
@@ -197,36 +191,15 @@ namespace AntsFlow
 
             GUILayout.Label("Generate Level", EditorStyles.boldLabel);
 
-            // startX = EditorGUILayout.IntField("StartX", startX);
-            // startY = EditorGUILayout.IntField("StartY", startY);
-            // size = EditorGUILayout.IntField("Size", size);
             tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
 
             EditorGUILayout.LabelField("Import Color Palette", EditorStyles.boldLabel);
 
             hexInput = EditorGUILayout.TextArea(hexInput, GUILayout.MinHeight(180));
 
-            // colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
-            // moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
-            // factionMapper = (FactionMapper)EditorGUILayout.ObjectField("Faction Mapper", factionMapper, typeof(FactionMapper), true);
-
-            // GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
-
-            // json = EditorGUILayout.TextArea(json, GUILayout.MinHeight(200));
-
-            // if (GUILayout.Button("Spawn Pixel Art"))
-            // {
-            //     SpawnPixelArt(levelItem);
-            // }
-
-            // if (GUILayout.Button("GenerateLevelFromJson"))
-            // {
-            //     GenerateLevelFromJson(levelItem, json);
-            // }
-
-            if (GUILayout.Button("Auto Fill Factions"))
+            if (GUILayout.Button("GenerateChickenLevelTiles"))
             {
-                FillFactionPool();
+                GenerateChickenLevelTiles(levelItem);
             }
 
             if (GUILayout.Button("GENERATE LEVEL"))
@@ -254,73 +227,26 @@ namespace AntsFlow
                 // Force Scene view repaint
                 SceneView.RepaintAll();
             }
-
-            // if (GUILayout.Button("Step 1: ReadLevel"))
-            // {
-            //     ReadLevel(levelItem);
-            // }
-
-            // if (GUILayout.Button("Step 2: GroupColors"))
-            // {
-            //     GroupColors(levelItem);
-            // }
-
-            // if (GUILayout.Button("Step 3: ReassignFactionForTiles"))
-            // {
-            //     ReassignFactionForTiles(levelItem);
-            // }
-
-            // if (GUILayout.Button("Step 4: AssignLevelPriority"))
-            // {
-            //     AssignLevelPriority(levelItem);
-            // }
-
-            // if (GUILayout.Button("Step 5: Find Tile Blockages"))
-            // {
-            //     levelItem.FindTileBlockages();
-            // }
-
-            // if (GUILayout.Button("Step 6: Get Pool Faction"))
-            // {
-            //     GetPoolFaction(levelItem);
-            // }
-
-            // if (GUILayout.Button("Center On X"))
-            // {
-            //     CenterOnX(levelItem);
-            // }
-
-            // if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
-            // {
-            //     MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
-            // }
-
-            // GUILayout.Label("Preview Level", EditorStyles.boldLabel);
-
-            // if (GUILayout.Button("Preview Level"))
-            // {
-            //     PreviewLevel(levelItem);
-            // }
-
-            // GUILayout.Label("Manual Level Setup", EditorStyles.boldLabel);
-
-            // if (GUILayout.Button("FillTheRestOfLevel"))
-            // {
-            //     FillTheRestOfLevel(levelItem);
-            // }
         }
 
+        #region Chicken Feed
         private void OnSceneGUI()
         {
-            ConfiguringSnake();
+            ConfiguringLevel();
         }
 
-        private void ConfiguringSnake()
+        private void ConfiguringLevel()
         {
             if (!snakeConfigMode)
                 return;
 
             LevelItem level = (LevelItem)target;
+
+            if (level.factionMapper == null)
+            {
+                level.factionMapper =
+                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+            }
 
             Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
 
@@ -334,58 +260,70 @@ namespace AntsFlow
 
             int index = 0;
 
+            int numColumn = level.numColumn;
+            int numRow = level.numRow;
             float tileDistance = 0.1f;
-
-            BaseTile[,] tileAtCoordinate = new BaseTile[level.numColumn, level.numRow];
-
-            for (int i = 0; i < level.tiles.Count; i++)
-            {
-                BaseTile tile = level.tiles[i];
-                tileAtCoordinate[(int)tile.position.x, (int)tile.position.y] = tile;
-            }
 
             // Background
             float backgroundWidth = 10;
 
             Vector3[] background =
             {
-        new Vector3(-backgroundWidth, -backgroundWidth, 1),
-        new Vector3(-backgroundWidth, +backgroundWidth, 1),
-        new Vector3(+backgroundWidth, +backgroundWidth, 1),
-        new Vector3(+backgroundWidth, -backgroundWidth, 1),
-    };
+                new Vector3(-backgroundWidth, -backgroundWidth, 1),
+                new Vector3(-backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, -backgroundWidth, 1),
+            };
 
             Handles.DrawSolidRectangleWithOutline(
                 background,
                 new Color(0f, 0f, 0f, 0.85f),
                 Color.white);
 
-            for (int y = 0; y < level.numRow; y++)
+            for (int y = 0; y < numRow; y++)
             {
-                for (int x = 0; x < level.numColumn; x++)
+                for (int x = 0; x < numColumn; x++)
                 {
                     Vector3 worldPos = tileDistance * new Vector2(x, y);
+
+                    if (level.specialElementConfig.snakeConfig.snakeSegmentIndexes == null)
+                    {
+                        level.specialElementConfig.snakeConfig.snakeSegmentIndexes = new List<int>();
+                    }
 
                     bool selected = level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index);
 
                     float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
 
-                    BaseTile tile = tileAtCoordinate[x, y];
+                    AntLevelDataItem tileData = level.chickenLevelTiles[index];
 
-                    if (tile != null)
+                    if (tileData != null)
                     {
-                        Handles.color = tile.Faction;
+                        Handles.color = level.factionMapper.allFactions[tileData.factionIndex];
                         Handles.DrawSolidDisc(
                             worldPos,
                             SceneView.currentDrawingSceneView.camera.transform.forward,
                             0.75f * size);
                     }
 
-                    Handles.color = selected ? Color.green : Color.black;
+                    Handles.color = selected ? Color.green : Color.gray;
                     Handles.DrawWireDisc(
                         worldPos,
                         SceneView.currentDrawingSceneView.camera.transform.forward,
                         size);
+
+                    // Node id
+                    if (isShowingNodeId)
+                    {
+                        GUIStyle style = new GUIStyle(EditorStyles.whiteBoldLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 11
+                        };
+                        style.normal.textColor = Color.yellow;
+
+                        Handles.Label(worldPos + Vector3.up * 0.05f, $"{x + y * numColumn}", style);
+                    }
 
                     // Detect mouse over this circle
                     if (HandleUtility.DistanceToCircle(worldPos, size) == 0)
@@ -437,8 +375,80 @@ namespace AntsFlow
                 }
             }
 
+            // Vector3 previousPos = Vector3.zero;
+            // bool hasPrevious = false;
+
+            // for (int i = 0; i < level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Count; i++)
+            // {
+            //     index = level.specialElementConfig.snakeConfig.snakeSegmentIndexes[i];
+
+            //     int x = index % numColumn;
+            //     int y = index / numColumn;
+
+            //     Vector3 worldPos = new Vector3(x * tileDistance, y * tileDistance, 0);
+
+            //     if (hasPrevious)
+            //         DrawArrow(previousPos, worldPos, 0.05f, 20f);
+
+            //     previousPos = worldPos;
+            //     hasPrevious = true;
+            // }
+
             if (GUI.changed)
                 SceneView.RepaintAll();
+        }
+
+        private void GenerateChickenLevelTiles(LevelItem levelItem)
+        {
+            FactionMapper factionMapper =
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+
+            levelItem.chickenLevelTiles = new List<AntLevelDataItem>();
+
+            List<Color> allFactions = factionMapper.GetRandomFactions(8, levelItem.numRow * levelItem.numColumn);
+
+            for (int y = 0; y < levelItem.numRow; y++)
+            {
+                for (int x = 0; x < levelItem.numColumn; x++)
+                {
+                    int index = x + y * levelItem.numColumn;
+
+                    AntLevelDataItem tileData = new AntLevelDataItem();
+
+                    tileData.position = new Vector3(x, y);
+                    tileData.factionIndex = factionMapper.allFactions.IndexOf(allFactions[index]);
+
+                    levelItem.chickenLevelTiles.Add(tileData);
+                }
+            }
+        }
+        #endregion
+
+        private void DrawArrow(Vector3 from, Vector3 to, float headLength, float headAngle)
+        {
+            float lineWidth = 5f; // thickness
+
+            // Thick line
+            Handles.color = Color.green;
+            Handles.DrawAAPolyLine(lineWidth, from, to);
+
+            Vector3 direction = (to - from).normalized;
+
+            Vector3 left = Quaternion.Euler(0, 0, headAngle) * -direction;
+            Vector3 right = Quaternion.Euler(0, 0, -headAngle) * -direction;
+
+            // Thicker arrow head
+            Handles.DrawAAPolyLine(
+                lineWidth,
+                to,
+                to + left * headLength
+            );
+
+            Handles.DrawAAPolyLine(
+                lineWidth,
+                to,
+                to + right * headLength
+            );
         }
 
         private void FillFactionPool()
@@ -479,62 +489,6 @@ namespace AntsFlow
             levelItem.poolFaction = levelItem.tiles.Select(item => item.Faction).ToList();
 
             EditorUtility.SetDirty(levelItem);
-        }
-
-        void SpawnPixelArt(LevelItem level)
-        {
-            List<GameObject> toRemoveObjects = new List<GameObject>();
-
-            for (int i = 0; i < level.transform.childCount; i++)
-            {
-                toRemoveObjects.Add(level.transform.GetChild(i).gameObject);
-            }
-
-            foreach (var item in toRemoveObjects)
-            {
-                DestroyImmediate(item, true);
-            }
-
-            level.transform.position = Vector3.zero;
-            level.transform.localScale = Vector3.one;
-
-            Color[] pixels = level.picture.texture.GetPixels();
-
-            int width = level.picture.texture.width;
-            int height = level.picture.texture.height;
-
-            int index = 0;
-
-            // for (int y = startY; y < startY + size; y++)
-            // {
-            //     for (int x = startX; x < startX + size; x++)
-            //     {
-            //         Color pixelColor = pixels[y * width + x];
-
-            //         // Skip transparent pixels if enabled
-            //         if (pixelColor.a < 1)
-            //             continue;
-
-            //         // Create tile
-            //         Vector3 spawnPos = new Vector3(-8 + (x - startX) * tileSpacing.x, (y - startY) * tileSpacing.y, 0.01f * y);
-
-            //         BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
-            //             level.tilePrefab,
-            //             level.transform
-            //         );
-            //         tile.name = $"Tile {index}";
-            //         tile.transform.position = spawnPos;
-
-            //         tile.spriteRenderer.color = pixelColor;
-
-            //         index++;
-            //     }
-            // }
-
-            level.transform.position = level.spawnPosition;
-            level.transform.localScale = level.spawnScale;
-
-            EditorUtility.SetDirty(level);
         }
 
         private void GenerateLevel(LevelItem levelItem)
@@ -632,153 +586,6 @@ namespace AntsFlow
             level.transform.localScale = level.spawnScale;
 
             EditorUtility.SetDirty(level);
-        }
-
-        private void FindTileBlockages(LevelItem level)
-        {
-            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
-
-            // for (int i = 0; i < tiles.Length; i++)
-            // {
-            //     BaseTile tile = tiles[i];
-
-            //     tile.blockages = new List<BaseTile>();
-
-            //     BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
-
-            //     FindBlockage(tile, boxCollider, tile.transform.up);
-            //     FindBlockage(tile, boxCollider, tile.transform.right);
-            //     FindBlockage(tile, boxCollider, -tile.transform.up);
-            //     FindBlockage(tile, boxCollider, -tile.transform.right);
-            // }
-
-            // EditorUtility.SetDirty(level);
-
-            void FindBlockage(BaseTile tile, BoxCollider2D collider, Vector2 direction)
-            {
-                RaycastHit2D[] hits = new RaycastHit2D[1];
-
-                collider.Raycast(direction, hits);
-
-                if (hits.Length > 0 && hits[0].collider != null)
-                {
-                    BaseTile blockage = hits[0].collider.GetComponent<BaseTile>();
-
-                    if (blockage != null)
-                    {
-                        tile.blockages.Add(blockage);
-                    }
-                }
-            }
-        }
-
-        private void GenerateLevelFromJson(LevelItem level, string json)
-        {
-            List<GameObject> toRemoveObjects = new List<GameObject>();
-
-            for (int i = 0; i < level.transform.childCount; i++)
-            {
-                toRemoveObjects.Add(level.transform.GetChild(i).gameObject);
-            }
-
-            foreach (var item in toRemoveObjects)
-            {
-                DestroyImmediate(item, true);
-            }
-
-            level.transform.position = Vector3.zero;
-            level.transform.localScale = Vector3.one;
-
-            // Parse JSON
-            LevelData data = JsonUtility.FromJson<LevelData>(json);
-
-            Dictionary<string, Color> paletteMap = new Dictionary<string, Color>();
-
-            // Create palette dictionary
-            paletteMap.Clear();
-
-            foreach (var p in data.palette)
-            {
-                paletteMap[p.key] = HexToColor(p.fill);
-            }
-
-            // Generate grid
-            for (int row = 0; row < data.gridRows; row++)
-            {
-                for (int col = 0; col < data.gridCols; col++)
-                {
-                    int index = row * data.gridCols + col;
-
-                    // Safety check
-                    if (index >= data.grid.Length)
-                        continue;
-
-                    string tileKey = data.grid[index];
-
-                    // "" means empty
-                    if (string.IsNullOrEmpty(tileKey))
-                        continue;
-
-                    // Create tile
-                    Vector3 pos = new Vector3(
-                        col * tileSpacing.x,
-                        -row * tileSpacing.y,
-                        0
-                    );
-
-                    // BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
-                    //     level.tilePrefab,
-                    //     level.transform
-                    // );
-
-                    // // Set tile data
-                    // tile.name = $"Tile_{row}_{col}_{tileKey}";
-                    // tile.transform.position = pos;
-
-                    // // Apply color from palette
-                    // if (paletteMap.TryGetValue(tileKey, out Color color))
-                    // {
-                    //     tile.spriteRenderer.color = color;
-                    // }
-                }
-            }
-
-            EditorUtility.SetDirty(level);
-        }
-
-        private void GroupColors(LevelItem level)
-        {
-            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
-
-            // List<Color> colors = tiles.Select(item => item.spriteRenderer.color).ToList();
-
-            // List<Color> groups = new();
-
-            // float threshold = colorGroupThreshold;
-
-            // foreach (var color in colors)
-            // {
-            //     bool found = false;
-
-            //     for (int i = 0; i < groups.Count; i++)
-            //     {
-            //         float distance = Vector3.Distance(
-            //             new Vector3(color.r, color.g, color.b),
-            //             new Vector3(groups[i].r, groups[i].g, groups[i].b));
-
-            //         if (distance < threshold)
-            //         {
-            //             found = true;
-            //             break;
-            //         }
-            //     }
-
-            //     if (!found)
-            //         groups.Add(color);
-            // }
-
-
-            // level.factions = groups;
         }
 
         private void ReassignFactionForTiles(LevelItem level)
@@ -958,176 +765,6 @@ namespace AntsFlow
             EditorUtility.SetDirty(level);
         }
 
-        public void CenterOnX(LevelItem level)
-        {
-            float sumX = 0f;
-
-            foreach (BaseTile child in level.tiles)
-            {
-                sumX += child.position.x;
-            }
-
-            float averageX = sumX / level.transform.childCount;
-
-            level.transform.position += Vector3.left * averageX;
-
-            EditorUtility.SetDirty(level);
-        }
-
-        public void MoveTilesCloserTogether(LevelItem level, float factor)
-        {
-            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
-
-            // Vector3 center = Vector3.zero;
-
-            // foreach (BaseTile tile in tiles)
-            //     center += tile.transform.position;
-
-            // center /= tiles.Length;
-
-            // // find num column
-            // float firstRowY = tiles[0].transform.position.y;
-            // float tolerance = 0.01f;
-
-            // int numCols = 0;
-
-            // foreach (var tile in tiles)
-            // {
-            //     if (Mathf.Abs(tile.transform.position.y - firstRowY) < tolerance)
-            //         numCols++;
-            // }
-
-            // float baseSpacingX = 0.7605271f;
-            // float baseSpacingY = 0.760527f;
-            // float currentSpacingX = tiles[1].transform.position.x - tiles[0].transform.position.x;
-            // float currentSpacingY = tiles[numCols].transform.position.y - tiles[0].transform.position.y;
-
-            // float ratioX = currentSpacingX / baseSpacingX;
-            // float ratioY = currentSpacingY / baseSpacingY;
-
-            // foreach (BaseTile tile in tiles)
-            // {
-            //     Vector3 offset = tile.transform.position - center;
-
-            //     float gridX = offset.x / currentSpacingX * ratioX;
-            //     float gridY = offset.y / currentSpacingY * ratioY;
-
-            //     tile.transform.position = center + new Vector3(
-            //         gridX * tileSpacing.x,
-            //         gridY * tileSpacing.y,
-            //         offset.z
-            //     );
-            // }
-
-
-            // foreach (BaseTile tile in tiles)
-            // {
-            //     tile.transform.position = center + (tile.transform.position - center) * factor;
-            // }
-
-            EditorUtility.SetDirty(level);
-        }
-
-        public void PreviewLevel(LevelItem level)
-        {
-            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
-
-            // foreach (BaseTile tile in tiles)
-            // {
-            //     tile.spriteRenderer.sprite = factionMapper.GetAntBoxSprite(tile.Faction);
-            // }
-        }
-
-        #region JSON
-        private void ConvertToJson(LevelItem level)
-        {
-            // factionMapper =
-            //     AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
-
-            // List<BaseTile> tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(level.transform);
-
-            // AntLevelData antLevelData = new AntLevelData();
-
-            // antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
-
-            // for (int i = 0; i < tiles.Count; i++)
-            // {
-            //     BaseTile tile = tiles[i];
-
-            //     AntLevelDataItem dataItem = new AntLevelDataItem();
-            //     dataItem.position = tile.transform.position;
-            //     dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
-
-            //     dataItem.blockageIndexes = new List<int>();
-
-            //     for (int j = 0; j < tile.blockages.Count; j++)
-            //     {
-            //         dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
-            //     }
-
-            //     dataItem.ring = tile.ring;
-            //     dataItem.priority = tile.priority;
-
-            //     antLevelData.antLevelDataItems.Add(dataItem);
-            // }
-
-            // List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(level.poolFaction);
-
-            // antLevelData.levelItemData = new LevelItemData()
-            // {
-            //     levelScale = level.transform.localScale,
-            //     poolFactionIndexes = poolFactionIndexes,
-            //     isTutorialLevel = level.isTutorialLevel,
-            //     isUseManualFactionSetupForFirstAntBoxes = level.isUseManualFactionSetupForFirstAntBoxes,
-            //     levelFactionConfig = level.levelFactionConfig,
-            //     difficulty = level.difficulty,
-            //     initialDifficulty = level.initialDifficulty,
-            //     overrideInitialDifficulty = level.overrideInitialDifficulty,
-            //     numStartAntBoxes = level.numStartAntBoxes,
-            //     specialElementConfig = level.specialElementConfig
-            // };
-
-            // // Use level name as file name
-            // string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{level.name}.json");
-
-            // // Serialize and save
-            // string json = JsonUtility.ToJson(antLevelData, false);
-            // File.WriteAllText(filePath, json);
-
-#if UNITY_EDITOR
-            UnityEditor.AssetDatabase.Refresh();
-#endif
-        }
-        #endregion
-
-        #region Manual Level Setup
-        private void FillTheRestOfLevel(LevelItem levelItem)
-        {
-            List<Color> poolFaction = levelItem.poolFaction;
-
-            Dictionary<Color, int> numAntPerFaction = new Dictionary<Color, int>();
-
-            for (int i = 0; i < poolFaction.Count; i++)
-            {
-                CommonUtil.SumValueOfDictionary(numAntPerFaction, poolFaction[i], 1);
-            }
-
-            for (int i = 0; i < levelItem.levelFactionConfig.items.Count; i++)
-            {
-                LevelFactionItemConfig item = levelItem.levelFactionConfig.items[i];
-
-                CommonUtil.SumValueOfDictionary(numAntPerFaction, item.faction, item.numAnt);
-            }
-
-            foreach (var item in numAntPerFaction)
-            {
-                levelItem.levelFactionConfig.items.Add(new LevelFactionItemConfig(item.Key, item.Value));
-            }
-
-            EditorUtility.SetDirty(levelItem);
-        }
-        #endregion
-
         private Color HexToColor(string hex)
         {
             Color color;
@@ -1230,6 +867,20 @@ public class SpecialElementConfig
     public SnakeConfig snakeConfig;
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
+}
+
+[Serializable]
+public class GiantChickenConfig
+{
+    public List<GiantChickenItemConfig> giantChickenItemConfigs;
+}
+
+[Serializable]
+public class GiantChickenItemConfig
+{
+    public Vector2Int coordinate;
+    public int sizeX = 2;
+    public int sizeY = 2;
 }
 
 [Serializable]

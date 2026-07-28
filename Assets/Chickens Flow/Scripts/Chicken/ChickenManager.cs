@@ -15,6 +15,11 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public List<Color> allFactions;
 
+    public void GenerateAllFactions(int total)
+    {
+        allFactions = FactionMapper.Ins.GetRandomFactions(8, total);
+    }
+
     public void SpawnFirstChickens(AntsFlow.LevelItem levelItem)
     {
         int numColumn = levelItem.numColumn;
@@ -31,6 +36,19 @@ public class ChickenManager : Singleton<ChickenManager>
 
         int column;
         int row;
+
+        // // Random All
+        // GenerateAllFactions(numColumn * numRow);
+
+        // New Level Config
+        allFactions = new List<Color>();
+
+        for (int i = 0; i < levelItem.chickenLevelTiles.Count; i++)
+        {
+            AntLevelDataItem tileData = levelItem.chickenLevelTiles[i];
+
+            allFactions.Add(FactionMapper.Ins.allFactions[tileData.factionIndex]);
+        }
 
         chickens = new List<BaseChicken>();
 
