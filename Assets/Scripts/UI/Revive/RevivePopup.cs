@@ -161,7 +161,7 @@ public class RevivePopup : BasePopup
                     currentLevel.Value, "Coin",
                     200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
 
-            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Revive", 200, currentLevel.Value);
+            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Revive", 200, currentLevel.Value).Send();
 
             // userResourcesObserver.Save();
         }

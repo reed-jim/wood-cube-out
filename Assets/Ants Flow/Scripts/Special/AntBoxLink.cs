@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -76,9 +77,19 @@ public class AntBoxLink : MonoBehaviour
 
     private void PlaceTheLink()
     {
-        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
-        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
-
+        Vector3 a = Vector3.zero;
+        Vector3 b = Vector3.zero;
+        if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+        {
+             a = antBoxes[0].lid.transform.position.AddZ(-1f);
+             b = antBoxes[1].lid.transform.position.AddZ(-1f);
+        }
+        else
+        {
+             // Giữ nguyên hành vi nhánh ants-flow: link ở z = -0.2
+             a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
+             b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
+        }
         // if (a.x > b.x)
         // {
         //     Vector3 temp = a;

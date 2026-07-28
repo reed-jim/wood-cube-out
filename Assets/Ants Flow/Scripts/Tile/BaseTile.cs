@@ -27,10 +27,9 @@ namespace AntsFlow
         public bool isPrepareComplete;
         public bool isLocked;
         public bool isHidden;
-        public int numStepToReach;
+        public bool isSpawningAgain;
         [NonSerialized] public List<BaseTile> blockages;
         [NonSerialized] public HashSet<BaseTile> blockedByMe;
-        [NonSerialized] public List<BaseTile> actualBlockages;
         [NonSerialized] public List<Node> path;
 
         public int ring;
@@ -105,9 +104,6 @@ namespace AntsFlow
             tileMoveToAntEvent += OnTileMoveToAnt;
             removeTileAsBlockageEvent += OnRemoveTileAsBlockage;
 
-            // actualBlockages = new List<BaseTile>();
-            // actualBlockages.AddRange(blockages);
-
             // Vector2 spriteSize = outline.sprite.bounds.size;
 
             // Vector2 worldSize = new Vector2(
@@ -136,9 +132,13 @@ namespace AntsFlow
         {
             isAntApproaching = false;
             isAnimating = false;
+            isMovedToAnt = false;
+            isDone = false;
 
-            actualBlockages.Clear();
-            path.Clear();
+            if (path != null)
+            {
+                path.Clear();
+            }
         }
 
         public void SetNoLongerBlockages()
@@ -213,8 +213,25 @@ namespace AntsFlow
 
             Hide();
             RevealHiddenTiles();
+            try
+            {
+                SpecialElementManager.Ins.spawningTileBox.SpawnNewTileAt(this);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
 
             tileMoveToAntEvent?.Invoke(this);
+        }
+
+        public void Show()
+        {
+            Tile tile = ScriptableObject.CreateInstance<Tile>();
+            tile.sprite = FactionMapper.Ins.GetTileSprite(faction);
+
+            TileManager.Ins.tilemap.SetTile(tilemapPosition, tile);
+            TileManager.Ins.shadowTilemap.SetTile(tilemapPosition, AntsFlow.TileManager.Ins.shadowTile);
         }
 
         public void Hide()
@@ -225,6 +242,13 @@ namespace AntsFlow
 
         public void Complete()
         {
+            if (isSpawningAgain)
+            {
+                isSpawningAgain = false;
+
+                return;
+            }
+
             isDone = true;
 
             tileCompleteEvent.Invoke(this);

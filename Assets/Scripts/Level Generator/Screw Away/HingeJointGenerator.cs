@@ -117,221 +117,6 @@ public class HingeJointGenerator : EditorWindow
 
         GUILayout.Label("Generate", centeredStyle);
 
-        // if (GUILayout.Button("AutoAssignSprites"))
-        // {
-        //     AutoAssignSprites();
-        // }
-
-        // if (GUILayout.Button("Generate Level"))
-        // {
-        //     GenerateLevel();
-        // }
-
-        // if (GUILayout.Button("Generate Level Simple"))
-        // {
-        //     GenerateLevelSimple();
-        // }
-
-        // if (GUILayout.Button("Generate Level Pattern"))
-        // {
-        //     GenerateLevelPattern();
-        // }
-
-        // if (GUILayout.Button("Generate Level Rubik"))
-        // {
-        //     GenerateLevelRubik();
-        // }
-
-        // if (GUILayout.Button("Generate Level Rubik Symmetrically"))
-        // {
-        //     GenerateLevelRubikQuarter();
-        // }
-
-        // if (GUILayout.Button("Randomize Level Pieces' Color"))
-        // {
-        //     RandomizeLevelModelColor();
-        // }
-
-        // if (GUILayout.Button("Revert Original Model Color"))
-        // {
-        //     RevertOriginalModelColor();
-        // }
-
-        // if (GUILayout.Button("GenerateChain"))
-        // {
-        //     GenerateChain();
-        // }
-        // // if (GUILayout.Button("Fine Tune Level"))
-        // // {
-        // //     FineTuneLevel();
-        // // }
-
-        // GUILayout.Space(16);
-        // GUILayout.Label("Screws", centeredStyle);
-
-        // if (GUILayout.Button("Generate And Snap Screws"))
-        // {
-        //     ClearScrews();
-        //     GenerateScrews();
-        //     SnapSurfaceScrewForAllPieceSequentially();
-        // }
-
-        // if (GUILayout.Button("Generate Screws"))
-        // {
-        //     ClearScrews();
-        //     GenerateScrewsNew();
-        // }
-
-        // if (GUILayout.Button("Spawn Screws From Top"))
-        // {
-        //     ClearScrews();
-        //     SpawnScrewsWithFacing(Facing.Top);
-        // }
-
-        // if (GUILayout.Button("Spawn Screws From Right"))
-        // {
-        //     ClearScrews();
-        //     SpawnScrewsWithFacing(Facing.Right);
-        // }
-
-        // if (GUILayout.Button("Spawn Screws From Front"))
-        // {
-        //     ClearScrews();
-        //     SpawnScrewsWithFacing(Facing.Front);
-        // }
-
-        // // if (GUILayout.Button("Generate Screw Single Piece"))
-        // // {
-        // //     GenerateScrewForPiece(Selection.activeTransform.GetComponent<BasicObjectPart>());
-        // // }
-
-        // if (GUILayout.Button("Generate Screw Single Piece"))
-        // {
-        //     GenerateScrewsForAPieceSpiral(Selection.activeTransform.GetComponent<BasicObjectPart>());
-        // }
-
-        // expectedDirection = (FaceDirection)EditorGUILayout.EnumPopup("Expected Direction", expectedDirection);
-
-        // if (GUILayout.Button("Count number of screws"))
-        // {
-        //     CountNumberOfScrews();
-        // }
-
-        // GUILayout.Space(16);
-        // GUILayout.Label("Hinge Joint", centeredStyle);
-
-        // if (GUILayout.Button("Generate Hinge Joint All"))
-        // {
-        //     GenerateHingeJointAll(Selection.activeTransform);
-        // }
-
-        // if (GUILayout.Button("Remove Mesh Colliders"))
-        // {
-        //     RemoveAllMeshColliders();
-        // }
-
-        // GUILayout.Space(16);
-        // GUILayout.Label("Delete", centeredStyle);
-
-        // if (GUILayout.Button("Delete Screws"))
-        // {
-        //     ClearScrews();
-        // }
-
-        // if (GUILayout.Button("Reduce Screws"))
-        // {
-        //     ReduceScrews();
-        // }
-
-        // GUILayout.Space(16);
-        // GUILayout.Label("Snap", centeredStyle);
-
-        // if (GUILayout.Button("Snap Surface All"))
-        // {
-        //     SnapSurfaceAll(Selection.activeTransform);
-        // }
-
-        // if (GUILayout.Button("Snap Surface All Pieces Sequentially"))
-        // {
-        //     SnapSurfaceScrewForAllPieceSequentially();
-        // }
-
-        // GUILayout.Space(16);
-        // GUILayout.Label("Extract other games' level", centeredStyle);
-
-        // if (GUILayout.Button("Extract Pieces"))
-        // {
-        //     ExtractPieces();
-        // }
-
-        // if (GUILayout.Button("Extract Full Level"))
-        // {
-        //     ExtractFullLevel();
-        // }
-
-        // GUILayout.Space(16);
-        // GUILayout.Label("Utils", centeredStyle);
-
-        // if (GUILayout.Button("Remove Children's Components"))
-        // {
-        //     RemoveComponentsForAllChildren();
-        // }
-
-        // if (GUILayout.Button("Add Required Components To Pieces"))
-        // {
-        //     AddRequiredComponentsToPieces();
-        // }
-
-        // if (GUILayout.Button("Set Lossy Scale All Screws"))
-        // {
-        //     SetLossyScaleAllScrews();
-        // }
-
-        // if (GUILayout.Button("Check Level Issues"))
-        // {
-        //     CheckLevelIssues();
-        // }
-
-        // if (GUILayout.Button("Check Level Concave Colliders"))
-        // {
-        //     CheckForConcaveColliderAllLevels();
-        // }
-
-        // if (GUILayout.Button("Check Missing Components"))
-        // {
-        //     CheckMissingComponents();
-        // }
-
-        // if (GUILayout.Button("Check HingeJoint Number All Levels"))
-        // {
-        //     CheckHingeJointNumberAllLevels();
-        // }
-
-        // if (GUILayout.Button("Check Null HingeJoint's Rigidbody"))
-        // {
-        //     CheckForNullHingeJointRigidbody(Selection.activeTransform);
-        // }
-
-        // if (GUILayout.Button("CheckAddressablesLevels"))
-        // {
-        //     CheckAddressablesLevels();
-        // }
-
-        // if (GUILayout.Button("Find Pieces With Missing Mesh"))
-        // {
-        //     FindPiecesWithMissingMesh();
-        // }
-
-        // if (GUILayout.Button("SwitchToMasterMaterial"))
-        // {
-        //     SwitchToMasterMaterial();
-        // }
-
-        // if (GUILayout.Button("Fold All"))
-        // {
-        //     FoldAllInPrefabMode();
-        // }
-
         if (GUILayout.Button("Find Tile Blockages All"))
         {
             FindTileBlockagesAll();
@@ -340,6 +125,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Convert To Json All"))
         {
             ConvertToJsonAll();
+        }
+
+        if (GUILayout.Button("Auto Assign Faction Mapper"))
+        {
+            AutoAssignFactionMapperSprites();
         }
 
         EditorGUILayout.EndScrollView();
@@ -438,6 +228,35 @@ public class HingeJointGenerator : EditorWindow
         Debug.Log($"Processed {processed} prefabs.");
     }
     #endregion
+
+    private void AutoAssignFactionMapperSprites()
+    {
+        string[] files = Directory.GetFiles("Assets/Ants Flow/Sprites/spawning tile box top", "*.png");
+        FactionMapper FactionMapper = AssetDatabase.LoadAssetAtPath<FactionMapper>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab");
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            string fileColor = files[i].Substring(files[i].Length - 10, 6);
+
+            for (int j = 0; j < FactionMapper.mapper.Count; j++)
+            {
+                string color = FactionMapper.mapper[j].spriteContainer.antBoxSkin;
+
+                if (color == fileColor)
+                {
+                    Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(files[i]);
+
+                    FactionMapper.mapper[j].spriteContainer.spawningTileBoxTop = sprite;
+
+                    break;
+                }
+            }
+        }
+
+        EditorUtility.SetDirty(FactionMapper);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
 
     private void AutoAssignSprites()
     {

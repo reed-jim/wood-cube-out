@@ -189,7 +189,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc6afa66f5762ec45bb8f41e00b0706b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HiddenAntBox
-  spriteRenderer: {fileID: 5929929943237858396}
   lid: {fileID: 5929833888475490255}
   shadow: {fileID: 6776577813766121946}
   doubleAntBoxHole: {fileID: 4456705103062332158}
@@ -213,10 +212,14 @@ MonoBehaviour:
   isAnimating: 0
   isInSlot: 0
   isDouble: 0
+  isMagnet: 0
+  magnetPartner: {fileID: 0}
   isGhostMode: 0
   isStucking: 0
   isPlayingWarningLoseAnimation: 0
   isShuffled: 0
+  isOpen: 1
+  isOpenCloseType: 0
   washingMachineStartSlot: {fileID: 0}
   washingMachineSlot: {fileID: 0}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
