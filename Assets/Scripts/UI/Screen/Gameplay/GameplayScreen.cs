@@ -5,6 +5,8 @@ using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,20 +17,24 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [Header("Buttons")]
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button noAdsButton;
-    [SerializeField] private Button x2SpeedButton;
     [SerializeField] private Button openShopPopupButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
+    [SerializeField] private RectTransform noAdsPack;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
 
     [Header("Game Speed")]
+    [SerializeField] private Button upSpeedButton;
+    [SerializeField] private CanvasGroup upSpeedActiveState;
+    [SerializeField] private CanvasGroup upSpeedInactiveState;
+
     [SerializeField] private Button increaseGameSpeedButton;
     [SerializeField] private Button decreaseGameSpeedButton;
     [SerializeField] private TMP_Text gameSpeedText;
-    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedGameSpeedText;
+    private bool _isSwitchingStateUpSpeed;
 
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
@@ -42,6 +48,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private CanvasGroup debugContainer;
     [SerializeField] private GameObject mainUI;
     [SerializeField] private GameObject boosterUI;
+    [SerializeField] private CanvasGroup mainUICanvasGroup;
+    [SerializeField] private CanvasGroup boosterUICanvasGroup;
+    [SerializeField] private SkeletonGraphic iconSkeleton;
+    [SpineAnimation] public string iconLoadingAnimation;
 
     #region MonoBehaviour Callbacks
 
@@ -58,10 +68,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
-        if (x2SpeedButton != null)
-        {
-            x2SpeedButton.onClick.AddListener(X2Speed);
-        }
+        upSpeedButton.onClick.AddListener(X2Speed);
 
         openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
@@ -79,14 +86,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
             openDebugPopupButton.gameObject.SetActive(false);
         }
 
-        if (gameSpeedText != null)
-        {
-            gameSpeedText.text = $"x{(int)Time.timeScale}";
-        }
-        if (localizedGameSpeedText != null)
-        {
-            localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{(int)Time.timeScale}");
-        }
+        gameSpeedText.text = $"x{(int)Time.timeScale}";
     }
 
     void OnDestroy()
@@ -115,6 +115,48 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     }
 
+    #endregion
+
+    #region Near Win Level
+    public void ShowUINearWinLevel()
+    {
+        SaferioTween.AlphaShow(mainUICanvasGroup);
+        SaferioTween.AlphaShow(boosterUICanvasGroup);
+
+        if (UserData.IsRemoveAds)
+        {
+            noAdsPack.gameObject.SetActive(false);
+        }
+    }
+
+    public void HideUINearWinLevel(Action onCompleteAction)
+    {
+        SaferioTween.AlphaHide(mainUICanvasGroup);
+        SaferioTween.AlphaHide(boosterUICanvasGroup, onCompleteAction: onCompleteAction);
+    }
+
+    public void ShowGameIcon(Action onCompleteAction)
+    {
+        iconSkeleton.gameObject.SetActive(true);
+        iconSkeleton.color = Color.white;
+
+        iconSkeleton.Skeleton.SetToSetupPose();
+        iconSkeleton.AnimationState.ClearTracks();
+        TrackEntry trackEntry = iconSkeleton.AnimationState.SetAnimation(0, iconLoadingAnimation, false);
+
+        trackEntry.Complete += OnAnimationComplete;
+
+        void OnAnimationComplete(TrackEntry entry)
+        {
+            trackEntry.Complete -= OnAnimationComplete;
+
+            Tween.Alpha(iconSkeleton, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                onCompleteAction?.Invoke();
+            });
+        }
+    }
     #endregion
 
     #region Button Events
@@ -180,7 +222,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelStarted()
     {
-
+        ShowUINearWinLevel();
     }
 
     private void OnLevelTextTranslated()
@@ -254,20 +296,35 @@ public class GameplayScreen : Singleton<GameplayScreen>
     #region Game Speed
     public void X2Speed()
     {
-        float prevValue = Time.timeScale;
-
-        if (Time.timeScale == 1)
+        if (_isSwitchingStateUpSpeed)
         {
-            Time.timeScale = 2;
+            return;
+        }
+
+        _isSwitchingStateUpSpeed = true;
+
+        int currentSpeed = UpSpeedAnt.Ins.SwitchGameSpeed();
+
+        UpdateUpSpeedState(currentSpeed);
+    }
+
+    public void UpdateUpSpeedState(int currentSpeed)
+    {
+        if (currentSpeed == 1)
+        {
+            SaferioTween.AlphaHide(upSpeedActiveState);
+            SaferioTween.AlphaShow(upSpeedInactiveState, onCompleteAction: () =>
+            {
+                _isSwitchingStateUpSpeed = false;
+            });
         }
         else
         {
-            Time.timeScale = 1;
-        }
-
-        if (localizedGameSpeedText != null)
-        {
-            localizedGameSpeedText.UpdateTranslationWithParameter("value", $"{prevValue}");
+            SaferioTween.AlphaShow(upSpeedActiveState);
+            SaferioTween.AlphaHide(upSpeedInactiveState, onCompleteAction: () =>
+            {
+                _isSwitchingStateUpSpeed = false;
+            });
         }
     }
 

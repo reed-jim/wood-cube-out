@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AntsFlow;
 using Falcon.FalconAnalytics.Scripts.Enum;
 using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
+using Lean.Localization;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -27,6 +28,11 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private RectTransform breakModeButtonRT;
     [SerializeField] private RectTransform clearAllScrewPortsButtonRT;
     [SerializeField] private RectTransform breakModeContainer;
+    [SerializeField] private CanvasGroup breakModeContainerCanvasGroup;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
+
+    public string enableAllAntBoxesTranslationName;
+    public string clearOneColorTranslationName;
 
     [SerializeField] private Button addMoreScrewPortButton;
     [SerializeField] private Button breakObjectButton;
@@ -69,6 +75,7 @@ public class BoosterUI : MonoBehaviour
     private bool _isInTransition;
     private bool _isEnable;
     private bool _isPreventShowWarningPopup;
+    private bool _isInBoosterEnableAllBoxesMode;
 
     private Vector2 _initialBoosterContainerPosition;
     private Vector2 _initialAddMoreScrewPortButtonPosition;
@@ -78,6 +85,7 @@ public class BoosterUI : MonoBehaviour
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
+        WashingMachineItem.selectWashingMachineEvent += ConfirmUseEnableAllBoxes;
         WaterFlowGameInput.useClearOneColorBoosterEvent += ConfirmClearOneColor;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
@@ -93,7 +101,7 @@ public class BoosterUI : MonoBehaviour
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
         clearOneColorButton.onClick.AddListener(() => UseBooster(BoosterType.ClearOneColor));
-        disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
+        // disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
         _tweens = new List<Tween>();
 
@@ -114,6 +122,7 @@ public class BoosterUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
+        WashingMachineItem.selectWashingMachineEvent -= ConfirmUseEnableAllBoxes;
         WaterFlowGameInput.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
@@ -382,17 +391,43 @@ public class BoosterUI : MonoBehaviour
         }
 
         breakModeContainer.gameObject.SetActive(true);
+        breakModeContainerCanvasGroup.alpha = 1;
+        localizedDescription.TranslationName = clearOneColorTranslationName;
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
 
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
+        Tween.LocalPositionY(breakModeContainer, -breakModeContainer.sizeDelta.y, duration: transitionTime)
         .OnComplete(() =>
         {
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
 
             AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
 
+            GamePersistentVariable.isPreventSelectAntBox = false;
+
             _isInTransition = false;
         });
+    }
+
+    private void ConfirmUseEnableAllBoxes(WashingMachineItem antBox)
+    {
+        if (!_isInBoosterEnableAllBoxesMode)
+        {
+            return;
+        }
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
+
+        if (breakModeContainer.gameObject.activeInHierarchy)
+        {
+            DisableBreakObjectMode(onCompleteAction: () =>
+            {
+                GamePersistentVariable.isPreventSelectAntBox = false;
+            });
+        }
+
+        _isInBoosterEnableAllBoxesMode = false;
     }
 
     private void ConfirmClearOneColor(Color faction)
@@ -402,14 +437,21 @@ public class BoosterUI : MonoBehaviour
         DisableBreakObjectMode();
     }
 
-    private void DisableBreakObjectMode()
+    private void DisableBreakObjectMode(Action onCompleteAction = null)
     {
         Tween.LocalPositionY(boosterContainer, _initialBoosterContainerPosition.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime)
-        .OnComplete(() =>
+        SaferioTween.AlphaHide(breakModeContainerCanvasGroup, onCompleteAction: () =>
         {
+            breakModeContainer.localPosition = breakModeContainer.localPosition.ChangeY(-canvasSizeOfReferenceDevice.Value.y);
             breakModeContainer.gameObject.SetActive(false);
+
+            onCompleteAction?.Invoke();
         });
+    }
+
+    private void DisableBreakObjectMode()
+    {
+        DisableBreakObjectMode(onCompleteAction: null);
     }
 
     private void DisableBreakObjectModeEarly()
@@ -449,10 +491,22 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 1);
 
-        HideBooster();
+        breakModeContainer.gameObject.SetActive(true);
+        breakModeContainerCanvasGroup.alpha = 1;
+        localizedDescription.TranslationName = enableAllAntBoxesTranslationName;
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
+
+        Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
+        Tween.LocalPositionY(breakModeContainer, 0, duration: transitionTime)
+        .OnComplete(() =>
+        {
+            GamePersistentVariable.isPreventSelectAntBox = false;
+
+            _isInTransition = false;
+        });
 
         WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
-        // WashingMachineManager.Ins.UseMagicBooster();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
 
@@ -462,6 +516,8 @@ public class BoosterUI : MonoBehaviour
         });
 
         GamePersistentVariable.boosterMode = BoosterMode.EnableAllAntBoxes;
+
+        _isInBoosterEnableAllBoxesMode = true;
     }
 
     private bool IsBoosterAvailable(int boosterIndex)
@@ -492,7 +548,7 @@ public class BoosterUI : MonoBehaviour
             currentLevel.Value, boosterType.ToString(),
             1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], $"Consume_Booster_{boosterType}");
 
-        new FResourceLog(FlowType.Sink, boosterType.ToString(), boosterType.ToString(), $"Consume_Booster_{boosterType}", 1, currentLevel.Value);
+        new FResourceLog(FlowType.Sink, boosterType.ToString(), boosterType.ToString(), $"Consume_Booster_{boosterType}", 1, currentLevel.Value).Send();
     }
 
     private void UseBreakObjectBooster()

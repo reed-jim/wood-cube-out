@@ -118,12 +118,27 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         // }
     }
 
+    public Vector2 WorldToCanvasPosition(Vector3 worldPosition)
+    {
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(worldPosition);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            GetComponent<RectTransform>(),
+            screenPoint,
+            null, // null for Screen Space - Overlay
+            out Vector2 localPoint);
+
+        return localPoint;
+    }
+
     public async void CollectItem
     (
         ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, float itemSizeX
     )
     {
-        Vector3 startPosition = new Vector3(-50, -150, 0);
+        Vector3 startPosition = GamePersistentVariable.spawnFlyingCoinPosition;
+
+        GamePersistentVariable.spawnFlyingCoinPosition = Vector3.zero;
 
         for (int i = 0; i < _rewards.Length; i++)
         {
@@ -158,10 +173,12 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         isCompleted = false;
 
+        Vector3 delta = position - startPosition;
+
         Vector3[] path =
         {
-            startPosition + new Vector3(150f, -100f, 0f), // curve right & down
-            startPosition + new Vector3(250f,  50f, 0f), // start moving up
+            startPosition + new Vector3(delta.x * 0.4f, -Mathf.Abs(delta.y) * 0.15f, 0),
+            startPosition + new Vector3(delta.x * 0.9f, delta.y * 0.4f, 0),
             position
         };
 
@@ -172,7 +189,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             Sequence seq = DOTween.Sequence();
 
-            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.1f * i));
+            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.1f * index));
 
             seq.Append(
                 DOTween.Sequence()
@@ -199,10 +216,14 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
                 onCompleteAction?.Invoke();
 
-                if (i % 2 == 0)
+                if (index % 3 == 0)
                 {
                     _rewards[index].GetComponent<RotatingCoin>().PlayFX();
                     SoundManager.Instance.PlaySoundCollectCoin();
+                }
+                else
+                {
+                    _rewards[index].gameObject.SetActive(false);
                 }
             });
 

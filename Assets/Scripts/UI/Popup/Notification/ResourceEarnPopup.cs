@@ -15,6 +15,7 @@ public class ResourceEarnPopup : BasePopup
     private bool _isRemoveAds;
 
     public static event Action<int> collectCoinEvent;
+    public static event Action updateCoinTextEvent;
     public static event Action removeAdsEvent;
     public static event Action<bool> showResourcesEarnPopupEvent;
 
@@ -65,7 +66,16 @@ public class ResourceEarnPopup : BasePopup
 
         if (_coinQuantity > 0)
         {
-            collectCoinEvent?.Invoke(_coinQuantity);
+            if (GamePersistentVariable.collectResourceMode == CollectResourceMode.PlayCollectAnimation)
+            {
+                collectCoinEvent?.Invoke(_coinQuantity);
+            }
+            else
+            {
+                updateCoinTextEvent?.Invoke();
+            }
+
+            GamePersistentVariable.collectResourceMode = CollectResourceMode.PlayCollectAnimation;
 
             _coinQuantity = 0;
         }

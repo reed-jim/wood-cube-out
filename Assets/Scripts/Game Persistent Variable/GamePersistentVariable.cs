@@ -58,6 +58,7 @@ public static class GamePersistentVariable
     #region GAME FLOW
     public static bool hasAppJustLaunched;
     public static bool isLoadingComplete;
+    public static bool isLoadingLevel;
     public static bool isPendingReplay;
     public static bool isPendingReturnHome;
     public static bool isPendingStartLevel;
@@ -204,5 +205,15 @@ public static class GamePersistentVariable
     public static bool isPauseGame;
     public static bool isTutorialLevelOneDone;
     public static bool isHideUI;
+    public static Vector2 tileDistance;
+    public static float ratioXY;
+    public static Vector2 spawnFlyingCoinPosition;
+    public static CollectResourceMode collectResourceMode;
     #endregion
+}
+
+public enum CollectResourceMode
+{
+    PlayCollectAnimation,
+    UpdateText
 }

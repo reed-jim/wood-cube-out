@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using AntsFlow;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
@@ -12,7 +13,9 @@ using static GameEnum;
 public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 {
     public CanvasGroup canvasGroup;
+    public CanvasGroup nonSafeAreaCanvasGroup;
     public Button x2SpeedButton;
+    public RectTransform upSpeedButtonHighlight;
     public SkeletonGraphic tutorialHand;
     [SpineEvent] public string tutorialHandClickEvent;
     public ParticleSystem rippleFx;
@@ -38,6 +41,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
             x2SpeedButton.onClick.AddListener(X2Speed);
         }
 
+        LevelLoader.startLevelEvent += OnLevelStarted;
         TileManager.winLevelEvent += OnLevelWon;
 
         if (tutorialHand != null && tutorialHand.AnimationState != null)
@@ -49,6 +53,7 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
     void OnDestroy()
     {
+        LevelLoader.startLevelEvent -= OnLevelStarted;
         TileManager.winLevelEvent -= OnLevelWon;
 
         if (tutorialHand != null && tutorialHand.AnimationState != null)
@@ -118,13 +123,6 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
         while (!isLevelWon)
         {
-            if (!GamePersistentVariable.isTutorialLevelOneDone)
-            {
-                yield return waitForSeconds;
-
-                continue;
-            }
-
             if (!isTutorialStarted)
             {
                 if (GamePersistentVariable.numActiveAnt > numAntToShow)
@@ -168,14 +166,31 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
     private void Show()
     {
-        SaferioTween.AlphaShow(canvasGroup);
+        upSpeedButtonHighlight.sizeDelta = 4000 * Vector2.one;
+
+        SaferioTween.AlphaShow(canvasGroup, onCompleteAction: () =>
+        {
+            HighlightUpSpeedButton();
+        });
+        SaferioTween.AlphaShow(nonSafeAreaCanvasGroup);
         Tween.Alpha(tutorialHand, 1, 0.3f);
+    }
+
+    private void HighlightUpSpeedButton()
+    {
+        Tween.UISizeDelta(upSpeedButtonHighlight, Vector2.zero, duration: 0.3f);
     }
 
     private void Hide()
     {
         SaferioTween.AlphaHide(canvasGroup);
+        SaferioTween.AlphaHide(nonSafeAreaCanvasGroup);
         Tween.Alpha(tutorialHand, 0, 0.3f);
+    }
+
+    private void OnLevelStarted()
+    {
+        isLevelWon = false;
     }
 
     private void OnLevelWon()

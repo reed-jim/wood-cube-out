@@ -12,6 +12,23 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    public static Vector3 RectTransformToWorldPosition(
+    RectTransform rectTransform,
+    Camera worldCamera,
+    float worldZ)
+    {
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(null, rectTransform.position);
+
+        Vector3 worldPoint = worldCamera.ScreenToWorldPoint(
+            new Vector3(
+                screenPoint.x,
+                screenPoint.y,
+                Mathf.Abs(worldZ - worldCamera.transform.position.z)));
+
+        worldPoint.z = worldZ;
+        return worldPoint;
+    }
+
     public static void MoveInCurve(Transform target, Vector3 from, Vector3 to, float height, float duration, Action onComplete)
     {
         Vector3 mid = Vector3.Lerp(from, to, 0.5f);

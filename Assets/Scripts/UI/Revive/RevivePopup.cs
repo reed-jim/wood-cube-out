@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using static GameEnum;
 using DG.Tweening;
 using Spine.Unity;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
+using Falcon.FalconAnalytics.Scripts.Enum;
 
 public class RevivePopup : BasePopup
 {
@@ -48,7 +50,7 @@ public class RevivePopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        costText.text = $"{GetBoosterCost(BoosterType.UnlockScrewBox)}";
+        costText.text = $"{boosterDataObserver.reviveCost}";
 
         _reviveByDiamondButtonRT = reviveByDiamondButton.GetComponent<RectTransform>();
         _reviveByAdsButtonRT = reviveByAdsButton.GetComponent<RectTransform>();
@@ -156,9 +158,7 @@ public class RevivePopup : BasePopup
 
         reviveByDiamondButton.interactable = false;
 
-        int cost = GetBoosterCost(_currentBoosterOnRevive);
-
-        if (userResourcesObserver.UserResources.CoinQuantity >= cost)
+        if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.reviveCost)
         {
             base.Hide(onCompletedAction: () =>
             {
@@ -169,19 +169,19 @@ public class RevivePopup : BasePopup
                 reviveByDiamondButton.interactable = true;
             });
 
-            userResourcesObserver.ChangeCoin(-cost);
-
-            SaferioTracking.TrackResourceSink(
-                    currentLevel.Value, "Coin",
-                    cost, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
-
+            userResourcesObserver.ChangeCoin(-boosterDataObserver.reviveCost);
             updateCoinTextEvent?.Invoke();
-
 
             if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
             {
                 userResourcesObserver.ChangeBoosterQuantity(2, 1);
             }
+
+            SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
+
+            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Revive", 200, currentLevel.Value).Send();
 
             // userResourcesObserver.Save();
         }
@@ -269,7 +269,6 @@ public class RevivePopup : BasePopup
 
     public void OnHoldSeeBoard()
     {
-        Debug.Log("Hold==== " + isBoardApla);
         isClickBoard = true;
     }
 

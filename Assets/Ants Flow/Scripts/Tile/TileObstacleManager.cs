@@ -16,6 +16,7 @@ namespace AntsFlow
 
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.winLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
             TileManager.winLevelEvent += OnLevelReplayed;
 
@@ -26,6 +27,7 @@ namespace AntsFlow
         {
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.winLevelEvent -= OnLevelReplayed;
             DebugPopup.switchLevelEvent -= OnLevelReplayed;
             TileManager.winLevelEvent -= OnLevelReplayed;
         }

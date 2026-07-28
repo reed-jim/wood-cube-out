@@ -187,7 +187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a4540b399e82a4ba240461f387fc73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WashingMachineItem
-  spriteRenderer: {fileID: 5929929943237858396}
   lid: {fileID: 3451961694251783844}
   shadow: {fileID: 379933700654909350}
   doubleAntBoxHole: {fileID: 8490269413565392648}
@@ -211,10 +210,14 @@ MonoBehaviour:
   isAnimating: 0
   isInSlot: 0
   isDouble: 0
+  isMagnet: 0
+  magnetPartner: {fileID: 0}
   isGhostMode: 0
   isStucking: 0
   isPlayingWarningLoseAnimation: 0
   isShuffled: 0
+  isOpen: 1
+  isOpenCloseType: 0
   washingMachineStartSlot: {fileID: 0}
   washingMachineSlot: {fileID: 0}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
@@ -516,7 +519,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1015
 --- !u!1 &2891729649468107841
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +926,7 @@ Transform:
   m_GameObject: {fileID: 8681561946960665055}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 0.2, z: 0.1}
+  m_LocalPosition: {x: -0.3, y: 0.2, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

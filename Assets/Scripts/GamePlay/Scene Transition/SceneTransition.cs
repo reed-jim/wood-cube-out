@@ -107,14 +107,10 @@ public class SceneTransition : MonoBehaviour
 
     private void Reset()
     {
-        if (loadLevelInProgressContainer != null)
-            loadLevelInProgressContainer.gameObject.SetActive(true);
+        loadLevelInProgressContainer.gameObject.SetActive(true);
 
-        if (loadLevelInProgressCanvasGroup != null)
-            loadLevelInProgressCanvasGroup.alpha = 1;
-
-        if (loadingSpine != null)
-            loadingSpine.color = Color.white;
+        loadLevelInProgressCanvasGroup.alpha = 1;
+        loadingSpine.color = Color.white;
     }
 
     private void BlackScreenTransition(float delay, Action onCompletedAction)
@@ -149,20 +145,13 @@ public class SceneTransition : MonoBehaviour
 
     public void ShowStaticSceneTransition()
     {
-        if (loadingSpine != null)
-            loadingSpine.gameObject.SetActive(false);
+        loadingSpine.gameObject.SetActive(false);
 
-        if (progressBarFill != null)
-            progressBarFill.fillAmount = 0;
-
-        if (loadingText != null)
-            loadingText.text = "0%";
-
-        if (loadLevelInProgressCanvasGroup != null)
-        {
-            loadLevelInProgressCanvasGroup.alpha = 0;
-            SaferioTween.AlphaShow(loadLevelInProgressCanvasGroup);
-        }
+        progressBarFill.fillAmount = 0;
+        loadingText.text = "0%";
+        GamePersistentVariable.isLoadingLevel = false;
+        loadLevelInProgressCanvasGroup.alpha = 0;
+        SaferioTween.AlphaShow(loadLevelInProgressCanvasGroup);
     }
 
     private void OnSwitchLevel(int level)
@@ -172,17 +161,9 @@ public class SceneTransition : MonoBehaviour
 
     private void TransitionOnLevelStarted()
     {
-        Debug.Log("[FLOW] SceneTransition.TransitionOnLevelStarted() called");
         Reset();
 
-        if (almostThereBackground != null)
-        {
-            almostThereBackground.gameObject.SetActive(true);
-            almostThereBackground.alpha = 1;
-        }
-
-        if (loadingSpine != null)
-            loadingSpine.gameObject.SetActive(false);
+        loadingSpine.gameObject.SetActive(false);
 
         if (_waitForLevelLoadedCoroutine != null)
         {
@@ -199,86 +180,66 @@ public class SceneTransition : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        if (progressBarFill != null)
-            progressBarFill.fillAmount = 0;
-
-        if (loadingText != null)
-            loadingText.text = "0%";
+        // ShowBlackScreenImmediately();
+        GamePersistentVariable.isLoadingLevel = false;
+        progressBarFill.fillAmount = 0;
+        loadingText.text = "0%";
 
         if (_loadingLevelInProgressCoroutine != null)
         {
             StopCoroutine(_loadingLevelInProgressCoroutine);
         }
 
-        // Chỉ chạy scrolling background nếu có đủ references
-        if (scrollingAntBoxes != null && scrollingAntBoxes.Length > 0)
-        {
-            _loadingLevelInProgressCoroutine = StartCoroutine(ScrollingBackground());
-        }
+        _loadingLevelInProgressCoroutine = StartCoroutine(ScrollingBackground());
 
-        Debug.Log("[FLOW] SceneTransition: WaitUntil(_isLevelLoaded) START...");
         yield return new WaitUntil(() => _isLevelLoaded);
-        Debug.Log("[FLOW] SceneTransition: WaitUntil(_isLevelLoaded) DONE");
 
-        if (loadingSpine != null)
+        loadingSpine.gameObject.SetActive(true);
+        loadingSpine.Skeleton.SetToSetupPose();
+        loadingSpine.AnimationState.ClearTracks();
+        TrackEntry entry = loadingSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+        loadingSpine.AnimationState.Apply(loadingSpine.Skeleton);
+        loadingSpine.Skeleton.UpdateWorldTransform();
+        loadingSpine.AnimationState.Complete += OnAnimationComplete;
+
+        void OnAnimationComplete(TrackEntry trackEntry)
         {
-            loadingSpine.gameObject.SetActive(true);
-            loadingSpine.Skeleton.SetToSetupPose();
-            loadingSpine.AnimationState.ClearTracks();
-            TrackEntry entry = loadingSpine.AnimationState.SetAnimation(0, appearAnimation, false);
-            loadingSpine.AnimationState.Apply(loadingSpine.Skeleton);
-            loadingSpine.Skeleton.UpdateWorldTransform();
-            loadingSpine.AnimationState.Complete += OnAnimationComplete;
+            loadingSpine.AnimationState.Complete -= OnAnimationComplete;
 
-            void OnAnimationComplete(TrackEntry trackEntry)
+            if (trackEntry.Animation.Name == appearAnimation)
             {
-                loadingSpine.AnimationState.Complete -= OnAnimationComplete;
-
-                if (trackEntry.Animation.Name == appearAnimation)
-                {
-                    loadingSpine.AnimationState.SetAnimation(0, idleAnimation, false);
-                }
+                loadingSpine.AnimationState.SetAnimation(0, idleAnimation, false);
             }
         }
 
-        LoadingLevelInProgress();
+        if (GamePersistentVariable.isLoadingLevelInProgress)
+        {
+            LoadingLevelInProgress();
+
+            GamePersistentVariable.isLoadingLevelInProgress = false;
+        }
+        else
+        {
+            LoadingLevelInProgress();
+        }
+
+        // BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: () =>
+        // {
+
+        // });
 
         _isLevelLoaded = false;
     }
 
     private void SetIsLevelLoaded()
     {
-        Debug.Log("[FLOW] SceneTransition.SetIsLevelLoaded() called → _isLevelLoaded = true");
         _isLevelLoaded = true;
     }
 
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        // Nếu không có UI references (SceneTransition bị disable/thiếu assign)
-        // thì bỏ qua ads + UI, fire event ngay lập tức
-        if (loadLevelInProgressContainer == null || loadLevelInProgressCanvasGroup == null || !loadLevelInProgressContainer.gameObject.activeInHierarchy)
-        {
-            Debug.Log("[FLOW] SceneTransition: No UI refs → fade almostThereBackground and fire event");
-            _isFirstTimeEnterScene = false;
-
-            if (almostThereBackground != null && almostThereBackground.gameObject.activeSelf)
-            {
-                _tweens.Add(Tween.Alpha(almostThereBackground, 1, 0, duration: 0.3f).OnComplete(() =>
-                {
-                    almostThereBackground.gameObject.SetActive(false);
-                    levelSceneTransitionCompleteEvent?.Invoke();
-                }));
-            }
-            else
-            {
-                levelSceneTransitionCompleteEvent?.Invoke();
-            }
-            return;
-        }
-
-        if (GameController.Instance != null)
-            GameController.Instance.admobAds.ShowMRec();
+        GameController.Instance.admobAds.ShowMRec();
 
         float minWaitTime = 2;
 
@@ -286,34 +247,32 @@ public class SceneTransition : MonoBehaviour
         {
             minWaitTime = 4.5f;
         }
-
         _tweens.Add(Tween.Custom(0, 1, duration: minWaitTime, onValueChange: newVal =>
         {
-            if (progressBarFill != null)
-                progressBarFill.fillAmount = newVal;
-            if (loadingText != null)
-                loadingText.text = $"{(int)(newVal * 100)}%";
+
+            progressBarFill.fillAmount = newVal;
+            loadingText.text = $"{(int)(newVal * 100)}%";
+        }).OnComplete(() =>
+        {
+            GamePersistentVariable.isLoadingLevel = true;
+
         }));
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
-            if (GameController.Instance != null)
-                GameController.Instance.admobAds.HideMRec();
+            GameController.Instance.admobAds.HideMRec();
 
             // double inter
             if (!_isFirstTimeEnterScene)
             {
-                if (blackBackgroundToPassPolicy != null)
-                    blackBackgroundToPassPolicy.gameObject.SetActive(true);
+                blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                if (GameController.Instance != null)
-                    GameController.Instance.admobAds.ShowInterstitial(
-                        actionIniterClose: () =>
-                        {
-                            if (blackBackgroundToPassPolicy != null)
-                                blackBackgroundToPassPolicy.gameObject.SetActive(false);
-                        }
-                    );
+                GameController.Instance.admobAds.ShowInterstitial(
+                  actionIniterClose: () =>
+                   {
+                       blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                   }
+               );
             }
             else
             {
@@ -322,29 +281,23 @@ public class SceneTransition : MonoBehaviour
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
             {
-                if (loadLevelInProgressCanvasGroup != null)
-                    loadLevelInProgressCanvasGroup.alpha = newVal;
-                
-                if (almostThereBackground != null && almostThereBackground.gameObject.activeSelf)
-                    almostThereBackground.alpha = newVal;
+                loadLevelInProgressCanvasGroup.alpha = newVal;
             })
             .OnComplete(() =>
                 {
-                    if (loadLevelInProgressContainer != null)
-                        loadLevelInProgressContainer.gameObject.SetActive(false);
-                        
-                    if (almostThereBackground != null)
-                        almostThereBackground.gameObject.SetActive(false);
+                    for (int i = 0; i < scrollingAntBoxes.Length; i++)
+                    {
+                        scrollingAntBoxes[i].localPosition = scrollingAntBoxInitialPositions[i];
+                    }
+
+                    loadLevelInProgressContainer.gameObject.SetActive(false);
 
                     levelSceneTransitionCompleteEvent?.Invoke();
                 })
             );
+            Tween.Alpha(loadingSpine, 0, duration: 0.3f);
 
-            if (loadingSpine != null)
-                Tween.Alpha(loadingSpine, 0, duration: 0.3f);
-
-            if (_loadingLevelInProgressCoroutine != null)
-                StopCoroutine(_loadingLevelInProgressCoroutine);
+            StopCoroutine(_loadingLevelInProgressCoroutine);
         }));
     }
 

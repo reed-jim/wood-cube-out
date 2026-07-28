@@ -66,7 +66,7 @@ public class AntBoxLink : MonoBehaviour
 
         float startTime = Time.time;
 
-        while (Time.time - startTime < 3)
+        while (Time.time - startTime < 3 && antBoxes.Length > 0)
         {
             PlaceTheLink();
 
@@ -76,8 +76,8 @@ public class AntBoxLink : MonoBehaviour
 
     private void PlaceTheLink()
     {
-        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
-        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
+        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-1f);
+        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-1f);
 
         // if (a.x > b.x)
         // {
@@ -124,7 +124,7 @@ public class AntBoxLink : MonoBehaviour
         }
     }
 
-    private void Unlink()
+    private void HideLink()
     {
         SaferioTween.AlphaHide(leftHalf, onCompleteAction: () =>
         {
@@ -134,12 +134,39 @@ public class AntBoxLink : MonoBehaviour
         {
             rightHalf.color = Color.white;
         });
+    }
+
+    private void Unlink()
+    {
+        // SaferioTween.AlphaHide(leftHalf, onCompleteAction: () =>
+        // {
+        //     leftHalf.color = Color.white;
+        // });
+        // SaferioTween.AlphaHide(rightHalf, onCompleteAction: () =>
+        // {
+        //     rightHalf.color = Color.white;
+
+        //     gameObject.SetActive(false);
+        // });
+
+        gameObject.SetActive(false);
+
         antBoxes = new WashingMachineItem[0];
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         WashingMachineItem selectedAntBox = null;
+
+        if (antBoxes.Length == 0)
+        {
+            return;
+        }
 
         for (int i = 0; i < antBoxes.Length; i++)
         {
@@ -178,12 +205,18 @@ public class AntBoxLink : MonoBehaviour
 
         if (isNeededToUpdateLinkPosition)
         {
-            StartCoroutine(UpdateLinkPositions());
+            HideLink();
+            // StartCoroutine(UpdateLinkPositions());
         }
     }
 
     private void OnAntBoxMovingUp(WashingMachineItem antBox)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (antBoxes.Contains(antBox))
         {
             StartCoroutine(UpdateLinkPositions());
@@ -196,6 +229,11 @@ public class AntBoxLink : MonoBehaviour
 
         if (isDone)
         {
+            for (int i = 0; i < antBoxes.Length; i++)
+            {
+                antBoxes[i].numSlotRequired = 1;
+            }
+
             Unlink();
         }
     }

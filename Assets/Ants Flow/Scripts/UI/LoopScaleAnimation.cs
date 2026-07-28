@@ -6,16 +6,27 @@ public class LoopScaleAnimation : MonoBehaviour
 {
     [SerializeField] private Button clickButton;
 
+    public float zoomUpScale = 1.1f;
+    public bool isNotAutoScaleDown;
+
     Tween animationTween;
 
     void Awake()
     {
-        clickButton.onClick.AddListener(OnClick);
+        if (clickButton != null)
+        {
+            clickButton.onClick.AddListener(OnClick);
+        }
     }
 
     void OnEnable()
     {
-        animationTween = Tween.Scale(transform, 1.1f, duration: 1, cycles: -1, cycleMode: CycleMode.Yoyo);
+        if (animationTween.isAlive)
+        {
+            animationTween.Stop();
+        }
+
+        animationTween = Tween.Scale(transform, zoomUpScale, duration: 1, cycles: -1, cycleMode: CycleMode.Yoyo);
     }
 
     private void OnClick()
@@ -25,6 +36,9 @@ public class LoopScaleAnimation : MonoBehaviour
             animationTween.Stop();
         }
 
-        Tween.Scale(transform, 1f, duration: 0.3f);
+        if (!isNotAutoScaleDown)
+        {
+            Tween.Scale(transform, 1f, duration: 0.3f);
+        }
     }
 }

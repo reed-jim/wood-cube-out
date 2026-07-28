@@ -24,10 +24,10 @@ namespace AntsFlow
 
         void OnDestroy()
         {
-            LevelLoader.startLevelEvent += OnLevelReplayed;
-            SettingPopup.replayLevelEvent += OnLevelReplayed;
-            LosePopup.replayLevelEvent += OnLevelReplayed;
-            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
         }
 
         public void Init(BaseAnt ant, Color faction)
@@ -48,7 +48,7 @@ namespace AntsFlow
 
             Vector3 position = (Vector3)tile.tilemapPosition;
 
-            transform.position = TileManager.Ins.GetTilePosition(tile).AddZ(-0.0001f * (100 - position.y) - 3);
+            transform.position = TileManager.Ins.GetTilePosition(tile).AddZ(-0.0001f * (100 - position.y) - 7);
             transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
             transform.localRotation = Quaternion.identity;
         }

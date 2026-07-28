@@ -38,8 +38,6 @@ public class IAPPackageUI : MonoBehaviour
 
         buyButton.onClick.AddListener(Buy);
 
-        Setup(_packageData);
-
         UpdateVisibility();
     }
 
@@ -50,6 +48,11 @@ public class IAPPackageUI : MonoBehaviour
         SaferioIAPManager.buyIAPPackageEvent -= OnIAPPackageBought;
         SalePackIAPManager.updateSalePackVisibilityEvent -= UpdateVisibility;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
+    }
+
+    void OnEnable()
+    {
+        Setup(_packageData);
     }
 
     public void Setup(IAPPackageData data)

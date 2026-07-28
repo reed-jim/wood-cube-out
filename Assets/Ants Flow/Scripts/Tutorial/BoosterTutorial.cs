@@ -23,6 +23,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     [SerializeField] private SkeletonGraphic tutorialHand;
     [SerializeField] private SkeletonAnimation worldTutorialHand;
     [SerializeField] private Button[] useBoosterButtons;
+    [SerializeField] private SkeletonGraphic[] boosterSkeletonGraphic;
 
     public int[] boosterTutorialLevels;
 
@@ -68,6 +69,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         int boosterIndex = GetBoosterIndex(boosterType);
 
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
+        boosterSkeletonGraphic[boosterIndex].color = Color.white;
 
         while (step < maxStep)
         {
@@ -92,6 +94,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         int boosterIndex = GetBoosterIndex(boosterType);
 
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
+        boosterSkeletonGraphic[boosterIndex].color = Color.white;
 
         while (step < maxStep)
         {
@@ -99,10 +102,15 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
             {
                 localizedDescription.TranslationName = "Now, you can select any ant box!";
 
-                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
-                Tween.Position(worldTutorialHand.transform,
-                    WashingMachineManager.Ins.washingMachineStartSlots[6].transform.position.AddZ(-5f), duration: 0.3f);
+                worldTutorialHand.transform.position = WashingMachineManager.Ins.washingMachineStartSlots[6].transform.position.AddZ(-5f);
+
+                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.9f);
                 SaferioTween.AlphaHide(canvasGroup);
+                Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+                {
+                    tutorialHand.color = ColorUtil.WithAlpha(Color.white, newVal);
+                    boosterSkeletonGraphic[boosterIndex].color = ColorUtil.WithAlpha(Color.white, newVal);
+                });
 
                 step++;
             }
@@ -135,6 +143,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         int boosterIndex = GetBoosterIndex(boosterType);
 
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
+        boosterSkeletonGraphic[boosterIndex].color = Color.white;
 
         while (step < maxStep)
         {
@@ -142,10 +151,15 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
             {
                 localizedDescription.TranslationName = "Select a color to clear all matching tiles.";
 
-                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
-                Tween.Position(worldTutorialHand.transform,
-                    AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-3), duration: 0.3f);
+                worldTutorialHand.transform.position = AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-6.1f);
+
+                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.9f);
                 SaferioTween.AlphaHide(canvasGroup);
+                Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+                {
+                    tutorialHand.color = ColorUtil.WithAlpha(Color.white, newVal);
+                    boosterSkeletonGraphic[boosterIndex].color = ColorUtil.WithAlpha(Color.white, newVal);
+                });
 
                 step++;
             }
@@ -170,7 +184,17 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
     public void EndTutorial()
     {
-        SaferioTween.AlphaHide(canvasGroup);
+        int boosterIndex = GetBoosterIndex(boosterType);
+
+        if (canvasGroup.gameObject.activeInHierarchy)
+        {
+            SaferioTween.AlphaHide(canvasGroup);
+            Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+            {
+                tutorialHand.color = ColorUtil.WithAlpha(Color.white, newVal);
+                boosterSkeletonGraphic[boosterIndex].color = ColorUtil.WithAlpha(Color.white, newVal);
+            });
+        }
     }
 
     private void OnBoosterUsed()
@@ -225,6 +249,8 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         canvasGroup.gameObject.SetActive(true);
         canvasGroup.alpha = 1;
         worldTutorialHand.gameObject.SetActive(false);
+
+        tutorialHand.color = Color.white;
 
         localizedDescription.TranslationName = "Press the booster button!";
 

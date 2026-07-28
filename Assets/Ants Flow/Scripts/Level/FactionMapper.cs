@@ -155,6 +155,11 @@ public class FactionMapper : Singleton<FactionMapper>
         // return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
     }
 
+    public Sprite GetSpawningTileBoxTop(Color faction)
+    {
+        return spriteContainersOfColors[faction].spawningTileBoxTop;
+    }
+
     public Color GetFaction(Sprite tileSprite)
     {
         return mapper.First(item => item.spriteContainer.tileSprite == tileSprite).color;
@@ -176,6 +181,7 @@ public class SpriteContainer
     public Sprite tileSprite;
     public Sprite doubleBoxLink;
     public Sprite doubleBoxHole;
+    public Sprite spawningTileBoxTop;
     public string antBoxSkin;
 }
 

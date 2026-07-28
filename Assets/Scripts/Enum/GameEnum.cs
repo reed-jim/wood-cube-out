@@ -71,7 +71,9 @@ public class GameEnum : MonoBehaviour
         FacebookGroup,
         ChangeTheme,
         Language,
-        SpeedUpTutorial
+        SpeedUpTutorial,
+        None,
+        SpecialElementIntroduction
     }
 
     public enum GameFaction

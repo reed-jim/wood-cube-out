@@ -36,8 +36,6 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 return;
             }
 
-
-
             if (inputMode == AntsFlowInputMode.SelectTile)
             {
                 Vector3 touchPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -99,8 +97,6 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 //     }
                 // }
             }
-
-
 
             if (hit.collider != null)
             {
