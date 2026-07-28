@@ -1161,17 +1161,29 @@ namespace AntsFlow
                 List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
 
                 // Only turn on warning lose animation if all occupied slots are actually stuck
-                bool allActuallyStuck = true;
-                for (int i = 0; i < stuckAntBoxes.Count; i++)
+                if(isLevelContainingNewSpecialElements)
                 {
-                    if (!stuckAntBoxes[i].IsActuallyStuck())
+                    bool allActuallyStuck = true;
+                    for (int i = 0; i < stuckAntBoxes.Count; i++)
                     {
-                        allActuallyStuck = false;
-                        break;
+                        if (!stuckAntBoxes[i].IsActuallyStuck())
+                        {
+                            allActuallyStuck = false;
+                            break;
+                        }
+                    }
+
+                    if (allActuallyStuck)
+                    {
+                        for (int i = 0; i < stuckAntBoxes.Count; i++)
+                        {
+                            WashingMachineItem antBox = stuckAntBoxes[i];
+
+                            antBox.TurnOnWarningLoseAnimation();
+                        }
                     }
                 }
-
-                if (allActuallyStuck)
+                else
                 {
                     for (int i = 0; i < stuckAntBoxes.Count; i++)
                     {
