@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -24,7 +25,7 @@ public class BaseChicken : MonoBehaviour
     public bool isDone;
     public bool isStuck;
 
-    public WaitingChickenSlot waitingChickenSlot;
+    public List<WaitingChickenSlot> waitingChickenSlots;
 
     public float Size => transform.localScale.x;
 
@@ -49,10 +50,7 @@ public class BaseChicken : MonoBehaviour
 
     public void Feed(GrainPile grainPile, bool isLastChickenInTheWave)
     {
-        Tween.PositionY(transform, WashingMachineManager.Ins.grainPool.topCoordinator.position.y, duration: 0.6f, ease: Ease.Linear)
-        .OnComplete(() =>
-        {
-            grainPile.BeEaten(this, onCompleteAction: () =>
+        grainPile.BeEaten(this, onCompleteAction: () =>
             {
                 Vector3 outPosition = transform.position;
 
@@ -65,6 +63,11 @@ public class BaseChicken : MonoBehaviour
                     outPosition.x -= 10;
                 }
 
+                if (isLastChickenInTheWave)
+                {
+                    ChickenManager.Ins.MoveChickensDown();
+                }
+
                 Rotate(outPosition - transform.position);
 
                 Tween.Position(transform, outPosition, duration: 0.8f, ease: Ease.Linear).OnComplete(() =>
@@ -75,15 +78,12 @@ public class BaseChicken : MonoBehaviour
                 });
             });
 
-            if (isLastChickenInTheWave)
-            {
-                ChickenManager.Ins.MoveChickensDown();
-            }
-        });
-
         isEating = true;
 
-        waitingChickenSlot.chicken = null;
+        foreach (var waitingChickenSlot in waitingChickenSlots)
+        {
+            waitingChickenSlot.chicken = null;
+        }
     }
 
     public void Complete()

@@ -126,6 +126,7 @@ namespace AntsFlow
                 levelScale = transform.localScale,
                 numColumn = numColumn,
                 numRow = numRow,
+                chickenLevelTiles = chickenLevelTiles,
                 isLevelHavingTransparentPixels = isLevelHavingTransparentPixels,
                 isOverrideLevelScale = isOverrideLevelScale,
                 levelScaleXRatio = levelScaleXRatio,
@@ -232,7 +233,7 @@ namespace AntsFlow
         #region Chicken Feed
         private void OnSceneGUI()
         {
-            ConfiguringLevel();
+            ConfiguringChicken();
         }
 
         private void ConfiguringLevel()
@@ -393,6 +394,132 @@ namespace AntsFlow
             //     previousPos = worldPos;
             //     hasPrevious = true;
             // }
+
+            if (GUI.changed)
+                SceneView.RepaintAll();
+        }
+
+        private void ConfiguringChicken()
+        {
+            LevelItem level = (LevelItem)target;
+
+            if (level.specialElementConfig.giantChickenConfig.giantChickenItemConfigs == null)
+                level.specialElementConfig.giantChickenConfig.giantChickenItemConfigs =
+                    new List<GiantChickenItemConfig>();
+
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+
+            Event e = Event.current;
+
+            int numColumn = level.numColumn;
+            int numRow = level.numRow;
+            float tileDistance = 0.1f;
+
+            // Background
+            float backgroundWidth = 10f;
+
+            Vector3[] background =
+            {
+        new Vector3(-backgroundWidth, -backgroundWidth, 1),
+        new Vector3(-backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, -backgroundWidth, 1),
+    };
+
+            Handles.DrawSolidRectangleWithOutline(
+                background,
+                new Color(0, 0, 0, 0.85f),
+                Color.white);
+
+            for (int y = 0; y < numRow; y++)
+            {
+                for (int x = 0; x < numColumn; x++)
+                {
+                    Vector2Int coord = new Vector2Int(x, y);
+                    Vector3 worldPos = tileDistance * new Vector2(x, y);
+
+                    float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
+
+                    GiantChickenItemConfig chicken =
+                        level.specialElementConfig.giantChickenConfig.giantChickenItemConfigs
+                            .Find(c => c.coordinate == coord);
+
+                    if (chicken != null)
+                    {
+                        Vector3 center = worldPos +
+                                         new Vector3(
+                                             (chicken.sizeX - 1) * tileDistance * 0.5f,
+                                             (chicken.sizeY - 1) * tileDistance * 0.5f);
+
+                        Vector3 rectSize = new Vector3(
+                            chicken.sizeX * tileDistance,
+                            chicken.sizeY * tileDistance);
+
+                        Handles.color = Color.yellow;
+
+                        Handles.DrawSolidRectangleWithOutline(
+                            new Vector3[]
+                            {
+                        center + new Vector3(-rectSize.x/2,-rectSize.y/2),
+                        center + new Vector3(-rectSize.x/2, rectSize.y/2),
+                        center + new Vector3( rectSize.x/2, rectSize.y/2),
+                        center + new Vector3( rectSize.x/2,-rectSize.y/2),
+                            },
+                            new Color(1, 1, 0, 0.25f),
+                            Color.yellow);
+
+                        GUIStyle style = new GUIStyle(EditorStyles.boldLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 18
+                        };
+
+                        Handles.Label(center, "🐔", style);
+
+                        Handles.color = Color.red;
+                    }
+                    else
+                    {
+                        Handles.color = Color.gray;
+                    }
+
+                    Handles.DrawWireDisc(
+                        worldPos,
+                        SceneView.currentDrawingSceneView.camera.transform.forward,
+                        size);
+
+                    if (HandleUtility.DistanceToCircle(worldPos, size) == 0)
+                    {
+                        HandleUtility.AddDefaultControl(
+                            GUIUtility.GetControlID(FocusType.Passive));
+
+                        if (e.type == EventType.MouseDown && e.button == 0)
+                        {
+                            Undo.RecordObject(level, "Chicken Config");
+
+                            if (chicken == null)
+                            {
+                                chicken = new GiantChickenItemConfig
+                                {
+                                    coordinate = coord
+                                };
+
+                                level.specialElementConfig.giantChickenConfig
+                                    .giantChickenItemConfigs.Add(chicken);
+                            }
+                            else
+                            {
+                                level.specialElementConfig.giantChickenConfig
+                                    .giantChickenItemConfigs.Remove(chicken);
+                            }
+
+                            EditorUtility.SetDirty(level);
+
+                            e.Use();
+                        }
+                    }
+                }
+            }
 
             if (GUI.changed)
                 SceneView.RepaintAll();
@@ -838,6 +965,7 @@ public class LevelItemData
     public Vector3 levelScale;
     public int numColumn;
     public int numRow;
+    public List<AntLevelDataItem> chickenLevelTiles;
     public bool isLevelHavingTransparentPixels;
     public bool isOverrideLevelScale;
     public float levelScaleXRatio = 18f;
@@ -859,6 +987,8 @@ public class LevelItemData
 [Serializable]
 public class SpecialElementConfig
 {
+    public GiantChickenConfig giantChickenConfig;
+
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;

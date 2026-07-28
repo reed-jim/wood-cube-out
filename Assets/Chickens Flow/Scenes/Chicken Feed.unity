@@ -5012,7 +5012,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChickenManager
   chickens: []
-  waitingChickenSlots: []
   allFactions: []
 --- !u!1 &742183347
 GameObject:
@@ -9492,6 +9491,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpecialElementManager
   nextLevelElement: 0
   specialElementConfig:
+    giantChickenConfig:
+      giantChickenItemConfigs: []
     hiddenAntBoxConfig:
       spawnOrder: 
     frozenAntBoxConfig:
@@ -13738,7 +13739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8038280400323001441, guid: 906f3e246575dfd48aa4a47c2d4f2a3e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 8038280400323001441, guid: 906f3e246575dfd48aa4a47c2d4f2a3e, type: 3}
       propertyPath: m_LocalPosition.z

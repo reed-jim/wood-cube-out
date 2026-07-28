@@ -97,7 +97,7 @@ namespace AntsFlow
 
             numAntBoxSpawned = 0;
 
-            ChickenManager.Ins.SpawnFirstChickens(levelItem);
+            ChickenManager.Ins.SpawnFirstChickensUsingLevelConfig(levelItem);
 
             // SpecialElementManager.Ins.Setup(levelItem);
 
