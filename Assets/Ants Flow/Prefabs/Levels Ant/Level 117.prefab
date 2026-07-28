@@ -17417,10 +17417,22 @@ MonoBehaviour:
     worldSize: 0
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
-  difficulty: 5
+    items:
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 35
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 30
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 40
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 20
+    - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+      numAnt: 40
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 30
+  difficulty: 4
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
@@ -17433,7 +17445,7 @@ MonoBehaviour:
     doubleAntBoxConfig:
       spawnOrder: 
     magnetAntBoxConfig:
-      spawnOrder: 06000000040000000d000000070000000a0000000c0000000f00000010000000130000001600000017000000180000001d000000200000002100000026000000270000002a0000002e0000002d0000000d00000019000000280000003300000034000000
+      spawnOrder: 0600000004000000070000000a0000000f00000010000000130000001600000018000000200000002100000026000000270000002a0000002e0000002d0000000d00000019000000280000003300000034000000
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
