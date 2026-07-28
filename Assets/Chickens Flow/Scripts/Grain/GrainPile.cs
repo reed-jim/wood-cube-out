@@ -111,10 +111,10 @@ public class GrainPile : MonoBehaviour
                 float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
                 offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
-                offset.y = 0.3f * radius * i - 1;
+                offset.y = -transform.localPosition.y + 0.3f * radius * i - 1;
 
-                position = pileCenter + offset;
-                position.z = transform.position.z + zOffset;
+                position = offset;
+                position.z = zOffset;
 
                 grainPositions.Add(position);
             }
@@ -142,7 +142,7 @@ public class GrainPile : MonoBehaviour
                 Vector3 start = grains[index].transform.localPosition;
                 Vector3 end = position;
 
-                grains[index].transform.DOMove(end, duration: 0.3f + 0.01f * i).SetEase(Ease.InOutSine)
+                grains[index].transform.DOLocalMove(end, duration: 0.3f + 0.01f * i).SetEase(Ease.InOutSine)
                 .OnComplete(() =>
                 {
                     grains[index].transform.SetZ(zOffset);
@@ -270,6 +270,7 @@ public class GrainPile : MonoBehaviour
         if (remainingNumber <= 0)
         {
             WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
+            WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
         }
 
         WashingMachineManager.Ins.grainPool.AddGrain(-1);
@@ -286,16 +287,10 @@ public class GrainPile : MonoBehaviour
         {
             if (!isMoving)
             {
-                Rotate(chicken.transform, grainToBeEaten[index].transform.position - chicken.transform.position);
-
-                chicken.transform.DOMove(grainToBeEaten[index].transform.position.AddZ(-1), duration: 0.1f).SetEase(Ease.Linear)
+                grainToBeEaten[index].transform.DOMove(chicken.transform.position, duration: 0.3f);
+                grainToBeEaten[index].transform.DOScale(0, duration: 0.3f)
                 .OnComplete(() =>
                 {
-                    // grainToBeEaten[index].transform.DOScale(0, duration: 0.1f).OnComplete(() =>
-                    // {
-                    //     grainToBeEaten[index].gameObject.SetActive(false);
-                    // });
-
                     grainToBeEaten[index].gameObject.SetActive(false);
 
                     index++;

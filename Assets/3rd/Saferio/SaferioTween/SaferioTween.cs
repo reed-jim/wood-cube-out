@@ -740,6 +740,13 @@ namespace Saferio.Util.SaferioTween
             return new Vector3(currentValue.x, currentValue.y, value);
         }
 
+        public static void SetX(this Transform transform, float x)
+        {
+            var pos = transform.position;
+            pos.x = x;
+            transform.position = pos;
+        }
+
         public static void SetZ(this Transform transform, float z)
         {
             var pos = transform.position;

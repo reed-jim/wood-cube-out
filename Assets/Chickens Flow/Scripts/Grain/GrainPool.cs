@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AntsFlow;
 using Dreamteck.Splines;
 using PrimeTween;
@@ -14,12 +15,16 @@ public class GrainPool : MonoBehaviour
     public float moveSpeed;
     public float leftBoundX;
     public float rightBoundX;
+    Dictionary<GrainPoolSlot, GrainPile> grainPileInSlot;
+
+    public Transform topCoordinator;
 
     public List<GrainPoolSlot> grainPoolSlots;
     public List<GrainPile> grainPiles;
     public GrainPoolSlot grainPoolSlotPrefab;
     public GrainPoolSlot leftMostGrainPoolSlot;
     public int maxGrainPoolSlots;
+    public float distanceBetweenSlots;
 
     public TMP_Text percentText;
     public LazyHealthBar lazyHealthBar;
@@ -37,11 +42,13 @@ public class GrainPool : MonoBehaviour
 
     void Awake()
     {
+        grainPileInSlot = new Dictionary<GrainPoolSlot, GrainPile>();
+
         Reset();
 
         SetupGrainPoolSlots();
 
-        StartCoroutine(RunTheQueue());
+        StartCoroutine(RunTheQueueLoop());
     }
 
     public void Reset()
@@ -54,12 +61,26 @@ public class GrainPool : MonoBehaviour
 
     public void SetupGrainPoolSlots()
     {
+        Vector3 position = Vector3.zero;
+
+        float totalSizeX = 1.2f * GamePersistentVariable.screenSizeWorld.x;
+
+        distanceBetweenSlots = totalSizeX / maxGrainPoolSlots;
+        leftBoundX = -0.5f * totalSizeX;
+        rightBoundX = 0.5f * totalSizeX;
+
         for (int i = 0; i < maxGrainPoolSlots; i++)
         {
             GrainPoolSlot grainPoolSlot = Instantiate(grainPoolSlotPrefab, transform);
 
+            position.x = leftBoundX + i * distanceBetweenSlots;
+
+            grainPoolSlot.transform.localPosition = position;
+
             grainPoolSlots.Add(grainPoolSlot);
         }
+
+        leftMostGrainPoolSlot = grainPoolSlots[0];
     }
 
     private IEnumerator RunTheQueue()
@@ -120,16 +141,18 @@ public class GrainPool : MonoBehaviour
         {
             for (int i = 0; i < grainPoolSlots.Count; i++)
             {
-                GrainPoolSlot loopPathSlot = grainPoolSlots[i];
+                GrainPoolSlot grainPoolSlot = grainPoolSlots[i];
 
-                position = loopPathSlot.transform.position;
+                position = grainPoolSlot.transform.position;
                 position.x += moveSpeed;
 
-                loopPathSlot.transform.position = position;
+                grainPoolSlot.transform.position = position;
 
-                if (loopPathSlot.transform.position.x > rightBoundX)
+                if (grainPoolSlot.transform.position.x > rightBoundX)
                 {
-                    // loopPathSlot.transform.position =
+                    grainPoolSlot.transform.SetX(leftMostGrainPoolSlot.transform.position.x - distanceBetweenSlots);
+
+                    leftMostGrainPoolSlot = grainPoolSlot;
                 }
             }
 
@@ -175,6 +198,20 @@ public class GrainPool : MonoBehaviour
         //         break;
         //     }
         // }
+    }
+
+    public void AddGrainPileToSlot(GrainPile grainPile, GrainPoolSlot grainPoolSlot)
+    {
+        grainPoolSlot.grainPile = grainPile;
+        grainPileInSlot.Add(grainPoolSlot, grainPile);
+    }
+
+    public void RemoveGrainPileInSlot(GrainPile grainPile)
+    {
+        GrainPoolSlot grainPoolSlot = grainPileInSlot.First(item => item.Value == grainPile).Key;
+
+        grainPoolSlot.grainPile = null;
+        grainPileInSlot.Remove(grainPoolSlot);
     }
 
     public void RemoveGrainPile(GrainPile grainPile)

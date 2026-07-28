@@ -230,7 +230,7 @@ public class WashingMachineItem : MonoBehaviour
 
             grainPile.transform.SetParent(grainPoolSlot.transform);
             grainPile.transform.localPosition = bucketDestination;
-            grainPoolSlot.grainPile = grainPile;
+            WashingMachineManager.Ins.grainPool.AddGrainPileToSlot(grainPile, grainPoolSlot);
 
             grainPile.Setup(this, maxAddNumber);
 

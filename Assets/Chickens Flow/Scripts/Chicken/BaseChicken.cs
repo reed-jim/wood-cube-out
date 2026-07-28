@@ -47,9 +47,7 @@ public class BaseChicken : MonoBehaviour
 
     public void Feed(GrainPile grainPile, bool isLastChickenInTheWave)
     {
-        Rotate(grainPile.pileCenter - transform.position);
-
-        Tween.Position(transform, grainPile.pileCenter.AddZ(-1), duration: 0.6f, ease: Ease.Linear)
+        Tween.PositionY(transform, WashingMachineManager.Ins.grainPool.topCoordinator.position.y, duration: 0.6f, ease: Ease.Linear)
         .OnComplete(() =>
         {
             grainPile.BeEaten(this, onCompleteAction: () =>
@@ -78,7 +76,6 @@ public class BaseChicken : MonoBehaviour
             if (isLastChickenInTheWave)
             {
                 ChickenManager.Ins.MoveChickensDown();
-                // WashingMachineManager.Ins.grainPool.CheckFeedChickens();
             }
         });
 

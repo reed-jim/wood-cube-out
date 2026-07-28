@@ -111,12 +111,6 @@ namespace NamPhuThuy.GamePlay
 
             GamePersistentVariable.hasPlayerReachedGameplay = true;
             GamePersistentVariable.tileMapScaleFactor = scaleFactor;
-        }
-
-        private void Start()
-        {
-            // GoLevel(currentLevel.Value);
-
             GamePersistentVariable.screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
         }
 
