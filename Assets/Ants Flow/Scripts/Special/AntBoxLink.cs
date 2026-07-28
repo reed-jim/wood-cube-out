@@ -124,19 +124,23 @@ public class AntBoxLink : MonoBehaviour
         rightHalf.size = size;
 
         //fix Z antbox link luon cho o tren box va duoi text
-        const float behindNumberTextZOffset = 0.1f;
-        if (antBoxes[0] != null && antBoxes[0].numberText != null)
+        if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
         {
-            Vector3 lp = leftHalf.transform.position;
-            lp.z = Mathf.Max(lp.z, antBoxes[0].numberText.transform.position.z + behindNumberTextZOffset);
-            leftHalf.transform.position = lp;
+            const float behindNumberTextZOffset = 0.1f;
+            if (antBoxes[0] != null && antBoxes[0].numberText != null)
+            {
+                Vector3 lp = leftHalf.transform.position;
+                lp.z = Mathf.Max(lp.z, antBoxes[0].numberText.transform.position.z + behindNumberTextZOffset);
+                leftHalf.transform.position = lp;
+            }
+            if (antBoxes[1] != null && antBoxes[1].numberText != null)
+            {
+                Vector3 rp = rightHalf.transform.position;
+                rp.z = Mathf.Max(rp.z, antBoxes[1].numberText.transform.position.z + behindNumberTextZOffset);
+                rightHalf.transform.position = rp;
+            }
         }
-        if (antBoxes[1] != null && antBoxes[1].numberText != null)
-        {
-            Vector3 rp = rightHalf.transform.position;
-            rp.z = Mathf.Max(rp.z, antBoxes[1].numberText.transform.position.z + behindNumberTextZOffset);
-            rightHalf.transform.position = rp;
-        }
+     
 
         for (int i = 0; i < antBoxes.Length; i++)
         {
