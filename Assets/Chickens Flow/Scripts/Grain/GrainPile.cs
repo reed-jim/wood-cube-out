@@ -287,7 +287,6 @@ public class GrainPile : MonoBehaviour
         {
             if (!isMoving)
             {
-                grainToBeEaten[index].transform.DOMove(chicken.transform.position, duration: 0.3f);
                 grainToBeEaten[index].transform.DOScale(0, duration: 0.3f)
                 .OnComplete(() =>
                 {

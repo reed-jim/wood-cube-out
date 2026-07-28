@@ -411,27 +411,29 @@ public class ChickenManager : Singleton<ChickenManager>
 
         HashSet<Vector2Int> occupied = new();
 
-        bool canMoveDown = false;
+        bool isMovable = false;
 
         foreach (BaseChicken chicken in chickens)
         {
-            canMoveDown = CanMoveDown(chicken, occupied);
+            isMovable = false;
 
-            while (canMoveDown)
+            while (CanMoveDown(chicken, occupied))
             {
                 MoveChickenDownOneRow(chicken);
+
+                isMovable = true;
             }
 
             OccupyChicken(chicken, occupied);
 
-            destinations[chicken.transform] =
-                GetBottomLeftSlot(chicken).GetRandomPosition();
+            if (isMovable)
+            {
+                destinations[chicken.transform] =
+                    GetBottomLeftSlot(chicken).GetRandomPosition();
+            }
         }
 
-        if (canMoveDown)
-        {
-            AnimateChickens(destinations);
-        }
+        AnimateChickens(destinations);
     }
 
     private bool CanMoveDown(BaseChicken chicken, HashSet<Vector2Int> occupied)
@@ -470,8 +472,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 oldSlot.column,
                 oldSlot.row - 1);
 
-            chicken.waitingChickenSlots[i] =
-                waitingChickenSlots[newPos];
+            chicken.waitingChickenSlots[i] = waitingChickenSlots[newPos];
         }
     }
 

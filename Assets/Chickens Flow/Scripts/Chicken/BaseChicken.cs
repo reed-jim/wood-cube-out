@@ -63,11 +63,6 @@ public class BaseChicken : MonoBehaviour
                     outPosition.x -= 10;
                 }
 
-                if (isLastChickenInTheWave)
-                {
-                    ChickenManager.Ins.MoveChickensDown();
-                }
-
                 Rotate(outPosition - transform.position);
 
                 Tween.Position(transform, outPosition, duration: 0.8f, ease: Ease.Linear).OnComplete(() =>
@@ -75,6 +70,11 @@ public class BaseChicken : MonoBehaviour
                     gameObject.SetActive(false);
 
                     isDone = true;
+
+                    if (isLastChickenInTheWave)
+                    {
+                        ChickenManager.Ins.MoveChickensDown();
+                    }
                 });
             });
 
@@ -90,6 +90,7 @@ public class BaseChicken : MonoBehaviour
     {
         isDone = true;
     }
+    
     public void PlayIdleAnim()
     {
         PlayForCycles(skeletonAnimation, idleAnimation, 3, null, false);
