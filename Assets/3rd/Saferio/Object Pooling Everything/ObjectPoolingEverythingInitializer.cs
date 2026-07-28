@@ -50,6 +50,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject closeBoxSoundPrefab;
     [SerializeField] private GameObject linkMagnetSoundPrefab;
     [SerializeField] private GameObject spawnPopSoundPrefab;
+    [SerializeField] private GameObject woodBreakStateSoundPrefab;
+    [SerializeField] private GameObject woodBreakEndSoundPrefab;
 
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -162,6 +164,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.closeBoxSound, closeBoxSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.linkMagnetSound, linkMagnetSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.spawnPopSound, spawnPopSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.woodBreakStateSound, woodBreakStateSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.woodBreakEndSound, woodBreakEndSoundPrefab, 8);
+
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
@@ -187,7 +192,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 30);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 30);
         RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);
-        RegisterPool<OpenCloseAntBox>(GameConstants.openCloseAntBox, openCloseAntBoxPrefab, 20);
+        RegisterPool<OpenCloseAntBox>(GameConstants.openCloseAntBox, openCloseAntBoxPrefab, 50);
         RegisterPool<SnakeAntBox>(GameConstants.snakeAntBox, snakeAntBoxPrefab, 5);
         RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
         RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);

@@ -13,6 +13,7 @@ public class OpenCloseAntBox : WashingMachineItem
     [SpineAnimation(dataField = "skeletonAnimation")] public string disappearAnimation = "appear-re";
     [SpineAnimation(dataField = "skeletonAnimation")] public string selectFailToggleAnimation = "select fail toggle";
     public bool useNewFailAnimation;
+    public GameObject selectFailOutLine;
 
 
     [Header("Door Animations (skeletonOpenClose)")]
@@ -20,14 +21,15 @@ public class OpenCloseAntBox : WashingMachineItem
     [SpineAnimation(dataField = "skeletonOpenClose")] public string doorBeginAnimation = "begin";
     [SpineAnimation(dataField = "skeletonOpenClose")] public string doorOpenAnimation = "action_open";
     [SpineAnimation(dataField = "skeletonOpenClose")] public string doorCloseAnimation = "action_close";
-
     private bool lastOpenState;
     private TrackEntry doorOpenEntry;
     private TrackEntry boxAppearOpenEntry;
     private TrackEntry boxAppearCloseEntry;
     private TrackEntry doorCloseEntry;
+    private TrackEntry selectFailEntry;
     private Coroutine toggleNumberCoroutine;
 
+    private bool numberVisible;
     protected override void ExtendAwake()
     {
         base.ExtendAwake();
@@ -43,21 +45,19 @@ public class OpenCloseAntBox : WashingMachineItem
         lastOpenState = isOpen;
 
         PlayOpenCloseAnimation(isOpen, instant: true);
+
+        if (selectFailOutLine != null)
+        {
+            selectFailOutLine.SetActive(false);
+        }
     }
 
     public override void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {
         base.Setup(washingMachineStartSlot);
-        // Sau khi lên hàng: đồng bộ hiện/ẩn số theo trạng thái đóng/mở hiện tại.
         SetNumberVisible(isOpen);
     }
 
-    // Cửa (Spine pixel_box2) đã rút nông nên không tự che số khi đóng.
-    // => Điều khiển ẩn/hiện số bằng code theo đúng yêu cầu:
-    //    - BẬT số khi anim mở thực hiện được 1/2 thời gian.
-    //    - TẮT số khi anim đóng thực hiện được 1/2 thời gian.
-    // numberVisible là nguồn sự thật duy nhất cho việc số có được hiện hay không.
-    private bool numberVisible;
 
     private void SetNumberVisible(bool visible)
     {
@@ -75,8 +75,6 @@ public class OpenCloseAntBox : WashingMachineItem
         numberText.alpha = (isInSlot || numberVisible) ? (isDisable ? 0.2f : 1f) : 0f;
     }
 
-    // Booster EnableAll gọi hàm này. Nếu hộp đang ĐÓNG thì vẫn cho enable nhưng KHÔNG hiện số
-    // (số nằm trước cửa nên sẽ đè lên cửa). Số chỉ hiện khi hộp thực sự mở.
     public override void TemporarilyEnable()
     {
         if (numberVisible)
@@ -108,8 +106,7 @@ public class OpenCloseAntBox : WashingMachineItem
             PlayOpenCloseAnimation(isOpen, instant: false);
         }
 
-        // Chống booster/Enable bật số lên khi hộp đang đóng (số nằm trước cửa nên sẽ đè lên cửa).
-        // Khi numberVisible == false thì luôn ép số ẩn, bất kể ai vừa set alpha.
+
         if (!numberVisible && numberText != null && numberText.alpha != 0f)
         {
             numberText.alpha = 0f;
@@ -142,6 +139,11 @@ public class OpenCloseAntBox : WashingMachineItem
         {
             doorCloseEntry.Complete -= OnDoorCloseComplete;
             doorCloseEntry = null;
+        }
+        if (selectFailEntry != null)
+        {
+            selectFailEntry.Complete -= OnSelectFailComplete;
+            selectFailEntry = null;
         }
     }
 
@@ -196,7 +198,6 @@ public class OpenCloseAntBox : WashingMachineItem
                 }
             }
 
-            // Instant: trạng thái tức thời => số hiện đúng theo open ngay.
             SetNumberVisible(open);
         }
         else
@@ -214,7 +215,7 @@ public class OpenCloseAntBox : WashingMachineItem
 
     private void StartAnimateOpen()
     {
-        // Theo yêu cầu: KHÔNG bật số ngay khi bắt đầu mở mà đợi anim mở chạy được 1/2 thời gian mới bật.
+
         SetNumberVisible(false);
 
         if (skeletonAnimation != null && !string.IsNullOrEmpty(closedIdleAnimation))
@@ -308,14 +309,12 @@ public class OpenCloseAntBox : WashingMachineItem
             skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, true);
         }
 
-        // Đồng bộ lại alpha số cho chắc chắn
         ApplyNumberVisibility();
     }
 
     private void StartAnimateClose()
     {
-        // Giữ số hiện trong lúc thu box.
-        // Tắt số khi anim đóng cửa (doorCloseAnimation) chạy được 1/2 thời gian.
+
 
         if (skeletonAnimation != null && !string.IsNullOrEmpty(disappearAnimation))
         {
@@ -396,7 +395,6 @@ public class OpenCloseAntBox : WashingMachineItem
             skeletonOpenClose.AnimationState.SetAnimation(0, doorBeginAnimation, true);
         }
 
-        // Đảm bảo số được tắt khi hoàn tất anim đóng.
         SetNumberVisible(false);
     }
 
@@ -407,11 +405,38 @@ public class OpenCloseAntBox : WashingMachineItem
             return;
         }
 
+        if (selectFailEntry != null)
+        {
+            selectFailEntry.Complete -= OnSelectFailComplete;
+            selectFailEntry = null;
+        }
+
+        if (selectFailOutLine != null)
+        {
+            selectFailOutLine.SetActive(true);
+        }
+
         if (isOpen && useNewFailAnimation)
         {
             if (skeletonAnimation != null && !string.IsNullOrEmpty(selectFailToggleAnimation))
             {
-                skeletonAnimation.AnimationState.SetAnimation(0, selectFailToggleAnimation, false);
+                selectFailEntry = skeletonAnimation.AnimationState.SetAnimation(0, selectFailToggleAnimation, false);
+                if (selectFailEntry != null)
+                {
+                    selectFailEntry.Complete += OnSelectFailComplete;
+
+                    float duration = selectFailEntry.Animation != null ? selectFailEntry.Animation.Duration : 0.5f;
+                    if (duration > 0f)
+                    {
+                        PrimeTween.Tween.Delay(duration).OnComplete(() =>
+                        {
+                            if (selectFailOutLine != null)
+                            {
+                                selectFailOutLine.SetActive(false);
+                            }
+                        });
+                    }
+                }
             }
 
             if (GamePersistentVariable.IsVibrate)
@@ -424,11 +449,65 @@ public class OpenCloseAntBox : WashingMachineItem
         else
         {
             base.PlayInvalidSelectAnimation();
+            if (isOpenCloseType && !isOpen)
+            {
+                PrimeTween.Tween.Delay(0.3f).OnComplete(() =>
+                {
+                    if (selectFailOutLine != null)
+                    {
+                        selectFailOutLine.SetActive(false);
+                    }
+                });
+            }
+            else
+            {
+                if (skeletonAnimation != null && !string.IsNullOrEmpty(selectFalseAnimation))
+                {
+                    selectFailEntry = skeletonAnimation.AnimationState.GetCurrent(0);
+                    if (selectFailEntry != null)
+                    {
+                        selectFailEntry.Complete += OnSelectFailComplete;
+
+                        float duration = selectFailEntry.Animation != null ? selectFailEntry.Animation.Duration : 0.5f;
+                        if (duration > 0f)
+                        {
+                            PrimeTween.Tween.Delay(duration).OnComplete(() =>
+                            {
+                                if (selectFailOutLine != null)
+                                {
+                                    selectFailOutLine.SetActive(false);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnSelectFailComplete(TrackEntry trackEntry)
+    {
+        if (trackEntry != null)
+        {
+            trackEntry.Complete -= OnSelectFailComplete;
+        }
+        if (selectFailEntry == trackEntry)
+        {
+            selectFailEntry = null;
+        }
+        if (selectFailOutLine != null)
+        {
+            selectFailOutLine.SetActive(false);
         }
     }
 
     public override void TurnOnWarningLoseAnimation()
     {
+        if (selectFailOutLine != null)
+        {
+            selectFailOutLine.SetActive(true);
+        }
+
         if (isOpen && useNewFailAnimation && skeletonAnimation != null && !string.IsNullOrEmpty(selectFailToggleAnimation))
         {
             skeletonAnimation.AnimationState.SetAnimation(0, selectFailToggleAnimation, true);
@@ -437,6 +516,29 @@ public class OpenCloseAntBox : WashingMachineItem
         else
         {
             base.TurnOnWarningLoseAnimation();
+        }
+    }
+
+    public override void TurnOffWarningLoseAnimation()
+    {
+        base.TurnOffWarningLoseAnimation();
+        if (selectFailOutLine != null)
+        {
+            selectFailOutLine.SetActive(false);
+        }
+    }
+
+    protected override void OnRevive(GameEnum.BoosterType boosterType)
+    {
+        base.OnRevive(boosterType);
+        if (selectFailEntry != null)
+        {
+            selectFailEntry.Complete -= OnSelectFailComplete;
+            selectFailEntry = null;
+        }
+        if (selectFailOutLine != null)
+        {
+            selectFailOutLine.SetActive(false);
         }
     }
 }

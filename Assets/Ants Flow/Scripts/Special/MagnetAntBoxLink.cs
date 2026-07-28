@@ -75,14 +75,38 @@ public class MagnetAntBoxLink : MonoBehaviour
 
     public void Setup(WashingMachineItem[] antBoxes)
     {
+
         Tween.StopAll(linkImage.transform);
+        Tween.StopAll(linkImage);
         linkImage.gameObject.SetActive(true);
         linkImage.color = Color.white;
 
-        if (blur1 != null) { blur1.gameObject.SetActive(true); blur1.color = Color.white; }
-        if (blur2 != null) { blur2.gameObject.SetActive(true); blur2.color = Color.white; }
-        if (bubble1 != null) { Tween.StopAll(bubble1.transform); bubble1.gameObject.SetActive(true); bubble1.color = Color.white; }
-        if (bubble2 != null) { Tween.StopAll(bubble2.transform); bubble2.gameObject.SetActive(true); bubble2.color = Color.white; }
+        if (blur1 != null)
+        {
+            Tween.StopAll(blur1);
+            blur1.gameObject.SetActive(true);
+            blur1.color = Color.white;
+        }
+        if (blur2 != null)
+        {
+            Tween.StopAll(blur2);
+            blur2.gameObject.SetActive(true);
+            blur2.color = Color.white;
+        }
+        if (bubble1 != null)
+        {
+            Tween.StopAll(bubble1.transform);
+            Tween.StopAll(bubble1);
+            bubble1.gameObject.SetActive(true);
+            bubble1.color = Color.white;
+        }
+        if (bubble2 != null)
+        {
+            Tween.StopAll(bubble2.transform);
+            Tween.StopAll(bubble2);
+            bubble2.gameObject.SetActive(true);
+            bubble2.color = Color.white;
+        }
 
         boxCountReachedZero = new bool[antBoxes.Length];
 
@@ -200,7 +224,6 @@ public class MagnetAntBoxLink : MonoBehaviour
         float distance;
         Vector3 mid;
 
-        //Nối trực tiếp từ viền bong bóng này sang viền bong bóng kia (dọc theo vector hướng) ---
 
         Vector3 dirRef = b - a;
         Vector3 dirNormalized = dirRef.normalized;
@@ -210,13 +233,6 @@ public class MagnetAntBoxLink : MonoBehaviour
         distance = Mathf.Max(0f, totalDistance - 2f * bubbleRadius);
         mid = (startPos + endPos) * 0.5f;
 
-
-        //Trừ Y đi một khoảng bằng bán kính (ở dưới bong bóng) ---
-        //startPos = a - new Vector3(0, bubbleRadius, 0);
-        //endPos = b - new Vector3(0, bubbleRadius, 0);
-        //distance = Vector3.Distance(startPos, endPos);
-        //mid = (startPos + endPos) * 0.5f;
-        // end moi
         Vector3 dir = endPos - startPos;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         Quaternion rot = Quaternion.Euler(0, 0, angle);
@@ -275,7 +291,7 @@ public class MagnetAntBoxLink : MonoBehaviour
             linkSound = null;
         }
 
-        // Reset trạng thái magnet cho tất cả box trước khi deactivate
+        // Reset trạng thái magnet 
         for (int i = 0; i < antBoxes.Length; i++)
         {
             if (antBoxes[i] != null)

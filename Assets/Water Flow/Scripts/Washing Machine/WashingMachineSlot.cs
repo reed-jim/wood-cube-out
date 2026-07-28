@@ -69,12 +69,12 @@ public class WashingMachineSlot : MonoBehaviour
     private void OnLevelLoaded()
     {
         unlockButtonIcon.color = Color.white;
-        if (lockSprite != null)
-        {
-            Color color = lockSprite.color;
-            color.a = 1f;
-            lockSprite.color = color;
-        }
+        //if (lockSprite != null)
+        //{
+        //    Color color = lockSprite.color;
+        //    color.a = 1f;
+        //    lockSprite.color = color;
+        //}
 
         washingMachineItem = null;
     }

@@ -208,9 +208,11 @@ namespace AntsFlow
             var hpVisual = visual.GetComponent<HardPixelVisual>();
             if (hpVisual != null)
             {
+                hpVisual.ResetState();
                 int remaining = idToRemainingEatCount.ContainsKey(inst.config.id) ? idToRemainingEatCount[inst.config.id] : inst.config.requiredEatCount;
                 hpVisual.SetText(remaining.ToString());
                 hpVisual.SetTextActive(inst.config.isShowText);
+                hpVisual.UpdateState(remaining, inst.config.requiredEatCount);
 
                 if (inst.config.isShowText)
                 {
@@ -310,11 +312,13 @@ namespace AntsFlow
                         var hpVisual = visual.GetComponent<HardPixelVisual>();
                         if (hpVisual != null)
                         {
+                            int currentCount = idToRemainingEatCount[id];
                             if (inst.config.isShowText)
                             {
-                                hpVisual.SetText(idToRemainingEatCount[id].ToString());
+                                hpVisual.SetText(currentCount.ToString());
                                 hpVisual.PlayTextTween();
                             }
+                            hpVisual.UpdateState(currentCount, inst.config.requiredEatCount);
                         }
                         else if (visual.name == "HardPixel_Text_" + id)
                         {
@@ -419,8 +423,13 @@ namespace AntsFlow
                     {
                         if (visual != null)
                         {
-                            Tween.Scale(visual.transform, Vector3.zero, 0.3f)
-                                .OnComplete(() => Destroy(visual));
+                            var hpVisual = visual.GetComponent<HardPixelVisual>();
+                            if (hpVisual != null)
+                            {
+                                hpVisual.PlayHitFX();
+                            }
+
+                            Tween.ShakeScale(visual.transform, strength: Vector3.one * 0.15f, duration: 0.3f).OnComplete(() => Destroy(visual));
                         }
                     }
                     inst.visualObjects.Clear();

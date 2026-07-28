@@ -14,6 +14,8 @@ namespace AntsFlow
     public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         public LevelItem levelItem;
+        public bool isLevelContainingNewSpecialElements;
+
         public Camera mainCamera;
 
         public List<WashingMachineSlot> washingMachineSlots;
@@ -75,79 +77,94 @@ namespace AntsFlow
 
                 finishUsingEnableAllAntBoxesBoosterEvent?.Invoke();
             }
-
-            if (Time.frameCount != lastToggleFrame)
+            if (isLevelContainingNewSpecialElements)
             {
-                lastToggleFrame = Time.frameCount;
-
-                // === Check trước: tìm hộp nào sẽ lên hàng đầu (row 0) ===
-                HashSet<WashingMachineItem> boxesMovingToTop = new HashSet<WashingMachineItem>();
-                for (int i = 0; i < washingMachineStartSlots.Count; i++)
+                if (Time.frameCount != lastToggleFrame)
                 {
-                    var slot = washingMachineStartSlots[i];
-                    if (slot.row == 0 && slot.washingMachine == null)
+                    lastToggleFrame = Time.frameCount;
+
+
+                    List<WashingMachineItem> predictedRow0Boxes = new List<WashingMachineItem>();
+                    foreach (var slot in washingMachineStartSlots)
                     {
-                        int x = (int)slot.transform.position.x;
-                        for (int j = i + 1; j < washingMachineStartSlots.Count; j++)
+                        if (slot.row == 0)
                         {
-                            var otherSlot = washingMachineStartSlots[j];
-                            if (otherSlot.washingMachine != null
-                                && (int)otherSlot.transform.position.x == x
-                                && !otherSlot.washingMachine.isMoving)
+                            if (slot.washingMachine != null)
                             {
-                                boxesMovingToTop.Add(otherSlot.washingMachine);
+                                predictedRow0Boxes.Add(slot.washingMachine);
+                            }
+                            else
+                            {
+                                int x = (int)slot.transform.position.x;
+                                for (int j = 0; j < washingMachineStartSlots.Count; j++)
+                                {
+                                    var otherSlot = washingMachineStartSlots[j];
+                                    if (otherSlot.row > 0 && otherSlot.washingMachine != null && (int)otherSlot.transform.position.x == x)
+                                    {
+                                        predictedRow0Boxes.Add(otherSlot.washingMachine);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    bool wouldBeDeadlocked = true;
+                    if (predictedRow0Boxes.Count == 0)
+                    {
+                        wouldBeDeadlocked = false;
+                    }
+                    else
+                    {
+                        foreach (var box in predictedRow0Boxes)
+                        {
+                            if (box.isMagnet)
+                            {
+                                if (box.IsValidToSelect())
+                                {
+                                    wouldBeDeadlocked = false;
+                                    break;
+                                }
+                            }
+                            else if (box.isOpenCloseType)
+                            {
+                                bool nextOpenState = !box.isOpen;
+                                if (nextOpenState)
+                                {
+                                    wouldBeDeadlocked = false;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+
+                                wouldBeDeadlocked = false;
                                 break;
                             }
                         }
                     }
-                }
 
-                // === Simulate toggle: check nếu toggle tất cả thì hàng đầu sẽ ra sao ===
-                int numTopBoxesTotal = 0;
-                int numTopOpenCloseBoxes = 0;
-                int numTopOpenCloseWillBeClosed = 0;
 
-                foreach (var slot in washingMachineStartSlots)
-                {
-                    WashingMachineItem box = slot.washingMachine;
-                    if (box == null || box.isInSlot) continue;
-
-                    bool willBeAtTopRow = (slot.row == 0) || boxesMovingToTop.Contains(box);
-                    if (willBeAtTopRow)
+                    foreach (var startSlot in washingMachineStartSlots)
                     {
-                        numTopBoxesTotal++;
-                        if (box.isOpenCloseType)
+                        var box = startSlot.washingMachine;
+                        if (box != null && box.isOpenCloseType)
                         {
-                            numTopOpenCloseBoxes++;
-                            bool willBeClosedAfterToggle = box.isOpen; // Nếu đang mở thì toggle sẽ thành đóng
-                            if (willBeClosedAfterToggle)
+
+                            if (wouldBeDeadlocked && predictedRow0Boxes.Contains(box))
                             {
-                                numTopOpenCloseWillBeClosed++;
+                                box.isOpen = true;
+                            }
+                            else
+                            {
+                                box.isOpen = !box.isOpen;
                             }
                         }
                     }
                 }
-
-                // Chỉ áp dụng chống deadlock khi TẤT CẢ hộp ở hàng đầu đều là OpenCloseType và đều sẽ bị đóng
-                bool wouldAllTopBeClosed = (numTopBoxesTotal > 0)
-                                           && (numTopOpenCloseBoxes == numTopBoxesTotal)
-                                           && (numTopOpenCloseWillBeClosed == numTopOpenCloseBoxes);
-
-                // === Toggle, nhưng SKIP hộp sẽ lên hàng đầu nếu toggle sẽ gây TH tất cả đóng ===
-                foreach (var startSlot in washingMachineStartSlots)
-                {
-                    if (startSlot.washingMachine != null && startSlot.washingMachine.isOpenCloseType)
-                    {
-                        // Nếu toggle sẽ gây TH tất cả hàng đầu đều đóng,
-                        // thì ko cho đóng hộp đang ở hàng dưới sắp lên hàng đầu
-                        if (wouldAllTopBeClosed && boxesMovingToTop.Contains(startSlot.washingMachine))
-                        {
-                            continue;
-                        }
-                        startSlot.washingMachine.isOpen = !startSlot.washingMachine.isOpen;
-                    }
-                }
             }
+
 
             CheckNoAntBoxLeftOnStartSlots();
         }
@@ -155,24 +172,26 @@ namespace AntsFlow
         public void StartLevel(AntsFlow.LevelItem levelItem)
         {
             this.levelItem = levelItem;
+            isLevelContainingNewSpecialElements = IsLevelContainingNewSpecialElements();
 
-            if (washingMachineSlots != null)
-            {
-                for (int i = 0; i < washingMachineSlots.Count; i++)
-                {
-                    if (i < 5)
-                    {
-                        washingMachineSlots[i].SetLocked(false);
-                    }
+            //comment de test
+            //if (washingMachineSlots != null)
+            //{
+            //    for (int i = 0; i < washingMachineSlots.Count; i++)
+            //    {
+            //        if (i < 5)
+            //        {
+            //            washingMachineSlots[i].SetLocked(false);
+            //        }
 
-                    if (levelItem.specialElementConfig != null &&
-                        levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices != null &&
-                        levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices.Contains(i))
-                    {
-                        washingMachineSlots[i].SetLocked(true, showUnlockButton: false);
-                    }
-                }
-            }
+            //        if (levelItem.specialElementConfig != null &&
+            //            levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices != null &&
+            //            levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices.Contains(i))
+            //        {
+            //            washingMachineSlots[i].SetLocked(true, showUnlockButton: false);
+            //        }
+            //    }
+            //}
 
 
             try
@@ -193,13 +212,20 @@ namespace AntsFlow
             TileManager.Ins.UpdateTileCount();
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
+            // Level mới đẩy shadowTilemap ra sau (z=4f); level cũ giữ z gốc như ants-flow
+            TileManager.Ins.ApplyShadowTilemapDepth(isLevelContainingNewSpecialElements);
+
             SpecialElementManager.Ins.Setup(levelItem);
-            if (HardPixelManager.Ins != null)
+            if (isLevelContainingNewSpecialElements)
             {
-                HardPixelManager.Ins.Setup(levelItem);
+                if (HardPixelManager.Ins != null)
+                {
+                    HardPixelManager.Ins.Setup(levelItem);
+
+                }
+
 
             }
-
             if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
             {
                 int manualStart = currentLevel.Value == 40 ? 0 : -1;
@@ -227,8 +253,10 @@ namespace AntsFlow
             {
                 SpeedUpTutorialManager.Ins.StartTutorial();
             }
-
-            CheckLoseLevel();
+            if (isLevelContainingNewSpecialElements)
+            {
+                CheckLoseLevel();
+            }
         }
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem, Action onCompleteAction = null)
@@ -248,16 +276,27 @@ namespace AntsFlow
 
             washingMachineItem.isMoving = true;
             washingMachineItem.washingMachineStartSlot.washingMachine = null;
-
-            if (washingMachineItem.skeletonAnimation != null)
+            if(isLevelContainingNewSpecialElements)
             {
-                var localPos = washingMachineItem.skeletonAnimation.transform.localPosition;
-                washingMachineItem.skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
+                if (washingMachineItem.skeletonAnimation != null)
+                {
+                    var localPos = washingMachineItem.skeletonAnimation.transform.localPosition;
+                    washingMachineItem.skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
+                }
             }
 
             // Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
             Vector3 initialScale = washingMachineItem.transform.localScale;
-            Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
+            if(isLevelContainingNewSpecialElements)
+            {
+                Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
+
+            }
+            else
+            {
+                Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
+
+            }
             Tween.ScaleY(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.y, duration: 0.2f)
             .OnComplete(() =>
             {
@@ -410,21 +449,58 @@ namespace AntsFlow
                                 (washingMachineItem as FreezedAntBox).AssignRequirementNumber();
                             }
 
+                            if (washingMachineStartSlot.row == 0 && washingMachineItem.isOpenCloseType)
+                            {
+                                List<WashingMachineItem> unselectableRow0Magnets = new List<WashingMachineItem>();
+                                foreach (var startSlot in washingMachineStartSlots)
+                                {
+                                    if (startSlot.row == 0 && startSlot.washingMachine != null && startSlot.washingMachine.isMagnet)
+                                    {
+                                        if (!startSlot.washingMachine.IsValidToSelect())
+                                        {
+                                            unselectableRow0Magnets.Add(startSlot.washingMachine);
+                                        }
+                                    }
+                                }
+
+                                if (unselectableRow0Magnets.Count >= 2)
+                                {
+                                    washingMachineItem.isOpen = true;
+                                }
+                            }
+
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
                             washingMachineItem.isMoving = true;
-                            washingMachineItem.Setup(washingMachineStartSlot);
-                            bool isTut = (levelItem != null && levelItem.isTutorialLevel);
-                            if (!isTut && currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+
+                            if (isLevelContainingNewSpecialElements)
                             {
-                                isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(currentLevel.Value);
+                                // Logic mới: Setup trước tween để set z-offset theo row, tween về rowZ
+                                washingMachineItem.Setup(washingMachineStartSlot);
+
+                                bool isTut = (levelItem != null && levelItem.isTutorialLevel);
+                                if (!isTut && currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+                                {
+                                    isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(currentLevel.Value);
+                                }
+                                float rowZ = isTut ? 0 : WashingMachineItem.GetRowZOffset(washingMachineStartSlot.row);
+                                Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(rowZ), duration: 0.3f)
+                                .OnComplete(() =>
+                                {
+                                    washingMachineItem.isMoving = false;
+                                });
                             }
-                            float rowZ = isTut ? 0 : WashingMachineItem.GetRowZOffset(washingMachineStartSlot.row);
-                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(rowZ), duration: 0.3f)
-                            .OnComplete(() =>
+                            else
                             {
-                                washingMachineItem.isMoving = false;
-                            });
+                                // Giữ nguyên hành vi nhánh ants-flow: z = -1, Setup gọi trong OnComplete
+                                Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
+                                .OnComplete(() =>
+                                {
+                                    washingMachineItem.Setup(washingMachineStartSlot);
+
+                                    washingMachineItem.isMoving = false;
+                                });
+                            }
 
                             washingMachineItem.washingMachineStartSlot = washingMachineStartSlot;
                             washingMachineStartSlot.washingMachine = washingMachineItem;
@@ -466,7 +542,41 @@ namespace AntsFlow
                 }
             }
 
-            CheckLoseLevel();
+            // Kiểm tra deadlock nếu hàng đầu chỉ có các hộp đóng/mở đang đóng và các hộp magnet đang bị kẹt
+            if (isLevelContainingNewSpecialElements)
+            {
+                List<WashingMachineItem> closedOpenCloseBoxesOnRow0 = new List<WashingMachineItem>();
+                List<WashingMachineItem> stuckMagnetsOnRow0 = new List<WashingMachineItem>();
+                int totalBoxesOnRow0 = 0;
+
+                foreach (var slot in washingMachineStartSlots)
+                {
+                    if (slot.row == 0 && slot.washingMachine != null)
+                    {
+                        totalBoxesOnRow0++;
+                        var box = slot.washingMachine;
+                        if (box.isOpenCloseType && !box.isOpen)
+                        {
+                            closedOpenCloseBoxesOnRow0.Add(box);
+                        }
+                        else if (box.isMagnet && !box.IsValidToSelect())
+                        {
+                            stuckMagnetsOnRow0.Add(box);
+                        }
+                    }
+                }
+
+                if (closedOpenCloseBoxesOnRow0.Count > 0 && (closedOpenCloseBoxesOnRow0.Count + stuckMagnetsOnRow0.Count == totalBoxesOnRow0))
+                {
+                    foreach (var box in closedOpenCloseBoxesOnRow0)
+                    {
+                        box.isOpen = true;
+                    }
+                }
+
+                CheckLoseLevel();
+            }
+
         }
 
         public void SpawnNewWashingMachine()
@@ -743,17 +853,22 @@ namespace AntsFlow
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
-            HardPixelManager.Ins.OnBoosterClearTiles(tilesToClear.Count);
-            HardPixelManager.Ins.CheckBoosterClear();
-
-            try
+            if (isLevelContainingNewSpecialElements)
             {
-                SpecialElementManager.Ins.spawningTileBox.ClearSpawningTileBoxesOnUsingClearOneColorBooster(tilesToClear);
-            }
-            catch (System.Exception)
-            {
+                HardPixelManager.Ins.OnBoosterClearTiles(tilesToClear.Count);
+                HardPixelManager.Ins.CheckBoosterClear();
+                //comment de test
+                //try
+                //{
+                //    SpecialElementManager.Ins.spawningTileBox.ClearSpawningTileBoxesOnUsingClearOneColorBooster(tilesToClear);
+                //}
+                //catch (System.Exception)
+                //{
 
+                //}
             }
+
+
 
             void SpawnFakeTile(BaseTile tile, bool isLast)
             {
@@ -901,9 +1016,42 @@ namespace AntsFlow
         #endregion
 
         #region Check Lose
+        public bool IsLevelContainingNewSpecialElements()
+        {
+            if (levelItem == null || levelItem.specialElementConfig == null)
+            {
+                return false;
+            }
+
+            var spec = levelItem.specialElementConfig;
+
+            if (spec.magnetAntBoxConfig != null &&
+                spec.magnetAntBoxConfig.spawnOrder != null &&
+                spec.magnetAntBoxConfig.spawnOrder.Count > 0)
+            {
+                return true;
+            }
+            if (spec.openCloseAntBoxConfig != null &&
+                spec.openCloseAntBoxConfig.spawnOrder != null &&
+                spec.openCloseAntBoxConfig.spawnOrder.Count > 0)
+            {
+                return true;
+            }
+
+            if (spec.hardPixelConfigs != null &&
+                spec.hardPixelConfigs.Count > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public bool IsLose()
         {
             int numAntBoxLeft = washingMachineSlots.Count;
+
+            bool isNewSpecLevel = isLevelContainingNewSpecialElements;
 
             for (int i = 0; i < washingMachineSlots.Count; i++)
             {
@@ -917,7 +1065,13 @@ namespace AntsFlow
                 {
                     WashingMachineItem antBox = washingMachineSlot.washingMachineItem;
 
-                    if (antBox != null && antBox.IsActuallyStuck())
+                    bool isStuck = false;
+                    if (antBox != null)
+                    {
+                        isStuck = isNewSpecLevel ? antBox.IsActuallyStuck() : antBox.isStucking;
+                    }
+
+                    if (antBox != null && isStuck)
                     {
                         numAntBoxLeft--;
                     }
@@ -925,7 +1079,7 @@ namespace AntsFlow
             }
 
             bool isLose = numAntBoxLeft == 0;
-            if (!isLose)
+            if (isNewSpecLevel && !isLose)
             {
                 int numAvailableSlots = GetAvailableWashingMachineSlots().Count;
 
@@ -953,6 +1107,14 @@ namespace AntsFlow
                         }
                         else
                         {
+                            // Hộp băng (FreezedAntBox) chưa được phá vỡ thì không thể select lên slot
+                            // (chỉ tan băng khi hộp khác hoàn thành), nên không được tính là còn nước đi.
+                            // Nhờ vậy TH hàng đầu gồm 2 magnet đang kẹt + 1 ô băng chưa vỡ sẽ được cho thua.
+                            if (box is FreezedAntBox frozenBox && frozenBox.isFreezed)
+                            {
+                                continue;
+                            }
+
                             //Normal
                             if (numAvailableSlots >= box.numSlotRequired)
                             {
@@ -999,17 +1161,29 @@ namespace AntsFlow
                 List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
 
                 // Only turn on warning lose animation if all occupied slots are actually stuck
-                bool allActuallyStuck = true;
-                for (int i = 0; i < stuckAntBoxes.Count; i++)
+                if(isLevelContainingNewSpecialElements)
                 {
-                    if (!stuckAntBoxes[i].IsActuallyStuck())
+                    bool allActuallyStuck = true;
+                    for (int i = 0; i < stuckAntBoxes.Count; i++)
                     {
-                        allActuallyStuck = false;
-                        break;
+                        if (!stuckAntBoxes[i].IsActuallyStuck())
+                        {
+                            allActuallyStuck = false;
+                            break;
+                        }
+                    }
+
+                    if (allActuallyStuck)
+                    {
+                        for (int i = 0; i < stuckAntBoxes.Count; i++)
+                        {
+                            WashingMachineItem antBox = stuckAntBoxes[i];
+
+                            antBox.TurnOnWarningLoseAnimation();
+                        }
                     }
                 }
-
-                if (allActuallyStuck)
+                else
                 {
                     for (int i = 0; i < stuckAntBoxes.Count; i++)
                     {

@@ -82,12 +82,6 @@ public class WashingMachineItem : MonoBehaviour
         TileManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
 
-        if (shadow != null)
-        {
-            var localPos = shadow.transform.localPosition;
-            shadow.transform.localPosition = new Vector3(localPos.x, localPos.y, 4f);
-        }
-
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
@@ -161,6 +155,8 @@ public class WashingMachineItem : MonoBehaviour
 
         shadow.sprite = shadows[0];
 
+        ApplyShadowDepth();
+
         skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
@@ -212,25 +208,28 @@ public class WashingMachineItem : MonoBehaviour
         isDisable = !(washingMachineStartSlot.row == 0);
 
         numberText.alpha = isDisable ? 0.2f : 1;
-
-        bool isTut = false;
-        if (WashingMachineManager.Ins != null)
+        if(WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
         {
-            if (WashingMachineManager.Ins.levelItem != null && WashingMachineManager.Ins.levelItem.isTutorialLevel)
+            bool isTut = false;
+            if (WashingMachineManager.Ins != null)
             {
-                isTut = true;
+                if (WashingMachineManager.Ins.levelItem != null && WashingMachineManager.Ins.levelItem.isTutorialLevel)
+                {
+                    isTut = true;
+                }
+                else if (WashingMachineManager.Ins.currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+                {
+                    isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(WashingMachineManager.Ins.currentLevel.Value);
+                }
             }
-            else if (WashingMachineManager.Ins.currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+
+            if (!isTut)
             {
-                isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(WashingMachineManager.Ins.currentLevel.Value);
+                float zOffset = GetRowZOffset(washingMachineStartSlot.row);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
             }
         }
-
-        if (!isTut)
-        {
-            float zOffset = GetRowZOffset(washingMachineStartSlot.row);
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
-        }
+     
 
     }
 
@@ -239,6 +238,23 @@ public class WashingMachineItem : MonoBehaviour
     public static float GetRowZOffset(int row)
     {
         return -row * rowZSeparation;
+    }
+
+    // z shadow theo hành vi ants-flow của level cũ. Prefab Ant Box đã bị đổi 0.1 -> 4 (dùng chung mọi level),
+    // nên phải set tường minh: level mới = 4f, level cũ = 0.1f (giá trị prefab gốc nhánh ants-flow).
+    public const float shadowZNewSpecialLevel = 4f;
+    public const float shadowZLegacyLevel = 0.1f;
+
+    private void ApplyShadowDepth()
+    {
+        if (shadow == null)
+        {
+            return;
+        }
+
+        var localPos = shadow.transform.localPosition;
+        float z = WashingMachineManager.Ins.isLevelContainingNewSpecialElements ? shadowZNewSpecialLevel : shadowZLegacyLevel;
+        shadow.transform.localPosition = new Vector3(localPos.x, localPos.y, z);
     }
 
     public void MinusClothingPiece()
@@ -413,8 +429,11 @@ public class WashingMachineItem : MonoBehaviour
         {
             HapticFeedback.MediumFeedback();
         }
+        if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+        {
+            WashingMachineManager.Ins.CheckLoseLevel();
 
-        WashingMachineManager.Ins.CheckLoseLevel();
+        }
     }
 
     public virtual void TurnOnWarningLoseAnimation()
@@ -558,7 +577,10 @@ public class WashingMachineItem : MonoBehaviour
     {
         if (remainingNumber <= 0)
         {
-            if (isInSlot)
+            // Chỉ áp dụng cho level có special element mới; IsActuallyStuck (nhánh mới) đã bỏ qua
+            // TH remainingNumber<=0. Level cũ (ants-flow) đọc isStucking thô nên không được set ở đây,
+            // tránh bị tính thua nhầm khi hộp đã nhả hết kiến.
+            if (isInSlot && WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
             {
                 isStucking = true;
             }
@@ -1034,7 +1056,7 @@ public class WashingMachineItem : MonoBehaviour
         // }
     }
 
-    private void OnRevive(BoosterType boosterType)
+    protected virtual void OnRevive(BoosterType boosterType)
     {
         if (isInSlot)
         {
