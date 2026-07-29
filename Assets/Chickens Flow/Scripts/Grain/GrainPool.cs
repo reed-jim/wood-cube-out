@@ -175,6 +175,28 @@ public class GrainPool : MonoBehaviour
         return null;
     }
 
+    public List<GrainPoolSlot> GetGrainPoolSlots(int number)
+    {
+        List<GrainPoolSlot> slots = new List<GrainPoolSlot>();
+
+        for (int i = 0; i < grainPoolSlots.Count; i++)
+        {
+            GrainPoolSlot grainPoolSlot = grainPoolSlots[i];
+
+            if (grainPoolSlot.grainPile == null)
+            {
+                slots.Add(grainPoolSlot);
+            }
+
+            if (slots.Count == number)
+            {
+                break;
+            }
+        }
+
+        return slots;
+    }
+
     public void AddGrainPile(GrainPile grainPile)
     {
         if (grainPiles == null)

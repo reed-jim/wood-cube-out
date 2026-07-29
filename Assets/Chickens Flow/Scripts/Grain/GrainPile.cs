@@ -97,69 +97,75 @@ public class GrainPile : MonoBehaviour
             grains[i].transform.localPosition = position;
         }
 
-        int numColumn = 5;
+        int numColumn = 3;
         int numRow = grains.Count / numColumn;
 
         Vector2 offset;
 
         List<Vector3> grainPositions = new List<Vector3>();
 
-        for (int i = 0; i < numRow; i++)
+        for (int i = 0; i < grains.Count; i++)
         {
-            for (int j = 0; j < numColumn; j++)
-            {
-                float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+            float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
-                offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
-                offset.y = -transform.localPosition.y + 0.3f * radius * i - 1;
+            offset = UnityEngine.Random.insideUnitCircle * radius;
+            // flatten y
+            offset.y *= 0.6f;
+            offset.y -= transform.localPosition.y;
 
-                position = offset;
-                position.z = zOffset;
+            position = offset;
+            position.z = zOffset;
 
-                grainPositions.Add(position);
-            }
+            grainPositions.Add(position);
         }
 
-        for (int i = 0; i < numRow; i++)
+        // for (int i = 0; i < numRow; i++)
+        // {
+        //     for (int j = 0; j < numColumn; j++)
+        //     {
+        //         float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+        //         offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
+        //         offset.y = -transform.localPosition.y + 0.3f * radius * i - 1;
+
+        //         position = offset;
+        //         position.z = zOffset;
+
+        //         grainPositions.Add(position);
+        //     }
+        // }
+
+        for (int i = 0; i < grains.Count; i++)
         {
-            for (int j = 0; j < numColumn; j++)
+            int index = i;
+
+            float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+            int randomIndex = UnityEngine.Random.Range(0, grainPositions.Count);
+            position = grainPositions[randomIndex];
+
+            grainPositions.RemoveAt(randomIndex);
+
+            Vector3 start = grains[index].transform.localPosition;
+            Vector3 end = position;
+
+            grains[index].transform.DOLocalMove(end, duration: 0.3f + 0.01f * i).SetEase(Ease.InOutSine)
+            .OnComplete(() =>
             {
-                int index = j + numColumn * i;
+                grains[index].transform.SetZ(zOffset);
 
-                float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
-
-                // offset.x = radius * (j + 0.1f * i) * UnityEngine.Random.Range(0.8f, 1.2f);
-                // offset.y = 0.3f * radius * i - 1;
-
-                // position = pileCenter + offset;
-                // position.z = transform.position.z + zOffset;
-
-                int randomIndex = UnityEngine.Random.Range(0, grainPositions.Count);
-                position = grainPositions[randomIndex];
-
-                grainPositions.RemoveAt(randomIndex);
-
-                Vector3 start = grains[index].transform.localPosition;
-                Vector3 end = position;
-
-                grains[index].transform.DOLocalMove(end, duration: 0.3f + 0.01f * i).SetEase(Ease.InOutSine)
-                .OnComplete(() =>
+                if (index == 0)
                 {
-                    grains[index].transform.SetZ(zOffset);
+                    ChickenManager.Ins.FeedTheChicken(this);
 
-                    if (index == 0)
-                    {
-                        ChickenManager.Ins.FeedTheChicken(this);
+                    onFirstGrainHitGround?.Invoke();
+                }
 
-                        onFirstGrainHitGround?.Invoke();
-                    }
-
-                    if (index == grains.Count - 1)
-                    {
-                        onCompleteAction?.Invoke();
-                    }
-                });
-            }
+                if (index == grains.Count - 1)
+                {
+                    onCompleteAction?.Invoke();
+                }
+            });
         }
 
         // for (int i = 0; i < grains.Count; i++)
@@ -288,7 +294,7 @@ public class GrainPile : MonoBehaviour
             if (!isMoving && IsGrainNearChicken(grainToBeEaten[index].transform))
             {
                 SaferioTween.Punch(chicken.transform, 1.2f);
-                grainToBeEaten[index].transform.DOScale(0, duration: 0.3f)
+                grainToBeEaten[index].transform.DOScale(0, duration: 0.08f)
                 .OnComplete(() =>
                 {
                     grainToBeEaten[index].gameObject.SetActive(false);
@@ -308,7 +314,7 @@ public class GrainPile : MonoBehaviour
 
         bool IsGrainNearChicken(Transform grainPile)
         {
-            float range = 1;
+            float range = 2;
 
             return chicken.transform.position.x > grainPile.position.x - range &&
                 chicken.transform.position.x < grainPile.position.x + range;
