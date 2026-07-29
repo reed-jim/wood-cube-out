@@ -112,6 +112,8 @@ public static class GamePersistentVariable
     public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
     public static bool isUMPPersonalizedAdsConsent;
+    public static int levelShowBanner;
+    public static int levelShowCollapseBanner;
     #endregion
 
     #region LIVES SYSTEM

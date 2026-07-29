@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -544,6 +544,9 @@ public class FirebaseConfig
     public const string specialLevelConfig = "special_level_config";
     public const string isDisableLoopLevel = "isTester";
     public const string gameplayBackgroundConfig = "gameplay_background_config";
+
+    public const string LEVEL_UNLOCK_BANNER = "level_unlock_banner";
+    public const string LEVEL_UNLOCK_COLLAPSE_BANNER = "level_unlock_collapse_banner";
 
 }
 

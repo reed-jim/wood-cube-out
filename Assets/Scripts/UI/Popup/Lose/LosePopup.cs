@@ -115,9 +115,15 @@ public class LosePopup : BasePopup
 
         if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
         {
-            skipLevelButton.gameObject.SetActive(true);
-
-            GamePersistentVariable.isAllowedSkipLevel = true;
+            if (GamePersistentVariable.isEnableRewardedAds)
+            {
+                skipLevelButton.gameObject.SetActive(true);
+                GamePersistentVariable.isAllowedSkipLevel = true;
+            }
+            else
+            {
+                skipLevelButton.gameObject.SetActive(false);
+            }
         }
         else
         {

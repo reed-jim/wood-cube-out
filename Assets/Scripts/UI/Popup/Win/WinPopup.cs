@@ -18,6 +18,7 @@ using static GameEnum;
 
 public class WinPopup : BasePopup
 {
+    [SerializeField] private Button continueButtonSingle;
     [SerializeField] private Button continueButton;
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Button x5CoinButton;
@@ -70,6 +71,7 @@ public class WinPopup : BasePopup
         // RewardCollectingUI.collectCoinCompleteEvent += OnCollectCoinCompleted;
 
         continueButton.onClick.AddListener(Continue);
+        continueButtonSingle.onClick.AddListener(Continue);
         returnHomeButton.onClick.AddListener(ReturnHome);
         x5CoinButton.onClick.AddListener(X5Coin);
     }
@@ -90,6 +92,7 @@ public class WinPopup : BasePopup
         goldPassKeyText.text = $"{0}";
 
         continueButton.interactable = true;
+        continueButtonSingle.interactable = true;
         returnHomeButton.interactable = true;
         x5CoinButton.interactable = true;
 
@@ -100,8 +103,10 @@ public class WinPopup : BasePopup
         _multiplierCoinWinLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MULTIPLIER_COIN_WIN_LEVEL, 2);
 
         // coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
-        x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
-
+        bool isEnableRewardAds = GamePersistentVariable.isEnableRewardedAds;
+        x5CoinButton.gameObject.SetActive(isEnableRewardAds);
+        continueButton.gameObject.SetActive(isEnableRewardAds);
+        continueButtonSingle.gameObject.SetActive(!isEnableRewardAds);
         if (!_isCollectCoinRemoteConfig)
         {
             continueButton.GetComponent<RectTransform>().localPosition += new Vector3(0, 80, 0);
@@ -232,7 +237,7 @@ public class WinPopup : BasePopup
     {
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
-
+        continueButtonSingle.interactable = false;
         CollectCoin(numCoinNormal);
 
         GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinContinueButton.position);
@@ -261,6 +266,7 @@ public class WinPopup : BasePopup
         else
         {
             continueButton.interactable = false;
+            continueButtonSingle.interactable = false;
 
             DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
 
@@ -307,6 +313,7 @@ public class WinPopup : BasePopup
     {
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
+        continueButtonSingle.interactable = false;
 
         GameController.Instance.admobAds.ShowVideoReward(
            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
@@ -354,10 +361,12 @@ public class WinPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
-      
-        InvokeShowAdNotLoadedPopupEvent();
         x5CoinButton.interactable = true;
         continueButton.interactable = true;
+        continueButtonSingle.interactable = true;
+
+        //InvokeShowAdNotLoadedPopupEvent();
+        ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
     }
 
     private void OnMultiplyCoinTextTranslated()

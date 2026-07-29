@@ -477,6 +477,9 @@ public class AdmobAdsMax
     {
         if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", false))
         {
+            if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowCollapseBanner)
+                return;
+
             if (GameController.Instance.useProfile.IsRemoveAds)
                 return;
 
@@ -1262,6 +1265,9 @@ public class AdmobAdsMax
 
     public void ShowBanner()
     {
+        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowBanner)
+            return;
+
         if (GameController.Instance.useProfile.IsRemoveAds)
             return;
         if (isAdmobInitDone)
