@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -71,26 +72,28 @@ public class BaseChicken : MonoBehaviour
 
                     isDone = true;
 
-                    if (isLastChickenInTheWave)
+                    foreach (var waitingChickenSlot in waitingChickenSlots)
                     {
-                        ChickenManager.Ins.MoveChickensDown();
+                        waitingChickenSlot.chicken = null;
                     }
+
+                    ChickenManager.Ins.MoveChickensDown();
+
+                    // if (isLastChickenInTheWave)
+                    // {
+                    //     ChickenManager.Ins.MoveChickensDown();
+                    // }
                 });
             });
 
         isEating = true;
-
-        foreach (var waitingChickenSlot in waitingChickenSlots)
-        {
-            waitingChickenSlot.chicken = null;
-        }
     }
 
     public void Complete()
     {
         isDone = true;
     }
-    
+
     public void PlayIdleAnim()
     {
         PlayForCycles(skeletonAnimation, idleAnimation, 3, null, false);
@@ -151,5 +154,10 @@ public class BaseChicken : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
         transform.rotation = targetRotation;
+    }
+
+    public int GetFirstRow()
+    {
+        return waitingChickenSlots.Min(item => item.row);
     }
 }

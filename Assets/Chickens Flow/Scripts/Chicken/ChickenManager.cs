@@ -142,7 +142,7 @@ public class ChickenManager : Singleton<ChickenManager>
             waitingChickenSlot.row = y;
 
             position = new Vector3(x, y);
-            position.x -= numColumn / 2;
+            position.x -= (numColumn - 1) / 2f;
             position *= distance;
             position.z = -1 - 0.01f * (numRow - i);
 
@@ -196,11 +196,10 @@ public class ChickenManager : Singleton<ChickenManager>
             BaseChicken chicken = ObjectPoolingEverything.GetFromPool<BaseChicken>(GameConstants.chicken);
 
             column = (int)tileData.position.x;
-            column -= numColumn / 2;
             row = (int)tileData.position.y;
 
             position = tileData.position;
-            position.x -= numColumn / 2;
+            position.x -= (numColumn - 1) / 2f;
             position *= distance;
             position.z = -1 - 0.01f * (numRow - i);
 

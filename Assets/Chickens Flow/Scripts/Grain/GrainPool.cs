@@ -175,26 +175,40 @@ public class GrainPool : MonoBehaviour
         return null;
     }
 
-    public List<GrainPoolSlot> GetGrainPoolSlots(int number)
+    public List<GrainPoolSlot> GetGrainPoolSlots(int number, List<BaseChicken> possibleChickensToEat)
     {
-        List<GrainPoolSlot> slots = new List<GrainPoolSlot>();
+        List<(GrainPoolSlot slot, float distance)> candidates = new();
 
-        for (int i = 0; i < grainPoolSlots.Count; i++)
+        foreach (var slot in grainPoolSlots)
         {
-            GrainPoolSlot grainPoolSlot = grainPoolSlots[i];
+            if (slot.grainPile != null)
+                continue;
 
-            if (grainPoolSlot.grainPile == null)
+            float closestDistance = float.MaxValue;
+
+            if (possibleChickensToEat != null)
             {
-                slots.Add(grainPoolSlot);
+                foreach (var chicken in possibleChickensToEat)
+                {
+                    float dist = Mathf.Abs(slot.transform.position.x - chicken.transform.position.x);
+                    
+                    if (dist < closestDistance)
+                        closestDistance = dist;
+                }
             }
 
-            if (slots.Count == number)
-            {
-                break;
-            }
+            candidates.Add((slot, closestDistance));
         }
 
-        return slots;
+        candidates.Sort((a, b) => a.distance.CompareTo(b.distance));
+
+        List<GrainPoolSlot> result = new(Mathf.Min(number, candidates.Count));
+        for (int i = 0; i < Mathf.Min(number, candidates.Count); i++)
+        {
+            result.Add(candidates[i].slot);
+        }
+
+        return result;
     }
 
     public void AddGrainPile(GrainPile grainPile)

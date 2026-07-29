@@ -202,13 +202,27 @@ public class WashingMachineItem : MonoBehaviour
     }
 
     #region Chicken Feed
+    public List<BaseChicken> GetPossibleChickensToEat()
+    {
+        List<BaseChicken> result = new List<BaseChicken>();
+
+        List<BaseChicken> chickensInFirstRow =
+            ChickenManager.Ins.chickens.Where(item => !item.isEating && !item.isDone && item.GetFirstRow() == 0).ToList();
+
+        result = chickensInFirstRow.Where(item => item.faction == faction).ToList();
+
+        return result;
+    }
+
     public void PourGrainOur(out bool isPouringAll, Action onCompleteAction)
     {
         int maxAddNumber = Mathf.Min(number, WashingMachineManager.Ins.grainPool.AmountLeft);
 
         isPouringAll = maxAddNumber == number;
 
-        List<GrainPoolSlot> grainPoolSlots = WashingMachineManager.Ins.grainPool.GetGrainPoolSlots(maxAddNumber);
+        List<BaseChicken> possibleChickensToEat = GetPossibleChickensToEat();
+
+        List<GrainPoolSlot> grainPoolSlots = WashingMachineManager.Ins.grainPool.GetGrainPoolSlots(maxAddNumber, possibleChickensToEat);
 
         StartCoroutine(PouringOut(grainPoolSlots, isBucketMoveBack: !isPouringAll, onCompleteAction));
 

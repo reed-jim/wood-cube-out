@@ -20,8 +20,10 @@ public class GrainPile : MonoBehaviour
     #endregion
 
     #region Eating
+    [Header("Eating")]
     public int totalNumber;
     public int remainingNumber;
+    public float timeEatOneGrain;
     #endregion
 
     public int siblingIndex;
@@ -285,8 +287,8 @@ public class GrainPile : MonoBehaviour
         {
             if (!isMoving && IsGrainNearChicken(grainToBeEaten[index].transform))
             {
-                SaferioTween.Punch(chicken.transform, 1.2f);
-                grainToBeEaten[index].transform.DOScale(0, duration: 0.08f)
+                PlaySoundAndFx();
+                grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
                 .OnComplete(() =>
                 {
                     grainToBeEaten[index].gameObject.SetActive(false);
@@ -318,6 +320,16 @@ public class GrainPile : MonoBehaviour
 
             return chicken.transform.position.x > grainPile.position.x - range &&
                 chicken.transform.position.x < grainPile.position.x + range;
+        }
+
+        void PlaySoundAndFx()
+        {
+            ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+            antDissappearFx.transform.position = chicken.transform.position.ChangeY(-1f);
+            antDissappearFx.Play();
+
+            SoundManager.Instance.PlaySoundCubeLand();
         }
     }
 
