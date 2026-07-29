@@ -285,8 +285,9 @@ public class GrainPile : MonoBehaviour
 
         while (index < grainToBeEaten.Count)
         {
-            if (!isMoving)
+            if (!isMoving && IsGrainNearChicken(grainToBeEaten[index].transform))
             {
+                SaferioTween.Punch(chicken.transform, 1.2f);
                 grainToBeEaten[index].transform.DOScale(0, duration: 0.3f)
                 .OnComplete(() =>
                 {
@@ -304,6 +305,14 @@ public class GrainPile : MonoBehaviour
         }
 
         onCompleteAction?.Invoke();
+
+        bool IsGrainNearChicken(Transform grainPile)
+        {
+            float range = 1;
+
+            return chicken.transform.position.x > grainPile.position.x - range &&
+                chicken.transform.position.x < grainPile.position.x + range;
+        }
     }
 
     void Rotate(Transform target, Vector2 direction)

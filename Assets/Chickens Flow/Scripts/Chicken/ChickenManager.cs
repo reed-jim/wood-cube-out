@@ -13,6 +13,9 @@ public class ChickenManager : Singleton<ChickenManager>
     public Dictionary<int, List<BaseChicken>> chickenByColumn;
     public Dictionary<int, List<WaitingChickenSlot>> slotByColumn;
 
+    public int numColumn;
+    public int numRow;
+
     public List<Color> allFactions;
 
     public void GenerateAllFactions(int total)
@@ -120,8 +123,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void SpawnFirstChickensUsingLevelConfig(AntsFlow.LevelItem levelItem)
     {
-        int numColumn = levelItem.numColumn;
-        int numRow = levelItem.numRow;
+        numColumn = levelItem.numColumn;
+        numRow = levelItem.numRow;
         float distance = 1f;
         float radius = 0.1f;
 
@@ -357,38 +360,56 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void CheckChickensStuck(bool isGhostChicken = false)
     {
-        if (isGhostChicken)
+        foreach (BaseChicken chicken in chickens)
         {
-            foreach (var chicken in chickens)
+            chicken.isStuck = false;
+
+            if (isGhostChicken)
+                continue;
+
+            // Check every column occupied by this chicken.
+            var occupiedColumns = chicken.waitingChickenSlots
+                .Select(s => s.column)
+                .Distinct();
+
+            foreach (int column in occupiedColumns)
             {
-                chicken.isStuck = false;
-            }
+                // Bottom-most slot of this chicken in this column.
+                int bottomRow = chicken.waitingChickenSlots
+                    .Where(s => s.column == column)
+                    .Min(s => s.row);
 
-            return;
-        }
+                bool foundSelf = false;
 
-        foreach (var column in chickenByColumn.Keys)
-        {
-            chickenByColumn[column][0].isStuck = false;
-
-            for (int i = 1; i < chickenByColumn[column].Count; i++)
-            {
-                BaseChicken frontChicken = chickenByColumn[column][i - 1];
-                BaseChicken currentChicken = chickenByColumn[column][i];
-
-                if (!frontChicken.isEating && !frontChicken.isDone)
+                for (int row = 0; row < numRow; row++)
                 {
-                    chickenByColumn[column]
-                        .Skip(i)
-                        .ToList()
-                        .ForEach(chicken => chicken.isStuck = true);
+                    BaseChicken other = waitingChickenSlots[new Vector2Int(column, row)].chicken;
 
+                    if (other == null)
+                        continue;
+
+                    if (!foundSelf)
+                    {
+                        if (other == chicken && row == bottomRow)
+                            foundSelf = true;
+                    }
+
+                    if (foundSelf)
+                    {
+                        break;
+                    }
+
+                    // First chicken in front of us.
+                    if (!other.isEating && !other.isDone)
+                    {
+                        chicken.isStuck = true;
+                        break;
+                    }
+                }
+
+                // ANY blocked column => stuck.
+                if (chicken.isStuck)
                     break;
-                }
-                else
-                {
-                    currentChicken.isStuck = false;
-                }
             }
         }
     }
