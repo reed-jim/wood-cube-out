@@ -272,14 +272,6 @@ public class GrainPile : MonoBehaviour
         StartCoroutine(ChickenEatingGrains(chicken, grainsToBeEaten, onCompleteAction));
 
         remainingNumber--;
-
-        if (remainingNumber <= 0)
-        {
-            WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
-            WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
-        }
-
-        WashingMachineManager.Ins.grainPool.AddGrain(-1);
     }
 
     private IEnumerator ChickenEatingGrains(BaseChicken chicken, List<Grain> grainToBeEaten, Action onCompleteAction)
@@ -309,6 +301,14 @@ public class GrainPile : MonoBehaviour
 
             yield return waitForSeconds;
         }
+
+        if (remainingNumber <= 0)
+        {
+            WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
+            WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
+        }
+
+        WashingMachineManager.Ins.grainPool.AddGrain(-1);
 
         onCompleteAction?.Invoke();
 
