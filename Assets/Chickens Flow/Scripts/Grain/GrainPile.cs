@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using AntsFlow;
 using DG.Tweening;
 using Saferio.Util.SaferioTween;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 public class GrainPile : MonoBehaviour
@@ -33,6 +36,13 @@ public class GrainPile : MonoBehaviour
     void Awake()
     {
         SpawnGrains();
+    }
+
+    private void OnDrawGizmos()
+    {
+#if UNITY_EDITOR
+        Handles.Label(transform.position, gameObject.name);
+#endif
     }
 
     public void Reset()
@@ -278,14 +288,20 @@ public class GrainPile : MonoBehaviour
 
     private IEnumerator ChickenEatingGrains(BaseChicken chicken, List<Grain> grainToBeEaten, Action onCompleteAction)
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
         int index = 0;
         bool isMoving = false;
 
+        float updateAnimTimeframe = Time.time;
+
+        chicken.PlayEatAnim();
+
         while (index < grainToBeEaten.Count)
         {
-            if (!isMoving && IsGrainNearChicken(grainToBeEaten[index].transform))
+            bool isGrainNear = IsGrainNearChicken(grainToBeEaten[index].transform);
+
+            if (!isMoving && isGrainNear)
             {
                 PlaySoundAndFx();
                 grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
@@ -299,6 +315,20 @@ public class GrainPile : MonoBehaviour
                 });
 
                 isMoving = true;
+            }
+
+            if (Time.time - updateAnimTimeframe > 0.5f)
+            {
+                if (!isGrainNear)
+                {
+                    chicken.PlayIdleAnim();
+                }
+                else
+                {
+                    chicken.PlayEatAnim();
+                }
+
+                updateAnimTimeframe = Time.time;
             }
 
             yield return waitForSeconds;
@@ -316,7 +346,7 @@ public class GrainPile : MonoBehaviour
 
         bool IsGrainNearChicken(Transform grainPile)
         {
-            float range = 2;
+            float range = chicken.eatingRange;
 
             return chicken.transform.position.x > grainPile.position.x - range &&
                 chicken.transform.position.x < grainPile.position.x + range;

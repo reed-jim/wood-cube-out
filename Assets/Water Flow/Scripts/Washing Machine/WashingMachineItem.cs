@@ -256,7 +256,7 @@ public class WashingMachineItem : MonoBehaviour
                 pileCenter.z = -1;
 
                 transform.SetParent(grainPoolSlot.transform);
-
+                
                 Tween.LocalPosition(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
                 {
                     GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);

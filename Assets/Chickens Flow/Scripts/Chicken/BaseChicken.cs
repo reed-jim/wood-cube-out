@@ -13,6 +13,8 @@ public class BaseChicken : MonoBehaviour
 {
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimation;
+    [SpineAnimation] public string moveAnimation;
+    [SpineAnimation] public string eatAnimation;
     public GameObject eyes;
 
     public Color faction;
@@ -20,6 +22,9 @@ public class BaseChicken : MonoBehaviour
     public int row;
     public int numColumnTaken;
     public int numRowTaken;
+
+    [Header("Customize")]
+    public float eatingRange;
 
     [Header("State")]
     public bool isEating;
@@ -30,16 +35,29 @@ public class BaseChicken : MonoBehaviour
 
     public float Size => transform.localScale.x;
 
-    void Start()
+    void Awake()
     {
-        StartCoroutine(PlayEyesAnim());
+        Debug.Log($"Chicken Bones: {skeletonAnimation.Skeleton.Data.Bones.Count}");
+        Debug.Log($"Chicken Slots: {skeletonAnimation.Skeleton.Data.Slots.Count}");
+        Debug.Log($"Chicken Animations: {skeletonAnimation.Skeleton.Data.Animations.Count}");
+        Debug.Log($"Chicken Skins: {skeletonAnimation.Skeleton.Data.Skins.Count}");
+
+        Mesh mesh = skeletonAnimation.GetComponent<MeshFilter>().sharedMesh;
+
+        Debug.Log($"Chicken  {mesh.vertexCount}");
+        Debug.Log($"Chicken  {mesh.triangles.Length / 3}");
     }
+
+    // void Start()
+    // {
+    //     StartCoroutine(PlayEyesAnim());
+    // }
 
     public void SetFaction(Color faction)
     {
-        skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
-        skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-        skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+        // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+        // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+        // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
         Tween.Delay(0.02f).OnComplete(() =>
         {
@@ -63,6 +81,8 @@ public class BaseChicken : MonoBehaviour
                 {
                     outPosition.x -= 10;
                 }
+
+                PlayMoveAnim();
 
                 Rotate(outPosition - transform.position);
 
@@ -94,9 +114,35 @@ public class BaseChicken : MonoBehaviour
         isDone = true;
     }
 
+    public void PlayIdleAnim(int loopTime)
+    {
+        PlayForCycles(skeletonAnimation, idleAnimation, loopTime, null, false);
+    }
+
+    public void PlayAnim(string anim)
+    {
+        if (!skeletonAnimation.enabled)
+        {
+            skeletonAnimation.enabled = true;
+        }
+
+        skeletonAnimation.AnimationState.SetAnimation(0, anim, true);
+    }
+
     public void PlayIdleAnim()
     {
-        PlayForCycles(skeletonAnimation, idleAnimation, 3, null, false);
+        PlayIdleAnim(1);
+        // PlayAnim(idleAnimation);
+    }
+
+    public void PlayMoveAnim()
+    {
+        PlayAnim(moveAnimation);
+    }
+
+    public void PlayEatAnim()
+    {
+        PlayAnim(eatAnimation);
     }
 
     public IEnumerator PlayEyesAnim()

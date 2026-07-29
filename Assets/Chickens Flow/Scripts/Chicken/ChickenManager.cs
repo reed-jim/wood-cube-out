@@ -118,7 +118,7 @@ public class ChickenManager : Singleton<ChickenManager>
         //     CommonUtil.AddValueOfDictionary(slotByColumn, waitingChickenSlot.column, waitingChickenSlot);
         // }
 
-        // StartCoroutine(RandomlyAnimateChickens());
+        StartCoroutine(RandomlyAnimateChickens());
     }
 
     public void SpawnFirstChickensUsingLevelConfig(AntsFlow.LevelItem levelItem)
@@ -415,7 +415,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void MoveChickensDown()
     {
-        Dictionary<Transform, Vector3> destinations = new();
+        Dictionary<BaseChicken, Vector3> destinations = new();
 
         // Unique chickens, processed bottom -> top.
         List<BaseChicken> chickens = waitingChickenSlots.Values
@@ -448,7 +448,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
             if (isMovable)
             {
-                destinations[chicken.transform] =
+                destinations[chicken] =
                     GetBottomLeftSlot(chicken).GetRandomPosition();
             }
         }
@@ -521,7 +521,7 @@ public class ChickenManager : Singleton<ChickenManager>
     }
 
     private void AnimateChickens(
-        Dictionary<Transform, Vector3> destinations)
+        Dictionary<BaseChicken, Vector3> destinations)
     {
         if (destinations.Count == 0)
         {
@@ -533,13 +533,19 @@ public class ChickenManager : Singleton<ChickenManager>
 
         foreach (var pair in destinations)
         {
+            BaseChicken chicken = pair.Key;
+
+            chicken.PlayMoveAnim();
+
             Tween.Position(
-                pair.Key,
+                pair.Key.transform,
                 pair.Value,
                 Random.Range(0.3f, 0.6f))
             .OnComplete(() =>
             {
                 remaining--;
+
+                chicken.PlayIdleAnim();
 
                 if (remaining == 0)
                     WashingMachineManager.Ins.grainPool.CheckFeedChickens();
@@ -563,7 +569,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
             foreach (var chicken in randomChickens)
             {
-                chicken.PlayIdleAnim();
+                chicken.PlayIdleAnim(3);
             }
 
             yield return waitForSeconds;

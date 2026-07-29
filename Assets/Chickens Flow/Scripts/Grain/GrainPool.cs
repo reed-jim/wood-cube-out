@@ -177,38 +177,76 @@ public class GrainPool : MonoBehaviour
 
     public List<GrainPoolSlot> GetGrainPoolSlots(int number, List<BaseChicken> possibleChickensToEat)
     {
-        List<(GrainPoolSlot slot, float distance)> candidates = new();
+        List<GrainPoolSlot> availableSlots = grainPoolSlots.Where(item => item.grainPile == null).ToList();
+        List<GrainPoolSlot> result = new List<GrainPoolSlot>();
 
-        foreach (var slot in grainPoolSlots)
+        for (int i = 0; i < possibleChickensToEat.Count; i++)
         {
-            if (slot.grainPile != null)
-                continue;
+            BaseChicken chicken = possibleChickensToEat[i];
 
-            float closestDistance = float.MaxValue;
-
-            if (possibleChickensToEat != null)
+            if (availableSlots.Count == 0)
             {
-                foreach (var chicken in possibleChickensToEat)
-                {
-                    float dist = Mathf.Abs(slot.transform.position.x - chicken.transform.position.x);
-                    
-                    if (dist < closestDistance)
-                        closestDistance = dist;
-                }
+                return result;
             }
 
-            candidates.Add((slot, closestDistance));
+            availableSlots =
+                availableSlots
+                .OrderBy(slot => slot.transform.position.x > chicken.transform.position.x)
+                .ThenBy(item => Mathf.Abs(item.transform.position.x - chicken.transform.position.x)).ToList();
+
+            result.Add(availableSlots[0]);
+            availableSlots.RemoveAt(0);
         }
 
-        candidates.Sort((a, b) => a.distance.CompareTo(b.distance));
-
-        List<GrainPoolSlot> result = new(Mathf.Min(number, candidates.Count));
-        for (int i = 0; i < Mathf.Min(number, candidates.Count); i++)
+        if (number > possibleChickensToEat.Count)
         {
-            result.Add(candidates[i].slot);
+            int remainingNeeded = number - possibleChickensToEat.Count;
+
+            for (int i = 0; i < remainingNeeded; i++)
+            {
+                if (i >= availableSlots.Count)
+                {
+                    return result;
+                }
+
+                result.Add(availableSlots[i]);
+            }
         }
 
         return result;
+
+        // List<(GrainPoolSlot slot, float distance)> candidates = new();
+
+        // foreach (var slot in grainPoolSlots)
+        // {
+        //     if (slot.grainPile != null)
+        //         continue;
+
+        //     float closestDistance = float.MaxValue;
+
+        //     if (possibleChickensToEat != null)
+        //     {
+        //         foreach (var chicken in possibleChickensToEat)
+        //         {
+        //             float dist = Mathf.Abs(slot.transform.position.x - chicken.transform.position.x);
+
+        //             if (dist < closestDistance)
+        //                 closestDistance = dist;
+        //         }
+        //     }
+
+        //     candidates.Add((slot, closestDistance));
+        // }
+
+        // candidates.Sort((a, b) => a.distance.CompareTo(b.distance));
+
+        // List<GrainPoolSlot> result = new(Mathf.Min(number, candidates.Count));
+        // for (int i = 0; i < Mathf.Min(number, candidates.Count); i++)
+        // {
+        //     result.Add(candidates[i].slot);
+        // }
+
+        // return result;
     }
 
     public void AddGrainPile(GrainPile grainPile)
