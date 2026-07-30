@@ -454,7 +454,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7947759780985193466}
   - {fileID: 6294261290943594699}
   - {fileID: 2712267888555385633}
   m_Father: {fileID: 2950709935183104750}
@@ -1145,6 +1144,7 @@ MonoBehaviour:
   reviveByAdsButton: {fileID: 6341381116521728507}
   reviveByCoinSingle: {fileID: 7709938287304753695}
   costText: {fileID: 1280382291174881541}
+  costTextSingle: {fileID: 6687819230888665820}
   coinBalanceCointaner: {fileID: 6171344609693253802}
   coinBalanceText: {fileID: 808069382392274451}
   unlockBoxSprite: {fileID: 21300000, guid: 89444f33358b03b489df6bd3bed79c14, type: 3}
@@ -1249,7 +1249,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Continue
+  m_text: Keep Playing
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 836a87490146d4e42b6c1914c9f0fa17, type: 2}
@@ -1873,6 +1873,7 @@ RectTransform:
   - {fileID: 2764014346596827518}
   - {fileID: 329873059443891142}
   - {fileID: 5371879921395472893}
+  - {fileID: 7947759780985193466}
   - {fileID: 3211916174628636892}
   - {fileID: 6171344609693253802}
   - {fileID: 10967074607213184}
@@ -2500,12 +2501,12 @@ RectTransform:
   - {fileID: 717731225801763196}
   - {fileID: 6877862999738598561}
   - {fileID: 95641676128860333}
-  m_Father: {fileID: 3211916174628636892}
+  m_Father: {fileID: 2950709935183104750}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 239.1, y: -114.4}
-  m_SizeDelta: {x: 478.2, y: 228.8}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 195.09998}
+  m_SizeDelta: {x: 478.2, y: 228.79999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6020009216096424742
 CanvasRenderer:

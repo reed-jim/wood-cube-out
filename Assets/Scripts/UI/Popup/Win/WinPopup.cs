@@ -31,6 +31,8 @@ public class WinPopup : BasePopup
     [SerializeField] private RectTransform eventItemGroup;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
     [SerializeField] private RectTransform coinContinueButton;
+    [SerializeField] private RectTransform coinContinueButtonSingle;
+
     [SerializeField] private RectTransform coinX2Button;
 
     [SerializeField] private ParticleSystem completeFx;
@@ -85,16 +87,17 @@ public class WinPopup : BasePopup
 
     private async void OnLevelWinAsync()
     {
-        GameController.Instance.admobAds.ShowBannerCollap();
+
 
         coinText.text = $"{0}";
         starText.text = $"{0}";
         goldPassKeyText.text = $"{0}";
 
-        continueButton.interactable = true;
-        continueButtonSingle.interactable = true;
-        returnHomeButton.interactable = true;
-        x5CoinButton.interactable = true;
+
+        continueButtonSingle.interactable = false;
+        continueButton.interactable = false;
+        returnHomeButton.interactable = false;
+        x5CoinButton.interactable = false;
 
         x5CoinButton.transform.localScale = Vector3.one;
 
@@ -142,7 +145,10 @@ public class WinPopup : BasePopup
         int coinQuantity = GamePersistentVariable.isHardMode ? 30 : 10;
 
         completeFx.Play();
-
+        continueButton.interactable = true;
+        continueButtonSingle.interactable = true;
+        returnHomeButton.interactable = true;
+        x5CoinButton.interactable = true;
         TrackLevelWin();
 
         if (currentLevel.Value - UserData.NumLevelLoop >= LevelManager.Ins.LevelDataContainer.MaxLevel)
@@ -155,6 +161,7 @@ public class WinPopup : BasePopup
 
         GamePersistentVariable.currentLevel = currentLevel.Value;
 
+        GameController.Instance.admobAds.ShowBannerCollap();
         _isAlreadyWatchRewardedAd = false;
 
         #region GOLD PASS
@@ -239,9 +246,15 @@ public class WinPopup : BasePopup
         continueButton.interactable = false;
         continueButtonSingle.interactable = false;
         CollectCoin(numCoinNormal);
-
-        GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinContinueButton.position);
-
+        bool isEnableRewardAds = GamePersistentVariable.isEnableRewardedAds;
+        if (isEnableRewardAds)
+        {
+            GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinContinueButton.position);
+        }
+        else
+        {
+            GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinContinueButtonSingle.position);
+        }
         collectCoinEvent?.Invoke(_currentCollectedCoin);
 
         new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value).Send();

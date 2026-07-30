@@ -17,6 +17,8 @@ public class BuyBoosterPopup : BasePopup
     [SerializeField] private Button getWithAdsButton;
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text costText;
+    [SerializeField] private TMP_Text costTextSingle;
+
     [SerializeField] private LeanLocalizedTextMeshProUGUI title;
     [SerializeField] private LeanLocalizedTextMeshProUGUI boosterDescription;
 
@@ -95,6 +97,7 @@ public class BuyBoosterPopup : BasePopup
         UIUtil.SetSizeKeepRatioY(icon, 0.25f * container.sizeDelta.x);
 
         costText.text = $"{boosterDataObserver.BoosterCosts[boosterIndex]}";
+        costTextSingle.text = $"{boosterDataObserver.BoosterCosts[boosterIndex]}";
         title.TranslationName = leanTranslationTitle[boosterIndex];
         boosterDescription.TranslationName = leanTranslationNames[boosterIndex];
 
@@ -312,8 +315,8 @@ public class BuyBoosterPopup : BasePopup
     private void SetupRewardedAdsButton(bool forceEnable = false)
     {
         bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds;
-
-        if (isEnableRewardedAds || forceEnable)
+        Debug.Log("isEnableRewardedAds: " + isEnableRewardedAds);
+        if (isEnableRewardedAds)
         {
             adsButtonRT.gameObject.SetActive(true);
             //coinBalanceCointaner.gameObject.SetActive(false);

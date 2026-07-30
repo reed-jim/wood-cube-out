@@ -101,7 +101,14 @@ public class GameServices : SingletonClass<GameServices>, IService
                     {
                         if (isAvailable)
                         {
-                            InitializeFirebase();
+                            try
+                            {
+                                InitializeFirebase();
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.LogError("InitializeFirebase failed: " + e.Message);
+                            }
                             return RemoteConfigController.FetchData().ToObservable();
                         }
                         else
@@ -169,6 +176,19 @@ public class GameServices : SingletonClass<GameServices>, IService
         InitProperty();
 
         RemoteConfigController.RemoteConfigFirebaseInit();
+        //Hieu code
+        //if (!GamePersistentVariable.isFirebaseRemoteConfigLoaded)
+        //{
+        //    try
+        //    {
+        //        RemoteConfigController.ReloadFirebaseKeys();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.LogError("ReloadFirebaseKeys baseline apply failed: " + ex.Message);
+        //    }
+        //}
+
         AnalyticsController.firebaseInitialized = true;
         //todo
         //RocketRemoteConfig.FetchData().ToObservable();

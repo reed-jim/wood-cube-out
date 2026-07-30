@@ -348,8 +348,8 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
         GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
-        GamePersistentVariable.levelShowBanner = GetIntConfig(FirebaseConfig.LEVEL_UNLOCK_BANNER, 0);
-        GamePersistentVariable.levelShowCollapseBanner = GetIntConfig(FirebaseConfig.LEVEL_UNLOCK_COLLAPSE_BANNER, 0);
+        GamePersistentVariable.levelShowBanner = GetIntConfig(FirebaseConfig.LEVEL_UNLOCK_BANNER, 3);
+        GamePersistentVariable.levelShowCollapseBanner = GetIntConfig(FirebaseConfig.LEVEL_UNLOCK_COLLAPSE_BANNER, 5);
 
         #region CORE GAMEPLAY CONFIG
         GamePersistentVariable.screwHoleLeftToLose = /*GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 1)*/1;
@@ -458,7 +458,7 @@ public class RemoteConfigController : MonoBehaviour
 
     private static void SetRemoteConfigRewardedAds()
     {
-        GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
+        GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.IS_ENABLE_REWARDED_ADS, true);
 
         GamePersistentVariable.minLevelDisableRewardedAds = GetIntConfig(FirebaseConfig.MIN_LEVEL_DISABLE_REWARDED_ADS, 20);
 

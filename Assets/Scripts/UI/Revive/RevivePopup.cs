@@ -18,6 +18,7 @@ public class RevivePopup : BasePopup
     [SerializeField] private Button reviveByCoinSingle;
 
     [SerializeField] private TMP_Text costText;
+    [SerializeField] private TMP_Text costTextSingle;
 
     [Header("COIN BALANCE")]
     [SerializeField] private RectTransform coinBalanceCointaner;
@@ -53,6 +54,7 @@ public class RevivePopup : BasePopup
     protected override void MoreActionInAwake()
     {
         costText.text = $"{boosterDataObserver.reviveCost}";
+        costTextSingle.text = $"{boosterDataObserver.reviveCost}";
 
         _reviveByDiamondButtonRT = reviveByDiamondButton.GetComponent<RectTransform>();
         _reviveByAdsButtonRT = reviveByAdsButton.GetComponent<RectTransform>();
@@ -227,7 +229,7 @@ public class RevivePopup : BasePopup
     {
         bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds;
 
-        if (isEnableRewardedAds || forceEnable)
+        if (isEnableRewardedAds)
         {
             reviveByAdsButton.gameObject.SetActive(true);
             reviveByCoinSingle.gameObject.SetActive(false);
