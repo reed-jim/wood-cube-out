@@ -209,7 +209,7 @@ public class WashingMachineItem : MonoBehaviour
         List<BaseChicken> result = new List<BaseChicken>();
 
         List<BaseChicken> chickensInFirstRow =
-            ChickenManager.Ins.chickens.Where(item => !item.isEating && !item.isDone && item.GetFirstRow() == 0).ToList();
+            ChickenManager.Ins.chickens.Where(item => !item.isMoving && !item.isEating && !item.isDone && item.GetFirstRow() == 0).ToList();
 
         result = chickensInFirstRow.Where(item => item.faction == faction).ToList();
 
@@ -893,7 +893,7 @@ public class WashingMachineItem : MonoBehaviour
         void MoveBack()
         {
             transform.SetParent(initialParent);
-            
+
             Tween.Position(transform, initialPosition, duration: 0.3f)
             .OnComplete(() =>
             {

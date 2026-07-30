@@ -74,64 +74,64 @@ public class BaseChicken : MonoBehaviour
     public void Feed(GrainPile grainPile, bool isLastChickenInTheWave)
     {
         grainPile.BeEaten(this, onCompleteAction: () =>
+        {
+            transform.SetZ(-9);
+
+            Vector3 outPosition = transform.position;
+
+            if (outPosition.x > 0)
             {
-                transform.SetZ(-9);
+                outPosition.x += 15;
 
-                Vector3 outPosition = transform.position;
+                transform.eulerAngles = new Vector3(0, 180);
+            }
+            else
+            {
+                outPosition.x -= 15;
 
-                if (outPosition.x > 0)
+                transform.eulerAngles = Vector3.zero;
+            }
+
+            numGrainPileRequiredLeft--;
+
+            if (numGrainPileRequiredLeft == 0)
+            {
+                PlayFlyAnim();
+
+                Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
                 {
-                    outPosition.x += 15;
+                    gameObject.SetActive(false);
+                });
 
-                    transform.eulerAngles = new Vector3(0, 180);
-                }
-                else
+                foreach (var waitingChickenSlot in waitingChickenSlots)
                 {
-                    outPosition.x -= 15;
-
-                    transform.eulerAngles = Vector3.zero;
-                }
-
-                numGrainPileRequiredLeft--;
-
-                if (numGrainPileRequiredLeft == 0)
-                {
-                    PlayFlyAnim();
-
-                    Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
-                    {
-                        gameObject.SetActive(false);
-                    });
-
-                    foreach (var waitingChickenSlot in waitingChickenSlots)
-                    {
-                        waitingChickenSlot.chicken = null;
-                    }
-
-                    isDone = true;
-
-                    ChickenManager.Ins.MoveChickensDown();
-                }
-                else
-                {
-                    isEating = false;
+                    waitingChickenSlot.chicken = null;
                 }
 
-                if (numGrainPileRequired > 1)
+                isDone = true;
+
+                ChickenManager.Ins.MoveChickensDown();
+            }
+            else
+            {
+                isEating = false;
+            }
+
+            if (numGrainPileRequired > 1)
+            {
+                if (!eatingProgress.gameObject.activeSelf)
                 {
-                    if (!eatingProgress.gameObject.activeSelf)
-                    {
-                        SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
-                        {
-                            eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-                        });
-                    }
-                    else
+                    SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
                     {
                         eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-                    }
+                    });
                 }
-            });
+                else
+                {
+                    eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
+                }
+            }
+        });
 
         isEating = true;
     }

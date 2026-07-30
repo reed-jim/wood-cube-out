@@ -5,6 +5,7 @@ using AntsFlow;
 using Dreamteck.Splines;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
 using TMPro;
 using UnityEngine;
 
@@ -25,6 +26,7 @@ public class GrainPool : MonoBehaviour
     public GrainPoolSlot grainPoolSlotPrefab;
     public GrainPoolSlot leftMostGrainPoolSlot;
     public int maxGrainPoolSlots;
+    public int maxShowingGrainPoolSlots;
     public float distanceBetweenSlots;
 
     public TMP_Text percentText;
@@ -64,9 +66,10 @@ public class GrainPool : MonoBehaviour
     {
         Vector3 position = Vector3.zero;
 
-        float totalSizeX = 2f * GamePersistentVariable.screenSizeWorld.x;
+        distanceBetweenSlots = GamePersistentVariable.screenSizeWorld.x / maxShowingGrainPoolSlots;
 
-        distanceBetweenSlots = totalSizeX / maxGrainPoolSlots;
+        float totalSizeX = initialMaxCapacity * distanceBetweenSlots;
+
         leftBoundX = -0.5f * totalSizeX;
         rightBoundX = 0.5f * totalSizeX;
 
@@ -180,12 +183,25 @@ public class GrainPool : MonoBehaviour
     {
         List<GrainPoolSlot> availableSlots = grainPoolSlots.Where(item => item.grainPile == null).ToList();
 
-        if (possibleChickenToEat != null)
+        float leftScreenWorldBound = -0.5f * GamePersistentVariable.screenSizeWorld.x;
+        float rightScreenWorldBound = 0.5f * GamePersistentVariable.screenSizeWorld.x;
+
+        List<GrainPoolSlot> insideScreenSlots = availableSlots
+            .Where(slot => slot.transform.position.x > leftScreenWorldBound && slot.transform.position.x < rightScreenWorldBound)
+            .OrderBy(slot => slot.transform.position.x)
+            .ToList();
+
+        // if (possibleChickenToEat != null)
+        // {
+        //     availableSlots =
+        //         availableSlots
+        //         .OrderBy(item => Mathf.Abs(item.transform.position.x - (possibleChickenToEat.transform.position.x - offsetPourGrainPileX)))
+        //         .ToList();
+        // }
+
+        if (insideScreenSlots.Count > 0)
         {
-            availableSlots =
-                availableSlots
-                .OrderBy(item => Mathf.Abs(item.transform.position.x - (possibleChickenToEat.transform.position.x - offsetPourGrainPileX)))
-                .ToList();
+            return insideScreenSlots[0];
         }
 
         return availableSlots[0];

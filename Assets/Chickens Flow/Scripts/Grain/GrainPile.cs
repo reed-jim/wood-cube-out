@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AntsFlow;
 using DG.Tweening;
+using NSubstitute;
 using Saferio.Util.SaferioTween;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -263,27 +265,11 @@ public class GrainPile : MonoBehaviour
 
         for (int i = startIndex; i <= endIndex; i++)
         {
-            int index = i;
-
             Grain grain = grains[i];
 
             if (!grain.isBeingEaten && !grain.isDone)
             {
                 grainsToBeEaten.Add(grain);
-
-                // grain.transform.DOMove(chicken.transform.position, duration: 0.3f)
-                // .SetDelay((i - startIndex) * 0.02f)
-                // .OnComplete(() =>
-                // {
-                //     grain.gameObject.SetActive(false);
-
-                //     grain.isDone = true;
-
-                //     if (index == endIndex)
-                //     {
-                //         onCompleteAction?.Invoke();
-                //     }
-                // });
 
                 grain.isBeingEaten = true;
             }
@@ -362,6 +348,80 @@ public class GrainPile : MonoBehaviour
             SoundManager.Instance.PlaySoundCubeLand();
         }
     }
+
+    // private IEnumerator CheckingFeedChicken(List<Grain> grainToBeEaten, Action onCompleteAction)
+    // {
+    //     WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+
+    //     int index = 0;
+
+    //     while (index < grainToBeEaten.Count)
+    //     {
+    //         List<BaseChicken> chickensInFirstRow =
+    //             ChickenManager.Ins.chickens.Where(item => !item.isMoving && !item.isEating && !item.isDone && item.GetFirstRow() == 0)
+    //             .ToList();
+
+            
+    //     }
+
+    //     chicken.PlayIdleAnim();
+
+    //     while (!IsGrainNearChicken(transform))
+    //     {
+    //         yield return waitForSeconds;
+    //     }
+
+    //     while (index < grainToBeEaten.Count)
+    //     {
+    //         if (chicken.currentAnimation != chicken.eatAnimation)
+    //         {
+    //             chicken.PlayEatAnim();
+    //         }
+
+    //         if (index % 5 == 0)
+    //         {
+    //             PlaySoundAndFx();
+    //         }
+
+    //         grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
+    //         .OnComplete(() =>
+    //         {
+    //             grainToBeEaten[index].gameObject.SetActive(false);
+
+    //             index++;
+    //         });
+
+    //         yield return new WaitForSeconds(delayPerGrain);
+    //     }
+
+    //     if (remainingNumber <= 0)
+    //     {
+    //         WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
+    //         WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
+    //     }
+
+    //     WashingMachineManager.Ins.grainPool.AddGrain(-1);
+
+    //     onCompleteAction?.Invoke();
+
+    //     bool IsGrainNearChicken(Transform grainPile)
+    //     {
+    //         float range = chicken.eatingRange;
+
+    //         return chicken.transform.position.x > grainPile.position.x - range &&
+    //             chicken.transform.position.x < grainPile.position.x + range;
+    //     }
+
+    //     void PlaySoundAndFx()
+    //     {
+    //         ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+    //         antDissappearFx.transform.position = chicken.transform.position.AddY(-1f);
+    //         antDissappearFx.Play();
+
+    //         SoundManager.Instance.PlaySoundCubeLand();
+    //     }
+    // }
 
     void Rotate(Transform target, Vector2 direction)
     {
