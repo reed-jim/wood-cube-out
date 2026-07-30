@@ -27,6 +27,7 @@ public class GrainPile : MonoBehaviour
     public int totalNumber;
     public int remainingNumber;
     public float timeEatOneGrain;
+    public float delayPerGrain;
     #endregion
 
     public int siblingIndex;
@@ -57,6 +58,8 @@ public class GrainPile : MonoBehaviour
             grain.isBeingEaten = false;
             grain.isDone = false;
         }
+
+        chickenToEat = null;
     }
 
     public void Setup(WashingMachineItem grainBusket, int amount)
@@ -169,13 +172,13 @@ public class GrainPile : MonoBehaviour
 
                 if (index == 0)
                 {
-                    ChickenManager.Ins.FeedTheChicken(this);
-
                     onFirstGrainHitGround?.Invoke();
                 }
 
                 if (index == grains.Count - 1)
                 {
+                    ChickenManager.Ins.FeedTheChicken(this);
+
                     onCompleteAction?.Invoke();
                 }
             });
@@ -294,52 +297,37 @@ public class GrainPile : MonoBehaviour
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
         int index = 0;
-        bool isMoving = false;
 
         float updateAnimTimeframe = Time.time;
 
-        chicken.PlayEatAnim();
+        chicken.PlayIdleAnim();
+
+        while (!IsGrainNearChicken(transform))
+        {
+            yield return waitForSeconds;
+        }
 
         while (index < grainToBeEaten.Count)
         {
-            bool isGrainNear = IsGrainNearChicken(grainToBeEaten[index].transform);
-
-            if (!isMoving && isGrainNear)
+            if (chicken.currentAnimation != chicken.eatAnimation)
             {
-                if (chicken.currentAnimation != chicken.eatAnimation)
-                {
-                    chicken.PlayEatAnim();
-                }
+                chicken.PlayEatAnim();
+            }
 
+            if (index % 3 == 0)
+            {
                 PlaySoundAndFx();
-                grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
-                .OnComplete(() =>
-                {
-                    grainToBeEaten[index].gameObject.SetActive(false);
-
-                    index++;
-
-                    isMoving = false;
-                });
-
-                isMoving = true;
             }
 
-            if (Time.time - updateAnimTimeframe > 0.5f)
+            grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
+            .OnComplete(() =>
             {
-                if (!isGrainNear)
-                {
-                    chicken.PlayIdleAnim();
-                }
-                else
-                {
-                    chicken.PlayEatAnim();
-                }
+                grainToBeEaten[index].gameObject.SetActive(false);
 
-                updateAnimTimeframe = Time.time;
-            }
+                index++;
+            });
 
-            yield return waitForSeconds;
+            yield return new WaitForSeconds(delayPerGrain);
         }
 
         if (remainingNumber <= 0)
@@ -364,7 +352,7 @@ public class GrainPile : MonoBehaviour
         {
             ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
 
-            antDissappearFx.transform.position = chicken.transform.position.ChangeY(-1f);
+            antDissappearFx.transform.position = chicken.transform.position.AddY(-1f);
             antDissappearFx.Play();
 
             SoundManager.Instance.PlaySoundCubeLand();

@@ -27,6 +27,7 @@ public class BaseChicken : MonoBehaviour
 
     [Header("Customize")]
     public float eatingRange;
+    public float flyOutDuration;
 
     [Header("State")]
     public bool isEating;
@@ -50,11 +51,6 @@ public class BaseChicken : MonoBehaviour
         Debug.Log($"Chicken  {mesh.vertexCount}");
         Debug.Log($"Chicken  {mesh.triangles.Length / 3}");
     }
-
-    // void Start()
-    // {
-    //     StartCoroutine(PlayEyesAnim());
-    // }
 
     public void SetFaction(Color faction)
     {
@@ -93,7 +89,7 @@ public class BaseChicken : MonoBehaviour
 
                 PlayFlyAnim();
 
-                Tween.Position(transform, outPosition, duration: 0.8f, ease: Ease.Linear).OnComplete(() =>
+                Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
                 {
                     gameObject.SetActive(false);
 

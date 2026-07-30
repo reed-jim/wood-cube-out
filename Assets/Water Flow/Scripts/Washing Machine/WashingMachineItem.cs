@@ -204,7 +204,7 @@ public class WashingMachineItem : MonoBehaviour
     }
 
     #region Chicken Feed
-    public List<BaseChicken> GetPossibleChickensToEat()
+    public List<BaseChicken> GetPossibleChickensToEat(int max)
     {
         List<BaseChicken> result = new List<BaseChicken>();
 
@@ -213,7 +213,7 @@ public class WashingMachineItem : MonoBehaviour
 
         result = chickensInFirstRow.Where(item => item.faction == faction).ToList();
 
-        return result;
+        return result.Take(max).ToList();
     }
 
     public void PourGrainOur(out bool isPouringAll, Action onCompleteAction)
@@ -222,7 +222,7 @@ public class WashingMachineItem : MonoBehaviour
 
         isPouringAll = maxAddNumber == number;
 
-        List<BaseChicken> possibleChickensToEat = GetPossibleChickensToEat();
+        List<BaseChicken> possibleChickensToEat = GetPossibleChickensToEat(maxAddNumber);
 
         List<GrainPoolSlot> grainPoolSlots = WashingMachineManager.Ins.grainPool.GetGrainPoolSlots(maxAddNumber, possibleChickensToEat);
 

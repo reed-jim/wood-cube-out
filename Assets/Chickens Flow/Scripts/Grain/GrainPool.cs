@@ -17,7 +17,8 @@ public class GrainPool : MonoBehaviour
     public float rightBoundX;
     Dictionary<GrainPoolSlot, GrainPile> grainPileInSlot;
 
-    public Transform topCoordinator;
+    [Header("Customize")]
+    public float offsetPourGrainPileX;
 
     public List<GrainPoolSlot> grainPoolSlots;
     public List<GrainPile> grainPiles;
@@ -63,7 +64,7 @@ public class GrainPool : MonoBehaviour
     {
         Vector3 position = Vector3.zero;
 
-        float totalSizeX = 1.2f * GamePersistentVariable.screenSizeWorld.x;
+        float totalSizeX = 2f * GamePersistentVariable.screenSizeWorld.x;
 
         distanceBetweenSlots = totalSizeX / maxGrainPoolSlots;
         leftBoundX = -0.5f * totalSizeX;
@@ -191,8 +192,8 @@ public class GrainPool : MonoBehaviour
 
             availableSlots =
                 availableSlots
-                .OrderBy(slot => slot.transform.position.x > chicken.transform.position.x)
-                .ThenBy(item => Mathf.Abs(item.transform.position.x - chicken.transform.position.x)).ToList();
+                // .OrderBy(slot => slot.transform.position.x > chicken.transform.position.x)
+                .OrderBy(item => Mathf.Abs(item.transform.position.x - (chicken.transform.position.x - offsetPourGrainPileX))).ToList();
 
             result.Add(availableSlots[0]);
             availableSlots.RemoveAt(0);

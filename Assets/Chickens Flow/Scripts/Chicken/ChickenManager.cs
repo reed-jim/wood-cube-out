@@ -256,6 +256,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
             list.Add(kvp.Value);
         }
+
+        StartCoroutine(RandomlyAnimateChickens());
     }
 
     private GiantChickenItemConfig GetGiantChickenAt(
@@ -341,6 +343,11 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void FeedTheChicken(GrainPile grainPile, bool isGhostChicken = false)
     {
+        if (grainPile.chickenToEat != null)
+        {
+            return;
+        }
+
         CheckChickensStuck(isGhostChicken);
 
         int remainingNumber = grainPile.remainingNumber;
@@ -370,6 +377,8 @@ public class ChickenManager : Singleton<ChickenManager>
             bool isLast = i == chickensToFeed.Count - 1;
 
             chicken.Feed(grainPile, isLast);
+
+            Debug.Log($"Chicken {chicken} {grainPile}");
         }
     }
 
