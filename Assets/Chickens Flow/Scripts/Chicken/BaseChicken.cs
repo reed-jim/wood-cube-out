@@ -19,11 +19,15 @@ public class BaseChicken : MonoBehaviour
     [SpineAnimation] public string flyAnimation;
     public GameObject eyes;
 
+    public LazyHealthBar eatingProgress;
+
     public Color faction;
     public int column;
     public int row;
     public int numColumnTaken;
     public int numRowTaken;
+    public int numGrainPileRequired;
+    public int numGrainPileRequiredLeft;
 
     [Header("Customize")]
     public float eatingRange;
@@ -88,21 +92,45 @@ public class BaseChicken : MonoBehaviour
                     transform.eulerAngles = Vector3.zero;
                 }
 
-                PlayFlyAnim();
+                numGrainPileRequiredLeft--;
 
-                Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+                if (numGrainPileRequiredLeft == 0)
                 {
-                    gameObject.SetActive(false);
-                });
+                    PlayFlyAnim();
 
-                foreach (var waitingChickenSlot in waitingChickenSlots)
+                    Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+                    {
+                        gameObject.SetActive(false);
+                    });
+
+                    foreach (var waitingChickenSlot in waitingChickenSlots)
+                    {
+                        waitingChickenSlot.chicken = null;
+                    }
+
+                    isDone = true;
+
+                    ChickenManager.Ins.MoveChickensDown();
+                }
+                else
                 {
-                    waitingChickenSlot.chicken = null;
+                    isEating = false;
                 }
 
-                isDone = true;
-
-                ChickenManager.Ins.MoveChickensDown();
+                if (numGrainPileRequired > 1)
+                {
+                    if (!eatingProgress.gameObject.activeSelf)
+                    {
+                        SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
+                        {
+                            eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
+                        });
+                    }
+                    else
+                    {
+                        eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
+                    }
+                }
             });
 
         isEating = true;

@@ -253,6 +253,11 @@ public class WashingMachineItem : MonoBehaviour
                 }
 
                 GrainPoolSlot grainPoolSlot = WashingMachineManager.Ins.grainPool.GetGrainPoolSlot(possibleChickenToEat);
+                GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
+
+                WashingMachineManager.Ins.grainPool.AddGrainPileToSlot(grainPile, grainPoolSlot);
+
+                grainPile.gameObject.SetActive(false);
 
                 remaining--;
                 bool isLast = remaining == 0;
@@ -271,11 +276,10 @@ public class WashingMachineItem : MonoBehaviour
 
                 Tween.LocalPosition(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
                 {
-                    GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
+                    grainPile.gameObject.SetActive(true);
 
                     grainPile.transform.SetParent(grainPoolSlot.transform);
                     grainPile.transform.localPosition = bucketDestination.ChangeX(0);
-                    WashingMachineManager.Ins.grainPool.AddGrainPileToSlot(grainPile, grainPoolSlot);
 
                     grainPile.Setup(this, 1);
 
@@ -862,6 +866,8 @@ public class WashingMachineItem : MonoBehaviour
 
         bool isPouringAll = true;
 
+        Transform initialParent = transform.parent;
+
         PourGrainOur(out isPouringAll, onCompleteAction: () =>
         {
             if (!isPouringAll)
@@ -886,6 +892,8 @@ public class WashingMachineItem : MonoBehaviour
 
         void MoveBack()
         {
+            transform.SetParent(initialParent);
+            
             Tween.Position(transform, initialPosition, duration: 0.3f)
             .OnComplete(() =>
             {

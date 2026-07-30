@@ -318,7 +318,7 @@ public class GrainPile : MonoBehaviour
                 chicken.PlayEatAnim();
             }
 
-            if (index % 3 == 0)
+            if (index % 5 == 0)
             {
                 PlaySoundAndFx();
             }

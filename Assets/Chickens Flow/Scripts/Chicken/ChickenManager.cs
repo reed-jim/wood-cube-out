@@ -218,6 +218,8 @@ public class ChickenManager : Singleton<ChickenManager>
             chicken.SetFaction(allFactions[index]);
             chicken.column = column;
             chicken.row = row;
+            chicken.numGrainPileRequired = 1;
+            chicken.numGrainPileRequiredLeft = chicken.numGrainPileRequired;
 
             WaitingChickenSlot waitingChickenSlot = waitingChickenSlots[new Vector2Int(tileColumn, tileRow)];
 
@@ -315,6 +317,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
         chicken.numColumnTaken = giant.sizeX;
         chicken.numRowTaken = giant.sizeY;
+        chicken.numGrainPileRequired = giant.sizeX;
+        chicken.numGrainPileRequiredLeft = chicken.numGrainPileRequired;
 
         // Set faction if needed.
         int tileIndex = giant.coordinate.y * levelItem.numColumn + giant.coordinate.x;
@@ -396,50 +400,63 @@ public class ChickenManager : Singleton<ChickenManager>
                 continue;
             }
 
-            // Check every column occupied by this chicken.
-            var occupiedColumns = chicken.waitingChickenSlots
-                .Select(s => s.column)
-                .Distinct();
-
-            foreach (int column in occupiedColumns)
-            {
-                // Bottom-most slot of this chicken in this column.
-                int bottomRow = chicken.waitingChickenSlots
-                    .Where(s => s.column == column)
+            int bottomRow = chicken.waitingChickenSlots
                     .Min(s => s.row);
 
-                bool foundSelf = false;
-
-                for (int row = 0; row < numRow; row++)
-                {
-                    BaseChicken other = waitingChickenSlots[new Vector2Int(column, row)].chicken;
-
-                    if (other == null)
-                        continue;
-
-                    if (!foundSelf)
-                    {
-                        if (other == chicken && row == bottomRow)
-                            foundSelf = true;
-                    }
-
-                    if (foundSelf)
-                    {
-                        break;
-                    }
-
-                    // First chicken in front of us.
-                    if (!other.isEating && !other.isDone)
-                    {
-                        chicken.isStuck = true;
-                        break;
-                    }
-                }
-
-                // ANY blocked column => stuck.
-                if (chicken.isStuck)
-                    break;
+            if (bottomRow > 0)
+            {
+                chicken.isStuck = true;
             }
+
+            // // Check every column occupied by this chicken.
+            // var occupiedColumns = chicken.waitingChickenSlots
+            //     .Select(s => s.column)
+            //     .Distinct();
+
+            // foreach (int column in occupiedColumns)
+            // {
+            //     // Bottom-most slot of this chicken in this column.
+            //     int bottomRow = chicken.waitingChickenSlots
+            //         .Where(s => s.column == column)
+            //         .Min(s => s.row);
+
+            //     if (bottomRow > 0)
+            //     {
+            //         chicken.isStuck = true;
+            //     }
+
+            //     // bool foundSelf = false;
+
+            //     // for (int row = 0; row < numRow; row++)
+            //     // {
+            //     //     BaseChicken other = waitingChickenSlots[new Vector2Int(column, row)].chicken;
+
+            //     //     if (other == null)
+            //     //         continue;
+
+            //     //     if (!foundSelf)
+            //     //     {
+            //     //         if (other == chicken && row == bottomRow)
+            //     //             foundSelf = true;
+            //     //     }
+
+            //     //     if (foundSelf)
+            //     //     {
+            //     //         break;
+            //     //     }
+
+            //     //     // First chicken in front of us.
+            //     //     if (!other.isEating && !other.isDone)
+            //     //     {
+            //     //         chicken.isStuck = true;
+            //     //         break;
+            //     //     }
+            //     // }
+
+            //     // ANY blocked column => stuck.
+            //     if (chicken.isStuck)
+            //         break;
+            // }
         }
     }
 
