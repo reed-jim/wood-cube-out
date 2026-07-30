@@ -19,6 +19,7 @@ public class ChickenManager : Singleton<ChickenManager>
     [Header("Customize")]
     public Vector2 chickenDistanceRatio;
     public float chickenAreaOffsetY;
+    public float depthDistanceXRatio;
 
     public List<Color> allFactions;
 
@@ -147,9 +148,10 @@ public class ChickenManager : Singleton<ChickenManager>
             position = new Vector3(x, y);
             position.x -= (numColumn - 1) / 2f;
             position.x += 0.5f * (y % 2);
+            position.x *= 1 - depthDistanceXRatio * y;
             position.y += chickenAreaOffsetY;
             position *= chickenDistanceRatio;
-            position.z = -1 - 0.0001f * (numColumn - i) - 0.01f * (numRow - i);
+            position.z = -1 - 0.01f * (numRow - i);
 
             waitingChickenSlot.position = position;
 
@@ -203,14 +205,14 @@ public class ChickenManager : Singleton<ChickenManager>
             column = (int)tileData.position.x;
             row = (int)tileData.position.y;
 
-            position = tileData.position;
-            position.x -= (numColumn - 1) / 2f;
-            position.x += 0.5f * (row % 2);
-            position.y += chickenAreaOffsetY;
-            position *= chickenDistanceRatio;
-            position.z = -1 - 0.0001f * (numColumn - i) - 0.01f * (numRow - i);
+            // position = tileData.position;
+            // position.x -= (numColumn - 1) / 2f;
+            // position.x += 0.5f * (row % 2);
+            // position.y += chickenAreaOffsetY;
+            // position *= chickenDistanceRatio;
+            // position.z = -1 - 0.01f * (numRow - i);
 
-            chicken.transform.position = position;
+            // chicken.transform.position = position;
             // chicken.transform.position = chicken.transform.position.AddX(UnityEngine.Random.Range(-radius, radius));
 
             chicken.SetFaction(allFactions[index]);
@@ -225,6 +227,8 @@ public class ChickenManager : Singleton<ChickenManager>
             };
 
             waitingChickenSlot.chicken = chicken;
+
+            chicken.transform.position = waitingChickenSlot.position;
 
             chickens.Add(chicken);
         }
@@ -281,25 +285,27 @@ public class ChickenManager : Singleton<ChickenManager>
     private void SpawnGiantChicken(AntsFlow.LevelItem levelItem, GiantChickenItemConfig giant)
     {
         int numColumn = levelItem.numColumn;
-        float distance = 1f;
         float radius = 0.1f;
 
         BaseChicken chicken = ObjectPoolingEverything.GetFromPool<BaseChicken>(GameConstants.chicken);
 
-        Vector3 position = new Vector3(
-            giant.coordinate.x,
-            giant.coordinate.y,
-            0);
+        // Vector3 position = new Vector3(
+        //     giant.coordinate.x,
+        //     giant.coordinate.y,
+        //     0);
 
-        position.x -= numColumn / 2f;
-        position *= distance;
+        // position.x -= (numColumn - 1) / 2f;
+        // position.x += 0.5f * (giant.coordinate.y % 2);
+        // position.y += chickenAreaOffsetY;
+        // position *= chickenDistanceRatio;
+        // position.z = -1 - 0.01f * (numRow - giant.coordinate.y);
 
-        // Move to the center of the occupied area.
-        position.x += (giant.sizeX - 1) * distance * 0.5f;
-        position.y += (giant.sizeY - 1) * distance * 0.5f;
+        // // Move to the center of the occupied area.
+        // position.x += (giant.sizeX - 1) * chickenDistanceRatio.x * 0.5f;
+        // position.y += (giant.sizeY - 1) * chickenDistanceRatio.y * 0.5f;
 
-        chicken.transform.position = position;
-        chicken.transform.position += Vector3.right * UnityEngine.Random.Range(-radius, radius);
+        // chicken.transform.position = position;
+        // chicken.transform.position += Vector3.right * UnityEngine.Random.Range(-radius, radius);
         chicken.transform.localScale = giant.sizeX * Vector3.one;
 
         chicken.column = giant.coordinate.x;
@@ -328,7 +334,10 @@ public class ChickenManager : Singleton<ChickenManager>
                 chicken.waitingChickenSlots.Add(slot);
             }
         }
+
+        chicken.transform.position = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
     }
+
 
     public void FeedTheChicken(GrainPile grainPile, bool isGhostChicken = false)
     {
@@ -582,4 +591,20 @@ public class ChickenManager : Singleton<ChickenManager>
             yield return waitForSeconds;
         }
     }
+
+    #region Util
+    public static Vector3 GetAveragePositionOfSlots(List<WaitingChickenSlot> slots)
+    {
+        Vector3 result = Vector3.zero;
+
+        foreach (var slot in slots)
+        {
+            result += slot.position;
+        }
+
+        result /= slots.Count;
+
+        return result;
+    }
+    #endregion
 }

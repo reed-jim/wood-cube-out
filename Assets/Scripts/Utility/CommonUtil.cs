@@ -108,6 +108,20 @@ public static class CommonUtil
 
         return output;
     }
+
+    public static Vector3 GetAveragePosition(List<Vector3> positions)
+    {
+        Vector3 result = Vector3.zero;
+
+        foreach (var position in positions)
+        {
+            result += position;
+        }
+
+        result /= positions.Count;
+
+        return result;
+    }
     #endregion
 
     public static void StopTween(PrimeTween.Tween tween)
