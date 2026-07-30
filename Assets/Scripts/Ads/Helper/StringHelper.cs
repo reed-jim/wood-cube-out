@@ -531,7 +531,7 @@ public class FirebaseConfig
     public const string BANNER_COOLDOWN = "banner_cooldown";
     public const string MAX_LIVES = "max_lives";
     public const string REPLENISH_LIFE_TIME = "replenish_life_time";
-    public const string ENABLE_REWARDED_ADS = "enable_rewarded_ads_old";
+    public const string ENABLE_REWARDED_ADS = "enable_rewarded_ads_new";
     public const string MIN_LEVEL_DISABLE_REWARDED_ADS = "min_level_disable_rewarded_ads";
     public const string STAR_CHEST_CONFIG = "star_chest_config";
     public const string DOUBLE_INTER_ADS_CONFIG = "double_inter_ads_config";
