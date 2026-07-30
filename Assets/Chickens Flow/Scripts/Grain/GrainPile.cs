@@ -53,7 +53,7 @@ public class GrainPile : MonoBehaviour
         {
             Grain grain = grains[i];
 
-            grain.gameObject.SetActive(true);
+            grain.gameObject.SetActive(false);
 
             grain.transform.localScale = Vector3.one;
 
@@ -113,6 +113,8 @@ public class GrainPile : MonoBehaviour
             position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
             grains[i].transform.localPosition = position;
+
+            grains[i].gameObject.SetActive(true);
         }
 
         int numColumn = 3;

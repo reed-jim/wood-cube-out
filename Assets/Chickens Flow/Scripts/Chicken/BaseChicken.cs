@@ -93,21 +93,16 @@ public class BaseChicken : MonoBehaviour
                 Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
                 {
                     gameObject.SetActive(false);
-
-                    isDone = true;
-
-                    foreach (var waitingChickenSlot in waitingChickenSlots)
-                    {
-                        waitingChickenSlot.chicken = null;
-                    }
-
-                    ChickenManager.Ins.MoveChickensDown();
-
-                    // if (isLastChickenInTheWave)
-                    // {
-                    //     ChickenManager.Ins.MoveChickensDown();
-                    // }
                 });
+
+                foreach (var waitingChickenSlot in waitingChickenSlots)
+                {
+                    waitingChickenSlot.chicken = null;
+                }
+
+                isDone = true;
+
+                ChickenManager.Ins.MoveChickensDown();
             });
 
         isEating = true;
