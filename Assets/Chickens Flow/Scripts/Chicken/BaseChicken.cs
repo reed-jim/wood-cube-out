@@ -15,7 +15,7 @@ public class BaseChicken : MonoBehaviour
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string moveAnimation;
-    [SpineAnimation] public string eatAnimation;
+    [SpineAnimation] public string[] eatAnimations;
     [SpineAnimation] public string flyAnimation;
     public GameObject eyes;
 
@@ -69,6 +69,66 @@ public class BaseChicken : MonoBehaviour
         });
 
         this.faction = faction;
+    }
+
+    public void FlyOut()
+    {
+        transform.SetZ(-9);
+
+        Vector3 outPosition = transform.position;
+
+        if (outPosition.x > 0)
+        {
+            outPosition.x += 15;
+
+            transform.eulerAngles = new Vector3(0, 180);
+        }
+        else
+        {
+            outPosition.x -= 15;
+
+            transform.eulerAngles = Vector3.zero;
+        }
+
+        numGrainPileRequiredLeft--;
+
+        if (numGrainPileRequiredLeft == 0)
+        {
+            PlayFlyAnim();
+
+            Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+            });
+
+            foreach (var waitingChickenSlot in waitingChickenSlots)
+            {
+                waitingChickenSlot.chicken = null;
+            }
+
+            isDone = true;
+
+            ChickenManager.Ins.MoveChickensDown();
+        }
+        else
+        {
+            isEating = false;
+        }
+
+        if (numGrainPileRequired > 1)
+        {
+            if (!eatingProgress.gameObject.activeSelf)
+            {
+                SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
+                {
+                    eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
+                });
+            }
+            else
+            {
+                eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
+            }
+        }
     }
 
     public void Feed(GrainPile grainPile, bool isLastChickenInTheWave)
@@ -186,6 +246,8 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayEatAnim()
     {
+        string eatAnimation = eatAnimations[UnityEngine.Random.Range(0, eatAnimations.Length)];
+
         PlayAnim(eatAnimation);
     }
 

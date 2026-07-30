@@ -347,14 +347,14 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void FeedTheChicken(GrainPile grainPile, bool isGhostChicken = false)
     {
+        return;
+        
         if (grainPile.chickenToEat != null)
         {
             return;
         }
 
         CheckChickensStuck(isGhostChicken);
-
-        int remainingNumber = grainPile.remainingNumber;
 
         List<BaseChicken> chickensToFeed = chickens
             .Where(chicken => !chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction)
@@ -363,7 +363,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
         if (chickensToFeed.Count > 0)
         {
-            remainingNumber--;
 
             chickensToFeed[0].Feed(grainPile, true);
         }

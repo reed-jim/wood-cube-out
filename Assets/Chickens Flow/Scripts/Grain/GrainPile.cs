@@ -30,6 +30,7 @@ public class GrainPile : MonoBehaviour
     public int remainingNumber;
     public float timeEatOneGrain;
     public float delayPerGrain;
+    public int numGrainToSwitchEatAnimation;
     #endregion
 
     public int siblingIndex;
@@ -186,6 +187,8 @@ public class GrainPile : MonoBehaviour
                     ChickenManager.Ins.FeedTheChicken(this);
 
                     onCompleteAction?.Invoke();
+
+                    StartCoroutine(CheckingFeedChicken(grains, onCompleteAction));
                 }
             });
         }
@@ -299,13 +302,9 @@ public class GrainPile : MonoBehaviour
 
         while (index < grainToBeEaten.Count)
         {
-            if (chicken.currentAnimation != chicken.eatAnimation)
+            if (index % numGrainToSwitchEatAnimation == 0)
             {
                 chicken.PlayEatAnim();
-            }
-
-            if (index % 5 == 0)
-            {
                 PlaySoundAndFx();
             }
 
@@ -349,79 +348,91 @@ public class GrainPile : MonoBehaviour
         }
     }
 
-    // private IEnumerator CheckingFeedChicken(List<Grain> grainToBeEaten, Action onCompleteAction)
-    // {
-    //     WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+    private IEnumerator CheckingFeedChicken(List<Grain> grainToBeEaten, Action onCompleteAction)
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
-    //     int index = 0;
+        int index = 0;
 
-    //     while (index < grainToBeEaten.Count)
-    //     {
-    //         List<BaseChicken> chickensInFirstRow =
-    //             ChickenManager.Ins.chickens.Where(item => !item.isMoving && !item.isEating && !item.isDone && item.GetFirstRow() == 0)
-    //             .ToList();
+        BaseChicken toFeedChicken = null;
 
-            
-    //     }
+        while (toFeedChicken == null)
+        {
+            List<BaseChicken> chickensInFirstRow =
+                ChickenManager.Ins.chickens.Where(item => !item.isMoving && !item.isEating && !item.isDone && item.GetFirstRow() == 0 && item.faction == faction)
+                .ToList();
 
-    //     chicken.PlayIdleAnim();
+            for (int i = 0; i < chickensInFirstRow.Count; i++)
+            {
+                BaseChicken chicken = chickensInFirstRow[i];
 
-    //     while (!IsGrainNearChicken(transform))
-    //     {
-    //         yield return waitForSeconds;
-    //     }
+                if (IsGrainNearChicken(chicken))
+                {
+                    toFeedChicken = chicken;
+                    chickenToEat = toFeedChicken;
 
-    //     while (index < grainToBeEaten.Count)
-    //     {
-    //         if (chicken.currentAnimation != chicken.eatAnimation)
-    //         {
-    //             chicken.PlayEatAnim();
-    //         }
+                    break;
+                }
+            }
 
-    //         if (index % 5 == 0)
-    //         {
-    //             PlaySoundAndFx();
-    //         }
+            yield return new WaitForSeconds(0.1f);
+        }
 
-    //         grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
-    //         .OnComplete(() =>
-    //         {
-    //             grainToBeEaten[index].gameObject.SetActive(false);
+        toFeedChicken.isEating = true;
 
-    //             index++;
-    //         });
+        while (index < grainToBeEaten.Count)
+        {
+            if (index % numGrainToSwitchEatAnimation == 0)
+            {
+                chickenToEat.PlayEatAnim();
+                PlaySoundAndFx();
+            }
 
-    //         yield return new WaitForSeconds(delayPerGrain);
-    //     }
+            grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
+            .OnComplete(() =>
+            {
+                grainToBeEaten[index].gameObject.SetActive(false);
 
-    //     if (remainingNumber <= 0)
-    //     {
-    //         WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
-    //         WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
-    //     }
+                index++;
+            });
 
-    //     WashingMachineManager.Ins.grainPool.AddGrain(-1);
+            yield return new WaitForSeconds(delayPerGrain);
+        }
 
-    //     onCompleteAction?.Invoke();
+        remainingNumber--;
+        
+        if (remainingNumber <= 0)
+        {
+            WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
+            WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
+        }
 
-    //     bool IsGrainNearChicken(Transform grainPile)
-    //     {
-    //         float range = chicken.eatingRange;
+        WashingMachineManager.Ins.grainPool.AddGrain(-1);
 
-    //         return chicken.transform.position.x > grainPile.position.x - range &&
-    //             chicken.transform.position.x < grainPile.position.x + range;
-    //     }
+        onCompleteAction?.Invoke();
 
-    //     void PlaySoundAndFx()
-    //     {
-    //         ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+        chickenToEat.FlyOut();
 
-    //         antDissappearFx.transform.position = chicken.transform.position.AddY(-1f);
-    //         antDissappearFx.Play();
+        gameObject.SetActive(false);
 
-    //         SoundManager.Instance.PlaySoundCubeLand();
-    //     }
-    // }
+        bool IsGrainNearChicken(BaseChicken chicken)
+        {
+            float range = chicken.eatingRange;
+
+            return chicken.transform.position.x > transform.position.x - range &&
+                chicken.transform.position.x < transform.position.x + range;
+        }
+
+        void PlaySoundAndFx()
+        {
+            ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+            antDissappearFx.transform.position = toFeedChicken.transform.position.AddY(-1f);
+            antDissappearFx.Play();
+
+            SoundManager.Instance.PlaySoundCubeLand();
+        }
+    }
 
     void Rotate(Transform target, Vector2 direction)
     {

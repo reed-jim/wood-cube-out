@@ -445,14 +445,16 @@ public class WashingMachineItem : MonoBehaviour
 
     private void SwitchShadow()
     {
-        shadow.sprite = shadows[1];
+        // shadow.sprite = shadows[1];
 
-        shadow.gameObject.SetActive(false);
+        // shadow.gameObject.SetActive(false);
 
-        Tween.Delay(0.5f).OnComplete(() =>
-        {
-            SaferioTween.AlphaShow(shadow);
-        });
+        // Tween.Delay(0.5f).OnComplete(() =>
+        // {
+        //     SaferioTween.AlphaShow(shadow);
+        // });
+
+        SaferioTween.AlphaHide(shadow);
     }
 
     public virtual void Enable()
