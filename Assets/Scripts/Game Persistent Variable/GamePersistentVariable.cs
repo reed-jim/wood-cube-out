@@ -107,11 +107,13 @@ public static class GamePersistentVariable
     public static bool isShowBanner;
     public static bool remoteConfigIsShowMREC;
     public static int bannerCooldown = 30;
-    public static bool isEnableRewardedAds;
+    public static bool isEnableRewardedAds = true;
     public static int minLevelDisableRewardedAds;
     public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
     public static bool isUMPPersonalizedAdsConsent;
+    public static int levelShowBanner;
+    public static int levelShowCollapseBanner;
     #endregion
 
     #region LIVES SYSTEM
