@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4071185426488668694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1082957882188782735}
+  - component: {fileID: 299328947885205127}
+  m_Layer: 0
+  m_Name: Faction Mapper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1082957882188782735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071185426488668694}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &299328947885205127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071185426488668694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8abf3575588b974cbed7e1e88325822, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FactionMapper
+  mapper:
+  - color: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
+    spriteContainer:
+      bucketSprite: {fileID: 21300000, guid: 7b31c21f9c2825b418ee53da3358eb40, type: 3}
+      bucketTopSprite: {fileID: 21300000, guid: be48ca61f5181324287ca9f4d6be0a90, type: 3}
+      tileSprite: {fileID: 21300000, guid: 8977e897ea4c61043bd7e3986060aca6, type: 3}
+      doubleBoxLink: {fileID: 0}
+      doubleBoxHole: {fileID: 0}
+      spawningTileBoxTop: {fileID: 0}
+      antBoxSkin: 15db21
+  - color: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+    spriteContainer:
+      bucketSprite: {fileID: 21300000, guid: 5eb988d529ef579468794f1e40443aef, type: 3}
+      bucketTopSprite: {fileID: 21300000, guid: 61fce89b486b9514dae4b766cd57f239, type: 3}
+      tileSprite: {fileID: 21300000, guid: 35e20f1dbda2e54408267c73d5f87714, type: 3}
+      doubleBoxLink: {fileID: 0}
+      doubleBoxHole: {fileID: 0}
+      spawningTileBoxTop: {fileID: 0}
+      antBoxSkin: 2071fa
+  - color: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+    spriteContainer:
+      bucketSprite: {fileID: 21300000, guid: f2fe74d199a402c42b241531c5618681, type: 3}
+      bucketTopSprite: {fileID: 21300000, guid: f896557ada1f3344884cb54c03e37bc2, type: 3}
+      tileSprite: {fileID: 21300000, guid: 9f35e90b5e487484993d0310c61b3c6d, type: 3}
+      doubleBoxLink: {fileID: 0}
+      doubleBoxHole: {fileID: 0}
+      spawningTileBoxTop: {fileID: 0}
+      antBoxSkin: B04AFD
+  - color: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+    spriteContainer:
+      bucketSprite: {fileID: 21300000, guid: 42d284dc7c585c34eb5316e7244c0529, type: 3}
+      bucketTopSprite: {fileID: 21300000, guid: c69f7d87d0e1c9240bbd7e92aa7979d4, type: 3}
+      tileSprite: {fileID: 21300000, guid: 5eaa8266c86e53a4db0a549b00f136b6, type: 3}
+      doubleBoxLink: {fileID: 0}
+      doubleBoxHole: {fileID: 0}
+      spawningTileBoxTop: {fileID: 0}
+      antBoxSkin: FC3339
+  - color: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+    spriteContainer:
+      bucketSprite: {fileID: 21300000, guid: f5dbde61d0382ba48ad7614caee9259e, type: 3}
+      bucketTopSprite: {fileID: 21300000, guid: 87b38924e75c6bc4eab37613352d5dc9, type: 3}
+      tileSprite: {fileID: 21300000, guid: 9e4a48a34640efb48b82bed79345a227, type: 3}
+      doubleBoxLink: {fileID: 0}
+      doubleBoxHole: {fileID: 0}
+      spawningTileBoxTop: {fileID: 0}
+      antBoxSkin: FEDD03
+  - color: {r: 1, g: 0.3882353, b: 0.61960787, a: 1}
+    spriteContainer:
+      bucketSprite: {fileID: 21300000, guid: dd936629a1ac80f4a9cab0efc394fbee, type: 3}
+      bucketTopSprite: {fileID: 21300000, guid: ff788008a6feea248b9783ac41a0a26c, type: 3}
+      tileSprite: {fileID: 21300000, guid: c24b0a226114f66499fea1cb1a7e24cd, type: 3}
+      doubleBoxLink: {fileID: 0}
+      doubleBoxHole: {fileID: 0}
+      spawningTileBoxTop: {fileID: 0}
+      antBoxSkin: FF639E
+  allFactions:
+  - {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
+  - {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+  - {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+  - {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+  - {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+  - {r: 1, g: 0.3882353, b: 0.61960787, a: 1}

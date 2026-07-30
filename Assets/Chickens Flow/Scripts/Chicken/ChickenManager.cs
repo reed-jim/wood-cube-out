@@ -16,6 +16,10 @@ public class ChickenManager : Singleton<ChickenManager>
     public int numColumn;
     public int numRow;
 
+    [Header("Customize")]
+    public float chickenDistanceRatio;
+    public float chickenAreaOffsetY;
+
     public List<Color> allFactions;
 
     public void GenerateAllFactions(int total)
@@ -125,7 +129,6 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         numColumn = levelItem.numColumn;
         numRow = levelItem.numRow;
-        float distance = 1f;
         float radius = 0.1f;
 
         Vector3 position;
@@ -143,7 +146,9 @@ public class ChickenManager : Singleton<ChickenManager>
 
             position = new Vector3(x, y);
             position.x -= (numColumn - 1) / 2f;
-            position *= distance;
+            position.x += 0.5f * y % 2;
+            position.y += chickenAreaOffsetY;
+            position *= chickenDistanceRatio;
             position.z = -1 - 0.01f * (numRow - i);
 
             waitingChickenSlot.position = position;
@@ -200,7 +205,9 @@ public class ChickenManager : Singleton<ChickenManager>
 
             position = tileData.position;
             position.x -= (numColumn - 1) / 2f;
-            position *= distance;
+            position.x += 0.5f * row % 2;
+            position.y += chickenAreaOffsetY;
+            position *= chickenDistanceRatio;
             position.z = -1 - 0.01f * (numRow - i);
 
             chicken.transform.position = position;

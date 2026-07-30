@@ -11,6 +11,7 @@ using static Spine.AnimationState;
 
 public class BaseChicken : MonoBehaviour
 {
+    public SpriteRenderer factionPreview;
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string moveAnimation;
@@ -55,6 +56,7 @@ public class BaseChicken : MonoBehaviour
 
     public void SetFaction(Color faction)
     {
+        factionPreview.color = faction;
         // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
         // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);

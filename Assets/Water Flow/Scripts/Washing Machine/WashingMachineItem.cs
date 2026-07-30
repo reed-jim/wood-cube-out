@@ -19,7 +19,8 @@ public class WashingMachineItem : MonoBehaviour
 {
     #region  Chicken Feed
     public Vector3 pileCenter;
-    public SpriteRenderer colorPreview;
+    public SpriteRenderer bucketSprite;
+    public SpriteRenderer bucketTopSprite;
     #endregion
 
     public SpriteRenderer lid;
@@ -152,12 +153,13 @@ public class WashingMachineItem : MonoBehaviour
 
         shadow.sprite = shadows[0];
 
-        skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
-        skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-        skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+        // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+        // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+        // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
 
-        colorPreview.color = faction;
+        bucketSprite.sprite = FactionMapper.Ins.GetBucketSprite(faction);
+        bucketTopSprite.sprite = FactionMapper.Ins.GetBucketTopSprite(faction);
 
         tilesToMove = new List<AntsFlow.BaseTile>();
 

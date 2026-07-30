@@ -92,7 +92,7 @@ namespace AntsFlow
         {
 #if UNITY_EDITOR
             FactionMapper factionMapper =
-                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
 
             AntLevelData antLevelData = new AntLevelData();
 
@@ -528,7 +528,7 @@ namespace AntsFlow
         private void GenerateChickenLevelTiles(LevelItem levelItem)
         {
             FactionMapper factionMapper =
-                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
 
             levelItem.chickenLevelTiles = new List<AntLevelDataItem>();
 

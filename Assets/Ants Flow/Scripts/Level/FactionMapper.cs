@@ -206,6 +206,16 @@ public class FactionMapper : Singleton<FactionMapper>
     {
         return mapper.First(item => item.spriteContainer.tileSprite == tileSprite).color;
     }
+
+    public Sprite GetBucketSprite(Color faction)
+    {
+        return spriteContainersOfColors[faction].bucketSprite;
+    }
+
+    public Sprite GetBucketTopSprite(Color faction)
+    {
+        return spriteContainersOfColors[faction].bucketTopSprite;
+    }
 }
 
 [Serializable]
@@ -218,8 +228,9 @@ public class ColorSpriteContainerPair
 [Serializable]
 public class SpriteContainer
 {
-    // public Sprite antBoxSprite;
-    // public Sprite antBoxLidSprite;
+    public Sprite bucketSprite;
+    public Sprite bucketTopSprite;
+
     public Sprite tileSprite;
     public Sprite doubleBoxLink;
     public Sprite doubleBoxHole;
