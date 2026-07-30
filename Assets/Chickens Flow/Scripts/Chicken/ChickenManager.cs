@@ -17,7 +17,7 @@ public class ChickenManager : Singleton<ChickenManager>
     public int numRow;
 
     [Header("Customize")]
-    public float chickenDistanceRatio;
+    public Vector2 chickenDistanceRatio;
     public float chickenAreaOffsetY;
 
     public List<Color> allFactions;
@@ -146,10 +146,10 @@ public class ChickenManager : Singleton<ChickenManager>
 
             position = new Vector3(x, y);
             position.x -= (numColumn - 1) / 2f;
-            position.x += 0.5f * y % 2;
+            position.x += 0.5f * (y % 2);
             position.y += chickenAreaOffsetY;
             position *= chickenDistanceRatio;
-            position.z = -1 - 0.01f * (numRow - i);
+            position.z = -1 - 0.0001f * (numColumn - i) - 0.01f * (numRow - i);
 
             waitingChickenSlot.position = position;
 
@@ -205,13 +205,13 @@ public class ChickenManager : Singleton<ChickenManager>
 
             position = tileData.position;
             position.x -= (numColumn - 1) / 2f;
-            position.x += 0.5f * row % 2;
+            position.x += 0.5f * (row % 2);
             position.y += chickenAreaOffsetY;
             position *= chickenDistanceRatio;
-            position.z = -1 - 0.01f * (numRow - i);
+            position.z = -1 - 0.0001f * (numColumn - i) - 0.01f * (numRow - i);
 
             chicken.transform.position = position;
-            chicken.transform.position = chicken.transform.position.AddX(UnityEngine.Random.Range(-radius, radius));
+            // chicken.transform.position = chicken.transform.position.AddX(UnityEngine.Random.Range(-radius, radius));
 
             chicken.SetFaction(allFactions[index]);
             chicken.column = column;
