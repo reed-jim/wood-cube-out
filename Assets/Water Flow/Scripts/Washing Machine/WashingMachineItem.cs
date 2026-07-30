@@ -250,7 +250,7 @@ public class WashingMachineItem : MonoBehaviour
                 Vector3 bucketDestination;
 
                 bucketDestination.x = 0;
-                bucketDestination.y = WashingMachineManager.Ins.grainPool.transform.position.y + 7;
+                bucketDestination.y = 7;
                 bucketDestination.z = -9;
 
                 pileCenter.x = grainPoolSlot.transform.position.x;

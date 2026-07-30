@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,11 @@ using static Spine.AnimationState;
 
 public class BaseChicken : MonoBehaviour
 {
-    public SpriteRenderer factionPreview;
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string moveAnimation;
     [SpineAnimation] public string eatAnimation;
+    [SpineAnimation] public string flyAnimation;
     public GameObject eyes;
 
     public Color faction;
@@ -31,6 +32,7 @@ public class BaseChicken : MonoBehaviour
     public bool isEating;
     public bool isDone;
     public bool isStuck;
+    public string currentAnimation;
 
     public List<WaitingChickenSlot> waitingChickenSlots;
 
@@ -56,10 +58,9 @@ public class BaseChicken : MonoBehaviour
 
     public void SetFaction(Color faction)
     {
-        factionPreview.color = faction;
-        // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
-        // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-        // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+        skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+        skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+        skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
         Tween.Delay(0.02f).OnComplete(() =>
         {
@@ -73,20 +74,24 @@ public class BaseChicken : MonoBehaviour
     {
         grainPile.BeEaten(this, onCompleteAction: () =>
             {
+                transform.SetZ(-9);
+
                 Vector3 outPosition = transform.position;
 
                 if (outPosition.x > 0)
                 {
-                    outPosition.x += 10;
+                    outPosition.x += 15;
+
+                    transform.eulerAngles = new Vector3(0, 180);
                 }
                 else
                 {
-                    outPosition.x -= 10;
+                    outPosition.x -= 15;
+
+                    transform.eulerAngles = Vector3.zero;
                 }
 
-                PlayMoveAnim();
-
-                Rotate(outPosition - transform.position);
+                PlayFlyAnim();
 
                 Tween.Position(transform, outPosition, duration: 0.8f, ease: Ease.Linear).OnComplete(() =>
                 {
@@ -116,25 +121,42 @@ public class BaseChicken : MonoBehaviour
         isDone = true;
     }
 
-    public void PlayIdleAnim(int loopTime)
+    public void PlayIdleAnim(int loopTime, bool isDisableSpineOnComplete = true)
     {
-        PlayForCycles(skeletonAnimation, idleAnimation, loopTime, null, false);
+        PlayForCycles(skeletonAnimation, idleAnimation, loopTime, null, false, onCompleteAction: () =>
+        {
+            if (isDisableSpineOnComplete)
+            {
+                skeletonAnimation.enabled = false;
+            }
+        });
+    }
+
+    public void PlayIdleAnimNoLoop(bool isDisableSpineOnComplete = true)
+    {
+        PlayIdleAnim(1, isDisableSpineOnComplete);
+    }
+
+    public void PlayIdleAnim()
+    {
+        PlayAnim(idleAnimation);
     }
 
     public void PlayAnim(string anim)
     {
+        if (currentAnimation == anim)
+        {
+            return;
+        }
+
         if (!skeletonAnimation.enabled)
         {
             skeletonAnimation.enabled = true;
         }
 
         skeletonAnimation.AnimationState.SetAnimation(0, anim, true);
-    }
 
-    public void PlayIdleAnim()
-    {
-        PlayIdleAnim(1);
-        // PlayAnim(idleAnimation);
+        currentAnimation = anim;
     }
 
     public void PlayMoveAnim()
@@ -147,11 +169,16 @@ public class BaseChicken : MonoBehaviour
         PlayAnim(eatAnimation);
     }
 
+    public void PlayFlyAnim()
+    {
+        PlayAnim(flyAnimation);
+    }
+
     public IEnumerator PlayEyesAnim()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(Random.Range(0.5f, 1f));
+        WaitForSeconds waitForSeconds = new WaitForSeconds(UnityEngine.Random.Range(0.5f, 1f));
 
-        yield return new WaitForSeconds(Random.Range(0, 1f));
+        yield return new WaitForSeconds(UnityEngine.Random.Range(0, 1f));
 
         while (true)
         {
@@ -161,12 +188,15 @@ public class BaseChicken : MonoBehaviour
         }
     }
 
-    public static void PlayForCycles(
+    public static void PlayForCycles
+    (
         SkeletonAnimation skeleton,
         string animationName,
         int cycles,
         string endAnimation,
-        bool endLoop = true)
+        bool endLoop = true,
+        Action onCompleteAction = null
+    )
     {
         var state = skeleton.AnimationState;
         int completedLoops = 0;
@@ -187,8 +217,7 @@ public class BaseChicken : MonoBehaviour
             {
                 state.Complete -= handler;
 
-                skeleton.enabled = false;
-                // state.SetAnimation(0, endAnimation, endLoop);
+                onCompleteAction?.Invoke();
             }
         };
 

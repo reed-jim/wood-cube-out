@@ -561,7 +561,14 @@ public class ChickenManager : Singleton<ChickenManager>
             {
                 remaining--;
 
-                chicken.PlayIdleAnim();
+                if (chicken.GetFirstRow() == 0)
+                {
+                    chicken.PlayIdleAnim();
+                }
+                else
+                {
+                    chicken.PlayIdleAnimNoLoop();
+                }
 
                 if (remaining == 0)
                     WashingMachineManager.Ins.grainPool.CheckFeedChickens();

@@ -30,6 +30,7 @@ public class GrainPile : MonoBehaviour
     #endregion
 
     public int siblingIndex;
+    public BaseChicken chickenToEat;
 
     public List<Vector3> positions = new();
 
@@ -284,6 +285,8 @@ public class GrainPile : MonoBehaviour
         StartCoroutine(ChickenEatingGrains(chicken, grainsToBeEaten, onCompleteAction));
 
         remainingNumber--;
+
+        chickenToEat = chicken;
     }
 
     private IEnumerator ChickenEatingGrains(BaseChicken chicken, List<Grain> grainToBeEaten, Action onCompleteAction)
@@ -303,6 +306,11 @@ public class GrainPile : MonoBehaviour
 
             if (!isMoving && isGrainNear)
             {
+                if (chicken.currentAnimation != chicken.eatAnimation)
+                {
+                    chicken.PlayEatAnim();
+                }
+
                 PlaySoundAndFx();
                 grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
                 .OnComplete(() =>
