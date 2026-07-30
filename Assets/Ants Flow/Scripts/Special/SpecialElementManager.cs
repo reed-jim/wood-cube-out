@@ -24,6 +24,7 @@ namespace AntsFlow
 
         public int nextFreezeAntBoxRequiredNumber;
         public List<AntBoxLink> antBoxLinks;
+        public SpawningTileBox spawningTileBox;
 
         public Sprite hiddenTileSprite;
         public Sprite wallTileSprite;
@@ -48,6 +49,8 @@ namespace AntsFlow
             {
                 showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
             }
+
+            // SetupSpawningTileBoxes();
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -178,8 +181,9 @@ namespace AntsFlow
             {
                 try
                 {
-                    nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
-                    specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+                    int index = specialElementConfig.frozenAntBoxConfig.spawnOrder.IndexOf(WashingMachineManager.Ins.numAntBoxSpawned);
+
+                    nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[index];
                 }
                 catch (System.Exception)
                 {
@@ -340,6 +344,7 @@ namespace AntsFlow
                         tilemapTile.sprite = wallTileSprite;
 
                         tilemap.SetTile(cellPos, tilemapTile);
+                        TileManager.Ins.SetShadowTile(cellPos);
 
                         node.isObstacle = true;
                     }
@@ -409,6 +414,36 @@ namespace AntsFlow
             }
 
             return cluster.ToArray();
+        }
+
+        public void SetupSpawningTileBoxes()
+        {
+            if (specialElementConfig.spawningTileBoxConfig.items == null)
+            {
+                return;
+            }
+
+            NextSpawningTileBoxes();
+        }
+
+        public void NextSpawningTileBoxes()
+        {
+            if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
+            {
+                return;
+            }
+
+            Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
+
+            SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[0];
+
+            specialElementConfig.spawningTileBoxConfig.items.RemoveAt(0);
+
+            spawningTileBox.gameObject.SetActive(true);
+
+            spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.4f * screenSizeWorld.y, -5);
+
+            spawningTileBox.Setup(item.faction, item.number);
         }
     }
 }

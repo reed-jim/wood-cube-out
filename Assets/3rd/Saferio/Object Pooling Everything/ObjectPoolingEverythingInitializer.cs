@@ -60,6 +60,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject baseTile;
     [SerializeField] private GameObject fakeTilePrefab;
     [SerializeField] private GameObject tilemapPrefab;
+    [SerializeField] private GameObject spawningTileBoxPrefab;
 
     [Header("Washing Machine")]
     public GameObject washingMachineItemPrefab;

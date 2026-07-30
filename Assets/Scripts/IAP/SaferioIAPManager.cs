@@ -174,7 +174,7 @@ public class SaferioIAPManager : MonoBehaviour, IStoreListener
         // Handle this event by, e.g. presenting a parental gate.
         // Here, for demonstration purposes only, we will wait five seconds before continuing
         // the purchase.
-        StartCoroutine(ContinuePromotionalPurchases());
+        //StartCoroutine(ContinuePromotionalPurchases());
     }
 
     private IEnumerator ContinuePromotionalPurchases()
@@ -224,7 +224,7 @@ public class SaferioIAPManager : MonoBehaviour, IStoreListener
             if (item.availableToPurchase)
             {
                 // Set all these products to be visible in the user's App Store
-                m_AppleExtensions.SetStorePromotionVisibility(item, AppleStorePromotionVisibility.Show);
+              //  m_AppleExtensions.SetStorePromotionVisibility(item, AppleStorePromotionVisibility.Show);
             }
         }
 
@@ -308,7 +308,7 @@ public class SaferioIAPManager : MonoBehaviour, IStoreListener
                 {
                     // collectCoinEvent?.Invoke(productData.CoinQuantity);
 
-                    int multiplier = 1 + GamePersistentVariable.IAPAddition;
+                    int multiplier = 1;
 
                     int coinQuantity = multiplier * productData.CoinQuantity;
 

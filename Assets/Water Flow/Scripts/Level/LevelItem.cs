@@ -1061,6 +1061,7 @@ public class SpecialElementConfig
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;
+    public SpawningTileBoxConfig spawningTileBoxConfig;
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
 }
@@ -1115,4 +1116,17 @@ public class SpecialElementItemConfig
 public class FrozenAntBoxConfig : SpecialElementItemConfig
 {
     public List<int> numBoxToUnfreeze;
+}
+
+[Serializable]
+public class SpawningTileBoxConfig
+{
+    public List<SpawningTileBoxItemConfig> items;
+}
+
+[Serializable]
+public class SpawningTileBoxItemConfig
+{
+    public Color faction;
+    public int number;
 }
