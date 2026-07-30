@@ -176,6 +176,21 @@ public class GrainPool : MonoBehaviour
         return null;
     }
 
+    public GrainPoolSlot GetGrainPoolSlot(BaseChicken possibleChickenToEat)
+    {
+        List<GrainPoolSlot> availableSlots = grainPoolSlots.Where(item => item.grainPile == null).ToList();
+
+        if (possibleChickenToEat != null)
+        {
+            availableSlots =
+                availableSlots
+                .OrderBy(item => Mathf.Abs(item.transform.position.x - (possibleChickenToEat.transform.position.x - offsetPourGrainPileX)))
+                .ToList();
+        }
+
+        return availableSlots[0];
+    }
+
     public List<GrainPoolSlot> GetGrainPoolSlots(int number, List<BaseChicken> possibleChickensToEat)
     {
         List<GrainPoolSlot> availableSlots = grainPoolSlots.Where(item => item.grainPile == null).ToList();
@@ -193,7 +208,7 @@ public class GrainPool : MonoBehaviour
             availableSlots =
                 availableSlots
                 // .OrderBy(slot => slot.transform.position.x > chicken.transform.position.x)
-                .OrderBy(item => Mathf.Abs(item.transform.position.x - (chicken.transform.position.x - offsetPourGrainPileX))).ToList();
+                .OrderBy(item => Mathf.Abs(item.transform.position.x - (chicken.transform.position.x - offsetPourGrainPileX - i))).ToList();
 
             result.Add(availableSlots[0]);
             availableSlots.RemoveAt(0);

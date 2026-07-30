@@ -224,28 +224,38 @@ public class WashingMachineItem : MonoBehaviour
 
         List<BaseChicken> possibleChickensToEat = GetPossibleChickensToEat(maxAddNumber);
 
-        List<GrainPoolSlot> grainPoolSlots = WashingMachineManager.Ins.grainPool.GetGrainPoolSlots(maxAddNumber, possibleChickensToEat);
+        // List<GrainPoolSlot> grainPoolSlots = WashingMachineManager.Ins.grainPool.GetGrainPoolSlots(maxAddNumber, possibleChickensToEat);
 
-        StartCoroutine(PouringOut(grainPoolSlots, isBucketMoveBack: !isPouringAll, onCompleteAction));
+        StartCoroutine(PouringOut(maxAddNumber, possibleChickensToEat, isBucketMoveBack: !isPouringAll, onCompleteAction));
 
         WashingMachineManager.Ins.grainPool.AddGrain(maxAddNumber);
     }
 
-    private IEnumerator PouringOut(List<GrainPoolSlot> grainPoolSlots, bool isBucketMoveBack, Action onCompleteAction)
+    private IEnumerator PouringOut(int numPile, List<BaseChicken> possibleChickensToEat, bool isBucketMoveBack, Action onCompleteAction)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
 
         bool isPouring = false;
         bool isRotated = false;
 
-        while (grainPoolSlots.Count > 0)
+        int remaining = numPile;
+
+        while (remaining > 0)
         {
             if (!isPouring)
             {
-                GrainPoolSlot grainPoolSlot = grainPoolSlots[0];
-                grainPoolSlots.RemoveAt(0);
+                BaseChicken possibleChickenToEat = null;
 
-                bool isLast = grainPoolSlots.Count == 0;
+                if (possibleChickensToEat.Count > 0)
+                {
+                    possibleChickenToEat = possibleChickensToEat[0];
+                    possibleChickensToEat.RemoveAt(0);
+                }
+
+                GrainPoolSlot grainPoolSlot = WashingMachineManager.Ins.grainPool.GetGrainPoolSlot(possibleChickenToEat);
+
+                remaining--;
+                bool isLast = remaining == 0;
 
                 Vector3 bucketDestination;
 
@@ -258,7 +268,7 @@ public class WashingMachineItem : MonoBehaviour
                 pileCenter.z = -1;
 
                 transform.SetParent(grainPoolSlot.transform);
-                
+
                 Tween.LocalPosition(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
                 {
                     GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);

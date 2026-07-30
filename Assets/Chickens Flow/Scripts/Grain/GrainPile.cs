@@ -55,6 +55,8 @@ public class GrainPile : MonoBehaviour
 
             grain.gameObject.SetActive(true);
 
+            grain.transform.localScale = Vector3.one;
+
             grain.isBeingEaten = false;
             grain.isDone = false;
         }

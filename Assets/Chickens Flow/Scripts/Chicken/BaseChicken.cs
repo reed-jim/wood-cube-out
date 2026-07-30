@@ -30,6 +30,7 @@ public class BaseChicken : MonoBehaviour
     public float flyOutDuration;
 
     [Header("State")]
+    public bool isMoving;
     public bool isEating;
     public bool isDone;
     public bool isStuck;

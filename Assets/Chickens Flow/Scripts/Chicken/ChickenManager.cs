@@ -377,8 +377,6 @@ public class ChickenManager : Singleton<ChickenManager>
             bool isLast = i == chickensToFeed.Count - 1;
 
             chicken.Feed(grainPile, isLast);
-
-            Debug.Log($"Chicken {chicken} {grainPile}");
         }
     }
 
@@ -390,6 +388,13 @@ public class ChickenManager : Singleton<ChickenManager>
 
             if (isGhostChicken)
                 continue;
+
+            if (chicken.isMoving)
+            {
+                chicken.isStuck = true;
+
+                continue;
+            }
 
             // Check every column occupied by this chicken.
             var occupiedColumns = chicken.waitingChickenSlots
@@ -579,9 +584,13 @@ public class ChickenManager : Singleton<ChickenManager>
                     chicken.PlayIdleAnimNoLoop();
                 }
 
+                chicken.isMoving = false;
+
                 if (remaining == 0)
                     WashingMachineManager.Ins.grainPool.CheckFeedChickens();
             });
+
+            chicken.isMoving = true;
         }
     }
 
