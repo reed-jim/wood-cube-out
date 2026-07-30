@@ -156,12 +156,12 @@ public class DebugPopup : BasePopup
         bool isEnableRewards = GamePersistentVariable.isEnableRewardedAds;
         if (isEnableRewards)
         {
-            GamePersistentVariable.isEnableRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_ENABLE_REWARDED_ADS, false);
+            GamePersistentVariable.isEnableRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, false);
             debugRewardsText.text = "Enable rewards";
         }
         else
         {
-            GamePersistentVariable.isEnableRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_ENABLE_REWARDED_ADS, true);
+            GamePersistentVariable.isEnableRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
 
             debugRewardsText.text = "Disable Rewards";
         }

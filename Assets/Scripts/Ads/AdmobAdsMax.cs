@@ -490,7 +490,6 @@ public class AdmobAdsMax
 
         if (!RemoteConfigController.GetBoolConfig("is_show_collap_policy_new", false))
         {
-            ShowBanner();
             return;
         }
 
@@ -503,14 +502,13 @@ public class AdmobAdsMax
 
         if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowCollapseBanner)
         {
-            ShowBanner();
+
             return;
         }
 
         if (_bannerViewCollap == null)
         {
             LoadBannerCollap();
-            return;
         }
 
         Debug.LogFormat("[TestCollapse]_isShowAdmobCollap: {0},isLoadedCollap: {1}", _isShowAdmobCollap, isLoadedCollap);
@@ -522,10 +520,7 @@ public class AdmobAdsMax
             _bannerViewCollap?.Show();
             isShowingCollap = true;
         }
-        else
-        {
-            ShowBanner();
-        }
+
     }
 
     public void DestroyBannerCollap()
