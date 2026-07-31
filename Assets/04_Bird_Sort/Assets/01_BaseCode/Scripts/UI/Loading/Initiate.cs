@@ -73,4 +73,31 @@ public static class Initiate
     {
         areWeFading = false;
     }
+
+
+    public static void FadeWithExistingOp(Color col, float multiplier, AsyncOperation asyncOp)
+    {
+        if (areWeFading)
+        {
+            Debug.Log("Already Fading");
+            return;
+        }
+
+        GameObject init = new GameObject();
+        init.name = "Fader";
+        Canvas myCanvas = init.AddComponent<Canvas>();
+        myCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        myCanvas.sortingOrder = 9999;
+        init.AddComponent<Fader>();
+        init.AddComponent<CanvasGroup>();
+        init.AddComponent<Image>();
+
+        Fader scr = init.GetComponent<Fader>();
+        scr.fadeDamp = multiplier;
+        scr.fadeColor = col;
+        scr.externalOp = asyncOp;
+        scr.start = true; // Bắt đầu fade ngay
+        areWeFading = true;
+        scr.InitiateFaderWithExternalOp();
+    }
 }

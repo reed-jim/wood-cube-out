@@ -776,7 +776,7 @@ public class AdmobAdsMax
         return true;
 #endif
 
-        if (GameController.Instance.useProfile.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.minimumLevel)
+        if (UseProfile.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.minimumLevel)
         {
             GameController.Instance.AnalyticsController.LoadInterEligible();
             if (countdownAds > GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.minimumInterval)
@@ -810,7 +810,7 @@ public class AdmobAdsMax
         UnityAction actionIniterClose = null, string level = null)
     {
         actionIniterClose += () => { IsCooldownAdmobBanner = true; };
-        if (GameController.Instance.useProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
+        if (UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
         {
             var close = actionIniterClose;
             actionIniterClose = () => { ShowInterstitialAd(true, actionIniterClose: close); };
@@ -928,7 +928,7 @@ public class AdmobAdsMax
         }
 
         return (!GameController.Instance.useProfile.IsRemoveAds && _interstitialAd != null && _interstitialAd.CanShowAd()
-            && GameController.Instance.useProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel
+            && UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel
                                         && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
     }
 
@@ -1185,7 +1185,7 @@ public class AdmobAdsMax
         {
             actionNotLoadedVideo?.Invoke();
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, false,
-                 GameController.Instance.useProfile.CurrentLevel.ToString());
+                 UseProfile.CurrentLevel.ToString());
             return;
         }
 
@@ -1218,7 +1218,7 @@ public class AdmobAdsMax
                 Debug.LogError(e.Message);
             }
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                 GameController.Instance.useProfile.CurrentLevel.ToString());
+                 UseProfile.CurrentLevel.ToString());
             GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
         }
         else
@@ -1231,12 +1231,12 @@ public class AdmobAdsMax
 
                 ShowInterstitial(isShowImmediatly: true, actionType.ToString(), actionIniterClose: () => { });
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                     GameController.Instance.useProfile.CurrentLevel.ToString());
+                     UseProfile.CurrentLevel.ToString());
                 Debug.Log("ShowInterstitial !!!");
                 countdownAds = 0;
                 try
                 {
-                    DWHLog.Log.AdsLog(GameController.Instance.useProfile.CurrentLevel, AdType.Reward, adWhere);
+                    DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Reward, adWhere);
                 }
                 catch (Exception e)
                 {
@@ -1249,7 +1249,7 @@ public class AdmobAdsMax
                 Debug.Log("No ads !!!");
                 actionNotLoadedVideo?.Invoke();
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, false, true,
-                      GameController.Instance.useProfile.CurrentLevel.ToString());
+                      UseProfile.CurrentLevel.ToString());
             }
         }
 

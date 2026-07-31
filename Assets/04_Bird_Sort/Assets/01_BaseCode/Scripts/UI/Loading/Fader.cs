@@ -6,28 +6,26 @@ using NamPhuThuy.GamePlay;
 
 public class Fader : MonoBehaviour
 {
-    [HideInInspector]
-    public bool start = false;
-    [HideInInspector]
-    public float fadeDamp = 0.0f;
-    [HideInInspector]
-    public string fadeScene;
-    [HideInInspector]
-    public float alpha = 0.0f;
-    [HideInInspector]
-    public Color fadeColor;
-    [HideInInspector]
-    public bool isFadeIn = false;
+    [HideInInspector] public bool start = false;
+    [HideInInspector] public float fadeDamp = 0.0f;
+    [HideInInspector] public string fadeScene;
+    [HideInInspector] public float alpha = 0.0f;
+    [HideInInspector] public Color fadeColor;
+    [HideInInspector] public bool isFadeIn = false;
+    [HideInInspector] public AsyncOperation externalOp;
+
     CanvasGroup myCanvas;
     Image bg;
     float lastTime = 0;
     bool startedLoading = false;
+    AsyncOperation _loadOp;
+
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnLevelFinishedLoading;
         SceneTransition.levelSceneTransitionCompleteEvent += OnGameplayStartLevel;
     }
-    //Remove callback
+
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnLevelFinishedLoading;
@@ -36,10 +34,8 @@ public class Fader : MonoBehaviour
 
     public void InitiateFader()
     {
-
         DontDestroyOnLoad(gameObject);
 
-        //Getting the visual elements
         if (transform.GetComponent<CanvasGroup>())
             myCanvas = transform.GetComponent<CanvasGroup>();
 
@@ -48,87 +44,110 @@ public class Fader : MonoBehaviour
             bg = transform.GetComponent<Image>();
             bg.color = fadeColor;
         }
-        //Checking and starting the coroutine
+
         if (myCanvas && bg)
         {
             myCanvas.alpha = 0.0f;
             StartCoroutine(FadeIt());
         }
         else
-            Debug.LogWarning("Something is missing please reimport the package."); 
+            Debug.LogWarning("Something is missing please reimport the package.");
+    }
+
+    public void InitiateFaderWithExternalOp()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        if (transform.GetComponent<CanvasGroup>())
+            myCanvas = transform.GetComponent<CanvasGroup>();
+
+        if (transform.GetComponentInChildren<Image>())
+        {
+            bg = transform.GetComponent<Image>();
+            bg.color = fadeColor;
+        }
+
+        if (myCanvas && bg)
+        {
+            myCanvas.alpha = 0.0f; // Bắt đầu trong suốt, sẽ fade in to black
+            StartCoroutine(FadeIt());
+        }
+        else
+            Debug.LogWarning("Something is missing please reimport the package.");
     }
 
     IEnumerator FadeIt()
     {
-
         while (!start)
-        {
-            //waiting to start
             yield return null;
-        }
+
         lastTime = Time.time;
-        float coDelta = lastTime;
+        float coDelta;
         bool hasFadedIn = false;
 
         while (!hasFadedIn)
         {
             coDelta = Time.time - lastTime;
+
             if (!isFadeIn)
             {
-                //Fade in
+                // Fade to black
                 alpha = newAlpha(coDelta, 1, alpha);
-                if (alpha == 1 && !startedLoading)
-                {
-                    startedLoading = true;
-                    SceneManager.LoadScene(fadeScene);
-                }
 
+                if (externalOp != null)
+                {
+                    if (alpha >= 1f && externalOp.progress >= 0.9f)
+                    {
+                        externalOp.allowSceneActivation = true;
+                    }
+                }
+                else
+                {
+                    if (!startedLoading)
+                    {
+                        startedLoading = true;
+                        _loadOp = SceneManager.LoadSceneAsync(fadeScene);
+                        _loadOp.allowSceneActivation = false;
+                    }
+
+                    if (alpha >= 1f && _loadOp != null && _loadOp.progress >= 0.9f)
+                    {
+                        _loadOp.allowSceneActivation = true;
+                    }
+                }
             }
             else
             {
-                //Fade out
+                // Fade out (sáng lại)
                 alpha = newAlpha(coDelta, 0, alpha);
-                if (alpha == 0)
+                if (alpha <= 0)
                 {
                     hasFadedIn = true;
                 }
-
-
             }
+
             lastTime = Time.time;
             myCanvas.alpha = alpha;
             yield return null;
         }
 
         Initiate.DoneFading();
-
-       // Debug.Log("Your scene has been loaded , and fading in has just ended");
-
         Destroy(gameObject);
-
-        yield return null;
     }
-
 
     float newAlpha(float delta, int to, float currAlpha)
     {
-
         switch (to)
         {
             case 0:
                 currAlpha -= fadeDamp * delta;
-                if (currAlpha <= 0)
-                    currAlpha = 0;
-
+                if (currAlpha <= 0) currAlpha = 0;
                 break;
             case 1:
                 currAlpha += fadeDamp * delta;
-                if (currAlpha >= 1)
-                    currAlpha = 1;
-
+                if (currAlpha >= 1) currAlpha = 1;
                 break;
         }
-
         return currAlpha;
     }
 
@@ -136,12 +155,14 @@ public class Fader : MonoBehaviour
     {
         if (scene.name == GameConstants.GAMEPLAY_SCENE || scene.name == SceneName.GAME_PLAY)
         {
-            return;
+            return; // Gameplay scene: không fade in ngay, đợi levelSceneTransitionCompleteEvent
         }
 
-        StartCoroutine(FadeIt());
-        //We can now fade in
+        // Non-gameplay (Home scene, v.v.): fade out ngay khi scene load xong
+        start = true;
+        alpha = 1f;
         isFadeIn = true;
+        StartCoroutine(FadeIt());
     }
 
     void OnGameplayStartLevel()
@@ -149,8 +170,12 @@ public class Fader : MonoBehaviour
         var sceneName = SceneManager.GetActiveScene().name;
         if (sceneName == GameConstants.GAMEPLAY_SCENE || sceneName == SceneName.GAME_PLAY)
         {
-            StartCoroutine(FadeIt());
+            // SceneTransition đã hoàn thành → fade out black overlay
+            start = true;
+            alpha = 1f;
+            myCanvas.alpha = 1f;
             isFadeIn = true;
+            StartCoroutine(FadeIt());
         }
     }
 }

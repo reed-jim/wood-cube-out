@@ -349,6 +349,11 @@ namespace AntsFlow
 
                 WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column);
 
+                if (washingMachineItem == null)
+                {
+                    continue;
+                }
+
                 washingMachineItems.Add(washingMachineItem);
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
@@ -612,6 +617,12 @@ namespace AntsFlow
             }
 
             WashingMachineItem antBox = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(key);
+
+            if (antBox == null)
+            {
+                Debug.LogError($"[WashingMachineManager] Failed to get antBox from pool with key '{key}'!");
+                return null;
+            }
 
             if (levelElement == LevelElement.OpenCloseAntBox)
             {

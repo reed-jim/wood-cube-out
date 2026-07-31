@@ -360,10 +360,17 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
-            shadowTilemapGrid.SetParent(levelTransform);
-            shadowTilemapGrid.position = shadowTilemapOffset;
-            shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
-            glowTilemapGrid.localScale = scaleFactor * Vector3.one;
+            if (shadowTilemapGrid != null)
+            {
+                shadowTilemapGrid.SetParent(levelTransform);
+                shadowTilemapGrid.position = shadowTilemapOffset;
+                shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
+            }
+
+            if (glowTilemapGrid != null)
+            {
+                glowTilemapGrid.localScale = scaleFactor * Vector3.one;
+            }
 
             float ratioXY = multiplierScaleX * (multiplierScaleX / multiplierScaleY);
 
@@ -371,7 +378,18 @@ namespace NamPhuThuy.GamePlay
             GamePersistentVariable.ratioXY = ratioXY;
 
             Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
+            if (spawnedTileMapGrid == null)
+            {
+                Debug.LogError($"[LevelLoader] ObjectPoolingEverything returned null for pool '{GameConstants.tileMap}'");
+                return;
+            }
+
             Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+            if (spawnedTileMap == null)
+            {
+                Debug.LogError($"[LevelLoader] Tilemap component not found in spawned tilemap grid!");
+                return;
+            }
 
             spawnedTileMapGrid.SetParent(levelTransform);
             spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-6f);

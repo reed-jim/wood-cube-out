@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Sirenix.OdinInspector;
+using BirdSort;
 
 [CreateAssetMenu(fileName = "Level", menuName = "ScriptableObject/LevelTripleBird", order = 1)]
 public class LevelTripleBird : SerializedScriptableObject

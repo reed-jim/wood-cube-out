@@ -5,6 +5,8 @@ using DG.Tweening;
 using Spine.Unity;
 using Spine;
 using System.Collections;
+namespace BirdSort
+{
 public enum TypeTile
 {
     CanClick,
@@ -326,4 +328,5 @@ public class Tile : MonoBehaviour
             });
         });
     }
+}
 }

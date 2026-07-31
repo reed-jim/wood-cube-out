@@ -5,6 +5,8 @@ using DG.Tweening;
 using System;
 using System.Collections;
 
+namespace BirdSort
+{
 public class TripleBirdLevelManager : SerializedMonoBehaviour
 {
     public TripleBirdMGLogic controller;
@@ -522,4 +524,5 @@ public class CountIdTile
     {
         this.id = ID;
     }
+}
 }

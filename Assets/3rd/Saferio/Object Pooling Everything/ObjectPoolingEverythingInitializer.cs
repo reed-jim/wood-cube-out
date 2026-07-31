@@ -203,6 +203,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
     {
+        if (prefab == null)
+        {
+            return;
+        }
+
         ObjectPool pool = new ObjectPool();
 
         pool.Init<T>(prefab, poolSize);
@@ -212,6 +217,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void RegisterPool<T>(string key, GameObject prefab, Transform parent, int poolSize)
     {
+        if (prefab == null)
+        {
+            return;
+        }
+
         ObjectPool pool = new ObjectPool();
 
         pool.Init<T>(prefab, parent, poolSize);
