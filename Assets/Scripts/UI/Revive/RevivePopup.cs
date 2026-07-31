@@ -15,7 +15,10 @@ public class RevivePopup : BasePopup
     [SerializeField] private Image reviveByDiamondButtonForeground;
     [SerializeField] private Image boosterImage;
     [SerializeField] private Button reviveByAdsButton;
+    [SerializeField] private Button reviveByCoinSingle;
+
     [SerializeField] private TMP_Text costText;
+    [SerializeField] private TMP_Text costTextSingle;
 
     [Header("COIN BALANCE")]
     [SerializeField] private RectTransform coinBalanceCointaner;
@@ -51,6 +54,7 @@ public class RevivePopup : BasePopup
     protected override void MoreActionInAwake()
     {
         costText.text = $"{boosterDataObserver.reviveCost}";
+        costTextSingle.text = $"{boosterDataObserver.reviveCost}";
 
         _reviveByDiamondButtonRT = reviveByDiamondButton.GetComponent<RectTransform>();
         _reviveByAdsButtonRT = reviveByAdsButton.GetComponent<RectTransform>();
@@ -65,6 +69,7 @@ public class RevivePopup : BasePopup
 
         reviveByDiamondButton.onClick.AddListener(ReviveByDiamond);
         reviveByAdsButton.onClick.AddListener(ReviveByAds);
+        reviveByCoinSingle.onClick.AddListener(ReviveByDiamond);
     }
 
     protected override void MoreActionOnDestroy()
@@ -121,6 +126,7 @@ public class RevivePopup : BasePopup
         UIUtil.SetSizeKeepRatioY(boosterImage, 0.2f * container.sizeDelta.x);
 
         reviveByDiamondButton.interactable = true;
+        reviveByCoinSingle.interactable = true;
 
         _currentBoosterOnRevive = boosterType;
 
@@ -137,6 +143,7 @@ public class RevivePopup : BasePopup
         userResourcesObserver.Load();
 
         reviveByDiamondButton.interactable = false;
+        reviveByCoinSingle.interactable = false;
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.reviveCost)
         {
@@ -147,6 +154,7 @@ public class RevivePopup : BasePopup
                 SaferioTracking.TrackReviveEvent(currentLevel.Value, "coin", _currentBoosterOnRevive, levelObserver.Progress);
 
                 reviveByDiamondButton.interactable = true;
+                reviveByCoinSingle.interactable = true;
             });
 
             userResourcesObserver.ChangeCoin(-boosterDataObserver.reviveCost);
@@ -161,7 +169,7 @@ public class RevivePopup : BasePopup
                     currentLevel.Value, "Coin",
                     200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
 
-            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Revive", 200, currentLevel.Value);
+            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Revive", 200, currentLevel.Value).Send();
 
             // userResourcesObserver.Save();
         }
@@ -172,6 +180,7 @@ public class RevivePopup : BasePopup
                 openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
 
                 reviveByDiamondButton.interactable = true;
+                reviveByCoinSingle.interactable = true;
             });
         }
     }
@@ -218,27 +227,31 @@ public class RevivePopup : BasePopup
     #region REMOTE CONFIG REWARDED AD
     private void SetupRewardedAdsButton(bool forceEnable = false)
     {
-        // bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
+        bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds;
 
-        // if (isEnableRewardedAds || forceEnable)
-        // {
-        //     reviveByAdsButton.gameObject.SetActive(true);
-        //     coinBalanceCointaner.gameObject.SetActive(false);
+        if (isEnableRewardedAds)
+        {
+            reviveByAdsButton.gameObject.SetActive(true);
+            reviveByCoinSingle.gameObject.SetActive(false);
+            reviveByDiamondButton.gameObject.SetActive(true);
+            //coinBalanceCointaner.gameObject.SetActive(false);
 
-        //     _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition;
-        //     _reviveByAdsButtonRT.localPosition = _reviveAdsButtonPosition;
-        // }
-        // else
-        // {
-        //     reviveByAdsButton.gameObject.SetActive(false);
-        //     coinBalanceCointaner.gameObject.SetActive(true);
+            //_reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition;
+            //_reviveByAdsButtonRT.localPosition = _reviveAdsButtonPosition;
+        }
+        else
+        {
+            reviveByDiamondButton.gameObject.SetActive(false);
+            reviveByAdsButton.gameObject.SetActive(false);
+            reviveByCoinSingle.gameObject.SetActive(true);
+            //coinBalanceCointaner.gameObject.SetActive(true);
 
-        //     // _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition - (_reviveCoinButtonPosition - _reviveAdsButtonPosition) / 2;
+            //_reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition - (_reviveCoinButtonPosition - _reviveAdsButtonPosition) / 2;
 
-        //     userResourcesObserver.Load();
+            //userResourcesObserver.Load();
 
-        //     coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
-        // }
+            //coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+        }
     }
     #endregion
 

@@ -2114,6 +2114,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da9d59708946344a8d8bf32214116b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1432852397666469984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2926384850954363530}
+  - component: {fileID: 7692151825950785380}
+  m_Layer: 0
+  m_Name: Magnetic Box
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2926384850954363530
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432852397666469984}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7692151825950785380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432852397666469984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Magnetic Box
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Bo\xEEte magn\xE9tique"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Magnetische Box
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Scatola magnetica
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30DE\u30B0\u30CD\u30C3\u30C8\u30DC\u30C3\u30AF\u30B9"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC790\uAE30 \uC0C1\uC790"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Caixa Magn\xE9tica"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041C\u0430\u0433\u043D\u0438\u0442\u043D\u0430\u044F \u043A\u043E\u0440\u043E\u0431\u043A\u0430"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Caja magn\xE9tica"
+    Object: {fileID: 0}
 --- !u!1 &1476361203180820364
 GameObject:
   m_ObjectHideFlags: 0
@@ -4042,6 +4115,89 @@ MonoBehaviour:
   - Language: Spanish
     Text: Paquete Semanal
     Object: {fileID: 0}
+--- !u!1 &2549043953453022880
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6346743566181737125}
+  - component: {fileID: 4444695768937303019}
+  m_Layer: 0
+  m_Name: Selecting one pulls both linked boxes into the waiting slots. Requires
+    2 adjacent slots
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6346743566181737125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2549043953453022880}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4444695768937303019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2549043953453022880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Selecting one pulls both linked boxes into the waiting slots. Requires
+      2 adjacent slots
+    Object: {fileID: 0}
+  - Language: French
+    Text: "En s\xE9lectionner une am\xE8ne les deux bo\xEEtes li\xE9es dans les emplacements
+      d\u2019attente. "
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Wenn Sie eines ausw\xE4hlen, werden beide verbundenen Boxen in die Wartef\xE4cher
+      gezogen. "
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: 'Selezionandone uno si trascinano entrambe le caselle collegate negli slot
+      di attesa. '
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "1 \u3064\u3092\u9078\u629E\u3059\u308B\u3068\u3001\u30EA\u30F3\u30AF\u3055\u308C\u305F\u4E21\u65B9\u306E\u30DC\u30C3\u30AF\u30B9\u304C\u5F85\u6A5F\u30B9\u30ED\u30C3\u30C8\u306B\u5F15\u304D\u8FBC\u307E\u308C\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD558\uB098\uB97C \uC120\uD0DD\uD558\uBA74 \uC5F0\uACB0\uB41C \uB450
+      \uC0C1\uC790\uAC00 \uBAA8\uB450 \uB300\uAE30 \uC2AC\uB86F\uC73C\uB85C \uB2F9\uACA8\uC9D1\uB2C8\uB2E4. "
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: 'Selecionar uma puxa ambas as caixas vinculadas para os slots de espera. '
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0440\u0438 \u0432\u044B\u0431\u043E\u0440\u0435 \u043E\u0434\u043D\u043E\u0433\u043E
+      \u0438\u0437 \u043D\u0438\u0445 \u043E\u0431\u0430 \u0441\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0445
+      \u044F\u0449\u0438\u043A\u0430 \u043F\u043E\u043C\u0435\u0449\u0430\u044E\u0442\u0441\u044F
+      \u0432 \u0441\u043B\u043E\u0442\u044B \u043E\u0436\u0438\u0434\u0430\u043D\u0438\u044F. "
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: 'Al seleccionar uno, ambas cajas vinculadas se colocan en las ranuras de
+      espera. '
+    Object: {fileID: 0}
 --- !u!1 &2567119999190137008
 GameObject:
   m_ObjectHideFlags: 0
@@ -4424,6 +4580,10 @@ MonoBehaviour:
   startFreezeSoundPrefab: {fileID: 7606835583939712495, guid: db5b0ffd200286f46a26df36cc43d6a3, type: 3}
   iceBreakSoundPrefab: {fileID: 7606835583939712495, guid: 6b6fb74965827734da56b2c47b379873, type: 3}
   boosterAppearSoundPrefab: {fileID: 7606835583939712495, guid: 33a9f735f0f6ee94e9007ec65df7319d, type: 3}
+  openBoxSoundPrefab: {fileID: 7606835583939712495, guid: 4a7618402fbeca843949650723393a0a, type: 3}
+  closeBoxSoundPrefab: {fileID: 7606835583939712495, guid: eb0118a3943a7004d8d7f20bd1b8bb49, type: 3}
+  linkMagnetSoundPrefab: {fileID: 7606835583939712495, guid: c0d2dd589bb6c884c9fb72bc62a9a669, type: 3}
+  spawnPopSoundPrefab: {fileID: 7606835583939712495, guid: 1eb012d391ae03648986d17b204b7147, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
@@ -4434,16 +4594,24 @@ MonoBehaviour:
   baseTile: {fileID: 7515087262887657689, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
   fakeTilePrefab: {fileID: 7515087262887657689, guid: 0cb926ee7f35018418e0c0171d4f9080, type: 3}
   tilemapPrefab: {fileID: 5196122292102480756, guid: e0c172cfcbdcd774caefec61dcb77b35, type: 3}
-  spawningTileBoxPrefab: {fileID: 1148281578818409660, guid: 2c95032c910aae44bb453d83d540b918, type: 3}
   washingMachineItemPrefab: {fileID: 1148281578818409660, guid: 9f39d111f9cc954499c2f5ce7c22292e, type: 3}
   clothingPiecePrefab: {fileID: 2626563146641554035, guid: e9ab9a5bf6d05f04aad5b1a7711f2fac, type: 3}
   pathSlotPrefab: {fileID: 8262014832508821915, guid: 405925f23c037394883c206d0062ff77, type: 3}
   antPrefab: {fileID: 7633806343919385861, guid: aa33b135fe1e51244981be52b7a24013, type: 3}
+  warriorAntPrefab: {fileID: 7633806343919385861, guid: a1093a7d7ae60b74ba4db62d1ad2d3b9, type: 3}
+  snakeAntPrefab: {fileID: 7633806343919385861, guid: b5e5c67bd4ab7e345a9c4d843bd2d420, type: 3}
   antDissapearFxPrefab: {fileID: 8771972552311404799, guid: a806ac4e48a08384489710603e06a4f5, type: 3}
   antBoxLink: {fileID: 8191369023376492896, guid: efe107045a350dd4cb69f45337a55424, type: 3}
+  magnetAntBoxLink: {fileID: 8191369023376492896, guid: 769247fb39f5c1b46a7012430340833e, type: 3}
   hiddenAntBoxPrefab: {fileID: 1148281578818409660, guid: 54c4430010aef93428b84faba86b06ab, type: 3}
   freezedAntBoxPrefab: {fileID: 1148281578818409660, guid: 856c72489e336414f8e71f84ca31a605, type: 3}
+  warriorAntBoxPrefab: {fileID: 1148281578818409660, guid: c111b72bbfbf4ac43a9572ef04fffacc, type: 3}
+  openCloseAntBoxPrefab: {fileID: 1148281578818409660, guid: 77dc09db7b31c7e49aa7a3ec76d39427, type: 3}
+  snakeAntBoxPrefab: {fileID: 1148281578818409660, guid: 5568b30cb16beef4e8927bad9ab95a2b, type: 3}
   tileRemainingPrefab: {fileID: 1182540883955536169, guid: 4ab92e46da006624793a2706211be288, type: 3}
+  missilePrefab: {fileID: 1182540883955536169, guid: a8e0d0a2ae8044e4d995916ca47e659a, type: 3}
+  keyAntBoxPrefab: {fileID: 1148281578818409660, guid: 148286370bc0a744a8edb0e2c2764500, type: 3}
+  damageTextPrefab: {fileID: 7633806343919385861, guid: f7b72f24080ac794cbeca31b8d2591de, type: 3}
 --- !u!1 &2840574385503466499
 GameObject:
   m_ObjectHideFlags: 0
@@ -5230,6 +5398,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Fallido
     Object: {fileID: 0}
+--- !u!1 &3197184025725191060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6619569548542205114}
+  - component: {fileID: 7723997522647462851}
+  m_Layer: 0
+  m_Name: Locks a region of tiles. Clear tiles to reduce the counter and break it
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6619569548542205114
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3197184025725191060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7723997522647462851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3197184025725191060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Locks a region of tiles. Clear tiles to reduce the counter and break it
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Verrouille une r\xE9gion de tuiles. "
+    Object: {fileID: 0}
+  - Language: German
+    Text: 'Sperrt einen Kachelbereich. '
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: 'Blocca una regione di tessere. '
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30BF\u30A4\u30EB\u306E\u9818\u57DF\u3092\u30ED\u30C3\u30AF\u3057\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD0C0\uC77C \\u200b\\u200b\uC601\uC5ED\uC744 \uC7A0\uAE09\uB2C8\uB2E4. "
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Bloqueia uma regi\xE3o de blocos. "
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0411\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442 \u043E\u0431\u043B\u0430\u0441\u0442\u044C
+      \u043F\u043B\u0438\u0442\u043E\u043A. "
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Bloquea una regi\xF3n de mosaicos. "
+    Object: {fileID: 0}
 --- !u!1 &3208417433034009727
 GameObject:
   m_ObjectHideFlags: 0
@@ -5686,6 +5928,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Configurar perfil
+    Object: {fileID: 0}
+--- !u!1 &3596877310943232029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8439072589204572968}
+  - component: {fileID: 3255727249873840383}
+  m_Layer: 0
+  m_Name: Hard Tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8439072589204572968
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3596877310943232029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3255727249873840383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3596877310943232029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Hard Tiles
+    Object: {fileID: 0}
+  - Language: French
+    Text: Tuiles dures
+    Object: {fileID: 0}
+  - Language: German
+    Text: Harte Fliesen
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Piastrelle dure
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30CF\u30FC\u30C9\u30BF\u30A4\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2E8\uB2E8\uD55C \uD0C0\uC77C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Ladrilhos Duros
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0422\u0432\u0435\u0440\u0434\u0430\u044F \u043F\u043B\u0438\u0442\u043A\u0430"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Azulejos duros
     Object: {fileID: 0}
 --- !u!1 &3601538918192833633
 GameObject:
@@ -7832,6 +8147,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Borrar agujeros
     Object: {fileID: 0}
+--- !u!1 &4544136504824563666
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2078312484244912260}
+  - component: {fileID: 6098675983564181167}
+  m_Layer: 0
+  m_Name: Spawn Tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2078312484244912260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544136504824563666}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6098675983564181167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544136504824563666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawn Tiles
+    Object: {fileID: 0}
+  - Language: French
+    Text: Tuiles d'apparition
+    Object: {fileID: 0}
+  - Language: German
+    Text: Spawn-Kacheln
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Tessere di generazione
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30DD\u30FC\u30F3\u30BF\u30A4\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD0C0\uC77C \\u200b\\u200b\uC0DD\uC131"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Ladrilhos de Gera\xE7\xE3o"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043B\u0438\u0442\u043A\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u044F"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Azulejos de generaci\xF3n"
+    Object: {fileID: 0}
 --- !u!1 &4544957826969965292
 GameObject:
   m_ObjectHideFlags: 0
@@ -8384,6 +8772,163 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 1015
+--- !u!1 &4766215079255574196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2324279635020132534}
+  - component: {fileID: 1276629158781210064}
+  m_Layer: 0
+  m_Name: Toggle Box
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2324279635020132534
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4766215079255574196}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1276629158781210064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4766215079255574196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Toggle Box
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Bo\xEEte \xE0 bascule"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Umschaltfeld
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Casella di commutazione
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C8\u30B0\u30EB\u30DC\u30C3\u30AF\u30B9"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD1A0\uAE00\uBC15\uC2A4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Caixa de altern\xE2ncia"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043F\u043E\u043B\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cuadro de alternancia
+    Object: {fileID: 0}
+--- !u!1 &4832577944382079428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 357129858098490128}
+  - component: {fileID: 9210073177220888798}
+  m_Layer: 0
+  m_Name: Spawns a matching tile whenever one is cleared until its counter hits zero
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &357129858098490128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4832577944382079428}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9210073177220888798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4832577944382079428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawns a matching tile whenever one is cleared until its counter hits zero
+    Object: {fileID: 0}
+  - Language: French
+    Text: "G\xE9n\xE8re une tuile correspondante chaque fois qu'une est effac\xE9e
+      jusqu'\xE0 ce que son compteur atteigne z\xE9ro"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Erzeugt jedes Mal ein passendes Pl\xE4ttchen, wenn eines abger\xE4umt
+      wird, bis sein Z\xE4hler Null erreicht"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Genera una tessera corrispondente ogni volta che una viene eliminata finch\xE9
+      il suo contatore non raggiunge lo zero"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AB\u30A6\u30F3\u30BF\u30FC\u304C\u30BC\u30ED\u306B\u306A\u308B\u307E\u3067\u3001\u30BF\u30A4\u30EB\u304C\u30AF\u30EA\u30A2\u3055\u308C\u308B\u305F\u3073\u306B\u4E00\u81F4\u3059\u308B\u30BF\u30A4\u30EB\u3092\u751F\u6210\u3057\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uCE74\uC6B4\uD130\uAC00 0\uC5D0 \uB3C4\uB2EC\uD560 \uB54C\uAE4C\uC9C0
+      \uD0C0\uC77C\uC774 \uC9C0\uC6CC\uC9C8 \uB54C\uB9C8\uB2E4 \uC77C\uCE58\uD558\uB294
+      \uD0C0\uC77C\uC744 \uC0DD\uC131\uD569\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Gera uma pe\xE7a correspondente sempre que uma \xE9 limpa at\xE9 que seu
+      contador chegue a zero"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0437\u0434\u0430\u0435\u0442 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0443\u044E
+      \u043F\u043B\u0438\u0442\u043A\u0443 \u0432\u0441\u044F\u043A\u0438\u0439 \u0440\u0430\u0437,
+      \u043A\u043E\u0433\u0434\u0430 \u043E\u043D\u0430 \u043E\u0447\u0438\u0449\u0430\u0435\u0442\u0441\u044F,
+      \u043F\u043E\u043A\u0430 \u0435\u0435 \u0441\u0447\u0435\u0442\u0447\u0438\u043A
+      \u043D\u0435 \u0434\u043E\u0441\u0442\u0438\u0433\u043D\u0435\u0442 \u043D\u0443\u043B\u044F."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Genera una ficha correspondiente cada vez que se elimina una hasta que
+      su contador llega a cero
+    Object: {fileID: 0}
 --- !u!1 &4841730450718879905
 GameObject:
   m_ObjectHideFlags: 0
@@ -9623,6 +10168,16 @@ Transform:
   - {fileID: 4569982207386793711}
   - {fileID: 7181139005054408791}
   - {fileID: 2511448271447738636}
+  - {fileID: 2324279635020132534}
+  - {fileID: 2926384850954363530}
+  - {fileID: 3609601848948173048}
+  - {fileID: 486084086100860953}
+  - {fileID: 6619569548542205114}
+  - {fileID: 7590003553181876934}
+  - {fileID: 6346743566181737125}
+  - {fileID: 357129858098490128}
+  - {fileID: 8439072589204572968}
+  - {fileID: 2078312484244912260}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -15229,6 +15784,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: "\xA1Ganaste!"
     Object: {fileID: 0}
+--- !u!1 &8115466613062138592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 486084086100860953}
+  - component: {fileID: 3241520186184340842}
+  m_Layer: 0
+  m_Name: Spawn Pixel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &486084086100860953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115466613062138592}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3241520186184340842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115466613062138592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawn Pixel
+    Object: {fileID: 0}
+  - Language: French
+    Text: Pixel d'apparition
+    Object: {fileID: 0}
+  - Language: German
+    Text: Spawn-Pixel
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Genera Pixel
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30DD\u30FC\u30F3\u30D4\u30AF\u30BB\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD53D\uC140 \uC0DD\uC131"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Gerar Pixel
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u0438\u043A\u0441\u0435\u043B\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Generar p\xEDxel"
+    Object: {fileID: 0}
 --- !u!1 &8117800609564227789
 GameObject:
   m_ObjectHideFlags: 0
@@ -15954,6 +16582,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: "\xA1Desbloquee todas las cajas de tornillo!"
     Object: {fileID: 0}
+--- !u!1 &8369890834659119906
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3609601848948173048}
+  - component: {fileID: 1824429408527258218}
+  m_Layer: 0
+  m_Name: Hard Pixel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3609601848948173048
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8369890834659119906}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1824429408527258218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8369890834659119906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Hard Pixel
+    Object: {fileID: 0}
+  - Language: French
+    Text: Pixel dur
+    Object: {fileID: 0}
+  - Language: German
+    Text: Hartes Pixel
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pixel duro
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30CF\u30FC\u30C9\u30D4\u30AF\u30BB\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD558\uB4DC \uD53D\uC140"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Pixel r\xEDgido"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0416\u0435\u0441\u0442\u043A\u0438\u0439 \u043F\u0438\u043A\u0441\u0435\u043B\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "P\xEDxel duro"
+    Object: {fileID: 0}
 --- !u!1 &8492624515224176491
 GameObject:
   m_ObjectHideFlags: 0
@@ -16291,6 +16992,86 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "\xA1Ganar niveles!"
+    Object: {fileID: 0}
+--- !u!1 &8642568619692178454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7590003553181876934}
+  - component: {fileID: 7803279179110453378}
+  m_Layer: 0
+  m_Name: Toggles open or closed whenever any Ant Box is selected
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7590003553181876934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8642568619692178454}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7803279179110453378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8642568619692178454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Toggles open or closed whenever any Ant Box is selected
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Bascule l'ouverture ou la fermeture chaque fois qu'une bo\xEEte \xE0 fourmis
+      est s\xE9lectionn\xE9e"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Wird ge\xF6ffnet oder geschlossen, wenn eine Ameisenbox ausgew\xE4hlt
+      wird"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Attiva/disattiva l'apertura o la chiusura ogni volta che viene selezionata
+      una scatola delle formiche
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "Ant Box \u304C\u9078\u629E\u3055\u308C\u308B\u305F\u3073\u306B\u3001\u958B\u9589\u3092\u5207\u308A\u66FF\u3048\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "Ant Box\uB97C \uC120\uD0DD\uD560 \uB54C\uB9C8\uB2E4 \uC5F4\uB9AC\uAC70\uB098
+      \uB2EB\uD788\uB3C4\uB85D \uC804\uD658\uD569\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Alterna entre aberto ou fechado sempre que qualquer Ant Box for selecionado
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0435\u0442 \u0438\u043B\u0438
+      \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u043A\u0430\u0436\u0434\u044B\u0439
+      \u0440\u0430\u0437, \u043A\u043E\u0433\u0434\u0430 \u0432\u044B\u0431\u0440\u0430\u043D
+      \u043A\u0430\u043A\u043E\u0439-\u043B\u0438\u0431\u043E Ant Box."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Se abre o se cierra cada vez que se selecciona cualquier Ant Box
     Object: {fileID: 0}
 --- !u!1 &8646290984459753504
 GameObject:

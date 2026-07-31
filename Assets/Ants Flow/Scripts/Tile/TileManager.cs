@@ -96,6 +96,30 @@ namespace AntsFlow
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
             // BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
+
+            // Chụp lại z gốc của shadowTilemap (giá trị nhánh ants-flow) 1 lần.
+            // Không ép z ở đây vì Awake chạy trước khi StartLevel set flag; áp per-level qua ApplyShadowTilemapDepth.
+            if (shadowTilemap != null && !hasShadowTilemapInitialZ)
+            {
+                shadowTilemapInitialZ = shadowTilemap.transform.localPosition.z;
+                hasShadowTilemapInitialZ = true;
+            }
+        }
+
+        private float shadowTilemapInitialZ;
+        private bool hasShadowTilemapInitialZ;
+
+        // Level mới (special element): shadowTilemap về z = 4f. Level cũ (ants-flow): giữ z gốc.
+        public void ApplyShadowTilemapDepth(bool isLevelContainingNewSpecialElements)
+        {
+            if (shadowTilemap == null)
+            {
+                return;
+            }
+
+            var localPos = shadowTilemap.transform.localPosition;
+            float z = isLevelContainingNewSpecialElements ? 4f : shadowTilemapInitialZ;
+            shadowTilemap.transform.localPosition = new Vector3(localPos.x, localPos.y, z);
         }
 
         void OnDestroy()
@@ -108,7 +132,6 @@ namespace AntsFlow
         public Vector3 GetTilePosition(BaseTile tile)
         {
             return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1);
-            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.3f, 0.3f);
         }
 
         public void RevealTile(BaseTile tile)
@@ -519,48 +542,49 @@ namespace AntsFlow
         {
             foreach (var node in nodes)
             {
+                // if (node.isObstacle)
+                // {
+                //     continue;
+                // }
+
+                // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
+
+                // if (node.tile != null && node.tile.isLocked)
+                // {
+                //     Gizmos.color = Color.green;
+
+                //     Gizmos.DrawSphere(node.initialPosition, 0.1f);
+                //     // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
+                // }
+
                 if (node.isObstacle)
                 {
-                    continue;
-                }
-
-                if (node.tile == null)
-                {
                     Gizmos.color = Color.green;
-
                     Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
-
-                    DrawConnectors(node);
+                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)}");
                 }
-                else
-                {
-                    if (node.tile.isMovedToAnt || node.tile.isDone || node.isStarter)
-                    {
-                        Gizmos.color = Color.green;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.1f);
-                        Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
-                        // Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} ({node.tile.tileName})");
+                // if (node.tile == null)
+                // {
+                //     Gizmos.color = Color.green;
 
-                        DrawConnectors(node);
-                    }
-                    // else
-                    // {
-                    //     Gizmos.color = Color.red;
+                //     Gizmos.DrawSphere(node.initialPosition, 0.1f);
+                //     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
 
-                    //     Gizmos.DrawSphere(node.initialPosition, 0.15f);
-                    //     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
-                    // }
+                //     // DrawConnectors(node);
+                // }
+                // else
+                // {
+                //     if (node.tile.isMovedToAnt || node.tile.isDone || node.isStarter)
+                //     {
+                //         Gizmos.color = Color.green;
 
-                    // if (node.tile.isAntApproaching)
-                    // {
-                    //     Gizmos.color = Color.yellow;
+                //         Gizmos.DrawSphere(node.initialPosition, 0.1f);
+                //         Handles.Label(node.initialPosition.AddY(0.2f).AddZ(-0.3f), $"{nodes.IndexOf(node)} - {node.EdgePriority}");
 
-                    //     Gizmos.DrawSphere(node.initialPosition.AddY(0.31f), 0.15f);
-                    //     Handles.Label(node.initialPosition.AddY(0.61f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
-                    // }
-                }
+                //         // DrawConnectors(node);
+                //     }
+                // }
 
                 // Gizmos.DrawSphere(node.initialPosition, 0.2f);
 
@@ -732,6 +756,110 @@ namespace AntsFlow
                     }
 
                     if (isBlocked && !isReachTarget)
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor);
+                    parent[neighbor] = current;
+
+                    if (neighbor.EdgePriority <= 3)
+                    {
+                        edgeQueue.Enqueue(neighbor);
+                    }
+                    else
+                    {
+                        normalQueue.Enqueue(neighbor);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public List<BaseTile> GetFirstNMovableTilesForWarriorAnts(int count, Vector2 antBoxPosition)
+        {
+            Node start = bottomMostNodes
+                    .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
+                    .First();
+
+            var result = new List<BaseTile>();
+            Queue<Node> edgeQueue = new();
+            Queue<Node> normalQueue = new();
+            var visited = new HashSet<Node>();
+            var parent = new Dictionary<Node, Node>();
+
+            edgeQueue.Enqueue(start);
+            visited.Add(start);
+            parent[start] = null;
+
+            while ((edgeQueue.Count > 0 || normalQueue.Count > 0) && result.Count < count)
+            {
+                Node current = edgeQueue.Count > 0
+                    ? edgeQueue.Dequeue()
+                    : normalQueue.Dequeue();
+
+                if (current.tile != null && current.tile.isDone)
+                {
+                    current.tile.path = ReconstructPath(current, parent);
+
+                    result.Add(current.tile);
+                }
+
+                if (current.tile != null)
+                {
+                    if (
+                        !current.isStarter &&
+                        !current.tile.isMovedToAnt &&
+                        !current.tile.isDone
+                    )
+                    {
+                        continue;
+                    }
+                }
+
+                if (current.isObstacle)
+                {
+                    continue;
+                }
+
+                foreach (var neighbor in current.neighbors)
+                {
+                    if (visited.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    bool isBlocked = true;
+
+                    if (neighbor.tile == null)
+                    {
+                        isBlocked = false;
+                    }
+                    else
+                    {
+                        if (neighbor.tile.isMovedToAnt || neighbor.tile.isDone)
+                        {
+                            isBlocked = false;
+                        }
+                    }
+
+                    if
+                    (
+                        current.tile != null &&
+                        !current.tile.isMovedToAnt &&
+                        !current.tile.isDone
+                    )
+                    {
+                        isBlocked = true;
+                    }
+
+                    if (neighbor.isObstacle)
+                    {
+                        isBlocked = true;
+                    }
+
+                    if (isBlocked)
                     {
                         continue;
                     }
@@ -1103,8 +1231,8 @@ namespace AntsFlow
 
                 if (!tile.isDone &&
                     tile.Faction == faction &&
-                    !tile.isAntApproaching &&
-                    !tile.isLocked
+                    !tile.isAntApproaching
+                //&&!tile.isLocked
                 )
                 {
                     validTiles.Add(tile);
@@ -1120,6 +1248,7 @@ namespace AntsFlow
         {
             UpdateTileCount();
             CheckWinLevel();
+            HardPixelManager.Ins.OnTileCompleted();
         }
 
         public void UpdateNavMesh(BaseTile tile)
@@ -1337,6 +1466,13 @@ namespace AntsFlow
         }
 
         public List<GridNode> grids;
+
+        #region Util
+        public Vector3 GetTilemapPostionWithLowerZ()
+        {
+            return tilemap.transform.position.AddZ(-1);
+        }
+        #endregion
     }
 }
 

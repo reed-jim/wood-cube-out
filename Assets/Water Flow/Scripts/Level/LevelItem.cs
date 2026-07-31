@@ -151,6 +151,16 @@ namespace AntsFlow
             AssetDatabase.Refresh();
 #endif
         }
+
+        public void ClearAllSpecialElements()
+        {
+            specialElementConfig = new SpecialElementConfig();
+        }
+
+        public void RandomizeSpecialElements()
+        {
+            specialElementConfig = new SpecialElementConfig();
+        }
     }
 
 #if UNITY_EDITOR
@@ -169,6 +179,14 @@ namespace AntsFlow
         public float difficulty;
         public float moveTilesCloserFactor = 0.9f;
         public FactionMapper factionMapper;
+
+        #region Snake
+        private bool snakeConfigMode;
+        private bool isPainting;
+        private bool isShowingNodeId;
+        private bool paintValue; // true = add, false = remove
+        private readonly HashSet<int> paintedThisDrag = new();
+        #endregion
 
         public override void OnInspectorGUI()
         {
@@ -220,6 +238,33 @@ namespace AntsFlow
             if (GUILayout.Button("Convert to JSON"))
             {
                 levelItem.ConvertToJson();
+            }
+
+            if (GUILayout.Button("Clear All Special Elements"))
+            {
+                levelItem.ClearAllSpecialElements();
+            }
+
+            if (GUILayout.Button(
+            snakeConfigMode
+                ? "Disable Snake Config Mode"
+                : "Enable Snake Config Mode"))
+            {
+                snakeConfigMode = !snakeConfigMode;
+
+                // Force Scene view repaint
+                SceneView.RepaintAll();
+            }
+
+            if (GUILayout.Button(
+            isShowingNodeId
+                ? "Hide Node Id"
+                : "Show Node Id"))
+            {
+                isShowingNodeId = !isShowingNodeId;
+
+                // Force Scene view repaint
+                SceneView.RepaintAll();
             }
 
             // if (GUILayout.Button("Step 1: ReadLevel"))
@@ -275,6 +320,244 @@ namespace AntsFlow
             // {
             //     FillTheRestOfLevel(levelItem);
             // }
+        }
+
+        private void OnSceneGUI()
+        {
+            ConfiguringSnake();
+        }
+
+        private void ConfiguringSnake()
+        {
+            if (!snakeConfigMode)
+                return;
+
+            LevelItem level = (LevelItem)target;
+
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+
+            Event e = Event.current;
+
+            if (e.type == EventType.MouseUp && e.button == 0)
+            {
+                isPainting = false;
+                paintedThisDrag.Clear();
+            }
+
+            int index = 0;
+
+            int numColumn = level.numColumn + 2;
+            int numRow = level.numRow + 2;
+            float tileDistance = 0.1f;
+
+            BaseTile[,] tileAtCoordinate = new BaseTile[numColumn, numRow];
+
+            for (int i = 0; i < level.tiles.Count; i++)
+            {
+                BaseTile tile = level.tiles[i];
+                tileAtCoordinate[(int)tile.position.x + 1, (int)tile.position.y + 1] = tile;
+            }
+
+            // Background
+            float backgroundWidth = 10;
+
+            Vector3[] background =
+            {
+        new Vector3(-backgroundWidth, -backgroundWidth, 1),
+        new Vector3(-backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, -backgroundWidth, 1),
+    };
+
+            Handles.DrawSolidRectangleWithOutline(
+                background,
+                new Color(0f, 0f, 0f, 0.85f),
+                Color.white);
+
+            // Highlight Hard Pixels
+            if (level.specialElementConfig != null && level.specialElementConfig.hardPixelConfigs != null)
+            {
+                foreach (var config in level.specialElementConfig.hardPixelConfigs)
+                {
+                    if (config.startNodeId >= 0)
+                    {
+                        int startX = config.startNodeId % numColumn;
+                        int startY = config.startNodeId / numColumn;
+
+                        float left = (startX - 0.5f) * tileDistance;
+                        float right = (startX + config.numCols - 0.5f) * tileDistance;
+                        float bottom = (startY - 0.5f) * tileDistance;
+                        float top = (startY + config.numRows - 0.5f) * tileDistance;
+
+                        Vector3[] corners =
+                        {
+                            new Vector3(left, bottom, 0.5f),
+                            new Vector3(left, top, 0.5f),
+                            new Vector3(right, top, 0.5f),
+                            new Vector3(right, bottom, 0.5f)
+                        };
+
+                        Handles.DrawSolidRectangleWithOutline(
+                            corners,
+                            new Color(1f, 0.5f, 0f, 0.25f), // Orange fill with transparency
+                            new Color(1f, 0.5f, 0f, 1f)    // Solid orange outline
+                        );
+
+                        Vector3 centerPos = new Vector3((left + right) * 0.5f, (bottom + top) * 0.5f, 0);
+                        GUIStyle labelStyle = new GUIStyle(EditorStyles.whiteBoldLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 11
+                        };
+                        labelStyle.normal.textColor = new Color(1f, 0.7f, 0f, 1f);
+                        Handles.Label(centerPos + Vector3.up * 0.02f, $"HP {config.id}\n({config.numCols}x{config.numRows})", labelStyle);
+                    }
+                }
+            }
+
+            for (int y = 0; y < numRow; y++)
+            {
+                for (int x = 0; x < numColumn; x++)
+                {
+                    Vector3 worldPos = tileDistance * new Vector2(x, y);
+
+                    if (level.specialElementConfig.snakeConfig.snakeSegmentIndexes == null)
+                    {
+                        level.specialElementConfig.snakeConfig.snakeSegmentIndexes = new List<int>();
+                    }
+
+                    bool selected = level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index);
+
+                    float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
+
+                    BaseTile tile = tileAtCoordinate[x, y];
+
+                    if (tile != null)
+                    {
+                        Handles.color = tile.Faction;
+                        Handles.DrawSolidDisc(
+                            worldPos,
+                            SceneView.currentDrawingSceneView.camera.transform.forward,
+                            0.75f * size);
+                    }
+
+                    Handles.color = selected ? Color.green : Color.gray;
+                    Handles.DrawWireDisc(
+                        worldPos,
+                        SceneView.currentDrawingSceneView.camera.transform.forward,
+                        size);
+
+                    // Node id
+                    if (isShowingNodeId)
+                    {
+                        GUIStyle style = new GUIStyle(EditorStyles.whiteBoldLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 11
+                        };
+                        style.normal.textColor = Color.yellow;
+
+                        Handles.Label(worldPos + Vector3.up * 0.05f, $"{x + y * numColumn}", style);
+                    }
+
+                    // Detect mouse over this circle
+                    if (HandleUtility.DistanceToCircle(worldPos, size) == 0)
+                    {
+                        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+
+                        if (e.type == EventType.MouseDown && e.button == 0)
+                        {
+                            Undo.RecordObject(level, "Snake Paint");
+
+                            paintValue = !selected;
+                            isPainting = true;
+                            paintedThisDrag.Clear();
+
+                            if (paintValue)
+                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
+                            else
+                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
+
+                            paintedThisDrag.Add(index);
+
+                            EditorUtility.SetDirty(level);
+                            e.Use();
+                        }
+                        else if (isPainting &&
+                                 e.type == EventType.MouseDrag &&
+                                 !paintedThisDrag.Contains(index))
+                        {
+                            Undo.RecordObject(level, "Snake Paint");
+
+                            if (paintValue)
+                            {
+                                if (!level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index))
+                                    level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
+                            }
+                            else
+                            {
+                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
+                            }
+
+                            paintedThisDrag.Add(index);
+
+                            EditorUtility.SetDirty(level);
+                            e.Use();
+                        }
+                    }
+
+                    index++;
+                }
+            }
+
+            Vector3 previousPos = Vector3.zero;
+            bool hasPrevious = false;
+
+            for (int i = 0; i < level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Count; i++)
+            {
+                index = level.specialElementConfig.snakeConfig.snakeSegmentIndexes[i];
+
+                int x = index % numColumn;
+                int y = index / numColumn;
+
+                Vector3 worldPos = new Vector3(x * tileDistance, y * tileDistance, 0);
+
+                if (hasPrevious)
+                    DrawArrow(previousPos, worldPos, 0.05f, 20f);
+
+                previousPos = worldPos;
+                hasPrevious = true;
+            }
+
+            if (GUI.changed)
+                SceneView.RepaintAll();
+        }
+
+        private void DrawArrow(Vector3 from, Vector3 to, float headLength, float headAngle)
+        {
+            float lineWidth = 5f; // thickness
+
+            // Thick line
+            Handles.color = Color.green;
+            Handles.DrawAAPolyLine(lineWidth, from, to);
+
+            Vector3 direction = (to - from).normalized;
+
+            Vector3 left = Quaternion.Euler(0, 0, headAngle) * -direction;
+            Vector3 right = Quaternion.Euler(0, 0, -headAngle) * -direction;
+
+            // Thicker arrow head
+            Handles.DrawAAPolyLine(
+                lineWidth,
+                to,
+                to + left * headLength
+            );
+
+            Handles.DrawAAPolyLine(
+                lineWidth,
+                to,
+                to + right * headLength
+            );
         }
 
         private void FillFactionPool()
@@ -1056,15 +1339,64 @@ public class LevelItemData
 
 
 [Serializable]
+public class HardPixelConfig : ISerializationCallbackReceiver
+{
+    public int id;
+    public int startNodeId;
+    public int numRows;
+    public int numCols;
+    public int requiredEatCount;
+    public GameObject prefab;
+    public int prefabIndex;
+    public bool isShowText;
+    public float rotationAngle;
+    public float scaleWidth = 1.01f;
+    public float scaleHeight = 1.055f;
+    public float offsetX;
+    public float offsetY;
+
+    public HardPixelConfig()
+    {
+        scaleWidth = 1.01f;
+        scaleHeight = 1.055f;
+    }
+
+    public void OnBeforeSerialize()
+    {
+    }
+
+    public void OnAfterDeserialize()
+    {
+        if (scaleWidth <= 0)
+        {
+            scaleWidth = 1.01f;
+        }
+        if (scaleHeight <= 0)
+        {
+            scaleHeight = 1.055f;
+        }
+    }
+}
+
+[Serializable]
 public class SpecialElementConfig
 {
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
     public SpecialElementItemConfig doubleAntBoxConfig;
+    public SpecialElementItemConfig magnetAntBoxConfig;
     public SpawningTileBoxConfig spawningTileBoxConfig;
+    public BossAreaConfig bossAreaConfig;
+    public OpenCloseAntBoxConfig openCloseAntBoxConfig;
+    public List<HardPixelConfig> hardPixelConfigs;
+    public LockedSlotConfig lockedSlotConfig;
+    public SnakeConfig snakeConfig;
     public bool isContainsHiddenTiles;
     public bool isContainsWallTiles;
+
+
 }
+
 
 [Serializable]
 public class SpecialElementItemConfig
@@ -1086,8 +1418,13 @@ public class SpecialElementItemConfig
         return spawnOrder.Contains(numAntBoxesSpawned);
     }
 
-    public bool IsValidToSpawn(int numAntBoxesSpawned)
+    public virtual bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
     {
+        if (spawnOrder == null)
+        {
+            return false;
+        }
+
         List<int> remainingColumns = new List<int>() { 0, 1, 2 };
 
         for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
@@ -1107,7 +1444,6 @@ public class SpecialElementItemConfig
         {
             return false;
         }
-
         return GetNumLeft() > 0 && IsCorrectOrder(numAntBoxesSpawned);
     }
 }
@@ -1129,4 +1465,44 @@ public class SpawningTileBoxItemConfig
 {
     public Color faction;
     public int number;
+}
+
+[Serializable]
+public class BossAreaConfig : SpecialElementItemConfig
+{
+    public int startNodeId;
+    public int numCoverColumn;
+    public int numCoverRow;
+    public int bossHealth;
+
+    public override bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
+    {
+        if (spawnOrder == null)
+        {
+            return false;
+        }
+        return GetNumLeft() > 0 && IsCorrectOrder(numAntBoxesSpawned);
+    }
+}
+
+[Serializable]
+public class SnakeConfig : SpecialElementItemConfig
+
+{
+    public List<int> snakeSegmentIndexes;
+    public int health;
+}
+
+
+[Serializable]
+public class OpenCloseAntBoxConfig : SpecialElementItemConfig
+{
+    public List<bool> initialStates;
+}
+
+[Serializable]
+public class LockedSlotConfig
+{
+    public List<int> lockedSlotIndices;
+    public SpecialElementItemConfig keyAntBoxConfig;
 }

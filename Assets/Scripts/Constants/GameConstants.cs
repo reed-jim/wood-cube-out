@@ -86,6 +86,12 @@ public static class GameConstants
     public static string startFreezeSound = "startFreezeSound";
     public static string iceBreakSound = "iceBreakSound";
     public static string boosterAppearSound = "boosterAppearSound";
+    public static string openBoxSound = "openBoxSound";
+    public static string closeBoxSound = "closeBoxSound";
+    public static string linkMagnetSound = "linkMagnetSound";
+    public static string spawnPopSound = "spawnPopSound";
+    public static string woodBreakStateSound = "woodBreakStateSound";
+    public static string woodBreakEndSound = "woodBreakEndSound";
     #endregion
 
     #region ANIMATION
@@ -255,19 +261,29 @@ public static class GameConstants
     public static string tile = "tile";
     #endregion
 
-    #region Washing Machine
+    #region Ant Out
     public static string washingMachine = "washingMachine";
     public static string clothingPiece = "clothingPiece";
     public static string pathSlot = "pathSlot";
     public static string ant = "ant";
+    public static string warriorAnt = "warriorAnt";
+    public static string snakeAnt = "snakeAnt";
     public static string antDissapearFxPrefab = "antDissapearFxPrefab";
     public static string antBoxLink = "antBoxLink";
+    public static string magnetAntBoxLink = "magnetAntBoxLink";
     public static string hiddenAntBox = "hiddenAntBox";
     public static string freezedAntBox = "freezedAntBox";
+    public static string warriorAntBox = "warriorAntBox";
+    public static string openCloseAntBox = "openCloseAntBox";
+    public static string keyAntBox = "keyAntBox";
+    public static string snakeAntBox = "snakeAntBox";
     public static string tileRemaining = "tileRemaining";
+
     public static string fakeTile = "fakeTile";
     public static string tileMap = "tileMap";
     public static string tileObstacle = "tileObstacle";
     public static string spawningTileBox = "spawningTileBox";
+    public static string missile = "missile";
+    public static string damageText = "damageText";
     #endregion
 }
