@@ -21,6 +21,7 @@ public class WashingMachineItem : MonoBehaviour
     public Vector3 pileCenter;
     public SpriteRenderer bucketSprite;
     public SpriteRenderer bucketTopSprite;
+    public SpriteRenderer grainSprite;
     #endregion
 
     public SpriteRenderer lid;
@@ -158,8 +159,11 @@ public class WashingMachineItem : MonoBehaviour
         // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
 
+        grainSprite.gameObject.SetActive(true);
+
         bucketSprite.sprite = FactionMapper.Ins.GetBucketSprite(faction);
         bucketTopSprite.sprite = FactionMapper.Ins.GetBucketTopSprite(faction);
+        grainSprite.sprite = FactionMapper.Ins.GetGrainSprite(faction);
 
         tilesToMove = new List<AntsFlow.BaseTile>();
 
@@ -288,6 +292,8 @@ public class WashingMachineItem : MonoBehaviour
                         Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
                         .OnComplete(() =>
                         {
+                            grainSprite.gameObject.SetActive(false);
+
                             PourGrainPile(grainPile, isLast, () =>
                             {
                                 isPouring = false;

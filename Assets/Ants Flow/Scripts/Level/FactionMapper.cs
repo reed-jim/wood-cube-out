@@ -216,6 +216,11 @@ public class FactionMapper : Singleton<FactionMapper>
     {
         return spriteContainersOfColors[faction].bucketTopSprite;
     }
+
+    public Sprite GetGrainSprite(Color faction)
+    {
+        return spriteContainersOfColors[faction].grainSprite;
+    }
 }
 
 [Serializable]
@@ -230,6 +235,7 @@ public class SpriteContainer
 {
     public Sprite bucketSprite;
     public Sprite bucketTopSprite;
+    public Sprite grainSprite;
 
     public Sprite tileSprite;
     public Sprite doubleBoxLink;

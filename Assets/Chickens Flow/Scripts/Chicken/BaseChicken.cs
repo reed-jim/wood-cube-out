@@ -251,6 +251,15 @@ public class BaseChicken : MonoBehaviour
         PlayAnim(eatAnimation);
     }
 
+    public void PlayEatAnim(int eatAnimIndex)
+    {
+        eatAnimIndex = Mathf.Min(eatAnimIndex, eatAnimations.Length - 1);
+
+        string eatAnimation = eatAnimations[eatAnimIndex];
+
+        PlayAnim(eatAnimation);
+    }
+
     public void PlayFlyAnim()
     {
         PlayAnim(flyAnimation);
