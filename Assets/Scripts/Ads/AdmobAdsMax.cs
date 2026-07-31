@@ -47,9 +47,6 @@ public class AdmobAdsMax
     private UnityAction _actionClose;
     private UnityAction _actionRewardVideo;
     private UnityAction _actionNotLoadedVideo;
-    // true nếu user đã thực sự nhận reward trong lần show hiện tại; dùng để phân biệt
-    // "đóng ad sau khi nhận thưởng" với "đóng ad khi chưa nhận" (vd thoát app giữa chừng).
-    private bool _isRewardVideoGranted;
     private ActionWatchVideo actionWatchVideo;
     public Coroutine coroutineShowAppOpen;
 
@@ -136,10 +133,6 @@ public class AdmobAdsMax
     private double _cooldownMrecBannerTimer;
     public void LoadBannerMrecAdmob()
     {
-        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowBanner)
-        {
-            return;
-        }
         //GoogleMobileAds.Api.AdSize adaptiveSize =
         //     GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
         _bannerViewFakeMrec?.Destroy();
@@ -341,7 +334,7 @@ public class AdmobAdsMax
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2523627104"; // check this  id chinh : ca-app-pub-3046520253844875/2523627104, id test: ca-app-pub-3940256099942544/2014213617
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2523627104"; // check this
 #endif
 #elif UNITY_IOS
 #if TESTER
@@ -389,7 +382,6 @@ public class AdmobAdsMax
 
     private void InitBannerAdmob()
     {
-
         LoadBannerAdmob();
         LoadBannerMrecAdmob();
         LoadBannerCollap();
@@ -410,10 +402,6 @@ public class AdmobAdsMax
     }
     private void LoadBannerCollap()
     {
-        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowCollapseBanner)
-        {
-            return;
-        }
         //GoogleMobileAds.Api.AdSize adaptiveSize =
         //    GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
         _bannerViewCollap?.Destroy();
@@ -487,40 +475,23 @@ public class AdmobAdsMax
 
     public void ShowBannerCollap()
     {
-
-        if (!RemoteConfigController.GetBoolConfig("is_show_collap_policy_new", false))
+        if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", false))
         {
-            return;
+            if (GameController.Instance.useProfile.IsRemoveAds)
+                return;
+
+            if (_isShowAdmobCollap)
+            {
+                if (isLoadedCollap)
+                {
+                    Debug.Log("show banner collap===========");
+                    _bannerView?.Hide();
+                    MaxSdk.HideBanner(BanerAdUnitId);
+                    _bannerViewCollap?.Show();
+                    isShowingCollap = true;
+                }
+            }
         }
-
-        if (!GamePersistentVariable.isFirebaseRemoteConfigLoaded
-            && Application.internetReachability != NetworkReachability.NotReachable)
-            return;
-
-        if (GameController.Instance.useProfile.IsRemoveAds)
-            return;
-
-        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowCollapseBanner)
-        {
-
-            return;
-        }
-
-        if (_bannerViewCollap == null)
-        {
-            LoadBannerCollap();
-        }
-
-        Debug.LogFormat("[TestCollapse]_isShowAdmobCollap: {0},isLoadedCollap: {1}", _isShowAdmobCollap, isLoadedCollap);
-        if (_isShowAdmobCollap && isLoadedCollap)
-        {
-            Debug.Log("show banner collap===========");
-            _bannerView?.Hide();
-            MaxSdk.HideBanner(BanerAdUnitId);
-            _bannerViewCollap?.Show();
-            isShowingCollap = true;
-        }
-
     }
 
     public void DestroyBannerCollap()
@@ -561,12 +532,6 @@ public class AdmobAdsMax
 
     public void LoadBannerAdmob()
     {
-        Debug.Log("LoadBannerAdmob================== CurrentLevel = " + GameController.Instance.useProfile.CurrentLevel);
-        Debug.Log("LoadBannerAdmob================== levelShowBanner = " + GamePersistentVariable.levelShowBanner);
-        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowBanner)
-        {
-            return;
-        }
         //GoogleMobileAds.Api.AdSize adaptiveSize =
         //     GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
         _bannerView?.Destroy();
@@ -1123,7 +1088,6 @@ public class AdmobAdsMax
     private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo, MaxSdkBase.AdInfo adInfo)
     {
         isVideoDone = false;
-        isShowingAds = false;
 
         //if (IsLoadedInterstitial())
         //{
@@ -1133,15 +1097,6 @@ public class AdmobAdsMax
         //{
         //    //ConfirmBox.Setup().AddMessageYes(Localization.Get("s_noti"), Localization.Get("s_TryAgain"), () => { });
         //}
-
-        // Ad không hiển thị được (vd: thoát app khi đang xem reward rồi vào lại).
-        // Route về nhánh "not loaded" để ShowAdsNotLoadedPopup bật lại interactable các nút.
-        // Không nhận reward nên clear luôn action reward để tránh double-claim.
-        _actionRewardVideo = null;
-        _actionClose = null;
-        _actionNotLoadedVideo?.Invoke();
-        _actionNotLoadedVideo = null;
-
         LoadRewardedAd();
 
         SaferioTracking.TrackAdsInterLoadFail();
@@ -1168,24 +1123,11 @@ public class AdmobAdsMax
         //}
 
         // Rewarded ad is hidden. Pre-load the next ad
-        isShowingAds = false;
-
         _actionClose?.Invoke();
         _actionClose = null;
         if (_actionRewardVideo != null)
             _actionRewardVideo = null;
         _actionRewardVideo = null;
-
-        // Ad bị đóng mà CHƯA nhận reward (vd: thoát app khi đang xem reward rồi vào lại).
-        // Route về nhánh "not loaded" để ShowAdsNotLoadedPopup bật lại interactable các nút,
-        // tránh treo game ở màn win. Nếu đã nhận reward thì bỏ qua (đang đi tiếp NextLevel),
-        // nhờ vậy không cho double-claim.
-        if (!_isRewardVideoGranted)
-        {
-            _actionNotLoadedVideo?.Invoke();
-        }
-        _actionNotLoadedVideo = null;
-
         LoadRewardedAd();
         Invoke("RefeshCloseAds", 1);
     }
@@ -1196,10 +1138,8 @@ public class AdmobAdsMax
     {
         // Rewarded ad was displayed and user should receive the reward
         isVideoDone = true;
-        _isRewardVideoGranted = true;
         _actionRewardVideo?.Invoke();
         _actionRewardVideo = null;
-        _actionNotLoadedVideo = null;
         countdownAds = 0;
         GameController.Instance.AnalyticsController.LogVideoRewardShowDone(actionWatchVideo.ToString());
 
@@ -1264,7 +1204,6 @@ public class AdmobAdsMax
             isShowingAds = true;
             countdownAds = 0;
             oldTime = DateTime.Now;
-            _isRewardVideoGranted = false;
             this._actionNotLoadedVideo = actionNotLoadedVideo;
             this._actionClose = actionClose;
             this._actionRewardVideo = actionReward;
@@ -1323,27 +1262,8 @@ public class AdmobAdsMax
 
     public void ShowBanner()
     {
-        Debug.Log("[ShowBanner]show banner level=" + GamePersistentVariable.levelShowBanner);
-        Debug.Log("[ShowBanner]Current level=" + GameController.Instance.useProfile.CurrentLevel);
-        //// Chưa có remote config thật từ Firebase:
-        ////  - Còn mạng: config đang tải, chờ đã (tránh flash banner sai ngưỡng khi config thật > 0).
-        ////  - Mất mạng: config sẽ không bao giờ về, cho load như bình thường theo giá trị default
-        ////    (levelShowBanner = 0 -> hiện ngay từ level đầu).
-        if (!GamePersistentVariable.isFirebaseRemoteConfigLoaded
-            && Application.internetReachability != NetworkReachability.NotReachable)
-            return;
-        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowBanner)
-            return;
-
         if (GameController.Instance.useProfile.IsRemoveAds)
             return;
-
-
-        if (_bannerView == null)
-        {
-            LoadBannerAdmob();
-        }
-
         if (isAdmobInitDone)
         {
             if (_isShowAdmobBanner)
@@ -1359,7 +1279,7 @@ public class AdmobAdsMax
     {
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Show();
-        _bannerViewCollap?.Hide();
+        _bannerViewCollap.Hide();
     }
 
     public void ShowBannerMax()
@@ -1367,7 +1287,7 @@ public class AdmobAdsMax
         MaxSdk.ShowBanner(BanerAdUnitId);
         // RequestBanner();
         _bannerView?.Hide();
-        _bannerViewCollap?.Hide();
+        _bannerViewCollap.Hide();
     }
 
     public void DestroyBanner()
@@ -1375,7 +1295,7 @@ public class AdmobAdsMax
         Debug.Log("destroy banner");
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Hide();
-        _bannerViewCollap?.Hide();
+        _bannerViewCollap.Hide();
     }
 
     #endregion

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
@@ -296,7 +296,7 @@ public class RemoteConfigController : MonoBehaviour
         DebugLog(String.Format("Remote data loaded and ready (last fetch time {0}).", info.FetchTime));
     }
 
-
+   
     //static Dictionary<string, object> defaults = new Dictionary<string, object>();
     public static void RemoteConfigFirebaseInit()
     {
@@ -348,8 +348,6 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
         GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
-        GamePersistentVariable.levelShowBanner = GetIntConfig(FirebaseConfig.LEVEL_UNLOCK_BANNER, 3);
-        GamePersistentVariable.levelShowCollapseBanner = GetIntConfig(FirebaseConfig.LEVEL_UNLOCK_COLLAPSE_BANNER, 5);
 
         #region CORE GAMEPLAY CONFIG
         GamePersistentVariable.screwHoleLeftToLose = /*GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 1)*/1;
@@ -458,17 +456,14 @@ public class RemoteConfigController : MonoBehaviour
 
     private static void SetRemoteConfigRewardedAds()
     {
-
+        GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
         GamePersistentVariable.minLevelDisableRewardedAds = GetIntConfig(FirebaseConfig.MIN_LEVEL_DISABLE_REWARDED_ADS, 20);
 
-
-        GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
         if (!GamePersistentVariable.isEnableRewardedAds)
         {
             GamePersistentVariable.doubleInterAdsConfig.isEnable = false;
             GamePersistentVariable.isShowBanner = false;
         }
-
     }
     #endregion
 }

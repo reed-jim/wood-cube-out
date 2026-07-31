@@ -13,9 +13,9 @@ public class Config
 
     public const string settingLogo = "GAME_ICON";
 
-    public static int versionCode = 2026072802;//sua
+    public static int versionCode = 2026072801;//sua
     public static string versionName = "1.0.4";//sua
-    public static int settingVersionCode = 2026072802;//sua
+    public static int settingVersionCode = 2026072801;//sua
     public static string settingVersionName = "1.0.4";//sua
 
     public static string productNameBuild = "Ant Out: Pixel Block";

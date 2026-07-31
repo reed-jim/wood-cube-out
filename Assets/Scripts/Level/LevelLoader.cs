@@ -162,7 +162,7 @@ namespace NamPhuThuy.GamePlay
             int nextLevel = currentLevel.Value;
 
             bool isLoopLevel = false;
-            GameController.Instance.admobAds.ShowBanner();
+
             // if (!UserData.IsLoopLevel)
             // {
             //     if (currentLevel.Value <= _maxLevel)

@@ -12,13 +12,10 @@ public class BuyBoosterPopup : BasePopup
 {
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Button buyWithDiamondButton;
-    [SerializeField] private Button buyWithCoinSingle;
     [SerializeField] private Image buyWithDiamondButtonForeground;
     [SerializeField] private Button getWithAdsButton;
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text costText;
-    [SerializeField] private TMP_Text costTextSingle;
-
     [SerializeField] private LeanLocalizedTextMeshProUGUI title;
     [SerializeField] private LeanLocalizedTextMeshProUGUI boosterDescription;
 
@@ -70,7 +67,6 @@ public class BuyBoosterPopup : BasePopup
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
         buyWithDiamondButton.onClick.AddListener(GetWithCoin);
-        buyWithCoinSingle.onClick.AddListener(GetWithCoin);
         getWithAdsButton.onClick.AddListener(GetWithAds);
     }
 
@@ -97,7 +93,6 @@ public class BuyBoosterPopup : BasePopup
         UIUtil.SetSizeKeepRatioY(icon, 0.25f * container.sizeDelta.x);
 
         costText.text = $"{boosterDataObserver.BoosterCosts[boosterIndex]}";
-        costTextSingle.text = $"{boosterDataObserver.BoosterCosts[boosterIndex]}";
         title.TranslationName = leanTranslationTitle[boosterIndex];
         boosterDescription.TranslationName = leanTranslationNames[boosterIndex];
 
@@ -314,31 +309,27 @@ public class BuyBoosterPopup : BasePopup
     #region REMOTE CONFIG REWARDED AD
     private void SetupRewardedAdsButton(bool forceEnable = false)
     {
-        bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds;
-        Debug.Log("isEnableRewardedAds: " + isEnableRewardedAds);
-        if (isEnableRewardedAds)
-        {
-            adsButtonRT.gameObject.SetActive(true);
-            //coinBalanceCointaner.gameObject.SetActive(false);
-            coinButtonRT.gameObject.SetActive(true);
-            //coinButtonRT.localPosition = _coinButtonPosition;
-            //adsButtonRT.localPosition = _adsButtonPosition;
-            buyWithCoinSingle.gameObject.SetActive(false);
-        }
-        else
-        {
+        // bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
 
-            coinButtonRT.gameObject.SetActive(false);
-            adsButtonRT.gameObject.SetActive(false);
-            buyWithCoinSingle.gameObject.SetActive(true);
-            //coinBalanceCointaner.gameObject.SetActive(true);
+        // if (isEnableRewardedAds || forceEnable)
+        // {
+        //     adsButtonRT.gameObject.SetActive(true);
+        //     coinBalanceCointaner.gameObject.SetActive(false);
 
-            //coinButtonRT.localPosition = _coinButtonPosition - (_coinButtonPosition - _adsButtonPosition) / 2;
+        //     coinButtonRT.localPosition = _coinButtonPosition;
+        //     adsButtonRT.localPosition = _adsButtonPosition;
+        // }
+        // else
+        // {
+        //     adsButtonRT.gameObject.SetActive(false);
+        //     coinBalanceCointaner.gameObject.SetActive(true);
 
-            //userResourcesObserver.Load();
+        //     // coinButtonRT.localPosition = _coinButtonPosition - (_coinButtonPosition - _adsButtonPosition) / 2;
 
-            //coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
-        }
+        //     userResourcesObserver.Load();
+
+        //     coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+        // }
     }
     #endregion
 
