@@ -169,6 +169,8 @@ public class GrainPile : MonoBehaviour
 
                 Vector3 lerpedPosition = Vector3.Lerp(left, right, u);
 
+                lerpedPosition += (Vector3)(0.05f * UnityEngine.Random.insideUnitCircle);
+
                 lerpedPosition.y -= transform.localPosition.y;
                 lerpedPosition.z = -0.01f * (siblingIndex + 0.001f * (amount - x));
 
@@ -218,7 +220,7 @@ public class GrainPile : MonoBehaviour
             {
                 grains[index].transform.SetZ(zOffset);
 
-                grains[index].transform.DOPunchPosition(Vector3.up * 0.15f, 0.12f, vibrato: 1, elasticity: 0.2f)
+                grains[index].transform.DOPunchPosition(Vector3.up * 0.5f, 0.12f, vibrato: 1, elasticity: 0.2f)
                 .OnComplete(() =>
                 {
                     if (index == 0)
@@ -433,8 +435,7 @@ public class GrainPile : MonoBehaviour
         }
 
         grainsToEat = grainsToEat
-            .OrderBy(grain => grain.transform.position.z)
-            .ThenBy(grain => grain.transform.position.x).ToList();
+            .OrderBy(grain => grain.transform.position.x).ToList();
 
         currentIndex = 0;
 
