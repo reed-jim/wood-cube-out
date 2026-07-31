@@ -15,7 +15,7 @@ namespace AntsFlow
     public class BaseAnt : MonoBehaviour
     {
         [SerializeField] private Renderer antRenderer;
-        [SerializeField] private SkeletonAnimation skeletonAnimation;
+        [SerializeField] protected SkeletonAnimation skeletonAnimation;
         [SpineAttachment] public List<string> antAntennaeAttachments;
         private MaterialPropertyBlock materialPropertyBlock;
 
@@ -38,10 +38,10 @@ namespace AntsFlow
         private List<Node> reversePath;
         private Coroutine movingCoroutine;
 
-        private List<Tween> tweens;
-        private List<Sequence> sequences;
+        protected List<Tween> tweens;
+        protected List<Sequence> sequences;
         private int siblingIndex;
-        private float stuckTime;
+        protected float stuckTime;
         private float stuckTimeNoReachDestination;
         private float stuckThreshold;
         private float stuckNoReachDestinationThreshold;
@@ -56,7 +56,7 @@ namespace AntsFlow
         #endregion
 
         #region Wiggle
-        private Vector3 skeletonAnimationInitialPosition;
+        protected Vector3 skeletonAnimationInitialPosition;
         #endregion
 
         [Header("Noise Settings")]
@@ -69,7 +69,7 @@ namespace AntsFlow
         private float speedMove;
         public float initialSpeedMove;
 
-        void Awake()
+        protected virtual void Awake()
         {
             speedMove = initialSpeedMove;
 
@@ -144,7 +144,7 @@ namespace AntsFlow
             CommonUtil.StopAllSequences(sequences);
         }
 
-        private void OnAntMovedToNest()
+        protected virtual void OnAntMovedToNest()
         {
             stuckTime = 0;
 
@@ -202,7 +202,7 @@ namespace AntsFlow
             ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
         }
 
-        public void Init(Color faction)
+        public virtual void Init(Color faction)
         {
             materialPropertyBlock.SetColor("_Color", faction);
             antRenderer.SetPropertyBlock(materialPropertyBlock);
@@ -396,9 +396,6 @@ namespace AntsFlow
                 reversePath.AddRange(path);
                 reversePath.Reverse();
 
-                Vector3 tilePosition = path[^1].initialPosition;
-                Vector3 corner = tilePosition.x > 0 ? TileManager.Ins.bottomRightMostNode.initialPosition : TileManager.Ins.bottomLeftMostNode.initialPosition;
-
                 int firstBottomMostPointIndex = 0;
 
                 if (isCenter)
@@ -587,14 +584,7 @@ namespace AntsFlow
 
             if (count < 2)
             {
-                if (tile != null)
-                {
-                    HideAntennaes();
-
-                    tile.MoveToAnt(this);
-
-                    ReverseMove();
-                }
+                OnAntReachTarget();
             }
             else
             {
@@ -608,8 +598,18 @@ namespace AntsFlow
                     targetRotation,
                     progress
                 );
+            }
+        }
 
-                // transform.rotation = targetRotation;
+        protected virtual void OnAntReachTarget()
+        {
+            if (tile != null)
+            {
+                HideAntennaes();
+
+                tile.MoveToAnt(this);
+
+                ReverseMove();
             }
         }
 
@@ -687,14 +687,13 @@ namespace AntsFlow
             }
         }
 
-
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_START_UP_SPEED_ANT, (a) => UpSpeed((float)a));
             EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_END_UP_SPEED_ANT, (a) => EndUpSpeed());
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_START_UP_SPEED_ANT, (a) => UpSpeed((float)a));
             EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_END_UP_SPEED_ANT, (a) => EndUpSpeed());

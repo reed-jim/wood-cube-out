@@ -17,7 +17,6 @@ using static GameEnum;
 
 public class WashingMachineItem : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
     public SpriteRenderer lid;
     public SpriteRenderer shadow;
     public SpriteRenderer doubleAntBoxHole;
@@ -43,21 +42,26 @@ public class WashingMachineItem : MonoBehaviour
     public bool isAnimating;
     public bool isInSlot;
     public bool isDouble;
+    public bool isMagnet;
+    public WashingMachineItem magnetPartner;
     public bool isGhostMode;
     public bool isStucking;
     public bool isPlayingWarningLoseAnimation;
     public bool isShuffled;
+    public bool isOpen = true;
+    public bool isOpenCloseType = false;
 
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
 
     private Vector3 numberTextInitialPosition;
-    private Coroutine spawningAntCoroutine;
+    protected Coroutine spawningAntCoroutine;
 
     public GameSetting gameSetting;
 
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
+    public static event Action<WashingMachineItem> magnetBoxCountZeroEvent;
     public static event Action<WashingMachineItem> moveUpEvent;
     public static event Action spawnAntEvent;
     public static event Action loseLevelEvent;
@@ -65,7 +69,7 @@ public class WashingMachineItem : MonoBehaviour
     public List<AntsFlow.BaseTile> tilesToMove;
     private int walkableMask;
 
-    void Awake()
+    protected virtual void Awake()
     {
         selectWashingMachineEvent += OnAntBoxSelected;
         antBoxDoneEvent += OnAntBoxCompleted;
@@ -77,6 +81,7 @@ public class WashingMachineItem : MonoBehaviour
         DebugPopup.switchLevelEvent += OnLevelReplayed;
         TileManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
+
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
@@ -89,9 +94,12 @@ public class WashingMachineItem : MonoBehaviour
         walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
     }
 
-    void OnDestroy()
+
+
+    protected virtual void OnDestroy()
     {
         selectWashingMachineEvent -= OnAntBoxSelected;
+
         antBoxDoneEvent -= OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent -= OnLevelLose;
         AntsFlow.BaseTile.tileMoveToAntEvent -= OnTileMoveToAnt;
@@ -122,7 +130,6 @@ public class WashingMachineItem : MonoBehaviour
         this.faction = faction;
         this.number = number;
 
-        spriteRenderer.color = faction;
         lid.color = faction;
         numberText.text = $"{number}";
 
@@ -148,6 +155,8 @@ public class WashingMachineItem : MonoBehaviour
 
         shadow.sprite = shadows[0];
 
+        ApplyShadowDepth();
+
         skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
@@ -161,6 +170,8 @@ public class WashingMachineItem : MonoBehaviour
         isInSlot = false;
         isGhostMode = false;
         isDouble = false;
+        isMagnet = false;
+        magnetPartner = null;
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
         remainingNumber = number;
@@ -178,9 +189,13 @@ public class WashingMachineItem : MonoBehaviour
         isInSlot = false;
         isGhostMode = false;
         isDouble = false;
+        isMagnet = false;
+        magnetPartner = null;
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
         isShuffled = false;
+        isOpenCloseType = false;
+        isOpen = true;
 
         washingMachineStartSlot = null;
         washingMachineSlot = null;
@@ -193,6 +208,53 @@ public class WashingMachineItem : MonoBehaviour
         isDisable = !(washingMachineStartSlot.row == 0);
 
         numberText.alpha = isDisable ? 0.2f : 1;
+        if(WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+        {
+            bool isTut = false;
+            if (WashingMachineManager.Ins != null)
+            {
+                if (WashingMachineManager.Ins.levelItem != null && WashingMachineManager.Ins.levelItem.isTutorialLevel)
+                {
+                    isTut = true;
+                }
+                else if (WashingMachineManager.Ins.currentLevel != null && BoosterTutorial.Ins != null && BoosterTutorial.Ins.boosterTutorialLevels != null)
+                {
+                    isTut = BoosterTutorial.Ins.boosterTutorialLevels.Contains(WashingMachineManager.Ins.currentLevel.Value);
+                }
+            }
+
+            if (!isTut)
+            {
+                float zOffset = GetRowZOffset(washingMachineStartSlot.row);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
+            }
+        }
+     
+
+    }
+
+    public const float rowZSeparation = 1.8f;
+
+    public static float GetRowZOffset(int row)
+    {
+        return -row * rowZSeparation;
+    }
+
+    // z shadow theo hành vi ants-flow của level cũ. Prefab Ant Box đã bị đổi 0.1 -> 4 (dùng chung mọi level),
+    // nên phải set tường minh: level mới = 4f, level cũ = 0.1f (giá trị prefab gốc nhánh ants-flow).
+    public const float shadowZNewSpecialLevel = 4f;
+    public const float shadowZLegacyLevel = 0.1f;
+
+    private void ApplyShadowDepth()
+    {
+        if (shadow == null)
+        {
+            return;
+        }
+
+        var localPos = shadow.transform.localPosition;
+        float z = WashingMachineManager.Ins.isLevelContainingNewSpecialElements ? shadowZNewSpecialLevel : shadowZLegacyLevel;
+        shadow.transform.localPosition = new Vector3(localPos.x, localPos.y, z);
     }
 
     public void MinusClothingPiece()
@@ -265,6 +327,11 @@ public class WashingMachineItem : MonoBehaviour
 
     public void ForceSelect()
     {
+        if (isMagnet)
+        {
+            return;
+        }
+
         Enable();
 
         SwitchShadow();
@@ -278,6 +345,56 @@ public class WashingMachineItem : MonoBehaviour
         selectWashingMachineEvent?.Invoke(this);
     }
 
+    public void ForceSelectToSlot(WashingMachineSlot slot)
+    {
+        Enable();
+
+        SwitchShadow();
+
+        MoveToSlotDirect(slot);
+
+        SoundManager.Instance.PlaySoundBoxTap();
+
+        this.washingMachineSlot = slot;
+
+        selectWashingMachineEvent?.Invoke(this);
+    }
+
+    public void MoveToSlotDirect(WashingMachineSlot targetSlot)
+    {
+        isMoving = true;
+        Vector3 initialScale = transform.localScale;
+        if (skeletonAnimation != null)
+        {
+            var localPos = skeletonAnimation.transform.localPosition;
+            skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, -1.5f);
+        }
+        Tween.Position(transform, targetSlot.transform.position.AddY(2.2f).AddZ(-0.5f), duration: 0.2f, ease: Ease.Linear);
+        Tween.ScaleY(transform, 1.3f * transform.localScale.y, duration: 0.2f)
+        .OnComplete(() =>
+        {
+            Tween.Scale(transform, initialScale, duration: 0.2f);
+
+            Tween.Position(transform, targetSlot.transform.position.AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                isMoving = false;
+                washingMachineStartSlot.washingMachine = null;
+
+                if (skeletonAnimation != null)
+                {
+                    var localPos = skeletonAnimation.transform.localPosition;
+                    skeletonAnimation.transform.localPosition = new Vector3(localPos.x, localPos.y, 0f);
+                }
+
+                OpenTheBox();
+                CheckAntsPath();
+
+                WashingMachineManager.Ins.MoveAntBoxTop();
+            });
+        });
+    }
+
     protected virtual void PlayInvalidSelectAnimation()
     {
         if (isInSlot)
@@ -285,9 +402,21 @@ public class WashingMachineItem : MonoBehaviour
             return;
         }
 
-        if (isDouble)
+        if (isOpenCloseType && !isOpen)
         {
             Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+        }
+        else if (isDouble)
+        {
+            Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+        }
+        else if (isMagnet)
+        {
+            Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+            if (magnetPartner != null && !magnetPartner.isInSlot)
+            {
+                Tween.ShakeScale(magnetPartner.transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+            }
         }
         else
         {
@@ -300,16 +429,21 @@ public class WashingMachineItem : MonoBehaviour
         {
             HapticFeedback.MediumFeedback();
         }
+        if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+        {
+            WashingMachineManager.Ins.CheckLoseLevel();
+
+        }
     }
 
-    public void TurnOnWarningLoseAnimation()
+    public virtual void TurnOnWarningLoseAnimation()
     {
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, true);
 
         isPlayingWarningLoseAnimation = true;
     }
 
-    public void TurnOffWarningLoseAnimation()
+    public virtual void TurnOffWarningLoseAnimation()
     {
         if (isInSlot)
         {
@@ -321,6 +455,19 @@ public class WashingMachineItem : MonoBehaviour
         }
 
         isPlayingWarningLoseAnimation = false;
+    }
+
+    public bool IsActuallyStuck()
+    {
+        if (isDisable) return false;
+        if (isMagnet)
+        {
+            return isStucking || number <= 0;
+        }
+        else
+        {
+            return remainingNumber > 0 && isStucking;
+        }
     }
 
     private void SwitchShadow()
@@ -353,7 +500,7 @@ public class WashingMachineItem : MonoBehaviour
         });
     }
 
-    public void TemporarilyEnable()
+    public virtual void TemporarilyEnable()
     {
         if (isDisable)
         {
@@ -368,18 +515,42 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect()
     {
-        return !isInSlot && !isDisable &&
+        bool isValid = !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
             !GamePersistentVariable.isPreventSelectAntBox;
+        if (isOpenCloseType)
+        {
+            isValid = isValid && isOpen;
+        }
+        if (isMagnet)
+        {
+            isValid = isValid &&
+                magnetPartner != null &&
+                !magnetPartner.isDisable &&
+                WashingMachineManager.Ins.HasAdjacentAvailableSlotPair();
+        }
+        return isValid;
     }
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
-        return !isInSlot && !isDisable &&
+        bool isValid = !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= currentNumSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
             !GamePersistentVariable.isPreventSelectAntBox;
+        if (isOpenCloseType)
+        {
+            isValid = isValid && isOpen;
+        }
+        if (isMagnet)
+        {
+            isValid = isValid &&
+                magnetPartner != null &&
+                !magnetPartner.isDisable &&
+                WashingMachineManager.Ins.HasAdjacentAvailableSlotPair();
+        }
+        return isValid;
     }
 
     public void OpenTheBox()
@@ -402,10 +573,17 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
-    public void CheckAntsPath(bool isAlsoCheckLose = true)
+    public virtual void CheckAntsPath(bool isAlsoCheckLose = true)
     {
         if (remainingNumber <= 0)
         {
+            // Chỉ áp dụng cho level có special element mới; IsActuallyStuck (nhánh mới) đã bỏ qua
+            // TH remainingNumber<=0. Level cũ (ants-flow) đọc isStucking thô nên không được set ở đây,
+            // tránh bị tính thua nhầm khi hộp đã nhả hết kiến.
+            if (isInSlot && WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+            {
+                isStucking = true;
+            }
             return;
         }
 
@@ -500,7 +678,7 @@ public class WashingMachineItem : MonoBehaviour
 
             if (spawningAntCoroutine == null)
             {
-                spawningAntCoroutine = StartCoroutine(SpawningAnts());
+                spawningAntCoroutine = StartCoroutine(SpawningAnts(antType: GameConstants.ant));
             }
         }
         else if (isAlsoCheckLose)
@@ -530,7 +708,7 @@ public class WashingMachineItem : MonoBehaviour
         isGhostMode = true;
     }
 
-    private IEnumerator SpawningAnts()
+    protected IEnumerator SpawningAnts(string antType)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.35f);
 
@@ -559,7 +737,7 @@ public class WashingMachineItem : MonoBehaviour
                 continue;
             }
 
-            BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
+            BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(antType);
 
             ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
             ant.transform.eulerAngles = Vector3.zero;
@@ -598,17 +776,24 @@ public class WashingMachineItem : MonoBehaviour
 
         if (number == 0)
         {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            if (isMagnet)
             {
-                if (washingMachineSlot != null)
+                magnetBoxCountZeroEvent?.Invoke(this);
+            }
+            else
+            {
+                SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
                 {
-                    washingMachineSlot.washingMachineItem = null;
-                }
+                    if (washingMachineSlot != null)
+                    {
+                        washingMachineSlot.washingMachineItem = null;
+                    }
 
-                antBoxDoneEvent?.Invoke(this);
-            });
+                    antBoxDoneEvent?.Invoke(this);
+                });
 
-            isInSlot = false;
+                isInSlot = false;
+            }
         }
 
         spawningAntCoroutine = null;
@@ -688,21 +873,24 @@ public class WashingMachineItem : MonoBehaviour
     {
         Reset();
 
-        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+        string key = isOpenCloseType ? GameConstants.openCloseAntBox : GameConstants.washingMachine;
+        ObjectPoolingEverything.ReturnToPool(key, gameObject);
     }
 
     private void OnLevelReplayed()
     {
         Reset();
 
-        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+        string key = isOpenCloseType ? GameConstants.openCloseAntBox : GameConstants.washingMachine;
+        ObjectPoolingEverything.ReturnToPool(key, gameObject);
     }
 
     private void OnLevelWon()
     {
         Reset();
 
-        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+        string key = isOpenCloseType ? GameConstants.openCloseAntBox : GameConstants.washingMachine;
+        ObjectPoolingEverything.ReturnToPool(key, gameObject);
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)
@@ -735,14 +923,36 @@ public class WashingMachineItem : MonoBehaviour
         moveUpEvent?.Invoke(this);
     }
 
+    public static void InvokeAntBoxDoneEvent(WashingMachineItem antBox)
+    {
+        antBoxDoneEvent?.Invoke(antBox);
+    }
+
     private void OnSelectTrueCompleted()
     {
         SwitchShadow();
 
-        WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
+        WashingMachineSlot washingMachineSlot = null;
+        if (isMagnet && magnetPartner != null && !magnetPartner.isInSlot)
         {
+            var pair = WashingMachineManager.Ins.GetAdjacentAvailableSlotPair();
+            if (pair.Item1 != null && pair.Item2 != null)
+            {
 
-        });
+                pair.Item1.washingMachineItem = this;
+                pair.Item2.washingMachineItem = magnetPartner;
+
+
+                magnetPartner.ForceSelectToSlot(pair.Item2);
+                washingMachineSlot = pair.Item1;
+                MoveToSlotDirect(washingMachineSlot);
+            }
+        }
+
+        if (washingMachineSlot == null)
+        {
+            washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
+        }
 
         SoundManager.Instance.PlaySoundBoxTap();
 
@@ -799,18 +1009,6 @@ public class WashingMachineItem : MonoBehaviour
 
         // BFS
         return true;
-        return tile.IsMovable();
-        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
-
-        // if (path == null || path.Count == 0)
-        // {
-        //     return false;
-        // }
-
-        // return true;
-
-        return tile.blockages.Count < 4;
-        return tile.actualBlockages.Count < 4;
     }
 
     public Vector3 GetNearestMovableNavMeshPoint(Vector3 targetPosition, float maxDistance)
@@ -858,7 +1056,7 @@ public class WashingMachineItem : MonoBehaviour
         // }
     }
 
-    private void OnRevive(BoosterType boosterType)
+    protected virtual void OnRevive(BoosterType boosterType)
     {
         if (isInSlot)
         {

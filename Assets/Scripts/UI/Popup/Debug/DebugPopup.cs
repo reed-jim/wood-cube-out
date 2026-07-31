@@ -17,6 +17,7 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugPrevLevelButton;
     [SerializeField] private Button debugWinLevelButton;
     [SerializeField] private Button debugAdsButton;
+    [SerializeField] private Button debugRewardsButton;
     [SerializeField] private Button debugAddBoostersButton;
     [SerializeField] private Button debugAddCoinButton;
     [SerializeField] private Button changeBackgroundColorButton;
@@ -27,6 +28,8 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button hideUIButton;
     [SerializeField] private TMP_Text gameSpeedText;
     [SerializeField] private TMP_Text debugAdsText;
+    [SerializeField] private TMP_Text debugRewardsText;
+
     [SerializeField] private TMP_Text hideUIButtonText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -45,6 +48,7 @@ public class DebugPopup : BasePopup
         debugPrevLevelButton.onClick.AddListener(PrevLevel);
         debugWinLevelButton.onClick.AddListener(DebugWinLevel);
         debugAdsButton.onClick.AddListener(DebugAdsButton);
+        debugRewardsButton.onClick.AddListener(DebugRewardsButton);
         debugAddBoostersButton.onClick.AddListener(AddBooster);
         debugAddCoinButton.onClick.AddListener(AddCoin);
         increaseGameSpeedButton.onClick.AddListener(IncreaseGameSpeed);
@@ -68,11 +72,30 @@ public class DebugPopup : BasePopup
         {
             debugAdsText.text = "Disable Ads";
         }
+        bool isEnableRewards = GamePersistentVariable.isEnableRewardedAds;
+        if (isEnableRewards)
+        {
+            debugRewardsText.text = "Disable Rewards";
+        }
+        else
+        {
+            debugRewardsText.text = "Enable Rewards";
+        }
     }
 
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction);
+
+        bool isEnableRewards = GamePersistentVariable.isEnableRewardedAds;
+        if (isEnableRewards)
+        {
+            debugRewardsText.text = "Disable Rewards";
+        }
+        else
+        {
+            debugRewardsText.text = "Enable Rewards";
+        }
 
         if (GameController.Instance.useProfile.IsRemoveAds)
         {
@@ -128,6 +151,22 @@ public class DebugPopup : BasePopup
         Hide();
     }
 
+    private void DebugRewardsButton()
+    {
+        bool isEnableRewards = GamePersistentVariable.isEnableRewardedAds;
+        if (isEnableRewards)
+        {
+            GamePersistentVariable.isEnableRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, false);
+            debugRewardsText.text = "Enable rewards";
+        }
+        else
+        {
+            GamePersistentVariable.isEnableRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
+
+            debugRewardsText.text = "Disable Rewards";
+        }
+        Hide();
+    }
     private void DebugAdsButton()
     {
         if (GameController.Instance.useProfile.IsRemoveAds)

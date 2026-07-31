@@ -117,6 +117,8 @@ namespace NamPhuThuy.GamePlay
         private void Start()
         {
             // GoLevel(currentLevel.Value);
+
+            GamePersistentVariable.screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
         }
 
         void OnDestroy()
@@ -160,7 +162,7 @@ namespace NamPhuThuy.GamePlay
             int nextLevel = currentLevel.Value;
 
             bool isLoopLevel = false;
-
+            GameController.Instance.admobAds.ShowBanner();
             // if (!UserData.IsLoopLevel)
             // {
             //     if (currentLevel.Value <= _maxLevel)
@@ -410,6 +412,8 @@ namespace NamPhuThuy.GamePlay
 
                         Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position.MultiplyX(54).MultiplyY(ratioXY));
 
+
+
                         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
                         spawnedTileMap.SetTile(cellPos, tile);
@@ -421,12 +425,12 @@ namespace NamPhuThuy.GamePlay
                 }
             }
 
-            if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
-            {
-                int manualStart = currentLevel.Value == 40 ? 0 : -1;
+            // if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
+            // {
+            //     int manualStart = currentLevel.Value == 40 ? 0 : -1;
 
-                SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows, manualStart);
-            }
+            //     SpecialElementManager.Ins.FillHiddenTiles(spawnedTileMap, numCols, numRows, manualStart);
+            // }
         }
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
@@ -462,9 +466,6 @@ namespace NamPhuThuy.GamePlay
 
             List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
 
-            GameObject tileComponentHolder = new GameObject();
-            tileComponentHolder.name = "tileComponentHolder";
-
             for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
             {
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
@@ -487,26 +488,8 @@ namespace NamPhuThuy.GamePlay
                 tiles.Add(tile);
             }
 
-            // find num column
-            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
-            float tolerance = 0.01f;
-
-            GamePersistentVariable.numColumn = 0;
-
-            foreach (var tile in antLevelData.antLevelDataItems)
-            {
-                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
-                {
-                    GamePersistentVariable.numColumn++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            GamePersistentVariable.numRow = antLevelData.antLevelDataItems.Count / GamePersistentVariable.numColumn;
-            //
+            GamePersistentVariable.numColumn = antLevelData.levelItemData.numColumn;
+            GamePersistentVariable.numRow = antLevelData.levelItemData.numRow;
 
             for (int i = 0; i < tiles.Count; i++)
             {
@@ -541,9 +524,6 @@ namespace NamPhuThuy.GamePlay
                 {
                     tile.blockages.Add(tiles[leftIndex]);
                 }
-
-                tile.actualBlockages = new List<AntsFlow.BaseTile>();
-                tile.actualBlockages.AddRange(tile.blockages);
 
                 // if (topRightIndex >= 0 && topRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
                 // {

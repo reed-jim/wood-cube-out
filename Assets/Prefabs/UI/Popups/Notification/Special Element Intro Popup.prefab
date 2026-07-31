@@ -293,18 +293,28 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 90816accfb7853a4c886b3e5f8a124a4, type: 3}
   - {fileID: 21300000, guid: 5a0c1e8ff7a218c4ea2532dafb0b656e, type: 3}
   - {fileID: 21300000, guid: 5713c77140c58c6488334b9bc2dd8967, type: 3}
+  - {fileID: 21300000, guid: b47a2157175b89248a9c4665e85a9bf4, type: 3}
+  - {fileID: 21300000, guid: 23bfc9f0e078b994eaaa7d8e1cffe06a, type: 3}
+  - {fileID: 21300000, guid: ae012bcf653eed340a3dce19b36505a1, type: 3}
   specialElementNames:
   - Hidden Ant Box
   - Double Ant Box
   - Frozen Ant Box
   - Wall Tile
   - Hidden Tile
+  - Hard Tiles
+  - Magnetic Box
+  - Toggle Box
   specialElementDescriptions:
   - Reveals itself when moved into the top row
   - Always moves together with its linked partner
   - Can't be selected while frozen. Clear all normal Ant Boxes to unfreeze it
   - Blocks the movement of ants
   - Its color is hidden until it is uncovered
+  - Locks a region of tiles. Clear tiles to reduce the counter and break it
+  - Selecting one pulls both linked boxes into the waiting slots. Requires 2 adjacent
+    slots
+  - Toggles open or closed whenever any Ant Box is selected
 --- !u!114 &2878686236699059345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,8 +397,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Can't be selected while frozen. Clear all normal Ant Boxes to unfreeze
-    it!
+  m_text: Can't select while frozen!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 1345362923132317015, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
@@ -415,7 +424,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 58.1
+  m_fontSize: 72
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1

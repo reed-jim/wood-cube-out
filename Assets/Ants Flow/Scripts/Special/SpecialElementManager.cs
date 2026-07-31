@@ -12,7 +12,12 @@ public enum LevelElement
     NormalAntBox,
     HiddenAntBox,
     AntBoxLink,
-    FreezedAntBox
+    FreezedAntBox,
+    WarriorAntBox,
+    OpenCloseAntBox,
+    MagnetAntBox,
+    KeyAntBox,
+    SnakeAntBox
 }
 
 namespace AntsFlow
@@ -23,8 +28,12 @@ namespace AntsFlow
         public SpecialElementConfig specialElementConfig;
 
         public int nextFreezeAntBoxRequiredNumber;
+        public bool nextOpenCloseAntBoxInitialState = true;
         public List<AntBoxLink> antBoxLinks;
+        public List<MagnetAntBoxLink> magnetAntBoxLinks;
         public SpawningTileBox spawningTileBox;
+        public BossArea bossArea;
+        public Snake snake;
 
         public Sprite hiddenTileSprite;
         public Sprite wallTileSprite;
@@ -36,6 +45,8 @@ namespace AntsFlow
 
         public void Setup(AntsFlow.LevelItem levelItem)
         {
+            Reset();
+
             specialElementConfig = levelItem.specialElementConfig;
 
             for (int i = 0; i < antBoxLinks.Count; i++)
@@ -45,12 +56,28 @@ namespace AntsFlow
 
             antBoxLinks.Clear();
 
+            for (int i = 0; i < magnetAntBoxLinks.Count; i++)
+            {
+                ObjectPoolingEverything.ReturnToPool(GameConstants.magnetAntBoxLink, magnetAntBoxLinks[i].gameObject);
+            }
+
+            magnetAntBoxLinks.Clear();
+
             if (levelsShowSpecialElementIntroduction.Contains(currentLevel.Value))
             {
                 showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
             }
 
-            // SetupSpawningTileBoxes();
+//            SetupSpawningTileBoxes();
+            SetupBossArea(levelItem.specialElementConfig.bossAreaConfig);
+            SetupSnake(levelItem.specialElementConfig.snakeConfig);
+        }
+
+        private void Reset()
+        {
+            spawningTileBox.gameObject.SetActive(false);
+            bossArea.gameObject.SetActive(false);
+            snake.gameObject.SetActive(false);
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -71,11 +98,10 @@ namespace AntsFlow
             {
                 WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
 
-                if (
-                    washingMachine != null &&
-                    washingMachine is not HiddenAntBox &&
-                    washingMachine is not FreezedAntBox
-                )
+                if (washingMachine != null && washingMachine is not HiddenAntBox &&
+                    washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
+                    !washingMachine.isOpenCloseType && !washingMachine.isMagnet)
                 {
                     if (washingMachine.numSlotRequired == 1)
                     {
@@ -124,7 +150,11 @@ namespace AntsFlow
                 if (
                     washingMachine != null &&
                     washingMachine is not HiddenAntBox &&
-                    washingMachine is not FreezedAntBox
+                    washingMachine is not FreezedAntBox &&
+                    washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
+                    !washingMachine.isOpenCloseType &&
+                    !washingMachine.isMagnet
                 )
                 {
                     if (washingMachine.numSlotRequired == 1)
@@ -143,6 +173,148 @@ namespace AntsFlow
                 antBoxLinks.Add(antBoxLink);
 
                 specialElementConfig.doubleAntBoxConfig.RemoveOneSpecialElementInPool();
+            }
+        }
+
+        public void SpawnMagnetAntBoxLinkFirstAntBoxes(int order)
+        {
+            if (specialElementConfig.magnetAntBoxConfig == null ||
+                !specialElementConfig.magnetAntBoxConfig.IsValidToSpawn(order))
+            {
+                return;
+            }
+
+            //if (magnetAntBoxLinks.Count >= 5)
+            //{
+            //    return;
+            //}
+
+            List<WashingMachineItem> validAntBoxesToLink = new List<WashingMachineItem>();
+
+            for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
+
+                if (washingMachine != null && washingMachine is not HiddenAntBox &&
+                    washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
+                    !washingMachine.isOpenCloseType && !washingMachine.isDouble &&
+                    !washingMachine.isMagnet)
+                {
+                    if (washingMachine.numSlotRequired == 1)
+                    {
+                        validAntBoxesToLink.Add(washingMachine);
+                    }
+                }
+            }
+
+            WashingMachineItem box1 = null;
+            WashingMachineItem box2 = null;
+            bool foundPair = false;
+
+            for (int i = 0; i < validAntBoxesToLink.Count; i++)
+            {
+                for (int j = i + 1; j < validAntBoxesToLink.Count; j++)
+                {
+                    int col1 = validAntBoxesToLink[i].washingMachineStartSlot.column;
+                    int col2 = validAntBoxesToLink[j].washingMachineStartSlot.column;
+                    if (Mathf.Abs(col1 - col2) == 1)
+                    {
+                        box1 = validAntBoxesToLink[i];
+                        box2 = validAntBoxesToLink[j];
+                        foundPair = true;
+                        break;
+                    }
+                }
+                if (foundPair) break;
+            }
+
+            if (foundPair)
+            {
+                MagnetAntBoxLink magnetAntBoxLink = ObjectPoolingEverything.GetFromPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink);
+
+                magnetAntBoxLink.Setup(new WashingMachineItem[] { box1, box2 });
+
+                magnetAntBoxLinks.Add(magnetAntBoxLink);
+
+                specialElementConfig.magnetAntBoxConfig.RemoveOneSpecialElementInPool();
+            }
+        }
+
+        public void SpawnMagnetAntBoxLink()
+        {
+            if (specialElementConfig.magnetAntBoxConfig == null ||
+                !specialElementConfig.magnetAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                return;
+            }
+
+            //if (magnetAntBoxLinks.Count >= 5)
+            //{
+            //    return;
+            //}
+
+            List<WashingMachineItem> validAntBoxesToLink = new List<WashingMachineItem>();
+
+            for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.row < 2)
+                {
+                    continue;
+                }
+
+                WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
+
+                if (
+                    washingMachine != null &&
+                    washingMachine is not HiddenAntBox &&
+                    washingMachine is not FreezedAntBox &&
+                    washingMachine is not KeyAntBox &&
+                    washingMachine is not WarriorAntBox &&
+                    !washingMachine.isOpenCloseType &&
+                    !washingMachine.isDouble &&
+                    !washingMachine.isMagnet
+                )
+                {
+                    if (washingMachine.numSlotRequired == 1)
+                    {
+                        validAntBoxesToLink.Add(washingMachine);
+                    }
+                }
+            }
+
+            WashingMachineItem box1 = null;
+            WashingMachineItem box2 = null;
+            bool foundPair = false;
+
+            for (int i = 0; i < validAntBoxesToLink.Count; i++)
+            {
+                for (int j = i + 1; j < validAntBoxesToLink.Count; j++)
+                {
+                    int col1 = validAntBoxesToLink[i].washingMachineStartSlot.column;
+                    int col2 = validAntBoxesToLink[j].washingMachineStartSlot.column;
+                    if (Mathf.Abs(col1 - col2) == 1)
+                    {
+                        box1 = validAntBoxesToLink[i];
+                        box2 = validAntBoxesToLink[j];
+                        foundPair = true;
+                        break;
+                    }
+                }
+                if (foundPair) break;
+            }
+
+            if (foundPair)
+            {
+                MagnetAntBoxLink magnetAntBoxLink = ObjectPoolingEverything.GetFromPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink);
+
+                magnetAntBoxLink.Setup(new WashingMachineItem[] { box1, box2 });
+
+                magnetAntBoxLinks.Add(magnetAntBoxLink);
+
+                specialElementConfig.magnetAntBoxConfig.RemoveOneSpecialElementInPool();
             }
         }
 
@@ -205,6 +377,40 @@ namespace AntsFlow
 
                 return LevelElement.FreezedAntBox;
             }
+            else if (specialElementConfig.bossAreaConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                specialElementConfig.bossAreaConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.WarriorAntBox;
+            }
+            else if (specialElementConfig.openCloseAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned, true))
+            {
+                var config = specialElementConfig.openCloseAntBoxConfig;
+                if (config != null && config.initialStates != null && config.initialStates.Count > 0)
+                {
+                    nextOpenCloseAntBoxInitialState = config.initialStates[0];
+                    config.initialStates.RemoveAt(0);
+                }
+                else
+                {
+                    nextOpenCloseAntBoxInitialState = true;
+                }
+                specialElementConfig.openCloseAntBoxConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.OpenCloseAntBox;
+            }
+            else if (specialElementConfig.lockedSlotConfig.keyAntBoxConfig != null && specialElementConfig.lockedSlotConfig.keyAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                specialElementConfig.lockedSlotConfig.keyAntBoxConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.KeyAntBox;
+            }
+            else if (specialElementConfig.snakeConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                specialElementConfig.snakeConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.SnakeAntBox;
+            }
             else
             {
                 return LevelElement.NormalAntBox;
@@ -246,7 +452,7 @@ namespace AntsFlow
         {
             if (manualStart != -1)
             {
-                Color targetColor = ColorUtil.HexToColor("#B04AFD");
+                Color targetColor = ColorUtil.HexToColor("#B792FA");
 
                 for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
                 {
@@ -269,11 +475,28 @@ namespace AntsFlow
             }
 
             int clusterSize = 100;
-            int[] indexesToFill = GetRandomCluster(width, height, clusterSize, manualStart);
+
+            List<int> notValidIndexes = new List<int>();
+
+            for (int i = 0; i < width * height; i++)
+            {
+                if (i >= TileManager.Ins.tiles.Count)
+                {
+                    notValidIndexes.Add(i);
+                }
+            }
+
+            int[] indexesToFill = GetRandomCluster(width, height, clusterSize, manualStart, notValidIndexes);
 
             for (int i = 0; i < indexesToFill.Length; i++)
             {
                 int index = indexesToFill[i];
+
+                if (index < 0 || index >= TileManager.Ins.tiles.Count)
+                {
+                    continue;
+                }
+
                 BaseTile tile = TileManager.Ins.tiles[index];
 
                 Vector3Int cellPos = tile.tilemapPosition;
@@ -352,20 +575,52 @@ namespace AntsFlow
             }
         }
 
-        public static int[] GetRandomCluster(int width, int height, int clusterSize, int manualStart)
+        public static int[] GetRandomCluster
+        (
+            int width,
+            int height,
+            int clusterSize,
+            int manualStart,
+            List<int> emptyIndexes
+        )
         {
             int totalTiles = width * height;
-            clusterSize = Mathf.Min(clusterSize, totalTiles);
 
-            List<int> cluster = new();
-            HashSet<int> visited = new();
+            HashSet<int> blocked = new(emptyIndexes);
+
+            List<int> validIndexes = new(totalTiles - blocked.Count);
+            for (int i = 0; i < totalTiles; i++)
+            {
+                if (!blocked.Contains(i))
+                    validIndexes.Add(i);
+            }
+
+            if (validIndexes.Count == 0)
+                return Array.Empty<int>();
+
+            // Available tiles
+            int availableTiles = totalTiles - blocked.Count;
+            clusterSize = Mathf.Min(clusterSize, availableTiles);
+
+            if (clusterSize <= 0)
+                return System.Array.Empty<int>();
+
+            List<int> cluster = new(clusterSize);
+            HashSet<int> visited = new(blocked); // blocked tiles count as already visited
             List<int> frontier = new();
 
-            int start = UnityEngine.Random.Range(0, totalTiles);
+            int start;
 
             if (manualStart != -1)
             {
+                if (blocked.Contains(manualStart))
+                    return Array.Empty<int>();
+
                 start = manualStart;
+            }
+            else
+            {
+                start = validIndexes[UnityEngine.Random.Range(0, validIndexes.Count)];
             }
 
             cluster.Add(start);
@@ -381,13 +636,13 @@ namespace AntsFlow
 
                 int[] neighbors =
                 {
-                    (y > 0) ? current - width : -1,              // Down
-                    (y < height - 1) ? current + width : -1,     // Up
-                    (x > 0) ? current - 1 : -1,                  // Left
-                    (x < width - 1) ? current + 1 : -1           // Right
-                };
+                y > 0 ? current - width : -1,
+                y < height - 1 ? current + width : -1,
+                x > 0 ? current - 1 : -1,
+                x < width - 1 ? current + 1 : -1
+            };
 
-                // Shuffle neighbors
+                // Fisher-Yates shuffle
                 for (int i = neighbors.Length - 1; i > 0; i--)
                 {
                     int j = UnityEngine.Random.Range(0, i + 1);
@@ -418,32 +673,116 @@ namespace AntsFlow
 
         public void SetupSpawningTileBoxes()
         {
+            /*
             if (specialElementConfig.spawningTileBoxConfig.items == null)
             {
                 return;
             }
 
-            NextSpawningTileBoxes();
+            spawningTileBox.spawnNumberOfFactions = new Dictionary<Color, int>();
+
+            for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
+            {
+                SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
+
+                for (int j = 0; j < item.number; j++)
+                {
+                    WashingMachineManager.Ins.poolFaction.Add(item.faction);
+                }
+
+                spawningTileBox.spawnNumberOfFactions.Add(item.faction, item.number);
+            }
+
+            spawningTileBox.NextSpawningTileBoxes();
+            */
         }
 
-        public void NextSpawningTileBoxes()
+        public void SetupBossArea(BossAreaConfig bossAreaConfig)
         {
-            if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
+            if (bossAreaConfig == null)
             {
                 return;
             }
 
-            Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
+            if (bossAreaConfig.spawnOrder == null)
+            {
+                return;
+            }
 
-            SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[0];
+            if (bossAreaConfig.spawnOrder.Count == 0 || bossAreaConfig.numCoverColumn == 0 || bossAreaConfig.numCoverRow == 0)
+            {
+                return;
+            }
 
-            specialElementConfig.spawningTileBoxConfig.items.RemoveAt(0);
+            bossArea.gameObject.SetActive(true);
 
-            spawningTileBox.gameObject.SetActive(true);
+            int startX = 0;
+            int startY = 0;
 
-            spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.4f * screenSizeWorld.y, -5);
+            if (bossAreaConfig.startNodeId >= 0 && bossAreaConfig.startNodeId < TileManager.Ins.nodes.Count)
+            {
+                Node startNode = TileManager.Ins.nodes[bossAreaConfig.startNodeId];
+                startX = startNode.x;
+                startY = startNode.y;
+            }
 
-            spawningTileBox.Setup(item.faction, item.number);
+            List<Node> nodes = new List<Node>();
+
+            for (int r = 0; r < bossAreaConfig.numCoverRow; r++)
+            {
+                for (int c = 0; c < bossAreaConfig.numCoverColumn; c++)
+                {
+                    int targetX = startX + c;
+                    int targetY = startY + r;
+
+                    Node node = TileManager.Ins.nodes.FirstOrDefault(n => n.x == targetX && n.y == targetY);
+                    if (node != null)
+                    {
+                        nodes.Add(node);
+                    }
+                }
+            }
+
+            bossArea.Setup(nodes, bossAreaConfig);
         }
+
+        public void SetupSnake(SnakeConfig snakeConfig)
+        {
+            if (snakeConfig.spawnOrder == null)
+            {
+                return;
+            }
+
+            if (snakeConfig.spawnOrder.Count == 0)
+            {
+                return;
+            }
+
+            snake.Setup(snakeConfig);
+        }
+
+        // public bool NextSpawningTileBoxes()
+        // {
+        //     if (specialElementConfig.spawningTileBoxConfig.items.Count == 0)
+        //     {
+        //         return false;
+        //     }
+
+        //     Vector2 screenSizeWorld = GamePersistentVariable.screenSizeWorld;
+
+        //     SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[0];
+
+        //     specialElementConfig.spawningTileBoxConfig.items.RemoveAt(0);
+
+        //     spawningTileBox.gameObject.SetActive(true);
+
+        //     spawningTileBox.transform.position = new Vector3(0.4f * screenSizeWorld.x, 0.35f * screenSizeWorld.y, -5);
+
+        //     spawningTileBox.Setup(item.faction, item.number);
+
+        //     SaferioTween.ScaleUpWithPunch(spawningTileBox.transform, 1.1f);
+
+        //     return true;
+        // }
     }
 }

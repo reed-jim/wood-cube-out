@@ -58,6 +58,7 @@ public static class GamePersistentVariable
     #region GAME FLOW
     public static bool hasAppJustLaunched;
     public static bool isLoadingComplete;
+    public static bool isLoadingLevel;
     public static bool isPendingReplay;
     public static bool isPendingReturnHome;
     public static bool isPendingStartLevel;
@@ -106,11 +107,13 @@ public static class GamePersistentVariable
     public static bool isShowBanner;
     public static bool remoteConfigIsShowMREC;
     public static int bannerCooldown = 30;
-    public static bool isEnableRewardedAds;
+    public static bool isEnableRewardedAds = true;
     public static int minLevelDisableRewardedAds;
     public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
     public static bool isUMPPersonalizedAdsConsent;
+    public static int levelShowBanner;
+    public static int levelShowCollapseBanner;
     #endregion
 
     #region LIVES SYSTEM

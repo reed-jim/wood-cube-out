@@ -69,7 +69,34 @@ public class WashingMachineSlot : MonoBehaviour
     private void OnLevelLoaded()
     {
         unlockButtonIcon.color = Color.white;
+        //if (lockSprite != null)
+        //{
+        //    Color color = lockSprite.color;
+        //    color.a = 1f;
+        //    lockSprite.color = color;
+        //}
 
         washingMachineItem = null;
     }
+
+    public void SetLocked(bool locked, bool showUnlockButton = true)
+    {
+        isLocked = locked;
+        if (lockSprite != null)
+        {
+            lockSprite.gameObject.SetActive(locked);
+            if (locked)
+            {
+                Color color = lockSprite.color;
+                color.a = 1f;
+                lockSprite.color = color;
+            }
+        }
+        if (unlockButton != null)
+        {
+            unlockButton.gameObject.SetActive(locked && showUnlockButton);
+        }
+    }
+
 }
+
