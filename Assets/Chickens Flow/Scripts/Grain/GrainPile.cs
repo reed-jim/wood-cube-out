@@ -5,6 +5,7 @@ using System.Linq;
 using AntsFlow;
 using DG.Tweening;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Saferio.Util.SaferioTween;
 using TMPro;
 
@@ -41,6 +42,9 @@ public class GrainPile : MonoBehaviour
     public int numGrainToSwitchEatAnimation;
     public int numChickenEating;
     #endregion
+
+    [Header("Customize")]
+    public float delayFallPerGrain;
 
     [Header("UI")]
     public TMP_Text progressText;
@@ -139,25 +143,59 @@ public class GrainPile : MonoBehaviour
             grains[i].gameObject.SetActive(true);
         }
 
-        int numColumn = 3;
-        int numRow = grains.Count / numColumn;
-
-        Vector2 offset;
-
         List<Vector3> grainPositions = new List<Vector3>();
 
-        for (int i = 0; i < grains.Count; i++)
+        int grainCount = grains.Count;
+        int cols = Mathf.CeilToInt(Mathf.Sqrt(grainCount));
+        int rows = Mathf.CeilToInt((float)grainCount / cols);
+
+        GrainPoolSlot grainPoolSlot = GetComponentInParent<GrainPoolSlot>();
+
+        Vector3 topRight = grainPoolSlot.topRight;
+        Vector3 bottomRight = grainPoolSlot.bottomRight;
+        Vector3 topLeft = grainPoolSlot.topLeft;
+        Vector3 bottomLeft = grainPoolSlot.bottomLeft;
+
+        for (int y = 0; y < rows && grainPositions.Count < grainCount; y++)
         {
-            float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+            float v = rows == 1 ? 0.5f : (float)y / (rows - 1);
 
-            offset = UnityEngine.Random.insideUnitCircle * radius;
-            offset.y -= transform.localPosition.y;
+            Vector3 left = Vector3.Lerp(topLeft, bottomLeft, v);
+            Vector3 right = Vector3.Lerp(topRight, bottomRight, v);
 
-            position = offset;
-            position.z = zOffset;
+            for (int x = 0; x < cols && grainPositions.Count < grainCount; x++)
+            {
+                float u = cols == 1 ? 0.5f : (float)x / (cols - 1);
 
-            grainPositions.Add(position);
+                Vector3 lerpedPosition = Vector3.Lerp(left, right, u);
+
+                lerpedPosition.y -= transform.localPosition.y;
+                lerpedPosition.z = -0.01f * (siblingIndex + 0.001f * (amount - x));
+
+                grainPositions.Add(lerpedPosition);
+            }
         }
+
+        grainPositions = grainPositions
+            .OrderBy(grain => grain.y)
+            .ThenBy(grain => grain.x)
+            .ToList();
+
+        // Random pouring
+        // Vector2 offset;
+
+        // for (int i = 0; i < grains.Count; i++)
+        // {
+        //     float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+        //     offset = UnityEngine.Random.insideUnitCircle * radius;
+        //     offset.y -= transform.localPosition.y;
+
+        //     position = offset;
+        //     position.z = zOffset;
+
+        //     grainPositions.Add(position);
+        // }
 
         for (int i = 0; i < grains.Count; i++)
         {
@@ -165,20 +203,22 @@ public class GrainPile : MonoBehaviour
 
             float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
-            int randomIndex = UnityEngine.Random.Range(0, grainPositions.Count);
-            position = grainPositions[randomIndex];
+            // int randomIndex = UnityEngine.Random.Range(0, grainPositions.Count);
+            // position = grainPositions[randomIndex];
 
-            grainPositions.RemoveAt(randomIndex);
+            // grainPositions.RemoveAt(randomIndex);
+
+            position = grainPositions[i];
 
             Vector3 start = grains[index].transform.localPosition;
             Vector3 end = position;
 
-            grains[index].transform.DOLocalMove(end, duration: 0.3f + 0.002f * i).SetEase(Ease.InQuad)
+            grains[index].transform.DOLocalMove(end, duration: 0.3f + delayFallPerGrain * i).SetEase(Ease.InQuad)
             .OnComplete(() =>
             {
                 grains[index].transform.SetZ(zOffset);
 
-                grains[index].transform.DOPunchPosition(Vector3.up * 0.015f, 0.12f, vibrato: 1, elasticity: 0.2f)
+                grains[index].transform.DOPunchPosition(Vector3.up * 0.15f, 0.12f, vibrato: 1, elasticity: 0.2f)
                 .OnComplete(() =>
                 {
                     if (index == 0)

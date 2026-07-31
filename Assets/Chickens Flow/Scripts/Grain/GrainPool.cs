@@ -81,6 +81,8 @@ public class GrainPool : MonoBehaviour
 
             grainPoolSlot.transform.localPosition = position;
 
+            grainPoolSlot.Setup(distanceBetweenSlots);
+
             grainPoolSlots.Add(grainPoolSlot);
         }
 
