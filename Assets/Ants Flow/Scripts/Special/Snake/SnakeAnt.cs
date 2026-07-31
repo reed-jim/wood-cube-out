@@ -3,17 +3,53 @@ using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
+using Spine.Unity;
 
 namespace AntsFlow
 {
     public class SnakeAnt : BaseAnt
     {
+        public override void Init(Color faction)
+        {
+            this.faction = faction;
+
+            stuckTime = 0;
+            isMovingToSideTile = false;
+
+            skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
+        }
+
         protected override void OnAntReachTarget()
         {
             Attack(onCompleteAction: () =>
             {
-                ReverseMove();
+                DisappearIntoTail();
             });
+        }
+
+        private void DisappearIntoTail()
+        {
+            Vector3 antScale = transform.localScale;
+
+            tweens.Add(Tween.Scale(transform, 0, duration: 0.25f)
+            .OnComplete(() =>
+            {
+                if (tile != null)
+                {
+                    tile.Complete();
+                }
+                gameObject.SetActive(false);
+
+                transform.localScale = antScale;
+
+                isMovingToNest = false;
+                isDroppingTile = false;
+                tile = null;
+
+                GamePersistentVariable.numActiveAnt--;
+            }));
+
+            isDroppingTile = true;
         }
 
         protected override void OnAntMovedToNest()
@@ -39,6 +75,37 @@ namespace AntsFlow
             GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
 
             isDroppingTile = true;
+        }
+
+        public override void MoveToTileGhostMode(BaseTile tile)
+        {
+            tile.isAntApproaching = true;
+
+            this.tile = tile;
+
+            float speed = 10;
+            float distance;
+            float duration;
+            float zPosition = -7 - 0.001f * transform.GetSiblingIndex();
+
+            Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
+
+            Vector2 dir = (Vector2)(tilePosition - transform.position);
+            distance = dir.magnitude;
+            duration = distance / speed;
+
+            Rotate(transform, dir);
+
+            transform.position = transform.position.ChangeZ(zPosition);
+
+            tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(zPosition), duration: duration, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                Attack(onCompleteAction: () =>
+                {
+                    DisappearIntoTail();
+                });
+            }));
         }
 
         private void Attack(Action onCompleteAction)

@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 0c4c21d1ec2c42d4f96b0834bb1e4c21, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 47cb4cb1568515144b74b44bab017e01, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -165,10 +165,14 @@ MonoBehaviour:
   isAnimating: 0
   isInSlot: 0
   isDouble: 0
+  isMagnet: 0
+  magnetPartner: {fileID: 0}
   isGhostMode: 0
   isStucking: 0
   isPlayingWarningLoseAnimation: 0
   isShuffled: 0
+  isOpen: 1
+  isOpenCloseType: 0
   washingMachineStartSlot: {fileID: 0}
   washingMachineSlot: {fileID: 0}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
@@ -496,7 +500,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1015
 --- !u!1 &3422034594232483778
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,7 +607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonAnimation
   skeletonDataAsset: {fileID: 11400000, guid: ea465f05483b029439bbc62fdc3699e9, type: 2}
-  initialSkinName: 087839
+  initialSkinName: box_snake
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
@@ -753,7 +757,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6106337565580250619
 Transform:
   m_ObjectHideFlags: 0

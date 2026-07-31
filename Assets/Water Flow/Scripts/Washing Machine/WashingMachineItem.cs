@@ -208,7 +208,7 @@ public class WashingMachineItem : MonoBehaviour
         isDisable = !(washingMachineStartSlot.row == 0);
 
         numberText.alpha = isDisable ? 0.2f : 1;
-        if(WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+        if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
         {
             bool isTut = false;
             if (WashingMachineManager.Ins != null)
@@ -229,7 +229,7 @@ public class WashingMachineItem : MonoBehaviour
                 transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zOffset);
             }
         }
-     
+
 
     }
 
@@ -553,7 +553,7 @@ public class WashingMachineItem : MonoBehaviour
         return isValid;
     }
 
-    public void OpenTheBox()
+    public virtual void OpenTheBox()
     {
         Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
 
@@ -689,7 +689,7 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
-    public void CheckAntsPathGhostMode()
+    public virtual void CheckAntsPathGhostMode()
     {
         if (isMoving)
         {

@@ -883,6 +883,7 @@ namespace AntsFlow
 
         public void FindSingleAntPath(BaseTile tile)
         {
+            tile.path = null;
             Node start = bottomMostNodes
                 .OrderBy(node => (node.initialPosition - GetTilePosition(tile)).sqrMagnitude)
                 .First();
@@ -957,6 +958,11 @@ namespace AntsFlow
                     if (neighbor.isStarter)
                     {
                         isBlocked = false;
+                    }
+
+                    if (neighbor.isObstacle && neighbor.tile != tile)
+                    {
+                        isBlocked = true;
                     }
 
                     if (neighbor.tile != null && neighbor.tile.Faction == tile.Faction)
@@ -1066,6 +1072,11 @@ namespace AntsFlow
                     // blocked
                     bool isStarterTileAvailable = current.isStarter && !current.tile.isMovedToAnt;
                     bool isReachTarget = !isStarterTileAvailable && neighbor.tile == target;
+
+                    if (neighbor.isObstacle && neighbor.tile != target)
+                    {
+                        continue;
+                    }
 
                     if (neighbor.tile != null && !isReachTarget)
                     {

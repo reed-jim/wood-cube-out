@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
+using Spine.Unity;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,11 +16,14 @@ namespace AntsFlow
     public class Snake : MonoBehaviour
     {
         [SerializeField] private SpriteShapeController spriteShape;
-        [SerializeField] private Transform head;
         [SerializeField] private Transform tail;
-
+        [SerializeField] private SkeletonAnimation skeletonAnimHead;
+        [SpineAnimation] public string idleAnim = "idle";
+        [SpineAnimation] public string actionAnim = "action";
         // Head -> Tail
         public List<Vector2> allPoints = new();
+
+        [SerializeField] private Vector2 tailOffset;
 
         [Range(0, 1)]
         public float snakeLength = 1f;
@@ -37,16 +43,32 @@ namespace AntsFlow
         List<int> allAffectedNodeIndexes;
 
         private Tween updateSnakeLengthTween;
+        private Tween scaleTween;
+        private PrimeTween.Sequence tailScaleSequence;
 
         void OnValidate()
         {
             RebuildSpline(snakeLength);
+            if (tail != null && allPoints != null && allPoints.Count > 0)
+            {
+                tail.transform.position = allPoints[^1] + tailOffset;
+                tail.transform.localPosition = tail.transform.position.ChangeZ(-0.2f);
+
+              
+            }
         }
 
         public void Setup(SnakeConfig snakeConfig)
         {
             gameObject.SetActive(true);
+            tail.gameObject.SetActive(true);
+            skeletonAnimHead.gameObject.SetActive(true);
 
+            this.tailOffset = snakeConfig.tailOffset;
+            if (snakeConfig.width > 0f)
+            {
+                this.width = snakeConfig.width;
+            }
             List<int> indexes;
 
             if (snakeConfig.snakeSegmentIndexes.Count == 0)
@@ -108,8 +130,10 @@ namespace AntsFlow
             allPoints.AddRange(points);
             allPoints = SmoothCorners(allPoints, cornerSize, curveResolution);
 
-            tail.transform.position = allPoints[^1];
+            tail.transform.position = allPoints[^1] + tailOffset;
             tail.transform.localPosition = tail.transform.position.ChangeZ(-0.1f);
+
+      
 
             RebuildSpline(1);
             UpdateNodeObstacleState(1);
@@ -120,12 +144,54 @@ namespace AntsFlow
             GenerateAntNumberPerBox(snakeConfig.spawnOrder.Count, maxHealth);
 
             Reset();
+            ApplyScale(snakeConfig.scaleHead, snakeConfig.isFlipHead);
         }
 
         public void Reset()
         {
-            head.transform.localScale = Vector3.one;
-            tail.transform.localScale = Vector3.one;
+            if (scaleTween.isAlive)
+            {
+                scaleTween.Stop();
+            }
+            if (updateSnakeLengthTween.isAlive)
+            {
+                updateSnakeLengthTween.Stop();
+            }
+            if (tailScaleSequence.isAlive)
+            {
+                tailScaleSequence.Stop();
+            }
+            transform.localScale = Vector3.one;
+            skeletonAnimHead.transform.localScale = Vector3.one * 0.5f;
+            tail.transform.localScale = Vector3.one * 1.5f;
+        }
+
+        private void ApplyScale(float scaleHead, bool isFlipHead)
+        {
+            if (scaleHead > 0f)
+            {
+                skeletonAnimHead.transform.localScale = Vector3.one * scaleHead;
+                if (isFlipHead)
+                {
+                    skeletonAnimHead.transform.localScale = new Vector3(skeletonAnimHead.transform.localScale.x, -skeletonAnimHead.transform.localScale.y, skeletonAnimHead.transform.localScale.z);
+                }
+            }
+        }
+
+        public void PunchTailScale()
+        {
+            if (tail != null)
+            {
+                if (tailScaleSequence.isAlive)
+                {
+                    tailScaleSequence.Stop();
+                }
+
+                Vector3 baseScale = Vector3.one * 1.5f;
+                tailScaleSequence = PrimeTween.Sequence.Create()
+                    .Chain(Tween.Scale(tail, endValue: baseScale * 1.2f, duration: 0.1f, ease: Ease.OutQuad))
+                    .Chain(Tween.Scale(tail, endValue: baseScale, duration: 0.15f, ease: Ease.InQuad));
+            }
         }
 
         public static List<Vector2> SmoothCorners(
@@ -189,10 +255,36 @@ namespace AntsFlow
             return result;
         }
 
+        public void PlayAnimAction(string animName)
+        {
+            TrackEntry trackEntry = skeletonAnimHead.AnimationState.SetAnimation(0, animName, false);
+            trackEntry.Complete += OnAnimationComplete;
+        }
+        private void OnAnimationComplete(TrackEntry trackEntry)
+        {
+            trackEntry.Complete -= OnAnimationComplete;
+            skeletonAnimHead.AnimationState.SetAnimation(0, "idle", true);
+        }
+
         public void Hit()
         {
+            PlayAnimAction(actionAnim);
             health--;
-
+            if (health > 0)
+            {
+                PunchTailScale();
+            }
+            else
+            {
+                if (scaleTween.isAlive)
+                {
+                    scaleTween.Stop();
+                }
+                scaleTween = Tween.Custom(transform.localScale, Vector3.zero, duration: 0.3f, onValueChange: newVal =>
+                {
+                    transform.localScale = newVal;
+                });
+            }
             float prevSnakeLength = snakeLength;
             snakeLength = (float)health / maxHealth;
 
@@ -246,7 +338,7 @@ namespace AntsFlow
             {
                 if (spriteShape.enabled)
                 {
-                    SaferioTween.ScaleDownWithPunch(head);
+                    SaferioTween.ScaleDownWithPunch(skeletonAnimHead.transform);
                     SaferioTween.ScaleDownWithPunch(tail);
                 }
 
@@ -310,7 +402,7 @@ namespace AntsFlow
             }
 
             // Head
-            head.position = visible[0];
+            skeletonAnimHead.transform.position = visible[0];
 
             if (visible.Count > 1)
             {
@@ -318,12 +410,12 @@ namespace AntsFlow
 
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-                head.SetPositionAndRotation(
+                skeletonAnimHead.transform.SetPositionAndRotation(
                     visible[0],
                     Quaternion.Euler(0, 0, angle)
                 );
 
-                head.localPosition = head.localPosition.ChangeZ(-0.1f);
+                skeletonAnimHead.transform.localPosition = skeletonAnimHead.transform.localPosition.ChangeZ(-0.1f);
             }
         }
 
@@ -499,16 +591,16 @@ namespace AntsFlow
                 int x2 = to % width;
                 int y2 = to / width;
 
-                int dx = Mathf.Clamp(x2 - x1, -1, 1);
-                int dy = Mathf.Clamp(y2 - y1, -1, 1);
+                int stepX = System.Math.Sign(x2 - x1);
+                int stepY = System.Math.Sign(y2 - y1);
 
                 int x = x1;
                 int y = y1;
 
                 while (x != x2 || y != y2)
                 {
-                    x += dx;
-                    y += dy;
+                    if (x != x2) x += stepX;
+                    if (y != y2) y += stepY;
 
                     result.Add(y * width + x);
                 }

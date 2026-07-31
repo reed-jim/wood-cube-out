@@ -1044,6 +1044,13 @@ namespace AntsFlow
                 return true;
             }
 
+            if (spec.spawningTileBoxConfig != null &&
+                spec.spawningTileBoxConfig.items != null &&
+                spec.spawningTileBoxConfig.items.Count > 0)
+            {
+                return true;
+            }
+
             return false;
         }
 

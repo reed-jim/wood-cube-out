@@ -1465,6 +1465,9 @@ public class SpawningTileBoxItemConfig
 {
     public Color faction;
     public int number;
+    public int startNodeId = -1;
+    public int numCoverColumn = 3;
+    public int numCoverRow = 3;
 }
 
 [Serializable]
@@ -1491,6 +1494,10 @@ public class SnakeConfig : SpecialElementItemConfig
 {
     public List<int> snakeSegmentIndexes;
     public int health;
+    public Vector2 tailOffset;
+    public float width;
+    public float scaleHead;
+    public bool isFlipHead;
 }
 
 

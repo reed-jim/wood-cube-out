@@ -32,6 +32,7 @@ namespace AntsFlow
         public List<AntBoxLink> antBoxLinks;
         public List<MagnetAntBoxLink> magnetAntBoxLinks;
         public SpawningTileBox spawningTileBox;
+        public List<SpawningTileBox> activeSpawningTileBoxes = new List<SpawningTileBox>();
         public BossArea bossArea;
         public Snake snake;
 
@@ -68,7 +69,7 @@ namespace AntsFlow
                 showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
             }
 
-//            SetupSpawningTileBoxes();
+            SetupSpawningTileBoxes();
             SetupBossArea(levelItem.specialElementConfig.bossAreaConfig);
             SetupSnake(levelItem.specialElementConfig.snakeConfig);
         }
@@ -76,6 +77,11 @@ namespace AntsFlow
         private void Reset()
         {
             spawningTileBox.gameObject.SetActive(false);
+            foreach (var box in activeSpawningTileBoxes)
+            {
+                if (box != null && box != spawningTileBox) Destroy(box.gameObject);
+            }
+            activeSpawningTileBoxes.Clear();
             bossArea.gameObject.SetActive(false);
             snake.gameObject.SetActive(false);
         }
@@ -100,7 +106,7 @@ namespace AntsFlow
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
-                    washingMachine is not WarriorAntBox &&
+                    washingMachine is not WarriorAntBox && washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType && !washingMachine.isMagnet)
                 {
                     if (washingMachine.numSlotRequired == 1)
@@ -153,6 +159,7 @@ namespace AntsFlow
                     washingMachine is not FreezedAntBox &&
                     washingMachine is not KeyAntBox &&
                     washingMachine is not WarriorAntBox &&
+                    washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isMagnet
                 )
@@ -197,7 +204,7 @@ namespace AntsFlow
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
-                    washingMachine is not WarriorAntBox &&
+                    washingMachine is not WarriorAntBox && washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType && !washingMachine.isDouble &&
                     !washingMachine.isMagnet)
                 {
@@ -273,6 +280,7 @@ namespace AntsFlow
                     washingMachine is not FreezedAntBox &&
                     washingMachine is not KeyAntBox &&
                     washingMachine is not WarriorAntBox &&
+                    washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isDouble &&
                     !washingMachine.isMagnet
@@ -671,31 +679,31 @@ namespace AntsFlow
             return cluster.ToArray();
         }
 
-        public void SetupSpawningTileBoxes()
-        {
-            /*
-            if (specialElementConfig.spawningTileBoxConfig.items == null)
-            {
-                return;
-            }
+        //public void SetupSpawningTileBoxes()
+        //{
+        //    /*
+        //    if (specialElementConfig.spawningTileBoxConfig.items == null)
+        //    {
+        //        return;
+        //    }
 
-            spawningTileBox.spawnNumberOfFactions = new Dictionary<Color, int>();
+        //    spawningTileBox.spawnNumberOfFactions = new Dictionary<Color, int>();
 
-            for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
-            {
-                SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
+        //    for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
+        //    {
+        //        SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
 
-                for (int j = 0; j < item.number; j++)
-                {
-                    WashingMachineManager.Ins.poolFaction.Add(item.faction);
-                }
+        //        for (int j = 0; j < item.number; j++)
+        //        {
+        //            WashingMachineManager.Ins.poolFaction.Add(item.faction);
+        //        }
 
-                spawningTileBox.spawnNumberOfFactions.Add(item.faction, item.number);
-            }
+        //        spawningTileBox.spawnNumberOfFactions.Add(item.faction, item.number);
+        //    }
 
-            spawningTileBox.NextSpawningTileBoxes();
-            */
-        }
+        //    spawningTileBox.NextSpawningTileBoxes();
+        //    */
+        //}
 
         public void SetupBossArea(BossAreaConfig bossAreaConfig)
         {
@@ -784,5 +792,73 @@ namespace AntsFlow
 
         //     return true;
         // }
+        public void SetupSpawningTileBoxes()
+        {
+            if (specialElementConfig.spawningTileBoxConfig == null || specialElementConfig.spawningTileBoxConfig.items == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
+            {
+                SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
+
+                if (item.number <= 0) continue;
+
+                SpawningTileBox newBox = Instantiate(spawningTileBox, spawningTileBox.transform.parent);
+                newBox.gameObject.SetActive(true);
+
+                List<Node> boxNodes = new List<Node>();
+                int destroyedTileCount = 0;
+                if (item.startNodeId >= 0 && item.startNodeId < TileManager.Ins.nodes.Count)
+                {
+                    Node startNode = TileManager.Ins.nodes[item.startNodeId];
+                    int startX = startNode.x;
+                    int startY = startNode.y;
+
+                    Vector3 centerPos = Vector3.zero;
+                    int count = 0;
+                    for (int r = 0; r < item.numCoverRow; r++)
+                    {
+                        for (int c = 0; c < item.numCoverColumn; c++)
+                        {
+                            int targetX = startX + c;
+                            int targetY = startY + r;
+
+                            Node node = TileManager.Ins.nodes.FirstOrDefault(n => n.x == targetX && n.y == targetY);
+                            if (node != null)
+                            {
+                                centerPos += node.initialPosition;
+                                count++;
+                                node.isObstacle = true;
+                                boxNodes.Add(node);
+
+                                if (node.tile != null)
+                                {
+                                    // Remove the tile's color from poolFaction
+                                    GamePersistentVariable.levelItem.poolFaction.Remove(node.tile.Faction);
+
+                                    // Remove from TileManager tiles
+                                    TileManager.Ins.tiles.Remove(node.tile);
+
+                                    // Destroy the tile
+                                    node.tile.Hide();
+                                    node.tile = null;
+                                    destroyedTileCount++;
+                                }
+                            }
+                        }
+                    }
+                    if (count > 0)
+                    {
+                        centerPos /= count;
+                        newBox.transform.position = centerPos.ChangeZ(-7);
+                    }
+                }
+
+                newBox.Setup(item.faction, item.number, boxNodes);
+                activeSpawningTileBoxes.Add(newBox);
+            }
+        }
     }
 }

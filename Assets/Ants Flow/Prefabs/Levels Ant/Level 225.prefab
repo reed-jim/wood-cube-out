@@ -32075,7 +32075,17 @@ MonoBehaviour:
     magnetAntBoxConfig:
       spawnOrder: 0c000000320000001000000011000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
     spawningTileBoxConfig:
-      items: []
+      items:
+      - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+        number: 50
+        startNodeId: 802
+        numCoverColumn: 4
+        numCoverRow: 6
+      - faction: {r: 0.16470589, g: 0.8117647, b: 0.85882354, a: 1}
+        number: 30
+        startNodeId: 43
+        numCoverColumn: 4
+        numCoverRow: 6
     bossAreaConfig:
       spawnOrder: 
       startNodeId: 0
@@ -32117,9 +32127,13 @@ MonoBehaviour:
       keyAntBoxConfig:
         spawnOrder: 
     snakeConfig:
-      spawnOrder: 
-      snakeSegmentIndexes: 
-      health: 0
+      spawnOrder: 01000000030000000a0000000c0000000e000000
+      snakeSegmentIndexes: 3b030000340300000e0200000b0200006301000068010000960000009a00000046000000
+      health: 100
+      tailOffset: {x: 0, y: 0.5}
+      width: 0.3
+      scaleHead: 0.625
+      isFlipHead: 1
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
