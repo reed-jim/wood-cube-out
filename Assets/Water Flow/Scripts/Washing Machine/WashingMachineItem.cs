@@ -228,7 +228,7 @@ public class WashingMachineItem : MonoBehaviour
 
         StartCoroutine(PouringOut(maxAddNumber, possibleChickensToEat, isBucketMoveBack: !isPouringAll, onCompleteAction));
 
-        WashingMachineManager.Ins.grainPool.AddGrain(maxAddNumber);
+        WashingMachineManager.Ins.grainPool.AddGrain(1);
     }
 
     private IEnumerator PouringOut(int numPile, List<BaseChicken> possibleChickensToEat, bool isBucketMoveBack, Action onCompleteAction)
@@ -259,7 +259,7 @@ public class WashingMachineItem : MonoBehaviour
 
                 grainPile.gameObject.SetActive(false);
 
-                remaining--;
+                remaining -= numPile;
                 bool isLast = remaining == 0;
 
                 Vector3 bucketDestination;
@@ -281,7 +281,7 @@ public class WashingMachineItem : MonoBehaviour
                     grainPile.transform.SetParent(grainPoolSlot.transform);
                     grainPile.transform.localPosition = bucketDestination.ChangeX(0);
 
-                    grainPile.Setup(this, 1);
+                    grainPile.Setup(this, numPile);
 
                     if (!isRotated)
                     {
