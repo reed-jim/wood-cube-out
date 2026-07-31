@@ -136,7 +136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -7}
+  m_AnchoredPosition: {x: -0.1, y: -7}
   m_SizeDelta: {x: 2, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4420047711218773919
@@ -289,13 +289,15 @@ MonoBehaviour:
   grains: []
   pileCenter: {x: 0, y: 0, z: 0}
   radius: 1.2
+  grainRandomRadius: 0.1
   amount: 100
   dropOffsetY: -5
+  grainPileSizeX: 0
   totalNumber: 0
   remainingNumber: 0
   currentProgress: 0
   timeEatOneGrain: 0.3
-  delayPerGrain: 0.08
+  delayPerGrain: 0.07
   numGrainToSwitchEatAnimation: 10
   numChickenEating: 0
   delayFallPerGrain: 0.005

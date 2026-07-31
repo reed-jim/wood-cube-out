@@ -28,8 +28,10 @@ public class GrainPile : MonoBehaviour
     public List<Grain> grains;
     public Vector3 pileCenter;
     public float radius = 0.35f;
+    public float grainRandomRadius;
     public int amount = 50;
     public float dropOffsetY = -3;
+    public float grainPileSizeX;
     #endregion
 
     #region Eating
@@ -156,6 +158,8 @@ public class GrainPile : MonoBehaviour
         Vector3 topLeft = grainPoolSlot.topLeft;
         Vector3 bottomLeft = grainPoolSlot.bottomLeft;
 
+        grainPileSizeX = grainPoolSlot.sizeX;
+
         for (int y = 0; y < rows && grainPositions.Count < grainCount; y++)
         {
             float v = rows == 1 ? 0.5f : (float)y / (rows - 1);
@@ -169,7 +173,7 @@ public class GrainPile : MonoBehaviour
 
                 Vector3 lerpedPosition = Vector3.Lerp(left, right, u);
 
-                lerpedPosition += (Vector3)(0.05f * UnityEngine.Random.insideUnitCircle);
+                lerpedPosition += (Vector3)(grainRandomRadius * UnityEngine.Random.insideUnitCircle);
 
                 lerpedPosition.y -= transform.localPosition.y;
                 lerpedPosition.z = -0.01f * (siblingIndex + 0.001f * (amount - x));
@@ -234,7 +238,7 @@ public class GrainPile : MonoBehaviour
 
                         onCompleteAction?.Invoke();
 
-                        StartCoroutine(CheckingFeedChicken(grains, onCompleteAction));
+                        StartCoroutine(CheckingFeedChicken(onCompleteAction));
                     }
                 });
             });
@@ -325,10 +329,10 @@ public class GrainPile : MonoBehaviour
 
         bool IsGrainNearChicken(Transform grainPile)
         {
-            float range = chicken.eatingRange;
+            float range = grainPileSizeX;
 
-            return chicken.transform.position.x > grainPile.position.x - range &&
-                chicken.transform.position.x < grainPile.position.x + range;
+            return chicken.transform.position.x > grainPile.position.x - 0.5f * range &&
+                chicken.transform.position.x < grainPile.position.x + 0.5f * range;
         }
 
         void PlaySoundAndFx()
@@ -342,7 +346,7 @@ public class GrainPile : MonoBehaviour
         }
     }
 
-    private IEnumerator CheckingFeedChicken(List<Grain> grainToBeEaten, Action onCompleteAction)
+    private IEnumerator CheckingFeedChicken(Action onCompleteAction)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
