@@ -24,7 +24,6 @@ public class SettingPopup : BasePopup
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
     [SerializeField] private Button openFacebookGroupButton;
-    [SerializeField] private TMP_Text versionText;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -55,11 +54,6 @@ public class SettingPopup : BasePopup
         notificationToggle.SetState(gameSetting.isNotification);
 
         chooseLanguageContainer.gameObject.SetActive(false);
-
-        if (versionText != null)
-        {
-            versionText.text = "Version:" + Application.version;
-        }
     }
 
     protected override void RegisterMoreEvent()
