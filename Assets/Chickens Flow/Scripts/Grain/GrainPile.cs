@@ -143,6 +143,8 @@ public class GrainPile : MonoBehaviour
             grains[i].transform.localPosition = position;
 
             grains[i].gameObject.SetActive(true);
+
+            // GrainPool.Ins.particleField.SpawnParticleAtWorld(1, grains[i].transform.position);
         }
 
         List<Vector3> grainPositions = new List<Vector3>();
@@ -238,7 +240,7 @@ public class GrainPile : MonoBehaviour
 
                         onCompleteAction?.Invoke();
 
-                        StartCoroutine(CheckingFeedChicken(onCompleteAction));
+                        // StartCoroutine(CheckingFeedChicken(onCompleteAction));
                     }
                 });
             });
@@ -248,13 +250,8 @@ public class GrainPile : MonoBehaviour
         this.pileCenter.z = -0.01f * siblingIndex;
     }
 
-    public void BeEaten(BaseChicken chicken, Action onCompleteAction)
+    public void BeEaten(BaseChicken chicken, bool isLast, Action onCompleteAction)
     {
-        if (remainingNumber <= 0)
-        {
-            return;
-        }
-
         float progress = 1 - (float)remainingNumber / totalNumber;
         float nextProgress = 1 - (float)(remainingNumber - 1) / totalNumber;
         int startIndex = (int)(progress * grains.Count);
@@ -276,48 +273,67 @@ public class GrainPile : MonoBehaviour
             }
         }
 
-        StartCoroutine(ChickenEatingGrains(chicken, grainsToBeEaten, onCompleteAction));
-
-        remainingNumber--;
+        StartCoroutine(ChickenEatingGrains(chicken, grainsToBeEaten, isLast, onCompleteAction));
 
         chickenToEat = chicken;
     }
 
-    private IEnumerator ChickenEatingGrains(BaseChicken chicken, List<Grain> grainToBeEaten, Action onCompleteAction)
+    private IEnumerator ChickenEatingGrains(BaseChicken chicken, List<Grain> grainToBeEaten, bool isLast, Action onCompleteAction)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
-        int index = 0;
+        float percentGrainPerChicken = 1f / totalNumber;
+        float currentPercent = 1 - (float)(totalNumber - numChickenEating) / totalNumber;
 
-        float updateAnimTimeframe = Time.time;
+        int startIndex = (int)(currentPercent * grains.Count);
+        int endIndex = (int)((currentPercent + percentGrainPerChicken) * grains.Count);
+        endIndex = Mathf.Min(endIndex, grains.Count - 1);
+        int currentIndex = startIndex;
+
+        bool isDone = false;
+
+        numChickenEating++;
+
+        List<Grain> grainsToEat = new List<Grain>();
+
+        for (int i = startIndex; i <= endIndex; i++)
+        {
+            Grain grain = grains[i];
+
+            grainsToEat.Add(grain);
+        }
+
+        grainsToEat = grainsToEat
+            .OrderBy(grain => grain.transform.position.x).ToList();
+
+        currentIndex = 0;
+
+        int numGrainToSwitchAnim = grainsToEat.Count / 3;
 
         chicken.PlayIdleAnim();
 
-        while (!IsGrainNearChicken(transform))
+        while (!isDone)
         {
-            yield return waitForSeconds;
-        }
-
-        while (index < grainToBeEaten.Count)
-        {
-            if (index % numGrainToSwitchEatAnimation == 0)
+            if (currentIndex % numGrainToSwitchAnim == 0)
             {
                 chicken.PlayEatAnim();
-                PlaySoundAndFx();
             }
 
-            grainToBeEaten[index].transform.DOScale(0, duration: timeEatOneGrain)
-            .OnComplete(() =>
-            {
-                grainToBeEaten[index].gameObject.SetActive(false);
+            PlaySoundAndFx(grainsToEat[currentIndex]);
 
-                index++;
-            });
+            grainsToEat[currentIndex].gameObject.SetActive(false);
+
+            currentIndex++;
+
+            if (currentIndex >= grainsToEat.Count)
+            {
+                isDone = true;
+            }
 
             yield return new WaitForSeconds(delayPerGrain);
         }
 
-        if (remainingNumber <= 0)
+        if (isLast)
         {
             WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
             WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
@@ -335,81 +351,15 @@ public class GrainPile : MonoBehaviour
                 chicken.transform.position.x < grainPile.position.x + 0.5f * range;
         }
 
-        void PlaySoundAndFx()
+        void PlaySoundAndFx(Grain grain)
         {
-            ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
-
-            antDissappearFx.transform.position = chicken.transform.position.AddY(-1f);
-            antDissappearFx.Play();
+            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+            fx.transform.position = grain.transform.position.AddZ(-1);
+            var main = fx.main;
+            main.startColor = faction;
+            fx.Play();
 
             SoundManager.Instance.PlaySoundCubeLand();
-        }
-    }
-
-    private IEnumerator CheckingFeedChicken(Action onCompleteAction)
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
-
-        BaseChicken toFeedChicken = null;
-
-        ShowProgressText();
-
-        while (remainingNumber > 0)
-        {
-            toFeedChicken = GetNearestMatchingChicken();
-
-            if (toFeedChicken != null)
-            {
-                toFeedChicken.isEating = true;
-
-                StartCoroutine(FeedingSingleChicken(toFeedChicken));
-
-                remainingNumber--;
-
-                UpdateProgressText();
-            }
-
-            yield return waitForSeconds;
-        }
-
-        while (numChickenEating > 0)
-        {
-            yield return waitForSeconds;
-        }
-
-        WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
-        WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
-        WashingMachineManager.Ins.grainPool.AddGrain(-1);
-
-        onCompleteAction?.Invoke();
-
-        gameObject.SetActive(false);
-
-        bool IsGrainNearChicken(BaseChicken chicken)
-        {
-            float range = chicken.eatingRange;
-
-            return chicken.transform.position.x > transform.position.x - range &&
-                chicken.transform.position.x < transform.position.x + range;
-        }
-
-        BaseChicken GetNearestMatchingChicken()
-        {
-            List<BaseChicken> chickensInFirstRow =
-                ChickenManager.Ins.chickens.Where(item => !item.isMoving && !item.isEating && !item.isDone && item.GetFirstRow() == 0 && item.faction == faction)
-                .ToList();
-
-            for (int i = 0; i < chickensInFirstRow.Count; i++)
-            {
-                BaseChicken chicken = chickensInFirstRow[i];
-
-                if (IsGrainNearChicken(chicken))
-                {
-                    return chicken;
-                }
-            }
-
-            return null;
         }
     }
 

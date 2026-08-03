@@ -347,52 +347,34 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void FeedTheChicken(GrainPile grainPile, bool isGhostChicken = false)
     {
-        return;
-        
-        if (grainPile.chickenToEat != null)
-        {
-            return;
-        }
-
         CheckChickensStuck(isGhostChicken);
 
-        List<BaseChicken> chickensToFeed = chickens
-            .Where(chicken => !chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction)
-            .OrderBy(chicken => Mathf.Abs(chicken.transform.position.x - grainPile.transform.position.x))
-            .ToList();
+        List<BaseChicken> chickensToFeed = new List<BaseChicken>();
 
-        if (chickensToFeed.Count > 0)
+        for (int i = 0; i < chickens.Count; i++)
         {
+            if (grainPile.remainingNumber == 0)
+            {
+                break;
+            }
 
-            chickensToFeed[0].Feed(grainPile, true);
+            BaseChicken chicken = chickens[i];
+
+            if (!chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction)
+            {
+                chickensToFeed.Add(chicken);
+
+                grainPile.remainingNumber--;
+            }
         }
 
-        // List<BaseChicken> chickensToFeed = new List<BaseChicken>();
+        for (int i = 0; i < chickensToFeed.Count; i++)
+        {
+            BaseChicken chicken = chickensToFeed[i];
+            bool isLast = i == chickensToFeed.Count - 1 && grainPile.remainingNumber == 0;
 
-        // for (int i = 0; i < chickens.Count; i++)
-        // {
-        //     BaseChicken chicken = chickens[i];
-
-        //     if (!chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction)
-        //     {
-        //         chickensToFeed.Add(chicken);
-
-        //         remainingNumber--;
-
-        //         if (remainingNumber == 0)
-        //         {
-        //             break;
-        //         }
-        //     }
-        // }
-
-        // for (int i = 0; i < chickensToFeed.Count; i++)
-        // {
-        //     BaseChicken chicken = chickensToFeed[i];
-        //     bool isLast = i == chickensToFeed.Count - 1;
-
-        //     chicken.Feed(grainPile, isLast);
-        // }
+            chicken.Feed(grainPile, isLast);
+        }
     }
 
     public void CheckChickensStuck(bool isGhostChicken = false)

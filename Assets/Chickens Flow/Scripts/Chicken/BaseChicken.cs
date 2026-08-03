@@ -133,7 +133,7 @@ public class BaseChicken : MonoBehaviour
 
     public void Feed(GrainPile grainPile, bool isLastChickenInTheWave)
     {
-        grainPile.BeEaten(this, onCompleteAction: () =>
+        grainPile.BeEaten(this, isLastChickenInTheWave, onCompleteAction: () =>
         {
             transform.SetZ(-9);
 

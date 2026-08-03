@@ -232,7 +232,7 @@ public class WashingMachineItem : MonoBehaviour
 
         StartCoroutine(PouringOut(maxAddNumber, possibleChickensToEat, isBucketMoveBack: !isPouringAll, onCompleteAction));
 
-        WashingMachineManager.Ins.grainPool.AddGrain(1);
+        WashingMachineManager.Ins.grainPool.AddGrain(number);
     }
 
     private IEnumerator PouringOut(int numPile, List<BaseChicken> possibleChickensToEat, bool isBucketMoveBack, Action onCompleteAction)
