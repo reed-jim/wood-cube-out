@@ -1160,17 +1160,17 @@ namespace AntsFlow
 
         public static int RandomPreferMultipleOf5(int min, int max)
         {
-            int first = Mathf.CeilToInt(min / 5f) * 5;
-            int last = Mathf.FloorToInt(max / 5f) * 5;
+            int first = Mathf.CeilToInt(min / 10f) * 10;
+            int last = Mathf.FloorToInt(max / 10f) * 10;
 
-            // At least one multiple of 5 exists in range
+            // At least one multiple of 10 exists in range
             if (first <= last)
             {
-                int count = ((last - first) / 5) + 1;
-                return first + UnityEngine.Random.Range(0, count) * 5;
+                int count = ((last - first) / 10) + 1;
+                return first + UnityEngine.Random.Range(0, count) * 10;
             }
 
-            // No multiple of 5 exists in range
+            // No multiple of 10 exists in range
             return min;
         }
 

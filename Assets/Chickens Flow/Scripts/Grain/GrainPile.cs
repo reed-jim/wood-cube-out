@@ -43,6 +43,7 @@ public class GrainPile : MonoBehaviour
     public float delayPerGrain;
     public int numGrainToSwitchEatAnimation;
     public int numChickenEating;
+    public int numGrainBeEating;
     #endregion
 
     [Header("Customize")]
@@ -87,6 +88,7 @@ public class GrainPile : MonoBehaviour
         chickenToEat = null;
 
         numChickenEating = 0;
+        numGrainBeEating = 0;
     }
 
     public void Setup(WashingMachineItem grainBusket, int amount)
@@ -239,8 +241,6 @@ public class GrainPile : MonoBehaviour
                         ChickenManager.Ins.FeedTheChicken(this);
 
                         onCompleteAction?.Invoke();
-
-                        // StartCoroutine(CheckingFeedChicken(onCompleteAction));
                     }
                 });
             });
@@ -250,49 +250,48 @@ public class GrainPile : MonoBehaviour
         this.pileCenter.z = -0.01f * siblingIndex;
     }
 
-    public void BeEaten(BaseChicken chicken, bool isLast, Action onCompleteAction)
+    public void BeEaten(BaseChicken chicken, int numGrainPerChicken, bool isLast, Action onCompleteAction)
     {
-        float progress = 1 - (float)remainingNumber / totalNumber;
-        float nextProgress = 1 - (float)(remainingNumber - 1) / totalNumber;
-        int startIndex = (int)(progress * grains.Count);
-        int endIndex = (int)(nextProgress * grains.Count);
+        // float progress = 1 - (float)remainingNumber / totalNumber;
+        // float nextProgress = 1 - (float)(remainingNumber - 1) / totalNumber;
+        // int startIndex = (int)(progress * grains.Count);
+        // int endIndex = (int)(nextProgress * grains.Count);
 
-        endIndex = Mathf.Min(endIndex, grains.Count - 1);
+        // endIndex = Mathf.Min(endIndex, grains.Count - 1);
 
-        List<Grain> grainsToBeEaten = new List<Grain>();
+        // List<Grain> grainsToBeEaten = new List<Grain>();
 
-        for (int i = startIndex; i <= endIndex; i++)
-        {
-            Grain grain = grains[i];
+        // for (int i = startIndex; i <= endIndex; i++)
+        // {
+        //     Grain grain = grains[i];
 
-            if (!grain.isBeingEaten && !grain.isDone)
-            {
-                grainsToBeEaten.Add(grain);
+        //     if (!grain.isBeingEaten && !grain.isDone)
+        //     {
+        //         grainsToBeEaten.Add(grain);
 
-                grain.isBeingEaten = true;
-            }
-        }
+        //         grain.isBeingEaten = true;
+        //     }
+        // }
 
-        StartCoroutine(ChickenEatingGrains(chicken, grainsToBeEaten, isLast, onCompleteAction));
+        StartCoroutine(ChickenEatingGrains(chicken, numGrainPerChicken, isLast, onCompleteAction));
 
         chickenToEat = chicken;
     }
 
-    private IEnumerator ChickenEatingGrains(BaseChicken chicken, List<Grain> grainToBeEaten, bool isLast, Action onCompleteAction)
+    private IEnumerator ChickenEatingGrains(BaseChicken chicken, int numGrain, bool isLast, Action onCompleteAction)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
-        float percentGrainPerChicken = 1f / totalNumber;
-        float currentPercent = 1 - (float)(totalNumber - numChickenEating) / totalNumber;
+        float startPercent = (float)numGrainBeEating / totalNumber;
+        numGrainBeEating += numGrain;
+        float endPercent = (float)numGrainBeEating / totalNumber;
 
-        int startIndex = (int)(currentPercent * grains.Count);
-        int endIndex = (int)((currentPercent + percentGrainPerChicken) * grains.Count);
+        int startIndex = (int)(startPercent * grains.Count);
+        int endIndex = (int)(endPercent * grains.Count);
         endIndex = Mathf.Min(endIndex, grains.Count - 1);
         int currentIndex = startIndex;
 
         bool isDone = false;
-
-        numChickenEating++;
 
         List<Grain> grainsToEat = new List<Grain>();
 
@@ -312,6 +311,13 @@ public class GrainPile : MonoBehaviour
 
         chicken.PlayIdleAnim();
 
+
+        float startChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft) / (float)chicken.numGrainPileRequired;
+        float endChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft - numGrain) / (float)chicken.numGrainPileRequired;
+        float distanceChickenEatingPercent = endChickenEatingPercent - startChickenEatingPercent;
+        float percentPerStep = (endChickenEatingPercent - startChickenEatingPercent) / (endIndex - startIndex);
+        float prevChickenEatingProgress = startChickenEatingPercent;
+
         while (!isDone)
         {
             if (currentIndex % numGrainToSwitchAnim == 0)
@@ -330,6 +336,12 @@ public class GrainPile : MonoBehaviour
                 isDone = true;
             }
 
+            float currentPercent = startChickenEatingPercent + ((float)currentIndex / grainsToEat.Count) * distanceChickenEatingPercent;
+
+            chicken.UpdateEatingProgress(currentPercent, prevChickenEatingProgress, delayPerGrain);
+
+            prevChickenEatingProgress = currentPercent;
+
             yield return new WaitForSeconds(delayPerGrain);
         }
 
@@ -339,7 +351,7 @@ public class GrainPile : MonoBehaviour
             WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
         }
 
-        WashingMachineManager.Ins.grainPool.AddGrain(-1);
+        WashingMachineManager.Ins.grainPool.AddGrain(-numGrain);
 
         onCompleteAction?.Invoke();
 

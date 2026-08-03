@@ -20,6 +20,7 @@ public class ChickenManager : Singleton<ChickenManager>
     public Vector2 chickenDistanceRatio;
     public float chickenAreaOffsetY;
     public float depthDistanceXRatio;
+    public int requiredGrainForNormalChicken;
 
     public List<Color> allFactions;
 
@@ -218,7 +219,7 @@ public class ChickenManager : Singleton<ChickenManager>
             chicken.SetFaction(allFactions[index]);
             chicken.column = column;
             chicken.row = row;
-            chicken.numGrainPileRequired = 1;
+            chicken.numGrainPileRequired = 10;
             chicken.numGrainPileRequiredLeft = chicken.numGrainPileRequired;
 
             WaitingChickenSlot waitingChickenSlot = waitingChickenSlots[new Vector2Int(tileColumn, tileRow)];
@@ -317,7 +318,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
         chicken.numColumnTaken = giant.sizeX;
         chicken.numRowTaken = giant.sizeY;
-        chicken.numGrainPileRequired = giant.sizeX;
+        chicken.numGrainPileRequired = 10 * giant.sizeX;
         chicken.numGrainPileRequiredLeft = chicken.numGrainPileRequired;
 
         // Set faction if needed.
@@ -351,30 +352,33 @@ public class ChickenManager : Singleton<ChickenManager>
 
         List<BaseChicken> chickensToFeed = new List<BaseChicken>();
 
-        for (int i = 0; i < chickens.Count; i++)
+        int prevRemaningNumber = grainPile.remainingNumber;
+
+        chickensToFeed = chickens
+            .Where(chicken => !chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction).ToList();
+
+        if (prevRemaningNumber == 0 || chickensToFeed.Count == 0)
         {
-            if (grainPile.remainingNumber == 0)
-            {
-                break;
-            }
-
-            BaseChicken chicken = chickens[i];
-
-            if (!chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction)
-            {
-                chickensToFeed.Add(chicken);
-
-                grainPile.remainingNumber--;
-            }
+            return;
         }
+
+        int numGrainToFeedEachChicken = prevRemaningNumber / chickensToFeed.Count;
+        numGrainToFeedEachChicken = Mathf.Min(numGrainToFeedEachChicken, requiredGrainForNormalChicken);
 
         for (int i = 0; i < chickensToFeed.Count; i++)
         {
             BaseChicken chicken = chickensToFeed[i];
             bool isLast = i == chickensToFeed.Count - 1 && grainPile.remainingNumber == 0;
 
-            chicken.Feed(grainPile, isLast);
+            int actualNumGrainToFeed = Mathf.Min(numGrainToFeedEachChicken, chicken.numGrainPileRequiredLeft);
+            actualNumGrainToFeed = Mathf.Min(actualNumGrainToFeed, grainPile.remainingNumber);
+
+            grainPile.remainingNumber -= actualNumGrainToFeed;
+
+            chicken.Feed(grainPile, actualNumGrainToFeed, isLast);
         }
+
+        grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);
     }
 
     public void CheckChickensStuck(bool isGhostChicken = false)

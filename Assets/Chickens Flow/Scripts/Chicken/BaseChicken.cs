@@ -7,6 +7,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
 using Spine.Unity;
+using TMPro;
 using UnityEngine;
 using static Spine.AnimationState;
 
@@ -20,6 +21,7 @@ public class BaseChicken : MonoBehaviour
     public GameObject eyes;
 
     public LazyHealthBar eatingProgress;
+    public TMP_Text eatingProgressText;
 
     public Color faction;
     public int column;
@@ -90,8 +92,6 @@ public class BaseChicken : MonoBehaviour
             transform.eulerAngles = Vector3.zero;
         }
 
-        numGrainPileRequiredLeft--;
-
         if (numGrainPileRequiredLeft == 0)
         {
             PlayFlyAnim();
@@ -131,31 +131,31 @@ public class BaseChicken : MonoBehaviour
         }
     }
 
-    public void Feed(GrainPile grainPile, bool isLastChickenInTheWave)
+    public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave)
     {
-        grainPile.BeEaten(this, isLastChickenInTheWave, onCompleteAction: () =>
+        grainPile.BeEaten(this, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
         {
             transform.SetZ(-9);
 
-            Vector3 outPosition = transform.position;
-
-            if (outPosition.x > 0)
-            {
-                outPosition.x += 15;
-
-                transform.eulerAngles = new Vector3(0, 180);
-            }
-            else
-            {
-                outPosition.x -= 15;
-
-                transform.eulerAngles = Vector3.zero;
-            }
-
-            numGrainPileRequiredLeft--;
+            numGrainPileRequiredLeft -= numGrain;
 
             if (numGrainPileRequiredLeft == 0)
             {
+                Vector3 outPosition = transform.position;
+
+                if (outPosition.x > 0)
+                {
+                    outPosition.x += 15;
+
+                    transform.eulerAngles = new Vector3(0, 180);
+                }
+                else
+                {
+                    outPosition.x -= 15;
+
+                    transform.eulerAngles = Vector3.zero;
+                }
+
                 PlayFlyAnim();
 
                 Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
@@ -174,24 +174,29 @@ public class BaseChicken : MonoBehaviour
             }
             else
             {
+                PlayIdleAnim();
+
                 isEating = false;
             }
 
             if (numGrainPileRequired > 1)
             {
-                if (!eatingProgress.gameObject.activeSelf)
-                {
-                    SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
-                    {
-                        eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-                    });
-                }
-                else
-                {
-                    eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-                }
+                // if (!eatingProgress.gameObject.activeSelf)
+                // {
+                //     SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
+                //     {
+                //         eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
+                //     });
+                // }
+                // else
+                // {
+                //     eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
+                // }
             }
         });
+
+        float prevProgress = 1 - (numGrainPileRequiredLeft) / (float)numGrainPileRequired;
+        float progress = 1 - (numGrainPileRequiredLeft - numGrain) / (float)numGrainPileRequired;
 
         isEating = true;
     }
@@ -201,6 +206,25 @@ public class BaseChicken : MonoBehaviour
         isDone = true;
     }
 
+    #region Progress
+    public void UpdateEatingProgress(float progress, float prevProgress, float duration = 1f)
+    {
+        if (!eatingProgressText.gameObject.activeSelf)
+        {
+            SaferioTween.ShowWithPunch(eatingProgressText.transform, 1, onCompleteAction: () =>
+            {
+
+            });
+        }
+
+        Tween.Custom(prevProgress, progress, duration, onValueChange: newVal =>
+        {
+            eatingProgressText.text = $"{(int)(newVal * 100)}%";
+        });
+    }
+    #endregion
+
+    #region Animation
     public void PlayIdleAnim(int loopTime, bool isDisableSpineOnComplete = true)
     {
         PlayForCycles(skeletonAnimation, idleAnimation, loopTime, null, false, onCompleteAction: () =>
@@ -314,6 +338,7 @@ public class BaseChicken : MonoBehaviour
 
         state.Complete += handler;
     }
+    #endregion
 
     void Rotate(Vector2 direction)
     {

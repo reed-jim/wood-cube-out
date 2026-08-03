@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
 using Dreamteck.Splines;
+using MyGame.Runtime;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
 using TMPro;
 using UnityEngine;
 
-public class GrainPool : MonoBehaviour
+public class GrainPool : Singleton<GrainPool>
 {
     [Header("Loop Path")]
+    public ParticleField particleField;
     public SplineComputer loopPath;
     public float moveSpeed;
     public float leftBoundX;
@@ -43,8 +45,10 @@ public class GrainPool : MonoBehaviour
 
     public int AmountLeft => maxCapacity - currentAmount;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         grainPileInSlot = new Dictionary<GrainPoolSlot, GrainPile>();
 
         Reset();
@@ -52,6 +56,17 @@ public class GrainPool : MonoBehaviour
         SetupGrainPoolSlots();
 
         StartCoroutine(RunTheQueueLoop());
+
+        particleField.Configure(100, 100);
+
+        Color32[] colors = new Color32[100];
+
+        for (int i = 0; i < colors.Length; i++)
+        {
+            colors[i] = UnityEngine.Random.ColorHSV();
+        }
+
+        particleField.SetPalette(colors);
     }
 
     public void Reset()
@@ -68,7 +83,7 @@ public class GrainPool : MonoBehaviour
 
         distanceBetweenSlots = GamePersistentVariable.screenSizeWorld.x / maxShowingGrainPoolSlots;
 
-        float totalSizeX = initialMaxCapacity * distanceBetweenSlots;
+        float totalSizeX = maxGrainPoolSlots * distanceBetweenSlots;
 
         leftBoundX = -0.5f * totalSizeX;
         rightBoundX = 0.5f * totalSizeX;
@@ -87,54 +102,6 @@ public class GrainPool : MonoBehaviour
         }
 
         leftMostGrainPoolSlot = grainPoolSlots[0];
-    }
-
-    private IEnumerator RunTheQueue()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
-
-        float normalizedDistance = 1f / grainPoolSlots.Count;
-
-        for (int i = 0; i < grainPoolSlots.Count; i++)
-        {
-            GrainPoolSlot loopPathSlot = grainPoolSlots[i];
-
-            loopPathSlot.percentInLoopPath = i * normalizedDistance;
-        }
-
-        while (true)
-        {
-            for (int i = 0; i < grainPoolSlots.Count; i++)
-            {
-                GrainPoolSlot loopPathSlot = grainPoolSlots[i];
-
-                SplineSample sample = loopPath.Evaluate(loopPathSlot.percentInLoopPath);
-
-                loopPathSlot.transform.position = sample.position.ChangeZ(loopPathSlot.transform.position.z);
-
-                loopPathSlot.percentInLoopPath -= moveSpeed;
-
-                // if (loopPathSlot.percentInLoopPath >= percentMoveClothesOut - moveSpeed && loopPathSlot.percentInLoopPath < percentMoveClothesOut)
-                // {
-
-                // }
-
-                // if (loopPathSlot.percentInLoopPath >= percentPuttingClothesIntoLoopPath - moveSpeed && loopPathSlot.percentInLoopPath < percentPuttingClothesIntoLoopPath)
-                // {
-                //     if (loopPathSlot.clothingPiece == null)
-                //     {
-                //         MoveClothingPieceToLoopPath(loopPathSlot);
-                //     }
-                // }
-
-                if (loopPathSlot.percentInLoopPath < 0)
-                {
-                    loopPathSlot.percentInLoopPath = 1;
-                }
-            }
-
-            yield return waitForSeconds;
-        }
     }
 
     private IEnumerator RunTheQueueLoop()
