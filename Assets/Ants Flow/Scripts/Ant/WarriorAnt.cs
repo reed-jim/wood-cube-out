@@ -31,8 +31,7 @@ namespace AntsFlow
 
         public override void Init(Color faction)
         {
-            baseZPosition = -10f;
-            ghostBaseZPosition = -15f;
+            ghostBaseZPosition = -8f;
 
             skeletonAnimation.Skeleton.SetSlotsToSetupPose();
             skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
@@ -95,7 +94,7 @@ namespace AntsFlow
 
             Transform target = SpecialElementManager.Ins.bossArea.transform;
 
-            missile.position = transform.position.ChangeZ(target.position.z);
+            missile.position = transform.position.ChangeZ(target.position.z - 0.1f);
 
             Rotate(missile, target.position - missile.position);
 

@@ -405,6 +405,23 @@ namespace AntsFlow
                     numAnt = levelItem.levelFactionConfig.items[i].numAnt;
                 }
 
+                // GD control độ khó: nếu index của hộp này nằm trong easySpawnOrder thì ép hộp
+                // sinh ra với faction trùng tile đang ăn được ngay trên map (difficulty 0 = faction
+                // có nhiều tile không bị chặn nhất), ghi đè faction/số lượng ở trên.
+                if (levelItem.easySpawnOrder != null &&
+                    levelItem.easySpawnOrder.Count > 0 &&
+                    levelItem.easySpawnOrder.Contains(i))
+                {
+                    Color easyFaction;
+                    int easyNumAnt;
+
+                    if (GetNextAntSpawnByDifficulty(difficultyLevel: 0, out easyFaction, out easyNumAnt))
+                    {
+                        nextFaction = easyFaction;
+                        numAnt = easyNumAnt;
+                    }
+                }
+
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt, onCompleteAction: () =>
                 {
                     SpecialElementManager.Ins.SpawnAntBoxLinkFirstAntBoxes(index);
