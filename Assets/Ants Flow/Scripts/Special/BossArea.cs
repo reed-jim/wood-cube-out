@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Saferio.Util.SaferioTween;
+using Spine;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 
@@ -12,6 +14,11 @@ namespace AntsFlow
 
         public TMP_Text healthText;
         public LazyHealthBar lazyHealthBar;
+
+        [Header("Spine Animation")]
+        [SerializeField] private SkeletonAnimation skeletonAnimation;
+        [SpineAnimation] [SerializeField] private string idleAnimation = "idle";
+        [SpineAnimation] [SerializeField] private string dieAnimation = "die";
 
         private int maxHealth;
         private int currentHealth;
@@ -98,6 +105,11 @@ namespace AntsFlow
             lazyHealthBar.SetProgress((float)currentHealth / maxHealth);
 
             GenerateAntNumberPerBox(bossAreaConfig.spawnOrder.Count, currentHealth);
+
+            if (skeletonAnimation != null && !string.IsNullOrEmpty(idleAnimation))
+            {
+                skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, true);
+            }
         }
 
         private void UpdateHealth()
@@ -128,20 +140,34 @@ namespace AntsFlow
 
             if (currentHealth <= 0)
             {
-                SaferioTween.ScaleDownWithPunch(transform, 0);
-
                 for (int i = 0; i < coveredTiles.Count; i++)
                 {
                     coveredTiles[i].isLocked = false;
                 }
+
+                if (skeletonAnimation != null && !string.IsNullOrEmpty(dieAnimation))
+                {
+                    TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, dieAnimation, false);
+                    trackEntry.Complete += OnDieComplete;
+                }
+                else
+                {
+                    SaferioTween.ScaleDownWithPunch(transform, 0);
+                }
             }
+        }
+
+        private void OnDieComplete(TrackEntry trackEntry)
+        {
+            trackEntry.Complete -= OnDieComplete;
+            SaferioTween.ScaleDownWithPunch(transform, 0);
         }
 
         public void GenerateAntNumberPerBox(int totalBox, int maxHealth)
         {
             numAntPerBox = new List<int>();
 
-            int totalUnits = maxHealth / 5;
+            int totalUnits = maxHealth;
 
             // Base units per number
             int baseUnits = totalUnits / totalBox;
@@ -155,7 +181,7 @@ namespace AntsFlow
                 if (i < remainder)
                     units++;
 
-                numAntPerBox.Add(units * 5);
+                numAntPerBox.Add(units);
             }
         }
 

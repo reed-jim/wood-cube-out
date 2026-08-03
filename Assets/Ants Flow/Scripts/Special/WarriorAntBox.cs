@@ -109,6 +109,26 @@ namespace AntsFlow
             }
         }
 
+        // Warrior ant chỉ dùng tile "done" làm waypoint để bắn boss rồi quay về (không ăn mất tile),
+        // nên waypoint tái sử dụng được. GetFirstNMovableTilesForWarriorAnts mỗi lần chỉ trả về tối đa
+        // số tile done trong hành lang tới boss, nên 1 lần CheckAntsPath chỉ nhả được 1 đợt bằng độ dài
+        // hành lang. Nếu vẫn còn count, tự re-check để nhả tiếp cho hết thay vì phải bốc hộp khác lên bàn.
+        protected override void OnFinishSpawningAntsBatch()
+        {
+            if (remainingNumber <= 0)
+            {
+                return;
+            }
+
+            if (isMoving || GamePersistentVariable.isLevelLost || isGhostMode ||
+                WashingMachineManager.Ins.IsAnyGhostAntBox())
+            {
+                return;
+            }
+
+            CheckAntsPath();
+        }
+
         public override void CheckAntsPathGhostMode()
         {
             if (isMoving)

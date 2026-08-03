@@ -39,6 +39,13 @@ namespace AntsFlow
         public int initialDifficulty;
         public bool overrideInitialDifficulty;
         public int numStartAntBoxes = 6;
+
+        // GD control độ khó: list index của các hộp (trong 6 hộp đầu, index 0..5) sẽ được
+        // ép sinh ra với faction trùng với tile ĐANG ăn được ngay trên map lúc setup level,
+        // ghi đè faction/số lượng do logic difficulty tính ra.
+        // List rỗng (Count == 0) => không áp dụng logic sinh hộp dễ ăn này.
+        public List<int> easySpawnOrder;
+
         public SpecialElementConfig specialElementConfig;
 
         public Vector3 spawnPosition = new Vector3(0, 3, 0);
@@ -138,6 +145,7 @@ namespace AntsFlow
                 initialDifficulty = initialDifficulty,
                 overrideInitialDifficulty = overrideInitialDifficulty,
                 numStartAntBoxes = numStartAntBoxes,
+                easySpawnOrder = easySpawnOrder,
                 specialElementConfig = specialElementConfig
             };
 
@@ -1334,6 +1342,7 @@ public class LevelItemData
     public int initialDifficulty;
     public bool overrideInitialDifficulty;
     public int numStartAntBoxes = 6;
+    public List<int> easySpawnOrder;
     public SpecialElementConfig specialElementConfig;
 }
 

@@ -797,6 +797,14 @@ public class WashingMachineItem : MonoBehaviour
         }
 
         spawningAntCoroutine = null;
+
+        OnFinishSpawningAntsBatch();
+    }
+
+
+    protected virtual void OnFinishSpawningAntsBatch()
+    {
+
     }
 
     private IEnumerator SpawningGhostAnts(List<AntsFlow.BaseTile> tilesForGhostAnts)
