@@ -56,17 +56,6 @@ public class GrainPool : Singleton<GrainPool>
         SetupGrainPoolSlots();
 
         StartCoroutine(RunTheQueueLoop());
-
-        particleField.Configure(100, 100);
-
-        Color32[] colors = new Color32[100];
-
-        for (int i = 0; i < colors.Length; i++)
-        {
-            colors[i] = UnityEngine.Random.ColorHSV();
-        }
-
-        particleField.SetPalette(colors);
     }
 
     public void Reset()

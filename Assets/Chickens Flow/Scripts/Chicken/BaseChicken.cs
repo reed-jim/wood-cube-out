@@ -75,7 +75,7 @@ public class BaseChicken : MonoBehaviour
 
     public void FlyOut()
     {
-        transform.SetZ(-9);
+        transform.SetZ(-9.9f);
 
         Vector3 outPosition = transform.position;
 
@@ -91,6 +91,8 @@ public class BaseChicken : MonoBehaviour
 
             transform.eulerAngles = Vector3.zero;
         }
+
+        outPosition.z = -9.9f;
 
         if (numGrainPileRequiredLeft == 0)
         {
@@ -135,7 +137,7 @@ public class BaseChicken : MonoBehaviour
     {
         grainPile.BeEaten(this, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
         {
-            transform.SetZ(-9);
+            transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
 
             numGrainPileRequiredLeft -= numGrain;
 

@@ -268,7 +268,7 @@ public class WashingMachineItem : MonoBehaviour
 
                 Vector3 bucketDestination;
 
-                bucketDestination.x = 0;
+                bucketDestination.x = -grainPoolSlot.transform.position.x;
                 bucketDestination.y = 7;
                 bucketDestination.z = -9;
 
@@ -283,7 +283,7 @@ public class WashingMachineItem : MonoBehaviour
                     grainPile.gameObject.SetActive(true);
 
                     grainPile.transform.SetParent(grainPoolSlot.transform);
-                    grainPile.transform.localPosition = bucketDestination.ChangeX(0);
+                    grainPile.transform.localPosition = bucketDestination.ChangeX(-grainPoolSlot.transform.position.x);
 
                     grainPile.Setup(this, numPile);
 

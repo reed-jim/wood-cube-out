@@ -292,6 +292,29 @@ namespace MyGame.Runtime
             colorCount[color]++;
         }
 
+        public void HideParticle()
+        {
+            if (activeCount <= 0)
+                return;
+
+            int idx = activeCount - 1;
+
+            int color = colorsNative[idx];
+            if (color >= 0 && color < colorCount.Length)
+                colorCount[color]--;
+
+            // Clear data (optional, but actually "removes" the particle data)
+            positions[idx] = float2.zero;
+            prevPositions[idx] = float2.zero;
+            masses[idx] = 0f;
+            colorsNative[idx] = 0;
+            settledNative[idx] = false;
+            variants[idx] = 0;
+
+            activeCount--;
+            total--;
+        }
+
         private float stepAccumulator;
 
         private void FixedUpdate()

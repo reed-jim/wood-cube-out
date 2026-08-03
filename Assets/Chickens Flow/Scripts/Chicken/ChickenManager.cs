@@ -261,6 +261,22 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         StartCoroutine(RandomlyAnimateChickens());
+
+        SetupParticleField();
+    }
+
+    public void SetupParticleField()
+    {
+        GrainPool.Ins.particleField.Configure(chickens.Count, chickens.Count);
+
+        Color32[] colors = new Color32[chickens.Count];
+
+        for (int i = 0; i < chickens.Count; i++)
+        {
+            colors[i] = chickens[i].faction;
+        }
+
+        GrainPool.Ins.particleField.SetPalette(colors);
     }
 
     private GiantChickenItemConfig GetGiantChickenAt(
@@ -362,7 +378,7 @@ public class ChickenManager : Singleton<ChickenManager>
             return;
         }
 
-        int numGrainToFeedEachChicken = prevRemaningNumber / chickensToFeed.Count;
+        int numGrainToFeedEachChicken = (int)((float)prevRemaningNumber / chickensToFeed.Count);
         numGrainToFeedEachChicken = Mathf.Min(numGrainToFeedEachChicken, requiredGrainForNormalChicken);
 
         for (int i = 0; i < chickensToFeed.Count; i++)
@@ -376,6 +392,11 @@ public class ChickenManager : Singleton<ChickenManager>
             grainPile.remainingNumber -= actualNumGrainToFeed;
 
             chicken.Feed(grainPile, actualNumGrainToFeed, isLast);
+            
+            if (grainPile.remainingNumber <= 0)
+            {
+                break;
+            }
         }
 
         grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);

@@ -320,14 +320,23 @@ public class GrainPile : MonoBehaviour
 
         while (!isDone)
         {
-            if (currentIndex % numGrainToSwitchAnim == 0)
+            try
             {
-                chicken.PlayEatAnim();
+                if (currentIndex % numGrainToSwitchAnim == 0)
+                {
+                    chicken.PlayEatAnim();
+                }
+            }
+            catch (System.Exception)
+            {
+
             }
 
             PlaySoundAndFx(grainsToEat[currentIndex]);
 
             grainsToEat[currentIndex].gameObject.SetActive(false);
+
+            // GrainPool.Ins.particleField.HideParticle();
 
             currentIndex++;
 
