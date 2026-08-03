@@ -1495,6 +1495,7 @@ public class SnakeConfig : SpecialElementItemConfig
     public List<int> snakeSegmentIndexes;
     public int health;
     public Vector2 tailOffset;
+    public float tailAngle;
     public float width;
     public float scaleHead;
     public bool isFlipHead;

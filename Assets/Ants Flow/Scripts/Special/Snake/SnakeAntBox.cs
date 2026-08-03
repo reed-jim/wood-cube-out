@@ -75,7 +75,8 @@ namespace AntsFlow
 
                 if (spawningAntCoroutine == null)
                 {
-                    spawningAntCoroutine = StartCoroutine(SpawningAnts(antType: GameConstants.snakeAnt));
+                    if (gameObject.activeInHierarchy)
+                        spawningAntCoroutine = StartCoroutine(SpawningAnts(antType: GameConstants.snakeAnt));
                 }
             }
             else

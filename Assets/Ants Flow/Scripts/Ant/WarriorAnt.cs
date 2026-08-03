@@ -12,6 +12,11 @@ namespace AntsFlow
     {
         [SpineAnimation] public string attackAnimation;
 
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -26,7 +31,8 @@ namespace AntsFlow
 
         public override void Init(Color faction)
         {
-
+            baseZPosition = -10f;
+            ghostBaseZPosition = -15f;
 
             skeletonAnimation.Skeleton.SetSlotsToSetupPose();
             skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);

@@ -48,7 +48,6 @@ namespace AntsFlow
         private Vector2 direction;
 
         public static event Action requestUpdateNavmeshEvent;
-
         #region Debug
 #if UNITY_EDITOR
         List<Vector3> debugMovePoints;
@@ -68,6 +67,10 @@ namespace AntsFlow
 
         private float speedMove;
         public float initialSpeedMove;
+
+        [Header("Depth Settings")]
+        [SerializeField] protected float baseZPosition = -3f;
+        [SerializeField] protected float ghostBaseZPosition = -7f;
 
         protected virtual void Awake()
         {
@@ -535,7 +538,7 @@ namespace AntsFlow
             float totalTimePassed = 0;
             int zigZagSign = siblingIndex % 2 == 0 ? 1 : -1;
             float zigzagControl = zigZagSign * zigZagFrequency * Mathf.PI * 2f;
-            float zPosition = -3 - 0.001f * siblingIndex;
+            float zPosition = baseZPosition - 0.001f * siblingIndex;
             Quaternion targetRotation;
 
             for (int i = 0; i < points.Count; i++)
@@ -641,7 +644,7 @@ namespace AntsFlow
             float speed = 10;
             float distance;
             float duration;
-            float zPosition = -7 - 0.001f * siblingIndex;
+            float zPosition = ghostBaseZPosition - 0.001f * siblingIndex;
 
             Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
 

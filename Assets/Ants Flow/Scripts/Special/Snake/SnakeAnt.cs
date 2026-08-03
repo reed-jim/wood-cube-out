@@ -17,6 +17,21 @@ namespace AntsFlow
             isMovingToSideTile = false;
 
             skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
+
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.snake != null)
+            {
+                Transform tailTrans = SpecialElementManager.Ins.snake.Tail;
+                if (tailTrans != null)
+                {
+                    Renderer tailRenderer = tailTrans.GetComponentInChildren<Renderer>();
+                    Renderer myRenderer = GetComponentInChildren<Renderer>();
+                    if (tailRenderer != null && myRenderer != null)
+                    {
+                        myRenderer.sortingLayerID = tailRenderer.sortingLayerID;
+                        myRenderer.sortingOrder = tailRenderer.sortingOrder + 1;
+                    }
+                }
+            }
         }
 
         protected override void OnAntReachTarget()
@@ -30,6 +45,15 @@ namespace AntsFlow
         private void DisappearIntoTail()
         {
             Vector3 antScale = transform.localScale;
+
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.snake != null)
+            {
+                Transform tailTrans = SpecialElementManager.Ins.snake.Tail;
+                if (tailTrans != null)
+                {
+                    tweens.Add(Tween.Position(transform, tailTrans.position, duration: 0.25f));
+                }
+            }
 
             tweens.Add(Tween.Scale(transform, 0, duration: 0.25f)
             .OnComplete(() =>
@@ -87,6 +111,10 @@ namespace AntsFlow
             float distance;
             float duration;
             float zPosition = -7 - 0.001f * transform.GetSiblingIndex();
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.snake != null && SpecialElementManager.Ins.snake.Tail != null)
+            {
+                zPosition = SpecialElementManager.Ins.snake.Tail.position.z - 0.1f - 0.001f * transform.GetSiblingIndex();
+            }
 
             Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
 

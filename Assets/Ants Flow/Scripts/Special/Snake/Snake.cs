@@ -17,6 +17,7 @@ namespace AntsFlow
     {
         [SerializeField] private SpriteShapeController spriteShape;
         [SerializeField] private Transform tail;
+        public Transform Tail => tail;
         [SerializeField] private SkeletonAnimation skeletonAnimHead;
         [SpineAnimation] public string idleAnim = "idle";
         [SpineAnimation] public string actionAnim = "action";
@@ -24,6 +25,7 @@ namespace AntsFlow
         public List<Vector2> allPoints = new();
 
         [SerializeField] private Vector2 tailOffset;
+        [SerializeField] private float tailAngle;
 
         [Range(0, 1)]
         public float snakeLength = 1f;
@@ -54,17 +56,26 @@ namespace AntsFlow
                 tail.transform.position = allPoints[^1] + tailOffset;
                 tail.transform.localPosition = tail.transform.position.ChangeZ(-0.2f);
 
-              
+                float baseAngle = 0f;
+                if (allPoints.Count > 1)
+                {
+                    Vector2 dir = allPoints[^1] - allPoints[^2];
+                    baseAngle = 90f - Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                }
+                tail.transform.localRotation = Quaternion.Euler(0, 0, baseAngle + tailAngle);
             }
         }
 
         public void Setup(SnakeConfig snakeConfig)
         {
+            Reset();
+
             gameObject.SetActive(true);
             tail.gameObject.SetActive(true);
             skeletonAnimHead.gameObject.SetActive(true);
 
             this.tailOffset = snakeConfig.tailOffset;
+            this.tailAngle = snakeConfig.tailAngle;
             if (snakeConfig.width > 0f)
             {
                 this.width = snakeConfig.width;
@@ -133,7 +144,15 @@ namespace AntsFlow
             tail.transform.position = allPoints[^1] + tailOffset;
             tail.transform.localPosition = tail.transform.position.ChangeZ(-0.1f);
 
-      
+            float baseAngle = 0f;
+            if (allPoints.Count > 1)
+            {
+                Vector2 dir = allPoints[^1] - allPoints[^2];
+                baseAngle = 90f - Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            }
+            tail.transform.localRotation = Quaternion.Euler(0, 0, baseAngle + tailAngle);
+
+
 
             RebuildSpline(1);
             UpdateNodeObstacleState(1);
@@ -142,8 +161,6 @@ namespace AntsFlow
             health = maxHealth;
 
             GenerateAntNumberPerBox(snakeConfig.spawnOrder.Count, maxHealth);
-
-            Reset();
             ApplyScale(snakeConfig.scaleHead, snakeConfig.isFlipHead);
         }
 
@@ -164,6 +181,7 @@ namespace AntsFlow
             transform.localScale = Vector3.one;
             skeletonAnimHead.transform.localScale = Vector3.one * 0.5f;
             tail.transform.localScale = Vector3.one * 1.5f;
+            snakeLength = 1f;
         }
 
         private void ApplyScale(float scaleHead, bool isFlipHead)

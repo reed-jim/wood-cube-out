@@ -276,7 +276,7 @@ namespace AntsFlow
 
             washingMachineItem.isMoving = true;
             washingMachineItem.washingMachineStartSlot.washingMachine = null;
-            if(isLevelContainingNewSpecialElements)
+            if (isLevelContainingNewSpecialElements)
             {
                 if (washingMachineItem.skeletonAnimation != null)
                 {
@@ -287,7 +287,7 @@ namespace AntsFlow
 
             // Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
             Vector3 initialScale = washingMachineItem.transform.localScale;
-            if(isLevelContainingNewSpecialElements)
+            if (isLevelContainingNewSpecialElements)
             {
                 Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
 
@@ -853,10 +853,19 @@ namespace AntsFlow
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
+
+
             if (isLevelContainingNewSpecialElements)
             {
                 HardPixelManager.Ins.OnBoosterClearTiles(tilesToClear.Count);
                 HardPixelManager.Ins.CheckBoosterClear();
+                for (int i = 0; i < washingMachineSlots.Count; i++)
+                {
+                    if (washingMachineSlots[i].washingMachineItem != null)
+                    {
+                        washingMachineSlots[i].washingMachineItem.CheckAntsPath();
+                    }
+                }
                 //comment de test
                 //try
                 //{
@@ -1168,7 +1177,7 @@ namespace AntsFlow
                 List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
 
                 // Only turn on warning lose animation if all occupied slots are actually stuck
-                if(isLevelContainingNewSpecialElements)
+                if (isLevelContainingNewSpecialElements)
                 {
                     bool allActuallyStuck = true;
                     for (int i = 0; i < stuckAntBoxes.Count; i++)
