@@ -14,6 +14,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isPlaySound = true;
 
+    private Vector3 _originalScale;
     private Button _button;
     private Sequence _sequence;
     private List<Tween> _tweens;
@@ -27,6 +28,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 
     private void Awake()
     {
+        _originalScale = transform.localScale;
         preventMultiClickEvent += OnOtherButtonClicked;
 
         _tweens = new List<Tween>();
@@ -67,11 +69,11 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
             _sequence.Stop();
         }
 
-        float currentScale = transform.localScale.x;
+        transform.localScale = _originalScale;
 
-        _sequence = Tween.Scale(transform, scaleMultiplier * currentScale, duration: animationDuration)
-        .Chain(Tween.Scale(transform, 1 / scaleMultiplier * currentScale, duration: animationDuration))
-        .Chain(Tween.Scale(transform, 1f * currentScale, duration: animationDuration));
+        _sequence = Tween.Scale(transform, scaleMultiplier * _originalScale, duration: animationDuration)
+        .Chain(Tween.Scale(transform, (1f / scaleMultiplier) * _originalScale, duration: animationDuration))
+        .Chain(Tween.Scale(transform, _originalScale, duration: animationDuration));
     }
 
     private void PlaySoundOnClick()

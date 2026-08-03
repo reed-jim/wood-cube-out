@@ -10,6 +10,8 @@ namespace AntsFlow
 {
     public class WarriorAnt : BaseAnt
     {
+        private const string moveAnimation = "move";
+
         [SpineAnimation] public string attackAnimation;
 
         protected override void Awake()
@@ -34,6 +36,7 @@ namespace AntsFlow
             ghostBaseZPosition = -8f;
 
             skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+            skeletonAnimation.AnimationState.SetAnimation(0, moveAnimation, true);
             skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
             this.faction = faction;
@@ -93,12 +96,13 @@ namespace AntsFlow
             Transform missile = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.missile);
 
             Transform target = SpecialElementManager.Ins.bossArea.transform;
+            float missileZ = SpecialElementManager.Ins.bossArea.lazyHealthBar.transform.position.z - 0.1f;
 
-            missile.position = transform.position.ChangeZ(target.position.z - 0.1f);
+            missile.position = transform.position.ChangeZ(missileZ);
 
             Rotate(missile, target.position - missile.position);
 
-            Tween.Position(missile, target.position, duration: 0.3f).OnComplete(() =>
+            Tween.Position(missile, target.position.ChangeZ(missileZ), duration: 0.3f).OnComplete(() =>
             {
                 ObjectPoolingEverything.ReturnToPool(GameConstants.missile, missile.gameObject);
 

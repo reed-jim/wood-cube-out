@@ -601,13 +601,26 @@ namespace AntsFlow
             Color nextFaction;
             int numAnt;
 
-            if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
-            {
+            bool forceBossBox = false;
 
-            }
-            else
+            if (!GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
             {
-                return;
+                // Pool faction thường đã hết ants để sinh. Bình thường thì dừng ở đây. NHƯNG nếu boss
+                // vẫn còn warrior box chờ theo spawnOrder thì phải ép sinh nốt: các ô boss lock chặn hết
+                // tile ăn được nên numAntBoxSpawned không tăng tới các mốc spawnOrder lớn, khiến warrior box
+                // "sinh thiếu" và boss không bao giờ bị hạ (bug khi spawnOrder lớn hơn số hộp sinh ban đầu).
+                if (!SpecialElementManager.Ins.HasPendingBossBox())
+                {
+                    return;
+                }
+
+                forceBossBox = true;
+
+                // Faction chỉ để hiển thị màu cho warrior box (số lượng do boss quyết định trong Init).
+                if (poolFaction != null && poolFaction.Count > 0)
+                {
+                    nextFaction = poolFaction[0];
+                }
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
@@ -618,7 +631,7 @@ namespace AntsFlow
                 {
                     numAntBoxSpawned++;
 
-                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column);
+                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column, forceBossBox);
 
                     washingMachineItem.gameObject.SetActive(true);
                     washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
@@ -641,11 +654,13 @@ namespace AntsFlow
             }
         }
 
-        private WashingMachineItem GetAntBoxFromPool(int rowIndex, int columnIndex)
+        private WashingMachineItem GetAntBoxFromPool(int rowIndex, int columnIndex, bool forceBossBox = false)
         {
             string key = GameConstants.washingMachine;
 
-            LevelElement levelElement = SpecialElementManager.Ins.GetNextLevelElement(rowIndex, columnIndex);
+            LevelElement levelElement = forceBossBox
+                ? SpecialElementManager.Ins.GetNextForcedBossElement()
+                : SpecialElementManager.Ins.GetNextLevelElement(rowIndex, columnIndex);
 
             if (levelElement == LevelElement.NormalAntBox)
             {

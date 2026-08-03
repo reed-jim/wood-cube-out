@@ -351,7 +351,16 @@ namespace AntsFlow
 
         public LevelElement GetNextLevelElement(int rowIndex, int columnIndex)
         {
-            if (specialElementConfig.hiddenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            // Boss/Warrior box được ưu tiên kiểm tra TRƯỚC: nếu spawnOrder của boss trùng spawnOrder của
+            // loại box khác (vd Hidden) thì hộp hiện ra vẫn là warrior box đúng thứ tự, boss luôn đủ hộp.
+            // Loại kia chỉ nhường đúng slot trùng đó, không ảnh hưởng gì.
+            if (specialElementConfig.bossAreaConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                specialElementConfig.bossAreaConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.WarriorAntBox;
+            }
+            else if (specialElementConfig.hiddenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
             {
                 specialElementConfig.hiddenAntBoxConfig.RemoveOneSpecialElementInPool();
 
@@ -385,12 +394,6 @@ namespace AntsFlow
 
                 return LevelElement.FreezedAntBox;
             }
-            else if (specialElementConfig.bossAreaConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
-            {
-                specialElementConfig.bossAreaConfig.RemoveOneSpecialElementInPool();
-
-                return LevelElement.WarriorAntBox;
-            }
             else if (specialElementConfig.openCloseAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned, true))
             {
                 var config = specialElementConfig.openCloseAntBoxConfig;
@@ -423,6 +426,29 @@ namespace AntsFlow
             {
                 return LevelElement.NormalAntBox;
             }
+        }
+
+        // Boss còn warrior box chờ trong spawnOrder hay không (không đụng gì tới state).
+        public bool HasPendingBossBox()
+        {
+            return specialElementConfig != null &&
+                   specialElementConfig.bossAreaConfig != null &&
+                   specialElementConfig.bossAreaConfig.spawnOrder != null &&
+                   specialElementConfig.bossAreaConfig.spawnOrder.Count > 0;
+        }
+
+        // Ép lấy 1 warrior box còn lại của boss (bỏ qua so khớp đúng numAntBoxSpawned). Dùng khi pool
+        // faction thường đã cạn: lúc này thứ tự không còn ý nghĩa, chỉ cần nhả nốt cho boss đủ hộp.
+        public LevelElement GetNextForcedBossElement()
+        {
+            if (HasPendingBossBox())
+            {
+                specialElementConfig.bossAreaConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.WarriorAntBox;
+            }
+
+            return LevelElement.NormalAntBox;
         }
 
         public int GetMaxValueFreezedAntBox(int rowIndex, int columnIndex)

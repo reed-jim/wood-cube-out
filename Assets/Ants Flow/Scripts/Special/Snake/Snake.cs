@@ -323,7 +323,7 @@ namespace AntsFlow
         {
             numAntPerBox = new List<int>();
 
-            int totalUnits = maxHealth / 5;
+            int totalUnits = maxHealth;
 
             // Base units per number
             int baseUnits = totalUnits / totalBox;
@@ -337,7 +337,7 @@ namespace AntsFlow
                 if (i < remainder)
                     units++;
 
-                numAntPerBox.Add(units * 5);
+                numAntPerBox.Add(units);
             }
         }
 
