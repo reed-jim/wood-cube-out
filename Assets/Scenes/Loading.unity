@@ -410,6 +410,89 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1080, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &229408628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 229408629}
+  - component: {fileID: 229408630}
+  m_Layer: 0
+  m_Name: Spawns a fixed-color tile into any empty space when a tile is cleared
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &229408629
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229408628}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1102534186}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &229408630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229408628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawns a fixed-color tile into any empty space when a tile is cleared
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Fait appara\xEEtre une tuile de couleur fixe dans n'importe quel espace
+      vide lorsqu'une tuile est effac\xE9e"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Erzeugt eine Kachel mit fester Farbe auf einem beliebigen leeren Feld,
+      wenn eine Kachel abger\xE4umt wird"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Genera una tessera di colore fisso in qualsiasi spazio vuoto quando una
+      tessera viene eliminata
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30BF\u30A4\u30EB\u304C\u30AF\u30EA\u30A2\u3055\u308C\u308B\u3068\u3001\u4EFB\u610F\u306E\u7A7A\u304D\u30B9\u30DA\u30FC\u30B9\u306B\u56FA\u5B9A\u8272\u306E\u30BF\u30A4\u30EB\u3092\u751F\u6210\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD0C0\uC77C\uC744 \uC9C0\uC6B8 \uB54C \uBE48 \uACF5\uAC04\uC5D0 \uACE0\uC815
+      \uC0C9\uC0C1 \uD0C0\uC77C\uC744 \uC0DD\uC131\uD569\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Gera uma pe\xE7a de cor fixa em qualquer espa\xE7o vazio quando uma pe\xE7a
+      \xE9 limpa"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0437\u0434\u0430\u0435\u0442 \u043F\u043B\u0438\u0442\u043A\u0443
+      \u0444\u0438\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0433\u043E
+      \u0446\u0432\u0435\u0442\u0430 \u0432 \u043B\u044E\u0431\u043E\u043C \u043F\u0443\u0441\u0442\u043E\u043C
+      \u043C\u0435\u0441\u0442\u0435, \u043A\u043E\u0433\u0434\u0430 \u043F\u043B\u0438\u0442\u043A\u0430
+      \u043E\u0447\u0438\u0449\u0430\u0435\u0442\u0441\u044F."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Genera un mosaico de color fijo en cualquier espacio vac\xEDo cuando se
+      limpia un mosaico"
+    Object: {fileID: 0}
 --- !u!1001 &371384566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -774,6 +857,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535832575}
   m_CullTransparentMesh: 1
+--- !u!1 &796000489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 796000490}
+  - component: {fileID: 796000491}
+  m_Layer: 0
+  m_Name: Spider Hunter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &796000490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796000489}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1102534186}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &796000491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796000489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spider Hunter
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Chasseur d'araign\xE9es"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Spinnenj\xE4ger"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Cacciatore di ragni
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30D1\u30A4\u30C0\u30FC\u30CF\u30F3\u30BF\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2A4\uD30C\uC774\uB354\uD5CC\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Ca\xE7ador de Aranhas"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0445\u043E\u0442\u043D\u0438\u043A \u043D\u0430 \u043F\u0430\u0443\u043A\u043E\u0432"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Cazador de ara\xF1as"
+    Object: {fileID: 0}
 --- !u!1 &817468848
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,6 +1191,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!4 &1102534186 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 1582410615}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1139578509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1096,6 +1257,91 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 628f3b7a92d55574b82949dd0ba1d280, type: 3}
+--- !u!1 &1159780797
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1159780798}
+  - component: {fileID: 1159780799}
+  m_Layer: 0
+  m_Name: Spawns hunter ants that defeat the boss spider to clear its webbed tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1159780798
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159780797}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1102534186}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1159780799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159780797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawns hunter ants that defeat the boss spider to clear its webbed tiles
+    Object: {fileID: 0}
+  - Language: French
+    Text: "G\xE9n\xE8re des fourmis chasseuses qui battent l'araign\xE9e patronne
+      pour nettoyer ses tuiles palm\xE9es."
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Bringt J\xE4gerameisen hervor, die die Boss-Spinne besiegen, um ihre vernetzten
+      Kacheln freizumachen"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Genera formiche cacciatrici che sconfiggono il ragno boss per ripulire
+      le sue tessere ragnatele
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30DC\u30B9 \u30B9\u30D1\u30A4\u30C0\u30FC\u3092\u5012\u3057\u3066\u6C34\u304B\u304D\u306E\u3042\u308B\u30BF\u30A4\u30EB\u3092\u53D6\u308A\u9664\u304F\u30CF\u30F3\u30BF\u30FC
+      \u30A2\u30EA\u3092\u30B9\u30DD\u30FC\u30F3\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBB3C\uAC08\uD034\uAC00 \uC788\uB294 \uD0C0\uC77C\uC744 \uCCAD\uC18C\uD558\uAE30
+      \uC704\uD574 \uBCF4\uC2A4 \uAC70\uBBF8\uB97C \uBB3C\uB9AC\uCE58\uB294 \uC0AC\uB0E5\uAFBC
+      \uAC1C\uBBF8\uB97C \uC0DD\uC131\uD569\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Gera formigas ca\xE7adoras que derrotam a aranha-chefe para limpar seus
+      ladrilhos com membranas"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0437\u0434\u0430\u0435\u0442 \u043C\u0443\u0440\u0430\u0432\u044C\u0435\u0432-\u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u0432,
+      \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u043E\u0431\u0435\u0436\u0434\u0430\u044E\u0442
+      \u043F\u0430\u0443\u043A\u0430-\u0431\u043E\u0441\u0441\u0430 \u0438 \u043E\u0447\u0438\u0449\u0430\u044E\u0442
+      \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u043F\u043E\u043D\u0447\u0430\u0442\u044B\u0435
+      \u043F\u043B\u0438\u0442\u043A\u0438."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Genera hormigas cazadoras que derrotan a la ara\xF1a jefa para limpiar
+      sus mosaicos palmeados."
+    Object: {fileID: 0}
 --- !u!1 &1262431002
 GameObject:
   m_ObjectHideFlags: 0
@@ -1492,6 +1738,18 @@ PrefabInstance:
       propertyPath: woodBreakStateSoundPrefab
       value: 
       objectReference: {fileID: 7606835583939712495, guid: 20e202cbb0411ae4c8efb28f81e218fc, type: 3}
+    - target: {fileID: 3839826773994342846, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: appID
+      value: 6782749554
+      objectReference: {fileID: 0}
+    - target: {fileID: 5087665359884069504, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: m_text
+      value: "Entspannen Sie sich eine Weile vor der n\xE4chsten Schraubenherausforderung."
+      objectReference: {fileID: 0}
+    - target: {fileID: 5087665359884069504, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: m_fontSize
+      value: 46.15
+      objectReference: {fileID: 0}
     - target: {fileID: 6041947459616754546, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: gameLoading
       value: 
@@ -1502,7 +1760,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 796000490}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1790202776}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 229408629}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1159780798}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
 --- !u!1 &1626087555
@@ -1839,6 +2109,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1790202775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1790202776}
+  - component: {fileID: 1790202777}
+  m_Layer: 0
+  m_Name: Snake Cutter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1790202776
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790202775}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1102534186}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1790202777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790202775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Snake Cutter
+    Object: {fileID: 0}
+  - Language: French
+    Text: Coupeur de serpent
+    Object: {fileID: 0}
+  - Language: German
+    Text: Schlangenschneider
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Tagliatore di serpenti
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30CD\u30FC\u30AF\u30AB\u30C3\u30BF\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2A4\uB124\uC774\uD06C \uCEE4\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Cortador de Cobra
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u043C\u0435\u0438\u043D\u044B\u0439 \u0440\u0435\u0437\u0430\u043A"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cortador de serpientes
+    Object: {fileID: 0}
 --- !u!1 &395928970860806824
 GameObject:
   m_ObjectHideFlags: 0
