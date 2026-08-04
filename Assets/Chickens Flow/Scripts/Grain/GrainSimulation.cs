@@ -222,10 +222,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
             {
                 Grain g = group.grains[i];
 
-                g.position.z = g.zPosition;
-
                 if (!g.onPath)
+                {
+                    g.position.z = g.zPosition;
+
+                    group.grains[i] = g;
+
                     continue;
+                }
 
                 // landing absorption
                 if (g.landingTimer < landingDuration)
@@ -288,7 +292,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         dt * 3);
 
                 g.position = center + normal * g.offset;
-                g.position.z = g.zPosition;
+                g.position.z = LayerManager.GetGrainZ() - 0.001f * i;
 
                 group.grains[i] = g;
             }
@@ -359,15 +363,16 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     new Matrix4x4[group.grains.Count];
             }
 
+            Vector3 size = new Vector3(grainSize, grainSize, 0);
+
             for (int i = 0; i < group.grains.Count; i++)
             {
                 group.matrices[i] =
                     Matrix4x4.TRS(
                         group.grains[i].position,
                         Quaternion.identity,
-                        Vector3.one * grainSize);
+                        size);
             }
-
 
             Graphics.RenderMeshInstanced(
                 new RenderParams(

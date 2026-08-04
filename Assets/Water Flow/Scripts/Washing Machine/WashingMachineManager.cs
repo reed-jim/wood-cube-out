@@ -1042,15 +1042,8 @@ namespace AntsFlow
                     continue;
                 }
 
-                CommonUtil.SumValueOfDictionary(result, chicken.faction, 1);
+                CommonUtil.SumValueOfDictionary(result, chicken.faction, ChickenManager.Ins.requiredGrainForNormalChicken);
             }
-
-            return result;
-        }
-
-        public Dictionary<Color, int> GetNumTileWithNoAntPerFaction()
-        {
-            Dictionary<Color, int> result = GetMaxAntRequiredPerFaction();
 
             return result;
         }
@@ -1058,6 +1051,28 @@ namespace AntsFlow
         public Dictionary<Color, int> GetMaxAntRequiredPerFaction(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> result = GetRemaniningTilePerFaction();
+
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.washingMachine != null)
+                {
+                    if (isIncludeStartSlot)
+                    {
+                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        {
+                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
+                    }
+                }
+            }
 
             for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
             {
@@ -1086,7 +1101,29 @@ namespace AntsFlow
 
                 bool isBlocked = chicken.isStuck;
 
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : 1);
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : ChickenManager.Ins.requiredGrainForNormalChicken);
+            }
+
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.washingMachine != null)
+                {
+                    if (isIncludeStartSlot)
+                    {
+                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        {
+                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
+                    }
+                }
             }
 
             for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
@@ -1107,9 +1144,13 @@ namespace AntsFlow
             Dictionary<Color, int> numNotBlockedTilePerFaction = GetNumNotBlockedTilePerFaction(isIncludeStartSlot);
             Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction(isIncludeStartSlot);
 
+            Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty ================");
+
             foreach (var faction in numNotBlockedTilePerFaction.Keys)
             {
-                int maxValue = ChickenManager.Ins.requiredGrainForNormalChicken * maxAntRequiredPerFaction[faction];
+                Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {ColorUtil.ColorToHex(faction)} {maxAntRequiredPerFaction[faction]}");
+
+                int maxValue = maxAntRequiredPerFaction[faction];
                 maxValue = Mathf.Min(maxValue, maxAntNumberThreshold);
 
                 if (maxValue <= minAntNumberThreshold)
