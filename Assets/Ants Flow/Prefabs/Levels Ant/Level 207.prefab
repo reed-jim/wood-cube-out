@@ -22464,6 +22464,7 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 000000000100000002000000030000000400000005000000
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 
@@ -22492,20 +22493,26 @@ MonoBehaviour:
       numCols: 8
       requiredEatCount: 250
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     - id: 1
       startNodeId: 816
       numRows: 10
       numCols: 7
       requiredEatCount: 490
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
@@ -22514,6 +22521,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 1
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
