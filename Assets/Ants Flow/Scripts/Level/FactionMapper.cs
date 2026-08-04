@@ -17,6 +17,7 @@ public class FactionMapper : Singleton<FactionMapper>
     public Dictionary<int, Color> indexesOfColors;
     public Dictionary<Color, int> colorsOfIndexes;
 
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -116,6 +117,47 @@ public class FactionMapper : Singleton<FactionMapper>
         return result;
     }
 
+    // Tra cứu SpriteContainer chịu được sai lệch float nhỏ của màu faction: thử khớp chính xác trước,
+    // nếu trượt (vd màu trong JSON level lệch 1 ULP so với màu trong FactionMapper do làm tròn float khi
+    // serialize/deserialize) thì khớp màu gần nhất thay vì ném KeyNotFoundException.
+    private SpriteContainer ResolveContainer(Color faction)
+    {
+        if (spriteContainersOfColors != null && spriteContainersOfColors.TryGetValue(faction, out SpriteContainer container))
+        {
+            return container;
+        }
+
+        int nearestIndex = -1;
+        float bestDistance = float.MaxValue;
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            Color color = mapper[i].color;
+
+            float distance =
+                (color.r - faction.r) * (color.r - faction.r) +
+                (color.g - faction.g) * (color.g - faction.g) +
+                (color.b - faction.b) * (color.b - faction.b);
+
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                nearestIndex = i;
+            }
+        }
+
+        if (nearestIndex < 0)
+        {
+            Debug.LogError($"FactionMapper: mapper rỗng, không resolve được faction {faction}");
+            return null;
+        }
+
+        Debug.LogWarning($"FactionMapper: faction {faction} không khớp chính xác màu nào (lệch float?), " +
+                         $"dùng màu gần nhất {mapper[nearestIndex].color}. Nên chỉnh lại data cho khớp.");
+
+        return mapper[nearestIndex].spriteContainer;
+    }
+
     public Sprite GetAntBoxSprite(Color faction)
     {
         return spriteContainersOfColors[faction].tileSprite;
@@ -132,6 +174,11 @@ public class FactionMapper : Singleton<FactionMapper>
     {
         return spriteContainersOfColors[faction].tileSprite;
         // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
+    }
+
+    public Sprite GetSpawningBoxTileSprite(Color faction)
+    {
+        return ResolveContainer(faction).spawningTileBox;
     }
 
     public Sprite GetDoubleAntLinkSprite(Color faction)
@@ -154,13 +201,83 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public Sprite GetSpawningTileBoxTop(Color faction)
     {
-        return spriteContainersOfColors[faction].spawningTileBoxTop;
+        return ResolveContainer(faction).spawningTileBoxTop;
     }
 
     public Color GetFaction(Sprite tileSprite)
     {
         return mapper.First(item => item.spriteContainer.tileSprite == tileSprite).color;
     }
+
+#if UNITY_EDITOR
+    [Header("Editor Helper")]
+    public List<Sprite> sourceSprites = new List<Sprite>();
+    
+    public enum TargetSpriteField
+    {
+        TileSprite,
+        DoubleBoxLink,
+        DoubleBoxHole,
+        SpawningTileBoxTop,
+        SpawningTileBox
+    }
+    public TargetSpriteField targetField = TargetSpriteField.TileSprite;
+
+    public void MapSpritesByHexName()
+    {
+        if (sourceSprites == null || sourceSprites.Count == 0)
+        {
+            Debug.LogWarning("Source Sprites list is empty!");
+            return;
+        }
+
+        int count = 0;
+        foreach (var pair in mapper)
+        {
+            if (pair.spriteContainer == null)
+            {
+                pair.spriteContainer = new SpriteContainer();
+            }
+
+            string hexRGB = ColorUtility.ToHtmlStringRGB(pair.color).ToLower();
+            string hexRGBA = ColorUtility.ToHtmlStringRGBA(pair.color).ToLower();
+
+            Sprite matchedSprite = sourceSprites.Find(s =>
+            {
+                if (s == null) return false;
+                string nameCleaned = s.name.Replace("#", "").Replace("0x", "").Trim().ToLower();
+                return nameCleaned == hexRGB || nameCleaned == hexRGBA;
+            });
+
+            if (matchedSprite != null)
+            {
+                switch (targetField)
+                {
+                    case TargetSpriteField.TileSprite:
+                        pair.spriteContainer.tileSprite = matchedSprite;
+                        break;
+                    case TargetSpriteField.DoubleBoxLink:
+                        pair.spriteContainer.doubleBoxLink = matchedSprite;
+                        break;
+                    case TargetSpriteField.DoubleBoxHole:
+                        pair.spriteContainer.doubleBoxHole = matchedSprite;
+                        break;
+                    case TargetSpriteField.SpawningTileBoxTop:
+                        pair.spriteContainer.spawningTileBoxTop = matchedSprite;
+                        break;
+                    case TargetSpriteField.SpawningTileBox:
+                        pair.spriteContainer.spawningTileBox = matchedSprite;
+                        break;
+                }
+                count++;
+                Debug.Log($"Mapped color {hexRGB} to sprite {matchedSprite.name} for field {targetField}");
+            }
+        }
+
+        Debug.Log($"Successfully mapped {count} sprites!");
+        EditorUtility.SetDirty(this);
+    }
+#endif
 }
 
 [Serializable]
@@ -179,25 +296,26 @@ public class SpriteContainer
     public Sprite doubleBoxLink;
     public Sprite doubleBoxHole;
     public Sprite spawningTileBoxTop;
+    public Sprite spawningTileBox;
     public string antBoxSkin;
 }
 
-// #if UNITY_EDITOR
-// [CustomEditor(typeof(FactionMapper))]
-// public class FactionMapperEditor : Editor
-// {
-//     public override void OnInspectorGUI()
-//     {
-//         DrawDefaultInspector();
+#if UNITY_EDITOR
+[CustomEditor(typeof(FactionMapper))]
+public class FactionMapperEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
 
-//         LevelItem levelItem = (LevelItem)target;
+        FactionMapper mapperInstance = (FactionMapper)target;
 
-//         GUILayout.Space(10);
-//     }
-
-//     private void MapSpriteToColor(Sprite levelSprite)
-//     {
-
-//     }
-// }
-// #endif
+        GUILayout.Space(15);
+        GUILayout.Label("Auto-Map Sprites Tool", EditorStyles.boldLabel);
+        if (GUILayout.Button("Map Sprites By Hex Color Name", GUILayout.Height(30)))
+        {
+            mapperInstance.MapSpritesByHexName();
+        }
+    }
+}
+#endif

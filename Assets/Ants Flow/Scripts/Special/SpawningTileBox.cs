@@ -40,7 +40,7 @@ namespace AntsFlow
             this.numberLeft = totalNumber;
             this.occupiedNodes = nodes != null ? nodes : new List<Node>();
 
-            icon.sprite = FactionMapper.Ins.GetTileSprite(faction);
+            icon.sprite = FactionMapper.Ins.GetSpawningBoxTileSprite(faction);
             top.sprite = FactionMapper.Ins.GetSpawningTileBoxTop(faction);
 
             UpdateNumberText();
