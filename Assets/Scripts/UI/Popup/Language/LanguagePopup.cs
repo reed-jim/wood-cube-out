@@ -1,9 +1,10 @@
-using System;
-using System.Linq;
 using Lean.Localization;
 using PrimeTween;
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class LanguagePopup : BasePopup
 {
@@ -22,6 +23,16 @@ public class LanguagePopup : BasePopup
 
             chooseLanguageButtons[i].RegisterOnSelectAction(() => ChangeLanguage(language));
         }
+        if (closeButton != null)
+        {
+            closeButton.onClick.RemoveListener(Hide);
+            closeButton.onClick.AddListener(BackToSetting);
+        }
+    }
+
+    private void BackToSetting()
+    {
+        SwitchRoute(ScreenRoute.Pause);
     }
 
     protected override void Show(Action onCompletedAction = null)

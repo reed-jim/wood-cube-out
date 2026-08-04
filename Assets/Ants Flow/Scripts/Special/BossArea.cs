@@ -12,6 +12,10 @@ namespace AntsFlow
         public List<BaseTile> coveredTiles;
         public List<int> numAntPerBox;
 
+        // Các node ở rìa ngay sát 4 cạnh vùng boss (BÊN NGOÀI vùng boss, không phải node trong vùng).
+        // Warrior ant chỉ được spawn khi đã có đường đi (node clear) thông tới ít nhất 1 node trong tập này.
+        public HashSet<Node> borderNodes;
+
         public TMP_Text healthText;
         public LazyHealthBar lazyHealthBar;
 
@@ -27,6 +31,8 @@ namespace AntsFlow
         public void Setup(List<Node> nodes, BossAreaConfig bossAreaConfig)
         {
             coveredTiles = new List<BaseTile>();
+
+            BuildBorderNodes(nodes);
 
             Vector3 averagePosition = Vector3.zero;
 
@@ -109,6 +115,38 @@ namespace AntsFlow
             if (skeletonAnimation != null && !string.IsNullOrEmpty(idleAnimation))
             {
                 skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, true);
+            }
+        }
+
+        // Rìa boss = các node kề (4 hướng) của node trong vùng boss NHƯNG không thuộc vùng boss.
+        private void BuildBorderNodes(List<Node> coveredNodes)
+        {
+            borderNodes = new HashSet<Node>();
+
+            HashSet<Node> coveredNodeSet = new HashSet<Node>();
+
+            for (int i = 0; i < coveredNodes.Count; i++)
+            {
+                if (coveredNodes[i] != null)
+                {
+                    coveredNodeSet.Add(coveredNodes[i]);
+                }
+            }
+
+            foreach (Node coveredNode in coveredNodeSet)
+            {
+                if (coveredNode.neighbors == null)
+                {
+                    continue;
+                }
+
+                foreach (Node neighbor in coveredNode.neighbors)
+                {
+                    if (neighbor != null && !coveredNodeSet.Contains(neighbor))
+                    {
+                        borderNodes.Add(neighbor);
+                    }
+                }
             }
         }
 

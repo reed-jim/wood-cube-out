@@ -32064,6 +32064,7 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 
@@ -32078,8 +32079,14 @@ MonoBehaviour:
       items:
       - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
         number: 50
+        startNodeId: -1
+        numCoverColumn: 4
+        numCoverRow: 6
       - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352943, a: 1}
         number: 30
+        startNodeId: -1
+        numCoverColumn: 4
+        numCoverRow: 6
     bossAreaConfig:
       spawnOrder: 
       startNodeId: 0
@@ -32096,30 +32103,39 @@ MonoBehaviour:
       numCols: 5
       requiredEatCount: 350
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     - id: 1
       startNodeId: 152
       numRows: 5
       numCols: 10
       requiredEatCount: 460
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     - id: 2
       startNodeId: 128
       numRows: 12
       numCols: 8
       requiredEatCount: 550
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
@@ -32128,6 +32144,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}

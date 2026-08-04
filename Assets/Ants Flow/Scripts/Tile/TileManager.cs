@@ -779,11 +779,22 @@ namespace AntsFlow
 
         public List<BaseTile> GetFirstNMovableTilesForWarriorAnts(int count, Vector2 antBoxPosition)
         {
+            // Warrior ant chỉ được spawn khi đã có đường đi (node clear) thông tới ít nhất 1 node ở rìa
+            // sát boss (bên ngoài vùng boss). Chưa thông tới rìa boss => trả về rỗng => chưa spawn để bắn.
+            // (Revive/ghost đi theo nhánh riêng - đứng rìa map bắn boss - nên không gọi hàm này.)
+            HashSet<Node> bossBorderNodes = null;
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
+            {
+                bossBorderNodes = SpecialElementManager.Ins.bossArea.borderNodes;
+            }
+            bool requireBossBorder = bossBorderNodes != null && bossBorderNodes.Count > 0;
+            bool reachedBossBorder = !requireBossBorder;
+
             Node start = bottomMostNodes
                     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
                     .First();
 
-            var result = new List<BaseTile>();
+            var doneNodes = new List<Node>();
             Queue<Node> edgeQueue = new();
             Queue<Node> normalQueue = new();
             var visited = new HashSet<Node>();
@@ -793,17 +804,23 @@ namespace AntsFlow
             visited.Add(start);
             parent[start] = null;
 
-            while ((edgeQueue.Count > 0 || normalQueue.Count > 0) && result.Count < count)
+            while ((edgeQueue.Count > 0 || normalQueue.Count > 0) && !(reachedBossBorder && doneNodes.Count >= count))
             {
                 Node current = edgeQueue.Count > 0
                     ? edgeQueue.Dequeue()
                     : normalQueue.Dequeue();
 
+                // Chạm được node rìa boss (đã clear & thông đường) => đủ điều kiện cho warrior ant bắn.
+                if (requireBossBorder && bossBorderNodes.Contains(current))
+                {
+                    reachedBossBorder = true;
+                }
+
+                // Thu node có tile đã done (waypoint). Hoãn dựng path tới cuối, chỉ dựng khi thật sự spawn
+                // (đã chạm rìa boss) - tránh dựng path thừa mỗi lần ăn tile lúc chưa thông đường tới boss.
                 if (current.tile != null && current.tile.isDone)
                 {
-                    current.tile.path = ReconstructPath(current, parent);
-
-                    result.Add(current.tile);
+                    doneNodes.Add(current);
                 }
 
                 if (current.tile != null)
@@ -876,6 +893,25 @@ namespace AntsFlow
                         normalQueue.Enqueue(neighbor);
                     }
                 }
+            }
+
+            // Chưa có đường thông tới rìa boss => chưa cho spawn warrior ant.
+            if (!reachedBossBorder)
+            {
+                return new List<BaseTile>();
+            }
+
+            var result = new List<BaseTile>();
+
+            int limit = Mathf.Min(doneNodes.Count, count);
+
+            for (int i = 0; i < limit; i++)
+            {
+                Node doneNode = doneNodes[i];
+
+                doneNode.tile.path = ReconstructPath(doneNode, parent);
+
+                result.Add(doneNode.tile);
             }
 
             return result;

@@ -419,6 +419,45 @@ namespace AntsFlow
                 }
             }
 
+            // Highlight Boss Area
+            if (level.specialElementConfig != null && level.specialElementConfig.bossAreaConfig != null)
+            {
+                var bossConfig = level.specialElementConfig.bossAreaConfig;
+                if (bossConfig.startNodeId >= 0 && bossConfig.numCoverColumn > 0 && bossConfig.numCoverRow > 0)
+                {
+                    int startX = bossConfig.startNodeId % numColumn;
+                    int startY = bossConfig.startNodeId / numColumn;
+
+                    float left = (startX - 0.5f) * tileDistance;
+                    float right = (startX + bossConfig.numCoverColumn - 0.5f) * tileDistance;
+                    float bottom = (startY - 0.5f) * tileDistance;
+                    float top = (startY + bossConfig.numCoverRow - 0.5f) * tileDistance;
+
+                    Vector3[] corners =
+                    {
+                        new Vector3(left, bottom, 0.5f),
+                        new Vector3(left, top, 0.5f),
+                        new Vector3(right, top, 0.5f),
+                        new Vector3(right, bottom, 0.5f)
+                    };
+
+                    Handles.DrawSolidRectangleWithOutline(
+                        corners,
+                        new Color(0f, 0.8f, 1f, 0.25f), // Cyan fill with transparency
+                        new Color(0f, 0.8f, 1f, 1f)    // Solid cyan outline
+                    );
+
+                    Vector3 centerPos = new Vector3((left + right) * 0.5f, (bottom + top) * 0.5f, 0);
+                    GUIStyle labelStyle = new GUIStyle(EditorStyles.whiteBoldLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 11
+                    };
+                    labelStyle.normal.textColor = new Color(0f, 0.9f, 1f, 1f);
+                    Handles.Label(centerPos + Vector3.up * 0.02f, $"Boss Area\n({bossConfig.numCoverColumn}x{bossConfig.numCoverRow})", labelStyle);
+                }
+            }
+
             for (int y = 0; y < numRow; y++)
             {
                 for (int x = 0; x < numColumn; x++)

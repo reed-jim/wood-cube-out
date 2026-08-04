@@ -156,22 +156,34 @@ public class FactionMapper : Singleton<FactionMapper>
         return mapper[nearestIndex].spriteContainer;
     }
 
+    private SpriteContainer GetSpriteContainer(Color faction)
+    {
+        int level = 0;
+
+        level = GameController.Instance.useProfile.CurrentLevel;
+        if (level >= 226)
+        {
+            return ResolveContainer(faction);
+        }
+        else
+        {
+            return spriteContainersOfColors[faction];
+        }
+    }
+
     public Sprite GetAntBoxSprite(Color faction)
     {
-        return spriteContainersOfColors[faction].tileSprite;
-        // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
+        return GetSpriteContainer(faction).tileSprite;
     }
 
     public Sprite GetAntBoxLidSprite(Color faction)
     {
-        return spriteContainersOfColors[faction].tileSprite;
-        // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
+        return GetSpriteContainer(faction).tileSprite;
     }
 
     public Sprite GetTileSprite(Color faction)
     {
-        return spriteContainersOfColors[faction].tileSprite;
-        // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
+        return GetSpriteContainer(faction).tileSprite;
     }
 
     public Sprite GetSpawningBoxTileSprite(Color faction)
@@ -181,20 +193,17 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public Sprite GetDoubleAntLinkSprite(Color faction)
     {
-        return spriteContainersOfColors[faction].doubleBoxLink;
-        // return mapper.First(item => item.color == faction).spriteContainer.doubleBoxLink;
+        return GetSpriteContainer(faction).doubleBoxLink;
     }
 
     public Sprite GetDoubleAntHoleSprite(Color faction)
     {
-        return spriteContainersOfColors[faction].doubleBoxHole;
-        // return mapper.First(item => item.color == faction).spriteContainer.doubleBoxHole;
+        return GetSpriteContainer(faction).doubleBoxHole;
     }
 
     public string GetAntBoxSkin(Color faction)
     {
-        return spriteContainersOfColors[faction].antBoxSkin;
-        // return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
+        return GetSpriteContainer(faction).antBoxSkin;
     }
 
     public Sprite GetSpawningTileBoxTop(Color faction)

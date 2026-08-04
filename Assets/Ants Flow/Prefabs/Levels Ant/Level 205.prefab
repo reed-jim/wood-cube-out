@@ -30464,6 +30464,7 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
@@ -30478,8 +30479,14 @@ MonoBehaviour:
       items:
       - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
         number: 50
+        startNodeId: -1
+        numCoverColumn: 4
+        numCoverRow: 6
       - faction: {r: 0.91372555, g: 0.91372555, b: 0.91372555, a: 1}
         number: 60
+        startNodeId: -1
+        numCoverColumn: 4
+        numCoverRow: 6
     bossAreaConfig:
       spawnOrder: 
       startNodeId: 0
@@ -30498,6 +30505,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 1
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
