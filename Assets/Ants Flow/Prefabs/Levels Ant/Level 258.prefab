@@ -23624,24 +23624,35 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
-      spawnOrder: 
+      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000
     frozenAntBoxConfig:
-      spawnOrder: 080000000700000011000000180000001f00000023000000290000003c000000
-      numBoxToUnfreeze: 0400000003000000020000000400000005000000030000000400000003000000
-    doubleAntBoxConfig:
-      spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
-    magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
-    spawningTileBoxConfig:
-      items: []
-    bossAreaConfig:
       spawnOrder: 
-      startNodeId: 0
-      numCoverColumn: 0
-      numCoverRow: 0
-      bossHealth: 0
+      numBoxToUnfreeze: 
+    doubleAntBoxConfig:
+      spawnOrder: 
+    magnetAntBoxConfig:
+      spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
+    spawningTileBoxConfig:
+      items:
+      - faction: {r: 0.5176471, g: 0.16078432, b: 0.79607844, a: 1}
+        number: 35
+        startNodeId: 125
+        numCoverColumn: 4
+        numCoverRow: 6
+      - faction: {r: 0.054901965, g: 0.31764707, b: 0.7882353, a: 1}
+        number: 40
+        startNodeId: 69
+        numCoverColumn: 4
+        numCoverRow: 6
+    bossAreaConfig:
+      spawnOrder: 0d000000340000000f00000012000000180000001e0000001b000000260000002d0000004c000000250000002900000024000000
+      startNodeId: 471
+      numCoverColumn: 12
+      numCoverRow: 6
+      bossHealth: 2
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
@@ -23654,6 +23665,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 1
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
