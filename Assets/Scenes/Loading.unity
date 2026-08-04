@@ -774,6 +774,80 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535832575}
   m_CullTransparentMesh: 1
+--- !u!1 &710739250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 710739251}
+  - component: {fileID: 710739252}
+  m_Layer: 0
+  m_Name: Restore Purchases
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &710739251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710739250}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1582410616}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &710739252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710739250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Restore Purchases
+    Object: {fileID: 0}
+  - Language: French
+    Text: Restaurer les achats
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Eink\xE4ufe wiederherstellen"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Ripristina gli acquisti
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u8CFC\u5165\u3092\u5FA9\u5143\u3059\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAD6C\uB9E4 \uBCF5\uC6D0"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Restaurar compras
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C
+      \u043F\u043E\u043A\u0443\u043F\u043A\u0438"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Restaurar compras
+    Object: {fileID: 0}
 --- !u!1 &817468848
 GameObject:
   m_ObjectHideFlags: 0
@@ -1492,6 +1566,10 @@ PrefabInstance:
       propertyPath: woodBreakStateSoundPrefab
       value: 
       objectReference: {fileID: 7606835583939712495, guid: 20e202cbb0411ae4c8efb28f81e218fc, type: 3}
+    - target: {fileID: 3839826773994342846, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: appID
+      value: 6782749554
+      objectReference: {fileID: 0}
     - target: {fileID: 6041947459616754546, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: gameLoading
       value: 
@@ -1502,9 +1580,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 710739251}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+--- !u!4 &1582410616 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 1582410615}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1626087555
 GameObject:
   m_ObjectHideFlags: 0
