@@ -130,23 +130,22 @@ public class GrainPile : MonoBehaviour
 
         siblingIndex = transform.GetSiblingIndex();
 
-        Vector2[] positionsInFilledCircle = SunflowerDistribution(grains.Count, radius);
-
         List<Vector3> grainPositions = new List<Vector3>();
 
-        for (int i = 0; i < grains.Count; i++)
+        int totalGrain = totalNumber * GameConstants.grainMultiplier;
+
+        Vector2[] positionsInFilledCircle = SunflowerDistribution(totalGrain, radius);
+
+        for (int i = 0; i < totalGrain; i++)
         {
-            float angle = i * Mathf.PI * 2f / grains.Count;
+            float angle = i * Mathf.PI * 2f / totalGrain;
 
             position = positionsInFilledCircle[i];
             position.y -= 0.5f;
-            position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
+            // position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
+            position.z = -0.01f;
 
-            grains[i].transform.localPosition = position;
-
-            // grains[i].gameObject.SetActive(true);
-
-            grainPositions.Add(grains[i].transform.position);
+            grainPositions.Add(transform.TransformPoint(position));
         }
 
         int grainCount = grains.Count;
@@ -233,13 +232,29 @@ public class GrainPile : MonoBehaviour
 
         int numGrainToEat = numGrain * GameConstants.grainMultiplier;
 
+        Debug.Log($"Chicken {chicken.name} {numGrainToEat} {startChickenEatingPercent} {endChickenEatingPercent}");
+
         while (!isDone)
         {
             try
             {
                 if (currentIndex % 5 == 0)
                 {
-                    chicken.PlayEatAnim();
+                    if (currentIndex == 0)
+                    {
+                        float randomDelay = UnityEngine.Random.Range(0, 0.5f);
+
+                        DOVirtual.DelayedCall(randomDelay, () =>
+                        {
+                            chicken.PlayEatAnim();
+                        });
+
+                        chicken.PlayEatAnim();
+                    }
+                    else
+                    {
+                        chicken.PlayEatAnim();
+                    }
                 }
             }
             catch (System.Exception)
@@ -288,7 +303,7 @@ public class GrainPile : MonoBehaviour
         void PlaySoundAndFx(Vector3 position)
         {
             ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            fx.transform.position = position.AddZ(-3);
+            fx.transform.position = position.AddZ(-5);
             var main = fx.main;
             main.startColor = faction;
             fx.Play();

@@ -258,7 +258,7 @@ public static class GameConstants
     public static string chicken = "chicken";
     public static string waitingChickenSlot = "waitingChickenSlot";
     public static string grainPile = "grainPile";
-    public static int grainMultiplier = 3;
+    public static int grainMultiplier = 5;
     #endregion
 
     #region Ant Out

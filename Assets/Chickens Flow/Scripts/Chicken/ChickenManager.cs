@@ -368,17 +368,17 @@ public class ChickenManager : Singleton<ChickenManager>
 
         List<BaseChicken> chickensToFeed = new List<BaseChicken>();
 
-        int prevRemaningNumber = grainPile.remainingNumber;
-
         chickensToFeed = chickens
             .Where(chicken => !chicken.isEating && !chicken.isDone && !chicken.isStuck && chicken.faction == grainPile.faction).ToList();
 
-        if (prevRemaningNumber == 0 || chickensToFeed.Count == 0)
+        if (grainPile.remainingNumber == 0 || chickensToFeed.Count == 0)
         {
             return;
         }
 
-        int numGrainToFeedEachChicken = (int)((float)prevRemaningNumber / chickensToFeed.Count);
+        int remainder = grainPile.remainingNumber % chickensToFeed.Count;
+
+        int numGrainToFeedEachChicken = (int)((float)grainPile.remainingNumber / chickensToFeed.Count);
         numGrainToFeedEachChicken = Mathf.Min(numGrainToFeedEachChicken, requiredGrainForNormalChicken);
 
         for (int i = 0; i < chickensToFeed.Count; i++)
@@ -391,8 +391,14 @@ public class ChickenManager : Singleton<ChickenManager>
 
             grainPile.remainingNumber -= actualNumGrainToFeed;
 
+            if (remainder > 0)
+            {
+                actualNumGrainToFeed += remainder;
+                remainder = 0;
+            }
+
             chicken.Feed(grainPile, actualNumGrainToFeed, isLast);
-            
+
             if (grainPile.remainingNumber <= 0)
             {
                 break;

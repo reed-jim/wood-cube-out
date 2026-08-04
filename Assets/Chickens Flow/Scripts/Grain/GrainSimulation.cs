@@ -33,12 +33,17 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float windSpeed = 3f;
 
     [Header("Landing")]
+    public Transform landingPoint;
     public float pathSnapDistance = 0.15f;
     public float landingDuration = 0.2f;
     public float impactToPathVelocity = 0.15f;
     public float landingBoost = 0.05f;
     public float bounceHeight = 0.02f;
     public float bounceDamping = 0.15f;
+
+    [Header("Pouring")]
+    public float maxFallDelay = 0.8f;
+    public bool randomizeFallDelay = true;
 
     [Header("Path Variation")]
     public float laneWidth = 0.15f;
@@ -79,6 +84,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public float targetOffset;
 
         public float speedMultiplier;
+
+        public float fallDelay;
     }
 
     class FactionGroup
@@ -158,6 +165,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 if (grain.onPath)
                     continue;
 
+                if (grain.fallDelay > 0f)
+                {
+                    grain.fallDelay -= dt;
+                    group.grains[i] = grain;
+                    continue;
+                }
+
                 grain.fallVelocity -= gravity * dt;
 
                 grain.position.y +=
@@ -167,10 +181,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 float d = FindNearestDistance(
                     grain.position);
 
-                Vector2 closest =
-                    Evaluate(d);
-
-                if (Vector2.Distance(closest, grain.position) < pathSnapDistance)
+                // if (Vector2.Distance(landingPoint.position, grain.position) < pathSnapDistance)
+                if (grain.position.y < landingPoint.position.y)
                 {
                     grain.onPath = true;
                     grain.pathDistance = d;
@@ -183,8 +195,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         grain.fallVelocity;
 
                     grain.landingTimer = 0;
-
-                    grain.position = closest;
 
                     grain.position.y += bounceHeight;
                     grain.fallVelocity *= -bounceDamping;
@@ -200,8 +210,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     void SimulatePath(float dt)
     {
-        float z;
-
         foreach (var group in factionGroups.Values)
         {
             for (int i = 0; i < group.grains.Count; i++)
@@ -594,16 +602,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
         int startIndex =
             group.grains.Count;
 
-        int totalSpawn = GameConstants.grainMultiplier * grainPositions.Count;
+        int totalSpawn = grainPositions.Count;
 
         for (int i = 0; i < totalSpawn; i++)
         {
             Grain g = new Grain();
 
-            g.position = grainPositions[i % grainPositions.Count] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
-
-            g.windPhase =
-                UnityEngine.Random.value * 10f;
+            g.position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
 
             g.offset = 0f;
 
@@ -616,7 +621,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
             g.fallVelocity = 0;
             g.onPath = false;
 
-            g.speedMultiplier = UnityEngine.Random.Range(0.5f, 3f);
+            g.speedMultiplier = 1;
+
+            g.fallDelay = (float)i / (totalSpawn - 1) * maxFallDelay;
 
             group.grains.Add(g);
         }
@@ -644,14 +651,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
             out var group))
             return;
 
-
         if (group.grains.Count == 0)
             return;
 
-
         group.grains.RemoveAt(
             group.grains.Count - 1);
-
 
         group.matrices =
             new Matrix4x4[group.grains.Count];
@@ -679,6 +683,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             for (int g = request.startIndex; g < end; g++)
             {
+                Debug.Log($"CheckSpawnCompletion {g} {request.group.grains.Count}");
                 if (!request.group.grains[g].onPath)
                 {
                     completed = false;

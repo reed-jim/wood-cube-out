@@ -352,6 +352,7 @@ Transform:
   - {fileID: 443001194998169985}
   - {fileID: 8517841810034464817}
   - {fileID: 15773087884532524}
+  - {fileID: 6294717813495154575}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &742065749764928345
@@ -370,20 +371,23 @@ MonoBehaviour:
   spawnPosition: {x: 0, y: 0}
   spawnArea: {x: 1, y: 1}
   gravity: 15
-  moveForce: 20
+  moveForce: 100
   damping: 0.96
-  maxSpeed: 10
+  maxSpeed: 50
   randomStrength: 1
-  grainSpacing: 0.12
-  collisionForce: 20
+  grainSpacing: 0
+  collisionForce: 0
   windStrength: 0
-  windSpeed: 15
+  windSpeed: 50
+  landingPoint: {fileID: 6294717813495154575}
   pathSnapDistance: 0.15
   landingDuration: 0.2
   impactToPathVelocity: 0.15
   landingBoost: 0.05
   bounceHeight: 0.1
   bounceDamping: 0.15
+  maxFallDelay: 0.8
+  randomizeFallDelay: 1
   laneWidth: 2
   laneChangeSpeed: 0.5
   quadMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
@@ -409,6 +413,37 @@ MonoBehaviour:
   spawnAmount: 100
   spawnRandomArea: {x: 1, y: 1}
   textureCount: 4
+--- !u!1 &7994727352605114604
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6294717813495154575}
+  m_Layer: 0
+  m_Name: Landing Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6294717813495154575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7994727352605114604}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2813250161990254930}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8536201531642623890
 GameObject:
   m_ObjectHideFlags: 0
