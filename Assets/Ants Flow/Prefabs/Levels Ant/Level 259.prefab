@@ -32074,7 +32074,7 @@ MonoBehaviour:
     doubleAntBoxConfig:
       spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
     magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -32084,17 +32084,43 @@ MonoBehaviour:
       numCoverRow: 0
       bossHealth: 0
     openCloseAntBoxConfig:
-      spawnOrder: 
-      initialStates: 
-    hardPixelConfigs: []
+      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b00000034000000
+      initialStates: 0100010000010000000100000100010001000100
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 409
+      numRows: 7
+      numCols: 8
+      requiredEatCount: 300
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
+    - id: 0
+      startNodeId: 1347
+      numRows: 8
+      numCols: 12
+      requiredEatCount: 355
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
         spawnOrder: 
     snakeConfig:
-      spawnOrder: 
+      spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
       snakeSegmentIndexes: 4c000000f4000000df0000003301000031010000af010000a70100009f030000a30300001d05000029050000fb05000005060000
-      health: 0
+      health: 300
       tailOffset: {x: 0, y: 0}
       tailAngle: 0
       width: 0

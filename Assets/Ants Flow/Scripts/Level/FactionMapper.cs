@@ -161,7 +161,7 @@ public class FactionMapper : Singleton<FactionMapper>
         int level = 0;
 
         level = GameController.Instance.useProfile.CurrentLevel;
-        if (level >= 226)
+        if (level >= 200)
         {
             return ResolveContainer(faction);
         }
