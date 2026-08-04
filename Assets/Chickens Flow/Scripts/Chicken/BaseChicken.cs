@@ -49,18 +49,18 @@ public class BaseChicken : MonoBehaviour
 
     public float Size => transform.localScale.x;
 
-    void Awake()
-    {
-        Debug.Log($"Chicken Bones: {skeletonAnimation.Skeleton.Data.Bones.Count}");
-        Debug.Log($"Chicken Slots: {skeletonAnimation.Skeleton.Data.Slots.Count}");
-        Debug.Log($"Chicken Animations: {skeletonAnimation.Skeleton.Data.Animations.Count}");
-        Debug.Log($"Chicken Skins: {skeletonAnimation.Skeleton.Data.Skins.Count}");
+    // void Awake()
+    // {
+    //     Debug.Log($"Chicken Bones: {skeletonAnimation.Skeleton.Data.Bones.Count}");
+    //     Debug.Log($"Chicken Slots: {skeletonAnimation.Skeleton.Data.Slots.Count}");
+    //     Debug.Log($"Chicken Animations: {skeletonAnimation.Skeleton.Data.Animations.Count}");
+    //     Debug.Log($"Chicken Skins: {skeletonAnimation.Skeleton.Data.Skins.Count}");
 
-        Mesh mesh = skeletonAnimation.GetComponent<MeshFilter>().sharedMesh;
+    //     Mesh mesh = skeletonAnimation.GetComponent<MeshFilter>().sharedMesh;
 
-        Debug.Log($"Chicken  {mesh.vertexCount}");
-        Debug.Log($"Chicken  {mesh.triangles.Length / 3}");
-    }
+    //     Debug.Log($"Chicken  {mesh.vertexCount}");
+    //     Debug.Log($"Chicken  {mesh.triangles.Length / 3}");
+    // }
 
     public void SetFaction(Color faction)
     {
@@ -164,6 +164,8 @@ public class BaseChicken : MonoBehaviour
 
                     transform.eulerAngles = Vector3.zero;
                 }
+
+                SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
 
                 PlayFlyAnim();
 

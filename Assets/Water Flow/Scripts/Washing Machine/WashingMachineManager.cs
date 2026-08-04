@@ -1033,9 +1033,16 @@ namespace AntsFlow
         {
             Dictionary<Color, int> result = new Dictionary<Color, int>();
 
-            for (int i = 0; i < ChickenManager.Ins.allFactions.Count; i++)
+            for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
             {
-                CommonUtil.SumValueOfDictionary(result, ChickenManager.Ins.allFactions[i], 1);
+                BaseChicken chicken = ChickenManager.Ins.chickens[i];
+
+                if (chicken.isEating || chicken.isDone)
+                {
+                    continue;
+                }
+
+                CommonUtil.SumValueOfDictionary(result, chicken.faction, 1);
             }
 
             return result;
@@ -1052,36 +1059,11 @@ namespace AntsFlow
         {
             Dictionary<Color, int> result = GetRemaniningTilePerFaction();
 
-            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
             {
-                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+                GrainPile grainPile = GrainPool.Ins.grainPiles[i];
 
-                if (washingMachineStartSlot.washingMachine != null)
-                {
-                    if (isIncludeStartSlot)
-                    {
-                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                    }
-                    else
-                    {
-                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
-
-                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
-                        {
-                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < washingMachineSlots.Count; i++)
-            {
-                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
-
-                if (washingMachineSlot.washingMachineItem != null)
-                {
-                    CommonUtil.SumValueOfDictionary(result, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.remainingNumber);
-                }
+                CommonUtil.SumValueOfDictionary(result, grainPile.faction, -grainPile.remainingNumber);
             }
 
             return result;
@@ -1107,26 +1089,11 @@ namespace AntsFlow
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : 1);
             }
 
-            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
             {
-                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+                GrainPile grainPile = GrainPool.Ins.grainPiles[i];
 
-                if (washingMachineStartSlot.washingMachine != null)
-                {
-                    if (isIncludeStartSlot)
-                    {
-                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                    }
-                    else
-                    {
-                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
-
-                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
-                        {
-                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                    }
-                }
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, grainPile.faction, -grainPile.remainingNumber);
             }
 
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -1142,11 +1109,8 @@ namespace AntsFlow
 
             foreach (var faction in numNotBlockedTilePerFaction.Keys)
             {
-                int maxValue = maxAntRequiredPerFaction[faction];
+                int maxValue = ChickenManager.Ins.requiredGrainForNormalChicken * maxAntRequiredPerFaction[faction];
                 maxValue = Mathf.Min(maxValue, maxAntNumberThreshold);
-
-                // remove later
-                maxValue = Mathf.Max(maxValue, minAntNumberThreshold);
 
                 if (maxValue <= minAntNumberThreshold)
                 {

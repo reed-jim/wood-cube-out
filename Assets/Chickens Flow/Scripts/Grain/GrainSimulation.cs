@@ -222,6 +222,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
             {
                 Grain g = group.grains[i];
 
+                g.position.z = g.zPosition;
+
                 if (!g.onPath)
                     continue;
 
@@ -265,18 +267,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
                 Vector2 tangent = GetDirection(g.pathDistance);
 
-                Vector2 normal =
-                    new Vector2(
-                        -tangent.y,
-                        tangent.x);
+                Vector2 normal = new Vector2(-tangent.y, tangent.x);
 
                 g.windPhase += dt * windSpeed;
 
-                float wind =
-                    Mathf.Sin(g.windPhase) * windStrength;
+                float wind = Mathf.Sin(g.windPhase) * windStrength;
 
-                float desiredOffset =
-                    g.targetOffset + wind;
+                float desiredOffset = g.targetOffset + wind;
 
                 g.offset =
                     Mathf.Lerp(
@@ -617,7 +614,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
             Grain g = new Grain();
 
             g.position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
-            g.zPosition = LayerManager.GetGrainZ() - 0.0001f * UnityEngine.Random.Range(0, 1000);
+            g.zPosition = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000);
 
             g.offset = 0f;
 
