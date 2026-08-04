@@ -42,6 +42,9 @@ public class BaseChicken : MonoBehaviour
     public bool isStuck;
     public string currentAnimation;
 
+    public float prevEatingProgress;
+    public float currentEatingProgress;
+
     public List<WaitingChickenSlot> waitingChickenSlots;
 
     public float Size => transform.localScale.x;
@@ -135,14 +138,18 @@ public class BaseChicken : MonoBehaviour
 
     public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave)
     {
+        prevEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
+
+        numGrainPileRequiredLeft -= numGrain;
+
+        currentEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
+
         grainPile.BeEaten(this, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
         {
-            transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
-
-            numGrainPileRequiredLeft -= numGrain;
-
             if (numGrainPileRequiredLeft == 0)
             {
+                transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
+
                 Vector3 outPosition = transform.position;
 
                 if (outPosition.x > 0)

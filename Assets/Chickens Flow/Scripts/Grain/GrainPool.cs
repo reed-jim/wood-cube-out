@@ -336,8 +336,8 @@ public class GrainPool : Singleton<GrainPool>
 
     public void UpdatePercent(float percent)
     {
-        // percentText.text = $"{(int)(percent * 100)}%";
-        percentText.text = $"{currentAmount}/{maxCapacity}";
+        percentText.text = $"{(int)((float)currentAmount / maxCapacity * 100)}%";
+        // percentText.text = $"{currentAmount}/{maxCapacity}";
         lazyHealthBar.SetProgress(percent);
     }
 

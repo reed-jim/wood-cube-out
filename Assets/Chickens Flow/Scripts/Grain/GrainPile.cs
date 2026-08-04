@@ -224,15 +224,13 @@ public class GrainPile : MonoBehaviour
 
         chicken.PlayIdleAnim();
 
-        float startChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft) / (float)chicken.numGrainPileRequired;
-        float endChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft - numGrain) / (float)chicken.numGrainPileRequired;
-        float distanceChickenEatingPercent = endChickenEatingPercent - startChickenEatingPercent;
-        float percentPerStep = (endChickenEatingPercent - startChickenEatingPercent) / (endIndex - startIndex);
-        float prevChickenEatingProgress = startChickenEatingPercent;
+        // float startChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft) / (float)chicken.numGrainPileRequired;
+        // float endChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft - numGrain) / (float)chicken.numGrainPileRequired;
+        // float distanceChickenEatingPercent = endChickenEatingPercent - startChickenEatingPercent;
+        // float percentPerStep = (endChickenEatingPercent - startChickenEatingPercent) / (endIndex - startIndex);
+        float prevChickenEatingProgress = chicken.prevEatingProgress;
 
         int numGrainToEat = numGrain * GameConstants.grainMultiplier;
-
-        Debug.Log($"Chicken {chicken.name} {numGrainToEat} {startChickenEatingPercent} {endChickenEatingPercent}");
 
         while (!isDone)
         {
@@ -273,7 +271,7 @@ public class GrainPile : MonoBehaviour
                 isDone = true;
             }
 
-            float currentPercent = startChickenEatingPercent + ((float)currentIndex / numGrainToEat) * distanceChickenEatingPercent;
+            float currentPercent = chicken.prevEatingProgress + ((float)currentIndex / numGrainToEat) * (chicken.currentEatingProgress - chicken.prevEatingProgress);
 
             chicken.UpdateEatingProgress(currentPercent, prevChickenEatingProgress, delayPerGrain);
 
@@ -303,81 +301,9 @@ public class GrainPile : MonoBehaviour
         void PlaySoundAndFx(Vector3 position)
         {
             ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            fx.transform.position = position.AddZ(-5);
-            var main = fx.main;
-            main.startColor = faction;
-            fx.Play();
-
-            SoundManager.Instance.PlaySoundCubeLand();
-        }
-    }
-
-    private IEnumerator FeedingSingleChicken(BaseChicken chicken)
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
-
-        float percentGrainPerChicken = 1f / totalNumber;
-        float currentPercent = 1 - (float)remainingNumber / totalNumber;
-
-        int startIndex = (int)(currentPercent * grains.Count);
-        int endIndex = (int)((currentPercent + percentGrainPerChicken) * grains.Count);
-        endIndex = Mathf.Min(endIndex, grains.Count - 1);
-        int currentIndex = startIndex;
-
-        bool isDone = false;
-
-        numChickenEating++;
-
-        List<Grain> grainsToEat = new List<Grain>();
-
-        for (int i = startIndex; i <= endIndex; i++)
-        {
-            Grain grain = grains[i];
-
-            grainsToEat.Add(grain);
-        }
-
-        grainsToEat = grainsToEat
-            .OrderBy(grain => grain.transform.position.x).ToList();
-
-        currentIndex = 0;
-
-        int numGrainToSwitchAnim = grainsToEat.Count / 3;
-
-        while (!isDone)
-        {
-            if (currentIndex % numGrainToSwitchAnim == 0)
-            {
-                chicken.PlayEatAnim(currentIndex / numGrainToSwitchAnim);
-            }
-
-            PlaySoundAndFx(grainsToEat[currentIndex]);
-
-            grainsToEat[currentIndex].gameObject.SetActive(false);
-
-            currentIndex++;
-
-            if (currentIndex >= grainsToEat.Count)
-            {
-                isDone = true;
-            }
-
-            yield return new WaitForSeconds(delayPerGrain);
-        }
-
-        numChickenEating--;
-
-        chicken.FlyOut();
-
-        void PlaySoundAndFx(Grain grain)
-        {
-            // ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
-
-            // antDissappearFx.transform.position = grain.transform.position.AddZ(-1);
-            // antDissappearFx.Play();
-
-            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            fx.transform.position = grain.transform.position.AddZ(-1);
+            position.y -= 1;
+            position.z -= 1;
+            fx.transform.position = position;
             var main = fx.main;
             main.startColor = faction;
             fx.Play();

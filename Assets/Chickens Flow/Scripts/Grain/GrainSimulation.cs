@@ -683,7 +683,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             for (int g = request.startIndex; g < end; g++)
             {
-                Debug.Log($"CheckSpawnCompletion {g} {request.group.grains.Count}");
                 if (!request.group.grains[g].onPath)
                 {
                     completed = false;
