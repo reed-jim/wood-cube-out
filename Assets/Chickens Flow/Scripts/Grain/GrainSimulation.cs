@@ -1,12 +1,14 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 
-public class GrainSimulation : MonoBehaviour
+public class GrainSimulation : Singleton<GrainSimulation>
 {
     [Header("Spawn")]
     public int grainCount = 5000;
@@ -52,17 +54,11 @@ public class GrainSimulation : MonoBehaviour
     struct Grain
     {
         public Vector2 position;
-
         public float fallVelocity;
-
         public float pathDistance;
         public float velocity;
-
         public float windPhase;
         public float offset;
-
-        public int textureIndex;
-
         public bool onPath;
     }
 
@@ -73,8 +69,6 @@ public class GrainSimulation : MonoBehaviour
     float[] segmentLengths;
     float totalLength;
     public int textureCount = 4;
-    Vector4[] textureIndexes;
-    MaterialPropertyBlock propertyBlock;
 
 
     Matrix4x4[] matrices;
@@ -88,8 +82,6 @@ public class GrainSimulation : MonoBehaviour
 
         grains = new Grain[grainCount];
         matrices = new Matrix4x4[grainCount];
-        propertyBlock = new MaterialPropertyBlock();
-        textureIndexes = new Vector4[grainCount];
 
         for (int i = 0; i < grainCount; i++)
         {
@@ -311,31 +303,14 @@ public class GrainSimulation : MonoBehaviour
                     grains[i].position,
                     Quaternion.identity,
                     Vector3.one * grainSize);
-
-
-            textureIndexes[i] = new Vector4(
-                grains[i].textureIndex,
-                0,
-                0,
-                0);
         }
 
-
-        propertyBlock.SetVectorArray(
-            "_TextureIndex",
-            textureIndexes);
-
-
         Graphics.RenderMeshInstanced(
-            new RenderParams(material)
-            {
-                matProps = propertyBlock
-            },
+            new RenderParams(material),
             quadMesh,
             0,
             matrices,
             matrices.Length);
-
     }
 
 
@@ -591,10 +566,6 @@ public class GrainSimulation : MonoBehaviour
 
         Array.Resize(ref grains, oldLength + amount);
 
-        Array.Resize(
-    ref textureIndexes,
-    grains.Length);
-
         for (int i = oldLength; i < grains.Length; i++)
         {
             Grain g = new Grain();
@@ -627,19 +598,44 @@ public class GrainSimulation : MonoBehaviour
                     -0.1f,
                     0.1f);
 
-
             g.velocity = 0;
             g.fallVelocity = 0;
             g.onPath = false;
-
-            g.textureIndex = UnityEngine.Random.Range(0, textureCount);
-
 
             grains[i] = g;
         }
 
 
         // resize rendering buffer
+        matrices = new Matrix4x4[grains.Length];
+    }
+
+    public void SpawnGrains(List<Vector3> grainPositions)
+    {
+        int oldLength = grains.Length;
+        int amount = grainPositions.Count;
+
+        Array.Resize(ref grains, oldLength + amount);
+
+        for (int i = 0; i < amount; i++)
+        {
+            Grain g = new Grain();
+
+            // Use the provided position
+            g.position = grainPositions[i];
+
+            g.windPhase = UnityEngine.Random.value * 10f;
+
+            g.offset = UnityEngine.Random.Range(-0.1f, 0.1f);
+
+            g.velocity = 0;
+            g.fallVelocity = 0;
+            g.onPath = false;
+
+            grains[oldLength + i] = g;
+        }
+
+        // Resize rendering buffer
         matrices = new Matrix4x4[grains.Length];
     }
 
@@ -660,10 +656,6 @@ public class GrainSimulation : MonoBehaviour
         Array.Resize(
             ref matrices,
             newLength);
-
-        Array.Resize(
-            ref textureIndexes,
-            grains.Length);
     }
 
 #if UNITY_EDITOR

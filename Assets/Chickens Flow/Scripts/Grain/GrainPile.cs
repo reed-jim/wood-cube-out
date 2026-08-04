@@ -191,60 +191,41 @@ public class GrainPile : MonoBehaviour
             .ThenBy(grain => grain.x)
             .ToList();
 
-        // Random pouring
-        // Vector2 offset;
+        GrainSimulation.Ins.SpawnGrains(grainPositions);
 
         // for (int i = 0; i < grains.Count; i++)
         // {
+        //     int index = i;
+
         //     float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
-        //     offset = UnityEngine.Random.insideUnitCircle * radius;
-        //     offset.y -= transform.localPosition.y;
+        //     position = grainPositions[i];
 
-        //     position = offset;
-        //     position.z = zOffset;
+        //     Vector3 start = grains[index].transform.localPosition;
+        //     Vector3 end = position;
 
-        //     grainPositions.Add(position);
+        //     grains[index].transform.DOLocalMove(end, duration: 0.3f + delayFallPerGrain * i).SetEase(Ease.InQuad)
+        //     .OnComplete(() =>
+        //     {
+        //         grains[index].transform.SetZ(zOffset);
+
+        //         grains[index].transform.DOPunchPosition(Vector3.up * 0.5f, 0.12f, vibrato: 1, elasticity: 0.2f)
+        //         .OnComplete(() =>
+        //         {
+        //             if (index == 0)
+        //             {
+        //                 onFirstGrainHitGround?.Invoke();
+        //             }
+
+        //             if (index == grains.Count - 1)
+        //             {
+        //                 ChickenManager.Ins.FeedTheChicken(this);
+
+        //                 onCompleteAction?.Invoke();
+        //             }
+        //         });
+        //     });
         // }
-
-        for (int i = 0; i < grains.Count; i++)
-        {
-            int index = i;
-
-            float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
-
-            // int randomIndex = UnityEngine.Random.Range(0, grainPositions.Count);
-            // position = grainPositions[randomIndex];
-
-            // grainPositions.RemoveAt(randomIndex);
-
-            position = grainPositions[i];
-
-            Vector3 start = grains[index].transform.localPosition;
-            Vector3 end = position;
-
-            grains[index].transform.DOLocalMove(end, duration: 0.3f + delayFallPerGrain * i).SetEase(Ease.InQuad)
-            .OnComplete(() =>
-            {
-                grains[index].transform.SetZ(zOffset);
-
-                grains[index].transform.DOPunchPosition(Vector3.up * 0.5f, 0.12f, vibrato: 1, elasticity: 0.2f)
-                .OnComplete(() =>
-                {
-                    if (index == 0)
-                    {
-                        onFirstGrainHitGround?.Invoke();
-                    }
-
-                    if (index == grains.Count - 1)
-                    {
-                        ChickenManager.Ins.FeedTheChicken(this);
-
-                        onCompleteAction?.Invoke();
-                    }
-                });
-            });
-        }
 
         this.pileCenter = pileCenter;
         this.pileCenter.z = -0.01f * siblingIndex;
