@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
@@ -64,6 +65,30 @@ namespace AntsFlow
                 }
                 tail.transform.localRotation = Quaternion.Euler(0, 0, baseAngle + tailAngle);
             }
+        }
+
+        private void Awake()
+        {
+            LevelLoader.startLevelEvent += OnLevelReplayed;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            TileManager.winLevelEvent += OnLevelReplayed;
+        }
+
+        private void OnDestroy()
+        {
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
+            TileManager.winLevelEvent -= OnLevelReplayed;
+        }
+
+        private void OnLevelReplayed()
+        {
+            Reset();
+            gameObject.SetActive(false);
         }
 
         public void Setup(SnakeConfig snakeConfig)
@@ -178,10 +203,62 @@ namespace AntsFlow
             {
                 tailScaleSequence.Stop();
             }
+
+            PrimeTween.Tween.StopAll(transform);
             transform.localScale = Vector3.one;
-            skeletonAnimHead.transform.localScale = Vector3.one * 0.5f;
-            tail.transform.localScale = Vector3.one * 1.5f;
+
+            if (skeletonAnimHead != null)
+            {
+                PrimeTween.Tween.StopAll(skeletonAnimHead.transform);
+                skeletonAnimHead.gameObject.SetActive(true);
+                skeletonAnimHead.transform.localScale = Vector3.one * 0.5f;
+                skeletonAnimHead.transform.localRotation = Quaternion.identity;
+
+                if (skeletonAnimHead.AnimationState != null)
+                {
+                    skeletonAnimHead.AnimationState.ClearTracks();
+                    skeletonAnimHead.AnimationState.SetAnimation(0, idleAnim, true);
+                }
+            }
+
+            if (tail != null)
+            {
+                PrimeTween.Tween.StopAll(tail.transform);
+                tail.gameObject.SetActive(true);
+                tail.transform.localScale = Vector3.one * 1.5f;
+                tail.transform.localRotation = Quaternion.identity;
+            }
+
+            if (spriteShape != null)
+            {
+                spriteShape.enabled = true;
+                if (spriteShape.spline != null)
+                {
+                    spriteShape.spline.Clear();
+                }
+            }
+
             snakeLength = 1f;
+            health = 0;
+            maxHealth = 0;
+            snakeNestTile = null;
+
+            if (allPoints != null)
+            {
+                allPoints.Clear();
+            }
+            if (allAffectedNodeIndexes != null)
+            {
+                allAffectedNodeIndexes.Clear();
+            }
+            if (affectedNodes != null)
+            {
+                affectedNodes.Clear();
+            }
+            if (numAntPerBox != null)
+            {
+                numAntPerBox.Clear();
+            }
         }
 
         private void ApplyScale(float scaleHead, bool isFlipHead)

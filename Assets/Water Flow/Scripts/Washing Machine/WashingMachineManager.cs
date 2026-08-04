@@ -882,10 +882,14 @@ namespace AntsFlow
                 SpawnFakeTile(tilesToClear[i], isLast);
             }
 
+            if (SpecialElementManager.Ins != null)
+            {
+                SpecialElementManager.Ins.OnBoosterClearOneColor(selectedFaction, tilesToClear);
+            }
+
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
-
 
             if (isLevelContainingNewSpecialElements)
             {
@@ -898,15 +902,6 @@ namespace AntsFlow
                         washingMachineSlots[i].washingMachineItem.CheckAntsPath();
                     }
                 }
-                //comment de test
-                //try
-                //{
-                //    SpecialElementManager.Ins.spawningTileBox.ClearSpawningTileBoxesOnUsingClearOneColorBooster(tilesToClear);
-                //}
-                //catch (System.Exception)
-                //{
-
-                //}
             }
 
 

@@ -1376,6 +1376,14 @@ namespace AntsFlow
 
         public void CheckWinLevel()
         {
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.activeSpawningTileBoxes != null)
+            {
+                if (SpecialElementManager.Ins.activeSpawningTileBoxes.Any(b => b != null && b.gameObject.activeSelf && b.numberLeft > 0))
+                {
+                    return;
+                }
+            }
+
             bool isWon = !tiles.Any(tile => !tile.isDone);
 
             if (isWon)
