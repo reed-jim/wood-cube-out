@@ -32,6 +32,18 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float windStrength = 0.25f;
     public float windSpeed = 3f;
 
+    [Header("Landing")]
+    public float pathSnapDistance = 0.15f;
+    public float landingDuration = 0.2f;
+    public float impactToPathVelocity = 0.15f;
+    public float landingBoost = 0.05f;
+    public float bounceHeight = 0.02f;
+    public float bounceDamping = 0.15f;
+
+    [Header("Path Variation")]
+    public float laneWidth = 0.15f;
+    public float laneChangeSpeed = 0.5f;
+
     [Header("Rendering")]
     public Mesh quadMesh;
     public Material material;
@@ -63,6 +75,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public float impactVelocity;
 
         public bool onPath;
+
+        public float targetOffset;
+
+        public float speedMultiplier;
     }
 
     class FactionGroup
@@ -154,14 +170,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 Vector2 closest =
                     Evaluate(d);
 
-                if (Vector2.Distance(closest, grain.position) < 0.15f)
+                if (Vector2.Distance(closest, grain.position) < pathSnapDistance)
                 {
                     grain.onPath = true;
                     grain.pathDistance = d;
 
                     // transfer falling momentum into path movement
                     grain.velocity =
-                        Mathf.Abs(grain.fallVelocity) * 0.15f;
+                        Mathf.Abs(grain.fallVelocity) * impactToPathVelocity;
 
                     grain.impactVelocity =
                         grain.fallVelocity;
@@ -170,8 +186,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
                     grain.position = closest;
 
-                    grain.position.y += 0.02f;
-                    grain.fallVelocity *= -0.15f;
+                    grain.position.y += bounceHeight;
+                    grain.fallVelocity *= -bounceDamping;
                 }
 
                 group.grains[i] = grain;
@@ -196,22 +212,24 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     continue;
 
                 // landing absorption
-                if (g.landingTimer < 0.2f)
+                if (g.landingTimer < landingDuration)
                 {
                     g.landingTimer += dt;
 
-                    float t =
-                        g.landingTimer / 0.2f;
+                    float t = g.landingTimer / landingDuration;
 
                     g.velocity =
                         Mathf.Lerp(
                             g.velocity,
-                            moveForce * 0.05f,
+                            moveForce * landingBoost,
                             t);
                 }
                 else
                 {
-                    g.velocity += moveForce * dt;
+                    g.velocity +=
+    moveForce *
+    g.speedMultiplier *
+    dt;
                 }
 
                 g.velocity *= damping;
@@ -241,8 +259,16 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 g.windPhase += dt * windSpeed;
 
                 float wind =
-                    Mathf.Sin(g.windPhase)
-                    * windStrength;
+                    Mathf.Sin(g.windPhase) * windStrength;
+
+                float desiredOffset =
+                    g.targetOffset + wind;
+
+                g.offset =
+                    Mathf.Lerp(
+                        g.offset,
+                        desiredOffset,
+                        laneChangeSpeed * dt);
 
                 g.offset =
                     Mathf.Lerp(
@@ -579,15 +605,18 @@ public class GrainSimulation : Singleton<GrainSimulation>
             g.windPhase =
                 UnityEngine.Random.value * 10f;
 
-            g.offset =
+            g.offset = 0f;
+
+            g.targetOffset =
                 UnityEngine.Random.Range(
-                    -randomStrength,
-                    randomStrength);
+                    -laneWidth,
+                    laneWidth);
 
             g.velocity = 0;
             g.fallVelocity = 0;
             g.onPath = false;
 
+            g.speedMultiplier = UnityEngine.Random.Range(0.5f, 3f);
 
             group.grains.Add(g);
         }

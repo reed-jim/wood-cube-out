@@ -862,10 +862,19 @@ MonoBehaviour:
   moveForce: 20
   damping: 0.96
   maxSpeed: 5
+  randomStrength: 1
   grainSpacing: 0.12
   collisionForce: 20
-  windStrength: 0.25
+  windStrength: 0
   windSpeed: 3
+  pathSnapDistance: 0.15
+  landingDuration: 0.2
+  impactToPathVelocity: 0.15
+  landingBoost: 0.05
+  bounceHeight: 0.02
+  bounceDamping: 0.15
+  laneWidth: 2
+  laneChangeSpeed: 0.5
   quadMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: 7c77a6acaed3b80468be047b34327873, type: 2}
   grainSize: 0.08

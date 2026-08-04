@@ -139,9 +139,7 @@ public class GrainPile : MonoBehaviour
             float angle = i * Mathf.PI * 2f / grains.Count;
 
             position = positionsInFilledCircle[i];
-            // flatten y
-            position.y *= 0.6f;
-            position.y -= 1;
+            position.y -= 0.5f;
             position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
             grains[i].transform.localPosition = position;
@@ -290,7 +288,7 @@ public class GrainPile : MonoBehaviour
         void PlaySoundAndFx(Vector3 position)
         {
             ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            fx.transform.position = position.AddZ(-1);
+            fx.transform.position = position.AddZ(-3);
             var main = fx.main;
             main.startColor = faction;
             fx.Play();
