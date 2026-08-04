@@ -14,6 +14,10 @@ namespace AntsFlow
 
         [SpineAnimation] public string attackAnimation;
 
+        // Ghost/revive: warrior đứng ở rìa map bắn boss rồi biến mất (không quay về theo đường đi).
+        private bool isGhostAttack;
+        private Action ghostAttackOnComplete;
+
         protected override void Awake()
         {
             base.Awake();
@@ -44,6 +48,9 @@ namespace AntsFlow
             stuckTime = 0;
             isMovingToSideTile = false;
 
+            isGhostAttack = false;
+            ghostAttackOnComplete = null;
+
             skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
         }
 
@@ -51,11 +58,63 @@ namespace AntsFlow
         {
             if (trackEntry.Animation.Name == attackAnimation && e.Data.Name == "call")
             {
-                Attack(onCompleteAction: () =>
+                if (isGhostAttack)
                 {
-                    ReverseMove();
-                });
+                    // Revive: bắn boss xong thì biến mất tại chỗ (rìa map), không quay về theo đường đi.
+                    Attack(onCompleteAction: DisappearAfterGhostAttack);
+                }
+                else
+                {
+                    Attack(onCompleteAction: () =>
+                    {
+                        ReverseMove();
+                    });
+                }
             }
+        }
+
+        // Ghost/revive: đứng tại vị trí rìa map (standPosition) rồi bắn missile vào boss - không cần đường
+        // đi tới boss. Dùng khi revive warrior ant box mà chưa có hành lang thông tới bossArea.
+        public void GhostAttackBoss(Vector3 standPosition, Action onComplete)
+        {
+            isGhostAttack = true;
+            ghostAttackOnComplete = onComplete;
+
+            GamePersistentVariable.numActiveAnt++;
+
+            Vector3 targetPos = standPosition.ChangeZ(ghostBaseZPosition);
+
+            float speed = 10f;
+            float distance = Vector2.Distance(transform.position, targetPos);
+            float duration = Mathf.Max(0.2f, distance / speed);
+
+            tweens.Add(Tween.Position(transform, targetPos, duration: duration, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                // Play anim tấn công; event "call" trong anim sẽ kích hoạt Attack() -> missile -> boss.Hit().
+                skeletonAnimation.AnimationState.SetAnimation(0, attackAnimation, false);
+            }));
+        }
+
+        private void DisappearAfterGhostAttack()
+        {
+            Vector3 antScale = transform.localScale;
+
+            tweens.Add(Tween.Scale(transform, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+
+                transform.localScale = antScale;
+
+                GamePersistentVariable.numActiveAnt--;
+
+                isGhostAttack = false;
+
+                Action callback = ghostAttackOnComplete;
+                ghostAttackOnComplete = null;
+                callback?.Invoke();
+            }));
         }
         protected override void OnAntReachTarget()
         {
