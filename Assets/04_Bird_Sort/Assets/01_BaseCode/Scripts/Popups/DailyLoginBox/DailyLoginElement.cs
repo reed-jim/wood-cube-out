@@ -15,6 +15,9 @@ public class DailyLoginElement : MonoBehaviour
     [SerializeField] protected GameObject claimedObj;
     [SerializeField] protected GameObject canClaimObj;
     [SerializeField] protected Text dayTxt;
+    [SerializeField] protected Color dayTxtPreClaim;
+    [SerializeField] protected Color dayTxtMidClaim;
+    [SerializeField] protected Color dayTxtAftClaim;
     protected DailyLoginItem data;
     protected int indexDay;
 
@@ -32,6 +35,7 @@ public class DailyLoginElement : MonoBehaviour
         claimedObj.gameObject.SetActive(false);
         canClaimObj.gameObject.SetActive(false);
         claimBtn.interactable = false;
+        dayTxt.color = dayTxtPreClaim;
         body.transform.DOKill();
         body.transform.localScale = Vector3.one;
 
@@ -56,6 +60,7 @@ public class DailyLoginElement : MonoBehaviour
         {
             claimedObj.gameObject.SetActive(true);
             firstObj.gameObject.SetActive(false);
+            dayTxt.color = dayTxtAftClaim;
         }
         else if (data.id == DailyLoginController.CurrentReward)
         {
@@ -66,18 +71,21 @@ public class DailyLoginElement : MonoBehaviour
                 {
                     claimedObj.gameObject.SetActive(true);
                     firstObj.gameObject.SetActive(false);
+                    dayTxt.color = dayTxtAftClaim;
                 }
                 else
                 {
                     canClaimObj.gameObject.SetActive(true);
                     claimBtn.interactable = true;
+                    dayTxt.color = dayTxtMidClaim;
                     body.transform.DOScale(1.05f, 0.7f).SetLoops(-1, LoopType.Yoyo);
                     firstObj.gameObject.SetActive(false);
                 }
             } 
         }
 
-        dayTxt.text = string.Format(Localization.Get("s_day") , (this.indexDay + DailyLoginController.CurrentWeekReward * 7 + 1)); 
+        dayTxt.text = string.Format(Localization.Get("s_day") , (this.indexDay + DailyLoginController.CurrentWeekReward * 7 + 1));
+       
     }
 
     private void OnClickClaim()
@@ -109,7 +117,7 @@ public class DailyLoginElement : MonoBehaviour
         }
         else
         {
-            //M? hòm
+            //M? hï¿½m
             List<RewardRandom> rewardsShow = new List<RewardRandom>();
             for (int i = 0; i < data.rewards.Length; i++)
             {
