@@ -6,4 +6,9 @@ public static class LayerManager
     {
         return -10;
     }
+
+    public static float GetBucketZ(int siblingIndex)
+    {
+        return -9 - 0.001f * siblingIndex;
+    }
 }

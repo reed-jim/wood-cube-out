@@ -256,10 +256,7 @@ public class WashingMachineItem : MonoBehaviour
                     possibleChickensToEat.RemoveAt(0);
                 }
 
-                GrainPoolSlot grainPoolSlot = WashingMachineManager.Ins.grainPool.GetGrainPoolSlot(possibleChickenToEat);
                 GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
-
-                WashingMachineManager.Ins.grainPool.AddGrainPileToSlot(grainPile, grainPoolSlot);
 
                 grainPile.gameObject.SetActive(false);
 
@@ -268,22 +265,19 @@ public class WashingMachineItem : MonoBehaviour
 
                 Vector3 bucketDestination;
 
-                bucketDestination.x = -grainPoolSlot.transform.position.x;
+                bucketDestination.x = 0;
                 bucketDestination.y = 7;
-                bucketDestination.z = -9;
+                bucketDestination.z = LayerManager.GetBucketZ(grainPile.transform.GetSiblingIndex());
 
-                pileCenter.x = grainPoolSlot.transform.position.x;
+                pileCenter.x = 0;
                 pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y;
                 pileCenter.z = -1;
 
-                transform.SetParent(grainPoolSlot.transform);
-
-                Tween.LocalPosition(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
+                Tween.Position(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
                 {
                     grainPile.gameObject.SetActive(true);
 
-                    grainPile.transform.SetParent(grainPoolSlot.transform);
-                    grainPile.transform.localPosition = bucketDestination.ChangeX(-grainPoolSlot.transform.position.x);
+                    grainPile.transform.position = bucketDestination;
 
                     grainPile.Setup(this, numPile);
 
@@ -297,6 +291,8 @@ public class WashingMachineItem : MonoBehaviour
                             PourGrainPile(grainPile, isLast, () =>
                             {
                                 isPouring = false;
+
+                                WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
                             });
 
                             isRotated = true;
@@ -307,10 +303,10 @@ public class WashingMachineItem : MonoBehaviour
                         PourGrainPile(grainPile, isLast, () =>
                         {
                             isPouring = false;
+
+                            WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
                         });
                     }
-
-                    WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
                 });
 
                 isPouring = true;

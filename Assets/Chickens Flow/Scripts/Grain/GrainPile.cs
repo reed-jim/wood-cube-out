@@ -53,7 +53,6 @@ public class GrainPile : MonoBehaviour
     public TMP_Text progressText;
 
     public int siblingIndex;
-    public BaseChicken chickenToEat;
 
     private Tween updateProgressTextTween;
 
@@ -84,8 +83,6 @@ public class GrainPile : MonoBehaviour
         }
 
         progressText.gameObject.SetActive(false);
-
-        chickenToEat = null;
 
         numChickenEating = 0;
         numGrainBeEating = 0;
@@ -152,15 +149,6 @@ public class GrainPile : MonoBehaviour
         int cols = Mathf.CeilToInt(Mathf.Sqrt(grainCount));
         int rows = Mathf.CeilToInt((float)grainCount / cols);
 
-        GrainPoolSlot grainPoolSlot = GetComponentInParent<GrainPoolSlot>();
-
-        Vector3 topRight = grainPoolSlot.topRight;
-        Vector3 bottomRight = grainPoolSlot.bottomRight;
-        Vector3 topLeft = grainPoolSlot.topLeft;
-        Vector3 bottomLeft = grainPoolSlot.bottomLeft;
-
-        grainPileSizeX = grainPoolSlot.sizeX;
-
         grainPositions = grainPositions
             .OrderBy(grain => grain.y)
             .ThenBy(grain => grain.x)
@@ -201,33 +189,18 @@ public class GrainPile : MonoBehaviour
         // }
 
         StartCoroutine(ChickenEatingGrains(chicken, numGrainPerChicken, isLast, onCompleteAction));
-
-        chickenToEat = chicken;
     }
 
     private IEnumerator ChickenEatingGrains(BaseChicken chicken, int numGrain, bool isLast, Action onCompleteAction)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
-        float startPercent = (float)numGrainBeEating / totalNumber;
-        numGrainBeEating += numGrain;
-        float endPercent = (float)numGrainBeEating / totalNumber;
-
-        int startIndex = (int)(startPercent * grains.Count);
-        int endIndex = (int)(endPercent * grains.Count);
-        endIndex = Mathf.Min(endIndex, grains.Count - 1);
-        int currentIndex = startIndex;
+        int currentIndex = 0;
 
         bool isDone = false;
 
-        currentIndex = 0;
-
         chicken.PlayIdleAnim();
 
-        // float startChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft) / (float)chicken.numGrainPileRequired;
-        // float endChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft - numGrain) / (float)chicken.numGrainPileRequired;
-        // float distanceChickenEatingPercent = endChickenEatingPercent - startChickenEatingPercent;
-        // float percentPerStep = (endChickenEatingPercent - startChickenEatingPercent) / (endIndex - startIndex);
         float prevChickenEatingProgress = chicken.prevEatingProgress;
 
         int numGrainToEat = numGrain * GameConstants.grainMultiplier;
@@ -244,10 +217,11 @@ public class GrainPile : MonoBehaviour
 
                         DOVirtual.DelayedCall(randomDelay, () =>
                         {
-                            chicken.PlayEatAnim();
+                            if (chicken.isEating)
+                            {
+                                chicken.PlayEatAnim();
+                            }
                         });
-
-                        chicken.PlayEatAnim();
                     }
                     else
                     {
@@ -283,7 +257,6 @@ public class GrainPile : MonoBehaviour
         if (isLast)
         {
             WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
-            WashingMachineManager.Ins.grainPool.RemoveGrainPileInSlot(this);
         }
 
         WashingMachineManager.Ins.grainPool.AddGrain(-numGrain);

@@ -67,9 +67,15 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public int spawnAmount = 100;
     public Vector2 spawnRandomArea = new Vector2(1f, 1f);
 
+    [Header("Debug")]
+    public int totalSpawned;
+    public int totalRemoved;
+    public int totalRemoveCalled;
+
     struct Grain
     {
         public Vector3 position;
+        public float zPosition;
         public float fallVelocity;
         public float pathDistance;
         public float velocity;
@@ -285,7 +291,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         dt * 3);
 
                 g.position = center + normal * g.offset;
-                g.position.z = LayerManager.GetGrainZ();
+                g.position.z = g.zPosition;
 
                 group.grains[i] = g;
             }
@@ -604,11 +610,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         int totalSpawn = grainPositions.Count;
 
+        totalSpawned += totalSpawn;
+
         for (int i = 0; i < totalSpawn; i++)
         {
             Grain g = new Grain();
 
             g.position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
+            g.zPosition = LayerManager.GetGrainZ() - 0.0001f * UnityEngine.Random.Range(0, 1000);
 
             g.offset = 0f;
 
@@ -646,13 +655,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public void RemoveLastGrain(Color faction)
     {
-        if (!factionGroups.TryGetValue(
-            faction,
-            out var group))
-            return;
+        totalRemoveCalled++;
+
+        FactionGroup group = GetFaction(faction);
 
         if (group.grains.Count == 0)
+        {
             return;
+        }
 
         group.grains.RemoveAt(
             group.grains.Count - 1);
@@ -662,10 +672,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         if (group.grains.Count == 0)
         {
-            Destroy(group.material);
+            // Destroy(group.material);
 
-            factionGroups.Remove(faction);
+            // factionGroups.Remove(faction);
         }
+
+        totalRemoved++;
     }
 
     void CheckSpawnCompletion()
@@ -683,6 +695,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             for (int g = request.startIndex; g < end; g++)
             {
+                if (g >= request.group.grains.Count)
+                {
+                    continue;
+                }
+
                 if (!request.group.grains[g].onPath)
                 {
                     completed = false;

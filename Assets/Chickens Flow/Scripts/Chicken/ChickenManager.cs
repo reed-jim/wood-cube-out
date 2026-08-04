@@ -382,7 +382,7 @@ public class ChickenManager : Singleton<ChickenManager>
         int grainPerChicken = grainPile.remainingNumber / chickensToFeed.Count;
         int remainder = grainPile.remainingNumber % chickensToFeed.Count;
 
-        Debug.Log($"FeedTheChicken ======================= {grainPile.remainingNumber} {chickensToFeed.Count} {grainPerChicken}");
+        Debug.Log($"FeedTheChicken ======================= [ {grainPile.name} ] {grainPile.remainingNumber} {chickensToFeed.Count} {grainPerChicken} {remainder}");
 
         // Step 1: Feed equally
         if (grainPerChicken > 0)
