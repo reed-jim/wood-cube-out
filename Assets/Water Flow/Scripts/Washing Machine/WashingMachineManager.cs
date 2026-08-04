@@ -1037,12 +1037,12 @@ namespace AntsFlow
             {
                 BaseChicken chicken = ChickenManager.Ins.chickens[i];
 
-                if (chicken.isEating || chicken.isDone)
+                if (chicken.isDone)
                 {
                     continue;
                 }
 
-                CommonUtil.SumValueOfDictionary(result, chicken.faction, ChickenManager.Ins.requiredGrainForNormalChicken);
+                CommonUtil.SumValueOfDictionary(result, chicken.faction, chicken.numGrainPileRequiredLeft);
             }
 
             return result;
@@ -1094,14 +1094,14 @@ namespace AntsFlow
             {
                 BaseChicken chicken = ChickenManager.Ins.chickens[i];
 
-                if (chicken.isEating || chicken.isDone)
+                if (chicken.isDone)
                 {
                     continue;
                 }
 
                 bool isBlocked = chicken.isStuck;
 
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : ChickenManager.Ins.requiredGrainForNormalChicken);
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : chicken.numGrainPileRequiredLeft);
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
