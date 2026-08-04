@@ -316,7 +316,46 @@ namespace AntsFlow
                 RebuildSpline(newVal);
             });
 
+            int prevObstacleIndex = GetObstacleIndex(prevSnakeLength);
+
             UpdateNodeObstacleState(snakeLength);
+
+            // Rắn co lại làm lộ thêm node/đường đi. Các hộp đang kẹt chờ trên slot phải được
+            // check lại path ngay, nếu không chúng chỉ nhả kiến khi người chơi bấm hộp khác.
+            if (GetObstacleIndex(snakeLength) > prevObstacleIndex)
+            {
+                RecheckInSlotAntBoxes();
+            }
+        }
+
+        private int GetObstacleIndex(float snakeLengthRatio)
+        {
+            if (allAffectedNodeIndexes == null)
+            {
+                return 0;
+            }
+
+            return (int)(allAffectedNodeIndexes.Count * (1 - snakeLengthRatio));
+        }
+
+        private void RecheckInSlotAntBoxes()
+        {
+            var slots = WashingMachineManager.Ins.washingMachineSlots;
+
+            if (slots == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < slots.Count; i++)
+            {
+                WashingMachineItem item = slots[i].washingMachineItem;
+
+                if (item != null)
+                {
+                    item.CheckAntsPath();
+                }
+            }
         }
 
         public void GenerateAntNumberPerBox(int totalBox, int maxHealth)
@@ -439,7 +478,7 @@ namespace AntsFlow
 
         private void UpdateNodeObstacleState(float snakeLengthRatio)
         {
-            int obstacleIndex = (int)(allAffectedNodeIndexes.Count * (1 - snakeLengthRatio));
+            int obstacleIndex = GetObstacleIndex(snakeLengthRatio);
 
             for (int i = 0; i < allAffectedNodeIndexes.Count; i++)
             {

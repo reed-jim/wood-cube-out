@@ -64,24 +64,15 @@ namespace AntsFlow
 
             List<BaseTile> foundTiles = TileManager.Ins.GetFirstNMovableTilesForWarriorAnts(max, antBoxPosition);
 
-            foundTiles = foundTiles
-                .OrderBy(item => item.position.y)
-                .ThenBy(item => item.position.x)
-                .Take(remainingNumber)
-                .ToList();
-
             for (int i = 0; i < foundTiles.Count; i++)
             {
                 BaseTile tile = foundTiles[i];
 
-                if (!tilesToMove.Contains(tile))
-                {
-                    tilesToMove.Add(tile);
+                tilesToMove.Add(tile);
 
-                    tile.isAntApproaching = true;
+                tile.isAntApproaching = true;
 
-                    addedTile++;
-                }
+                addedTile++;
             }
 
             remainingNumber -= addedTile;
