@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Saferio.Util.SaferioTween;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -20,6 +22,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float moveForce = 20f;
     public float damping = 0.96f;
     public float maxSpeed = 5f;
+    public float randomStrength = 1f;
 
     [Header("Collision")]
     public float grainSpacing = 0.12f;
@@ -55,6 +58,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public float velocity;
         public float windPhase;
         public float offset;
+
+        public float landingTimer;
+        public float impactVelocity;
+
         public bool onPath;
     }
 
@@ -135,30 +142,36 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 if (grain.onPath)
                     continue;
 
-
                 grain.fallVelocity -= gravity * dt;
 
                 grain.position.y +=
                     grain.fallVelocity * dt;
 
-
                 // simple entrance detection
                 float d = FindNearestDistance(
                     grain.position);
 
-
                 Vector2 closest =
                     Evaluate(d);
 
-
-                if (Vector2.Distance(
-                    closest,
-                    grain.position) < 0.3f)
+                if (Vector2.Distance(closest, grain.position) < 0.15f)
                 {
                     grain.onPath = true;
                     grain.pathDistance = d;
-                    grain.velocity = 0;
+
+                    // transfer falling momentum into path movement
+                    grain.velocity =
+                        Mathf.Abs(grain.fallVelocity) * 0.15f;
+
+                    grain.impactVelocity =
+                        grain.fallVelocity;
+
+                    grain.landingTimer = 0;
+
                     grain.position = closest;
+
+                    grain.position.y += 0.02f;
+                    grain.fallVelocity *= -0.15f;
                 }
 
                 group.grains[i] = grain;
@@ -171,17 +184,35 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     void SimulatePath(float dt)
     {
+        float z;
+
         foreach (var group in factionGroups.Values)
         {
             for (int i = 0; i < group.grains.Count; i++)
             {
-                Grain g =
-                    group.grains[i];
+                Grain g = group.grains[i];
 
                 if (!g.onPath)
                     continue;
 
-                g.velocity += moveForce * dt;
+                // landing absorption
+                if (g.landingTimer < 0.2f)
+                {
+                    g.landingTimer += dt;
+
+                    float t =
+                        g.landingTimer / 0.2f;
+
+                    g.velocity =
+                        Mathf.Lerp(
+                            g.velocity,
+                            moveForce * 0.05f,
+                            t);
+                }
+                else
+                {
+                    g.velocity += moveForce * dt;
+                }
 
                 g.velocity *= damping;
 
@@ -191,27 +222,23 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         0,
                         maxSpeed);
 
-                g.pathDistance +=
-                    g.velocity * dt;
+                g.pathDistance += g.velocity * dt;
 
                 g.pathDistance =
                     Mathf.Repeat(
                         g.pathDistance,
                         totalLength);
 
-                Vector2 center =
-                    Evaluate(g.pathDistance);
+                Vector2 center = Evaluate(g.pathDistance);
 
-                Vector2 tangent =
-                    GetDirection(g.pathDistance);
+                Vector2 tangent = GetDirection(g.pathDistance);
 
                 Vector2 normal =
                     new Vector2(
                         -tangent.y,
                         tangent.x);
 
-                g.windPhase +=
-                    dt * windSpeed;
+                g.windPhase += dt * windSpeed;
 
                 float wind =
                     Mathf.Sin(g.windPhase)
@@ -223,9 +250,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         wind,
                         dt * 3);
 
-                g.position =
-                    center +
-                    normal * g.offset;
+                g.position = center + normal * g.offset;
+                g.position.z = LayerManager.GetGrainZ();
 
                 group.grains[i] = g;
             }
@@ -409,20 +435,16 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         float accumulated = 0;
 
-
         for (int i = 0; i < points.Length; i++)
         {
             int next =
                 (i + 1) % points.Length;
 
-
             Vector2 a = points[i];
             Vector2 b = points[next];
 
-
             Vector2 ab =
                 b - a;
-
 
             float t =
                 Mathf.Clamp01(
@@ -432,16 +454,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 /
                 ab.sqrMagnitude);
 
-
-
             Vector2 proj =
                 a + ab * t;
 
-
             float dist =
                 (proj - p).sqrMagnitude;
-
-
 
             if (dist < bestDist)
             {
@@ -452,11 +469,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     segmentLengths[i] * t;
             }
 
-
             accumulated +=
                 segmentLengths[i];
         }
-
 
         return best;
     }
@@ -473,26 +488,20 @@ public class GrainSimulation : Singleton<GrainSimulation>
             }
         }
 
-
         int count =
             capsuleResolution * 2;
-
 
         Transform[] newPoints =
             new Transform[count];
 
-
         float half =
             capsuleStraightLength * 0.5f;
-
 
         for (int i = 0; i < count; i++)
         {
             float angle;
 
-
             Vector3 localPos;
-
 
             // Left semicircle
             if (i < capsuleResolution)
@@ -530,35 +539,28 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         0);
             }
 
-
             GameObject obj =
                 new GameObject(
                     "PathPoint_" + i);
 
-
             obj.transform.parent =
                 transform;
 
-
             obj.transform.localPosition =
                 localPos;
-
 
             newPoints[i] =
                 obj.transform;
         }
 
+        System.Array.Reverse(newPoints);
 
         pathPoints = newPoints;
-
 
         BuildPath();
     }
 
-    public void SpawnGrains(
-    List<Vector3> grainPositions,
-    Color faction,
-    Action onComplete = null)
+    public void SpawnGrains(List<Vector3> grainPositions, Color faction, Action onComplete = null)
     {
         FactionGroup group =
             GetFaction(faction);
@@ -566,19 +568,21 @@ public class GrainSimulation : Singleton<GrainSimulation>
         int startIndex =
             group.grains.Count;
 
-        foreach (Vector3 pos in grainPositions)
+        int totalSpawn = GameConstants.grainMultiplier * grainPositions.Count;
+
+        for (int i = 0; i < totalSpawn; i++)
         {
             Grain g = new Grain();
 
-            g.position = pos;
+            g.position = grainPositions[i % grainPositions.Count] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
 
             g.windPhase =
                 UnityEngine.Random.value * 10f;
 
             g.offset =
                 UnityEngine.Random.Range(
-                    -0.1f,
-                    0.1f);
+                    -randomStrength,
+                    randomStrength);
 
             g.velocity = 0;
             g.fallVelocity = 0;
@@ -622,7 +626,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         group.matrices =
             new Matrix4x4[group.grains.Count];
-
 
         if (group.grains.Count == 0)
         {

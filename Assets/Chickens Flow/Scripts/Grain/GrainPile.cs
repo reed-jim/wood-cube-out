@@ -132,24 +132,24 @@ public class GrainPile : MonoBehaviour
 
         Vector2[] positionsInFilledCircle = SunflowerDistribution(grains.Count, radius);
 
-        // for (int i = 0; i < grains.Count; i++)
-        // {
-        //     float angle = i * Mathf.PI * 2f / grains.Count;
-
-        //     position = positionsInFilledCircle[i];
-        //     // flatten y
-        //     position.y *= 0.6f;
-        //     position.y -= 1;
-        //     position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
-
-        //     grains[i].transform.localPosition = position;
-
-        //     grains[i].gameObject.SetActive(true);
-
-        //     // GrainPool.Ins.particleField.SpawnParticleAtWorld(1, grains[i].transform.position);
-        // }
-
         List<Vector3> grainPositions = new List<Vector3>();
+
+        for (int i = 0; i < grains.Count; i++)
+        {
+            float angle = i * Mathf.PI * 2f / grains.Count;
+
+            position = positionsInFilledCircle[i];
+            // flatten y
+            position.y *= 0.6f;
+            position.y -= 1;
+            position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
+
+            grains[i].transform.localPosition = position;
+
+            // grains[i].gameObject.SetActive(true);
+
+            grainPositions.Add(grains[i].transform.position);
+        }
 
         int grainCount = grains.Count;
         int cols = Mathf.CeilToInt(Mathf.Sqrt(grainCount));
@@ -164,27 +164,6 @@ public class GrainPile : MonoBehaviour
 
         grainPileSizeX = grainPoolSlot.sizeX;
 
-        for (int y = 0; y < rows && grainPositions.Count < grainCount; y++)
-        {
-            float v = rows == 1 ? 0.5f : (float)y / (rows - 1);
-
-            Vector3 left = Vector3.Lerp(topLeft, bottomLeft, v);
-            Vector3 right = Vector3.Lerp(topRight, bottomRight, v);
-
-            for (int x = 0; x < cols && grainPositions.Count < grainCount; x++)
-            {
-                float u = cols == 1 ? 0.5f : (float)x / (cols - 1);
-
-                Vector3 lerpedPosition = Vector3.Lerp(left, right, u);
-
-                lerpedPosition += (Vector3)(grainRandomRadius * UnityEngine.Random.insideUnitCircle);
-
-                lerpedPosition.z = -9 - 0.01f * (siblingIndex + 0.001f * (amount - x));
-
-                grainPositions.Add(lerpedPosition);
-            }
-        }
-
         grainPositions = grainPositions
             .OrderBy(grain => grain.y)
             .ThenBy(grain => grain.x)
@@ -196,40 +175,6 @@ public class GrainPile : MonoBehaviour
 
             onCompleteAction?.Invoke();
         });
-
-        // for (int i = 0; i < grains.Count; i++)
-        // {
-        //     int index = i;
-
-        //     float zOffset = -0.01f * (siblingIndex + 0.001f * (amount - i));
-
-        //     position = grainPositions[i];
-
-        //     Vector3 start = grains[index].transform.localPosition;
-        //     Vector3 end = position;
-
-        //     grains[index].transform.DOLocalMove(end, duration: 0.3f + delayFallPerGrain * i).SetEase(Ease.InQuad)
-        //     .OnComplete(() =>
-        //     {
-        //         grains[index].transform.SetZ(zOffset);
-
-        //         grains[index].transform.DOPunchPosition(Vector3.up * 0.5f, 0.12f, vibrato: 1, elasticity: 0.2f)
-        //         .OnComplete(() =>
-        //         {
-        //             if (index == 0)
-        //             {
-        //                 onFirstGrainHitGround?.Invoke();
-        //             }
-
-        //             if (index == grains.Count - 1)
-        //             {
-        //                 ChickenManager.Ins.FeedTheChicken(this);
-
-        //                 onCompleteAction?.Invoke();
-        //             }
-        //         });
-        //     });
-        // }
 
         this.pileCenter = pileCenter;
         this.pileCenter.z = -0.01f * siblingIndex;
@@ -288,6 +233,8 @@ public class GrainPile : MonoBehaviour
         float percentPerStep = (endChickenEatingPercent - startChickenEatingPercent) / (endIndex - startIndex);
         float prevChickenEatingProgress = startChickenEatingPercent;
 
+        int numGrainToEat = numGrain * GameConstants.grainMultiplier;
+
         while (!isDone)
         {
             try
@@ -308,12 +255,12 @@ public class GrainPile : MonoBehaviour
 
             currentIndex++;
 
-            if (currentIndex >= 10)
+            if (currentIndex >= numGrainToEat)
             {
                 isDone = true;
             }
 
-            float currentPercent = startChickenEatingPercent + ((float)currentIndex / 10) * distanceChickenEatingPercent;
+            float currentPercent = startChickenEatingPercent + ((float)currentIndex / numGrainToEat) * distanceChickenEatingPercent;
 
             chicken.UpdateEatingProgress(currentPercent, prevChickenEatingProgress, delayPerGrain);
 
