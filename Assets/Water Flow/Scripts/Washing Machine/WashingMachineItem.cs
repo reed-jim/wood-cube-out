@@ -324,7 +324,7 @@ public class WashingMachineItem : MonoBehaviour
 
             void PourGrainPile(GrainPile grainPile, bool isLast, Action onComplete)
             {
-                grainPile.Pour(pileCenter, onFirstGrainHitGround: () =>
+                grainPile.Pour(pileCenter, onCompleteAction: () =>
                 {
                     if (isLast && !isBucketMoveBack)
                     {

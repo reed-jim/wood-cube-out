@@ -132,22 +132,22 @@ public class GrainPile : MonoBehaviour
 
         Vector2[] positionsInFilledCircle = SunflowerDistribution(grains.Count, radius);
 
-        for (int i = 0; i < grains.Count; i++)
-        {
-            float angle = i * Mathf.PI * 2f / grains.Count;
+        // for (int i = 0; i < grains.Count; i++)
+        // {
+        //     float angle = i * Mathf.PI * 2f / grains.Count;
 
-            position = positionsInFilledCircle[i];
-            // flatten y
-            position.y *= 0.6f;
-            position.y -= 1;
-            position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
+        //     position = positionsInFilledCircle[i];
+        //     // flatten y
+        //     position.y *= 0.6f;
+        //     position.y -= 1;
+        //     position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
 
-            grains[i].transform.localPosition = position;
+        //     grains[i].transform.localPosition = position;
 
-            grains[i].gameObject.SetActive(true);
+        //     grains[i].gameObject.SetActive(true);
 
-            // GrainPool.Ins.particleField.SpawnParticleAtWorld(1, grains[i].transform.position);
-        }
+        //     // GrainPool.Ins.particleField.SpawnParticleAtWorld(1, grains[i].transform.position);
+        // }
 
         List<Vector3> grainPositions = new List<Vector3>();
 
@@ -179,8 +179,7 @@ public class GrainPile : MonoBehaviour
 
                 lerpedPosition += (Vector3)(grainRandomRadius * UnityEngine.Random.insideUnitCircle);
 
-                lerpedPosition.y -= transform.localPosition.y;
-                lerpedPosition.z = -0.01f * (siblingIndex + 0.001f * (amount - x));
+                lerpedPosition.z = -9 - 0.01f * (siblingIndex + 0.001f * (amount - x));
 
                 grainPositions.Add(lerpedPosition);
             }
@@ -191,7 +190,7 @@ public class GrainPile : MonoBehaviour
             .ThenBy(grain => grain.x)
             .ToList();
 
-        GrainSimulation.Ins.SpawnGrains(grainPositions);
+        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, onCompleteAction);
 
         // for (int i = 0; i < grains.Count; i++)
         // {

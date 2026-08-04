@@ -2,11 +2,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-
 
 public class GrainSimulation : Singleton<GrainSimulation>
 {
@@ -36,7 +34,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public Material material;
     public float grainSize = 0.08f;
 
-
     [Header("Closed Path")]
     public Transform[] pathPoints;
 
@@ -50,10 +47,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public int spawnAmount = 100;
     public Vector2 spawnRandomArea = new Vector2(1f, 1f);
 
-
     struct Grain
     {
-        public Vector2 position;
+        public Vector3 position;
         public float fallVelocity;
         public float pathDistance;
         public float velocity;
@@ -62,44 +58,53 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public bool onPath;
     }
 
+    class FactionGroup
+    {
+        public Color faction;
+        public List<Grain> grains = new();
+        public Matrix4x4[] matrices;
+        public Material material;
+    }
 
-    Grain[] grains;
+    class SpawnRequest
+    {
+        public FactionGroup group;
+        public int startIndex;
+        public int count;
+        public Action onComplete;
+    }
 
-    Vector2[] points;
     float[] segmentLengths;
+    Vector2[] points;
     float totalLength;
     public int textureCount = 4;
 
-
-    Matrix4x4[] matrices;
-
-
+    Dictionary<Color, FactionGroup> factionGroups = new Dictionary<Color, FactionGroup>();
+    List<SpawnRequest> pendingSpawns = new List<SpawnRequest>();
     //------------------------------------------------------------
 
     void Start()
     {
         BuildPath();
 
-        grains = new Grain[grainCount];
-        matrices = new Matrix4x4[grainCount];
+        factionGroups.Clear();
 
-        for (int i = 0; i < grainCount; i++)
-        {
-            grains[i].position =
-                spawnPosition +
-                new Vector2(
-                    UnityEngine.Random.Range(-spawnArea.x, spawnArea.x),
-                    UnityEngine.Random.Range(-spawnArea.y, spawnArea.y)
-                );
+        // for (int i = 0; i < grainCount; i++)
+        // {
+        //     grains[i].position =
+        //         spawnPosition +
+        //         new Vector2(
+        //             UnityEngine.Random.Range(-spawnArea.x, spawnArea.x),
+        //             UnityEngine.Random.Range(-spawnArea.y, spawnArea.y)
+        //         );
 
-            grains[i].windPhase =
-                UnityEngine.Random.value * 10f;
+        //     grains[i].windPhase =
+        //         UnityEngine.Random.value * 10f;
 
-            grains[i].offset =
-                UnityEngine.Random.Range(-0.1f, 0.1f);
-        }
+        //     grains[i].offset =
+        //         UnityEngine.Random.Range(-0.1f, 0.1f);
+        // }
     }
-
 
     //------------------------------------------------------------
 
@@ -107,216 +112,212 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         float dt = Time.deltaTime;
 
-
         SimulateFall(dt);
-
-
         ResolveCollisions();
-
-
         SimulatePath(dt);
 
+        CheckSpawnCompletion();
 
         Render();
     }
-
 
     //------------------------------------------------------------
     // Falling grains
 
     void SimulateFall(float dt)
     {
-        for (int i = 0; i < grains.Length; i++)
+        foreach (var group in factionGroups.Values)
         {
-            if (grains[i].onPath)
-                continue;
-
-
-            grains[i].fallVelocity -= gravity * dt;
-
-            grains[i].position.y +=
-                grains[i].fallVelocity * dt;
-
-
-            // simple entrance detection
-            float d = FindNearestDistance(
-                grains[i].position);
-
-
-            Vector2 closest =
-                Evaluate(d);
-
-
-            if (Vector2.Distance(
-                closest,
-                grains[i].position) < 0.3f)
+            for (int i = 0; i < group.grains.Count; i++)
             {
-                grains[i].onPath = true;
-                grains[i].pathDistance = d;
-                grains[i].velocity = 0;
-                grains[i].position = closest;
+                Grain grain = group.grains[i];
+
+                if (grain.onPath)
+                    continue;
+
+
+                grain.fallVelocity -= gravity * dt;
+
+                grain.position.y +=
+                    grain.fallVelocity * dt;
+
+
+                // simple entrance detection
+                float d = FindNearestDistance(
+                    grain.position);
+
+
+                Vector2 closest =
+                    Evaluate(d);
+
+
+                if (Vector2.Distance(
+                    closest,
+                    grain.position) < 0.3f)
+                {
+                    grain.onPath = true;
+                    grain.pathDistance = d;
+                    grain.velocity = 0;
+                    grain.position = closest;
+                }
+
+                group.grains[i] = grain;
             }
         }
     }
-
 
     //------------------------------------------------------------
     // Path physics
 
     void SimulatePath(float dt)
     {
-        for (int i = 0; i < grains.Length; i++)
+        foreach (var group in factionGroups.Values)
         {
-            Grain g = grains[i];
+            for (int i = 0; i < group.grains.Count; i++)
+            {
+                Grain g =
+                    group.grains[i];
 
+                if (!g.onPath)
+                    continue;
 
-            if (!g.onPath)
-                continue;
+                g.velocity += moveForce * dt;
 
+                g.velocity *= damping;
 
-            // force pushing forward
-            g.velocity += moveForce * dt;
+                g.velocity =
+                    Mathf.Clamp(
+                        g.velocity,
+                        0,
+                        maxSpeed);
 
+                g.pathDistance +=
+                    g.velocity * dt;
 
-            // friction
-            g.velocity *= damping;
+                g.pathDistance =
+                    Mathf.Repeat(
+                        g.pathDistance,
+                        totalLength);
 
+                Vector2 center =
+                    Evaluate(g.pathDistance);
 
-            g.velocity =
-                Mathf.Clamp(
-                    g.velocity,
-                    0,
-                    maxSpeed);
+                Vector2 tangent =
+                    GetDirection(g.pathDistance);
 
+                Vector2 normal =
+                    new Vector2(
+                        -tangent.y,
+                        tangent.x);
 
+                g.windPhase +=
+                    dt * windSpeed;
 
-            g.pathDistance +=
-                g.velocity * dt;
+                float wind =
+                    Mathf.Sin(g.windPhase)
+                    * windStrength;
 
+                g.offset =
+                    Mathf.Lerp(
+                        g.offset,
+                        wind,
+                        dt * 3);
 
-            // closed loop
-            g.pathDistance =
-                Mathf.Repeat(
-                    g.pathDistance,
-                    totalLength);
+                g.position =
+                    center +
+                    normal * g.offset;
 
-
-
-            Vector2 center =
-                Evaluate(g.pathDistance);
-
-
-            Vector2 tangent =
-                GetDirection(g.pathDistance);
-
-
-            Vector2 normal =
-                new Vector2(
-                    -tangent.y,
-                    tangent.x);
-
-
-
-            // wind
-            g.windPhase +=
-                dt * windSpeed;
-
-
-            float wind =
-                Mathf.Sin(g.windPhase)
-                * windStrength;
-
-
-            g.offset =
-                Mathf.Lerp(
-                    g.offset,
-                    wind,
-                    dt * 3);
-
-
-
-            g.position =
-                center +
-                normal * g.offset;
-
-
-
-            grains[i] = g;
+                group.grains[i] = g;
+            }
         }
     }
-
 
     //------------------------------------------------------------
     // Simple collision
 
     void ResolveCollisions()
     {
-        Array.Sort(
-            grains,
-            (a, b) =>
-            a.pathDistance.CompareTo(
+        foreach (var group in factionGroups.Values)
+        {
+            group.grains.Sort(
+                (a, b) =>
+                a.pathDistance.CompareTo(
                 b.pathDistance));
 
 
-        for (int i = 0; i < grains.Length - 1; i++)
-        {
-            if (!grains[i].onPath ||
-               !grains[i + 1].onPath)
-                continue;
-
-
-            float gap =
-                grains[i + 1].pathDistance -
-                grains[i].pathDistance;
-
-
-            if (gap < grainSpacing)
+            for (int i = 0; i < group.grains.Count - 1; i++)
             {
-                float force =
-                    (grainSpacing - gap)
-                    * collisionForce;
+                Grain a = group.grains[i];
+                Grain b = group.grains[i + 1];
 
 
-                grains[i].velocity *= 0.8f;
+                if (!a.onPath || !b.onPath)
+                    continue;
 
 
-                grains[i + 1].velocity += force;
+                float gap =
+                    b.pathDistance -
+                    a.pathDistance;
+
+
+                if (gap < grainSpacing)
+                {
+                    float force =
+                        (grainSpacing - gap)
+                        * collisionForce;
+
+
+                    a.velocity *= .8f;
+
+                    b.velocity += force;
+
+
+                    group.grains[i] = a;
+                    group.grains[i + 1] = b;
+                }
             }
         }
     }
-
 
     //------------------------------------------------------------
     // Rendering
 
     void Render()
     {
-        if (grains.Length == 0)
+        foreach (var group in factionGroups.Values)
         {
-            return;
-        }
+            if (group.grains.Count == 0)
+                continue;
 
-        for (int i = 0; i < grains.Length; i++)
-        {
-            matrices[i] =
-                Matrix4x4.TRS(
-                    grains[i].position,
-                    Quaternion.identity,
-                    Vector3.one * grainSize);
-        }
 
-        Graphics.RenderMeshInstanced(
-            new RenderParams(material),
-            quadMesh,
-            0,
-            matrices,
-            matrices.Length);
+            if (group.matrices.Length != group.grains.Count)
+            {
+                group.matrices =
+                    new Matrix4x4[group.grains.Count];
+            }
+
+            for (int i = 0; i < group.grains.Count; i++)
+            {
+                group.matrices[i] =
+                    Matrix4x4.TRS(
+                        group.grains[i].position,
+                        Quaternion.identity,
+                        Vector3.one * grainSize);
+            }
+
+
+            Graphics.RenderMeshInstanced(
+                new RenderParams(
+                    group.material),
+                quadMesh,
+                0,
+                group.matrices,
+                group.grains.Count);
+        }
     }
-
 
     //------------------------------------------------------------
     // Path
-
     void BuildPath()
     {
         int count = pathPoints.Length;
@@ -355,7 +356,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
         }
     }
 
-
     Vector2 Evaluate(float distance)
     {
         distance =
@@ -391,8 +391,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
         return points[0];
     }
 
-
-
     Vector2 GetDirection(float distance)
     {
         float d = 0.05f;
@@ -403,8 +401,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
             Evaluate(distance))
             .normalized;
     }
-
-
 
     float FindNearestDistance(Vector2 p)
     {
@@ -464,7 +460,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         return best;
     }
-
 
     public void GenerateCapsulePath()
     {
@@ -560,38 +555,25 @@ public class GrainSimulation : Singleton<GrainSimulation>
         BuildPath();
     }
 
-    public void SpawnGrains(int amount)
+    public void SpawnGrains(
+    List<Vector3> grainPositions,
+    Color faction,
+    Action onComplete = null)
     {
-        int oldLength = grains.Length;
+        FactionGroup group =
+            GetFaction(faction);
 
-        Array.Resize(ref grains, oldLength + amount);
+        int startIndex =
+            group.grains.Count;
 
-        for (int i = oldLength; i < grains.Length; i++)
+        foreach (Vector3 pos in grainPositions)
         {
             Grain g = new Grain();
 
-            Vector2 center =
-                spawnPoint != null ?
-                spawnPoint.position :
-                Vector2.zero;
-
-
-            g.position =
-                center +
-                new Vector2(
-                    UnityEngine.Random.Range(
-                        -spawnRandomArea.x,
-                        spawnRandomArea.x),
-
-                    UnityEngine.Random.Range(
-                        -spawnRandomArea.y,
-                        spawnRandomArea.y)
-                );
-
+            g.position = pos;
 
             g.windPhase =
                 UnityEngine.Random.value * 10f;
-
 
             g.offset =
                 UnityEngine.Random.Range(
@@ -602,60 +584,111 @@ public class GrainSimulation : Singleton<GrainSimulation>
             g.fallVelocity = 0;
             g.onPath = false;
 
-            grains[i] = g;
+
+            group.grains.Add(g);
         }
 
+        group.matrices =
+            new Matrix4x4[group.grains.Count];
 
-        // resize rendering buffer
-        matrices = new Matrix4x4[grains.Length];
-    }
-
-    public void SpawnGrains(List<Vector3> grainPositions)
-    {
-        int oldLength = grains.Length;
-        int amount = grainPositions.Count;
-
-        Array.Resize(ref grains, oldLength + amount);
-
-        for (int i = 0; i < amount; i++)
+        if (onComplete != null)
         {
-            Grain g = new Grain();
-
-            // Use the provided position
-            g.position = grainPositions[i];
-
-            g.windPhase = UnityEngine.Random.value * 10f;
-
-            g.offset = UnityEngine.Random.Range(-0.1f, 0.1f);
-
-            g.velocity = 0;
-            g.fallVelocity = 0;
-            g.onPath = false;
-
-            grains[oldLength + i] = g;
+            pendingSpawns.Add(
+                new SpawnRequest
+                {
+                    group = group,
+                    startIndex = startIndex,
+                    count = grainPositions.Count,
+                    onComplete = onComplete
+                });
         }
-
-        // Resize rendering buffer
-        matrices = new Matrix4x4[grains.Length];
     }
 
-    public void RemoveLastGrain()
+    public void RemoveLastGrain(Color faction)
     {
-        if (grains == null || grains.Length == 0)
+        if (!factionGroups.TryGetValue(
+            faction,
+            out var group))
             return;
 
 
-        int newLength = grains.Length - 1;
+        if (group.grains.Count == 0)
+            return;
 
 
-        Array.Resize(
-            ref grains,
-            newLength);
+        group.grains.RemoveAt(
+            group.grains.Count - 1);
 
 
-        Array.Resize(
-            ref matrices,
-            newLength);
+        group.matrices =
+            new Matrix4x4[group.grains.Count];
+
+
+        if (group.grains.Count == 0)
+        {
+            Destroy(group.material);
+
+            factionGroups.Remove(faction);
+        }
+    }
+
+    void CheckSpawnCompletion()
+    {
+        for (int i = pendingSpawns.Count - 1; i >= 0; i--)
+        {
+            SpawnRequest request =
+                pendingSpawns[i];
+
+            bool completed = true;
+
+            int end =
+                request.startIndex +
+                request.count;
+
+            for (int g = request.startIndex; g < end; g++)
+            {
+                if (!request.group.grains[g].onPath)
+                {
+                    completed = false;
+                    break;
+                }
+            }
+
+            if (completed)
+            {
+                request.onComplete?.Invoke();
+
+                pendingSpawns.RemoveAt(i);
+            }
+        }
+    }
+
+    FactionGroup GetFaction(Color faction)
+    {
+        if (!factionGroups.TryGetValue(faction, out var group))
+        {
+            group = new FactionGroup();
+
+            group.faction = faction;
+
+            Texture tex =
+                FactionMapper.Ins.GetTileSprite(faction).texture;
+
+
+            group.material =
+                new Material(material);
+
+
+            group.material.mainTexture = tex;
+
+
+            factionGroups.Add(
+                faction,
+                group);
+        }
+
+
+        return group;
     }
 
 #if UNITY_EDITOR
@@ -664,16 +697,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
         if (pathPoints == null)
             return;
 
-
         Gizmos.color =
             Color.green;
-
 
         for (int i = 0; i < pathPoints.Length; i++)
         {
             int next =
                 (i + 1) % pathPoints.Length;
-
 
             Gizmos.DrawLine(
                 pathPoints[i].position,
@@ -692,28 +722,15 @@ public class GrainSimulationEditor : UnityEditor.Editor
     {
         DrawDefaultInspector();
 
-
         GrainSimulation sim =
             (GrainSimulation)target;
 
-
         GUILayout.Space(10);
-
 
         if (GUILayout.Button(
             "Generate Capsule Road"))
         {
             sim.GenerateCapsulePath();
-        }
-
-        if (GUILayout.Button("Spawn Grains"))
-        {
-            sim.SpawnGrains(sim.spawnAmount);
-        }
-
-        if (GUILayout.Button("Remove Last Grain"))
-        {
-            sim.RemoveLastGrain();
         }
     }
 }
