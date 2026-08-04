@@ -190,7 +190,12 @@ public class GrainPile : MonoBehaviour
             .ThenBy(grain => grain.x)
             .ToList();
 
-        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, onCompleteAction);
+        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, onComplete: () =>
+        {
+            ChickenManager.Ins.FeedTheChicken(this);
+
+            onCompleteAction?.Invoke();
+        });
 
         // for (int i = 0; i < grains.Count; i++)
         // {
@@ -273,24 +278,9 @@ public class GrainPile : MonoBehaviour
 
         bool isDone = false;
 
-        List<Grain> grainsToEat = new List<Grain>();
-
-        for (int i = startIndex; i <= endIndex; i++)
-        {
-            Grain grain = grains[i];
-
-            grainsToEat.Add(grain);
-        }
-
-        grainsToEat = grainsToEat
-            .OrderBy(grain => grain.transform.position.x).ToList();
-
         currentIndex = 0;
 
-        int numGrainToSwitchAnim = grainsToEat.Count / 3;
-
         chicken.PlayIdleAnim();
-
 
         float startChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft) / (float)chicken.numGrainPileRequired;
         float endChickenEatingPercent = 1 - (chicken.numGrainPileRequiredLeft - numGrain) / (float)chicken.numGrainPileRequired;
@@ -302,7 +292,7 @@ public class GrainPile : MonoBehaviour
         {
             try
             {
-                if (currentIndex % numGrainToSwitchAnim == 0)
+                if (currentIndex % 5 == 0)
                 {
                     chicken.PlayEatAnim();
                 }
@@ -312,20 +302,18 @@ public class GrainPile : MonoBehaviour
 
             }
 
-            PlaySoundAndFx(grainsToEat[currentIndex]);
+            PlaySoundAndFx(chicken.transform.position);
 
-            grainsToEat[currentIndex].gameObject.SetActive(false);
-
-            // GrainPool.Ins.particleField.HideParticle();
+            GrainSimulation.Ins.RemoveLastGrain(faction);
 
             currentIndex++;
 
-            if (currentIndex >= grainsToEat.Count)
+            if (currentIndex >= 10)
             {
                 isDone = true;
             }
 
-            float currentPercent = startChickenEatingPercent + ((float)currentIndex / grainsToEat.Count) * distanceChickenEatingPercent;
+            float currentPercent = startChickenEatingPercent + ((float)currentIndex / 10) * distanceChickenEatingPercent;
 
             chicken.UpdateEatingProgress(currentPercent, prevChickenEatingProgress, delayPerGrain);
 
@@ -352,10 +340,10 @@ public class GrainPile : MonoBehaviour
                 chicken.transform.position.x < grainPile.position.x + 0.5f * range;
         }
 
-        void PlaySoundAndFx(Grain grain)
+        void PlaySoundAndFx(Vector3 position)
         {
             ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            fx.transform.position = grain.transform.position.AddZ(-1);
+            fx.transform.position = position.AddZ(-1);
             var main = fx.main;
             main.startColor = faction;
             fx.Play();
