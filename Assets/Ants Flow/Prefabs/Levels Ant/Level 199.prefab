@@ -31264,6 +31264,7 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 000000000100000002000000030000000400000005000000
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
@@ -31277,11 +31278,20 @@ MonoBehaviour:
     spawningTileBoxConfig:
       items:
       - faction: {r: 1, g: 0.6627451, b: 0.5803922, a: 1}
-        number: 40
+        number: 30
+        startNodeId: 375
+        numCoverColumn: 4
+        numCoverRow: 6
       - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
-        number: 60
+        number: 40
+        startNodeId: 388
+        numCoverColumn: 4
+        numCoverRow: 6
       - faction: {r: 0.91372555, g: 0.91372555, b: 0.91372555, a: 1}
-        number: 80
+        number: 40
+        startNodeId: 318
+        numCoverColumn: 4
+        numCoverRow: 6
     bossAreaConfig:
       spawnOrder: 
       startNodeId: 0
@@ -31298,20 +31308,26 @@ MonoBehaviour:
       numCols: 8
       requiredEatCount: 355
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     - id: 1
       startNodeId: 1149
       numRows: 12
       numCols: 11
       requiredEatCount: 525
       prefab: {fileID: 2108898710330274750, guid: ea2648a0db5fe7e48a41c8be22b4da78, type: 3}
+      prefabIndex: 0
       isShowText: 1
       rotationAngle: 0
       scaleWidth: 1.01
       scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
@@ -31320,6 +31336,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: e8040000
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
