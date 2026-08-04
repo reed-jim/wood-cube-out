@@ -117,9 +117,7 @@ public class FactionMapper : Singleton<FactionMapper>
         return result;
     }
 
-    // Tra cứu SpriteContainer chịu được sai lệch float nhỏ của màu faction: thử khớp chính xác trước,
-    // nếu trượt (vd màu trong JSON level lệch 1 ULP so với màu trong FactionMapper do làm tròn float khi
-    // serialize/deserialize) thì khớp màu gần nhất thay vì ném KeyNotFoundException.
+
     private SpriteContainer ResolveContainer(Color faction)
     {
         if (spriteContainersOfColors != null && spriteContainersOfColors.TryGetValue(faction, out SpriteContainer container))
@@ -212,7 +210,7 @@ public class FactionMapper : Singleton<FactionMapper>
 #if UNITY_EDITOR
     [Header("Editor Helper")]
     public List<Sprite> sourceSprites = new List<Sprite>();
-    
+
     public enum TargetSpriteField
     {
         TileSprite,

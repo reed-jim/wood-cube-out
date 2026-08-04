@@ -40,10 +40,6 @@ namespace AntsFlow
         public bool overrideInitialDifficulty;
         public int numStartAntBoxes = 6;
 
-        // GD control độ khó: list index của các hộp (trong 6 hộp đầu, index 0..5) sẽ được
-        // ép sinh ra với faction trùng với tile ĐANG ăn được ngay trên map lúc setup level,
-        // ghi đè faction/số lượng do logic difficulty tính ra.
-        // List rỗng (Count == 0) => không áp dụng logic sinh hộp dễ ăn này.
         public List<int> easySpawnOrder;
 
         public SpecialElementConfig specialElementConfig;
@@ -1475,8 +1471,8 @@ public class SpawningTileBoxItemConfig
     public Color faction;
     public int number;
     public int startNodeId = -1;
-    public int numCoverColumn = 3;
-    public int numCoverRow = 3;
+    public int numCoverColumn = 4;
+    public int numCoverRow = 6;
 }
 
 [Serializable]
