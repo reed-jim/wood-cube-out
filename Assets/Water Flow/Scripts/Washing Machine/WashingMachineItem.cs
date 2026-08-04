@@ -310,10 +310,6 @@ public class WashingMachineItem : MonoBehaviour
                         });
                     }
 
-                    number--;
-
-                    UpdateNumber();
-
                     WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
                 });
 

@@ -509,10 +509,15 @@ public class ChickenManager : Singleton<ChickenManager>
         Dictionary<BaseChicken, Vector3> destinations = new();
 
         // Unique chickens, processed bottom -> top.
-        List<BaseChicken> chickens = waitingChickenSlots.Values
-            .Where(s => s.chicken != null)
-            .Select(s => s.chicken)
-            .Distinct()
+        // List<BaseChicken> validChickens = chickens
+        //     .Where(s => s.chicken != null)
+        //     .Select(s => s.chicken)
+        //     .Distinct()
+        //     .OrderBy(c => c.waitingChickenSlots.Min(s => s.row))
+        //     .ToList();
+
+        List<BaseChicken> validChickens = chickens
+            .Where(s => !s.isDone)
             .OrderBy(c => c.waitingChickenSlots.Min(s => s.row))
             .ToList();
 
@@ -524,17 +529,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
         bool isMovable = false;
 
-        Debug.Log($"CanMoveDown ======================");
-
-        for (int i = 0; i < chickens.Count; i++)
-        {
-            if (chickens[i].GetFirstRow() == 0)
-            {
-                Debug.Log($"CanMoveDown [ {chickens[i].name} ]");
-            }
-        }
-
-        foreach (BaseChicken chicken in chickens)
+        foreach (BaseChicken chicken in validChickens)
         {
             isMovable = false;
 
@@ -544,11 +539,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 isMovable = true;
             }
-
-            // if (chicken.GetFirstRow() < 2)
-            // {
-            //     Debug.Log($"CanMoveDown [ {chicken.name} ]");
-            // }
 
             OccupyChicken(chicken, occupied);
 
