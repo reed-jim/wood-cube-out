@@ -382,7 +382,7 @@ public class ChickenManager : Singleton<ChickenManager>
         int grainPerChicken = grainPile.remainingNumber / chickensToFeed.Count;
         int remainder = grainPile.remainingNumber % chickensToFeed.Count;
 
-        // Debug.Log($"FeedTheChicken ======================= {grainPile.remainingNumber} {chickensToFeed.Count} {grainPerChicken}");
+        Debug.Log($"FeedTheChicken ======================= {grainPile.remainingNumber} {chickensToFeed.Count} {grainPerChicken}");
 
         // Step 1: Feed equally
         if (grainPerChicken > 0)
@@ -400,29 +400,37 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 grainPile.remainingNumber -= amount;
 
-                // Debug.Log($"[Equal Feed {chicken.name}] {amount}");
+                Debug.Log($"[Equal Feed {chicken.name}] {amount}");
 
                 chicken.Feed(grainPile, amount, false);
             }
         }
 
-        // Step 2: Give remainder to first chicken
+        // Step 2: Distribute the remainder
         if (remainder > 0 && grainPile.remainingNumber > 0)
         {
-            BaseChicken firstChicken = chickensToFeed[0];
+            foreach (BaseChicken chicken in chickensToFeed)
+            {
+                if (remainder <= 0 || grainPile.remainingNumber <= 0)
+                    break;
 
-            int extra = Mathf.Min(
-                remainder,
-                firstChicken.numGrainPileRequiredLeft
-            );
+                int extra = Mathf.Min(
+                    remainder,
+                    chicken.numGrainPileRequiredLeft
+                );
 
-            extra = Mathf.Min(extra, grainPile.remainingNumber);
+                extra = Mathf.Min(extra, grainPile.remainingNumber);
 
-            grainPile.remainingNumber -= extra;
+                if (extra <= 0)
+                    continue;
 
-            // Debug.Log($"[Remainder Feed {firstChicken.name}] {extra}");
+                remainder -= extra;
+                grainPile.remainingNumber -= extra;
 
-            firstChicken.Feed(grainPile, extra, grainPile.remainingNumber == 0);
+                Debug.Log($"[Remainder Feed {chicken.name}] {extra}");
+
+                chicken.Feed(grainPile, extra, grainPile.remainingNumber == 0);
+            }
         }
 
         grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);
