@@ -779,22 +779,24 @@ namespace AntsFlow
 
         public List<BaseTile> GetFirstNMovableTilesForWarriorAnts(int count, Vector2 antBoxPosition)
         {
-            // Warrior ant chỉ được spawn khi đã có đường đi (node clear) thông tới ít nhất 1 node ở rìa
-            // sát boss (bên ngoài vùng boss). Chưa thông tới rìa boss => trả về rỗng => chưa spawn để bắn.
+            // Warrior ant chỉ được spawn khi đã có đường đi thông tới ít nhất 1 node trống/clear ở rìa
+            // sát boss (borderNodes). Kiến sinh ra sẽ đi thẳng tới vị trí rìa boss đó để bắn.
             // (Revive/ghost đi theo nhánh riêng - đứng rìa map bắn boss - nên không gọi hàm này.)
             HashSet<Node> bossBorderNodes = null;
             if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
             {
                 bossBorderNodes = SpecialElementManager.Ins.bossArea.borderNodes;
             }
-            bool requireBossBorder = bossBorderNodes != null && bossBorderNodes.Count > 0;
-            bool reachedBossBorder = !requireBossBorder;
+
+            if (bossBorderNodes == null || bossBorderNodes.Count == 0)
+            {
+                return new List<BaseTile>();
+            }
 
             Node start = bottomMostNodes
                     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
                     .First();
 
-            var doneNodes = new List<Node>();
             Queue<Node> edgeQueue = new();
             Queue<Node> normalQueue = new();
             var visited = new HashSet<Node>();
@@ -804,23 +806,24 @@ namespace AntsFlow
             visited.Add(start);
             parent[start] = null;
 
-            while ((edgeQueue.Count > 0 || normalQueue.Count > 0) && !(reachedBossBorder && doneNodes.Count >= count))
+            List<Node> reachableBorderNodes = new List<Node>();
+
+            while (edgeQueue.Count > 0 || normalQueue.Count > 0)
             {
                 Node current = edgeQueue.Count > 0
                     ? edgeQueue.Dequeue()
                     : normalQueue.Dequeue();
 
-                // Chạm được node rìa boss (đã clear & thông đường) => đủ điều kiện cho warrior ant bắn.
-                if (requireBossBorder && bossBorderNodes.Contains(current))
+                // Nếu current là node rìa boss và node này trống / đã clear
+                if (bossBorderNodes.Contains(current))
                 {
-                    reachedBossBorder = true;
-                }
+                    bool isPassable = !current.isObstacle &&
+                        (current.tile == null || current.tile.isMovedToAnt || current.tile.isDone);
 
-                // Thu node có tile đã done (waypoint). Hoãn dựng path tới cuối, chỉ dựng khi thật sự spawn
-                // (đã chạm rìa boss) - tránh dựng path thừa mỗi lần ăn tile lúc chưa thông đường tới boss.
-                if (current.tile != null && current.tile.isDone)
-                {
-                    doneNodes.Add(current);
+                    if (isPassable && !reachableBorderNodes.Contains(current))
+                    {
+                        reachableBorderNodes.Add(current);
+                    }
                 }
 
                 if (current.tile != null)
@@ -895,23 +898,37 @@ namespace AntsFlow
                 }
             }
 
-            // Chưa có đường thông tới rìa boss => chưa cho spawn warrior ant.
-            if (!reachedBossBorder)
+            if (reachableBorderNodes.Count == 0)
             {
                 return new List<BaseTile>();
             }
 
             var result = new List<BaseTile>();
 
-            int limit = Mathf.Min(doneNodes.Count, count);
-
-            for (int i = 0; i < limit; i++)
+            for (int i = 0; i < count; i++)
             {
-                Node doneNode = doneNodes[i];
+                Node targetBorderNode = reachableBorderNodes[i % reachableBorderNodes.Count];
+                List<Node> borderPath = ReconstructPath(targetBorderNode, parent);
 
-                doneNode.tile.path = ReconstructPath(doneNode, parent);
+                BaseTile antTargetTile;
+                if (targetBorderNode.tile != null)
+                {
+                    antTargetTile = targetBorderNode.tile;
+                    antTargetTile.path = borderPath;
+                }
+                else
+                {
+                    antTargetTile = new BaseTile()
+                    {
+                        tilemapPosition = CommonUtil.GetVector3Int(
+                            (targetBorderNode.initialPosition - (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1)) / GamePersistentVariable.tileMapScaleFactor),
+                        isDone = true,
+                        path = borderPath
+                    };
+                    targetBorderNode.tile = antTargetTile;
+                }
 
-                result.Add(doneNode.tile);
+                result.Add(antTargetTile);
             }
 
             return result;

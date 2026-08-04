@@ -12,8 +12,7 @@ namespace AntsFlow
         public List<BaseTile> coveredTiles;
         public List<int> numAntPerBox;
 
-        // Các node ở rìa ngay sát 4 cạnh vùng boss (BÊN NGOÀI vùng boss, không phải node trong vùng).
-        // Warrior ant chỉ được spawn khi đã có đường đi (node clear) thông tới ít nhất 1 node trong tập này.
+
         public HashSet<Node> borderNodes;
 
         public TMP_Text healthText;
@@ -21,12 +20,21 @@ namespace AntsFlow
 
         [Header("Spine Animation")]
         [SerializeField] private SkeletonAnimation skeletonAnimation;
-        [SpineAnimation] [SerializeField] private string idleAnimation = "idle";
-        [SpineAnimation] [SerializeField] private string dieAnimation = "die";
+        [SpineAnimation][SerializeField] private string idleAnimation = "idle";
+        [SpineAnimation][SerializeField] private string idle2Animation = "idle2";
+        [SpineAnimation][SerializeField] private string hitAnimation = "hit";
+        [SpineAnimation][SerializeField] private string dieAnimation = "die";
+
+        [Header("Hit FX Spine Animation")]
+        [SerializeField] private List<SkeletonAnimation> hitFxList = new List<SkeletonAnimation>();
+        [SpineAnimation][SerializeField] private string hitFxAnimation1 = "hit";
+        [SpineAnimation][SerializeField] private string hitFxAnimation2 = "hit2";
 
         private int maxHealth;
         private int currentHealth;
         private bool isAnimating;
+        private bool isDead;
+        private bool isPlayingIdle2;
 
         public void Setup(List<Node> nodes, BossAreaConfig bossAreaConfig)
         {
@@ -106,15 +114,133 @@ namespace AntsFlow
 
             maxHealth = bossAreaConfig.bossHealth;
             currentHealth = maxHealth;
+            isDead = false;
+            isPlayingIdle2 = false;
             healthText.text = $"{currentHealth}";
 
             lazyHealthBar.SetProgress((float)currentHealth / maxHealth);
 
             GenerateAntNumberPerBox(bossAreaConfig.spawnOrder.Count, currentHealth);
 
-            if (skeletonAnimation != null && !string.IsNullOrEmpty(idleAnimation))
+            DeactivateAllHitFx();
+
+            PlayIdle();
+        }
+
+        private void DeactivateAllHitFx()
+        {
+            if (hitFxList != null)
+            {
+                for (int i = 0; i < hitFxList.Count; i++)
+                {
+                    if (hitFxList[i] != null)
+                    {
+                        hitFxList[i].gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+
+        private void PlayRandomHitFx()
+        {
+            if (hitFxList == null || hitFxList.Count == 0)
+            {
+                return;
+            }
+
+            List<SkeletonAnimation> availableFx = new List<SkeletonAnimation>();
+            List<SkeletonAnimation> allValidFx = new List<SkeletonAnimation>();
+
+            for (int i = 0; i < hitFxList.Count; i++)
+            {
+                SkeletonAnimation fx = hitFxList[i];
+                if (fx != null)
+                {
+                    allValidFx.Add(fx);
+                    if (!fx.gameObject.activeSelf)
+                    {
+                        availableFx.Add(fx);
+                    }
+                }
+            }
+
+            if (allValidFx.Count == 0)
+            {
+                return;
+            }
+
+            SkeletonAnimation selectedFx = availableFx.Count > 0
+                ? availableFx[Random.Range(0, availableFx.Count)]
+                : allValidFx[Random.Range(0, allValidFx.Count)];
+
+            List<string> animOptions = new List<string>();
+            if (!string.IsNullOrEmpty(hitFxAnimation1))
+            {
+                animOptions.Add(hitFxAnimation1);
+            }
+            if (!string.IsNullOrEmpty(hitFxAnimation2))
+            {
+                animOptions.Add(hitFxAnimation2);
+            }
+
+            if (animOptions.Count == 0)
+            {
+                return;
+            }
+
+            string chosenAnim = animOptions[Random.Range(0, animOptions.Count)];
+
+            selectedFx.gameObject.SetActive(true);
+            selectedFx.Skeleton.SetToSetupPose();
+            TrackEntry trackEntry = selectedFx.AnimationState.SetAnimation(0, chosenAnim, false);
+            selectedFx.AnimationState.Apply(selectedFx.Skeleton);
+
+            trackEntry.Complete += (entry) =>
+            {
+                if (selectedFx != null && selectedFx.gameObject != null)
+                {
+                    selectedFx.gameObject.SetActive(false);
+                }
+            };
+        }
+
+        private void PlayIdle()
+        {
+            if (isDead || skeletonAnimation == null)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(idleAnimation) && !string.IsNullOrEmpty(idle2Animation))
+            {
+                string animToPlay = isPlayingIdle2 ? idle2Animation : idleAnimation;
+                isPlayingIdle2 = !isPlayingIdle2;
+
+                TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, animToPlay, false);
+                trackEntry.Complete += OnIdleComplete;
+            }
+            else if (!string.IsNullOrEmpty(idleAnimation))
             {
                 skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, true);
+            }
+            else if (!string.IsNullOrEmpty(idle2Animation))
+            {
+                skeletonAnimation.AnimationState.SetAnimation(0, idle2Animation, true);
+            }
+        }
+
+        private void OnIdleComplete(TrackEntry trackEntry)
+        {
+            trackEntry.Complete -= OnIdleComplete;
+
+            if (isDead || skeletonAnimation == null)
+            {
+                return;
+            }
+
+            if (skeletonAnimation.AnimationState.GetCurrent(0) == trackEntry)
+            {
+                PlayIdle();
             }
         }
 
@@ -167,6 +293,11 @@ namespace AntsFlow
 
         public void Hit()
         {
+            if (isDead)
+            {
+                return;
+            }
+
             currentHealth--;
 
             UpdateHealth();
@@ -176,8 +307,14 @@ namespace AntsFlow
             damageText.ShowDamage(1, transform.position.MinusZALittle());
             lazyHealthBar.SetProgress((float)currentHealth / maxHealth);
 
+            PlayRandomHitFx();
+
             if (currentHealth <= 0)
             {
+                isDead = true;
+
+                DeactivateAllHitFx();
+
                 for (int i = 0; i < coveredTiles.Count; i++)
                 {
                     coveredTiles[i].isLocked = false;
@@ -192,6 +329,29 @@ namespace AntsFlow
                 {
                     SaferioTween.ScaleDownWithPunch(transform, 0);
                 }
+            }
+            else
+            {
+                if (skeletonAnimation != null && !string.IsNullOrEmpty(hitAnimation))
+                {
+                    TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, hitAnimation, false);
+                    trackEntry.Complete += OnHitComplete;
+                }
+            }
+        }
+
+        private void OnHitComplete(TrackEntry trackEntry)
+        {
+            trackEntry.Complete -= OnHitComplete;
+
+            if (isDead || skeletonAnimation == null)
+            {
+                return;
+            }
+
+            if (skeletonAnimation.AnimationState.GetCurrent(0) == trackEntry)
+            {
+                PlayIdle();
             }
         }
 
