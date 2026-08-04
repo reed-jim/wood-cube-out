@@ -44,6 +44,31 @@ namespace AntsFlow
 
         public static event Action<int> showSpecialElementIntroduction;
 
+        protected override void MoreActionOnAwake()
+        {
+            base.MoreActionOnAwake();
+
+            LevelLoader.startLevelEvent += OnLevelReplayed;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            TileManager.winLevelEvent += OnLevelReplayed;
+        }
+
+        private void OnDestroy()
+        {
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
+            TileManager.winLevelEvent -= OnLevelReplayed;
+        }
+
+        private void OnLevelReplayed()
+        {
+            Reset();
+        }
+
         public void Setup(AntsFlow.LevelItem levelItem)
         {
             Reset();
@@ -83,7 +108,12 @@ namespace AntsFlow
             }
             activeSpawningTileBoxes.Clear();
             bossArea.gameObject.SetActive(false);
-            snake.gameObject.SetActive(false);
+
+            if (snake != null)
+            {
+                snake.Reset();
+                snake.gameObject.SetActive(false);
+            }
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -782,12 +812,7 @@ namespace AntsFlow
 
         public void SetupSnake(SnakeConfig snakeConfig)
         {
-            if (snakeConfig.spawnOrder == null)
-            {
-                return;
-            }
-
-            if (snakeConfig.spawnOrder.Count == 0)
+            if (snakeConfig == null || snakeConfig.spawnOrder == null || snakeConfig.spawnOrder.Count == 0)
             {
                 return;
             }
@@ -884,6 +909,29 @@ namespace AntsFlow
 
                 newBox.Setup(item.faction, item.number, boxNodes);
                 activeSpawningTileBoxes.Add(newBox);
+            }
+        }
+
+        public void OnBoosterClearOneColor(Color selectedFaction, List<BaseTile> clearedTiles)
+        {
+            if (activeSpawningTileBoxes == null || activeSpawningTileBoxes.Count == 0 || clearedTiles == null || clearedTiles.Count == 0)
+            {
+                return;
+            }
+
+            int tileIndex = 0;
+            foreach (var box in activeSpawningTileBoxes)
+            {
+                if (box != null && box.gameObject.activeSelf && box.faction == selectedFaction && box.numberLeft > 0)
+                {
+                    while (box.numberLeft > 0 && tileIndex < clearedTiles.Count)
+                    {
+                        BaseTile tileToRespawn = clearedTiles[tileIndex];
+                        float spawnDelay = 0.35f + tileIndex * 0.12f;
+                        box.SpawnNewTileAt(tileToRespawn, spawnDelay);
+                        tileIndex++;
+                    }
+                }
             }
         }
     }

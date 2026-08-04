@@ -70,7 +70,7 @@ namespace AntsFlow
             SpawnNewTileAt(tile);
         }
 
-        public void SpawnNewTileAt(BaseTile tile)
+        public void SpawnNewTileAt(BaseTile tile, float delay = 0f)
         {
             if (!gameObject.activeSelf)
             {
@@ -89,8 +89,43 @@ namespace AntsFlow
 
             tile.isSpawningAgain = true;
             tile.Reset();
-            SoundManager.Instance.PlaySound(GameConstants.spawnPopSound);
+            tile.Hide();
 
+            numberLeft--;
+
+            UpdateNumberText();
+
+            if (delay > 0f)
+            {
+                DOVirtual.DelayedCall(delay, () =>
+                {
+                    if (this != null && gameObject != null && gameObject.activeSelf)
+                    {
+                        DoSpawnTileAnimation(tile);
+                    }
+                });
+            }
+            else
+            {
+                DoSpawnTileAnimation(tile);
+            }
+
+            if (numberLeft <= 0)
+            {
+                if (occupiedNodes != null)
+                {
+                    foreach (var node in occupiedNodes)
+                    {
+                        node.isObstacle = false;
+                    }
+                }
+                SaferioTween.ScaleDownWithPunch(transform);
+            }
+        }
+
+        private void DoSpawnTileAnimation(BaseTile tile)
+        {
+            SoundManager.Instance.PlaySound(GameConstants.spawnPopSound);
 
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
@@ -115,23 +150,18 @@ namespace AntsFlow
                 tile.Show();
 
                 ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
-            });
 
-            numberLeft--;
-
-            UpdateNumberText();
-
-            if (numberLeft <= 0)
-            {
-                if (occupiedNodes != null)
+                if (WashingMachineManager.Ins != null && WashingMachineManager.Ins.washingMachineSlots != null)
                 {
-                    foreach (var node in occupiedNodes)
+                    for (int i = 0; i < WashingMachineManager.Ins.washingMachineSlots.Count; i++)
                     {
-                        node.isObstacle = false;
+                        if (WashingMachineManager.Ins.washingMachineSlots[i].washingMachineItem != null)
+                        {
+                            WashingMachineManager.Ins.washingMachineSlots[i].washingMachineItem.CheckAntsPath();
+                        }
                     }
                 }
-                SaferioTween.ScaleDownWithPunch(transform);
-            }
+            });
         }
     }
 }
