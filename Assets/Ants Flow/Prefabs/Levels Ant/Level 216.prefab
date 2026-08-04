@@ -28464,6 +28464,7 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 000000000100000002000000030000000400000005000000
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 
@@ -28473,15 +28474,15 @@ MonoBehaviour:
     doubleAntBoxConfig:
       spawnOrder: 
     magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 06000000330000000c000000320000000d000000100000003700000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e000000
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
-      spawnOrder: 
-      startNodeId: 0
-      numCoverColumn: 0
-      numCoverRow: 0
-      bossHealth: 0
+      spawnOrder: 0c000000080000000b0000000f00000015000000180000001c00000021000000270000002c000000
+      startNodeId: 270
+      numCoverColumn: 15
+      numCoverRow: 15
+      bossHealth: 350
     openCloseAntBoxConfig:
       spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
       initialStates: 
@@ -28494,6 +28495,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}

@@ -32057,31 +32057,44 @@ MonoBehaviour:
     worldSize: 0
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
+    items:
+    - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+      numAnt: 50
+    - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490197, a: 1}
+      numAnt: 50
+    - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352943, a: 1}
+      numAnt: 30
+    - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+      numAnt: 40
+    - faction: {r: 0.7176471, g: 0.57254905, b: 0.9803922, a: 1}
+      numAnt: 30
+    - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+      numAnt: 50
   difficulty: 1
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
-      spawnOrder: 
+      spawnOrder: 0e0000000600000007000000090000000a0000000d00000012000000140000001d0000001e00000023000000280000002f0000003200000034000000
     frozenAntBoxConfig:
-      spawnOrder: 02000000180000001f00000023000000290000003c000000
-      numBoxToUnfreeze: 020000000400000005000000030000000400000003000000
+      spawnOrder: 
+      numBoxToUnfreeze: 
     doubleAntBoxConfig:
       spawnOrder: 
     magnetAntBoxConfig:
-      spawnOrder: 090000000b0000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
-      spawnOrder: 
-      startNodeId: 0
-      numCoverColumn: 0
-      numCoverRow: 0
-      bossHealth: 0
+      spawnOrder: 0c000000080000000b0000000f00000015000000180000001c00000021000000270000002c0000002e00000035000000370000003a0000003e000000
+      startNodeId: 433
+      numCoverColumn: 15
+      numCoverRow: 15
+      bossHealth: 520
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
@@ -32092,9 +32105,14 @@ MonoBehaviour:
         spawnOrder: 
     snakeConfig:
       spawnOrder: 
-      snakeSegmentIndexes: 
+      snakeSegmentIndexes: 63020000
       health: 0
-    isContainsHiddenTiles: 1
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
+    isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
   spawnScale: {x: 0.423, y: 0.423, z: 0.423}
