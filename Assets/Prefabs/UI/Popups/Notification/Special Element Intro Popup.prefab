@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: unlocked!
+  m_text: freigeschaltet!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 1345362923132317015, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
@@ -219,7 +219,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: eb3e2e62c30830c4c9868b12e3e3a6c2, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -296,6 +296,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b47a2157175b89248a9c4665e85a9bf4, type: 3}
   - {fileID: 21300000, guid: 23bfc9f0e078b994eaaa7d8e1cffe06a, type: 3}
   - {fileID: 21300000, guid: ae012bcf653eed340a3dce19b36505a1, type: 3}
+  - {fileID: 21300000, guid: de8daa028446efc42a38f587b883afa4, type: 3}
+  - {fileID: 21300000, guid: e77cf88fa05d7214886c6453bf1b6c40, type: 3}
+  - {fileID: 21300000, guid: de55e0833594bf5408f0386e8980cde4, type: 3}
   specialElementNames:
   - Hidden Ant Box
   - Double Ant Box
@@ -305,6 +308,9 @@ MonoBehaviour:
   - Hard Tiles
   - Magnetic Box
   - Toggle Box
+  - Spawn Tiles
+  - Spider Hunter
+  - Snake Cutter
   specialElementDescriptions:
   - Reveals itself when moved into the top row
   - Always moves together with its linked partner
@@ -315,6 +321,10 @@ MonoBehaviour:
   - Selecting one pulls both linked boxes into the waiting slots. Requires 2 adjacent
     slots
   - Toggles open or closed whenever any Ant Box is selected
+  - Spawns a fixed-color tile into any empty space when a tile is cleared
+  - Spawns hunter ants that defeat the boss spider to clear its webbed tiles
+  - A snake blocks paths to tiles, collect special ants to defeat it and clear the
+    path
 --- !u!114 &2878686236699059345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,7 +407,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Can't select while frozen!
+  m_text: "Im eingefrorenen Zustand kann nicht ausgew\xE4hlt werden!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 1345362923132317015, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
@@ -424,7 +434,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 66.1
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -691,7 +701,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Frozen Ant Box
+  m_text: Gefrorene Ameisenbox
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 6b0a73ef9b6c0054a8ee4b1609b7e045, type: 2}
@@ -718,7 +728,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 87.35
+  m_fontSize: 74.35
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -919,7 +929,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Feature
+  m_text: Neue Funktion
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 550bd60e613a4544c8dbb1aee2a5ddc9, type: 2}
@@ -946,7 +956,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 119.1
+  m_fontSize: 105.1
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1206,7 +1216,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ok
+  m_text: OK
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 836a87490146d4e42b6c1914c9f0fa17, type: 2}
