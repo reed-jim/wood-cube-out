@@ -21,6 +21,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
     // Blittable struct compatible with Burst & Job System
     public struct GrainData
     {
+        public bool isSpawned;
+
         public float3 position;
         public float2 velocity2D;
         public float fallVelocity;
@@ -110,6 +112,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float capsuleStraightLength = 5f;
     public int capsuleResolution = 24;
 
+    [Header("Info")]
+    public int totalGrain;
+
     // Fast Native Lookups
     private NativeArray<float2> nativeSampledPositions;
     private NativeArray<float2> nativeSampledTangents;
@@ -140,7 +145,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         foreach (var group in factionGroups.Values)
         {
-            int count = group.grains.Length;
+            int count = group.grainCount;
             if (count == 0) continue;
 
             // 1. Ensure matrices array capacity
@@ -230,7 +235,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 cellSize = collisionCellSize,
                 gridWriter = spatialGrid.AsParallelWriter()
             };
-            handle = buildGridJob.Schedule(count, 64, handle);
+            handle = buildGridJob.Schedule(count, 1, handle);
 
             // -------------------------------------------------------------
             // STEP 5: Resolve Collisions (Read: grainsBuffer -> Write: grainArray)
@@ -244,7 +249,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 grainSpacing = grainSpacing,
                 collisionForce = collisionForce
             };
-            handle = collisionJob.Schedule(count, 32, handle);
+            handle = collisionJob.Schedule(count, 1, handle);
 
             // -------------------------------------------------------------
             // STEP 6: Render Matrices (Final state ends up back in grainArray)
@@ -317,6 +322,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public void Execute(int index)
         {
             GrainData g = grainsRead[index];
+
+            if (!g.isSpawned)
+            {
+                return;
+            }
 
             if (!g.onPath)
             {
@@ -391,6 +401,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             GrainData g = grainsRead[index];
 
+            if (!g.isSpawned)
+            {
+                return;
+            }
+
             if (g.bouncing)
             {
                 g.fallVelocity -= gravity * dt;
@@ -439,7 +454,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     }
 
     [BurstCompile]
-    struct SimulatePathJob : IJobParallelFor
+    public struct SimulatePathJob : IJobParallelFor
     {
         [ReadOnly] public NativeArray<GrainData> grainsRead;
         [WriteOnly] public NativeArray<GrainData> grainsWrite;
@@ -450,9 +465,20 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public float maxSpeed;
         public float airDrag;
 
-        [NativeDisableParallelForRestriction] public NativeArray<float2> sampledPositions;
-        [NativeDisableParallelForRestriction] public NativeArray<float2> sampledTangents;
-        [NativeDisableParallelForRestriction] public NativeArray<int> lookupGrid;
+        [ReadOnly]
+        [NativeDisableParallelForRestriction]
+        [NativeDisableContainerSafetyRestriction]
+        public NativeArray<float2> sampledPositions;
+
+        [ReadOnly]
+        [NativeDisableParallelForRestriction]
+        [NativeDisableContainerSafetyRestriction]
+        public NativeArray<float2> sampledTangents;
+
+        [ReadOnly]
+        [NativeDisableParallelForRestriction]
+        [NativeDisableContainerSafetyRestriction]
+        public NativeArray<int> lookupGrid;
 
         public float2 worldMin;
         public float lookupCellSize;
@@ -461,37 +487,53 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         public void Execute(int index)
         {
-            GrainData g = grainsRead[index];
+            GrainData grain = grainsRead[index];
 
-            if (g.onPath)
+            // Only process grains that have landed on the path
+            if (grain.onPath)
             {
-                int sample = GetNearestSampleIndex(g.position.xy);
-                float2 nearest = sampledPositions[sample];
-                float2 tangent = sampledTangents[sample];
+                int sampleIdx = GetNearestSampleIndex(grain.position.xy);
+                float2 pathPos = sampledPositions[sampleIdx];
+                float2 pathTangent = sampledTangents[sampleIdx];
 
-                g.velocity2D += tangent * conveyorForce * dt;
+                // 1. Conveyor Drive Force (along path direction)
+                grain.velocity2D += pathTangent * conveyorForce * dt;
 
-                float2 toCenter = nearest - g.position.xy;
-                g.velocity2D += toCenter * edgeForce * dt;
+                // 2. Resolve Edges (Keep grains centered on path bounds)
+                float2 pathNormal = math.normalize(new float2(-pathTangent.y, pathTangent.x));
+                float2 offsetFromCenter = grain.position.xy - pathPos;
+                float distFromCenter = math.dot(offsetFromCenter, pathNormal);
 
-                g.velocity2D = math.clamp(g.velocity2D, new float2(-maxSpeed), new float2(maxSpeed));
-                g.position.xy += g.velocity2D * dt;
-                g.velocity2D *= (1f - airDrag * dt);
+                // Push grain back toward path centerline when straying toward edges
+                grain.velocity2D -= pathNormal * (distFromCenter * edgeForce * dt);
 
-                g.position.z = g.zPosition;
+                // 3. Air Drag & Speed Clamp
+                grain.velocity2D *= math.pow(1.0f - airDrag, dt);
+
+                float currentSpeed = math.length(grain.velocity2D);
+                if (currentSpeed > maxSpeed)
+                {
+                    grain.velocity2D = (grain.velocity2D / currentSpeed) * maxSpeed;
+                }
+
+                // Update 2D Position
+                grain.position.xy += grain.velocity2D * dt;
             }
 
-            grainsWrite[index] = g;
+            grainsWrite[index] = grain;
         }
 
         private int GetNearestSampleIndex(float2 pos)
         {
             int x = math.clamp((int)math.floor((pos.x - worldMin.x) / lookupCellSize), 0, gridWidth - 1);
             int y = math.clamp((int)math.floor((pos.y - worldMin.y) / lookupCellSize), 0, gridHeight - 1);
-            return lookupGrid[x + y * gridWidth];
+            int idx = x + y * gridWidth;
+
+            if (idx < 0 || idx >= lookupGrid.Length) return 0;
+            return lookupGrid[idx];
         }
     }
-
+    
     [BurstCompile]
     struct BuildSpatialGridJob : IJobParallelFor
     {
@@ -502,6 +544,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         public void Execute(int index)
         {
+            if (!grains[index].isSpawned)
+            {
+                return;
+            }
+
             if (!grains[index].onPath) return;
 
             int2 cell = new int2(
@@ -516,7 +563,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     struct ResolveCollisionsJob : IJobParallelFor
     {
         // Read from ANY index safely:
-        [ReadOnly] public NativeArray<GrainData> grainsRead;
+        [NativeDisableParallelForRestriction][ReadOnly] public NativeArray<GrainData> grainsRead;
 
         // Write ONLY to index i safely:
         public NativeArray<GrainData> grainsWrite;
@@ -532,6 +579,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             // 1. Read 'a' from the READ-ONLY buffer
             GrainData a = grainsRead[index];
+
+            if (!a.isSpawned)
+            {
+                return;
+            }
+
             if (!a.onPath)
             {
                 grainsWrite[index] = a;
@@ -551,9 +604,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 {
                     int2 neighborCell = cell + new int2(x, y);
 
-                    return;
-                    
-                    if (grid.TryGetFirstValue(neighborCell, out int otherIndex, out var iterator))
+                    NativeParallelMultiHashMapIterator<int2> iterator;
+                    int otherIndex;
+
+                    if (grid.TryGetFirstValue(neighborCell, out otherIndex, out iterator))
                     {
                         do
                         {
@@ -629,6 +683,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             GrainData g = new GrainData
             {
+                isSpawned = true,
                 position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle,
                 zPosition = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000),
                 velocity2D = float2.zero,
@@ -715,7 +770,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         if (!factionGroups.TryGetValue(faction, out var group))
         {
-            group = new FactionGroup(1024);
+            group = new FactionGroup(10000);
             group.faction = faction;
 
             Texture tex = FactionMapper.Ins.GetTileSprite(faction).texture;
