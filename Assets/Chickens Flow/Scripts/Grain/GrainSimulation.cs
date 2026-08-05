@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Saferio.Util.SaferioTween;
 
 
 #if UNITY_EDITOR
@@ -10,11 +9,6 @@ using UnityEditor;
 
 public class GrainSimulation : Singleton<GrainSimulation>
 {
-    [Header("Spawn")]
-    public int grainCount = 5000;
-    public Vector2 spawnPosition;
-    public Vector2 spawnArea = new Vector2(1, 1);
-
     [Header("Fall")]
     public float gravity = 15f;
 
@@ -22,7 +16,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float moveForce = 20f;
     public float damping = 0.96f;
     public float maxSpeed = 5f;
-    public float randomStrength = 1f;
 
     [Header("Collision")]
     public float grainSpacing = 0.12f;
@@ -32,18 +25,28 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float windStrength = 0.25f;
     public float windSpeed = 3f;
 
+    [Header("Conveyor Physics")]
+    public float conveyorForce = 30f;
+    public float edgeForce = 50f;
+    public float grainMass = 1f;
+    public float airDrag = 0.01f;
+    public float conveyorWidth = 1f;
+
+    [Header("Collision Optimization")]
+    public float collisionCellSize = 0.2f;
+
+    Dictionary<Vector2Int, List<int>> collisionGrid =
+        new Dictionary<Vector2Int, List<int>>();
+
     [Header("Landing")]
     public Transform landingPoint;
     public float pathSnapDistance = 0.15f;
-    public float landingDuration = 0.2f;
     public float impactToPathVelocity = 0.15f;
-    public float landingBoost = 0.05f;
     public float bounceHeight = 0.02f;
-    public float bounceDamping = 0.15f;
+    public float percentNumGrainOnPathForChickenToEat = 0.5f;
 
     [Header("Pouring")]
     public float maxFallDelay = 0.8f;
-    public bool randomizeFallDelay = true;
 
     [Header("Path Variation")]
     public float laneWidth = 0.15f;
@@ -67,31 +70,25 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public int spawnAmount = 100;
     public Vector2 spawnRandomArea = new Vector2(1f, 1f);
 
-    [Header("Debug")]
-    public int totalSpawned;
-    public int totalRemoved;
-    public int totalRemoveCalled;
-
     struct Grain
     {
         public Vector3 position;
         public float zPosition;
-        public float fallVelocity;
-        public float pathDistance;
-        public float velocity;
-        public float windPhase;
-        public float offset;
 
-        public float landingTimer;
-        public float impactVelocity;
+        public Vector2 velocity2D;
+        public float fallVelocity;
+
+        public float windPhase;
+
+        public float offset;
 
         public bool onPath;
 
         public float targetOffset;
 
-        public float speedMultiplier;
-
         public float fallDelay;
+
+        public float radius;
     }
 
     class FactionGroup
@@ -113,7 +110,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
     float[] segmentLengths;
     Vector2[] points;
     float totalLength;
-    public int textureCount = 4;
 
     Dictionary<Color, FactionGroup> factionGroups = new Dictionary<Color, FactionGroup>();
     List<SpawnRequest> pendingSpawns = new List<SpawnRequest>();
@@ -124,22 +120,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
         BuildPath();
 
         factionGroups.Clear();
-
-        // for (int i = 0; i < grainCount; i++)
-        // {
-        //     grains[i].position =
-        //         spawnPosition +
-        //         new Vector2(
-        //             UnityEngine.Random.Range(-spawnArea.x, spawnArea.x),
-        //             UnityEngine.Random.Range(-spawnArea.y, spawnArea.y)
-        //         );
-
-        //     grains[i].windPhase =
-        //         UnityEngine.Random.value * 10f;
-
-        //     grains[i].offset =
-        //         UnityEngine.Random.Range(-0.1f, 0.1f);
-        // }
     }
 
     //------------------------------------------------------------
@@ -149,8 +129,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
         float dt = Time.deltaTime;
 
         SimulateFall(dt);
-        ResolveCollisions();
+
         SimulatePath(dt);
+
+        ResolveCollisions();
+
+        ResolveEdges();
 
         CheckSpawnCompletion();
 
@@ -166,47 +150,108 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             for (int i = 0; i < group.grains.Count; i++)
             {
-                Grain grain = group.grains[i];
+                Grain g = group.grains[i];
 
-                if (grain.onPath)
-                    continue;
 
-                if (grain.fallDelay > 0f)
+                // already on conveyor
+                if (g.onPath)
                 {
-                    grain.fallDelay -= dt;
-                    group.grains[i] = grain;
+                    group.grains[i] = g;
                     continue;
                 }
 
-                grain.fallVelocity -= gravity * dt;
 
-                grain.position.y +=
-                    grain.fallVelocity * dt;
-
-                // simple entrance detection
-                float d = FindNearestDistance(
-                    grain.position);
-
-                // if (Vector2.Distance(landingPoint.position, grain.position) < pathSnapDistance)
-                if (grain.position.y < landingPoint.position.y)
+                // pouring delay
+                if (g.fallDelay > 0f)
                 {
-                    grain.onPath = true;
-                    grain.pathDistance = d;
+                    g.fallDelay -= dt;
 
-                    // transfer falling momentum into path movement
-                    grain.velocity =
-                        Mathf.Abs(grain.fallVelocity) * impactToPathVelocity;
-
-                    grain.impactVelocity =
-                        grain.fallVelocity;
-
-                    grain.landingTimer = 0;
-
-                    grain.position.y += bounceHeight;
-                    grain.fallVelocity *= -bounceDamping;
+                    group.grains[i] = g;
+                    continue;
                 }
 
-                group.grains[i] = grain;
+
+                // gravity
+                g.fallVelocity -= gravity * dt;
+
+
+                // move downward
+                g.position.y +=
+                    g.fallVelocity * dt;
+
+
+
+                // check conveyor hit
+                float distance =
+                    FindNearestDistance(g.position);
+
+
+                Vector2 conveyorPoint =
+                    Evaluate(distance);
+
+
+                float height =
+                    Vector2.Distance(
+                        g.position,
+                        conveyorPoint
+                    );
+
+
+                if (height < pathSnapDistance)
+                {
+                    g.onPath = true;
+
+
+                    // put grain exactly on conveyor
+                    g.position =
+                        conveyorPoint;
+
+
+                    // convert falling speed into horizontal impact
+                    Vector2 tangent =
+                        GetDirection(distance);
+
+
+                    float impact =
+                        Mathf.Abs(g.fallVelocity);
+
+
+                    g.velocity2D =
+                        tangent *
+                        impact *
+                        impactToPathVelocity;
+
+
+                    // small bounce
+                    g.velocity2D +=
+                        UnityEngine.Random.insideUnitCircle *
+                        bounceHeight;
+
+
+                    g.fallVelocity = 0;
+
+
+                    // random lane position
+                    Vector2 normal =
+                        new Vector2(
+                            -tangent.y,
+                            tangent.x);
+
+
+                    g.position +=
+                        (Vector3)
+                        normal *
+                        UnityEngine.Random.Range(
+                            -laneWidth,
+                            laneWidth
+                        );
+
+
+                    g.radius = grainSpacing * 0.5f;
+                }
+
+
+                group.grains[i] = g;
             }
         }
     }
@@ -224,75 +269,56 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
                 if (!g.onPath)
                 {
-                    g.position.z = g.zPosition;
-
                     group.grains[i] = g;
-
                     continue;
                 }
 
-                // landing absorption
-                if (g.landingTimer < landingDuration)
-                {
-                    g.landingTimer += dt;
 
-                    float t = g.landingTimer / landingDuration;
+                Vector2 nearest = Evaluate(
+                    FindNearestDistance(g.position)
+                );
 
-                    g.velocity =
-                        Mathf.Lerp(
-                            g.velocity,
-                            moveForce * landingBoost,
-                            t);
-                }
-                else
-                {
-                    g.velocity +=
-    moveForce *
-    g.speedMultiplier *
-    dt;
-                }
 
-                g.velocity *= damping;
+                Vector2 tangent =
+                    GetDirection(
+                        FindNearestDistance(g.position)
+                    );
 
-                g.velocity =
-                    Mathf.Clamp(
-                        g.velocity,
-                        0,
-                        maxSpeed);
 
-                g.pathDistance += g.velocity * dt;
+                // Conveyor pushes forward
+                g.velocity2D +=
+                    tangent *
+                    conveyorForce *
+                    dt;
 
-                g.pathDistance =
-                    Mathf.Repeat(
-                        g.pathDistance,
-                        totalLength);
 
-                Vector2 center = Evaluate(g.pathDistance);
+                // Keep grains near conveyor surface
+                Vector2 toCenter =
+                    nearest -
+                    (Vector2)g.position;
 
-                Vector2 tangent = GetDirection(g.pathDistance);
 
-                Vector2 normal = new Vector2(-tangent.y, tangent.x);
+                g.velocity2D +=
+                    toCenter *
+                    edgeForce *
+                    dt;
 
-                g.windPhase += dt * windSpeed;
+                g.velocity2D.x = Mathf.Min(g.velocity2D.x, maxSpeed);
+                g.velocity2D.y = Mathf.Min(g.velocity2D.y, maxSpeed);
 
-                float wind = Mathf.Sin(g.windPhase) * windStrength;
+                // movement
+                g.position +=
+                    (Vector3)(g.velocity2D * dt);
 
-                float desiredOffset = g.targetOffset + wind;
 
-                g.offset =
-                    Mathf.Lerp(
-                        g.offset,
-                        desiredOffset,
-                        laneChangeSpeed * dt);
+                // tiny air resistance
+                g.velocity2D *=
+                    1f - airDrag * dt;
 
-                g.offset =
-                    Mathf.Lerp(
-                        g.offset,
-                        wind,
-                        dt * 3);
 
-                g.position = center + normal * g.offset;
-                g.position.z = g.zPosition;
+                g.position.z =
+                    g.zPosition;
+
 
                 group.grains[i] = g;
             }
@@ -306,47 +332,227 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         foreach (var group in factionGroups.Values)
         {
-            group.grains.Sort(
-                (a, b) =>
-                a.pathDistance.CompareTo(
-                b.pathDistance));
+            collisionGrid.Clear();
 
 
-            for (int i = 0; i < group.grains.Count - 1; i++)
+            // Build grid
+            for (int i = 0; i < group.grains.Count; i++)
             {
-                Grain a = group.grains[i];
-                Grain b = group.grains[i + 1];
+                Grain g = group.grains[i];
 
-
-                if (!a.onPath || !b.onPath)
+                if (!g.onPath)
                     continue;
 
 
-                float gap =
-                    b.pathDistance -
-                    a.pathDistance;
+                Vector2Int cell =
+                    new Vector2Int(
+                        Mathf.FloorToInt(
+                            g.position.x / collisionCellSize),
+                        Mathf.FloorToInt(
+                            g.position.y / collisionCellSize));
 
 
-                if (gap < grainSpacing)
+                if (!collisionGrid.TryGetValue(cell, out var list))
                 {
-                    float overlap = grainSpacing - gap;
-
-                    float impulse =
-                        overlap * collisionForce;
-
-                    a.velocity -= impulse * 0.5f;
-                    b.velocity += impulse * 0.5f;
-
-                    a.velocity = Mathf.Max(0, a.velocity);
-
-                    float correction = overlap * 0.5f;
-
-                    a.pathDistance -= correction;
-                    b.pathDistance += correction;
-
-                    group.grains[i] = a;
-                    group.grains[i + 1] = b;
+                    list = new List<int>();
+                    collisionGrid.Add(cell, list);
                 }
+
+
+                list.Add(i);
+            }
+
+
+
+            // Check neighbors only
+            foreach (var pair in collisionGrid)
+            {
+                Vector2Int cell = pair.Key;
+
+                List<int> current = pair.Value;
+
+
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        Vector2Int neighbor =
+                            new Vector2Int(
+                                cell.x + x,
+                                cell.y + y);
+
+
+                        if (!collisionGrid.TryGetValue(
+                            neighbor,
+                            out var others))
+                            continue;
+
+
+                        for (int a = 0; a < current.Count; a++)
+                        {
+                            int i = current[a];
+
+
+                            for (int b = 0; b < others.Count; b++)
+                            {
+                                int j = others[b];
+
+
+                                if (i >= j)
+                                    continue;
+
+
+                                ResolvePair(
+                                    group,
+                                    i,
+                                    j);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void ResolvePair(
+        FactionGroup group,
+        int i,
+        int j)
+    {
+        Grain a = group.grains[i];
+        Grain b = group.grains[j];
+
+
+        Vector2 delta =
+            b.position -
+            a.position;
+
+
+        float distSqr =
+            delta.sqrMagnitude;
+
+
+        float minDist =
+            grainSpacing;
+
+
+        if (distSqr >= minDist * minDist ||
+           distSqr < 0.000001f)
+            return;
+
+
+        float dist =
+            Mathf.Sqrt(distSqr);
+
+
+        Vector2 normal =
+            delta / dist;
+
+
+        float penetration =
+            minDist - dist;
+
+
+        Vector2 push =
+            normal *
+            penetration *
+            collisionForce;
+
+
+        a.velocity2D -=
+            push * 0.5f;
+
+
+        b.velocity2D +=
+            push * 0.5f;
+
+
+
+        // cheap position correction
+        float correction =
+            penetration * 0.25f;
+
+
+        a.position -=
+            (Vector3)
+            normal *
+            correction;
+
+
+        b.position +=
+            (Vector3)
+            normal *
+            correction;
+
+
+        group.grains[i] = a;
+        group.grains[j] = b;
+    }
+
+    void ResolveEdges()
+    {
+        foreach (var group in factionGroups.Values)
+        {
+            for (int i = 0; i < group.grains.Count; i++)
+            {
+                Grain g = group.grains[i];
+
+
+                if (!g.onPath)
+                    continue;
+
+
+                float d =
+                    FindNearestDistance(g.position);
+
+
+                Vector2 center =
+                    Evaluate(d);
+
+
+                Vector2 tangent =
+                    GetDirection(d);
+
+
+                Vector2 normal =
+                    new Vector2(
+                        -tangent.y,
+                        tangent.x);
+
+
+                float side =
+                    Vector2.Dot(
+                        (Vector2)g.position - center,
+                        normal);
+
+
+                float limit =
+                    conveyorWidth * 0.5f;
+
+
+                if (Mathf.Abs(side) > limit)
+                {
+                    float penetration =
+                        Mathf.Abs(side) - limit;
+
+
+                    g.velocity2D -=
+                        normal *
+                        Mathf.Sign(side) *
+                        penetration *
+                        edgeForce *
+                        Time.deltaTime;
+
+
+                    g.position -=
+                        (Vector3)
+                        normal *
+                        Mathf.Sign(side) *
+                        penetration;
+                }
+
+
+                group.grains[i] = g;
             }
         }
     }
@@ -372,16 +578,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             for (int i = 0; i < group.grains.Count; i++)
             {
-                group.matrices[i] =
-                    Matrix4x4.TRS(
-                        group.grains[i].position,
-                        Quaternion.identity,
-                        size);
+                group.matrices[i] = Matrix4x4.TRS(group.grains[i].position, Quaternion.identity, size);
             }
 
             Graphics.RenderMeshInstanced(
-                new RenderParams(
-                    group.material),
+                new RenderParams(group.material),
                 quadMesh,
                 0,
                 group.matrices,
@@ -395,71 +596,44 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         int count = pathPoints.Length;
 
-
         points = new Vector2[count];
-
 
         for (int i = 0; i < count; i++)
             points[i] =
                 pathPoints[i].position;
 
-
-
-        segmentLengths =
-            new float[count];
-
+        segmentLengths = new float[count];
 
         totalLength = 0;
-
 
         for (int i = 0; i < count; i++)
         {
             int next =
                 (i + 1) % count;
 
+            segmentLengths[i] = Vector2.Distance(points[i], points[next]);
 
-            segmentLengths[i] =
-                Vector2.Distance(
-                    points[i],
-                    points[next]);
-
-
-            totalLength +=
-                segmentLengths[i];
+            totalLength += segmentLengths[i];
         }
     }
 
     Vector2 Evaluate(float distance)
     {
-        distance =
-            Mathf.Repeat(
-                distance,
-                totalLength);
-
+        distance = Mathf.Repeat(distance, totalLength);
 
         for (int i = 0; i < segmentLengths.Length; i++)
         {
             if (distance <= segmentLengths[i])
             {
-                int next =
-                    (i + 1) % points.Length;
+                int next = (i + 1) % points.Length;
 
+                float t = distance / segmentLengths[i];
 
-                float t =
-                    distance /
-                    segmentLengths[i];
-
-
-                return Vector2.Lerp(
-                    points[i],
-                    points[next],
-                    t);
+                return Vector2.Lerp(points[i], points[next], t);
             }
-
 
             distance -= segmentLengths[i];
         }
-
 
         return points[0];
     }
@@ -468,11 +642,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         float d = 0.05f;
 
-        return
-            (Evaluate(distance + d)
-            -
-            Evaluate(distance))
-            .normalized;
+        return (Evaluate(distance + d) - Evaluate(distance)).normalized;
     }
 
     float FindNearestDistance(Vector2 p)
@@ -490,34 +660,22 @@ public class GrainSimulation : Singleton<GrainSimulation>
             Vector2 a = points[i];
             Vector2 b = points[next];
 
-            Vector2 ab =
-                b - a;
+            Vector2 ab = b - a;
 
-            float t =
-                Mathf.Clamp01(
-                Vector2.Dot(
-                    p - a,
-                    ab)
-                /
-                ab.sqrMagnitude);
+            float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / ab.sqrMagnitude);
 
-            Vector2 proj =
-                a + ab * t;
+            Vector2 proj = a + ab * t;
 
-            float dist =
-                (proj - p).sqrMagnitude;
+            float dist = (proj - p).sqrMagnitude;
 
             if (dist < bestDist)
             {
                 bestDist = dist;
 
-                best =
-                    accumulated +
-                    segmentLengths[i] * t;
+                best = accumulated + segmentLengths[i] * t;
             }
 
-            accumulated +=
-                segmentLengths[i];
+            accumulated += segmentLengths[i];
         }
 
         return best;
@@ -535,14 +693,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
             }
         }
 
-        int count =
-            capsuleResolution * 2;
+        int count = capsuleResolution * 2;
 
-        Transform[] newPoints =
-            new Transform[count];
+        Transform[] newPoints = new Transform[count];
 
-        float half =
-            capsuleStraightLength * 0.5f;
+        float half = capsuleStraightLength * 0.5f;
 
         for (int i = 0; i < count; i++)
         {
@@ -553,12 +708,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
             // Left semicircle
             if (i < capsuleResolution)
             {
-                float t =
-                    (float)i / (capsuleResolution - 1);
+                float t = (float)i / (capsuleResolution - 1);
 
-                angle =
-                    Mathf.PI * 0.5f +
-                    Mathf.PI * t;
+                angle = Mathf.PI * 0.5f + Mathf.PI * t;
 
                 localPos =
                     new Vector3(
@@ -574,9 +726,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     (float)(i - capsuleResolution) /
                     (capsuleResolution - 1);
 
-                angle =
-                    -Mathf.PI * 0.5f +
-                    Mathf.PI * t;
+                angle = -Mathf.PI * 0.5f + Mathf.PI * t;
 
                 localPos =
                     new Vector3(
@@ -586,18 +736,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         0);
             }
 
-            GameObject obj =
-                new GameObject(
-                    "PathPoint_" + i);
+            GameObject obj = new GameObject("PathPoint_" + i);
 
-            obj.transform.parent =
-                transform;
+            obj.transform.parent = transform;
 
-            obj.transform.localPosition =
-                localPos;
+            obj.transform.localPosition = localPos;
 
-            newPoints[i] =
-                obj.transform;
+            newPoints[i] = obj.transform;
         }
 
         System.Array.Reverse(newPoints);
@@ -609,15 +754,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public void SpawnGrains(List<Vector3> grainPositions, Color faction, Action onComplete = null)
     {
-        FactionGroup group =
-            GetFaction(faction);
+        FactionGroup group = GetFaction(faction);
 
-        int startIndex =
-            group.grains.Count;
+        int startIndex = group.grains.Count;
 
         int totalSpawn = grainPositions.Count;
-
-        totalSpawned += totalSpawn;
 
         for (int i = 0; i < totalSpawn; i++)
         {
@@ -628,24 +769,22 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             g.offset = 0f;
 
-            g.targetOffset =
-                UnityEngine.Random.Range(
-                    -laneWidth,
-                    laneWidth);
+            g.targetOffset = UnityEngine.Random.Range(-laneWidth, laneWidth);
 
-            g.velocity = 0;
+            g.velocity2D = Vector2.zero;
+
             g.fallVelocity = 0;
+
             g.onPath = false;
 
-            g.speedMultiplier = 1;
+            g.radius = grainSpacing * 0.5f;
 
             g.fallDelay = (float)i / (totalSpawn - 1) * maxFallDelay;
 
             group.grains.Add(g);
         }
 
-        group.matrices =
-            new Matrix4x4[group.grains.Count];
+        group.matrices = new Matrix4x4[group.grains.Count];
 
         if (onComplete != null)
         {
@@ -662,8 +801,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public void RemoveLastGrain(Color faction)
     {
-        totalRemoveCalled++;
-
         FactionGroup group = GetFaction(faction);
 
         if (group.grains.Count == 0)
@@ -676,15 +813,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         group.matrices =
             new Matrix4x4[group.grains.Count];
-
-        if (group.grains.Count == 0)
-        {
-            // Destroy(group.material);
-
-            // factionGroups.Remove(faction);
-        }
-
-        totalRemoved++;
     }
 
     void CheckSpawnCompletion()
@@ -694,23 +822,32 @@ public class GrainSimulation : Singleton<GrainSimulation>
             SpawnRequest request =
                 pendingSpawns[i];
 
-            bool completed = true;
+            bool completed = false;
 
             int end =
                 request.startIndex +
                 request.count;
 
+            int numberGrainOnPath = 0;
+            int totalGrain = end - request.startIndex;
+
             for (int g = request.startIndex; g < end; g++)
             {
                 if (g >= request.group.grains.Count)
                 {
+                    completed = true;
                     continue;
                 }
 
-                if (!request.group.grains[g].onPath)
+                if (request.group.grains[g].onPath)
                 {
-                    completed = false;
-                    break;
+                    numberGrainOnPath++;
+
+                    if (g > request.startIndex + percentNumGrainOnPathForChickenToEat * totalGrain)
+                    {
+                        completed = true;
+                        break;
+                    }
                 }
             }
 
