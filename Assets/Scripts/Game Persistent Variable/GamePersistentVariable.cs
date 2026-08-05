@@ -10,6 +10,10 @@ public enum CloudStorageRequest
 
 public static class GamePersistentVariable
 {
+    #region Chicken Flow
+    public static int bucketOrder;
+    #endregion
+
     public static Vector2 canvasSize;
     public static Vector2 canvasSizeAfterCanvasScaler;
     public static Vector2 canvasScale;

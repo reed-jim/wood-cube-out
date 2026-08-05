@@ -292,7 +292,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         dt * 3);
 
                 g.position = center + normal * g.offset;
-                g.position.z = LayerManager.GetGrainZ() - 0.001f * i;
+                g.position.z = g.zPosition;
 
                 group.grains[i] = g;
             }
@@ -329,15 +329,20 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
                 if (gap < grainSpacing)
                 {
-                    float force =
-                        (grainSpacing - gap)
-                        * collisionForce;
+                    float overlap = grainSpacing - gap;
 
+                    float impulse =
+                        overlap * collisionForce;
 
-                    a.velocity *= .8f;
+                    a.velocity -= impulse * 0.5f;
+                    b.velocity += impulse * 0.5f;
 
-                    b.velocity += force;
+                    a.velocity = Mathf.Max(0, a.velocity);
 
+                    float correction = overlap * 0.5f;
+
+                    a.pathDistance -= correction;
+                    b.pathDistance += correction;
 
                     group.grains[i] = a;
                     group.grains[i + 1] = b;

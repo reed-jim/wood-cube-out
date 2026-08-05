@@ -10,7 +10,12 @@ public class LazyHealthBar : MonoBehaviour
     [SerializeField] private Image lazyFill;
     [SerializeField] private Image background;
 
+    [Header("Customize")]
+    public float fillDuration = 0.3f;
+    public float lazyFillDuration = 1f;
+
     private Tween _progressTween;
+    private Tween _lazyProgressTween;
 
     public void SetProgress(float progress)
     {
@@ -19,14 +24,22 @@ public class LazyHealthBar : MonoBehaviour
             _progressTween.Stop();
         }
 
+        if (_lazyProgressTween.isAlive)
+        {
+            _lazyProgressTween.Stop();
+        }
+
         if (!gameObject.activeInHierarchy)
         {
             SaferioTween.AlphaShow(canvasGroup);
         }
 
-        fill.fillAmount = progress;
+        _progressTween = Tween.Custom(fill.fillAmount, progress, duration: fillDuration, onValueChange: newVal =>
+        {
+            fill.fillAmount = newVal;
+        });
 
-        _progressTween = Tween.Custom(lazyFill.fillAmount, progress, duration: 1f, onValueChange: newVal =>
+        _lazyProgressTween = Tween.Custom(lazyFill.fillAmount, progress, duration: lazyFillDuration, onValueChange: newVal =>
         {
             lazyFill.fillAmount = newVal;
         })

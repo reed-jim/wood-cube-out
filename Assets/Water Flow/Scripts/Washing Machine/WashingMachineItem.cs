@@ -60,7 +60,8 @@ public class WashingMachineItem : MonoBehaviour
     private Vector3 numberTextInitialPosition;
     protected Coroutine spawningAntCoroutine;
 
-    public GameSetting gameSetting;
+    private Vector3 bucketTopInitialPosition;
+    private Vector3 bucketTextInitialPosition;
 
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
@@ -92,7 +93,8 @@ public class WashingMachineItem : MonoBehaviour
 
         numberTextInitialPosition = numberText.transform.localPosition;
 
-        walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+        bucketTopInitialPosition = bucketTopSprite.transform.localPosition;
+        bucketTextInitialPosition = numberText.transform.localPosition;
     }
 
     void OnDestroy()
@@ -140,7 +142,8 @@ public class WashingMachineItem : MonoBehaviour
         transform.localPosition = new Vector3(0, 0, -1);
         transform.localScale = Vector3.zero;
         transform.rotation = Quaternion.identity;
-        numberText.transform.localPosition = numberTextInitialPosition;
+        bucketTopSprite.transform.localPosition = bucketTopInitialPosition;
+        numberText.transform.localPosition = bucketTextInitialPosition;
 
         Tween.Scale(transform, 2.3f, duration: 0.3f)
         .OnComplete(() =>
@@ -267,7 +270,12 @@ public class WashingMachineItem : MonoBehaviour
 
                 bucketDestination.x = 0;
                 bucketDestination.y = 7;
-                bucketDestination.z = LayerManager.GetBucketZ(grainPile.transform.GetSiblingIndex());
+                bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
+
+                bucketTopSprite.transform.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
+                numberText.transform.SetZ(LayerManager.GetBucketTextZ(GamePersistentVariable.bucketOrder));
+
+                GamePersistentVariable.bucketOrder++;
 
                 pileCenter.x = 0;
                 pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y;
@@ -321,6 +329,8 @@ public class WashingMachineItem : MonoBehaviour
                     if (isLast && !isBucketMoveBack)
                     {
                         SaferioTween.ScaleDownWithPunch(transform);
+
+                        GamePersistentVariable.bucketOrder--;
                     }
 
                     onComplete?.Invoke();
