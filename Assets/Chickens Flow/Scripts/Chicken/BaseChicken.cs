@@ -172,6 +172,8 @@ public class BaseChicken : MonoBehaviour
                 Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
                 {
                     gameObject.SetActive(false);
+
+                    ChickenManager.Ins.CheckWinLevel();
                 });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)

@@ -37,7 +37,7 @@ namespace NamPhuThuy.GamePlay
             LevelLoader.startLevelEvent += EnterPlayingState;
             ScrewManager.winLevelEvent += EnterWinState;
             AntsFlow.TileManager.winLevelEvent += EnterWinState;
-            WashingMachineManager.winLevelEvent += EnterWinState;
+            ChickenManager.winLevelEvent += EnterWinState;
             ScrewBoxManager.loseLevelEvent += EnterLoseState;
             SituationManager.loseLevelEvent += EnterLoseState;
             TileManager.loseLevelEvent += EnterLoseState;
@@ -53,7 +53,7 @@ namespace NamPhuThuy.GamePlay
             LevelLoader.startLevelEvent -= EnterPlayingState;
             ScrewManager.winLevelEvent -= EnterWinState;
             AntsFlow.TileManager.winLevelEvent -= EnterWinState;
-            WashingMachineManager.winLevelEvent -= EnterWinState;
+            ChickenManager.winLevelEvent -= EnterWinState;
             ScrewBoxManager.loseLevelEvent -= EnterLoseState;
             SituationManager.loseLevelEvent -= EnterLoseState;
             TileManager.loseLevelEvent -= EnterLoseState;

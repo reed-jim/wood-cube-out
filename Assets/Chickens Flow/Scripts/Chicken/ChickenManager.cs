@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public List<Color> allFactions;
 
-    public void GenerateAllFactions(int total)
-    {
-        allFactions = FactionMapper.Ins.GetRandomFactions(8, total);
-    }
+    public static event Action winLevelEvent;
 
     public void SpawnFirstChickens(AntsFlow.LevelItem levelItem)
     {
@@ -644,7 +642,7 @@ public class ChickenManager : Singleton<ChickenManager>
             Tween.Position(
                 pair.Key.transform,
                 pair.Value,
-                Random.Range(0.3f, 0.6f))
+                UnityEngine.Random.Range(0.3f, 0.6f))
             .OnComplete(() =>
             {
                 remaining--;
@@ -690,6 +688,20 @@ public class ChickenManager : Singleton<ChickenManager>
             yield return waitForSeconds;
         }
     }
+
+    #region Win
+    public void CheckWinLevel()
+    {
+        bool isWin = chickens.All(chicken => chicken.isDone);
+
+        if (isWin)
+        {
+            UpSpeedAnt.Ins.ResetSpeedOnWinLevel();
+            
+            winLevelEvent?.Invoke();
+        }
+    }
+    #endregion
 
     #region Util
     public static Vector3 GetAveragePositionOfSlots(List<WaitingChickenSlot> slots)
