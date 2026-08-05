@@ -642,7 +642,7 @@ public class ChickenManager : Singleton<ChickenManager>
             Tween.Position(
                 pair.Key.transform,
                 pair.Value,
-                UnityEngine.Random.Range(0.3f, 0.6f))
+                0.3f)
             .OnComplete(() =>
             {
                 remaining--;
@@ -697,7 +697,7 @@ public class ChickenManager : Singleton<ChickenManager>
         if (isWin)
         {
             UpSpeedAnt.Ins.ResetSpeedOnWinLevel();
-            
+
             winLevelEvent?.Invoke();
         }
     }

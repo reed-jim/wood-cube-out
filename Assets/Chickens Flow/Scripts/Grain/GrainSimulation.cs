@@ -41,7 +41,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     [Header("Landing")]
     public Transform landingPoint;
     public float pathSnapDistance = 0.15f;
-    public float impactToPathVelocity = 0.15f;
+    public Vector2 impactToPathVelocityRange = new Vector2(0, 0.4f);
     public float bounceHeight = 0.02f;
     public float percentNumGrainOnPathForChickenToEat = 0.5f;
 
@@ -77,6 +77,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public int spawnAmount = 100;
     public Vector2 spawnRandomArea = new Vector2(1f, 1f);
 
+    [Header("Debug")]
+    public int removedCallCount;
+    public int removedCount;
+
     struct Grain
     {
         public Vector3 position;
@@ -102,6 +106,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public float bounceRestitution;
         public float bounceFriction;
         public int maxBounces;
+        public float impactToPathVelocity;
     }
 
     class FactionGroup
@@ -217,7 +222,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     g.velocity2D =
                         tangent *
                         impact *
-                        impactToPathVelocity;
+                        g.impactToPathVelocity;
 
 
                     // random sideways bounce
@@ -234,6 +239,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         impact *
                         g.bounceRestitution;
                 }
+
+                g.position.z = g.zPosition;
 
                 group.grains[i] = g;
             }
@@ -289,7 +296,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         g.velocity2D =
                             tangent *
                             impact *
-                            impactToPathVelocity;
+                            g.impactToPathVelocity;
 
                         g.fallVelocity = 0;
                     }
@@ -305,6 +312,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         g.bounceCount++;
                     }
                 }
+
+                g.position.z = g.zPosition;
 
                 group.grains[i] = g;
             }
@@ -853,6 +862,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     bounceCountRange.x,
                     bounceCountRange.y + 1);
 
+            g.impactToPathVelocity = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y);
+
             group.grains.Add(g);
         }
 
@@ -873,6 +884,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public void RemoveLastGrain(Color faction)
     {
+        removedCallCount++;
+
         FactionGroup group = GetFaction(faction);
 
         if (group.grains.Count == 0)
@@ -885,6 +898,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         group.matrices =
             new Matrix4x4[group.grains.Count];
+
+        removedCount++;
     }
 
     void CheckSpawnCompletion()
