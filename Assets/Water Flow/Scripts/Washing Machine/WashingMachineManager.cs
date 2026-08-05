@@ -13,6 +13,9 @@ namespace AntsFlow
 {
     public class WashingMachineManager : Singleton<WashingMachineManager>
     {
+        [Header("Bucket")]
+        public List<FactionGrainRequirement> factionGrainRequirements;
+
         public LevelItem levelItem;
         public Camera mainCamera;
 
@@ -99,6 +102,8 @@ namespace AntsFlow
 
             ChickenManager.Ins.SpawnFirstChickensUsingLevelConfig(levelItem);
 
+            SetupFactionGrainRequirements();
+
             // SpecialElementManager.Ins.Setup(levelItem);
 
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
@@ -118,8 +123,41 @@ namespace AntsFlow
             // }
         }
 
-        #region Chicken Feed
+        #region Chicken Feed    
+        public void SetupFactionGrainRequirements()
+        {
+            factionGrainRequirements = new List<FactionGrainRequirement>();
 
+            foreach (var chicken in ChickenManager.Ins.chickens)
+            {
+                if (factionGrainRequirements.Any(item => item.faction == chicken.faction))
+                {
+                    FactionGrainRequirement factionGrainRequirement = factionGrainRequirements.First(item => item.faction == chicken.faction);
+
+                    factionGrainRequirement.totalGrain += ChickenManager.Ins.requiredGrainForNormalChicken;
+                }
+                else
+                {
+                    FactionGrainRequirement factionGrainRequirement = new FactionGrainRequirement()
+                    {
+                        faction = chicken.faction,
+                        totalGrain = ChickenManager.Ins.requiredGrainForNormalChicken
+                    };
+
+                    factionGrainRequirements.Add(factionGrainRequirement);
+                }
+            }
+        }
+
+        public void MinusFactionGrainRequirement(Color faction, int number)
+        {
+            if (factionGrainRequirements.Any(item => item.faction == faction))
+            {
+                FactionGrainRequirement factionGrainRequirement = factionGrainRequirements.First(item => item.faction == faction);
+
+                factionGrainRequirement.totalGrain -= number;
+            }
+        }
         #endregion
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem, Action onCompleteAction = null)
@@ -234,6 +272,8 @@ namespace AntsFlow
                 {
                     SpecialElementManager.Ins.SpawnAntBoxLinkFirstAntBoxes(index);
                 });
+
+                MinusFactionGrainRequirement(nextFaction, numAnt);
             }
 
             return washingMachineItems;
@@ -359,6 +399,8 @@ namespace AntsFlow
                     washingMachineStartSlot.washingMachine = washingMachineItem;
 
                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                    MinusFactionGrainRequirement(nextFaction, numAnt);
 
                     SpecialElementManager.Ins.SpawnAntBoxLink();
 
@@ -615,6 +657,11 @@ namespace AntsFlow
                         SaferioTween.ScaleDownWithPunch(chicken.transform, onCompleteAction: () =>
                         {
                             chicken.Complete();
+
+                            if (index == chickensToClear.Count - 1)
+                            {
+                                ChickenManager.Ins.CheckWinLevel();
+                            }
                         });
 
                         if (index == chickensToClear.Count - 1)
@@ -1142,15 +1189,23 @@ namespace AntsFlow
         {
             Dictionary<Color, int> result = new Dictionary<Color, int>();
             Dictionary<Color, int> numNotBlockedTilePerFaction = GetNumNotBlockedTilePerFaction(isIncludeStartSlot);
-            Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction(isIncludeStartSlot);
 
-            Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty ================");
+            // Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty ================");
 
             foreach (var faction in numNotBlockedTilePerFaction.Keys)
             {
-                Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {ColorUtil.ColorToHex(faction)} {maxAntRequiredPerFaction[faction]}");
+                int maxNumGrain = 0;
 
-                int maxValue = maxAntRequiredPerFaction[faction];
+                if (factionGrainRequirements.Any(item => item.faction == faction))
+                {
+                    FactionGrainRequirement factionGrainRequirement = factionGrainRequirements.First(item => item.faction == faction);
+
+                    maxNumGrain = factionGrainRequirement.totalGrain;
+                }
+
+                // Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {ColorUtil.ColorToHex(faction)} {maxNumGrain}");
+
+                int maxValue = maxNumGrain;
                 maxValue = Mathf.Min(maxValue, maxAntNumberThreshold);
 
                 if (maxValue <= minAntNumberThreshold)
@@ -1203,4 +1258,11 @@ namespace AntsFlow
         }
         #endregion
     }
+}
+
+[Serializable]
+public class FactionGrainRequirement
+{
+    public Color faction;
+    public int totalGrain;
 }
