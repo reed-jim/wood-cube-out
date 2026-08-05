@@ -180,10 +180,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-            //#if APPSFLYER_BANNER
-            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-            //                value, "USD", dic);
-            //#endif
+//#if APPSFLYER_BANNER
+//                        AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+//                            value, "USD", dic);
+//#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -1533,10 +1533,11 @@ public class AdmobAdsMax
         var dic = new Dictionary<string, string>
     {
         { "ad_unit_name", adInfo.AdUnitIdentifier },
-        { "ad_format", adInfo.AdFormat }
+        { "ad_format", adInfo.AdFormat },
     };
-        // AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
-        //     adInfo.Revenue, "USD", dic);
+         AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
+             adInfo.Revenue, "USD", dic);
+
         try
         {
             AdType type;
