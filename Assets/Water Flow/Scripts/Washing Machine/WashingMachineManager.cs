@@ -832,7 +832,12 @@ namespace AntsFlow
                 {
                     WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-                    if (washingMachine.isDouble || washingMachine.isMagnet || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                    // WarriorAntBox/SnakeAntBox không được shuffle: Init của chúng pop numAntPerBox
+                    // (số kiến chia theo máu boss/rắn). Shuffle re-Init sẽ pop thừa làm cạn list
+                    // -> GetNextAntNumberOfBox() văng IndexOutOfRange, hỏng luôn luồng booster.
+                    if (washingMachine.isDouble || washingMachine.isMagnet ||
+                        washingMachine is HiddenAntBox || washingMachine is FreezedAntBox ||
+                        washingMachine is WarriorAntBox || washingMachine is SnakeAntBox)
                     {
                         continue;
                     }
@@ -1424,6 +1429,16 @@ namespace AntsFlow
             ghostAntBoxes.Clear();
 
             GamePersistentVariable.numActiveAnt = 0;
+
+            if (mainCamera != null)
+            {
+                Tween.StopAll(mainCamera.transform);
+                var pos = mainCamera.transform.position;
+                pos.y = 0;
+                mainCamera.transform.position = pos;
+            }
+
+            GamePersistentVariable.boosterMode = BoosterMode.None;
 
             // if (currentLevel.Value < 10)
             // {

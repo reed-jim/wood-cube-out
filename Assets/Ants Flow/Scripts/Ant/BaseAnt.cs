@@ -460,13 +460,17 @@ namespace AntsFlow
                 }
 
                 // remove uneccessary points
-                if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
+                // Guard bounds: đường đi có thể quá ngắn (vd BossArea/tile mục tiêu sát rìa map)
+                // khiến points không đủ 3 phần tử tính từ firstBottomMostPointIndex → index+2 out of range.
+                if (points.Count > firstBottomMostPointIndex + 2 &&
+                    points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
                     points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
                 {
                     points.RemoveAt(firstBottomMostPointIndex + 1);
                 }
 
-                if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
+                if (points.Count > firstBottomMostPointIndex + 2 &&
+                    points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
                     points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
                 {
                     points.RemoveAt(firstBottomMostPointIndex + 1);
@@ -520,11 +524,19 @@ namespace AntsFlow
                     points.Remove(pointInFirstRow[i]);
                 }
 
-                Vector3 nearAntNestPosition = antNestPosition + 1f * (points[^1] - antNestPosition).normalized;
+                // points có thể rỗng khi toàn bộ đường về nằm ở hàng đáy (vd BossArea đặt sát
+                // rìa map): khi đó dùng điểm hàng đáy gần tổ nhất làm mốc để kiến vẫn quay về tổ,
+                // tránh points[^1] văng ArgumentOutOfRangeException.
+                Vector3 referencePoint = points.Count > 0 ? points[^1] : closestPointToNest;
+
+                Vector3 nearAntNestPosition = antNestPosition + 1f * (referencePoint - antNestPosition).normalized;
 
                 points.Add(nearAntNestPosition);
 
-                points.RemoveAt(0);
+                if (points.Count > 1)
+                {
+                    points.RemoveAt(0);
+                }
             }
 
             float totalDistance = GetTotalDistance(points, transform.position);
