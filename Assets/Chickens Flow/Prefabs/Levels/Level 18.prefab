@@ -1,0 +1,603 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3028384448401907426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8627647535231128167}
+  - component: {fileID: 408027457544584427}
+  m_Layer: 0
+  m_Name: Level 18
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8627647535231128167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3028384448401907426}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &408027457544584427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3028384448401907426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d49669fb285007b4fbe85fb3c73bd166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.LevelItem
+  picture: {fileID: 21300000, guid: b77fdfdcf6d8ca141bfefb618aaa5efa, type: 3}
+  numColumn: 10
+  numRow: 10
+  isLevelHavingTransparentPixels: 1
+  isOverrideLevelScale: 0
+  levelScaleXRatio: 0
+  levelScaleYRatio: 0
+  multiplierScaleX: 0
+  multiplierScaleY: 0
+  poolFaction: []
+  tiles: []
+  chickenLevelTiles:
+  - position: {x: 0, y: 0, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 0, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 0, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 0, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 0, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 0, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 0, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 0, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 0, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 0, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 1, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 1, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 1, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 1, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 1, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 1, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 1, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 1, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 1, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 1, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 2, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 2, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 2, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 2, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 2, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 2, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 2, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 2, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 2, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 2, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 3, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 3, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 3, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 3, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 3, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 3, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 3, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 3, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 3, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 3, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 4, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 4, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 4, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 4, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 4, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 4, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 4, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 4, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 4, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 4, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 5, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 5, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 5, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 5, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 5, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 5, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 5, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 5, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 5, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 5, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 6, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 6, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 6, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 6, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 6, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 6, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 6, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 6, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 6, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 6, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 7, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 7, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 7, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 7, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 7, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 7, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 7, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 7, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 7, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 7, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 8, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 8, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 8, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 8, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 8, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 8, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 8, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 8, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 8, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 8, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 0, y: 9, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 1, y: 9, z: 0}
+    factionIndex: 2
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 2, y: 9, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 3, y: 9, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 4, y: 9, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 5, y: 9, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 6, y: 9, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 7, y: 9, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 8, y: 9, z: 0}
+    factionIndex: 0
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  - position: {x: 9, y: 9, z: 0}
+    factionIndex: 1
+    blockageIndexes: 
+    ring: 0
+    priority: 0
+  isTutorialLevel: 0
+  isUseManualFactionSetupForFirstAntBoxes: 0
+  levelFactionConfig:
+    items: []
+  difficulty: 0
+  initialDifficulty: 0
+  overrideInitialDifficulty: 0
+  numStartAntBoxes: 6
+  specialElementConfig:
+    giantChickenConfig:
+      giantChickenItemConfigs: []
+    hiddenAntBoxConfig:
+      spawnOrder: 0700000008000000090000000e000000100000001500000017000000190000001b0000001d0000002100000022000000230000002600000029000000
+    frozenAntBoxConfig:
+      spawnOrder: 
+      numBoxToUnfreeze: 
+    doubleAntBoxConfig:
+      spawnOrder: 
+    spawningTileBoxConfig:
+      items: []
+    bossAreaConfig:
+      spawnOrder: 
+      startTileCoordinate: {x: 0, y: 0}
+      numCoverColumn: 0
+      numCoverRow: 0
+      bossHealth: 0
+    snakeConfig:
+      spawnOrder: 
+      snakeSegmentIndexes: 
+      health: 0
+    isContainsHiddenTiles: 0
+    isContainsWallTiles: 0
+  factionMapper: {fileID: 299328947885205127, guid: 1a4aa42b636ec724792bf1ecb52f7b8b, type: 3}
+  spawnPosition: {x: 0, y: 0.5, z: 0}
+  spawnScale: {x: 0.5, y: 0.5, z: 0.5}
+  factions:
+  - {r: 0.15686275, g: 0.84313726, b: 0.63529414, a: 1}
+  - {r: 0.4627451, g: 0.4627451, b: 0.4627451, a: 1}
+  - {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+  - {r: 0.9137255, g: 0.9137255, b: 0.9137255, a: 1}
+  - {r: 0.99215686, g: 0.62352943, b: 0.06666667, a: 1}
+  - {r: 0.9764706, g: 0.46666667, b: 0.45490196, a: 1}
+  - {r: 0, g: 0.7137255, b: 0.30980393, a: 1}
+  - {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
+  - {r: 1, g: 0.3882353, b: 0.61960787, a: 1}
