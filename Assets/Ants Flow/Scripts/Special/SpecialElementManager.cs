@@ -468,6 +468,43 @@ namespace AntsFlow
                    specialElementConfig.bossAreaConfig.spawnOrder.Count > 0;
         }
 
+        // Rắn còn snake box chờ trong spawnOrder hay không (không đụng gì tới state).
+        public bool HasPendingSnakeBox()
+        {
+            return specialElementConfig != null &&
+                   specialElementConfig.snakeConfig != null &&
+                   specialElementConfig.snakeConfig.spawnOrder != null &&
+                   specialElementConfig.snakeConfig.spawnOrder.Count > 0;
+        }
+
+        // Còn box đặc biệt (boss hoặc rắn) chờ trong spawnOrder hay không.
+        public bool HasPendingSpecialBossBox()
+        {
+            return HasPendingBossBox() || HasPendingSnakeBox();
+        }
+
+        // Ép lấy 1 box đặc biệt còn lại (boss ưu tiên, rồi tới rắn), bỏ qua so khớp numAntBoxSpawned.
+        // Dùng khi pool faction thường đã cạn (vd clear hết tile bằng booster): lúc này thứ tự không
+        // còn ý nghĩa, chỉ cần nhả nốt cho đủ box để hạ boss/rắn, tránh các box order lớn không kịp hiện.
+        public LevelElement GetNextForcedSpecialElement()
+        {
+            if (HasPendingBossBox())
+            {
+                specialElementConfig.bossAreaConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.WarriorAntBox;
+            }
+
+            if (HasPendingSnakeBox())
+            {
+                specialElementConfig.snakeConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.SnakeAntBox;
+            }
+
+            return LevelElement.NormalAntBox;
+        }
+
         // Ép lấy 1 warrior box còn lại của boss (bỏ qua so khớp đúng numAntBoxSpawned). Dùng khi pool
         // faction thường đã cạn: lúc này thứ tự không còn ý nghĩa, chỉ cần nhả nốt cho boss đủ hộp.
         public LevelElement GetNextForcedBossElement()
@@ -809,6 +846,24 @@ namespace AntsFlow
             }
 
             bossArea.Setup(nodes, bossAreaConfig);
+        }
+
+        // Level có boss/rắn thì chỉ được tính win khi cả hai đã bị hạ. Dùng để chặn win sớm khi
+        // người chơi clear hết tile màu thường (vd booster clear-one-color) mà chưa hạ boss/rắn.
+        // Level không có yếu tố nào (bossArea/snake inactive) thì luôn trả về true -> không ảnh hưởng.
+        public bool AreSpecialBossElementsCleared()
+        {
+            if (bossArea != null && bossArea.BlocksWin)
+            {
+                return false;
+            }
+
+            if (snake != null && snake.BlocksWin)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public void SetupSnake(SnakeConfig snakeConfig)

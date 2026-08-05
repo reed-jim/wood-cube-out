@@ -601,22 +601,22 @@ namespace AntsFlow
             Color nextFaction;
             int numAnt;
 
-            bool forceBossBox = false;
+            bool forceSpecialBox = false;
 
             if (!GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
             {
-                // Pool faction thường đã hết ants để sinh. Bình thường thì dừng ở đây. NHƯNG nếu boss
-                // vẫn còn warrior box chờ theo spawnOrder thì phải ép sinh nốt: các ô boss lock chặn hết
-                // tile ăn được nên numAntBoxSpawned không tăng tới các mốc spawnOrder lớn, khiến warrior box
-                // "sinh thiếu" và boss không bao giờ bị hạ (bug khi spawnOrder lớn hơn số hộp sinh ban đầu).
-                if (!SpecialElementManager.Ins.HasPendingBossBox())
+                // Pool faction thường đã hết ants để sinh. Bình thường thì dừng ở đây. NHƯNG nếu boss/rắn
+                // vẫn còn box chờ theo spawnOrder thì phải ép sinh nốt: khi clear hết tile (vd booster3)
+                // numAntBoxSpawned không tăng tới các mốc spawnOrder lớn, khiến warrior/snake box "sinh
+                // thiếu" và boss/rắn không bao giờ bị hạ (bug khi spawnOrder lớn hơn số hộp sinh ban đầu).
+                if (!SpecialElementManager.Ins.HasPendingSpecialBossBox())
                 {
                     return;
                 }
 
-                forceBossBox = true;
+                forceSpecialBox = true;
 
-                // Faction chỉ để hiển thị màu cho warrior box (số lượng do boss quyết định trong Init).
+                // Faction chỉ để hiển thị màu (số lượng do boss/rắn quyết định trong Init).
                 if (poolFaction != null && poolFaction.Count > 0)
                 {
                     nextFaction = poolFaction[0];
@@ -631,7 +631,7 @@ namespace AntsFlow
                 {
                     numAntBoxSpawned++;
 
-                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column, forceBossBox);
+                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column, forceSpecialBox);
 
                     washingMachineItem.gameObject.SetActive(true);
                     washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
@@ -654,12 +654,12 @@ namespace AntsFlow
             }
         }
 
-        private WashingMachineItem GetAntBoxFromPool(int rowIndex, int columnIndex, bool forceBossBox = false)
+        private WashingMachineItem GetAntBoxFromPool(int rowIndex, int columnIndex, bool forceSpecialBox = false)
         {
             string key = GameConstants.washingMachine;
 
-            LevelElement levelElement = forceBossBox
-                ? SpecialElementManager.Ins.GetNextForcedBossElement()
+            LevelElement levelElement = forceSpecialBox
+                ? SpecialElementManager.Ins.GetNextForcedSpecialElement()
                 : SpecialElementManager.Ins.GetNextLevelElement(rowIndex, columnIndex);
 
             if (levelElement == LevelElement.NormalAntBox)
@@ -980,6 +980,14 @@ namespace AntsFlow
                     break;
                 }
 
+                // Box warrior/snake có number = phần máu boss/rắn, KHÔNG liên quan tới màu tile.
+                // Booster clear-one-color chỉ dọn tile màu thường nên không được trừ count của chúng
+                // (trừ nhầm sẽ làm thiếu sát thương -> boss/rắn không hạ hết -> kẹt/lỗi game).
+                if (antBox is WarriorAntBox || antBox is SnakeAntBox)
+                {
+                    continue;
+                }
+
                 if (antBox.number > 0 && antBox.faction == tilesToClear[0].Faction)
                 {
                     int numToRemove = Mathf.Min(antBox.remainingNumber, numToClear);
@@ -1009,18 +1017,9 @@ namespace AntsFlow
                 }
             }
 
-            MoveAntBoxTop();
-
-            for (int i = 0; i < antBoxes.Count; i++)
-            {
-                WashingMachineItem antBox = antBoxes[i];
-
-                if (antBox.faction == tilesToClear[0].Faction)
-                {
-                    antBox.UpdateNumber();
-                }
-            }
-
+            // Cập nhật poolFaction TRƯỚC khi MoveAntBoxTop: ở lần clear màu cuối, pool cạn ngay tại đây
+            // để SpawnNewWashingMachine (gọi trong MoveAntBoxTop) ép sinh nốt boss/snake box còn lại,
+            // thay vì phải chờ người chơi tương tác thêm mới "đẩy" chúng lên.
             if (numToClear > 0)
             {
                 var indices = poolFaction
@@ -1033,6 +1032,18 @@ namespace AntsFlow
                 foreach (int index in indices)
                 {
                     poolFaction.RemoveAt(index);
+                }
+            }
+
+            MoveAntBoxTop();
+
+            for (int i = 0; i < antBoxes.Count; i++)
+            {
+                WashingMachineItem antBox = antBoxes[i];
+
+                if (antBox.faction == tilesToClear[0].Faction)
+                {
+                    antBox.UpdateNumber();
                 }
             }
         }
@@ -1052,6 +1063,12 @@ namespace AntsFlow
         private void CheckWinLevel()
         {
             bool isWin = poolFaction.Count + ClothesManager.Ins.clothingPieces.Count == 0;
+
+            // Level có boss/rắn: chưa hạ hết thì chưa win, dù ant box màu thường đã hết.
+            if (isWin && SpecialElementManager.Ins != null && !SpecialElementManager.Ins.AreSpecialBossElementsCleared())
+            {
+                isWin = false;
+            }
 
             if (isWin)
             {

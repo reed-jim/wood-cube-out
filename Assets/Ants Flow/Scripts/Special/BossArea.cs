@@ -36,6 +36,10 @@ namespace AntsFlow
         private bool isDead;
         private bool isPlayingIdle2;
 
+        // Level còn boss sống thì chưa được tính win (kể cả khi đã clear hết tile màu thường
+        // bằng booster). Boss chỉ hết chặn win khi đã chết.
+        public bool BlocksWin => gameObject.activeInHierarchy && !isDead;
+
         public void Setup(List<Node> nodes, BossAreaConfig bossAreaConfig)
         {
             coveredTiles = new List<BaseTile>();
@@ -319,6 +323,10 @@ namespace AntsFlow
                 {
                     coveredTiles[i].isLocked = false;
                 }
+
+                // Boss vừa bị hạ: tile màu thường có thể đã được clear hết từ trước (vd booster
+                // clear-one-color) nên win đang bị chặn chờ boss. Re-check để win ngay bây giờ.
+                TileManager.Ins.CheckWinLevel();
 
                 if (skeletonAnimation != null && !string.IsNullOrEmpty(dieAnimation))
                 {

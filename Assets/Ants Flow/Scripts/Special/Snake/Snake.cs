@@ -39,6 +39,10 @@ namespace AntsFlow
 
         public int maxHealth;
         public int health;
+
+        // Level còn rắn sống thì chưa được tính win (kể cả khi đã clear hết tile màu thường
+        // bằng booster). Rắn chỉ hết chặn win khi máu về 0.
+        public bool BlocksWin => gameObject.activeInHierarchy && health > 0;
         public List<int> numAntPerBox;
         public BaseTile snakeNestTile;
 
@@ -402,6 +406,13 @@ namespace AntsFlow
             if (GetObstacleIndex(snakeLength) > prevObstacleIndex)
             {
                 RecheckInSlotAntBoxes();
+            }
+
+            if (health <= 0)
+            {
+                // Rắn vừa bị hạ: tile màu thường có thể đã được clear hết từ trước (vd booster
+                // clear-one-color) nên win đang bị chặn chờ rắn. Re-check để win ngay bây giờ.
+                TileManager.Ins.CheckWinLevel();
             }
         }
 
