@@ -123,6 +123,20 @@ namespace AntsFlow
             }
         }
 
+        public void ForceComplete()
+        {
+            numberLeft = 0;
+            UpdateNumberText();
+            if (occupiedNodes != null)
+            {
+                foreach (var node in occupiedNodes)
+                {
+                    node.isObstacle = false;
+                }
+            }
+            SaferioTween.ScaleDownWithPunch(transform);
+        }
+
         private void DoSpawnTileAnimation(BaseTile tile)
         {
             SoundManager.Instance.PlaySound(GameConstants.spawnPopSound);
