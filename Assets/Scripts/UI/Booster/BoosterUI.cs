@@ -139,6 +139,10 @@ public class BoosterUI : MonoBehaviour
 
     private void Reset()
     {
+        if (boosterContainer != null) Tween.StopAll(boosterContainer);
+        if (breakModeContainer != null) Tween.StopAll(breakModeContainer);
+        if (breakModeContainerCanvasGroup != null) Tween.StopAll(breakModeContainerCanvasGroup);
+
         Tween.LocalPosition(boosterContainer, _initialBoosterContainerPosition, duration: transitionTime);
         Tween.LocalPosition(addMoreScrewPortButtonRT, _initialAddMoreScrewPortButtonPosition, duration: transitionTime);
         Tween.LocalPosition(breakModeButtonRT, _initialbreakObjectButtonPosition, duration: transitionTime);
@@ -152,6 +156,20 @@ public class BoosterUI : MonoBehaviour
         _isInTransition = false;
         _isEnable = true;
         _isPreventShowWarningPopup = false;
+
+        _isInBoosterEnableAllBoxesMode = false;
+        GamePersistentVariable.boosterMode = BoosterMode.None;
+        GamePersistentVariable.isPreventSelectAntBox = false;
+
+        if (WaterFlowGameInput.Ins != null)
+        {
+            WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.Normal;
+        }
+
+        if (AntsFlow.TileManager.Ins != null)
+        {
+            AntsFlow.TileManager.Ins.StopHighlightEachFaction();
+        }
     }
 
     private void OnRevived(BoosterType boosterType)

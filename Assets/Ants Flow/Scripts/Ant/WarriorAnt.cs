@@ -118,6 +118,13 @@ namespace AntsFlow
         }
         protected override void OnAntReachTarget()
         {
+            // Quay mặt kiến về phía boss trước khi bắn. Trước đây chỉ missile được xoay về boss,
+            // còn thân kiến giữ nguyên hướng di chuyển nên trông như không nhắm vào bossArea.
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
+            {
+                Rotate(transform, SpecialElementManager.Ins.bossArea.transform.position - transform.position);
+            }
+
             skeletonAnimation.AnimationState.SetAnimation(0, attackAnimation, false);
             //Attack(onCompleteAction: () =>
             //{

@@ -1423,9 +1423,28 @@ namespace AntsFlow
             // });
         }
 
+        private Coroutine highlightCoroutine;
+
         public void StartHightlightEachFactionSequentially()
         {
-            StartCoroutine(HightlightEachFactionSequentially());
+            if (highlightCoroutine != null)
+            {
+                StopCoroutine(highlightCoroutine);
+            }
+            highlightCoroutine = StartCoroutine(HightlightEachFactionSequentially());
+        }
+
+        public void StopHighlightEachFaction()
+        {
+            if (highlightCoroutine != null)
+            {
+                StopCoroutine(highlightCoroutine);
+                highlightCoroutine = null;
+            }
+            if (tileGlowTilemap != null)
+            {
+                tileGlowTilemap.gameObject.SetActive(false);
+            }
         }
 
         private IEnumerator HightlightEachFactionSequentially()
