@@ -32064,16 +32064,17 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
-      spawnOrder: 
+      spawnOrder: 050000003200000010000000130000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
     frozenAntBoxConfig:
-      spawnOrder: 080000000700000011000000180000001f00000023000000290000003c000000
-      numBoxToUnfreeze: 0400000003000000020000000400000005000000030000000400000003000000
+      spawnOrder: 
+      numBoxToUnfreeze: 
     doubleAntBoxConfig:
-      spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
+      spawnOrder: 
     magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 1f00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -32085,15 +32086,41 @@ MonoBehaviour:
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
-    hardPixelConfigs: []
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 85
+      numRows: 9
+      numCols: 10
+      requiredEatCount: 375
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
+    - id: 1
+      startNodeId: 1035
+      numRows: 11
+      numCols: 13
+      requiredEatCount: 300
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
         spawnOrder: 
     snakeConfig:
-      spawnOrder: 
-      snakeSegmentIndexes: 
-      health: 0
+      spawnOrder: 080000000e00000011000000180000001f00000023000000290000003c00000006000000
+      snakeSegmentIndexes: 4f000000ef020000e4020000e8010000d8010000fa0300000a040000ae0500009a050000
+      health: 450
       tailOffset: {x: 0, y: 0}
       tailAngle: 0
       width: 0

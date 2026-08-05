@@ -28864,16 +28864,17 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
-      spawnOrder: 
+      spawnOrder: 320000000d0000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
     frozenAntBoxConfig:
       spawnOrder: 080000000700000011000000180000001f00000023000000290000003c000000
       numBoxToUnfreeze: 0400000003000000020000000400000005000000030000000400000003000000
     doubleAntBoxConfig:
       spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
     magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -28885,14 +28886,40 @@ MonoBehaviour:
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
-    hardPixelConfigs: []
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 1288
+      numRows: 7
+      numCols: 10
+      requiredEatCount: 315
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
+    - id: 1
+      startNodeId: 982
+      numRows: 7
+      numCols: 10
+      requiredEatCount: 400
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
         spawnOrder: 
     snakeConfig:
       spawnOrder: 
-      snakeSegmentIndexes: 
+      snakeSegmentIndexes: 48000000160200001d020000e7040000dd0400005b0500004d050000a50400009c040000f8020000
       health: 0
       tailOffset: {x: 0, y: 0}
       tailAngle: 0

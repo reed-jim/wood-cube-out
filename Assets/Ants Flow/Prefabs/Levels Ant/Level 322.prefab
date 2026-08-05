@@ -32064,6 +32064,7 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 
@@ -32075,7 +32076,17 @@ MonoBehaviour:
     magnetAntBoxConfig:
       spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
     spawningTileBoxConfig:
-      items: []
+      items:
+      - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490197, a: 1}
+        number: 30
+        startNodeId: 244
+        numCoverColumn: 4
+        numCoverRow: 6
+      - faction: {r: 0.67058825, g: 0.8509804, b: 0.9803922, a: 1}
+        number: 30
+        startNodeId: 926
+        numCoverColumn: 4
+        numCoverRow: 6
     bossAreaConfig:
       spawnOrder: 
       startNodeId: 0
@@ -32085,7 +32096,20 @@ MonoBehaviour:
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
-    hardPixelConfigs: []
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 1247
+      numRows: 10
+      numCols: 10
+      requiredEatCount: 300
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
