@@ -45,6 +45,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float bounceHeight = 0.02f;
     public float percentNumGrainOnPathForChickenToEat = 0.5f;
 
+    [Header("Bounce")]
+    public Vector2 bounceRestitutionRange = new Vector2(0.25f, 0.65f);
+    public Vector2 bounceFrictionRange = new Vector2(0.65f, 0.9f);
+    public Vector2Int bounceCountRange = new Vector2Int(1, 4);
+
+    public float randomBounceSideForce = 0.3f;
+
     [Header("Pouring")]
     public float maxFallDelay = 0.8f;
 
@@ -89,6 +96,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public float fallDelay;
 
         public float radius;
+
+        public bool bouncing;
+        public int bounceCount;
+        public float bounceRestitution;
+        public float bounceFriction;
+        public int maxBounces;
     }
 
     class FactionGroup
@@ -130,6 +143,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         SimulateFall(dt);
 
+        SimulateBounce(dt);
+
         SimulatePath(dt);
 
         ResolveCollisions();
@@ -152,14 +167,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
             {
                 Grain g = group.grains[i];
 
-
                 // already on conveyor
                 if (g.onPath)
                 {
                     group.grains[i] = g;
                     continue;
                 }
-
 
                 // pouring delay
                 if (g.fallDelay > 0f)
@@ -170,86 +183,57 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     continue;
                 }
 
-
                 // gravity
                 g.fallVelocity -= gravity * dt;
-
 
                 // move downward
                 g.position.y +=
                     g.fallVelocity * dt;
 
-
-
                 // check conveyor hit
                 float distance =
                     FindNearestDistance(g.position);
 
-
                 Vector2 conveyorPoint =
                     Evaluate(distance);
 
-
-                float height =
-                    Vector2.Distance(
-                        g.position,
-                        conveyorPoint
-                    );
-
-
-                if (height < pathSnapDistance)
+                if (g.position.y <= conveyorPoint.y)
                 {
-                    g.onPath = true;
+                    g.position.y = conveyorPoint.y;
 
+                    g.bouncing = true;
 
-                    // put grain exactly on conveyor
-                    g.position =
-                        conveyorPoint;
+                    g.bounceCount = 0;
 
+                    g.radius = grainSpacing * 0.5f;
 
-                    // convert falling speed into horizontal impact
-                    Vector2 tangent =
-                        GetDirection(distance);
-
+                    Vector2 tangent = GetDirection(distance);
 
                     float impact =
-                        Mathf.Abs(g.fallVelocity);
+    Mathf.Abs(g.fallVelocity);
 
 
+                    // forward momentum
                     g.velocity2D =
                         tangent *
                         impact *
                         impactToPathVelocity;
 
 
-                    // small bounce
-                    g.velocity2D +=
+                    // random sideways bounce
+                    Vector2 sideKick =
                         UnityEngine.Random.insideUnitCircle *
-                        bounceHeight;
+                        randomBounceSideForce;
 
 
-                    g.fallVelocity = 0;
+                    g.velocity2D += sideKick;
 
 
-                    // random lane position
-                    Vector2 normal =
-                        new Vector2(
-                            -tangent.y,
-                            tangent.x);
-
-
-                    g.position +=
-                        (Vector3)
-                        normal *
-                        UnityEngine.Random.Range(
-                            -laneWidth,
-                            laneWidth
-                        );
-
-
-                    g.radius = grainSpacing * 0.5f;
+                    // random upward variation
+                    g.fallVelocity =
+                        impact *
+                        g.bounceRestitution;
                 }
-
 
                 group.grains[i] = g;
             }
@@ -258,6 +242,74 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     //------------------------------------------------------------
     // Path physics
+
+    void SimulateBounce(float dt)
+    {
+        foreach (var group in factionGroups.Values)
+        {
+            for (int i = 0; i < group.grains.Count; i++)
+            {
+                Grain g = group.grains[i];
+
+                if (!g.bouncing)
+                {
+                    group.grains[i] = g;
+                    continue;
+                }
+
+                // gravity
+                g.fallVelocity -= gravity * dt;
+
+                // move
+                g.position.y += g.fallVelocity * dt;
+                g.position += (Vector3)(g.velocity2D * dt);
+
+                float distance = FindNearestDistance(g.position);
+
+                Vector2 surface = Evaluate(distance);
+
+                if (g.position.y <= surface.y)
+                {
+                    g.position.y = surface.y;
+
+                    float impact = Mathf.Abs(g.fallVelocity);
+
+                    float personalSettle =
+    UnityEngine.Random.Range(0.8f, 1.2f);
+
+
+                    if (impact < personalSettle ||
+                        g.bounceCount >= g.maxBounces)
+                    {
+                        g.bouncing = false;
+                        g.onPath = true;
+
+                        Vector2 tangent = GetDirection(distance);
+
+                        g.velocity2D =
+                            tangent *
+                            impact *
+                            impactToPathVelocity;
+
+                        g.fallVelocity = 0;
+                    }
+                    else
+                    {
+                        g.fallVelocity =
+    impact *
+    g.bounceRestitution;
+
+                        g.velocity2D *=
+    g.bounceFriction;
+
+                        g.bounceCount++;
+                    }
+                }
+
+                group.grains[i] = g;
+            }
+        }
+    }
 
     void SimulatePath(float dt)
     {
@@ -780,6 +832,26 @@ public class GrainSimulation : Singleton<GrainSimulation>
             g.radius = grainSpacing * 0.5f;
 
             g.fallDelay = (float)i / (totalSpawn - 1) * maxFallDelay;
+
+            g.bouncing = false;
+            g.bounceCount = 0;
+
+            g.bounceRestitution =
+    UnityEngine.Random.Range(
+        bounceRestitutionRange.x,
+        bounceRestitutionRange.y);
+
+
+            g.bounceFriction =
+                UnityEngine.Random.Range(
+                    bounceFrictionRange.x,
+                    bounceFrictionRange.y);
+
+
+            g.maxBounces =
+                UnityEngine.Random.Range(
+                    bounceCountRange.x,
+                    bounceCountRange.y + 1);
 
             group.grains.Add(g);
         }
