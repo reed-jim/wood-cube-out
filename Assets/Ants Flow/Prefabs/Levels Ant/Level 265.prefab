@@ -28986,14 +28986,27 @@ MonoBehaviour:
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
-    hardPixelConfigs: []
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 610
+      numRows: 7
+      numCols: 12
+      requiredEatCount: 450
+      prefab: {fileID: 0}
+      prefabIndex: 0
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
         spawnOrder: 
     snakeConfig:
       spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
-      snakeSegmentIndexes: 37000000b5000000c4000000460000004b000000c5010000c7010000410300004203000092040000930400008f050000910500008d06000079060000
+      snakeSegmentIndexes: 37000000b5000000c4000000460000004b000000c5010000c701000041030000430300009304000095040000630600004e060000
       health: 300
       tailOffset: {x: 0, y: 0}
       tailAngle: 0
