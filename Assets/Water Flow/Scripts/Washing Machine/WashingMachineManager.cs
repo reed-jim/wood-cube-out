@@ -977,11 +977,17 @@ namespace AntsFlow
 
                 if (antBox.number > 0 && antBox.faction == tilesToClear[0].Faction)
                 {
-                    int numToRemove = Mathf.Min(antBox.number, numToClear) - antBox.tilesToMove.Count;
+                    int numToRemove = Mathf.Min(antBox.remainingNumber, numToClear);
+                    if (numToRemove <= 0)
+                    {
+                        continue;
+                    }
+
                     antBox.number -= numToRemove;
+                    antBox.remainingNumber -= numToRemove;
                     numToClear -= numToRemove;
 
-                    if (numToRemove >= antBox.number)
+                    if (antBox.number <= 0)
                     {
                         if (antBox.isInSlot)
                         {

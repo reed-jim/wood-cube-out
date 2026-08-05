@@ -920,18 +920,11 @@ namespace AntsFlow
                 return;
             }
 
-            int tileIndex = 0;
             foreach (var box in activeSpawningTileBoxes)
             {
                 if (box != null && box.gameObject.activeSelf && box.faction == selectedFaction && box.numberLeft > 0)
                 {
-                    while (box.numberLeft > 0 && tileIndex < clearedTiles.Count)
-                    {
-                        BaseTile tileToRespawn = clearedTiles[tileIndex];
-                        float spawnDelay = 0.35f + tileIndex * 0.12f;
-                        box.SpawnNewTileAt(tileToRespawn, spawnDelay);
-                        tileIndex++;
-                    }
+                    box.ForceComplete();
                 }
             }
         }
