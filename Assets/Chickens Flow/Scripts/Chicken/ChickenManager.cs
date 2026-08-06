@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class ChickenManager : Singleton<ChickenManager>
 {
+    public ChickenRenderer chickenRenderer;
+
     public List<BaseChicken> chickens;
     public List<WaitingChickenSlot> debugWaitingChickenSlots;
     public Dictionary<Vector2Int, WaitingChickenSlot> waitingChickenSlots;
@@ -263,6 +265,15 @@ public class ChickenManager : Singleton<ChickenManager>
         StartCoroutine(RandomlyAnimateChickens());
 
         SetupParticleField();
+
+        List<Vector3> positions = new List<Vector3>();
+
+        foreach (var kvp in waitingChickenSlots)
+        {
+            positions.Add(kvp.Value.position.ChangeZ(-9.9f));
+        }
+
+        chickenRenderer.SetPositions(positions);
     }
 
     public void SetupParticleField()

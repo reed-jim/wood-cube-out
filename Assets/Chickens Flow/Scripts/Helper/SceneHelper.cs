@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
+
 using UnityEngine;
 
 public class SceneHelper : MonoBehaviour
@@ -6,6 +8,7 @@ public class SceneHelper : MonoBehaviour
     public GameObject[] uiElementsToHide;
     [ReadOnly] public bool isHidingUI;
 }
+#endif
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(SceneHelper))]
