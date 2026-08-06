@@ -11,6 +11,7 @@ public class ChickenRenderer : MonoBehaviour
     [Header("Customize")]
     public Vector3 offset;
     public float chickenSize;
+    public float maxAnimationFrame;
 
     private const int BatchSize = 1023;
 
@@ -19,6 +20,7 @@ public class ChickenRenderer : MonoBehaviour
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[BatchSize];
     private readonly Vector4[] animData = new Vector4[BatchSize];
+    private readonly float[] animStartFrame = new float[BatchSize];
 
     private MaterialPropertyBlock propertyBlock;
 
@@ -27,6 +29,11 @@ public class ChickenRenderer : MonoBehaviour
     private void Awake()
     {
         propertyBlock = new MaterialPropertyBlock();
+
+        for (int i = 0; i < animStartFrame.Length; i++)
+        {
+            animStartFrame[i] = Random.Range(0, maxAnimationFrame);
+        }
     }
 
     private void Update()
@@ -55,11 +62,14 @@ public class ChickenRenderer : MonoBehaviour
                 // x = animation
                 // 0 = Idle
                 // 1 = Walk
-                animData[i] = new Vector4(walking[index] ? 1f : 0f, 0, 0, 0);
+                // animData[i] = new Vector4(walking[index] ? 1f : 0f, 0, 0, 0);
+
+                animData[i] = new Vector4(Random.Range(0, 10), Random.Range(0, 10), Random.Range(0, 10), Random.Range(0, 10));
             }
 
             propertyBlock.Clear();
-            propertyBlock.SetVectorArray(AnimDataID, animData);
+            propertyBlock.SetVectorArray("_AnimData", animData);
+            propertyBlock.SetFloatArray("_AnimStartFrame", animStartFrame);
 
             Graphics.DrawMeshInstanced(
                 chickenMesh,

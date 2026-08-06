@@ -270,7 +270,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
         foreach (var kvp in waitingChickenSlots)
         {
-            positions.Add(kvp.Value.position.ChangeZ(-9.9f));
+            positions.Add(kvp.Value.position);
         }
 
         chickenRenderer.SetPositions(positions);
