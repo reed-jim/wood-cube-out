@@ -222,6 +222,17 @@ public class ChickenRenderer : MonoBehaviour
         chickenData.anim = chicken.currentAnimation;
     }
 
+    public void RemoveChickenRendering(BaseChicken chicken)
+    {
+        if (dataOfChicken.ContainsKey(chicken))
+        {
+            ChickenData chickenData = dataOfChicken[chicken];
+
+            chickenDataItems.Remove(chickenData);
+            dataOfChicken.Remove(chicken);
+        }
+    }
+
     private Material GetMaterial(ChickenBatchKey key)
     {
         foreach (var materialsForAnim in materialsForAnims)

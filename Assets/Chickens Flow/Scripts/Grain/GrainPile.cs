@@ -205,6 +205,10 @@ public class GrainPile : MonoBehaviour
 
         int numGrainToEat = numGrain * GameConstants.grainMultiplier;
 
+        ChickenManager.Ins.chickenRenderer.RemoveChickenRendering(chicken);
+
+        chicken.skeletonAnimation.gameObject.SetActive(true);
+
         while (!isDone)
         {
             try
