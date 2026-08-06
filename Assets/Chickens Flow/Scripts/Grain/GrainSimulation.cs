@@ -22,6 +22,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public struct GrainData
     {
         public bool isSpawned;
+        public bool isHidden;
 
         public float3 position;
         public float2 velocity2D;
@@ -235,7 +236,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 cellSize = collisionCellSize,
                 gridWriter = spatialGrid.AsParallelWriter()
             };
-            handle = buildGridJob.Schedule(count, 1, handle);
+            handle = buildGridJob.Schedule(count, 64, handle);
 
             // -------------------------------------------------------------
             // STEP 5: Resolve Collisions (Read: grainsBuffer -> Write: grainArray)
@@ -249,7 +250,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 grainSpacing = grainSpacing,
                 collisionForce = collisionForce
             };
-            handle = collisionJob.Schedule(count, 1, handle);
+            handle = collisionJob.Schedule(count, 64, handle);
 
             // -------------------------------------------------------------
             // STEP 6: Render Matrices (Final state ends up back in grainArray)
@@ -258,6 +259,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
             {
                 grains = grainArray,
                 matrices = group.matrices,
+                grainCount = count,
                 grainSize = grainSize
             };
             handle = matrixJob.Schedule(count, 128, handle);
@@ -533,7 +535,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
             return lookupGrid[idx];
         }
     }
-    
+
     [BurstCompile]
     struct BuildSpatialGridJob : IJobParallelFor
     {
@@ -645,10 +647,16 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         [ReadOnly] public NativeArray<GrainData> grains;
         [WriteOnly] public NativeArray<Matrix4x4> matrices;
+        public int grainCount;
         public float grainSize;
 
         public void Execute(int index)
         {
+            if (index >= grainCount)
+            {
+                return;
+            }
+
             float3 size = new float3(grainSize, grainSize, 0);
             matrices[index] = Matrix4x4.TRS(grains[index].position, Quaternion.identity, size);
         }
@@ -662,14 +670,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         foreach (var group in factionGroups.Values)
         {
-            if (group.grains.Length == 0) continue;
+            if (group.grainCount == 0) continue;
 
             Graphics.RenderMeshInstanced(
                 new RenderParams(group.material),
                 quadMesh,
                 0,
                 group.matrices,
-                group.grains.Length);
+                group.grainCount);
         }
     }
 
@@ -684,6 +692,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
             GrainData g = new GrainData
             {
                 isSpawned = true,
+                isHidden = false,
                 position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle,
                 zPosition = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000),
                 velocity2D = float2.zero,
@@ -717,14 +726,16 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public void RemoveLastGrain(Color faction)
     {
-        return;
         FactionGroup group = GetFaction(faction);
         if (group.grains.Length == 0) return;
 
         if (group.grainCount > 0)
         {
+            GrainData data = group.grains[group.grainCount];
+            data.isHidden = true;
+            group.grains[group.grainCount] = data;
+
             group.grainCount--;
-            group.grains[group.grainCount] = default;
         }
     }
 
