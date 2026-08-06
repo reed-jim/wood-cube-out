@@ -256,7 +256,7 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayIdleAnim()
     {
-        PlayAnim(idleAnimation);
+        PlayAnimWhenFinished(idleAnimation);
     }
 
     public void PlayAnim(string anim)
@@ -274,6 +274,32 @@ public class BaseChicken : MonoBehaviour
         skeletonAnimation.AnimationState.SetAnimation(0, anim, true);
 
         currentAnimation = anim;
+    }
+
+    public void PlayAnimWhenFinished(string anim)
+    {
+        var state = skeletonAnimation.AnimationState;
+        var current = state.GetCurrent(0);
+
+        if (current == null || current.Loop)
+        {
+            state.SetAnimation(0, anim, true);
+            currentAnimation = anim;
+            return;
+        }
+
+        void OnComplete(Spine.TrackEntry entry)
+        {
+            if (entry != current)
+                return;
+
+            state.Complete -= OnComplete;
+
+            state.SetAnimation(0, anim, true);
+            currentAnimation = anim;
+        }
+
+        state.Complete += OnComplete;
     }
 
     public void PlayMoveAnim()
@@ -299,21 +325,7 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayFlyAnim()
     {
-        PlayAnim(flyAnimation);
-    }
-
-    public IEnumerator PlayEyesAnim()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(UnityEngine.Random.Range(0.5f, 1f));
-
-        yield return new WaitForSeconds(UnityEngine.Random.Range(0, 1f));
-
-        while (true)
-        {
-            eyes.gameObject.SetActive(!eyes.gameObject.activeSelf);
-
-            yield return waitForSeconds;
-        }
+        PlayAnimWhenFinished(flyAnimation);
     }
 
     public static void PlayForCycles
