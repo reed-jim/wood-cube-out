@@ -100,7 +100,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChickenRenderer
   chickenMesh: {fileID: -2104196984941773071, guid: e641dddd431b2034e8f7480209ca02f8, type: 3}
-  chickenMaterial: {fileID: 2100000, guid: cd42954edbef3ac40ba9fe4a670cb6ba, type: 2}
+  materialsForAnims:
+  - animation: idle2
+    materials:
+    - {fileID: 2100000, guid: 31178ea515e8bf14d8e0329c501ec6d4, type: 2}
+    - {fileID: 2100000, guid: cd42954edbef3ac40ba9fe4a670cb6ba, type: 2}
+    - {fileID: 2100000, guid: f1376fc8fd1da584f95ae13639546331, type: 2}
   offset: {x: 0, y: 0.8, z: 0}
   chickenSize: 1
   maxAnimationFrame: 16

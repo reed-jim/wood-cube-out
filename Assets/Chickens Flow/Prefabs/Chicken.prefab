@@ -267,6 +267,8 @@ MonoBehaviour:
   isDone: 0
   isStuck: 0
   currentAnimation: 
+  prevEatingProgress: 0
+  currentEatingProgress: 0
   waitingChickenSlots: []
 --- !u!61 &271464109191427687
 BoxCollider2D:
@@ -692,7 +694,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6734858105619798863
 Transform:
   m_ObjectHideFlags: 0

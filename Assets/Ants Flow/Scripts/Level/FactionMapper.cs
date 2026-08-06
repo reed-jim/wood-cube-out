@@ -221,6 +221,11 @@ public class FactionMapper : Singleton<FactionMapper>
     {
         return spriteContainersOfColors[faction].grainSprite;
     }
+
+    public int GetFactionIndex(Color faction)
+    {
+        return colorsOfIndexes[faction];
+    }
 }
 
 [Serializable]

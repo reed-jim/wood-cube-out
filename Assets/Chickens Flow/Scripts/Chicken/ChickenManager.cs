@@ -273,7 +273,7 @@ public class ChickenManager : Singleton<ChickenManager>
             positions.Add(kvp.Value.position);
         }
 
-        chickenRenderer.SetPositions(positions);
+        chickenRenderer.RenderChickens(chickens);
     }
 
     public void SetupParticleField()
@@ -654,6 +654,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 pair.Key.transform,
                 pair.Value,
                 0.3f)
+            .OnUpdate(target: pair.Key.transform, (target, tween) => chickenRenderer.UpdateChickenRendering(pair.Key))
             .OnComplete(() =>
             {
                 remaining--;

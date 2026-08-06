@@ -1,12 +1,58 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
+
+public enum ChickenAnim
+{
+    Idle,
+    Walk
+}
+
+public struct ChickenBatchKey
+{
+    public int factionIndex;
+    public string anim;
+
+    public ChickenBatchKey(int factionIndex, string anim)
+    {
+        this.factionIndex = factionIndex;
+        this.anim = anim;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is ChickenBatchKey other)
+        {
+            return factionIndex == other.factionIndex &&
+                   anim == other.anim;
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return System.HashCode.Combine(factionIndex, anim);
+    }
+}
+
+public class ChickenData
+{
+    public Vector3 position;
+
+    public int factionIndex;
+    public string anim;
+
+    public float animStartFrame;
+}
 
 public class ChickenRenderer : MonoBehaviour
 {
     [Header("Rendering")]
     [SerializeField] private Mesh chickenMesh;
-    [SerializeField] private Material chickenMaterial;
+    // [SerializeField] private Material[] idleMaterials;
+    // [SerializeField] private Material[] walkMaterials;
+    [SerializeField] private MaterialsForAnim[] materialsForAnims;
 
     [Header("Customize")]
     public Vector3 offset;
@@ -15,12 +61,13 @@ public class ChickenRenderer : MonoBehaviour
 
     private const int BatchSize = 1023;
 
-    private readonly List<Vector3> positions = new();
-    private readonly List<bool> walking = new();
+    private readonly List<ChickenData> chickenDataItems = new();
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[BatchSize];
     private readonly Vector4[] animData = new Vector4[BatchSize];
     private readonly float[] animStartFrame = new float[BatchSize];
+
+    private Dictionary<BaseChicken, ChickenData> dataOfChicken = new();
 
     private MaterialPropertyBlock propertyBlock;
 
@@ -29,11 +76,6 @@ public class ChickenRenderer : MonoBehaviour
     private void Awake()
     {
         propertyBlock = new MaterialPropertyBlock();
-
-        for (int i = 0; i < animStartFrame.Length; i++)
-        {
-            animStartFrame[i] = Random.Range(0, maxAnimationFrame);
-        }
     }
 
     private void Update()
@@ -43,42 +85,104 @@ public class ChickenRenderer : MonoBehaviour
 
     private void Render()
     {
-        int total = positions.Count;
+        Dictionary<ChickenBatchKey, List<int>> batches = new();
+
+        // Group chickens
+        for (int i = 0; i < chickenDataItems.Count; i++)
+        {
+            ChickenData chicken = chickenDataItems[i];
+
+            ChickenBatchKey key = new(
+                chicken.factionIndex,
+                chicken.anim
+            );
+
+            if (!batches.TryGetValue(key, out var list))
+            {
+                list = new List<int>();
+                batches.Add(key, list);
+            }
+
+            list.Add(i);
+        }
+
+
+        // Draw each group
+        foreach (var batch in batches)
+        {
+            DrawBatch(
+                batch.Key,
+                batch.Value
+            );
+        }
+    }
+
+    private void DrawBatch(
+        ChickenBatchKey key,
+        List<int> indexes)
+    {
+        Material material = GetMaterial(key);
+
         int start = 0;
 
-        while (start < total)
+        while (start < indexes.Count)
         {
-            int count = Mathf.Min(BatchSize, total - start);
+            int count = Mathf.Min(
+                BatchSize,
+                indexes.Count - start
+            );
+
 
             for (int i = 0; i < count; i++)
             {
-                int index = start + i;
+                ChickenData chicken =
+                    chickenDataItems[indexes[start + i]];
+
 
                 matrices[i] = Matrix4x4.TRS(
-                    positions[index] + offset,
+                    chicken.position + offset,
                     Quaternion.identity,
-                    chickenSize * Vector3.one);
+                    chickenSize * Vector3.one
+                );
+
 
                 // x = animation
-                // 0 = Idle
-                // 1 = Walk
-                // animData[i] = new Vector4(walking[index] ? 1f : 0f, 0, 0, 0);
+                // y = faction
+                animData[i] = new Vector4(
+                    0,
+                    chicken.factionIndex,
+                    0,
+                    0
+                );
 
-                animData[i] = new Vector4(Random.Range(0, 10), Random.Range(0, 10), Random.Range(0, 10), Random.Range(0, 10));
+
+                animStartFrame[i] =
+                    chicken.animStartFrame;
             }
 
+
             propertyBlock.Clear();
-            propertyBlock.SetVectorArray("_AnimData", animData);
-            propertyBlock.SetFloatArray("_AnimStartFrame", animStartFrame);
+
+            propertyBlock.SetVectorArray(
+                AnimDataID,
+                animData
+            );
+
+            propertyBlock.SetFloatArray(
+                "_AnimStartFrame",
+                animStartFrame
+            );
+
 
             Graphics.DrawMeshInstanced(
                 chickenMesh,
                 0,
-                chickenMaterial,
+                material,
                 matrices,
                 count,
                 propertyBlock
             );
+
 
             start += count;
         }
@@ -88,90 +192,54 @@ public class ChickenRenderer : MonoBehaviour
     // Public API
     // =====================================================
 
-    public int Count => positions.Count;
-
-    public void Clear()
+    public void RenderChickens(List<BaseChicken> chickens)
     {
-        positions.Clear();
-        walking.Clear();
-    }
+        chickenDataItems.Clear();
 
-    public void AddChicken(Vector3 position, bool isWalking = false)
-    {
-        positions.Add(position);
-        walking.Add(isWalking);
-    }
-
-    public void RemoveChicken(int index)
-    {
-        if ((uint)index >= positions.Count)
-            return;
-
-        positions.RemoveAt(index);
-        walking.RemoveAt(index);
-    }
-
-    public void SetPosition(int index, Vector3 position)
-    {
-        if ((uint)index >= positions.Count)
-            return;
-
-        positions[index] = position;
-    }
-
-    public Vector3 GetPosition(int index)
-    {
-        if ((uint)index >= positions.Count)
-            return Vector3.zero;
-
-        return positions[index];
-    }
-
-    public void SetWalking(int index, bool isWalking)
-    {
-        if ((uint)index >= walking.Count)
-            return;
-
-        walking[index] = isWalking;
-    }
-
-    public bool IsWalking(int index)
-    {
-        if ((uint)index >= walking.Count)
-            return false;
-
-        return walking[index];
-    }
-
-    public void SetPositions(IList<Vector3> newPositions)
-    {
-        positions.Clear();
-        walking.Clear();
-
-        for (int i = 0; i < newPositions.Count; i++)
+        for (int i = 0; i < chickens.Count; i++)
         {
-            positions.Add(newPositions[i]);
-            walking.Add(false);
+            BaseChicken chicken = chickens[i];
+
+            ChickenData chickenData = new ChickenData();
+
+            chickenData.position = chicken.transform.position;
+            chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
+            chickenData.anim = chicken.currentAnimation;
+            chickenData.animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame);
+
+            chickenDataItems.Add(chickenData);
+
+            dataOfChicken.Add(chicken, chickenData);
         }
     }
 
-    public void SetPositions(IList<Vector3> newPositions, IList<bool> walkingStates)
+    public void UpdateChickenRendering(BaseChicken chicken)
     {
-        positions.Clear();
-        walking.Clear();
+        ChickenData chickenData = dataOfChicken[chicken];
 
-        int count = Mathf.Min(newPositions.Count, walkingStates.Count);
+        chickenData.position = chicken.transform.position;
+        chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
+        chickenData.anim = chicken.currentAnimation;
+        chickenData.animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame);
+    }
 
-        for (int i = 0; i < count; i++)
+    private Material GetMaterial(ChickenBatchKey key)
+    {
+        foreach (var materialsForAnim in materialsForAnims)
         {
-            positions.Add(newPositions[i]);
-            walking.Add(walkingStates[i]);
+            if (key.anim == materialsForAnim.animation)
+            {
+                return materialsForAnim.materials[key.factionIndex];
+            }
         }
-    }
 
-    public void SetAllWalking(bool isWalking)
-    {
-        for (int i = 0; i < walking.Count; i++)
-            walking[i] = isWalking;
+        return materialsForAnims[0].materials[key.factionIndex];
     }
+}
+
+[Serializable]
+public class MaterialsForAnim
+{
+    public string animation;
+    public Material[] materials;
 }
