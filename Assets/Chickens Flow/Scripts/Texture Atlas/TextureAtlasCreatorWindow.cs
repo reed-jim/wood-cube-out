@@ -151,6 +151,11 @@ public class TextureAtlasCreatorWindow : EditorWindow
         {
             Texture2D tex = textures[i];
 
+            if (tex.width != width || tex.height != height)
+            {
+                tex = ResizeTexture(tex, width, height);
+            }
+
             // Make sure texture is readable
             string path = AssetDatabase.GetAssetPath(tex);
 
@@ -168,12 +173,7 @@ public class TextureAtlasCreatorWindow : EditorWindow
             int y = (rows - 1 - i / columns) * height;
 
 
-            atlas.SetPixels(
-                x,
-                y,
-                width,
-                height,
-                tex.GetPixels());
+            atlas.SetPixels(x, y, width, height, tex.GetPixels());
         }
 
 
@@ -192,5 +192,24 @@ public class TextureAtlasCreatorWindow : EditorWindow
             $"Created atlas: {outputPath}\n" +
             $"Frames: {count}\n" +
             $"Grid: {columns}x{rows}");
+    }
+
+    Texture2D ResizeTexture(Texture2D source, int width, int height)
+    {
+        RenderTexture rt = RenderTexture.GetTemporary(width, height);
+
+        Graphics.Blit(source, rt);
+
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = rt;
+
+        Texture2D result = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        result.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        result.Apply();
+
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(rt);
+
+        return result;
     }
 }
