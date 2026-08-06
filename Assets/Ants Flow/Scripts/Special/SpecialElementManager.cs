@@ -468,6 +468,40 @@ namespace AntsFlow
                    specialElementConfig.bossAreaConfig.spawnOrder.Count > 0;
         }
 
+        // Rắn còn snake box chờ trong spawnOrder hay không (không đụng gì tới state).
+        public bool HasPendingSnakeBox()
+        {
+            return specialElementConfig != null &&
+                   specialElementConfig.snakeConfig != null &&
+                   specialElementConfig.snakeConfig.spawnOrder != null &&
+                   specialElementConfig.snakeConfig.spawnOrder.Count > 0;
+        }
+
+        // Còn box đặc biệt (boss hoặc rắn) chờ trong spawnOrder hay không.
+        public bool HasPendingSpecialBossBox()
+        {
+            return HasPendingBossBox() || HasPendingSnakeBox();
+        }
+
+        public LevelElement GetNextForcedSpecialElement()
+        {
+            if (HasPendingBossBox())
+            {
+                specialElementConfig.bossAreaConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.WarriorAntBox;
+            }
+
+            if (HasPendingSnakeBox())
+            {
+                specialElementConfig.snakeConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.SnakeAntBox;
+            }
+
+            return LevelElement.NormalAntBox;
+        }
+
         // Ép lấy 1 warrior box còn lại của boss (bỏ qua so khớp đúng numAntBoxSpawned). Dùng khi pool
         // faction thường đã cạn: lúc này thứ tự không còn ý nghĩa, chỉ cần nhả nốt cho boss đủ hộp.
         public LevelElement GetNextForcedBossElement()
@@ -515,6 +549,11 @@ namespace AntsFlow
 
         public void FillHiddenTiles(Tilemap tilemap, int width, int height, int manualStart = -1)
         {
+            // Tile đang bị chiếm bởi rắn/boss/hộp (node.isObstacle) hoặc đã done thì KHÔNG được biến thành
+            // hidden tile: nó đã bị tách khỏi chuỗi blockage nên không bao giờ được reveal -> hidden tile
+            // kẹt trên map, không clear được. Đặc biệt là các ô đường đi con rắn đang chiếm hiện tại.
+            HashSet<BaseTile> blockedTiles = GetTilesBlockedForHidden();
+
             if (manualStart != -1)
             {
                 Color targetColor = ColorUtil.HexToColor("#B792FA");
@@ -525,6 +564,11 @@ namespace AntsFlow
 
                     if (tile.Faction == targetColor)
                     {
+                        if (tile.isDone || tile.isHidden || blockedTiles.Contains(tile))
+                        {
+                            continue;
+                        }
+
                         Vector3Int cellPos = tile.tilemapPosition;
 
                         Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
@@ -564,6 +608,11 @@ namespace AntsFlow
 
                 BaseTile tile = TileManager.Ins.tiles[index];
 
+                if (tile.isDone || tile.isHidden || blockedTiles.Contains(tile))
+                {
+                    continue;
+                }
+
                 Vector3Int cellPos = tile.tilemapPosition;
 
                 Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
@@ -573,6 +622,33 @@ namespace AntsFlow
 
                 tile.isHidden = true;
             }
+        }
+
+        // Tập tile không được phép chuyển thành hidden tile: các tile nằm trên node đang là obstacle
+        // (rắn/boss/hộp spawn... đang chiếm). Những tile này nằm ngoài chuỗi blockage bình thường nên
+        // hidden tile đặt lên đó sẽ không bao giờ được reveal/clear.
+        private HashSet<BaseTile> GetTilesBlockedForHidden()
+        {
+            HashSet<BaseTile> blockedTiles = new HashSet<BaseTile>();
+
+            List<Node> nodes = TileManager.Ins.nodes;
+
+            if (nodes == null)
+            {
+                return blockedTiles;
+            }
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+
+                if (node.isObstacle && node.tile != null)
+                {
+                    blockedTiles.Add(node.tile);
+                }
+            }
+
+            return blockedTiles;
         }
 
         public void FillWallTiles(Tilemap tilemap, int width, int height)
@@ -809,6 +885,24 @@ namespace AntsFlow
             }
 
             bossArea.Setup(nodes, bossAreaConfig);
+        }
+
+        // Level có boss/rắn thì chỉ được tính win khi cả hai đã bị hạ. Dùng để chặn win sớm khi
+        // người chơi clear hết tile màu thường (vd booster clear-one-color) mà chưa hạ boss/rắn.
+        // Level không có yếu tố nào (bossArea/snake inactive) thì luôn trả về true -> không ảnh hưởng.
+        public bool AreSpecialBossElementsCleared()
+        {
+            if (bossArea != null && bossArea.BlocksWin)
+            {
+                return false;
+            }
+
+            if (snake != null && snake.BlocksWin)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public void SetupSnake(SnakeConfig snakeConfig)

@@ -37,7 +37,19 @@ namespace AntsFlow
 
         public override void Init(Color faction)
         {
-            ghostBaseZPosition = -8f;
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
+            {
+                float bossZ = SpecialElementManager.Ins.bossArea.transform.position.z;
+                baseZPosition = bossZ - 1f;
+                ghostBaseZPosition = bossZ - 2f;
+            }
+            else
+            {
+                baseZPosition = -8f;
+                ghostBaseZPosition = -9f;
+            }
+
+            transform.position = transform.position.ChangeZ(baseZPosition);
 
             skeletonAnimation.Skeleton.SetSlotsToSetupPose();
             skeletonAnimation.AnimationState.SetAnimation(0, moveAnimation, true);

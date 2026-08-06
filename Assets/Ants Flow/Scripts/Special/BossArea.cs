@@ -36,6 +36,10 @@ namespace AntsFlow
         private bool isDead;
         private bool isPlayingIdle2;
 
+        // Level còn boss sống thì chưa được tính win (kể cả khi đã clear hết tile màu thường
+        // bằng booster). Boss chỉ hết chặn win khi đã chết.
+        public bool BlocksWin => gameObject.activeInHierarchy && !isDead;
+
         public void Setup(List<Node> nodes, BossAreaConfig bossAreaConfig)
         {
             coveredTiles = new List<BaseTile>();
@@ -320,6 +324,13 @@ namespace AntsFlow
                     coveredTiles[i].isLocked = false;
                 }
 
+                // Boss vừa bị hạ: mở khóa các tile dưới boss và kích hoạt các hộp đang chờ trên slot kiểm tra lại đường đi
+                RecheckInSlotAntBoxes();
+
+                // Boss vừa bị hạ: tile màu thường có thể đã được clear hết từ trước (vd booster
+                // clear-one-color) nên win đang bị chặn chờ boss. Re-check để win ngay bây giờ.
+                TileManager.Ins.CheckWinLevel();
+
                 if (skeletonAnimation != null && !string.IsNullOrEmpty(dieAnimation))
                 {
                     TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, dieAnimation, false);
@@ -336,6 +347,26 @@ namespace AntsFlow
                 {
                     TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, hitAnimation, false);
                     trackEntry.Complete += OnHitComplete;
+                }
+            }
+        }
+
+        private void RecheckInSlotAntBoxes()
+        {
+            if (WashingMachineManager.Ins == null || WashingMachineManager.Ins.washingMachineSlots == null)
+            {
+                return;
+            }
+
+            var slots = WashingMachineManager.Ins.washingMachineSlots;
+
+            for (int i = 0; i < slots.Count; i++)
+            {
+                WashingMachineItem item = slots[i].washingMachineItem;
+
+                if (item != null && item.isInSlot)
+                {
+                    item.CheckAntsPath();
                 }
             }
         }
@@ -365,26 +396,77 @@ namespace AntsFlow
         {
             numAntPerBox = new List<int>();
 
-            int totalUnits = maxHealth;
+            if (totalBox <= 0)
+            {
+                return;
+            }
 
-            // Base units per number
-            int baseUnits = totalUnits / totalBox;
-            int remainder = totalUnits % totalBox;
+            const int minAllowed = 5;
+            const int maxAllowed = 95;
+
+            if (totalBox == 1)
+            {
+                numAntPerBox.Add(Mathf.Clamp(maxHealth, 1, maxAllowed));
+                return;
+            }
+
+            int remainingHealth = maxHealth;
 
             for (int i = 0; i < totalBox; i++)
             {
-                int units = baseUnits;
+                int remainingBoxes = totalBox - i;
 
-                // Distribute remaining units
-                if (i < remainder)
-                    units++;
+                // Hộp cuối cùng: lấy toàn bộ số count còn lại để đảm bảo chắc chắn tổng bằng maxHealth (clear được boss)
+                if (remainingBoxes == 1)
+                {
+                    numAntPerBox.Add(Mathf.Clamp(remainingHealth, 1, maxAllowed));
+                    break;
+                }
 
-                numAntPerBox.Add(units);
+                // Nếu máu còn lại đủ để chia tối thiểu 5 cho mỗi hộp
+                if (remainingHealth >= remainingBoxes * minAllowed)
+                {
+                    // Để các hộp phía sau không bị vượt quá maxAllowed (95), hộp này phải gánh tối thiểu lượng dư
+                    int requiredMin = remainingHealth - (remainingBoxes - 1) * maxAllowed;
+                    int minUnits = Mathf.Max(minAllowed, requiredMin);
+                    minUnits = Mathf.CeilToInt(minUnits / 5f) * 5;
+
+                    // Để các hộp phía sau có tối thiểu minAllowed (5), hộp này có thể lấy tối đa:
+                    int maxUnits = remainingHealth - (remainingBoxes - 1) * minAllowed;
+                    maxUnits = Mathf.Min(maxUnits, maxAllowed);
+                    int maxUnitsMultipleOf5 = (maxUnits / 5) * 5;
+
+                    if (maxUnitsMultipleOf5 < minUnits)
+                    {
+                        int units = Mathf.Clamp(minUnits, minAllowed, maxAllowed);
+                        numAntPerBox.Add(units);
+                        remainingHealth -= units;
+                    }
+                    else
+                    {
+                        int stepCount = ((maxUnitsMultipleOf5 - minUnits) / 5) + 1;
+                        int units = minUnits + UnityEngine.Random.Range(0, stepCount) * 5;
+                        numAntPerBox.Add(units);
+                        remainingHealth -= units;
+                    }
+                }
+                else
+                {
+                    // Fallback trong trường hợp máu quá ít (không đủ 5 cho mỗi hộp)
+                    int units = Mathf.Max(1, remainingHealth / remainingBoxes);
+                    numAntPerBox.Add(units);
+                    remainingHealth -= units;
+                }
             }
         }
 
         public int GetNextAntNumberOfBox()
         {
+            if (numAntPerBox == null || numAntPerBox.Count == 0)
+            {
+                return currentHealth > 0 ? currentHealth : 5;
+            }
+
             int antNumber = numAntPerBox[0];
 
             numAntPerBox.RemoveAt(0);

@@ -20,6 +20,20 @@ namespace AntsFlow
         private bool isNumberAnimating;
         private float numberTextInitialScale;
 
+        // Các tile đang "bay" từ box về map (anim spawn-new-at 1s chưa xong). Trong khoảng đó tile đã bị
+        // Hide() và đang chờ Show() ở OnComplete. Phải theo dõi để nếu box bị ForceComplete giữa chừng
+        // (vd booster clear-one-color cùng màu) thì huỷ anim, tránh việc Show() dựng lại tile vừa bị clear
+        // -> tile mồ côi kẹt trên map mãi mãi.
+        private readonly List<PendingSpawn> pendingSpawns = new List<PendingSpawn>();
+        private bool isForceCompleted;
+
+        private class PendingSpawn
+        {
+            public BaseTile tile;
+            public Tween tween;
+            public FakeTile fakeTile;
+        }
+
         void Awake()
         {
             BaseTile.tileMoveToAntEvent += OnTileMoveToAnt;
@@ -39,6 +53,7 @@ namespace AntsFlow
             this.totalNumber = totalNumber;
             this.numberLeft = totalNumber;
             this.occupiedNodes = nodes != null ? nodes : new List<Node>();
+            isForceCompleted = false;
 
             icon.sprite = FactionMapper.Ins.GetSpawningBoxTileSprite(faction);
             top.sprite = FactionMapper.Ins.GetSpawningTileBoxTop(faction);
@@ -64,6 +79,7 @@ namespace AntsFlow
         public void OnTileMoveToAnt(BaseTile tile)
         {
             if (!gameObject.activeSelf) return;
+            if (isForceCompleted) return;
             if (numberLeft <= 0) return;
             if (tile.Faction != faction) return;
 
@@ -73,6 +89,11 @@ namespace AntsFlow
         public void SpawnNewTileAt(BaseTile tile, float delay = 0f)
         {
             if (!gameObject.activeSelf)
+            {
+                return;
+            }
+
+            if (isForceCompleted)
             {
                 return;
             }
@@ -99,7 +120,7 @@ namespace AntsFlow
             {
                 DOVirtual.DelayedCall(delay, () =>
                 {
-                    if (this != null && gameObject != null && gameObject.activeSelf)
+                    if (this != null && gameObject != null && gameObject.activeSelf && !isForceCompleted)
                     {
                         DoSpawnTileAnimation(tile);
                     }
@@ -125,8 +146,14 @@ namespace AntsFlow
 
         public void ForceComplete()
         {
+            isForceCompleted = true;
             numberLeft = 0;
             UpdateNumberText();
+
+            // Huỷ mọi anim spawn-new-at đang bay trước khi box biến mất, nếu không tile đang bay sẽ được
+            // Show() lại sau khi booster đã clear -> kẹt lại trên map.
+            CancelPendingSpawns();
+
             if (occupiedNodes != null)
             {
                 foreach (var node in occupiedNodes)
@@ -135,6 +162,31 @@ namespace AntsFlow
                 }
             }
             SaferioTween.ScaleDownWithPunch(transform);
+        }
+
+        // Với mỗi tile đang bay: kill tween, trả fake tile về pool và KHÔNG gọi tile.Show(). Tile tương ứng
+        // đã được booster clear-one-color dọn (isDone=true + Hide); ta set lại cho chắc để không sót tile.
+        private void CancelPendingSpawns()
+        {
+            for (int i = 0; i < pendingSpawns.Count; i++)
+            {
+                PendingSpawn pending = pendingSpawns[i];
+
+                pending.tween?.Kill();
+
+                if (pending.fakeTile != null)
+                {
+                    ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, pending.fakeTile.gameObject);
+                }
+
+                if (pending.tile != null)
+                {
+                    pending.tile.isDone = true;
+                    pending.tile.Hide();
+                }
+            }
+
+            pendingSpawns.Clear();
         }
 
         private void DoSpawnTileAnimation(BaseTile tile)
@@ -154,13 +206,27 @@ namespace AntsFlow
 
             fakeTile.transform.position = start;
 
-            fakeTile.transform.DOPath(
+            PendingSpawn pending = new PendingSpawn { tile = tile, fakeTile = fakeTile };
+            pendingSpawns.Add(pending);
+
+            pending.tween = fakeTile.transform.DOPath(
                 new Vector3[] { start, control, end },
                 1f,
                 PathType.CatmullRom
             ).SetEase(Ease.Linear)
             .OnComplete(() =>
             {
+                pendingSpawns.Remove(pending);
+
+                // Box đã bị ForceComplete (booster clear-one-color) hoặc tile đã bị clear thì tuyệt đối
+                // không Show() lại, nếu không sẽ tạo ra tile mồ côi kẹt trên map.
+                if (isForceCompleted || tile.isDone)
+                {
+                    ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
+
+                    return;
+                }
+
                 tile.Show();
 
                 ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);

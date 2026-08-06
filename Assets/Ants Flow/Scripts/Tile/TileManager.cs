@@ -1386,6 +1386,12 @@ namespace AntsFlow
 
             bool isWon = !tiles.Any(tile => !tile.isDone);
 
+            // Level có boss/rắn: chưa hạ hết thì chưa win, dù đã clear hết tile (vd booster clear-one-color).
+            if (isWon && SpecialElementManager.Ins != null && !SpecialElementManager.Ins.AreSpecialBossElementsCleared())
+            {
+                isWon = false;
+            }
+
             if (isWon)
             {
                 UpSpeedAnt.Ins.ResetSpeedOnWinLevel();

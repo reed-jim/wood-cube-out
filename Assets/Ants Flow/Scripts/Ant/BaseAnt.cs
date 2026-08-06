@@ -253,8 +253,8 @@ namespace AntsFlow
             {
                 StopCoroutine(movingCoroutine);
             }
-
-            movingCoroutine = StartCoroutine(MovingCurved(reversePath, 2));
+            if (gameObject.activeInHierarchy)
+                movingCoroutine = StartCoroutine(MovingCurved(reversePath, 2));
         }
 
         public static List<Vector3> Simplify(List<Vector3> points)
