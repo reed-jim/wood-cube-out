@@ -559,7 +559,6 @@ namespace AntsFlow
                 }
             }
 
-            // Kiểm tra deadlock nếu hàng đầu chỉ có các hộp đóng/mở đang đóng và các hộp magnet đang bị kẹt
             if (isLevelContainingNewSpecialElements)
             {
                 List<WashingMachineItem> closedOpenCloseBoxesOnRow0 = new List<WashingMachineItem>();

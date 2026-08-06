@@ -483,9 +483,6 @@ namespace AntsFlow
             return HasPendingBossBox() || HasPendingSnakeBox();
         }
 
-        // Ép lấy 1 box đặc biệt còn lại (boss ưu tiên, rồi tới rắn), bỏ qua so khớp numAntBoxSpawned.
-        // Dùng khi pool faction thường đã cạn (vd clear hết tile bằng booster): lúc này thứ tự không
-        // còn ý nghĩa, chỉ cần nhả nốt cho đủ box để hạ boss/rắn, tránh các box order lớn không kịp hiện.
         public LevelElement GetNextForcedSpecialElement()
         {
             if (HasPendingBossBox())
@@ -552,6 +549,11 @@ namespace AntsFlow
 
         public void FillHiddenTiles(Tilemap tilemap, int width, int height, int manualStart = -1)
         {
+            // Tile đang bị chiếm bởi rắn/boss/hộp (node.isObstacle) hoặc đã done thì KHÔNG được biến thành
+            // hidden tile: nó đã bị tách khỏi chuỗi blockage nên không bao giờ được reveal -> hidden tile
+            // kẹt trên map, không clear được. Đặc biệt là các ô đường đi con rắn đang chiếm hiện tại.
+            HashSet<BaseTile> blockedTiles = GetTilesBlockedForHidden();
+
             if (manualStart != -1)
             {
                 Color targetColor = ColorUtil.HexToColor("#B792FA");
@@ -562,6 +564,11 @@ namespace AntsFlow
 
                     if (tile.Faction == targetColor)
                     {
+                        if (tile.isDone || tile.isHidden || blockedTiles.Contains(tile))
+                        {
+                            continue;
+                        }
+
                         Vector3Int cellPos = tile.tilemapPosition;
 
                         Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
@@ -601,6 +608,11 @@ namespace AntsFlow
 
                 BaseTile tile = TileManager.Ins.tiles[index];
 
+                if (tile.isDone || tile.isHidden || blockedTiles.Contains(tile))
+                {
+                    continue;
+                }
+
                 Vector3Int cellPos = tile.tilemapPosition;
 
                 Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
@@ -610,6 +622,33 @@ namespace AntsFlow
 
                 tile.isHidden = true;
             }
+        }
+
+        // Tập tile không được phép chuyển thành hidden tile: các tile nằm trên node đang là obstacle
+        // (rắn/boss/hộp spawn... đang chiếm). Những tile này nằm ngoài chuỗi blockage bình thường nên
+        // hidden tile đặt lên đó sẽ không bao giờ được reveal/clear.
+        private HashSet<BaseTile> GetTilesBlockedForHidden()
+        {
+            HashSet<BaseTile> blockedTiles = new HashSet<BaseTile>();
+
+            List<Node> nodes = TileManager.Ins.nodes;
+
+            if (nodes == null)
+            {
+                return blockedTiles;
+            }
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+
+                if (node.isObstacle && node.tile != null)
+                {
+                    blockedTiles.Add(node.tile);
+                }
+            }
+
+            return blockedTiles;
         }
 
         public void FillWallTiles(Tilemap tilemap, int width, int height)
