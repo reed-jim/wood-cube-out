@@ -721,23 +721,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrainSimulation
   gravity: 15
-  moveForce: 60
-  damping: 1
-  maxSpeed: 30
-  grainSpacing: 0.35
+  maxSpeed: 15
+  grainSpacing: 0.2
   collisionForce: 20
-  windStrength: 0
-  windSpeed: 40
   conveyorForce: 15
   edgeForce: 300
-  grainMass: 1
   airDrag: 0
   conveyorWidth: 0.7
-  collisionCellSize: 0.2
-  landingPoint: {fileID: 6294717813495154575}
-  pathSnapDistance: 0.15
+  collisionCellSize: 0.4
   impactToPathVelocityRange: {x: -0.2, y: 0.6}
-  bounceHeight: 0.3
   percentNumGrainOnPathForChickenToEat: 0.5
   bounceRestitutionRange: {x: 0.25, y: 0.65}
   bounceFrictionRange: {x: 0.65, y: 0.9}
@@ -782,6 +774,9 @@ MonoBehaviour:
   spawnRandomArea: {x: 1, y: 1}
   removedCallCount: 0
   removedCount: 0
+  sampledPositions: []
+  sampledTangents: []
+  lookupCellSize: 0.2
 --- !u!1 &7994727352605114604
 GameObject:
   m_ObjectHideFlags: 0
