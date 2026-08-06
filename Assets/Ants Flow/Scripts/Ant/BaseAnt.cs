@@ -65,7 +65,7 @@ namespace AntsFlow
         public float noiseMagnitude = 2f;
         private float randomNoiseOffset;
 
-        private float speedMove;
+        protected float speedMove;
         public float initialSpeedMove;
 
         [Header("Depth Settings")]
@@ -318,17 +318,17 @@ namespace AntsFlow
             }
         }
 
-#if UNITY_EDITOR
-        void OnDrawGizmosSelected()
-        {
-            foreach (var point in debugMovePoints)
-            {
-                Gizmos.color = Color.green;
+        //#if UNITY_EDITOR
+        //        void OnDrawGizmosSelected()
+        //        {
+        //            foreach (var point in debugMovePoints)
+        //            {
+        //                Gizmos.color = Color.green;
 
-                Gizmos.DrawSphere(point, 0.15f);
-            }
-        }
-#endif
+        //                Gizmos.DrawSphere(point, 0.15f);
+        //            }
+        //        }
+        //#endif
 
         public static List<Vector3> RemoveNearbyPoints(List<Vector3> points, float minDistance)
         {

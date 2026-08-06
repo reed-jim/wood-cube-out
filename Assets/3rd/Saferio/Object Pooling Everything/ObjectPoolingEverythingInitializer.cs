@@ -52,6 +52,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject spawnPopSoundPrefab;
     [SerializeField] private GameObject woodBreakStateSoundPrefab;
     [SerializeField] private GameObject woodBreakEndSoundPrefab;
+    [SerializeField] private GameObject warriorAntBowSoundPrefab;
+    [SerializeField] private GameObject bossAreaHitSoundPrefab;
+    [SerializeField] private GameObject snakeCountSoundPrefab;
+    [SerializeField] private GameObject bossAreaDieSoundPrefab;
 
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -166,7 +170,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.spawnPopSound, spawnPopSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.woodBreakStateSound, woodBreakStateSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.woodBreakEndSound, woodBreakEndSoundPrefab, 8);
-
+        RegisterPool<AudioSource>(GameConstants.warriorAntBowSound, warriorAntBowSoundPrefab, 15);
+        RegisterPool<AudioSource>(GameConstants.bossAreaHitSound, bossAreaHitSoundPrefab, 15);
+        RegisterPool<AudioSource>(GameConstants.snakeCountSound, snakeCountSoundPrefab, 15);
+        RegisterPool<AudioSource>(GameConstants.bossAreaDieSound, bossAreaDieSoundPrefab, 15);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);

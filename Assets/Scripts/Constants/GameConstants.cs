@@ -92,6 +92,11 @@ public static class GameConstants
     public static string spawnPopSound = "spawnPopSound";
     public static string woodBreakStateSound = "woodBreakStateSound";
     public static string woodBreakEndSound = "woodBreakEndSound";
+    public static string warriorAntBowSound = "warriorAntBowSound";
+    public static string bossAreaHitSound = "bossAreaHitSound";
+    public static string snakeCountSound = "snakeCountSound";
+    public static string bossAreaDieSound = "bossAreaDieSound";
+
     #endregion
 
     #region ANIMATION
