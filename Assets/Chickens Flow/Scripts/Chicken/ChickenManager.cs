@@ -264,8 +264,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
         StartCoroutine(RandomlyAnimateChickens());
 
-        SetupParticleField();
-
         List<Vector3> positions = new List<Vector3>();
 
         foreach (var kvp in waitingChickenSlots)
@@ -274,20 +272,6 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         chickenRenderer.RenderChickens(chickens);
-    }
-
-    public void SetupParticleField()
-    {
-        GrainPool.Ins.particleField.Configure(chickens.Count, chickens.Count);
-
-        Color32[] colors = new Color32[chickens.Count];
-
-        for (int i = 0; i < chickens.Count; i++)
-        {
-            colors[i] = chickens[i].faction;
-        }
-
-        GrainPool.Ins.particleField.SetPalette(colors);
     }
 
     private GiantChickenItemConfig GetGiantChickenAt(

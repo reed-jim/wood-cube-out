@@ -220,7 +220,6 @@ public class ChickenRenderer : MonoBehaviour
         chickenData.position = chicken.transform.position;
         chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
         chickenData.anim = chicken.currentAnimation;
-        chickenData.animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame);
     }
 
     private Material GetMaterial(ChickenBatchKey key)
