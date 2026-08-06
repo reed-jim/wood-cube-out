@@ -1533,10 +1533,17 @@ public class AdmobAdsMax
         var dic = new Dictionary<string, string>
     {
         { "ad_unit_name", adInfo.AdUnitIdentifier },
-        { "ad_format", adInfo.AdFormat },
+        { "ad_format", adInfo.AdFormat }
     };
-         AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
-             adInfo.Revenue, "USD", dic);
+        var additionalParams = new Dictionary<string, string>
+        {
+            { AdRevenueScheme.AD_UNIT, adInfo.AdUnitIdentifier ?? "" },
+            { AdRevenueScheme.AD_TYPE, adInfo.AdFormat ?? "" },
+            { AdRevenueScheme.PLACEMENT, adInfo.Placement ?? "" }
+        };
+        var revenueData = new AFAdRevenueData(adInfo.NetworkName , MediationNetwork.ApplovinMax,
+             "USD", adInfo.Revenue);
+        AppsFlyer.logAdRevenue(revenueData, additionalParams);
 
         try
         {
