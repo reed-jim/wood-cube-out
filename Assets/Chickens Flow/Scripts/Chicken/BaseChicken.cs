@@ -88,9 +88,14 @@ public class BaseChicken : MonoBehaviour
 
         // Gameplay
         numGrainPileRequiredLeft = numGrainPileRequired;
+        skeletonAnimation.gameObject.SetActive(false);
+        eatingProgress.gameObject.SetActive(false);
+        eatingProgressText.gameObject.SetActive(false);
 
         // Waiting slots
         waitingChickenSlots.Clear();
+
+        ObjectPoolingEverything.ReturnToPool(GameConstants.chicken, gameObject);
     }
 
     public void SetFaction(Color faction)

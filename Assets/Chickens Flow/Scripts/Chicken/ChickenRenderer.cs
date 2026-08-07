@@ -102,8 +102,6 @@ public class ChickenRenderer : MonoBehaviour
         System.Array.Clear(matrices, 0, matrices.Length);
         System.Array.Clear(animData, 0, animData.Length);
         System.Array.Clear(animStartFrame, 0, animStartFrame.Length);
-
-        propertyBlock?.Clear();
     }
 
     private void Render()

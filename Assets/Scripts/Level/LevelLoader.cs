@@ -257,7 +257,7 @@ namespace NamPhuThuy.GamePlay
 
                 AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
 
-                // GamePersistentVariable.levelItem = levelItem;
+                GamePersistentVariable.levelItem = levelItem;
                 // GamePersistentVariable.isLevelLost = false;
 
                 // if (levelItem.isOverrideLevelScale)

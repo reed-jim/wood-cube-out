@@ -30,8 +30,10 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public static event Action winLevelEvent;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         SettingPopup.replayLevelEvent += Reset;
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
@@ -399,7 +401,7 @@ public class ChickenManager : Singleton<ChickenManager>
         int grainPerChicken = grainPile.remainingNumber / chickensToFeed.Count;
         int remainder = grainPile.remainingNumber % chickensToFeed.Count;
 
-        Debug.Log($"FeedTheChicken ======================= [ {grainPile.name} ] {grainPile.remainingNumber} {chickensToFeed.Count} {grainPerChicken} {remainder}");
+        // Debug.Log($"FeedTheChicken ======================= [ {grainPile.name} ] {grainPile.remainingNumber} {chickensToFeed.Count} {grainPerChicken} {remainder}");
 
         // Step 1: Feed equally
         if (grainPerChicken > 0)
@@ -417,7 +419,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 grainPile.remainingNumber -= amount;
 
-                Debug.Log($"[Equal Feed {chicken.name}] {amount}");
+                // Debug.Log($"[Equal Feed {chicken.name}] {amount}");
 
                 chicken.Feed(grainPile, amount, false);
             }
@@ -444,7 +446,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 remainder -= extra;
                 grainPile.remainingNumber -= extra;
 
-                Debug.Log($"[Remainder Feed {chicken.name}] {extra}");
+                // Debug.Log($"[Remainder Feed {chicken.name}] {extra}");
 
                 chicken.Feed(grainPile, extra, grainPile.remainingNumber == 0);
             }
@@ -658,7 +660,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
             chicken.PlayMoveAnim();
 
-            Tween.Position(
+            Tween tween = Tween.Position(
                 pair.Key.transform,
                 pair.Value,
                 0.3f)
@@ -681,6 +683,8 @@ public class ChickenManager : Singleton<ChickenManager>
                 if (remaining == 0)
                     WashingMachineManager.Ins.grainPool.CheckFeedChickens();
             });
+
+            TweenManager.Ins.AddTween(tween);
 
             chicken.isMoving = true;
         }
