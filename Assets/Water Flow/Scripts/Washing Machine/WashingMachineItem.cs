@@ -131,7 +131,7 @@ public class WashingMachineItem : MonoBehaviour
         this.number = number;
 
         lid.color = faction;
-        numberText.text = $"{number}";
+        numberText.text = $"{(int)((float)number / GrainPool.Ins.initialMaxCapacity * 100)}%";
 
         this.washingMachineStartSlot = washingMachineStartSlot;
         washingMachineSlot = null;
@@ -510,6 +510,8 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect()
     {
+        return !GamePersistentVariable.isPreventSelectAntBox;
+
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
@@ -518,6 +520,8 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
+        return !GamePersistentVariable.isPreventSelectAntBox;
+
         if (WashingMachineManager.Ins.grainPool.IsMaxCapacity())
         {
             return false;
