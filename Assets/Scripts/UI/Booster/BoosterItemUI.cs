@@ -46,7 +46,7 @@ public class BoosterItemUI : MonoBehaviour
         LevelLoader.startLevelEvent += Setup;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
-        pressButton.onClick.AddListener(Press);
+        // pressButton.onClick.AddListener(Press);
 
         Setup();
     }

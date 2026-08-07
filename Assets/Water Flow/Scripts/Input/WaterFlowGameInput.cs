@@ -46,14 +46,16 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 }
                 else if (inputMode == AntsFlowInputMode.SelectTile)
                 {
-                    BaseChicken chicken = hit.collider.GetComponent<BaseChicken>();
+                    // BaseChicken chicken = hit.collider.GetComponent<BaseChicken>();
 
-                    if (chicken != null && !chicken.isEating)
-                    {
-                        useClearOneColorBoosterEvent?.Invoke(chicken.faction);
+                    // if (chicken != null && !chicken.isEating)
+                    // {
+                    //     useClearOneColorBoosterEvent?.Invoke(chicken.faction);
 
-                        inputMode = AntsFlowInputMode.Normal;
-                    }
+                    //     inputMode = AntsFlowInputMode.Normal;
+                    // }
+
+                    ChickenManager.Ins.GetChicken(worldPoint);
                 }
             }
         }

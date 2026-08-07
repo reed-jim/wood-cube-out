@@ -838,6 +838,16 @@ public class ChickenManager : Singleton<ChickenManager>
     }
     #endregion
 
+    #region Booster
+    public void GetChicken(Vector3 position)
+    {
+        WaitingChickenSlot waitingChickenSlot = debugWaitingChickenSlots.OrderBy(item => (position - item.position).sqrMagnitude).First();
+
+        Debug.Log($"waitingChickenSlot {waitingChickenSlot.chicken}");
+        DebugUtil.Log("waitingChickenSlot", waitingChickenSlot.chicken.faction);
+    }
+    #endregion
+
     #region Util
     public static Vector3 GetAveragePositionOfSlots(List<WaitingChickenSlot> slots)
     {
