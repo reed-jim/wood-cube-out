@@ -270,6 +270,11 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayIdleAnim(int loopTime, bool isDisableSpineOnComplete = true)
     {
+        if (currentAnimation == idleAnimation)
+        {
+            return;
+        }
+
         PlayForCycles(skeletonAnimation, idleAnimation, loopTime, null, false, onCompleteAction: () =>
         {
             if (isDisableSpineOnComplete)
@@ -277,6 +282,8 @@ public class BaseChicken : MonoBehaviour
                 skeletonAnimation.enabled = false;
             }
         });
+
+        currentAnimation = idleAnimation;
     }
 
     public void PlayIdleAnimNoLoop(bool isDisableSpineOnComplete = true)

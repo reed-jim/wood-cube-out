@@ -2,12 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ChickenAnim
-{
-    Idle,
-    Walk
-}
-
 public struct ChickenBatchKey
 {
     public int factionIndex;

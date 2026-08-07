@@ -885,6 +885,8 @@ public class ChickenManager : Singleton<ChickenManager>
                 chicken.PlayFlyAnim();
             }
 
+            chickenRenderer.UpdateChickenRendering(chicken);
+
             GamePersistentVariable.numMovingChicken++;
 
             Tween tween = Tween.Position(
@@ -907,6 +909,8 @@ public class ChickenManager : Singleton<ChickenManager>
                 {
                     chicken.PlayIdleAnimNoLoop();
                 }
+
+                chickenRenderer.UpdateChickenRendering(chicken);
 
                 chicken.isMoving = false;
 
