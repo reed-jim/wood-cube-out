@@ -360,13 +360,23 @@ public class WashingMachineItem : MonoBehaviour
 
         // if (number <= 0)
         // {
-        //     SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
-        //     {
-        //         antBoxDoneEvent?.Invoke(this);
-        //     });
+        // SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+        // {
+        //     antBoxDoneEvent?.Invoke(this);
+        // });
 
-        //     SoundManager.Instance.PlaySoundSlotDone();
+        // SoundManager.Instance.PlaySoundSlotDone();
         // }
+    }
+
+    public void Done()
+    {
+        SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            {
+                antBoxDoneEvent?.Invoke(this);
+            });
+
+        SoundManager.Instance.PlaySoundSlotDone();
     }
 
     public virtual void Select()

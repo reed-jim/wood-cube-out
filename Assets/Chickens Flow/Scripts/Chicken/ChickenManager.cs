@@ -839,12 +839,15 @@ public class ChickenManager : Singleton<ChickenManager>
     #endregion
 
     #region Booster
-    public void GetChicken(Vector3 position)
+    public Color PickChickenColor(Vector3 position)
     {
-        WaitingChickenSlot waitingChickenSlot = debugWaitingChickenSlots.OrderBy(item => (position - item.position).sqrMagnitude).First();
+        Vector3 offset = new Vector2(0, 1);
 
-        Debug.Log($"waitingChickenSlot {waitingChickenSlot.chicken}");
-        DebugUtil.Log("waitingChickenSlot", waitingChickenSlot.chicken.faction);
+        Vector3 chickenPosition = position + offset;
+
+        WaitingChickenSlot waitingChickenSlot = debugWaitingChickenSlots.OrderBy(item => (chickenPosition - item.position).sqrMagnitude).First();
+
+        return waitingChickenSlot.chicken.faction;
     }
     #endregion
 

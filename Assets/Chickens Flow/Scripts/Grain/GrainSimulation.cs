@@ -722,6 +722,19 @@ public class GrainSimulation : Singleton<GrainSimulation>
         }
     }
 
+    public void RemoveAllGrainsOfFaction(Color faction)
+    {
+        foreach (var factionGroup in factionGroups)
+        {
+            if (factionGroup.Key == faction)
+            {
+                factionGroup.Value.grains.Clear();
+
+                break;
+            }
+        }
+    }
+
     void CheckSpawnCompletion()
     {
         for (int i = pendingSpawns.Count - 1; i >= 0; i--)

@@ -198,6 +198,49 @@ public class BaseChicken : MonoBehaviour
         isDone = true;
     }
 
+    public void ForceFlyOut(bool isLast)
+    {
+        transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
+
+        Vector3 outPosition = transform.position;
+
+        if (outPosition.x > 0)
+        {
+            outPosition.x += 15;
+
+            transform.eulerAngles = new Vector3(0, 180);
+        }
+        else
+        {
+            outPosition.x -= 15;
+
+            transform.eulerAngles = Vector3.zero;
+        }
+
+        SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
+
+        PlayFlyAnim();
+
+        Tween.PositionX(transform, outPosition.x, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+        {
+            gameObject.SetActive(false);
+
+            if (isLast)
+            {
+                ChickenManager.Ins.MoveChickensDown();
+            }
+
+            ChickenManager.Ins.CheckWinLevel();
+        });
+
+        foreach (var waitingChickenSlot in waitingChickenSlots)
+        {
+            waitingChickenSlot.chicken = null;
+        }
+
+        isDone = true;
+    }
+
     #region Progress
     public void UpdateEatingProgress(float progress, float prevProgress, float duration = 1f)
     {
@@ -220,6 +263,7 @@ public class BaseChicken : MonoBehaviour
     public void SetActiveSpine(bool isActive)
     {
         skeletonAnimation.gameObject.SetActive(isActive);
+        skeletonAnimation.enabled = true;
     }
 
     public void PlayIdleAnim(int loopTime, bool isDisableSpineOnComplete = true)
