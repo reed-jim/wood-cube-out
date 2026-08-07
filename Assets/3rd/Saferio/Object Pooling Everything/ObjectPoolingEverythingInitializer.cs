@@ -8,6 +8,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
     [SerializeField] private GameObject grainPile;
+    [SerializeField] private GameObject wall;
     
     public static ObjectPoolingEverythingInitializer Instance;
 
@@ -120,7 +121,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     private void InitPool()
     {
         RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 500);
-        RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 20);
+        RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 50);
+        RegisterPool<Wall>(GameConstants.wall, wall, 50);
 
 
 

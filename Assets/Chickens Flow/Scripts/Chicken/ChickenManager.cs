@@ -675,17 +675,17 @@ public class ChickenManager : Singleton<ChickenManager>
             .ToList();
 
         // Clear chicken references but keep walls
-        foreach (var slot in waitingChickenSlots.Values)
-        {
-            slot.chicken = null;
-        }
+        // foreach (var slot in waitingChickenSlots.Values)
+        // {
+        //     slot.chicken = null;
+        // }
 
         HashSet<Vector2Int> occupied = new();
 
         // Add walls as occupied
         foreach (var slot in waitingChickenSlots.Values)
         {
-            if (slot.isWall)
+            if (slot.isWall || slot.chicken != null)
             {
                 occupied.Add(new Vector2Int(slot.column, slot.row));
             }
@@ -708,19 +708,19 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 if (downResult == MoveBlockReason.None)
                 {
-                    MoveChicken(chicken, Vector2Int.down);
+                    MoveChicken(chicken, Vector2Int.down, occupied);
                     moved = true;
                 }
                 else if (downResult == MoveBlockReason.Wall)
                 {
                     if (GetMoveBlockReason(chicken, Vector2Int.left, occupied) == MoveBlockReason.None)
                     {
-                        MoveChicken(chicken, Vector2Int.left);
+                        MoveChicken(chicken, Vector2Int.left, occupied);
                         moved = true;
                     }
                     else if (GetMoveBlockReason(chicken, Vector2Int.right, occupied) == MoveBlockReason.None)
                     {
-                        MoveChicken(chicken, Vector2Int.right);
+                        MoveChicken(chicken, Vector2Int.right, occupied);
                         moved = true;
                     }
                 }
@@ -799,8 +799,10 @@ public class ChickenManager : Singleton<ChickenManager>
         return new List<WaitingChickenSlot>();
     }
 
-    private void MoveChicken(BaseChicken chicken, Vector2Int dir)
+    private void MoveChicken(BaseChicken chicken, Vector2Int dir, HashSet<Vector2Int> occupied)
     {
+        RemoveChickenFromOccupied(chicken, occupied);
+
         for (int i = 0; i < chicken.waitingChickenSlots.Count; i++)
         {
             WaitingChickenSlot slot = chicken.waitingChickenSlots[i];
@@ -813,50 +815,24 @@ public class ChickenManager : Singleton<ChickenManager>
         }
     }
 
-    private bool CanMoveDown(BaseChicken chicken, HashSet<Vector2Int> occupied)
-    {
-        int minRow = chicken.waitingChickenSlots.Min(s => s.row);
-
-        foreach (WaitingChickenSlot slot in chicken.waitingChickenSlots)
-        {
-            if (slot.row != minRow)
-                continue;
-
-            Vector2Int below = new(slot.column, slot.row - 1);
-
-            if (!waitingChickenSlots.TryGetValue(below, out WaitingChickenSlot belowSlot))
-                return false;
-
-            if (belowSlot.isWall)
-                return false;
-
-            if (occupied.Contains(below))
-                return false;
-        }
-
-        return true;
-    }
-
-    private void MoveChickenDownOneRow(BaseChicken chicken)
-    {
-        for (int i = 0; i < chicken.waitingChickenSlots.Count; i++)
-        {
-            WaitingChickenSlot oldSlot = chicken.waitingChickenSlots[i];
-
-            Vector2Int newPos = new(
-                oldSlot.column,
-                oldSlot.row - 1);
-
-            chicken.waitingChickenSlots[i] = waitingChickenSlots[newPos];
-        }
-    }
-
     private void OccupyChicken(BaseChicken chicken, HashSet<Vector2Int> occupied)
     {
         foreach (WaitingChickenSlot slot in chicken.waitingChickenSlots)
         {
             slot.chicken = chicken;
             occupied.Add(new Vector2Int(slot.column, slot.row));
+        }
+    }
+
+    private void RemoveChickenFromOccupied(
+        BaseChicken chicken,
+        HashSet<Vector2Int> occupied)
+    {
+        foreach (WaitingChickenSlot slot in chicken.waitingChickenSlots)
+        {
+            occupied.Remove(new Vector2Int(
+                slot.column,
+                slot.row));
         }
     }
 
