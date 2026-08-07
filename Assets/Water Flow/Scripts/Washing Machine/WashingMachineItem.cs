@@ -332,7 +332,10 @@ public class WashingMachineItem : MonoBehaviour
                     {
                         if (!isBucketMoveBack)
                         {
-                            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+                            float duration = 0.5f;
+
+                            Tween.Rotation(transform, Quaternion.identity, duration: duration);
+                            DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, onComplete: () =>
                             {
                                 GamePersistentVariable.bucketOrder--;
                             });
