@@ -792,30 +792,10 @@ namespace AntsFlow
         #region Check Lose
         public bool IsLose()
         {
-            int numAntBoxLeft = washingMachineSlots.Count;
-
-            for (int i = 0; i < washingMachineSlots.Count; i++)
-            {
-                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
-
-                if (washingMachineSlot.isLocked)
-                {
-                    numAntBoxLeft--;
-                }
-                else
-                {
-                    WashingMachineItem antBox = washingMachineSlot.washingMachineItem;
-
-                    if (antBox != null && antBox.isStucking)
-                    {
-                        numAntBoxLeft--;
-                    }
-                }
-            }
-
-            bool isLose = numAntBoxLeft == 0;
-
-            return isLose;
+            return
+                GrainPool.Ins.IsMaxCapacity() &&
+                GamePersistentVariable.numEatingChicken <= 0 &&
+                GamePersistentVariable.numMovingChicken <= 0;
         }
 
         public bool CheckLoseLevel()
@@ -846,27 +826,11 @@ namespace AntsFlow
                 yield return waitForSeconds;
             }
 
-            if (!GrainPool.Ins.IsMaxCapacity())
-            {
-                yield break;
-            }
-
             if (IsLose() && !GamePersistentVariable.isLevelLost)
             {
                 loseLevelEvent?.Invoke();
 
                 GamePersistentVariable.isLevelLost = true;
-            }
-            else
-            {
-                List<WashingMachineItem> antBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
-
-                for (int i = 0; i < antBoxes.Count; i++)
-                {
-                    WashingMachineItem antBox = antBoxes[i];
-
-                    antBox.TurnOffWarningLoseAnimation();
-                }
             }
 
             GamePersistentVariable.isPendingLoseLevel = false;
@@ -1005,6 +969,11 @@ namespace AntsFlow
             // {
             //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
             // }
+
+            nextFaction = FactionMapper.Ins.allFactions[0];
+            numAnt = 200;
+
+            return true;
 
             int maxValidIndex = 0;
 

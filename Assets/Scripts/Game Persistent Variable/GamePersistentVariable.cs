@@ -13,6 +13,7 @@ public static class GamePersistentVariable
     #region Chicken Flow
     public static int bucketOrder;
     public static int numEatingChicken;
+    public static int numMovingChicken;
     #endregion
 
     public static Vector2 canvasSize;

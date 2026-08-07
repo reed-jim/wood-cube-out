@@ -159,6 +159,8 @@ public class GrainPile : MonoBehaviour
             ChickenManager.Ins.FeedTheChicken(this);
 
             onCompleteAction?.Invoke();
+
+            WashingMachineManager.Ins.CheckLoseLevel();
         });
 
         this.pileCenter = pileCenter;

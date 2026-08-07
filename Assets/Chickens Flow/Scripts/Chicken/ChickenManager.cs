@@ -662,6 +662,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
             chicken.PlayMoveAnim();
 
+            GamePersistentVariable.numMovingChicken++;
+
             Tween tween = Tween.Position(
                 pair.Key.transform,
                 pair.Value,
@@ -684,7 +686,11 @@ public class ChickenManager : Singleton<ChickenManager>
                 chicken.isMoving = false;
 
                 if (remaining == 0)
+                {
                     WashingMachineManager.Ins.grainPool.CheckFeedChickens();
+                }
+
+                GamePersistentVariable.numMovingChicken--;
             });
 
             TweenManager.Ins.AddTween(tween);
