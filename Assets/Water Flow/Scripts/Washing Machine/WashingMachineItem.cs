@@ -225,7 +225,8 @@ public class WashingMachineItem : MonoBehaviour
 
     public void PourGrainOur(out bool isPouringAll, Action onCompleteAction)
     {
-        int maxAddNumber = Mathf.Min(number, WashingMachineManager.Ins.grainPool.AmountLeft);
+        // int maxAddNumber = Mathf.Min(number, WashingMachineManager.Ins.grainPool.AmountLeft);
+        int maxAddNumber = number;
 
         isPouringAll = maxAddNumber == number;
 

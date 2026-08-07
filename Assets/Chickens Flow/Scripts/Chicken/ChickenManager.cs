@@ -54,6 +54,8 @@ public class ChickenManager : Singleton<ChickenManager>
         waitingChickenSlots.Clear();
         chickenByColumn.Clear();
         slotByColumn.Clear();
+
+        GamePersistentVariable.numEatingChicken = 0;
     }
 
     public void SpawnFirstChickens(AntsFlow.LevelItem levelItem)
@@ -671,6 +673,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 if (chicken.GetFirstRow() == 0)
                 {
+                    chicken.SetActiveSpine(true);
                     chicken.PlayIdleAnim();
                 }
                 else

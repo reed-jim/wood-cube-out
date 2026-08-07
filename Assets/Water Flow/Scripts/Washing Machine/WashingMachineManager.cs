@@ -824,15 +824,6 @@ namespace AntsFlow
 
             if (isLose)
             {
-                List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
-
-                for (int i = 0; i < stuckAntBoxes.Count; i++)
-                {
-                    WashingMachineItem antBox = stuckAntBoxes[i];
-
-                    antBox.TurnOnWarningLoseAnimation();
-                }
-
                 if (pendingLoseLevelCoroutine != null)
                 {
                     StopCoroutine(pendingLoseLevelCoroutine);
@@ -846,32 +837,19 @@ namespace AntsFlow
             return isLose;
         }
 
-        public void LoseLevel()
-        {
-            loseLevelEvent?.Invoke();
-
-            GamePersistentVariable.isLevelLost = true;
-        }
-
         private IEnumerator PendingLoseLevel()
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
-            while (GamePersistentVariable.numActiveAnt > 0)
+            while (GamePersistentVariable.numEatingChicken > 0)
             {
                 yield return waitForSeconds;
             }
 
-            // yield return new WaitForSeconds(2f);
-
-            // List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
-
-            // for (int i = 0; i < stuckAntBoxes.Count; i++)
-            // {
-            //     WashingMachineItem antBox = stuckAntBoxes[i];
-
-            //     antBox.CheckAntsPath(isAlsoCheckLose: false);
-            // }
+            if (!GrainPool.Ins.IsMaxCapacity())
+            {
+                yield break;
+            }
 
             if (IsLose() && !GamePersistentVariable.isLevelLost)
             {
