@@ -17,7 +17,7 @@ public class BaseChicken : MonoBehaviour
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string moveAnimation;
     [SpineAnimation] public string[] eatAnimations;
-    [SpineAnimation] public string flyAnimation;
+    [SpineAnimation] public string[] flyAnimations;
 
     public LazyHealthBar eatingProgress;
     public TMP_Text eatingProgressText;
@@ -91,6 +91,7 @@ public class BaseChicken : MonoBehaviour
         skeletonAnimation.gameObject.SetActive(false);
         eatingProgress.gameObject.SetActive(false);
         eatingProgressText.gameObject.SetActive(false);
+        transform.rotation = Quaternion.identity;
 
         // Waiting slots
         waitingChickenSlots.Clear();
@@ -112,7 +113,7 @@ public class BaseChicken : MonoBehaviour
         this.faction = faction;
     }
 
-    public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave)
+    public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave, Action onChickenFlyOut = null)
     {
         prevEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
 
@@ -145,11 +146,13 @@ public class BaseChicken : MonoBehaviour
 
                 PlayFlyAnim();
 
-                Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+                Tween.PositionX(transform, outPosition.x, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
                 {
                     gameObject.SetActive(false);
 
                     ChickenManager.Ins.CheckWinLevel();
+
+                    onChickenFlyOut?.Invoke();
                 });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
@@ -214,6 +217,11 @@ public class BaseChicken : MonoBehaviour
     #endregion
 
     #region Animation
+    public void SetActiveSpine(bool isActive)
+    {
+        skeletonAnimation.gameObject.SetActive(isActive);
+    }
+
     public void PlayIdleAnim(int loopTime, bool isDisableSpineOnComplete = true)
     {
         PlayForCycles(skeletonAnimation, idleAnimation, loopTime, null, false, onCompleteAction: () =>
@@ -299,9 +307,9 @@ public class BaseChicken : MonoBehaviour
         PlayAnim(eatAnimation);
     }
 
-    public void PlayFlyAnim()
+    public void PlayFlyAnim(int flyAnimationIndex = 1)
     {
-        PlayAnimWhenFinished(flyAnimation);
+        PlayAnimWhenFinished(flyAnimations[flyAnimationIndex]);
     }
 
     public static void PlayForCycles

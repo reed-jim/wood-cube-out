@@ -236,11 +236,14 @@ public class ChickenRenderer : MonoBehaviour
 
     public void UpdateChickenRendering(BaseChicken chicken)
     {
-        ChickenData chickenData = dataOfChicken[chicken];
+        if (dataOfChicken.ContainsKey(chicken))
+        {
+            ChickenData chickenData = dataOfChicken[chicken];
 
-        chickenData.position = chicken.transform.position;
-        chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
-        chickenData.anim = chicken.currentAnimation;
+            chickenData.position = chicken.transform.position;
+            chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
+            chickenData.anim = chicken.currentAnimation;
+        }
     }
 
     public void RemoveChickenRendering(BaseChicken chicken)

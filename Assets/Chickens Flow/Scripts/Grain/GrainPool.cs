@@ -108,7 +108,7 @@ public class GrainPool : Singleton<GrainPool>
     {
         for (int i = 0; i < grainPiles.Count; i++)
         {
-            ChickenManager.Ins.FeedTheChicken(grainPiles[i], isGhostChicken: true);
+            ChickenManager.Ins.FeedTheGhostChicken(grainPiles[i]);
         }
     }
 

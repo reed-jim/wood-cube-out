@@ -21,4 +21,9 @@ public static class LayerManager
     {
         return -9 - 0.11f * order;
     }
+
+    public static float GetGhostChickenZ()
+    {
+        return -10;
+    }
 }

@@ -25,8 +25,12 @@ public class ChickenManager : Singleton<ChickenManager>
     public float chickenAreaOffsetY;
     public float depthDistanceXRatio;
     public int requiredGrainForNormalChicken;
+    public int maxGhostChicken;
 
     public List<Color> allFactions;
+
+    private GrainPile lastGrainPileToFeed;
+    public int numGhostChicken;
 
     public static event Action winLevelEvent;
 
@@ -385,9 +389,9 @@ public class ChickenManager : Singleton<ChickenManager>
     }
 
 
-    public void FeedTheChicken(GrainPile grainPile, bool isGhostChicken = false)
+    public void FeedTheChicken(GrainPile grainPile)
     {
-        CheckChickensStuck(isGhostChicken);
+        CheckChickensStuck(false);
 
         List<BaseChicken> chickensToFeed = chickens
             .Where(chicken => !chicken.isEating &&
@@ -455,6 +459,104 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);
+    }
+
+    public void FeedTheGhostChicken(GrainPile grainPile)
+    {
+        if (numGhostChicken > maxGhostChicken)
+        {
+            return;
+        }
+
+        CheckChickensStuck(isGhostChicken: true);
+
+        List<BaseChicken> ghostChickens = chickens
+            .Where(chicken => !chicken.isEating &&
+                              !chicken.isDone &&
+                              !chicken.isStuck &&
+                              chicken.faction == grainPile.faction)
+            .OrderByDescending(chicken => chicken.numGrainPileRequiredLeft)
+            .ToList();
+
+        if (grainPile.remainingNumber <= 0 || ghostChickens.Count == 0)
+            return;
+
+        BaseChicken lastFedChicken = null;
+
+        foreach (BaseChicken chicken in ghostChickens)
+        {
+            if (grainPile.remainingNumber <= 0)
+                break;
+
+            int amount = Mathf.Min(
+                chicken.numGrainPileRequiredLeft,
+                grainPile.remainingNumber
+            );
+
+            if (amount <= 0)
+                continue;
+
+            grainPile.remainingNumber -= amount;
+
+            // Feed until this chicken is full
+            chicken.SetActiveSpine(true);
+            chicken.PlayFlyAnim(flyAnimationIndex: 0);
+
+            chicken.transform.SetZ(LayerManager.GetGhostChickenZ());
+
+            Vector3 destination = GrainPool.Ins.transform.position;
+
+            destination.x = chicken.transform.position.x;
+            if (UnityEngine.Random.Range(0, 10) > 5)
+            {
+                destination.y += 1.5f;
+            }
+            else
+            {
+                destination.y -= 1.5f;
+            }
+            destination.z = LayerManager.GetGhostChickenZ();
+
+            chicken.isEating = true;
+
+            DOTweenUtil.MoveParabol(chicken.transform, destination, duration: 1f, onComplete: () =>
+            {
+                chicken.Feed(
+                    grainPile,
+                    amount,
+                    grainPile.remainingNumber == 0,
+                    onChickenFlyOut: () =>
+                    {
+                        if (grainPile == lastGrainPileToFeed && chicken == lastFedChicken)
+                        {
+                            MoveChickensDown();
+                        }
+
+                        numGhostChicken--;
+
+                        GamePersistentVariable.isPreventSelectAntBox = false;
+                    }
+                );
+            });
+
+            lastFedChicken = chicken;
+
+            lastGrainPileToFeed = grainPile;
+
+            numGhostChicken++;
+
+            // Tween tween = Tween.PositionY(chicken.transform, GrainPool.Ins.transform.position.y, duration: 0.6f)
+            // .OnComplete(() =>
+            // {
+
+            // });
+
+            // TweenManager.Ins.AddTween(tween);
+        }
+
+        grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
     }
 
     public void CheckChickensStuck(bool isGhostChicken = false)
