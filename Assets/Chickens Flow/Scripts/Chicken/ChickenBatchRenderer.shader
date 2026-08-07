@@ -110,23 +110,14 @@ Shader "Instanced/ChickenSpriteAtlas"
                         _AnimStartFrame
                     );
 
-                    float frame = floor(frac(_Time.y * _FPS + animStartFrame / _Frames) * _Frames);
+                float frame = floor(frac(_Time.y * _FPS + animStartFrame / _Frames) * _Frames);
 
-                float column =
-                    fmod(frame,_Columns);
-
-                float row =
-                    floor(frame/_Columns);
+                float column = fmod(frame, _Columns);
+                float row = _Rows - 1 - floor(frame / _Columns);
 
                 o.uv = v.uv;
-
-                o.uv.x =
-                    (o.uv.x + column)
-                    / _Columns;
-
-                o.uv.y =
-                    (o.uv.y + row)
-                    / _Rows;
+                o.uv.x = (o.uv.x + column) / _Columns;
+                o.uv.y = (o.uv.y + row) / _Rows;
 
                 return o;
             }
