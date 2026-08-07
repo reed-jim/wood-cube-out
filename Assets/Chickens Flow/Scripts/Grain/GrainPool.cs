@@ -14,10 +14,14 @@ using UnityEngine;
 public class GrainPool : Singleton<GrainPool>
 {
     [Header("Loop Path")]
+    public SplineComputer spline;
     public List<Transform> loopPoints;
     public float loopPathSpeed = 0.1f;
     public List<Transform> arrows;
     public List<LoopPathArrow> loopPathArrows;
+
+    List<float> distanceTable = new List<float>();
+    List<float> percentTable = new List<float>();
 
     [Header("Customize")]
     public float offsetPourGrainPileX;
@@ -53,7 +57,7 @@ public class GrainPool : Singleton<GrainPool>
 
         SetupLoopPathArrows();
 
-        StartCoroutine(ArrowsLooping());
+        StartCoroutine(MoveAlongSpline());
     }
 
     void OnDestroy()
@@ -166,78 +170,103 @@ public class GrainPool : Singleton<GrainPool>
 
             LoopPathArrow loopPathArrow = new LoopPathArrow();
             loopPathArrow.arrow = arrow;
-            loopPathArrow.FindCurrentIndex(loopPoints);
+            loopPathArrow.FindCurrentPercent(loopPoints, spline);
             loopPathArrows.Add(loopPathArrow);
         }
     }
 
-    private IEnumerator ArrowsLooping()
+    void BuildDistanceTable()
     {
-        float deltaTime = 1f / 30f;
+        distanceTable.Clear();
+        percentTable.Clear();
 
-        WaitForSeconds waitForSeconds = new WaitForSeconds(deltaTime);
+        int samples = 1000;
+        float totalDistance = 0f;
+
+        Vector3 previousPosition = spline.Evaluate(0).position;
+
+        distanceTable.Add(0);
+        percentTable.Add(0);
+
+        for (int i = 1; i <= samples; i++)
+        {
+            float percent = i / (float)samples;
+
+            SplineSample sample = spline.Evaluate(percent);
+
+            totalDistance += Vector3.Distance(previousPosition, sample.position);
+
+            distanceTable.Add(totalDistance);
+            percentTable.Add(percent);
+
+            previousPosition = sample.position;
+        }
+    }
+
+    float DistanceToPercent(float distance)
+    {
+        for (int i = 1; i < distanceTable.Count; i++)
+        {
+            if (distance <= distanceTable[i])
+            {
+                float t = Mathf.InverseLerp(
+                    distanceTable[i - 1],
+                    distanceTable[i],
+                    distance
+                );
+
+                return Mathf.Lerp(
+                    percentTable[i - 1],
+                    percentTable[i],
+                    t
+                );
+            }
+        }
+
+        return 1f;
+    }
+
+    IEnumerator MoveAlongSpline()
+    {
+        BuildDistanceTable();
 
         float arrowZ = loopPathArrows[0].arrow.position.z;
+        float splineLength = distanceTable[distanceTable.Count - 1];
+
+        for (int i = 0; i < loopPathArrows.Count; i++)
+        {
+            loopPathArrows[i].distanceTravelled = (splineLength / loopPathArrows.Count) * i;
+        }
 
         while (true)
         {
             foreach (LoopPathArrow loopPathArrow in loopPathArrows)
             {
-                float remainingDistance = loopPathSpeed * deltaTime;
+                loopPathArrow.distanceTravelled += loopPathSpeed * Time.deltaTime;
 
-                while (remainingDistance > 0f)
-                {
-                    int next = (loopPathArrow.currentIndex + 1) % loopPoints.Count;
+                if (loopPathArrow.distanceTravelled >= splineLength)
+                    loopPathArrow.distanceTravelled -= splineLength;
 
-                    Vector3 start = loopPoints[loopPathArrow.currentIndex].position;
-                    Vector3 end = loopPoints[next].position;
+                float percent = DistanceToPercent(loopPathArrow.distanceTravelled);
 
-                    Vector3 segment = end - start;
-                    float segmentLength = segment.magnitude;
+                SplineSample sample = spline.Evaluate(percent);
 
-                    // Face the next point
-                    if (segmentLength > 0f)
-                    {
-                        Vector3 dir = segment / segmentLength;
-                        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                        loopPathArrow.arrow.rotation = Quaternion.Euler(0f, 0f, angle);
-                    }
+                loopPathArrow.arrow.position = new Vector3(
+                    sample.position.x,
+                    sample.position.y,
+                    arrowZ
+                );
 
-                    float distanceOnSegment = loopPathArrow.currentSegmentProgress * segmentLength;
-                    float distanceLeft = segmentLength - distanceOnSegment;
+                float angle = Mathf.Atan2(
+                    sample.forward.y,
+                    sample.forward.x
+                ) * Mathf.Rad2Deg;
 
-                    if (remainingDistance >= distanceLeft)
-                    {
-                        // Reach the end of this segment
-                        remainingDistance -= distanceLeft;
-
-                        loopPathArrow.currentIndex = next;
-                        loopPathArrow.currentSegmentProgress = 0f;
-                    }
-                    else
-                    {
-                        // Move within the current segment
-                        distanceOnSegment += remainingDistance;
-                        loopPathArrow.currentSegmentProgress = distanceOnSegment / segmentLength;
-
-                        remainingDistance = 0f;
-                    }
-
-                    // Update position
-                    next = (loopPathArrow.currentIndex + 1) % loopPoints.Count;
-
-                    start = loopPoints[loopPathArrow.currentIndex].position;
-                    end = loopPoints[next].position;
-
-                    loopPathArrow.arrow.position = Vector3.Lerp(
-                        start,
-                        end,
-                        loopPathArrow.currentSegmentProgress
-                    ).ChangeZ(arrowZ);
-                }
+                loopPathArrow.arrow.rotation =
+                    Quaternion.Euler(0, 0, angle);
             }
 
-            yield return waitForSeconds;
+            yield return null;
         }
     }
 }
@@ -247,9 +276,9 @@ public class LoopPathArrow
 {
     public Transform arrow;
     public int currentIndex;
-    public float currentSegmentProgress;
+    public float distanceTravelled;
 
-    public void FindCurrentIndex(List<Transform> points)
+    public void FindCurrentPercent(List<Transform> points, SplineComputer splineComputer)
     {
         Vector3 arrowPosition = arrow.position;
 
@@ -264,8 +293,13 @@ public class LoopPathArrow
             nextIndex = 0;
         }
 
-        currentSegmentProgress = InverseLerp(points[currentIndex].position, points[nextIndex].position, arrowPosition);
-        currentSegmentProgress = Mathf.Max(currentSegmentProgress, 0);
+        distanceTravelled = FindClosestPercent(arrowPosition, splineComputer);
+    }
+
+    float FindClosestPercent(Vector3 position, SplineComputer splineComputer)
+    {
+        SplineSample result = splineComputer.Project(position);
+        return (float)result.percent;
     }
 
     float InverseLerp(Vector3 a, Vector3 b, Vector3 value)
