@@ -1030,11 +1030,14 @@ namespace AntsFlow
                     {
                         isBlocked = false;
                     }
-
-                    if (neighbor.isObstacle && neighbor.tile != tile)
+                    if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
                     {
-                        isBlocked = true;
+                        if (neighbor.isObstacle && neighbor.tile != tile)
+                        {
+                            isBlocked = true;
+                        }
                     }
+
 
                     if (neighbor.tile != null && neighbor.tile.Faction == tile.Faction)
                     {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -40,6 +41,42 @@ namespace AntsFlow
             {
                 DisappearIntoTail();
             });
+        }
+
+        // Guard bounds: đường đi tới tile có thể quá ngắn khi snake chiếm tile sát rìa map, khiến
+        // points không đủ 3 phần tử tính từ firstBottomMostPointIndex → index+2 out of range.
+        protected override void TrimRedundantPoints(List<Vector3> points, int firstBottomMostPointIndex)
+        {
+            if (points.Count > firstBottomMostPointIndex + 2 &&
+                points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+
+            if (points.Count > firstBottomMostPointIndex + 2 &&
+                points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+        }
+
+        // points có thể rỗng khi toàn bộ đường về nằm ở hàng đáy (vd snake chiếm tile sát rìa map):
+        // khi đó dùng điểm hàng đáy gần tổ nhất làm mốc để kiến vẫn quay về tổ, tránh points[^1]
+        // văng ArgumentOutOfRangeException.
+        protected override void AppendNearNestPointAndTrim(List<Vector3> points, Vector3 antNestPosition, Vector3 closestPointToNest)
+        {
+            Vector3 referencePoint = points.Count > 0 ? points[^1] : closestPointToNest;
+
+            Vector3 nearAntNestPosition = antNestPosition + 1f * (referencePoint - antNestPosition).normalized;
+
+            points.Add(nearAntNestPosition);
+
+            if (points.Count > 1)
+            {
+                points.RemoveAt(0);
+            }
         }
 
         private void DisappearIntoTail()
