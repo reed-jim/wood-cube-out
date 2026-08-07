@@ -207,6 +207,10 @@ public class ChickenManager : Singleton<ChickenManager>
             if (wallTiles.Contains(new Vector2Int(x, y)))
             {
                 waitingChickenSlot.isWall = true;
+
+                Wall wall = ObjectPoolingEverything.GetFromPool<Wall>(GameConstants.wall);
+
+                wall.transform.position = position.AddZ(-0.01f);
             }
 
             waitingChickenSlots.Add(new Vector2Int(x, y), waitingChickenSlot);
@@ -670,12 +674,18 @@ public class ChickenManager : Singleton<ChickenManager>
             .ThenBy(c => c.waitingChickenSlots.Min(s => s.column))
             .ToList();
 
+        // Clear chicken references but keep walls
+        foreach (var slot in waitingChickenSlots.Values)
+        {
+            slot.chicken = null;
+        }
+
         HashSet<Vector2Int> occupied = new();
 
         // Add walls as occupied
         foreach (var slot in waitingChickenSlots.Values)
         {
-            if (slot.isWall || slot.chicken != null)
+            if (slot.isWall)
             {
                 occupied.Add(new Vector2Int(slot.column, slot.row));
             }
