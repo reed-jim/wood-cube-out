@@ -325,6 +325,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     void ResolveCollisions()
     {
         float invCellSize = 1f / collisionCellSize;
+        float minDistSqr = grainSpacing * grainSpacing;
 
         foreach (var group in factionGroups.Values)
         {
@@ -376,7 +377,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                                 int j = others[b];
                                 if (i >= j) continue;
 
-                                ResolvePair(group, i, j);
+                                ResolvePair(group, i, j, minDistSqr);
                             }
                         }
                     }
@@ -385,7 +386,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         }
     }
 
-    void ResolvePair(FactionGroup group, int i, int j)
+    void ResolvePair(FactionGroup group, int i, int j, float minDistSqr)
     {
         Grain a = group.grains[i];
         Grain b = group.grains[j];
@@ -396,7 +397,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         float distSqr = dx * dx + dy * dy;
         float minDist = grainSpacing;
 
-        if (distSqr >= minDist * minDist || distSqr < 0.000001f)
+        if (distSqr >= minDistSqr || distSqr < 0.000001f)
             return;
 
         float dist = Mathf.Sqrt(distSqr);

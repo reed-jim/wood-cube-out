@@ -133,10 +133,7 @@ public class GrainPool : Singleton<GrainPool>
         })
         .OnComplete(() =>
         {
-            if (currentAmount >= maxCapacity)
-            {
-                WashingMachineManager.Ins.CheckLoseLevel();
-            }
+            
         });
         lazyHealthBar.SetProgress(percent, durationUpdateProgress);
     }
@@ -280,23 +277,11 @@ public class GrainPool : Singleton<GrainPool>
 public class LoopPathArrow
 {
     public Transform arrow;
-    public int currentIndex;
     public float distanceTravelled;
 
     public void FindCurrentPercent(List<Transform> points, SplineComputer splineComputer)
     {
         Vector3 arrowPosition = arrow.position;
-
-        Transform nearest = points.OrderBy(item => (item.position - arrowPosition).sqrMagnitude).First();
-
-        currentIndex = points.IndexOf(nearest);
-
-        int nextIndex = currentIndex + 1;
-
-        if (nextIndex >= points.Count)
-        {
-            nextIndex = 0;
-        }
 
         distanceTravelled = FindClosestPercent(arrowPosition, splineComputer);
     }
