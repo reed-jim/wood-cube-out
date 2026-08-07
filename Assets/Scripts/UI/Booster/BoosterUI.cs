@@ -402,7 +402,7 @@ public class BoosterUI : MonoBehaviour
 
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
         // Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
-        Tween.LocalPositionY(breakModeContainer, -breakModeContainer.sizeDelta.y, duration: transitionTime)
+        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y, duration: transitionTime)
         .OnComplete(() =>
         {
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;

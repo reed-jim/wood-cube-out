@@ -839,15 +839,15 @@ public class ChickenManager : Singleton<ChickenManager>
     #endregion
 
     #region Booster
-    public Color PickChickenColor(Vector3 position)
+    public Color PickChickenColor(Vector2 position)
     {
-        Vector3 offset = new Vector2(0, 1);
+        Vector2 offset = new Vector2(0, 0.5f);
 
-        Vector3 chickenPosition = position + offset;
+        Vector2 chickenPosition = position + offset;
 
-        WaitingChickenSlot waitingChickenSlot = debugWaitingChickenSlots.OrderBy(item => (chickenPosition - item.position).sqrMagnitude).First();
+        BaseChicken chicken = chickens.OrderBy(chicken => (chickenPosition - (Vector2)chicken.transform.position).sqrMagnitude).First();
 
-        return waitingChickenSlot.chicken.faction;
+        return chicken.faction;
     }
     #endregion
 

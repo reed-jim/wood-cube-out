@@ -709,15 +709,20 @@ namespace AntsFlow
             }
 
             // Clear grail pile
+            int totalRemovedGrain = 0;
+
             for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
             {
                 GrainPile grainPile = GrainPool.Ins.grainPiles[i];
 
                 if (grainPile.faction == factionToClear)
                 {
+                    totalRemovedGrain += grainPile.remainingNumber;
                     grainPile.remainingNumber = 0;
                 }
             }
+
+            GrainPool.Ins.AddGrain(-totalRemovedGrain);
 
             GrainSimulation.Ins.RemoveAllGrainsOfFaction(factionToClear);
         }

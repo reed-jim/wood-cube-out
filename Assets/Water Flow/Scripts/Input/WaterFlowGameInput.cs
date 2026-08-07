@@ -44,12 +44,13 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                         washingMachineItem.Select();
                     }
                 }
-                else if (inputMode == AntsFlowInputMode.SelectTile)
-                {
-                    useClearOneColorBoosterEvent?.Invoke(ChickenManager.Ins.PickChickenColor(worldPoint));
+            }
 
-                    inputMode = AntsFlowInputMode.Normal;
-                }
+            if (inputMode == AntsFlowInputMode.SelectTile)
+            {
+                useClearOneColorBoosterEvent?.Invoke(ChickenManager.Ins.PickChickenColor(worldPoint));
+
+                inputMode = AntsFlowInputMode.Normal;
             }
         }
     }
