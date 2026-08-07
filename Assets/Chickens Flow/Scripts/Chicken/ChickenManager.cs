@@ -7,6 +7,14 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 
+public enum MoveBlockReason
+{
+    None,
+    Wall,
+    Chicken,
+    Outside
+}
+
 public class ChickenManager : Singleton<ChickenManager>
 {
     public ChickenRenderer chickenRenderer;
@@ -168,6 +176,13 @@ public class ChickenManager : Singleton<ChickenManager>
 
         Vector3 position;
 
+        List<Vector2Int> wallTiles = new List<Vector2Int>();
+
+        for (int i = 0; i < levelItem.specialElementConfig.wallConfig.coordinates.Count; i++)
+        {
+            wallTiles.Add(levelItem.specialElementConfig.wallConfig.coordinates[i]);
+        }
+
         waitingChickenSlots = new Dictionary<Vector2Int, WaitingChickenSlot>();
 
         for (int i = 0; i < levelItem.chickenLevelTiles.Count; i++)
@@ -188,6 +203,11 @@ public class ChickenManager : Singleton<ChickenManager>
             position.z = -1 - 0.01f * (numRow - i);
 
             waitingChickenSlot.position = position;
+
+            if (wallTiles.Contains(new Vector2Int(x, y)))
+            {
+                waitingChickenSlot.isWall = true;
+            }
 
             waitingChickenSlots.Add(new Vector2Int(x, y), waitingChickenSlot);
             debugWaitingChickenSlots.Add(waitingChickenSlot);
@@ -217,6 +237,11 @@ public class ChickenManager : Singleton<ChickenManager>
 
             int tileColumn = (int)levelItem.chickenLevelTiles[i].position.x;
             int tileRow = (int)levelItem.chickenLevelTiles[i].position.y;
+
+            if (wallTiles.Contains(new Vector2Int(tileColumn, tileRow)))
+            {
+                continue;
+            }
 
             GiantChickenItemConfig giant =
                 GetGiantChickenAt(levelItem, tileColumn, tileRow);
@@ -639,41 +664,61 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         Dictionary<BaseChicken, Vector3> destinations = new();
 
-        // Unique chickens, processed bottom -> top.
-        // List<BaseChicken> validChickens = chickens
-        //     .Where(s => s.chicken != null)
-        //     .Select(s => s.chicken)
-        //     .Distinct()
-        //     .OrderBy(c => c.waitingChickenSlots.Min(s => s.row))
-        //     .ToList();
-
         List<BaseChicken> validChickens = chickens
-            .Where(s => !s.isDone)
+            .Where(c => !c.isDone)
             .OrderBy(c => c.waitingChickenSlots.Min(s => s.row))
+            .ThenBy(c => c.waitingChickenSlots.Min(s => s.column))
             .ToList();
-
-        // Remove every chicken from the board.
-        foreach (var slot in waitingChickenSlots.Values)
-            slot.chicken = null;
 
         HashSet<Vector2Int> occupied = new();
 
-        bool isMovable = false;
+        // Add walls as occupied
+        foreach (var slot in waitingChickenSlots.Values)
+        {
+            if (slot.isWall || slot.chicken != null)
+            {
+                occupied.Add(new Vector2Int(slot.column, slot.row));
+            }
+        }
 
         foreach (BaseChicken chicken in validChickens)
         {
-            isMovable = false;
+            bool moved = false;
 
-            while (CanMoveDown(chicken, occupied))
+            Vector2Int[] directions =
             {
-                MoveChickenDownOneRow(chicken);
+                Vector2Int.down,
+                Vector2Int.left,
+                Vector2Int.right
+            };
 
-                isMovable = true;
+            foreach (Vector2Int dir in directions)
+            {
+                MoveBlockReason downResult = GetMoveBlockReason(chicken, Vector2Int.down, occupied);
+
+                if (downResult == MoveBlockReason.None)
+                {
+                    MoveChicken(chicken, Vector2Int.down);
+                    moved = true;
+                }
+                else if (downResult == MoveBlockReason.Wall)
+                {
+                    if (GetMoveBlockReason(chicken, Vector2Int.left, occupied) == MoveBlockReason.None)
+                    {
+                        MoveChicken(chicken, Vector2Int.left);
+                        moved = true;
+                    }
+                    else if (GetMoveBlockReason(chicken, Vector2Int.right, occupied) == MoveBlockReason.None)
+                    {
+                        MoveChicken(chicken, Vector2Int.right);
+                        moved = true;
+                    }
+                }
             }
 
             OccupyChicken(chicken, occupied);
 
-            if (isMovable)
+            if (moved)
             {
                 destinations[chicken] =
                     GetBottomLeftSlot(chicken).GetRandomPosition();
@@ -683,25 +728,98 @@ public class ChickenManager : Singleton<ChickenManager>
         AnimateChickens(destinations);
     }
 
+    private MoveBlockReason GetMoveBlockReason(
+     BaseChicken chicken,
+     Vector2Int direction,
+     HashSet<Vector2Int> occupied)
+    {
+        List<WaitingChickenSlot> edge =
+            GetLeadingEdge(chicken, direction);
+
+        foreach (WaitingChickenSlot slot in edge)
+        {
+            Vector2Int next = new(
+                slot.column + direction.x,
+                slot.row + direction.y);
+
+            if (!waitingChickenSlots.TryGetValue(next, out WaitingChickenSlot target))
+                return MoveBlockReason.Outside;
+
+            if (target.isWall)
+                return MoveBlockReason.Wall;
+
+            if (occupied.Contains(next))
+                return MoveBlockReason.Chicken;
+        }
+
+        return MoveBlockReason.None;
+    }
+
+    private List<WaitingChickenSlot> GetLeadingEdge(
+    BaseChicken chicken,
+    Vector2Int direction)
+    {
+        if (direction == Vector2Int.down)
+        {
+            int minRow = chicken.waitingChickenSlots.Min(s => s.row);
+
+            return chicken.waitingChickenSlots
+                .Where(s => s.row == minRow)
+                .ToList();
+        }
+
+        if (direction == Vector2Int.left)
+        {
+            int minCol = chicken.waitingChickenSlots.Min(s => s.column);
+
+            return chicken.waitingChickenSlots
+                .Where(s => s.column == minCol)
+                .ToList();
+        }
+
+        if (direction == Vector2Int.right)
+        {
+            int maxCol = chicken.waitingChickenSlots.Max(s => s.column);
+
+            return chicken.waitingChickenSlots
+                .Where(s => s.column == maxCol)
+                .ToList();
+        }
+
+        return new List<WaitingChickenSlot>();
+    }
+
+    private void MoveChicken(BaseChicken chicken, Vector2Int dir)
+    {
+        for (int i = 0; i < chicken.waitingChickenSlots.Count; i++)
+        {
+            WaitingChickenSlot slot = chicken.waitingChickenSlots[i];
+
+            Vector2Int pos = new(
+                slot.column + dir.x,
+                slot.row + dir.y);
+
+            chicken.waitingChickenSlots[i] = waitingChickenSlots[pos];
+        }
+    }
+
     private bool CanMoveDown(BaseChicken chicken, HashSet<Vector2Int> occupied)
     {
-        int minY = chicken.waitingChickenSlots.Min(item => item.row);
+        int minRow = chicken.waitingChickenSlots.Min(s => s.row);
 
         foreach (WaitingChickenSlot slot in chicken.waitingChickenSlots)
         {
-            // Only check the bottom edge of the chicken.
-            bool isBottomEdge = slot.row == minY;
-
-            if (!isBottomEdge)
+            if (slot.row != minRow)
                 continue;
 
             Vector2Int below = new(slot.column, slot.row - 1);
 
-            // Bottom of board.
-            if (!waitingChickenSlots.ContainsKey(below))
+            if (!waitingChickenSlots.TryGetValue(below, out WaitingChickenSlot belowSlot))
                 return false;
 
-            // Another settled chicken is below.
+            if (belowSlot.isWall)
+                return false;
+
             if (occupied.Contains(below))
                 return false;
         }
@@ -723,17 +841,12 @@ public class ChickenManager : Singleton<ChickenManager>
         }
     }
 
-    private void OccupyChicken(
-        BaseChicken chicken,
-        HashSet<Vector2Int> occupied)
+    private void OccupyChicken(BaseChicken chicken, HashSet<Vector2Int> occupied)
     {
         foreach (WaitingChickenSlot slot in chicken.waitingChickenSlots)
         {
             slot.chicken = chicken;
-
-            occupied.Add(new Vector2Int(
-                slot.column,
-                slot.row));
+            occupied.Add(new Vector2Int(slot.column, slot.row));
         }
     }
 
