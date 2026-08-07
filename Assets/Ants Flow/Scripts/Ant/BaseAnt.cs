@@ -383,6 +383,31 @@ namespace AntsFlow
             return result;
         }
 
+        // remove uneccessary points
+        protected virtual void TrimRedundantPoints(List<Vector3> points, int firstBottomMostPointIndex)
+        {
+            if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+
+            if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+        }
+
+        protected virtual void AppendNearNestPointAndTrim(List<Vector3> points, Vector3 antNestPosition, Vector3 closestPointToNest)
+        {
+            Vector3 nearAntNestPosition = antNestPosition + 1f * (points[^1] - antNestPosition).normalized;
+
+            points.Add(nearAntNestPosition);
+
+            points.RemoveAt(0);
+        }
+
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
             float moveSpeed = 5f;
@@ -459,22 +484,7 @@ namespace AntsFlow
                     points.Insert(cachePointIndex, cachePoint);
                 }
 
-                // remove uneccessary points
-                // Guard bounds: đường đi có thể quá ngắn (vd BossArea/tile mục tiêu sát rìa map)
-                // khiến points không đủ 3 phần tử tính từ firstBottomMostPointIndex → index+2 out of range.
-                if (points.Count > firstBottomMostPointIndex + 2 &&
-                    points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
-                    points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
-                {
-                    points.RemoveAt(firstBottomMostPointIndex + 1);
-                }
-
-                if (points.Count > firstBottomMostPointIndex + 2 &&
-                    points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
-                    points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
-                {
-                    points.RemoveAt(firstBottomMostPointIndex + 1);
-                }
+                TrimRedundantPoints(points, firstBottomMostPointIndex);
 
                 points = RemoveNearbyPoints(points, 0.8f * GamePersistentVariable.tileDistance.x);
             }
@@ -524,19 +534,7 @@ namespace AntsFlow
                     points.Remove(pointInFirstRow[i]);
                 }
 
-                // points có thể rỗng khi toàn bộ đường về nằm ở hàng đáy (vd BossArea đặt sát
-                // rìa map): khi đó dùng điểm hàng đáy gần tổ nhất làm mốc để kiến vẫn quay về tổ,
-                // tránh points[^1] văng ArgumentOutOfRangeException.
-                Vector3 referencePoint = points.Count > 0 ? points[^1] : closestPointToNest;
-
-                Vector3 nearAntNestPosition = antNestPosition + 1f * (referencePoint - antNestPosition).normalized;
-
-                points.Add(nearAntNestPosition);
-
-                if (points.Count > 1)
-                {
-                    points.RemoveAt(0);
-                }
+                AppendNearNestPointAndTrim(points, antNestPosition, closestPointToNest);
             }
 
             float totalDistance = GetTotalDistance(points, transform.position);

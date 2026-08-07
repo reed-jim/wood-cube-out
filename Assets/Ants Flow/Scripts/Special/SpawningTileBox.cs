@@ -118,12 +118,7 @@ namespace AntsFlow
             tile.isSpawningAgain = true;
             tile.Hide();
 
-            // KHÔNG gọi tile.Reset() ở đây. Nếu reset ngay, isAntApproaching/isDone bị xoá trong khi tile
-            // trên thực tế còn đang bay ~1s (DoSpawnTileAnimation) trước khi Show() lại. Trong khoảng hở đó,
-            // GetFirstNMovableTiles/CheckAntsPath sẽ tưởng tile này "khả dụng" và gán cho 1 ant khác, khiến
-            // tile bị ăn lần 2 -> spawn thừa. Giữ isAntApproaching=true (vốn đã true từ lúc ant đầu tiên
-            // được gán tới tile) trong suốt lúc bay để tile luôn bị coi là "đang bận" cho tới khi Show().
-            // Reset() thật sự được gọi ngay trước Show() trong DoSpawnTileAnimation.
+
 
             numberLeft--;
 

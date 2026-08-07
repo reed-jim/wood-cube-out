@@ -389,8 +389,7 @@ namespace AntsFlow
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
                 Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-                target.rotation = targetRotation;
+                Tween.Rotation(target, targetRotation, duration: 0.1f, ease: Ease.OutQuad);
             }
         }
     }
