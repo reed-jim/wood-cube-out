@@ -9,14 +9,19 @@ using AntsFlow;
 
 
 
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace AntsFlow
 {
+    public enum ConfigTool
+    {
+        None,
+        GiantChicken,
+        Wall
+    }
+
     public class LevelItem : MonoBehaviour
     {
         public Sprite picture;
@@ -182,6 +187,8 @@ namespace AntsFlow
         private readonly HashSet<int> paintedThisDrag = new();
         #endregion
 
+        private ConfigTool configTool;
+
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
@@ -228,175 +235,36 @@ namespace AntsFlow
                 // Force Scene view repaint
                 SceneView.RepaintAll();
             }
+
+
+            GUILayout.Space(10);
+            GUILayout.Label("Scene Config", EditorStyles.boldLabel);
+
+            if (GUILayout.Button(configTool == ConfigTool.GiantChicken ? "Disable Giant Chicken Config" : "Giant Chicken Config"))
+            {
+                configTool = configTool == ConfigTool.GiantChicken ? ConfigTool.None : ConfigTool.GiantChicken;
+                SceneView.RepaintAll();
+            }
+
+            if (GUILayout.Button(configTool == ConfigTool.Wall ? "Disable Wall Config" : "Wall Config"))
+            {
+                configTool = configTool == ConfigTool.Wall ? ConfigTool.None : ConfigTool.Wall;
+                SceneView.RepaintAll();
+            }
         }
 
         #region Chicken Feed
         private void OnSceneGUI()
         {
-            ConfiguringChicken();
-        }
-
-        private void ConfiguringLevel()
-        {
-            if (!snakeConfigMode)
-                return;
-
-            LevelItem level = (LevelItem)target;
-
-            if (level.factionMapper == null)
+            switch (configTool)
             {
-                level.factionMapper =
-                    AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+                case ConfigTool.GiantChicken:
+                    ConfiguringChicken();
+                    break;
+                case ConfigTool.Wall:
+                    ConfiguringWall();
+                    break;
             }
-
-            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
-
-            Event e = Event.current;
-
-            if (e.type == EventType.MouseUp && e.button == 0)
-            {
-                isPainting = false;
-                paintedThisDrag.Clear();
-            }
-
-            int index = 0;
-
-            int numColumn = level.numColumn;
-            int numRow = level.numRow;
-            float tileDistance = 0.1f;
-
-            // Background
-            float backgroundWidth = 10;
-
-            Vector3[] background =
-            {
-                new Vector3(-backgroundWidth, -backgroundWidth, 1),
-                new Vector3(-backgroundWidth, +backgroundWidth, 1),
-                new Vector3(+backgroundWidth, +backgroundWidth, 1),
-                new Vector3(+backgroundWidth, -backgroundWidth, 1),
-            };
-
-            Handles.DrawSolidRectangleWithOutline(
-                background,
-                new Color(0f, 0f, 0f, 0.85f),
-                Color.white);
-
-            for (int y = 0; y < numRow; y++)
-            {
-                for (int x = 0; x < numColumn; x++)
-                {
-                    Vector3 worldPos = tileDistance * new Vector2(x, y);
-
-                    if (level.specialElementConfig.snakeConfig.snakeSegmentIndexes == null)
-                    {
-                        level.specialElementConfig.snakeConfig.snakeSegmentIndexes = new List<int>();
-                    }
-
-                    bool selected = level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index);
-
-                    float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
-
-                    AntLevelDataItem tileData = level.chickenLevelTiles[index];
-
-                    if (tileData != null)
-                    {
-                        Handles.color = level.factionMapper.allFactions[tileData.factionIndex];
-                        Handles.DrawSolidDisc(
-                            worldPos,
-                            SceneView.currentDrawingSceneView.camera.transform.forward,
-                            0.75f * size);
-                    }
-
-                    Handles.color = selected ? Color.green : Color.gray;
-                    Handles.DrawWireDisc(
-                        worldPos,
-                        SceneView.currentDrawingSceneView.camera.transform.forward,
-                        size);
-
-                    // Node id
-                    if (isShowingNodeId)
-                    {
-                        GUIStyle style = new GUIStyle(EditorStyles.whiteBoldLabel)
-                        {
-                            alignment = TextAnchor.MiddleCenter,
-                            fontSize = 11
-                        };
-                        style.normal.textColor = Color.yellow;
-
-                        Handles.Label(worldPos + Vector3.up * 0.05f, $"{x + y * numColumn}", style);
-                    }
-
-                    // Detect mouse over this circle
-                    if (HandleUtility.DistanceToCircle(worldPos, size) == 0)
-                    {
-                        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-
-                        if (e.type == EventType.MouseDown && e.button == 0)
-                        {
-                            Undo.RecordObject(level, "Snake Paint");
-
-                            paintValue = !selected;
-                            isPainting = true;
-                            paintedThisDrag.Clear();
-
-                            if (paintValue)
-                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
-                            else
-                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
-
-                            paintedThisDrag.Add(index);
-
-                            EditorUtility.SetDirty(level);
-                            e.Use();
-                        }
-                        else if (isPainting &&
-                                 e.type == EventType.MouseDrag &&
-                                 !paintedThisDrag.Contains(index))
-                        {
-                            Undo.RecordObject(level, "Snake Paint");
-
-                            if (paintValue)
-                            {
-                                if (!level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Contains(index))
-                                    level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Add(index);
-                            }
-                            else
-                            {
-                                level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Remove(index);
-                            }
-
-                            paintedThisDrag.Add(index);
-
-                            EditorUtility.SetDirty(level);
-                            e.Use();
-                        }
-                    }
-
-                    index++;
-                }
-            }
-
-            // Vector3 previousPos = Vector3.zero;
-            // bool hasPrevious = false;
-
-            // for (int i = 0; i < level.specialElementConfig.snakeConfig.snakeSegmentIndexes.Count; i++)
-            // {
-            //     index = level.specialElementConfig.snakeConfig.snakeSegmentIndexes[i];
-
-            //     int x = index % numColumn;
-            //     int y = index / numColumn;
-
-            //     Vector3 worldPos = new Vector3(x * tileDistance, y * tileDistance, 0);
-
-            //     if (hasPrevious)
-            //         DrawArrow(previousPos, worldPos, 0.05f, 20f);
-
-            //     previousPos = worldPos;
-            //     hasPrevious = true;
-            // }
-
-            if (GUI.changed)
-                SceneView.RepaintAll();
         }
 
         private void ConfiguringChicken()
@@ -515,6 +383,59 @@ namespace AntsFlow
 
                             EditorUtility.SetDirty(level);
 
+                            e.Use();
+                        }
+                    }
+                }
+            }
+
+            if (GUI.changed)
+                SceneView.RepaintAll();
+        }
+
+        private void ConfiguringWall()
+        {
+            LevelItem level = (LevelItem)target;
+            WallConfig wall = level.specialElementConfig.wallConfig;
+
+            if (wall.coordinates == null)
+                wall.coordinates = new();
+
+            Event e = Event.current;
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+
+            int cols = level.numColumn;
+            int rows = level.numRow;
+            float tileDistance = 0.1f;
+
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    Vector2Int coord = new(x, y);
+                    Vector3 pos = tileDistance * new Vector2(x, y);
+                    float size = HandleUtility.GetHandleSize(pos) * 0.15f;
+
+                    bool hasWall = wall.coordinates.Contains(coord);
+
+                    Handles.color = hasWall ? Color.green : Color.gray;
+                    Handles.DrawWireDisc(pos, SceneView.currentDrawingSceneView.camera.transform.forward, size);
+
+                    if (hasWall)
+                        Handles.DrawSolidDisc(pos, SceneView.currentDrawingSceneView.camera.transform.forward, size * .5f);
+
+                    if (HandleUtility.DistanceToCircle(pos, size) == 0)
+                    {
+                        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+
+                        if (e.type == EventType.MouseDown && e.button == 0)
+                        {
+                            Undo.RecordObject(level, "Wall Config");
+
+                            if (hasWall) wall.coordinates.Remove(coord);
+                            else wall.coordinates.Add(coord);
+
+                            EditorUtility.SetDirty(level);
                             e.Use();
                         }
                     }
@@ -988,6 +909,7 @@ public class LevelItemData
 public class SpecialElementConfig
 {
     public GiantChickenConfig giantChickenConfig;
+    public WallConfig wallConfig;
 
     public SpecialElementItemConfig hiddenAntBoxConfig;
     public FrozenAntBoxConfig frozenAntBoxConfig;
@@ -1011,6 +933,12 @@ public class GiantChickenItemConfig
     public Vector2Int coordinate;
     public int sizeX = 2;
     public int sizeY = 2;
+}
+
+[Serializable]
+public class WallConfig
+{
+    public List<Vector2Int> coordinates;
 }
 
 [Serializable]

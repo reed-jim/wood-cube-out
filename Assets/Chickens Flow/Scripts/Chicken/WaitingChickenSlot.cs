@@ -9,6 +9,8 @@ public class WaitingChickenSlot
     public int column;
     public int row;
 
+    public bool isWall;
+
     public BaseChicken chicken;
 
     public Vector3 GetRandomPosition()
