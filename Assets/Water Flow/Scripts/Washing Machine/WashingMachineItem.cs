@@ -268,7 +268,7 @@ public class WashingMachineItem : MonoBehaviour
 
                 Vector3 bucketDestination;
 
-                bucketDestination.x = 0;
+                bucketDestination.x = -0.5f;
                 bucketDestination.y = 7;
                 bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
 
@@ -291,7 +291,8 @@ public class WashingMachineItem : MonoBehaviour
 
                     if (!isRotated)
                     {
-                        Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
+                        Tween.PositionX(grainPile.transform, 0, duration: 0.3f);
+                        Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
                         .OnComplete(() =>
                         {
                             grainSprite.gameObject.SetActive(false);
@@ -324,17 +325,24 @@ public class WashingMachineItem : MonoBehaviour
 
             void PourGrainPile(GrainPile grainPile, bool isLast, Action onComplete)
             {
-                grainPile.Pour(pileCenter, onCompleteAction: () =>
-                {
-                    if (isLast && !isBucketMoveBack)
+                grainPile.Pour
+                (
+                    pileCenter,
+                    onAllGrainsPoured: () =>
                     {
-                        SaferioTween.ScaleDownWithPunch(transform);
-
-                        GamePersistentVariable.bucketOrder--;
+                        if (!isBucketMoveBack)
+                        {
+                            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+                            {
+                                GamePersistentVariable.bucketOrder--;
+                            });
+                        }
+                    },
+                    onCompleteAction: () =>
+                    {
+                        onComplete?.Invoke();
                     }
-
-                    onComplete?.Invoke();
-                });
+                );
             }
         }
 

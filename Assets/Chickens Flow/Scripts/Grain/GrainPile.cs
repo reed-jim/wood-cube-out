@@ -121,7 +121,7 @@ public class GrainPile : MonoBehaviour
         }
     }
 
-    public void Pour(Vector2 pileCenter, Action onFirstGrainHitGround = null, Action onCompleteAction = null)
+    public void Pour(Vector2 pileCenter, Action onAllGrainsPoured = null, Action onCompleteAction = null)
     {
         Vector3 position;
 
@@ -154,7 +154,7 @@ public class GrainPile : MonoBehaviour
             .ThenBy(grain => grain.x)
             .ToList();
 
-        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, onComplete: () =>
+        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, onAllGrainsPoured: onAllGrainsPoured, onComplete: () =>
         {
             ChickenManager.Ins.FeedTheChicken(this);
 
@@ -208,6 +208,10 @@ public class GrainPile : MonoBehaviour
         ChickenManager.Ins.chickenRenderer.RemoveChickenRendering(chicken);
 
         chicken.skeletonAnimation.gameObject.SetActive(true);
+
+        WashingMachineManager.Ins.grainPool.AddGrain(-numGrain);
+
+        GamePersistentVariable.numEatingChicken++;
 
         while (!isDone)
         {
@@ -263,7 +267,7 @@ public class GrainPile : MonoBehaviour
             WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
         }
 
-        WashingMachineManager.Ins.grainPool.AddGrain(-numGrain);
+        GamePersistentVariable.numEatingChicken--;
 
         onCompleteAction?.Invoke();
 

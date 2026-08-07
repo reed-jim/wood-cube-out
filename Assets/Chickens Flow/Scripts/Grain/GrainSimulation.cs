@@ -147,6 +147,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public FactionGroup group;
         public int startIndex;
         public int count;
+        public int tryTime;
+        public Action onAllGrainsPoured;
         public Action onComplete;
     }
 
@@ -654,7 +656,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         BuildPath();
     }
 
-    public void SpawnGrains(List<Vector3> grainPositions, Color faction, Action onComplete = null)
+    public void SpawnGrains(List<Vector3> grainPositions, Color faction, Action onAllGrainsPoured = null, Action onComplete = null)
     {
         FactionGroup group = GetFaction(faction);
         int startIndex = group.grains.Count;
@@ -693,6 +695,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 group = group,
                 startIndex = startIndex,
                 count = grainPositions.Count,
+                onAllGrainsPoured = onAllGrainsPoured,
                 onComplete = onComplete
             });
         }
@@ -722,6 +725,19 @@ public class GrainSimulation : Singleton<GrainSimulation>
         for (int i = pendingSpawns.Count - 1; i >= 0; i--)
         {
             SpawnRequest request = pendingSpawns[i];
+
+            request.tryTime++;
+
+            if (request.tryTime > 500)
+            {
+                request.onAllGrainsPoured?.Invoke();
+                request.onComplete?.Invoke();
+                pendingSpawns.RemoveAt(i);
+
+                continue;
+            }
+
+            bool allPoured = true;
             bool completed = false;
 
             int end = request.startIndex + request.count;
@@ -731,8 +747,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
             {
                 if (g >= request.group.grains.Count)
                 {
-                    completed = true;
-                    continue;
+                    break;
+                }
+
+                if (request.group.grains[g].fallDelay > 0)
+                {
+                    allPoured = false;
                 }
 
                 if (request.group.grains[g].onPath)
@@ -743,6 +763,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
                         break;
                     }
                 }
+            }
+
+            if (allPoured)
+            {
+                request.onAllGrainsPoured?.Invoke();
+                request.onAllGrainsPoured = null;
             }
 
             if (completed)

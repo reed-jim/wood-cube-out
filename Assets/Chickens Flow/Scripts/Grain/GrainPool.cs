@@ -120,7 +120,7 @@ public class GrainPool : Singleton<GrainPool>
             percentTextTween.Stop();
         }
 
-        percentTextTween = Tween.Custom(currentPercent, percent, duration: 0.6f, onValueChange: newVal =>
+        percentTextTween = Tween.Custom(currentPercent, percent, duration: 1f, onValueChange: newVal =>
         {
             UpdatePercent(newVal);
         })
