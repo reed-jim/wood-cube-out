@@ -416,65 +416,65 @@ namespace AntsFlow
         }
     }
 
-    [CustomEditor(typeof(Snake))]
-    public class SnakeEditor : Editor
-    {
-        float spacing = 0.5f;
-        float step = 0.5f;
-        int loops = 10;
+    // [CustomEditor(typeof(Snake))]
+    // public class SnakeEditor : Editor
+    // {
+    //     float spacing = 0.5f;
+    //     float step = 0.5f;
+    //     int loops = 10;
 
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
+    //     public override void OnInspectorGUI()
+    //     {
+    //         DrawDefaultInspector();
 
-            spacing = EditorGUILayout.FloatField("Point Spacing", spacing);
-            step = EditorGUILayout.FloatField("Spiral Step", step);
-            loops = EditorGUILayout.IntField("Loops", loops);
+    //         spacing = EditorGUILayout.FloatField("Point Spacing", spacing);
+    //         step = EditorGUILayout.FloatField("Spiral Step", step);
+    //         loops = EditorGUILayout.IntField("Loops", loops);
 
-            if (GUILayout.Button("Generate Spiral"))
-            {
-                Generate((Snake)target);
-            }
-        }
+    //         if (GUILayout.Button("Generate Spiral"))
+    //         {
+    //             Generate((Snake)target);
+    //         }
+    //     }
 
-        void Generate(Snake snake)
-        {
-            snake.allPoints = new List<Vector2>();
+    //     void Generate(Snake snake)
+    //     {
+    //         snake.allPoints = new List<Vector2>();
 
-            Vector2 pos = Vector2.zero;
+    //         Vector2 pos = Vector2.zero;
 
-            Vector2[] dirs =
-            {
-            Vector2.right,
-            Vector2.up,
-            Vector2.left,
-            Vector2.down
-        };
+    //         Vector2[] dirs =
+    //         {
+    //         Vector2.right,
+    //         Vector2.up,
+    //         Vector2.left,
+    //         Vector2.down
+    //     };
 
-            int dir = 0;
-            float length = step;
+    //         int dir = 0;
+    //         float length = step;
 
-            int index = 0;
+    //         int index = 0;
 
-            for (int ring = 0; ring < loops; ring++)
-            {
-                for (int side = 0; side < 2; side++)
-                {
-                    int count = Mathf.CeilToInt(length / spacing);
+    //         for (int ring = 0; ring < loops; ring++)
+    //         {
+    //             for (int side = 0; side < 2; side++)
+    //             {
+    //                 int count = Mathf.CeilToInt(length / spacing);
 
-                    for (int i = 0; i < count; i++)
-                    {
-                        snake.allPoints.Insert(index, pos);
+    //                 for (int i = 0; i < count; i++)
+    //                 {
+    //                     snake.allPoints.Insert(index, pos);
 
-                        pos += dirs[dir] * spacing;
-                        index++;
-                    }
+    //                     pos += dirs[dir] * spacing;
+    //                     index++;
+    //                 }
 
-                    dir = (dir + 1) % 4;
-                }
+    //                 dir = (dir + 1) % 4;
+    //             }
 
-                length += step;
-            }
-        }
-    }
+    //             length += step;
+    //         }
+    //     }
+    // }
 }

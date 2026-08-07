@@ -209,7 +209,7 @@ public class GrainPile : MonoBehaviour
 
         chicken.skeletonAnimation.gameObject.SetActive(true);
 
-        WashingMachineManager.Ins.grainPool.AddGrain(-numGrain);
+        WashingMachineManager.Ins.grainPool.AddGrain(-numGrain, durationUpdateProgress: GetUpdatingProgressDuration(numGrainToEat));
 
         GamePersistentVariable.numEatingChicken++;
 
@@ -290,6 +290,14 @@ public class GrainPile : MonoBehaviour
             fx.Play();
 
             SoundManager.Instance.PlaySoundCubeLand();
+        }
+
+        float GetUpdatingProgressDuration(int numGrainToEat)
+        {
+            float baseDuration = 1f;
+            float growthRate = 0.5f;
+
+            return baseDuration + growthRate * Mathf.Log(numGrainToEat + 1);
         }
     }
 

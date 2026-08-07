@@ -69,6 +69,7 @@ public class GrainPool : Singleton<GrainPool>
         currentPercent = 0;
 
         UpdatePercent(currentPercent);
+        lazyHealthBar.SetProgress(currentPercent);
     }
 
     public void AddGrainPile(GrainPile grainPile)
@@ -107,7 +108,7 @@ public class GrainPool : Singleton<GrainPool>
         }
     }
 
-    public void AddGrain(int number)
+    public void AddGrain(int number, float durationUpdateProgress = 1)
     {
         currentAmount += number;
 
@@ -120,19 +121,20 @@ public class GrainPool : Singleton<GrainPool>
             percentTextTween.Stop();
         }
 
-        percentTextTween = Tween.Custom(currentPercent, percent, duration: 1f, onValueChange: newVal =>
+        percentTextTween = Tween.Custom(currentPercent, percent, duration: durationUpdateProgress, onValueChange: newVal =>
         {
             UpdatePercent(newVal);
+
+            currentPercent = newVal;
         })
         .OnComplete(() =>
         {
             if (currentAmount >= maxCapacity)
             {
-                WashingMachineManager.Ins.LoseLevel();
+                WashingMachineManager.Ins.CheckLoseLevel();
             }
         });
-
-        currentPercent = percent;
+        lazyHealthBar.SetProgress(percent, durationUpdateProgress);
     }
 
     public void IncreaseGrainCapacity(int amount)
@@ -145,8 +147,6 @@ public class GrainPool : Singleton<GrainPool>
     public void UpdatePercent(float percent)
     {
         percentText.text = $"{(int)(percent * 100)}%";
-        // percentText.text = $"{currentAmount}/{maxCapacity}";
-        lazyHealthBar.SetProgress(percent);
     }
 
     public bool IsMaxCapacity()

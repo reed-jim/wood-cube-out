@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class DOTweenUtil
 {
-    public static void MoveParabol(Transform target, Vector3 destination, float height = 3, float duration = 0.6f, Action onComplete = null)
+    public static void MoveParabol(Transform target, Vector3 destination, float height = 6, float duration = 0.6f, Action onComplete = null)
     {
         Vector3 start = target.position;
         Vector3 end = destination;
