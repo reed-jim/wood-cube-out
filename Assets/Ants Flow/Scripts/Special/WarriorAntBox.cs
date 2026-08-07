@@ -22,6 +22,43 @@ namespace AntsFlow
             numberText.text = $"{this.number}";
         }
 
+        public void ShuffleBox(int newNumber)
+        {
+            this.number = newNumber;
+            this.remainingNumber = newNumber;
+
+            numberText.text = $"{this.number}";
+
+            isShuffled = true;
+            isMoving = false;
+            isInSlot = false;
+            isGhostMode = false;
+            isStucking = false;
+            isPlayingWarningLoseAnimation = false;
+
+            transform.localScale = Vector3.zero;
+            Tween.Scale(transform, 2.3f, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                isAnimating = false;
+            });
+
+            isAnimating = true;
+
+            shadow.sprite = shadows[0];
+            ApplyShadowDepth();
+
+            skeletonAnimation.Skeleton.SetSkin(warriorAntBoxName);
+            skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+            skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+            skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
+
+            if (washingMachineStartSlot != null)
+            {
+                Setup(washingMachineStartSlot);
+            }
+        }
+
         public override void OpenTheBox()
         {
             Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
@@ -54,13 +91,7 @@ namespace AntsFlow
 
             int max = remainingNumber;
 
-            bool isCenter = Math.Abs(transform.position.x) < 0.1f;
             Vector3 antBoxPosition = transform.position;
-
-            if (isCenter)
-            {
-                antBoxPosition = antBoxPosition.AddX(3);
-            }
 
             List<BaseTile> foundTiles = TileManager.Ins.GetFirstNMovableTilesForWarriorAnts(max, antBoxPosition);
 
@@ -89,7 +120,7 @@ namespace AntsFlow
                 if (spawningAntCoroutine == null)
                 {
                     if (gameObject.activeInHierarchy)
-                        spawningAntCoroutine = StartCoroutine(SpawningAnts(antType: GameConstants.warriorAnt));
+                        spawningAntCoroutine = StartCoroutine(SpawningWarriorAnts());
                 }
             }
             else if (isAlsoCheckLose)
@@ -98,6 +129,83 @@ namespace AntsFlow
 
                 WashingMachineManager.Ins.CheckLoseLevel();
             }
+        }
+
+        private IEnumerator SpawningWarriorAnts()
+        {
+            WaitForSeconds waitForSeconds = new WaitForSeconds(0.35f);
+
+            int currentAntIndex = 0;
+
+            while (tilesToMove.Count > 0)
+            {
+                if (GamePersistentVariable.isLevelLost)
+                {
+                    for (int i = 0; i < tilesToMove.Count; i++)
+                    {
+                        tilesToMove[i].isAntApproaching = false;
+                    }
+
+                    remainingNumber += tilesToMove.Count;
+                    tilesToMove.Clear();
+                    break;
+                }
+
+                if (GamePersistentVariable.isPauseGame)
+                {
+                    yield return waitForSeconds;
+                    continue;
+                }
+
+                WarriorAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.warriorAnt) as WarriorAnt;
+
+                ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
+                ant.transform.eulerAngles = Vector3.zero;
+
+                ant.Init(faction);
+                ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
+
+                SoundManager.Instance.PlaySoundAntPop();
+
+                number--;
+                numberText.text = $"{number}";
+
+                if (!isAnimating)
+                {
+                    SaferioTween.Punch(numberText.transform, 1.1f, onCompleteAction: () =>
+                    {
+                        isAnimating = false;
+                    });
+
+                    isAnimating = true;
+                }
+
+                tilesToMove.RemoveAt(currentAntIndex);
+                currentAntIndex = 0;
+
+                GamePersistentVariable.numActiveAnt++;
+
+                yield return waitForSeconds;
+            }
+
+            if (number == 0)
+            {
+                SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+                {
+                    if (washingMachineSlot != null && washingMachineSlot.washingMachineItem != null)
+                    {
+                        washingMachineSlot.washingMachineItem = null;
+                    }
+
+                    InvokeAntBoxDoneEvent(this);
+                });
+
+                isInSlot = false;
+            }
+
+            spawningAntCoroutine = null;
+
+            OnFinishSpawningAntsBatch();
         }
 
         // Warrior ant chỉ dùng tile "done" làm waypoint để bắn boss rồi quay về (không ăn mất tile),
@@ -162,6 +270,29 @@ namespace AntsFlow
                 }
             }
 
+            // minX=6 là cột cố định, không biết máy đang chạy có màn hình rộng bao nhiêu. Trên máy có
+            // tỉ lệ màn hình hẹp hơn Editor, cột này có thể rơi ra ngoài vùng camera thực sự nhìn thấy
+            // (screenSizeWorld tính theo camera.aspect lúc runtime, xem GameplayCamera/CommonUtil) ->
+            // warrior đứng bắn boss ở ghost mode bị khuất mép màn hình. Lọc lại, chỉ giữ node còn nằm
+            // trong vùng an toàn (chừa lề mỗi bên) trước khi chọn node gần nhất.
+            float? safeHalfWidth = null;
+            float cameraX = 0f;
+
+            if (WashingMachineManager.Ins != null && WashingMachineManager.Ins.mainCamera != null)
+            {
+                cameraX = WashingMachineManager.Ins.mainCamera.transform.position.x;
+                safeHalfWidth = GamePersistentVariable.screenSizeWorld.x * 0.5f * 0.85f;
+
+                List<Node> onScreenNodes = targetNodes
+                    .Where(node => Mathf.Abs(node.initialPosition.x - cameraX) <= safeHalfWidth.Value)
+                    .ToList();
+
+                if (onScreenNodes.Count > 0)
+                {
+                    targetNodes = onScreenNodes;
+                }
+            }
+
             if (targetNodes.Count > 0)
             {
                 Node edgeNode = targetNodes
@@ -185,6 +316,13 @@ namespace AntsFlow
 
                 // Tản nhẹ theo trục X để nhiều warrior không chồng khít lên nhau.
                 Vector3 standPosition = standBasePosition.AddX((i - (spawnCount - 1) * 0.5f) * 0.25f);
+
+                // Chặn cứng lần cuối: dù standBasePosition đã lọc theo vùng an toàn, offset tản đội hình
+                // ở trên vẫn có thể đẩy vài warrior ở rìa đội hình lố ra khỏi vùng camera nhìn thấy.
+                if (safeHalfWidth.HasValue)
+                {
+                    standPosition.x = Mathf.Clamp(standPosition.x, cameraX - safeHalfWidth.Value, cameraX + safeHalfWidth.Value);
+                }
 
                 ant.GhostAttackBoss(standPosition, onComplete: null);
 

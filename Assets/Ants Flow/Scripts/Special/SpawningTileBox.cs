@@ -108,9 +108,22 @@ namespace AntsFlow
                 return;
             }
 
+            // Chặn double-spawn: nếu tile này đang có 1 animation respawn treo (fakeTile đang bay), không
+            // mở thêm animation thứ 2 cho cùng 1 tile.
+            if (pendingSpawns.Any(p => p.tile == tile))
+            {
+                return;
+            }
+
             tile.isSpawningAgain = true;
-            tile.Reset();
             tile.Hide();
+
+            // KHÔNG gọi tile.Reset() ở đây. Nếu reset ngay, isAntApproaching/isDone bị xoá trong khi tile
+            // trên thực tế còn đang bay ~1s (DoSpawnTileAnimation) trước khi Show() lại. Trong khoảng hở đó,
+            // GetFirstNMovableTiles/CheckAntsPath sẽ tưởng tile này "khả dụng" và gán cho 1 ant khác, khiến
+            // tile bị ăn lần 2 -> spawn thừa. Giữ isAntApproaching=true (vốn đã true từ lúc ant đầu tiên
+            // được gán tới tile) trong suốt lúc bay để tile luôn bị coi là "đang bận" cho tới khi Show().
+            // Reset() thật sự được gọi ngay trước Show() trong DoSpawnTileAnimation.
 
             numberLeft--;
 
@@ -227,6 +240,7 @@ namespace AntsFlow
                     return;
                 }
 
+                tile.Reset();
                 tile.Show();
 
                 ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);

@@ -369,6 +369,8 @@ namespace AntsFlow
         {
             PlayAnimAction(actionAnim);
             health--;
+            SoundManager.Instance.PlaySound(GameConstants.snakeCountSound);
+
             if (health > 0)
             {
                 PunchTailScale();

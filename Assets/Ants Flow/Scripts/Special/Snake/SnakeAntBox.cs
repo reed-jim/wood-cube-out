@@ -20,6 +20,43 @@ namespace AntsFlow
             numberText.text = $"{this.number}";
         }
 
+        public void ShuffleBox(int newNumber)
+        {
+            this.number = newNumber;
+            this.remainingNumber = newNumber;
+
+            numberText.text = $"{this.number}";
+
+            isShuffled = true;
+            isMoving = false;
+            isInSlot = false;
+            isGhostMode = false;
+            isStucking = false;
+            isPlayingWarningLoseAnimation = false;
+
+            transform.localScale = Vector3.zero;
+            Tween.Scale(transform, 2.3f, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                isAnimating = false;
+            });
+
+            isAnimating = true;
+
+            shadow.sprite = shadows[0];
+            ApplyShadowDepth();
+
+            skeletonAnimation.Skeleton.SetSkin(snakeAntBoxName);
+            skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+            skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+            skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
+
+            if (washingMachineStartSlot != null)
+            {
+                Setup(washingMachineStartSlot);
+            }
+        }
+
         public override void OpenTheBox()
         {
             Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);

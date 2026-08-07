@@ -755,6 +755,17 @@ namespace AntsFlow
                         }
                     }
 
+
+                    if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+                    {
+                        if (neighbor.tile != null && neighbor.tile.isLocked)
+                        {
+                            isBlocked = true;
+                            isReachTarget = false;
+                        }
+                    }
+
+
                     if (isBlocked && !isReachTarget)
                     {
                         continue;
@@ -875,6 +886,13 @@ namespace AntsFlow
                     }
 
                     if (neighbor.isObstacle)
+                    {
+                        isBlocked = true;
+                    }
+
+                    // Giống GetFirstNMovableTiles: tile đang bị khóa (BossArea/HardPixel/FreezedTileRegion
+                    // còn che) luôn là tường chặn dù đã isDone, tới khi vật che đó biến mất hẳn.
+                    if (neighbor.tile != null && neighbor.tile.isLocked)
                     {
                         isBlocked = true;
                     }
@@ -1389,6 +1407,8 @@ namespace AntsFlow
             // Level có boss/rắn: chưa hạ hết thì chưa win, dù đã clear hết tile (vd booster clear-one-color).
             if (isWon && SpecialElementManager.Ins != null && !SpecialElementManager.Ins.AreSpecialBossElementsCleared())
             {
+                UpSpeedAnt.Ins.UpSpeedNearEndLevel();
+
                 isWon = false;
             }
 

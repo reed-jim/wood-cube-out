@@ -115,6 +115,11 @@ namespace AntsFlow
                 snake.Reset();
                 snake.gameObject.SetActive(false);
             }
+
+            if (HardPixelManager.Ins != null)
+            {
+                HardPixelManager.Ins.Reset();
+            }
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)

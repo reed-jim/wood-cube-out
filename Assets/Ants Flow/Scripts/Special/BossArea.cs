@@ -139,6 +139,15 @@ namespace AntsFlow
                 {
                     if (hitFxList[i] != null)
                     {
+                        if (hitFxList[i].AnimationState != null)
+                        {
+                            hitFxList[i].AnimationState.ClearTracks();
+                        }
+                        if (hitFxList[i].Skeleton != null)
+                        {
+                            hitFxList[i].Skeleton.SetToSetupPose();
+                            hitFxList[i].Skeleton.SetSlotsToSetupPose();
+                        }
                         hitFxList[i].gameObject.SetActive(false);
                     }
                 }
@@ -195,17 +204,34 @@ namespace AntsFlow
             string chosenAnim = animOptions[Random.Range(0, animOptions.Count)];
 
             selectedFx.gameObject.SetActive(true);
-            selectedFx.Skeleton.SetToSetupPose();
-            TrackEntry trackEntry = selectedFx.AnimationState.SetAnimation(0, chosenAnim, false);
-            selectedFx.AnimationState.Apply(selectedFx.Skeleton);
-
-            trackEntry.Complete += (entry) =>
+            selectedFx.Initialize(false);
+            if (selectedFx.Skeleton != null)
             {
-                if (selectedFx != null && selectedFx.gameObject != null)
+                selectedFx.Skeleton.SetToSetupPose();
+                selectedFx.Skeleton.SetSlotsToSetupPose();
+            }
+            if (selectedFx.AnimationState != null)
+            {
+                selectedFx.AnimationState.ClearTracks();
+                TrackEntry trackEntry = selectedFx.AnimationState.SetAnimation(0, chosenAnim, false);
+                if (trackEntry != null)
                 {
-                    selectedFx.gameObject.SetActive(false);
+                    trackEntry.MixDuration = 0f;
+                    trackEntry.Complete += (entry) =>
+                    {
+                        if (selectedFx != null && selectedFx.gameObject != null)
+                        {
+                            selectedFx.gameObject.SetActive(false);
+                        }
+                    };
                 }
-            };
+                if (selectedFx.Skeleton != null)
+                {
+                    selectedFx.AnimationState.Apply(selectedFx.Skeleton);
+                    selectedFx.Skeleton.UpdateWorldTransform();
+                }
+            }
+            selectedFx.LateUpdate();
         }
 
         private void PlayIdle()
@@ -303,6 +329,7 @@ namespace AntsFlow
             }
 
             currentHealth--;
+            SoundManager.Instance.PlaySound(GameConstants.bossAreaHitSound);
 
             UpdateHealth();
 
@@ -316,6 +343,7 @@ namespace AntsFlow
             if (currentHealth <= 0)
             {
                 isDead = true;
+                SoundManager.Instance.PlaySound(GameConstants.bossAreaDieSound);
 
                 DeactivateAllHitFx();
 

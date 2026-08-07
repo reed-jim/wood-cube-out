@@ -245,7 +245,7 @@ public class WashingMachineItem : MonoBehaviour
     public const float shadowZNewSpecialLevel = 4f;
     public const float shadowZLegacyLevel = 0.1f;
 
-    private void ApplyShadowDepth()
+    protected void ApplyShadowDepth()
     {
         if (shadow == null)
         {

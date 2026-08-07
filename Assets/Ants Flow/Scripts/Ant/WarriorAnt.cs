@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -14,13 +17,35 @@ namespace AntsFlow
 
         [SpineAnimation] public string attackAnimation;
 
-        // Ghost/revive: warrior đứng ở rìa map bắn boss rồi biến mất (không quay về theo đường đi).
         private bool isGhostAttack;
         private Action ghostAttackOnComplete;
+
+        private Renderer warriorRenderer;
+        private MaterialPropertyBlock warriorPropertyBlock;
 
         protected override void Awake()
         {
             base.Awake();
+            warriorRenderer = GetComponentInChildren<Renderer>();
+            warriorPropertyBlock = new MaterialPropertyBlock();
+        }
+
+        public void SetAlpha(float alpha)
+        {
+            if (skeletonAnimation != null && skeletonAnimation.Skeleton != null)
+            {
+                skeletonAnimation.Skeleton.A = alpha;
+            }
+
+            if (warriorRenderer != null)
+            {
+                if (warriorPropertyBlock == null)
+                {
+                    warriorPropertyBlock = new MaterialPropertyBlock();
+                }
+                warriorPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(faction, alpha));
+                warriorRenderer.SetPropertyBlock(warriorPropertyBlock);
+            }
         }
 
         protected override void OnEnable()
@@ -37,25 +62,20 @@ namespace AntsFlow
 
         public override void Init(Color faction)
         {
-            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
-            {
-                float bossZ = SpecialElementManager.Ins.bossArea.transform.position.z;
-                baseZPosition = bossZ - 1f;
-                ghostBaseZPosition = bossZ - 2f;
-            }
-            else
-            {
-                baseZPosition = -8f;
-                ghostBaseZPosition = -9f;
-            }
-
+            baseZPosition = -8f;
+            ghostBaseZPosition = -9f;
             transform.position = transform.position.ChangeZ(baseZPosition);
-
-            skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-            skeletonAnimation.AnimationState.SetAnimation(0, moveAnimation, true);
-            skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+            transform.localScale = Vector3.one;
 
             this.faction = faction;
+            SetAlpha(1f);
+
+            if (skeletonAnimation != null && skeletonAnimation.Skeleton != null)
+            {
+                skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+                skeletonAnimation.AnimationState.SetAnimation(0, moveAnimation, true);
+                skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+            }
 
             stuckTime = 0;
             isMovingToSideTile = false;
@@ -70,23 +90,10 @@ namespace AntsFlow
         {
             if (trackEntry.Animation.Name == attackAnimation && e.Data.Name == "call")
             {
-                if (isGhostAttack)
-                {
-                    // Revive: bắn boss xong thì biến mất tại chỗ (rìa map), không quay về theo đường đi.
-                    Attack(onCompleteAction: DisappearAfterGhostAttack);
-                }
-                else
-                {
-                    Attack(onCompleteAction: () =>
-                    {
-                        ReverseMove();
-                    });
-                }
+                Attack(onCompleteAction: DisappearAfterGhostAttack);
             }
         }
 
-        // Ghost/revive: đứng tại vị trí rìa map (standPosition) rồi bắn missile vào boss - không cần đường
-        // đi tới boss. Dùng khi revive warrior ant box mà chưa có hành lang thông tới bossArea.
         public void GhostAttackBoss(Vector3 standPosition, Action onComplete)
         {
             isGhostAttack = true;
@@ -100,24 +107,44 @@ namespace AntsFlow
             float distance = Vector2.Distance(transform.position, targetPos);
             float duration = Mathf.Max(0.2f, distance / speed);
 
+            Vector2 dir = (Vector2)(targetPos - transform.position);
+            Rotate(transform, dir);
+
             tweens.Add(Tween.Position(transform, targetPos, duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
-                // Play anim tấn công; event "call" trong anim sẽ kích hoạt Attack() -> missile -> boss.Hit().
+                if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
+                {
+                    Rotate(transform, SpecialElementManager.Ins.bossArea.transform.position - transform.position);
+                }
+
                 skeletonAnimation.AnimationState.SetAnimation(0, attackAnimation, false);
             }));
         }
 
         private void DisappearAfterGhostAttack()
         {
-            Vector3 antScale = transform.localScale;
+            // Fade alpha của skeleton và material property block về 0 tại chỗ (thay cho scale nhỏ lại).
+            float startAlpha = (skeletonAnimation != null && skeletonAnimation.Skeleton != null) ? skeletonAnimation.Skeleton.A : 1f;
 
-            tweens.Add(Tween.Scale(transform, 0, duration: 0.3f)
+            tweens.Add(Tween.Custom(startAlpha, 0f, duration: 0.3f, onValueChange: a =>
+            {
+                SetAlpha(a);
+            })
             .OnComplete(() =>
             {
                 gameObject.SetActive(false);
 
-                transform.localScale = antScale;
+                // Trả lại alpha=1 để lần sau lấy từ pool hiển thị bình thường.
+                SetAlpha(1f);
+
+                // Warrior thường dùng tile "done" làm waypoint; giữ nguyên việc complete waypoint như khi
+                // còn quay về lỗ. Ghost ant (GhostAttackBoss) không gán tile nên bỏ qua.
+                if (tile != null)
+                {
+                    tile.Complete();
+                    tile = null;
+                }
 
                 GamePersistentVariable.numActiveAnt--;
 
@@ -128,8 +155,196 @@ namespace AntsFlow
                 callback?.Invoke();
             }));
         }
+
+        private Coroutine warriorMovingCoroutine;
+
+        public new void MoveTo(BaseTile tile, int index)
+        {
+            List<Node> path = tile.path;
+
+            if (warriorMovingCoroutine != null)
+            {
+                StopCoroutine(warriorMovingCoroutine);
+            }
+
+            if (antAntennaeAttachments != null && skeletonAnimation != null && skeletonAnimation.Skeleton != null)
+            {
+                for (int i = 0; i < antAntennaeAttachments.Count; i++)
+                {
+                    skeletonAnimation.Skeleton.SetAttachment(antAntennaeAttachments[i], antAntennaeAttachments[i]);
+                }
+            }
+
+            warriorMovingCoroutine = StartCoroutine(MovingWarriorCurved(path));
+
+            tile.isAntApproaching = true;
+            tile.InvokeAntStartMoveToTileEvent();
+
+            this.tile = tile;
+        }
+
+        private IEnumerator MovingWarriorCurved(List<Node> path)
+        {
+            if (path == null || path.Count == 0)
+            {
+                OnAntReachTarget();
+                yield break;
+            }
+
+            List<Vector3> points = path.Select(item => item.initialPosition).ToList();
+
+            int firstBottomMostPointIndex;
+
+            // Đi Y HỆT kiến thường (BaseAnt.MovingCurved). Warrior sinh lệch tâm thì đi thẳng từ hộp lên
+            // hàng đáy; sinh ở slot giữa (ngay trên lỗ tổ antNest) thì đi vòng né lỗ tổ như bên dưới.
+            bool isCenter = Math.Abs(transform.position.x) < 0.1f;
+
+            if (isCenter)
+            {
+                int sign = 1;
+
+                // Warrior sinh ở slot giữa (x≈0) nằm ngay trên lỗ tổ antNest: đi xuống rồi TẠT NGANG
+                // VUÔNG GÓC hẳn sang một bên, sau đó mới leo thẳng lên — không đi chéo, không đè qua lỗ tổ.
+                // Đúng y đường của kiến thường trong BaseAnt.MovingCurved.
+                points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
+                points.Insert(1, TileManager.Ins.antNest.position.ChangeY(-3).ChangeX(sign * 3f));
+                points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
+
+                firstBottomMostPointIndex = 2;
+            }
+            else
+            {
+                points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
+
+                firstBottomMostPointIndex = 0;
+            }
+
+            float randomWiggleMagnitude = 0.5f * UnityEngine.Random.Range(0, 2);
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector3 point = points[i];
+
+                bool isNearBottomMost = Mathf.Abs(point.y - TileManager.Ins.bottomLeftMostNode.initialPosition.y) < 0.1f;
+                bool isNearLeftMost = Mathf.Abs(point.x - TileManager.Ins.bottomLeftMostNode.initialPosition.x) < 0.1f;
+                bool isNearRightMost = Mathf.Abs(point.x - TileManager.Ins.bottomRightMostNode.initialPosition.x) < 0.1f;
+
+                if (isNearBottomMost)
+                {
+                    continue;
+                }
+
+                if (isNearLeftMost)
+                {
+                    points[i] = points[i].AddX(-randomWiggleMagnitude);
+                }
+
+                if (isNearRightMost)
+                {
+                    points[i] = points[i].AddX(randomWiggleMagnitude);
+                }
+            }
+
+            if (points.Count > firstBottomMostPointIndex + 2 &&
+                points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+
+            if (points.Count > firstBottomMostPointIndex + 2 &&
+                points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+
+            points = RemoveNearbyPoints(points, 0.8f * GamePersistentVariable.tileDistance.x);
+
+            float totalDistance = 0f;
+            if (points.Count > 0)
+            {
+                totalDistance += Vector2.Distance(points[0], transform.position);
+                for (int i = 0; i < points.Count - 1; i++)
+                {
+                    totalDistance += Vector2.Distance(points[i], points[i + 1]);
+                }
+            }
+
+            // Dùng chung speedMove với kiến thường (BaseAnt) để tốc độ warrior luôn bằng kiến thường,
+            // kể cả khi đang có booster tăng tốc (EVENT_START_UP_SPEED_ANT cập nhật speedMove).
+            float speed = speedMove > 0 ? speedMove : (initialSpeedMove > 0 ? initialSpeedMove : 5f);
+            float totalTime = totalDistance > 0 ? totalDistance / speed : 0.1f;
+
+            int siblingIndex = transform.GetSiblingIndex();
+            float zPosition = baseZPosition - 0.001f * siblingIndex;
+            Quaternion targetRotation;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector3 start = transform.position;
+                Vector3 end = points[i];
+
+                Vector2 direction = (Vector2)(end - start).normalized;
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                // Dùng Vector2.Distance (bỏ qua Z) để khớp cơ sở tính toán với totalDistance ở trên.
+                // Nếu dùng Vector3.Distance, riêng đoạn đầu tiên sau khi spawn sẽ bị cộng khống chênh lệch
+                // Z giữa vị trí spawn (baseZPosition = -8, xem Init()) và waypoint (Node.initialPosition
+                // luôn có Z=0), khiến timeNeeded của đoạn đó bị thổi phồng → warrior bò rất chậm lúc mới ra,
+                // rồi mới nhanh bình thường từ đoạn thứ 2 trở đi.
+                float distance = Vector2.Distance(start, end);
+                float timeNeeded = totalDistance > 0 ? (distance / totalDistance * totalTime) : 0f;
+                float timePassed = 0f;
+
+                while (timePassed < timeNeeded)
+                {
+                    timePassed += Time.deltaTime;
+                    float t = timeNeeded > 0 ? (timePassed / timeNeeded) : 1f;
+
+                    Vector3 pos = Vector3.Lerp(start, end, t);
+                    transform.position = pos.ChangeZ(zPosition);
+
+                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 2f * t);
+
+                    yield return null;
+                }
+
+                transform.position = end.ChangeZ(zPosition);
+            }
+
+            OnAntReachTarget();
+        }
+
+        public override void MoveToTileGhostMode(BaseTile tile)
+        {
+            tile.isAntApproaching = true;
+            this.tile = tile;
+
+            float speed = 10;
+            float zPosition = ghostBaseZPosition - 0.001f * transform.GetSiblingIndex();
+
+            Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
+            Vector2 dir = (Vector2)(tilePosition - transform.position);
+            float distance = dir.magnitude;
+            float duration = distance / speed;
+
+            Rotate(transform, dir);
+            transform.position = transform.position.ChangeZ(zPosition);
+
+            tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(zPosition), duration: duration, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                OnAntReachTarget();
+            }));
+        }
+
         protected override void OnAntReachTarget()
         {
+            float zPosition = (isGhostAttack ? ghostBaseZPosition : baseZPosition) - 0.001f * transform.GetSiblingIndex();
+            transform.position = transform.position.ChangeZ(zPosition);
+
             // Quay mặt kiến về phía boss trước khi bắn. Trước đây chỉ missile được xoay về boss,
             // còn thân kiến giữ nguyên hướng di chuyển nên trông như không nhắm vào bossArea.
             if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
@@ -138,40 +353,17 @@ namespace AntsFlow
             }
 
             skeletonAnimation.AnimationState.SetAnimation(0, attackAnimation, false);
-            //Attack(onCompleteAction: () =>
-            //{
-            //    ReverseMove();
-            //});
         }
 
         protected override void OnAntMovedToNest()
         {
-            Vector3 antScale = transform.localScale;
-
-            tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f));
-            tweens.Add(Tween.Scale(transform, 0, duration: 0.3f)
-            .OnComplete(() =>
-            {
-                tile.Complete();
-                gameObject.SetActive(false);
-
-                transform.localScale = antScale;
-
-                isMovingToNest = false;
-                isDroppingTile = false;
-                tile = null;
-
-                GamePersistentVariable.numActiveAnt--;
-            }));
-
-            GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
-
-            isDroppingTile = true;
+            DisappearAfterGhostAttack();
         }
 
         private void Attack(Action onCompleteAction)
         {
             Transform missile = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.missile);
+            SoundManager.Instance.PlaySound(GameConstants.warriorAntBowSound);
 
             Transform target = SpecialElementManager.Ins.bossArea.transform;
             float missileZ = SpecialElementManager.Ins.bossArea.lazyHealthBar.transform.position.z - 0.1f;
