@@ -18,7 +18,6 @@ public class BaseChicken : MonoBehaviour
     [SpineAnimation] public string moveAnimation;
     [SpineAnimation] public string[] eatAnimations;
     [SpineAnimation] public string flyAnimation;
-    public GameObject eyes;
 
     public LazyHealthBar eatingProgress;
     public TMP_Text eatingProgressText;
@@ -47,7 +46,19 @@ public class BaseChicken : MonoBehaviour
 
     public List<WaitingChickenSlot> waitingChickenSlots;
 
-    public float Size => transform.localScale.x;
+    void Awake()
+    {
+        SettingPopup.replayLevelEvent += Reset;
+        LosePopup.replayLevelEvent += Reset;
+        DebugPopup.switchLevelEvent += Reset;
+    }
+
+    void OnDestroy()
+    {
+        SettingPopup.replayLevelEvent -= Reset;
+        LosePopup.replayLevelEvent -= Reset;
+        DebugPopup.switchLevelEvent -= Reset;
+    }
 
     // void Awake()
     // {
@@ -62,6 +73,26 @@ public class BaseChicken : MonoBehaviour
     //     Debug.Log($"Chicken  {mesh.triangles.Length / 3}");
     // }
 
+    public void Reset()
+    {
+        // State
+        isMoving = false;
+        isEating = false;
+        isDone = false;
+        isStuck = false;
+
+        currentAnimation = idleAnimation;
+
+        prevEatingProgress = 0f;
+        currentEatingProgress = 0f;
+
+        // Gameplay
+        numGrainPileRequiredLeft = numGrainPileRequired;
+
+        // Waiting slots
+        waitingChickenSlots.Clear();
+    }
+
     public void SetFaction(Color faction)
     {
         skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
@@ -74,66 +105,6 @@ public class BaseChicken : MonoBehaviour
         });
 
         this.faction = faction;
-    }
-
-    public void FlyOut()
-    {
-        transform.SetZ(-9.9f);
-
-        Vector3 outPosition = transform.position;
-
-        if (outPosition.x > 0)
-        {
-            outPosition.x += 15;
-
-            transform.eulerAngles = new Vector3(0, 180);
-        }
-        else
-        {
-            outPosition.x -= 15;
-
-            transform.eulerAngles = Vector3.zero;
-        }
-
-        outPosition.z = -9.9f;
-
-        if (numGrainPileRequiredLeft == 0)
-        {
-            PlayFlyAnim();
-
-            Tween.Position(transform, outPosition, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
-            {
-                gameObject.SetActive(false);
-            });
-
-            foreach (var waitingChickenSlot in waitingChickenSlots)
-            {
-                waitingChickenSlot.chicken = null;
-            }
-
-            isDone = true;
-
-            ChickenManager.Ins.MoveChickensDown();
-        }
-        else
-        {
-            isEating = false;
-        }
-
-        if (numGrainPileRequired > 1)
-        {
-            if (!eatingProgress.gameObject.activeSelf)
-            {
-                SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
-                {
-                    eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-                });
-            }
-            else
-            {
-                eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-            }
-        }
     }
 
     public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave)

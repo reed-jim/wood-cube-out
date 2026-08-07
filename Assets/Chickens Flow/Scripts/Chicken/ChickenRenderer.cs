@@ -75,12 +75,35 @@ public class ChickenRenderer : MonoBehaviour
 
     private void Awake()
     {
+        SettingPopup.replayLevelEvent += Reset;
+        LosePopup.replayLevelEvent += Reset;
+        DebugPopup.switchLevelEvent += Reset;
+
         propertyBlock = new MaterialPropertyBlock();
+    }
+
+    void OnDestroy()
+    {
+        SettingPopup.replayLevelEvent -= Reset;
+        LosePopup.replayLevelEvent -= Reset;
+        DebugPopup.switchLevelEvent -= Reset;
     }
 
     private void Update()
     {
         Render();
+    }
+
+    public void Reset()
+    {
+        chickenDataItems.Clear();
+        dataOfChicken.Clear();
+
+        System.Array.Clear(matrices, 0, matrices.Length);
+        System.Array.Clear(animData, 0, animData.Length);
+        System.Array.Clear(animStartFrame, 0, animStartFrame.Length);
+
+        propertyBlock?.Clear();
     }
 
     private void Render()

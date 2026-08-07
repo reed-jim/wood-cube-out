@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -155,6 +157,18 @@ public class GrainSimulation : Singleton<GrainSimulation>
     private readonly Dictionary<Color, FactionGroup> factionGroups = new Dictionary<Color, FactionGroup>();
     private readonly List<SpawnRequest> pendingSpawns = new List<SpawnRequest>();
 
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        LevelLoader.startLevelEvent += Reset;
+    }
+
+    void OnDestroy()
+    {
+        LevelLoader.startLevelEvent -= Reset;
+    }
+
     void Start()
     {
         BuildPath();
@@ -179,6 +193,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         // Optimized Instanced Batch Render
         Render();
+    }
+
+    void Reset()
+    {
+        RemoveAllGrains();
     }
 
     // ------------------------------------------------------------------------
@@ -688,6 +707,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         group.grains.RemoveAt(group.grains.Count - 1);
         removedCount++;
+    }
+
+    public void RemoveAllGrains()
+    {
+        foreach (var factionGroup in factionGroups)
+        {
+            factionGroup.Value.grains.Clear();
+        }
     }
 
     void CheckSpawnCompletion()

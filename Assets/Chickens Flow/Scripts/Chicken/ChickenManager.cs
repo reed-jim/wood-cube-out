@@ -30,6 +30,30 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public static event Action winLevelEvent;
 
+    void Awake()
+    {
+        SettingPopup.replayLevelEvent += Reset;
+        LosePopup.replayLevelEvent += Reset;
+        DebugPopup.switchLevelEvent += Reset;
+    }
+
+    void OnDestroy()
+    {
+        SettingPopup.replayLevelEvent -= Reset;
+        LosePopup.replayLevelEvent -= Reset;
+        DebugPopup.switchLevelEvent -= Reset;
+    }
+
+    public void Reset()
+    {
+        // Runtime collections
+        chickens.Clear();
+
+        waitingChickenSlots.Clear();
+        chickenByColumn.Clear();
+        slotByColumn.Clear();
+    }
+
     public void SpawnFirstChickens(AntsFlow.LevelItem levelItem)
     {
         int numColumn = levelItem.numColumn;

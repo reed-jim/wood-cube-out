@@ -45,11 +45,22 @@ public class GrainPool : Singleton<GrainPool>
     {
         base.MoreActionOnAwake();
 
+        SettingPopup.replayLevelEvent += Reset;
+        LosePopup.replayLevelEvent += Reset;
+        DebugPopup.switchLevelEvent += Reset;
+
         Reset();
 
         SetupLoopPathArrows();
 
         StartCoroutine(ArrowsLooping());
+    }
+
+    void OnDestroy()
+    {
+        SettingPopup.replayLevelEvent -= Reset;
+        LosePopup.replayLevelEvent -= Reset;
+        DebugPopup.switchLevelEvent -= Reset;
     }
 
     public void Reset()
