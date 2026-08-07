@@ -270,6 +270,29 @@ namespace AntsFlow
                 }
             }
 
+            // minX=6 là cột cố định, không biết máy đang chạy có màn hình rộng bao nhiêu. Trên máy có
+            // tỉ lệ màn hình hẹp hơn Editor, cột này có thể rơi ra ngoài vùng camera thực sự nhìn thấy
+            // (screenSizeWorld tính theo camera.aspect lúc runtime, xem GameplayCamera/CommonUtil) ->
+            // warrior đứng bắn boss ở ghost mode bị khuất mép màn hình. Lọc lại, chỉ giữ node còn nằm
+            // trong vùng an toàn (chừa lề mỗi bên) trước khi chọn node gần nhất.
+            float? safeHalfWidth = null;
+            float cameraX = 0f;
+
+            if (WashingMachineManager.Ins != null && WashingMachineManager.Ins.mainCamera != null)
+            {
+                cameraX = WashingMachineManager.Ins.mainCamera.transform.position.x;
+                safeHalfWidth = GamePersistentVariable.screenSizeWorld.x * 0.5f * 0.85f;
+
+                List<Node> onScreenNodes = targetNodes
+                    .Where(node => Mathf.Abs(node.initialPosition.x - cameraX) <= safeHalfWidth.Value)
+                    .ToList();
+
+                if (onScreenNodes.Count > 0)
+                {
+                    targetNodes = onScreenNodes;
+                }
+            }
+
             if (targetNodes.Count > 0)
             {
                 Node edgeNode = targetNodes
@@ -293,6 +316,13 @@ namespace AntsFlow
 
                 // Tản nhẹ theo trục X để nhiều warrior không chồng khít lên nhau.
                 Vector3 standPosition = standBasePosition.AddX((i - (spawnCount - 1) * 0.5f) * 0.25f);
+
+                // Chặn cứng lần cuối: dù standBasePosition đã lọc theo vùng an toàn, offset tản đội hình
+                // ở trên vẫn có thể đẩy vài warrior ở rìa đội hình lố ra khỏi vùng camera nhìn thấy.
+                if (safeHalfWidth.HasValue)
+                {
+                    standPosition.x = Mathf.Clamp(standPosition.x, cameraX - safeHalfWidth.Value, cameraX + safeHalfWidth.Value);
+                }
 
                 ant.GhostAttackBoss(standPosition, onComplete: null);
 
