@@ -21,7 +21,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float collisionForce = 20f;
 
     [Header("Conveyor Physics")]
-    public float conveyorForce = 30f;
+    public Vector2 conveyorForceRange = new Vector2(150, 300);
     public float edgeForce = 50f;
     public float airDrag = 0.01f;
     public float conveyorWidth = 1f;
@@ -83,7 +83,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public float zPosition;
         public Vector2 velocity2D;
         public float fallVelocity;
-        public float windPhase;
+        public float conveyorForce;
         public float offset;
         public bool onPath;
         public float targetOffset;
@@ -224,7 +224,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     Vector2 nearest = sampledPositions[sample];
                     Vector2 tangent = sampledTangents[sample];
 
-                    g.velocity2D += tangent * conveyorForce * dt;
+                    g.velocity2D += tangent * g.conveyorForce * dt;
 
                     Vector2 toCenter = nearest - (Vector2)g.position;
                     g.velocity2D += toCenter * edgeForce * dt;
@@ -298,8 +298,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
                 if (g.position.y <= conveyorPoint.y)
                 {
-                    g.position.y = conveyorPoint.y;
-                    g.bouncing = true;
+                    // g.position.y = conveyorPoint.y;
+                    g.onPath = true;
                     g.bounceCount = 0;
                     g.radius = grainSpacing * 0.5f;
 
@@ -672,6 +672,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 targetOffset = UnityEngine.Random.Range(-laneWidth, laneWidth),
                 velocity2D = Vector2.zero,
                 fallVelocity = 0,
+                conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y),
                 onPath = false,
                 radius = grainSpacing * 0.5f,
                 fallDelay = (float)i / (totalSpawn - 1) * maxFallDelay,

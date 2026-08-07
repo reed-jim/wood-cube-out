@@ -242,10 +242,13 @@ public class GrainPool : Singleton<GrainPool>
         {
             foreach (LoopPathArrow loopPathArrow in loopPathArrows)
             {
-                loopPathArrow.distanceTravelled += loopPathSpeed * Time.deltaTime;
+                loopPathArrow.distanceTravelled -= loopPathSpeed * Time.deltaTime;
 
-                if (loopPathArrow.distanceTravelled >= splineLength)
-                    loopPathArrow.distanceTravelled -= splineLength;
+                // Reverse loop
+                if (loopPathArrow.distanceTravelled < 0)
+                {
+                    loopPathArrow.distanceTravelled += splineLength;
+                }
 
                 float percent = DistanceToPercent(loopPathArrow.distanceTravelled);
 
@@ -257,13 +260,15 @@ public class GrainPool : Singleton<GrainPool>
                     arrowZ
                 );
 
+                // Reverse rotation direction
+                Vector3 direction = -sample.forward;
+
                 float angle = Mathf.Atan2(
-                    sample.forward.y,
-                    sample.forward.x
+                    direction.y,
+                    direction.x
                 ) * Mathf.Rad2Deg;
 
-                loopPathArrow.arrow.rotation =
-                    Quaternion.Euler(0, 0, angle);
+                loopPathArrow.arrow.rotation = Quaternion.Euler(0, 0, angle);
             }
 
             yield return null;
