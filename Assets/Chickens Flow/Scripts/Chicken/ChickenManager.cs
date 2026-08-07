@@ -666,7 +666,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void MoveChickensDown()
     {
-        Dictionary<BaseChicken, Vector3> destinations = new();
+        Dictionary<BaseChicken, ChickenMoveData> destinations = new();
 
         List<BaseChicken> validChickens = chickens
             .Where(c => !c.isDone)
@@ -694,6 +694,7 @@ public class ChickenManager : Singleton<ChickenManager>
         foreach (BaseChicken chicken in validChickens)
         {
             bool moved = false;
+            Vector2Int direction = Vector2Int.down;
 
             Vector2Int[] directions =
             {
@@ -711,7 +712,7 @@ public class ChickenManager : Singleton<ChickenManager>
                     MoveChicken(chicken, Vector2Int.down, occupied);
                     moved = true;
                 }
-                else if (downResult == MoveBlockReason.Wall)
+                else if (chicken.GetFirstRow() > 0)
                 {
                     if (GetMoveBlockReason(chicken, Vector2Int.left, occupied) == MoveBlockReason.None)
                     {
@@ -724,14 +725,20 @@ public class ChickenManager : Singleton<ChickenManager>
                         moved = true;
                     }
                 }
+
+                direction = dir;
             }
 
             OccupyChicken(chicken, occupied);
 
             if (moved)
             {
-                destinations[chicken] =
-                    GetBottomLeftSlot(chicken).GetRandomPosition();
+                ChickenMoveData chickenMoveData = new ChickenMoveData();
+
+                chickenMoveData.destination = GetBottomLeftSlot(chicken).GetRandomPosition();
+                chickenMoveData.direction = direction;
+
+                destinations[chicken] = chickenMoveData;
             }
         }
 
@@ -739,9 +746,9 @@ public class ChickenManager : Singleton<ChickenManager>
     }
 
     private MoveBlockReason GetMoveBlockReason(
-     BaseChicken chicken,
-     Vector2Int direction,
-     HashSet<Vector2Int> occupied)
+        BaseChicken chicken,
+        Vector2Int direction,
+        HashSet<Vector2Int> occupied)
     {
         List<WaitingChickenSlot> edge =
             GetLeadingEdge(chicken, direction);
@@ -847,7 +854,7 @@ public class ChickenManager : Singleton<ChickenManager>
     }
 
     private void AnimateChickens(
-        Dictionary<BaseChicken, Vector3> destinations)
+        Dictionary<BaseChicken, ChickenMoveData> destinations)
     {
         if (destinations.Count == 0)
         {
@@ -861,17 +868,34 @@ public class ChickenManager : Singleton<ChickenManager>
         {
             BaseChicken chicken = pair.Key;
 
-            chicken.PlayMoveAnim();
+            ChickenMoveData chickenMoveData = pair.Value;
+
+            if (chickenMoveData.direction == Vector2Int.down)
+            {
+                chicken.PlayMoveAnim();
+            }
+            else if (chickenMoveData.direction == Vector2Int.right)
+            {
+                chicken.PlayFlyAnim();
+
+                transform.eulerAngles = new Vector3(0, 180);
+            }
+            else
+            {
+                chicken.PlayFlyAnim();
+            }
 
             GamePersistentVariable.numMovingChicken++;
 
             Tween tween = Tween.Position(
                 pair.Key.transform,
-                pair.Value,
+                chickenMoveData.destination,
                 0.3f)
             .OnUpdate(target: pair.Key.transform, (target, tween) => chickenRenderer.UpdateChickenRendering(pair.Key))
             .OnComplete(() =>
             {
+                transform.rotation = Quaternion.identity;
+
                 remaining--;
 
                 if (chicken.GetFirstRow() == 0)
@@ -965,4 +989,10 @@ public class ChickenManager : Singleton<ChickenManager>
         return result;
     }
     #endregion
+}
+
+public struct ChickenMoveData
+{
+    public Vector3 destination;
+    public Vector2Int direction;
 }

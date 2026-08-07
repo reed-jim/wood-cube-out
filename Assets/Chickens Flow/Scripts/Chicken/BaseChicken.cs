@@ -39,6 +39,7 @@ public class BaseChicken : MonoBehaviour
     public bool isEating;
     public bool isDone;
     public bool isStuck;
+    public bool isForceFlyOut;
     public string currentAnimation;
 
     public float prevEatingProgress;
@@ -238,6 +239,7 @@ public class BaseChicken : MonoBehaviour
             waitingChickenSlot.chicken = null;
         }
 
+        isForceFlyOut = true;
         isDone = true;
     }
 

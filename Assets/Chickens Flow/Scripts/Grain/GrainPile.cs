@@ -201,6 +201,7 @@ public class GrainPile : MonoBehaviour
 
         bool isDone = false;
 
+        chicken.SetActiveSpine(true);
         chicken.PlayIdleAnim();
 
         float prevChickenEatingProgress = chicken.prevEatingProgress;
@@ -209,13 +210,11 @@ public class GrainPile : MonoBehaviour
 
         ChickenManager.Ins.chickenRenderer.RemoveChickenRendering(chicken);
 
-        chicken.skeletonAnimation.gameObject.SetActive(true);
-
         WashingMachineManager.Ins.grainPool.AddGrain(-numGrain, durationUpdateProgress: GetUpdatingProgressDuration(numGrainToEat));
 
         GamePersistentVariable.numEatingChicken++;
 
-        while (!isDone)
+        while (!isDone && !chicken.isForceFlyOut)
         {
             try
             {
