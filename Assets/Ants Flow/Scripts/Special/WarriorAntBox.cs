@@ -208,10 +208,7 @@ namespace AntsFlow
             OnFinishSpawningAntsBatch();
         }
 
-        // Warrior ant chỉ dùng tile "done" làm waypoint để bắn boss rồi quay về (không ăn mất tile),
-        // nên waypoint tái sử dụng được. GetFirstNMovableTilesForWarriorAnts mỗi lần chỉ trả về tối đa
-        // số tile done trong hành lang tới boss, nên 1 lần CheckAntsPath chỉ nhả được 1 đợt bằng độ dài
-        // hành lang. Nếu vẫn còn count, tự re-check để nhả tiếp cho hết thay vì phải bốc hộp khác lên bàn.
+
         protected override void OnFinishSpawningAntsBatch()
         {
             if (remainingNumber <= 0)
@@ -235,7 +232,7 @@ namespace AntsFlow
                 return;
             }
 
-         
+
             StartCoroutine(SpawningWarriorGhostAnts());
 
             isGhostMode = true;
@@ -270,11 +267,7 @@ namespace AntsFlow
                 }
             }
 
-            // minX=6 là cột cố định, không biết máy đang chạy có màn hình rộng bao nhiêu. Trên máy có
-            // tỉ lệ màn hình hẹp hơn Editor, cột này có thể rơi ra ngoài vùng camera thực sự nhìn thấy
-            // (screenSizeWorld tính theo camera.aspect lúc runtime, xem GameplayCamera/CommonUtil) ->
-            // warrior đứng bắn boss ở ghost mode bị khuất mép màn hình. Lọc lại, chỉ giữ node còn nằm
-            // trong vùng an toàn (chừa lề mỗi bên) trước khi chọn node gần nhất.
+
             float? safeHalfWidth = null;
             float cameraX = 0f;
 

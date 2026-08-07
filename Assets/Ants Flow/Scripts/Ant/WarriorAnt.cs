@@ -124,7 +124,6 @@ namespace AntsFlow
 
         private void DisappearAfterGhostAttack()
         {
-            // Fade alpha của skeleton và material property block về 0 tại chỗ (thay cho scale nhỏ lại).
             float startAlpha = (skeletonAnimation != null && skeletonAnimation.Skeleton != null) ? skeletonAnimation.Skeleton.A : 1f;
 
             tweens.Add(Tween.Custom(startAlpha, 0f, duration: 0.3f, onValueChange: a =>
@@ -135,11 +134,8 @@ namespace AntsFlow
             {
                 gameObject.SetActive(false);
 
-                // Trả lại alpha=1 để lần sau lấy từ pool hiển thị bình thường.
                 SetAlpha(1f);
 
-                // Warrior thường dùng tile "done" làm waypoint; giữ nguyên việc complete waypoint như khi
-                // còn quay về lỗ. Ghost ant (GhostAttackBoss) không gán tile nên bỏ qua.
                 if (tile != null)
                 {
                     tile.Complete();
@@ -195,17 +191,14 @@ namespace AntsFlow
 
             int firstBottomMostPointIndex;
 
-            // Đi Y HỆT kiến thường (BaseAnt.MovingCurved). Warrior sinh lệch tâm thì đi thẳng từ hộp lên
-            // hàng đáy; sinh ở slot giữa (ngay trên lỗ tổ antNest) thì đi vòng né lỗ tổ như bên dưới.
+
             bool isCenter = Math.Abs(transform.position.x) < 0.1f;
 
             if (isCenter)
             {
                 int sign = 1;
 
-                // Warrior sinh ở slot giữa (x≈0) nằm ngay trên lỗ tổ antNest: đi xuống rồi TẠT NGANG
-                // VUÔNG GÓC hẳn sang một bên, sau đó mới leo thẳng lên — không đi chéo, không đè qua lỗ tổ.
-                // Đúng y đường của kiến thường trong BaseAnt.MovingCurved.
+
                 points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
                 points.Insert(1, TileManager.Ins.antNest.position.ChangeY(-3).ChangeX(sign * 3f));
                 points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
@@ -271,8 +264,7 @@ namespace AntsFlow
                 }
             }
 
-            // Dùng chung speedMove với kiến thường (BaseAnt) để tốc độ warrior luôn bằng kiến thường,
-            // kể cả khi đang có booster tăng tốc (EVENT_START_UP_SPEED_ANT cập nhật speedMove).
+
             float speed = speedMove > 0 ? speedMove : (initialSpeedMove > 0 ? initialSpeedMove : 5f);
             float totalTime = totalDistance > 0 ? totalDistance / speed : 0.1f;
 
@@ -289,11 +281,6 @@ namespace AntsFlow
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                 targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                // Dùng Vector2.Distance (bỏ qua Z) để khớp cơ sở tính toán với totalDistance ở trên.
-                // Nếu dùng Vector3.Distance, riêng đoạn đầu tiên sau khi spawn sẽ bị cộng khống chênh lệch
-                // Z giữa vị trí spawn (baseZPosition = -8, xem Init()) và waypoint (Node.initialPosition
-                // luôn có Z=0), khiến timeNeeded của đoạn đó bị thổi phồng → warrior bò rất chậm lúc mới ra,
-                // rồi mới nhanh bình thường từ đoạn thứ 2 trở đi.
                 float distance = Vector2.Distance(start, end);
                 float timeNeeded = totalDistance > 0 ? (distance / totalDistance * totalTime) : 0f;
                 float timePassed = 0f;
@@ -345,8 +332,7 @@ namespace AntsFlow
             float zPosition = (isGhostAttack ? ghostBaseZPosition : baseZPosition) - 0.001f * transform.GetSiblingIndex();
             transform.position = transform.position.ChangeZ(zPosition);
 
-            // Quay mặt kiến về phía boss trước khi bắn. Trước đây chỉ missile được xoay về boss,
-            // còn thân kiến giữ nguyên hướng di chuyển nên trông như không nhắm vào bossArea.
+
             if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
             {
                 Rotate(transform, SpecialElementManager.Ins.bossArea.transform.position - transform.position);
