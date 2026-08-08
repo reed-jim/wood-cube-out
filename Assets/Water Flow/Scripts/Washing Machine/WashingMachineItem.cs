@@ -39,7 +39,7 @@ public class WashingMachineItem : MonoBehaviour
     [Header("Customize")]
     public float pourRange = 6;
     public float pourOffsetY = 7;
-    public float grainsOffsetYWhenPouring = -0.5f;
+    public Vector3 grainsOffsetWhenPouring;
 
     public TMP_Text numberText;
 
@@ -293,7 +293,7 @@ public class WashingMachineItem : MonoBehaviour
                 {
                     grainPile.gameObject.SetActive(true);
 
-                    grainPile.transform.position = bucketDestination.ChangeY(grainSprite.transform.position.y + grainsOffsetYWhenPouring);
+                    grainPile.transform.position = bucketDestination + grainsOffsetWhenPouring;
 
                     grainPile.Setup(this, numPile);
 
