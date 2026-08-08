@@ -196,6 +196,7 @@ public class GrainPile : MonoBehaviour
     private IEnumerator ChickenEatingGrains(BaseChicken chicken, int numGrain, bool isLast, Action onCompleteAction)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+        WaitForSeconds delayPerGrainWait = new WaitForSeconds(delayPerGrain);
 
         int currentIndex = 0;
 
@@ -216,7 +217,7 @@ public class GrainPile : MonoBehaviour
 
         while (!isDone && !chicken.isForceFlyOut)
         {
-            try
+            if (GrainSimulation.Ins.IsAnyGrainNear(chicken.transform.position, chicken.faction))
             {
                 if (currentIndex % 5 == 0)
                 {
@@ -237,30 +238,30 @@ public class GrainPile : MonoBehaviour
                         chicken.PlayEatAnim();
                     }
                 }
+
+                PlaySoundAndFx(chicken.transform.position);
+
+                GrainSimulation.Ins.RemoveLastGrain(faction);
+
+                currentIndex++;
+
+                if (currentIndex >= numGrainToEat)
+                {
+                    isDone = true;
+                }
+
+                float currentPercent = chicken.prevEatingProgress + ((float)currentIndex / numGrainToEat) * (chicken.currentEatingProgress - chicken.prevEatingProgress);
+
+                chicken.UpdateEatingProgress(currentPercent, prevChickenEatingProgress, delayPerGrain);
+
+                prevChickenEatingProgress = currentPercent;
             }
-            catch (System.Exception)
+            else
             {
-
+                chicken.PlayIdleAnim();
             }
 
-            PlaySoundAndFx(chicken.transform.position);
-
-            GrainSimulation.Ins.RemoveLastGrain(faction);
-
-            currentIndex++;
-
-            if (currentIndex >= numGrainToEat)
-            {
-                isDone = true;
-            }
-
-            float currentPercent = chicken.prevEatingProgress + ((float)currentIndex / numGrainToEat) * (chicken.currentEatingProgress - chicken.prevEatingProgress);
-
-            chicken.UpdateEatingProgress(currentPercent, prevChickenEatingProgress, delayPerGrain);
-
-            prevChickenEatingProgress = currentPercent;
-
-            yield return new WaitForSeconds(delayPerGrain);
+            yield return delayPerGrainWait;
         }
 
         if (isLast)

@@ -11,7 +11,8 @@ using UnityEditor;
 public class GrainSimulation : Singleton<GrainSimulation>
 {
     [Header("Fall")]
-    public float gravity = 15f;
+    public Vector2 gravityRange;
+    public float fallRatio = 15f;
 
     [Header("Path Movement")]
     public float maxSpeed = 5f;
@@ -82,6 +83,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         public Vector3 position;
         public float zPosition;
         public Vector2 velocity2D;
+        public float gravity;
         public float fallVelocity;
         public float conveyorForce;
         public float offset;
@@ -255,7 +257,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 // 3. BOUNCING STATE
                 if (g.bouncing)
                 {
-                    g.fallVelocity -= gravity * dt;
+                    g.fallVelocity -= g.gravity * dt;
                     g.position.y += g.fallVelocity * dt;
                     g.position.x += g.velocity2D.x * dt;
 
@@ -290,7 +292,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 }
 
                 // 4. FREE FALL STATE
-                g.fallVelocity -= gravity * dt;
+                g.fallVelocity -= g.gravity * dt;
                 g.position.y += g.fallVelocity * dt;
 
                 int fallSample = GetNearestSampleIndexFast(g.position, invCellSize);
@@ -665,6 +667,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         for (int i = 0; i < totalSpawn; i++)
         {
+            float indexRatio = (float)i / totalSpawn;
+
             Grain g = new Grain
             {
                 position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle,
@@ -672,11 +676,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 offset = 0f,
                 targetOffset = UnityEngine.Random.Range(-laneWidth, laneWidth),
                 velocity2D = Vector2.zero,
+                gravity = UnityEngine.Random.Range(gravityRange.x, gravityRange.y),
                 fallVelocity = 0,
                 conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y),
                 onPath = false,
                 radius = grainSpacing * 0.5f,
-                fallDelay = (float)i / (totalSpawn - 1) * maxFallDelay,
+                fallDelay = Mathf.Pow(indexRatio, fallRatio) * maxFallDelay,
                 bouncing = false,
                 bounceCount = 0,
                 bounceRestitution = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y),
@@ -733,6 +738,35 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 break;
             }
         }
+    }
+
+    public bool IsAnyGrainNear(Vector2 position, Color faction)
+    {
+        float grainPoolPositionY = GrainPool.Ins.transform.position.y;
+        float range = 1;
+
+        foreach (var factionGroup in factionGroups)
+        {
+            if (factionGroup.Key == faction)
+            {
+                List<Grain> grains = factionGroup.Value.grains;
+
+                for (int i = 0; i < grains.Count; i++)
+                {
+                    Grain grain = grains[i];
+
+                    if (grain.position.y > grainPoolPositionY &&
+                        grain.position.x > position.x - range &&
+                        grain.position.x < position.x + range
+                    )
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     void CheckSpawnCompletion()
