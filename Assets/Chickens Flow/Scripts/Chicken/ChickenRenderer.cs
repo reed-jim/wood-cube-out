@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public struct ChickenBatchKey
@@ -47,9 +48,12 @@ public class ChickenRenderer : MonoBehaviour
     // [SerializeField] private Material[] idleMaterials;
     // [SerializeField] private Material[] walkMaterials;
     [SerializeField] private MaterialsForAnim[] materialsForAnims;
+    [SerializeField] private Material shadowMaterial;
 
     [Header("Customize")]
     public Vector3 offset;
+    public Vector3 shadowOffset;
+    public Vector3 shadowSize;
     public float chickenSize;
     public float maxAnimationFrame;
 
@@ -58,6 +62,7 @@ public class ChickenRenderer : MonoBehaviour
     private readonly List<ChickenData> chickenDataItems = new();
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[BatchSize];
+    private readonly Matrix4x4[] shadowMatrices = new Matrix4x4[BatchSize];
     private readonly Vector4[] animData = new Vector4[BatchSize];
     private readonly float[] animStartFrame = new float[BatchSize];
 
@@ -130,6 +135,30 @@ public class ChickenRenderer : MonoBehaviour
                 batch.Value
             );
         }
+
+        RenderShadow();
+    }
+
+    private void RenderShadow()
+    {
+        for (int i = 0; i < chickenDataItems.Count; i++)
+        {
+            ChickenData chicken = chickenDataItems[i];
+
+            shadowMatrices[i] = Matrix4x4.TRS(
+                    chicken.position + shadowOffset,
+                    Quaternion.identity,
+                    shadowSize
+                );
+        }
+
+        Graphics.DrawMeshInstanced(
+                chickenMesh,
+                0,
+                shadowMaterial,
+                shadowMatrices,
+                chickenDataItems.Count
+            );
     }
 
     private void DrawBatch(
@@ -147,19 +176,16 @@ public class ChickenRenderer : MonoBehaviour
                 indexes.Count - start
             );
 
-
             for (int i = 0; i < count; i++)
             {
                 ChickenData chicken =
                     chickenDataItems[indexes[start + i]];
-
 
                 matrices[i] = Matrix4x4.TRS(
                     chicken.position + offset,
                     Quaternion.identity,
                     chickenSize * Vector3.one
                 );
-
 
                 // x = animation
                 // y = faction
@@ -170,11 +196,9 @@ public class ChickenRenderer : MonoBehaviour
                     0
                 );
 
-
                 animStartFrame[i] =
                     chicken.animStartFrame;
             }
-
 
             propertyBlock.Clear();
 
@@ -188,7 +212,6 @@ public class ChickenRenderer : MonoBehaviour
                 animStartFrame
             );
 
-
             Graphics.DrawMeshInstanced(
                 chickenMesh,
                 0,
@@ -197,7 +220,6 @@ public class ChickenRenderer : MonoBehaviour
                 count,
                 propertyBlock
             );
-
 
             start += count;
         }

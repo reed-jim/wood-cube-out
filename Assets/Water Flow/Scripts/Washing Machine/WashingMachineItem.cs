@@ -22,6 +22,7 @@ public class WashingMachineItem : MonoBehaviour
     public SpriteRenderer bucketSprite;
     public SpriteRenderer bucketTopSprite;
     public SpriteRenderer grainSprite;
+    public Transform[] grainSpriteRanges;
     #endregion
 
     public SpriteRenderer lid;
@@ -38,8 +39,7 @@ public class WashingMachineItem : MonoBehaviour
     [Header("Customize")]
     public float pourRange = 6;
     public float pourOffsetY = 7;
-
-    public Sprite[] shadows;
+    public float grainsOffsetYWhenPouring = -0.5f;
 
     public TMP_Text numberText;
 
@@ -141,6 +141,7 @@ public class WashingMachineItem : MonoBehaviour
         washingMachineSlot = null;
 
         doubleAntBoxHole.gameObject.SetActive(false);
+        shadow.color = Color.white;
 
         transform.SetParent(washingMachineStartSlot.transform);
         transform.localPosition = new Vector3(0, 0, -1);
@@ -159,8 +160,6 @@ public class WashingMachineItem : MonoBehaviour
 
         isAnimating = true;
 
-        shadow.sprite = shadows[0];
-
         // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
         // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
@@ -171,6 +170,10 @@ public class WashingMachineItem : MonoBehaviour
         bucketSprite.sprite = FactionMapper.Ins.GetBucketSprite(faction);
         bucketTopSprite.sprite = FactionMapper.Ins.GetBucketTopSprite(faction);
         grainSprite.sprite = FactionMapper.Ins.GetGrainSprite(faction);
+
+        float grainSpriteYRatio = number / 100f;
+        grainSpriteYRatio = Mathf.Min(grainSpriteYRatio, 1);
+        grainSprite.transform.localPosition = Vector3.Lerp(grainSpriteRanges[0].localPosition, grainSpriteRanges[1].localPosition, grainSpriteYRatio);
 
         tilesToMove = new List<AntsFlow.BaseTile>();
 
@@ -290,7 +293,7 @@ public class WashingMachineItem : MonoBehaviour
                 {
                     grainPile.gameObject.SetActive(true);
 
-                    grainPile.transform.position = bucketDestination;
+                    grainPile.transform.position = bucketDestination.ChangeY(grainSprite.transform.position.y + grainsOffsetYWhenPouring);
 
                     grainPile.Setup(this, numPile);
 
@@ -907,6 +910,8 @@ public class WashingMachineItem : MonoBehaviour
         bool isPouringAll = true;
 
         Transform initialParent = transform.parent;
+
+        TweenManager.Ins.AddTween(Tween.Alpha(shadow, 0, duration: 0.3f));
 
         PourGrainOur(out isPouringAll, onCompleteAction: () =>
         {
