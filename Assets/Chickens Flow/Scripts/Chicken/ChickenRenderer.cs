@@ -141,17 +141,25 @@ public class ChickenRenderer : MonoBehaviour
 
     private void RenderShadow()
     {
+        float outsideScreenX = 999;
+
+        Vector3 position;
+
         for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
         {
             BaseChicken chicken = ChickenManager.Ins.chickens[i];
 
             if (chicken.isDone)
             {
-                continue;
+                position = new Vector3(outsideScreenX, 0, 0);
+            }
+            else
+            {
+                position = chicken.transform.position + shadowOffset;
             }
 
             shadowMatrices[i] = Matrix4x4.TRS(
-                    chicken.transform.position + shadowOffset,
+                    position,
                     Quaternion.identity,
                     shadowSize
                 );
@@ -162,7 +170,7 @@ public class ChickenRenderer : MonoBehaviour
                 0,
                 shadowMaterial,
                 shadowMatrices,
-                chickenDataItems.Count
+                ChickenManager.Ins.chickens.Count
             );
     }
 
