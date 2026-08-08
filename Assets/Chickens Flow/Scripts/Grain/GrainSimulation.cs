@@ -16,14 +16,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float fallDelayPower = 3;
     [SerializeField]
     private AnimationCurve pourDelayCurve = new AnimationCurve(
-    new Keyframe(0.00f, 0.00f),
-    new Keyframe(0.40f, 0.01f),
-    new Keyframe(0.65f, 0.03f),
-    new Keyframe(0.80f, 0.08f),
-    new Keyframe(0.90f, 0.20f),
-    new Keyframe(0.95f, 0.40f),
-    new Keyframe(1.00f, 0.90f)
-);
+        new Keyframe(0.00f, 0.00f),
+        new Keyframe(0.50f, 0.01f),
+        new Keyframe(0.75f, 0.03f),
+        new Keyframe(0.85f, 0.07f),
+        new Keyframe(0.92f, 0.18f),
+        new Keyframe(0.97f, 0.45f),
+        new Keyframe(1.00f, 1.20f)
+    );
 
     [Header("Path Movement")]
     public float maxSpeed = 5f;
@@ -748,6 +748,17 @@ public class GrainSimulation : Singleton<GrainSimulation>
         if (group.grains.Count == 0) return;
 
         group.grains.RemoveAt(group.grains.Count - 1);
+        removedCount++;
+    }
+
+    public void RemoveFirstGrain(Color faction)
+    {
+        removedCallCount++;
+        FactionGroup group = GetFaction(faction);
+
+        if (group.grains.Count == 0) return;
+
+        group.grains.RemoveAt(0);
         removedCount++;
     }
 

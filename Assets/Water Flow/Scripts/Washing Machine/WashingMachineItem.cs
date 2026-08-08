@@ -303,7 +303,7 @@ public class WashingMachineItem : MonoBehaviour
                         Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
                         .OnComplete(() =>
                         {
-                            Tween.Alpha(grainSprite, 0, 0.6f);
+                            Tween.Alpha(grainSprite, 0, 0.4f);
 
                             PourGrainPile(grainPile, isLast, () =>
                             {

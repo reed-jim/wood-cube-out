@@ -240,7 +240,7 @@ public class GrainPile : MonoBehaviour
 
                 PlaySoundAndFx(chicken.transform.position);
 
-                GrainSimulation.Ins.RemoveLastGrain(faction);
+                GrainSimulation.Ins.RemoveFirstGrain(faction);
 
                 currentIndex++;
 
