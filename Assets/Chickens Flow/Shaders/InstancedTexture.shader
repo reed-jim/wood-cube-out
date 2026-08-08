@@ -1,4 +1,4 @@
-Shader "Custom/InstancedShadow"
+Shader "Custom/InstancedShadowNoOverlap"
 {
     Properties
     {
@@ -19,7 +19,16 @@ Shader "Custom/InstancedShadow"
         {
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
+            ZTest LEqual
             Cull Off
+
+            // Only allow the first shadow to write to this pixel
+            Stencil
+            {
+                Ref 1
+                Comp NotEqual
+                Pass Replace
+            }
 
             CGPROGRAM
 
@@ -64,16 +73,11 @@ Shader "Custom/InstancedShadow"
             {
                 fixed4 tex = tex2D(_MainTex, i.uv);
 
-                // Texture alpha controls shadow transparency
                 float alpha = tex.a * _Color.a;
 
-                // Remove almost-transparent pixels
                 clip(alpha - _Cutoff);
 
-                return fixed4(
-                    _Color.rgb,
-                    alpha
-                );
+                return fixed4(_Color.rgb, alpha);
             }
 
             ENDCG
