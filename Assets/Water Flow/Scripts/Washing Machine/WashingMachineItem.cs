@@ -35,6 +35,10 @@ public class WashingMachineItem : MonoBehaviour
     [SpineAnimation] public string selectFalseAnimation;
     [SpineAnimation] public string doubleBoxAnimation;
 
+    [Header("Customize")]
+    public float pourRange = 6;
+    public float pourOffsetY = 7;
+
     public Sprite[] shadows;
 
     public TMP_Text numberText;
@@ -269,8 +273,8 @@ public class WashingMachineItem : MonoBehaviour
 
                 Vector3 bucketDestination;
 
-                bucketDestination.x = -0.5f;
-                bucketDestination.y = 7;
+                bucketDestination.x = UnityEngine.Random.Range(-pourRange, pourRange);
+                bucketDestination.y = pourOffsetY;
                 bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
 
                 bucketTopSprite.transform.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
@@ -292,7 +296,7 @@ public class WashingMachineItem : MonoBehaviour
 
                     if (!isRotated)
                     {
-                        Tween.PositionX(grainPile.transform, 0, duration: 0.3f);
+                        Tween.PositionX(grainPile.transform, bucketDestination.x + 0.5f, duration: 0.3f);
                         Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
                         .OnComplete(() =>
                         {

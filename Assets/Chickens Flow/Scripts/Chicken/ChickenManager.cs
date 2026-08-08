@@ -35,6 +35,10 @@ public class ChickenManager : Singleton<ChickenManager>
     public int requiredGrainForNormalChicken;
     public int maxGhostChicken;
 
+    [Header("Board Shape")]
+    [SerializeField] private Transform[] shapePoints;
+    [SerializeField] private int middleRow = 12;
+
     public List<Color> allFactions;
 
     private GrainPile lastGrainPileToFeed;
@@ -178,9 +182,16 @@ public class ChickenManager : Singleton<ChickenManager>
 
         List<Vector2Int> wallTiles = new List<Vector2Int>();
 
-        for (int i = 0; i < levelItem.specialElementConfig.wallConfig.coordinates.Count; i++)
+        try
         {
-            wallTiles.Add(levelItem.specialElementConfig.wallConfig.coordinates[i]);
+            for (int i = 0; i < levelItem.specialElementConfig.wallConfig.coordinates.Count; i++)
+            {
+                wallTiles.Add(levelItem.specialElementConfig.wallConfig.coordinates[i]);
+            }
+        }
+        catch (System.Exception)
+        {
+
         }
 
         waitingChickenSlots = new Dictionary<Vector2Int, WaitingChickenSlot>();
@@ -191,29 +202,39 @@ public class ChickenManager : Singleton<ChickenManager>
             int y = (int)levelItem.chickenLevelTiles[i].position.y;
 
             WaitingChickenSlot waitingChickenSlot = new WaitingChickenSlot();
+
             waitingChickenSlot.column = x;
             waitingChickenSlot.row = y;
 
-            position = new Vector3(x, y);
-            position.x -= (numColumn - 1) / 2f;
-            position.x += 0.5f * (y % 2);
-            position.x *= 1 - depthDistanceXRatio * y;
-            position.y += chickenAreaOffsetY;
-            position *= chickenDistanceRatio;
+            // -----------------------------------------
+            // Generate position from the 6 shape points
+            // -----------------------------------------
+            position = GetShapePosition(x, y);
+
+            // Keep your depth ordering
             position.z = -1 - 0.01f * (numRow - i);
 
             waitingChickenSlot.position = position;
 
+            // -----------------------------------------
+            // Wall
+            // -----------------------------------------
             if (wallTiles.Contains(new Vector2Int(x, y)))
             {
                 waitingChickenSlot.isWall = true;
 
-                Wall wall = ObjectPoolingEverything.GetFromPool<Wall>(GameConstants.wall);
+                Wall wall = ObjectPoolingEverything.GetFromPool<Wall>(
+                    GameConstants.wall
+                );
 
                 wall.transform.position = position.AddZ(-0.01f);
             }
 
-            waitingChickenSlots.Add(new Vector2Int(x, y), waitingChickenSlot);
+            waitingChickenSlots.Add(
+                new Vector2Int(x, y),
+                waitingChickenSlot
+            );
+
             debugWaitingChickenSlots.Add(waitingChickenSlot);
         }
 
@@ -269,16 +290,6 @@ public class ChickenManager : Singleton<ChickenManager>
             column = (int)tileData.position.x;
             row = (int)tileData.position.y;
 
-            // position = tileData.position;
-            // position.x -= (numColumn - 1) / 2f;
-            // position.x += 0.5f * (row % 2);
-            // position.y += chickenAreaOffsetY;
-            // position *= chickenDistanceRatio;
-            // position.z = -1 - 0.01f * (numRow - i);
-
-            // chicken.transform.position = position;
-            // chicken.transform.position = chicken.transform.position.AddX(UnityEngine.Random.Range(-radius, radius));
-
             chicken.SetFaction(allFactions[index]);
             chicken.column = column;
             chicken.row = row;
@@ -333,6 +344,69 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         chickenRenderer.RenderChickens(chickens);
+    }
+
+    private Vector3 GetShapePosition(int x, int y)
+    {
+        float u = numColumn <= 1
+            ? 0.5f
+            : (float)x / (numColumn - 1);
+
+        Vector3 position;
+
+        // =========================
+        // BOTTOM RECTANGLE
+        // =========================
+        if (y <= middleRow)
+        {
+            float t = middleRow <= 0
+                ? 0f
+                : (float)y / middleRow;
+
+            Vector3 left = Vector3.Lerp(
+                shapePoints[0].position,
+                shapePoints[2].position,
+                t
+            );
+
+            Vector3 right = Vector3.Lerp(
+                shapePoints[1].position,
+                shapePoints[3].position,
+                t
+            );
+
+            position = Vector3.Lerp(left, right, u);
+        }
+        // =========================
+        // TOP PARALLELOGRAM
+        // =========================
+        else
+        {
+            int topRows = (numRow - 1) - middleRow;
+
+            float t = topRows <= 0
+                ? 0f
+                : (float)(y - middleRow) / topRows;
+
+            Vector3 left = Vector3.Lerp(
+                shapePoints[2].position,
+                shapePoints[4].position,
+                t
+            );
+
+            Vector3 right = Vector3.Lerp(
+                shapePoints[3].position,
+                shapePoints[5].position,
+                t
+            );
+
+            position = Vector3.Lerp(left, right, u);
+        }
+
+        // Odd rows are shifted slightly to the right
+        position.x += 0.5f * (y % 2);
+
+        return position;
     }
 
     private GiantChickenItemConfig GetGiantChickenAt(
