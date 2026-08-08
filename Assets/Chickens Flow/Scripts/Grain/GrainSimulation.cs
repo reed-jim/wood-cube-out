@@ -12,7 +12,18 @@ public class GrainSimulation : Singleton<GrainSimulation>
 {
     [Header("Fall")]
     public Vector2 gravityRange;
-    public float fallRatio = 15f;
+    public float fallDelayIncreaseRatio = 0.001f;
+    public float fallDelayPower = 3;
+    [SerializeField]
+    private AnimationCurve pourDelayCurve = new AnimationCurve(
+    new Keyframe(0.00f, 0.00f),
+    new Keyframe(0.40f, 0.01f),
+    new Keyframe(0.65f, 0.03f),
+    new Keyframe(0.80f, 0.08f),
+    new Keyframe(0.90f, 0.20f),
+    new Keyframe(0.95f, 0.40f),
+    new Keyframe(1.00f, 0.90f)
+);
 
     [Header("Path Movement")]
     public float maxSpeed = 5f;
@@ -71,6 +82,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public Vector2[] sampledPositions;
     public Vector2[] sampledTangents;
+    public float[] fallDelayAtIndexes;
     private int[,] lookupGrid;
     public float lookupCellSize = 0.05f;
     private Vector2 worldMin;
@@ -578,6 +590,28 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 lookupGrid[x, y] = bestIndex;
             }
         }
+
+        PreCalculateFallDelay();
+    }
+
+    [ContextMenu("Pre Calculate Fall Delay")]
+    public void PreCalculateFallDelay()
+    {
+        fallDelayAtIndexes = new float[800];
+
+        for (int i = 0; i < fallDelayAtIndexes.Length; i++)
+        {
+            // fallDelayAtIndexes[i] = Mathf.Pow(1 + fallDelayIncreaseRatio * i, fallDelayPower) * maxFallDelay - 1;
+
+            if (i < 100)
+            {
+                fallDelayAtIndexes[i] = fallDelayIncreaseRatio * i * maxFallDelay;
+            }
+            else
+            {
+                fallDelayAtIndexes[i] = 5 * fallDelayIncreaseRatio * i * maxFallDelay;
+            }
+        }
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -667,8 +701,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         for (int i = 0; i < totalSpawn; i++)
         {
-            float indexRatio = (float)i / totalSpawn;
-
             Grain g = new Grain
             {
                 position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle,
@@ -681,7 +713,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y),
                 onPath = false,
                 radius = grainSpacing * 0.5f,
-                fallDelay = Mathf.Pow(indexRatio, fallRatio) * maxFallDelay,
+                fallDelay = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay,
                 bouncing = false,
                 bounceCount = 0,
                 bounceRestitution = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y),
@@ -777,7 +809,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             request.tryTime++;
 
-            if (request.tryTime > 500)
+            if (request.tryTime > 5000)
             {
                 request.onAllGrainsPoured?.Invoke();
                 request.onComplete?.Invoke();

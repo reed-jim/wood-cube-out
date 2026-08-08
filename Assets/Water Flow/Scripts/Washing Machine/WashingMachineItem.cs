@@ -166,6 +166,7 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
 
         grainSprite.gameObject.SetActive(true);
+        grainSprite.color = Color.white;
 
         bucketSprite.sprite = FactionMapper.Ins.GetBucketSprite(faction);
         bucketTopSprite.sprite = FactionMapper.Ins.GetBucketTopSprite(faction);
@@ -299,11 +300,10 @@ public class WashingMachineItem : MonoBehaviour
 
                     if (!isRotated)
                     {
-                        Tween.PositionX(grainPile.transform, bucketDestination.x + 0.5f, duration: 0.3f);
                         Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
                         .OnComplete(() =>
                         {
-                            grainSprite.gameObject.SetActive(false);
+                            Tween.Alpha(grainSprite, 0, 0.6f);
 
                             PourGrainPile(grainPile, isLast, () =>
                             {
@@ -335,15 +335,15 @@ public class WashingMachineItem : MonoBehaviour
             {
                 grainPile.Pour
                 (
-                    pileCenter,
+                    transform.rotation,
                     onAllGrainsPoured: () =>
                     {
                         if (!isBucketMoveBack)
                         {
                             float duration = 0.5f;
 
-                            Tween.Rotation(transform, Quaternion.identity, duration: duration);
-                            DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, onComplete: () =>
+                            Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.2f);
+                            DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.2f, onComplete: () =>
                             {
                                 GamePersistentVariable.bucketOrder--;
                             });

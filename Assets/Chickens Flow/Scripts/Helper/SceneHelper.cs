@@ -6,7 +6,9 @@ using UnityEngine;
 public class SceneHelper : MonoBehaviour
 {
     public GameObject[] uiElementsToHide;
+    public GameObject bar;
     [ReadOnly] public bool isHidingUI;
+    [ReadOnly] public bool isHidingBar;
 }
 #endif
 
@@ -34,6 +36,21 @@ public class SceneHelperEditor : Editor
                 HideUI(sceneHelper);
             }
         }
+
+        if (sceneHelper.isHidingBar)
+        {
+            if (GUILayout.Button("Show Bar"))
+            {
+                ShowBar(sceneHelper, true);
+            }
+        }
+        else
+        {
+            if (GUILayout.Button("Hide Bar"))
+            {
+                ShowBar(sceneHelper, false);
+            }
+        }
     }
 
     public void ShowUI(SceneHelper sceneHelper)
@@ -54,6 +71,13 @@ public class SceneHelperEditor : Editor
         }
 
         sceneHelper.isHidingUI = true;
+    }
+
+    public void ShowBar(SceneHelper sceneHelper, bool isShow)
+    {
+        sceneHelper.bar.SetActive(isShow);
+
+        sceneHelper.isHidingBar = !isShow;
     }
 }
 #endif

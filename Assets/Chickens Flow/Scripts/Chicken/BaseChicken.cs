@@ -114,13 +114,22 @@ public class BaseChicken : MonoBehaviour
         this.faction = faction;
     }
 
-    public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave, Action onChickenFlyOut = null)
+    public void MinusRequiredGrainNumber(int numGrain)
     {
         prevEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
 
         numGrainPileRequiredLeft -= numGrain;
 
         currentEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
+    }
+
+    public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave, Action onChickenFlyOut = null)
+    {
+        // prevEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
+
+        // numGrainPileRequiredLeft -= numGrain;
+
+        // currentEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
 
         grainPile.BeEaten(this, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
         {
@@ -192,11 +201,6 @@ public class BaseChicken : MonoBehaviour
         float progress = 1 - (numGrainPileRequiredLeft - numGrain) / (float)numGrainPileRequired;
 
         isEating = true;
-    }
-
-    public void Complete()
-    {
-        isDone = true;
     }
 
     public void ForceFlyOut(bool isLast)

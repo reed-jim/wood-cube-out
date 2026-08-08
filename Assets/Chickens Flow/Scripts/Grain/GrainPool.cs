@@ -131,7 +131,7 @@ public class GrainPool : Singleton<GrainPool>
         })
         .OnComplete(() =>
         {
-            
+
         });
         lazyHealthBar.SetProgress(percent, durationUpdateProgress);
     }

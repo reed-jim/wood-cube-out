@@ -26,7 +26,6 @@ public class GrainPile : MonoBehaviour
     #region Grain
     public Grain grainPrefab;
     public List<Grain> grains;
-    public Vector3 pileCenter;
     public float radius = 0.35f;
     public float grainRandomRadius;
     public int amount = 50;
@@ -121,9 +120,11 @@ public class GrainPile : MonoBehaviour
         }
     }
 
-    public void Pour(Vector2 pileCenter, Action onAllGrainsPoured = null, Action onCompleteAction = null)
+    public void Pour(Quaternion rotation, Action onAllGrainsPoured = null, Action onCompleteAction = null)
     {
         Vector3 position;
+
+        transform.rotation = rotation;
 
         siblingIndex = transform.GetSiblingIndex();
 
@@ -139,6 +140,7 @@ public class GrainPile : MonoBehaviour
 
             position = positionsInFilledCircle[i];
             position.y -= 0.5f;
+            position.y *= 0.75f;
             // position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
             position.z = -0.01f;
 
@@ -162,9 +164,6 @@ public class GrainPile : MonoBehaviour
 
             WashingMachineManager.Ins.CheckLoseLevel();
         });
-
-        this.pileCenter = pileCenter;
-        this.pileCenter.z = -0.01f * siblingIndex;
     }
 
     public void BeEaten(BaseChicken chicken, int numGrainPerChicken, bool isLast, Action onCompleteAction)
@@ -262,11 +261,6 @@ public class GrainPile : MonoBehaviour
             }
 
             yield return delayPerGrainWait;
-        }
-
-        if (isLast)
-        {
-            WashingMachineManager.Ins.grainPool.RemoveGrainPile(this);
         }
 
         GamePersistentVariable.numEatingChicken--;
