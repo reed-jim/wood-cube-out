@@ -342,8 +342,8 @@ public class WashingMachineItem : MonoBehaviour
                         {
                             float duration = 0.5f;
 
-                            Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.2f);
-                            DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.2f, onComplete: () =>
+                            Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.1f);
+                            DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.1f, onComplete: () =>
                             {
                                 GamePersistentVariable.bucketOrder--;
                             });

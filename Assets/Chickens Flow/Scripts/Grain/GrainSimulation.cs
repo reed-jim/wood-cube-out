@@ -820,7 +820,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             request.tryTime++;
 
-            if (request.tryTime > 5000)
+            if (request.tryTime > 600)
             {
                 request.onAllGrainsPoured?.Invoke();
                 request.onComplete?.Invoke();
