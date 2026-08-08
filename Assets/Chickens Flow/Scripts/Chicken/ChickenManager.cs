@@ -74,6 +74,36 @@ public class ChickenManager : Singleton<ChickenManager>
         GamePersistentVariable.numEatingChicken = 0;
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        if (waitingChickenSlots == null)
+            return;
+
+        Gizmos.color = Color.yellow;
+
+        foreach (var pair in waitingChickenSlots)
+        {
+            Vector2Int gridPosition = pair.Key;
+            WaitingChickenSlot slot = pair.Value;
+
+            if (slot == null)
+                continue;
+
+            Vector3 position = slot.position;
+
+            // Circle
+            Gizmos.DrawSphere(position, 0.1f);
+
+#if UNITY_EDITOR
+            // Vector2Int text
+            UnityEditor.Handles.Label(
+                position + Vector3.up * 0.3f,
+                gridPosition.ToString()
+            );
+#endif
+        }
+    }
+
     public void SpawnFirstChickens(AntsFlow.LevelItem levelItem)
     {
         int numColumn = levelItem.numColumn;
@@ -504,6 +534,8 @@ public class ChickenManager : Singleton<ChickenManager>
             .OrderBy(chicken => chicken.transform.position.x)
             .ToList();
 
+        Dictionary<BaseChicken, ChickenFeedData> chickenFeedDataItems = new Dictionary<BaseChicken, ChickenFeedData>();
+
         if (grainPile.remainingNumber <= 0 || chickensToFeed.Count == 0)
             return;
 
@@ -530,7 +562,11 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 // Debug.Log($"[Equal Feed {chicken.name}] {amount}");
 
-                chicken.Feed(grainPile, amount, false);
+                // chicken.Feed(grainPile, amount, false);
+
+                chicken.MinusRequiredGrainNumber(amount);
+
+                AddChickenFeedData(chicken, amount);
             }
         }
 
@@ -557,11 +593,50 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 // Debug.Log($"[Remainder Feed {chicken.name}] {extra}");
 
-                chicken.Feed(grainPile, extra, grainPile.remainingNumber == 0);
+                // chicken.Feed(grainPile, extra, grainPile.remainingNumber == 0);
+
+                chicken.MinusRequiredGrainNumber(extra);
+
+                AddChickenFeedData(chicken, extra);
             }
         }
 
+        int count = 0;
+        foreach (var item in chickenFeedDataItems.Values)
+        {
+            bool isLast = count == chickenFeedDataItems.Count - 1;
+
+            item.chicken.Feed(item.grainPile, item.amount, isLast);
+
+            count++;
+        }
+
         grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);
+
+        if (grainPile.remainingNumber == 0)
+        {
+            GrainPool.Ins.RemoveGrainPile(grainPile);
+        }
+
+        void AddChickenFeedData(BaseChicken chicken, int amount)
+        {
+            ChickenFeedData newData = new ChickenFeedData();
+            newData.chicken = chicken;
+            newData.grainPile = grainPile;
+
+            if (chickenFeedDataItems.ContainsKey(chicken))
+            {
+                newData.amount = amount + chickenFeedDataItems[chicken].amount;
+
+                chickenFeedDataItems[chicken] = newData;
+            }
+            else
+            {
+                newData.amount = amount;
+
+                chickenFeedDataItems.Add(chicken, newData);
+            }
+        }
     }
 
     public void FeedTheGhostChicken(GrainPile grainPile)
@@ -624,6 +699,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
             DOTweenUtil.MoveParabol(chicken.transform, destination, duration: 1f, onComplete: () =>
             {
+                chicken.MinusRequiredGrainNumber(amount);
                 chicken.Feed(
                     grainPile,
                     amount,
@@ -773,8 +849,8 @@ public class ChickenManager : Singleton<ChickenManager>
             Vector2Int[] directions =
             {
                 Vector2Int.down,
-                Vector2Int.left,
-                Vector2Int.right
+                // Vector2Int.left,
+                // Vector2Int.right
             };
 
             foreach (Vector2Int dir in directions)
@@ -786,19 +862,19 @@ public class ChickenManager : Singleton<ChickenManager>
                     MoveChicken(chicken, Vector2Int.down, occupied);
                     moved = true;
                 }
-                else if (chicken.GetFirstRow() > 0)
-                {
-                    if (GetMoveBlockReason(chicken, Vector2Int.left, occupied) == MoveBlockReason.None)
-                    {
-                        MoveChicken(chicken, Vector2Int.left, occupied);
-                        moved = true;
-                    }
-                    else if (GetMoveBlockReason(chicken, Vector2Int.right, occupied) == MoveBlockReason.None)
-                    {
-                        MoveChicken(chicken, Vector2Int.right, occupied);
-                        moved = true;
-                    }
-                }
+                // else if (chicken.GetFirstRow() > 0)
+                // {
+                //     if (GetMoveBlockReason(chicken, Vector2Int.left, occupied) == MoveBlockReason.None)
+                //     {
+                //         MoveChicken(chicken, Vector2Int.left, occupied);
+                //         moved = true;
+                //     }
+                //     else if (GetMoveBlockReason(chicken, Vector2Int.right, occupied) == MoveBlockReason.None)
+                //     {
+                //         MoveChicken(chicken, Vector2Int.right, occupied);
+                //         moved = true;
+                //     }
+                // }
 
                 direction = dir;
             }
@@ -1067,6 +1143,13 @@ public class ChickenManager : Singleton<ChickenManager>
         return result;
     }
     #endregion
+}
+
+public struct ChickenFeedData
+{
+    public BaseChicken chicken;
+    public GrainPile grainPile;
+    public int amount;
 }
 
 public struct ChickenMoveData

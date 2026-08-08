@@ -141,12 +141,17 @@ public class ChickenRenderer : MonoBehaviour
 
     private void RenderShadow()
     {
-        for (int i = 0; i < chickenDataItems.Count; i++)
+        for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
         {
-            ChickenData chicken = chickenDataItems[i];
+            BaseChicken chicken = ChickenManager.Ins.chickens[i];
+
+            if (chicken.isDone)
+            {
+                continue;
+            }
 
             shadowMatrices[i] = Matrix4x4.TRS(
-                    chicken.position + shadowOffset,
+                    chicken.transform.position + shadowOffset,
                     Quaternion.identity,
                     shadowSize
                 );
