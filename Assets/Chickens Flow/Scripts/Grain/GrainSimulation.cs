@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using NamPhuThuy.GamePlay;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,9 +10,9 @@ using UnityEditor;
 public class GrainSimulation : Singleton<GrainSimulation>
 {
     [Header("Fall")]
-    public Vector2 gravityRange;
+    public Vector2 gravityRange = new Vector2(9.8f, 15f);
     public float fallDelayIncreaseRatio = 0.001f;
-    public float fallDelayPower = 3;
+    public float fallDelayPower = 3f;
     [SerializeField]
     private AnimationCurve pourDelayCurve = new AnimationCurve(
         new Keyframe(0.00f, 0.00f),
@@ -31,15 +30,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
     [Header("Collision")]
     public float grainSpacing = 0.12f;
     public float collisionForce = 20f;
+    public float collisionCellSize = 0.2f;
 
     [Header("Conveyor Physics")]
     public Vector2 conveyorForceRange = new Vector2(150, 300);
     public float edgeForce = 50f;
     public float airDrag = 0.01f;
     public float conveyorWidth = 1f;
-
-    [Header("Collision Optimization")]
-    public float collisionCellSize = 0.2f;
 
     [Header("Landing")]
     public Vector2 impactToPathVelocityRange = new Vector2(0, 0.4f);
@@ -56,11 +53,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     [Header("Path Variation")]
     public float laneWidth = 0.15f;
-    public float laneChangeSpeed = 0.5f;
 
     [Header("Rendering")]
     public Mesh quadMesh;
-    public Material material;
+    public Material baseMaterial;
     public float grainSize = 0.08f;
 
     [Header("Closed Path")]
@@ -71,88 +67,124 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float capsuleStraightLength = 5f;
     public int capsuleResolution = 24;
 
-    [Header("Spawning")]
-    public Transform spawnPoint;
-    public int spawnAmount = 100;
-    public Vector2 spawnRandomArea = new Vector2(1f, 1f);
-
-    [Header("Debug")]
-    public int removedCallCount;
-    public int removedCount;
-
-    public Vector2[] sampledPositions;
-    public Vector2[] sampledTangents;
-    public float[] fallDelayAtIndexes;
-    private int[,] lookupGrid;
+    [Header("Path Lookup Cache")]
     public float lookupCellSize = 0.05f;
+    [HideInInspector] public Vector2[] sampledPositions;
+    [HideInInspector] public Vector2[] sampledTangents;
+
+    private int[,] lookupGrid;
     private Vector2 worldMin;
     private Vector2 worldMax;
     private int gridWidth;
     private int gridHeight;
 
-    struct Grain
-    {
-        public Vector3 position;
-        public float zPosition;
-        public Vector2 velocity2D;
-        public float gravity;
-        public float fallVelocity;
-        public float conveyorForce;
-        public float offset;
-        public bool onPath;
-        public float targetOffset;
-        public float fallDelay;
-        public float radius;
-        public bool bouncing;
-        public int bounceCount;
-        public float bounceRestitution;
-        public float bounceFriction;
-        public int maxBounces;
-        public float impactToPathVelocity;
-    }
+    // Fast Spatial Hash Grid parameters
+    private const int SPATIAL_GRID_SIZE = 1024;
+    private int[] spatialHead = new int[SPATIAL_GRID_SIZE];
+    private int[] spatialNext; // Resized with max capacity
 
-    class FactionGroup
+    public class FactionGroup
     {
         public Color faction;
-        public List<Grain> grains = new List<Grain>(1024);
-        public Matrix4x4[] matrices = new Matrix4x4[1024];
         public Material material;
 
-        // Preallocated Spatial Grid storage to prevent GC allocation on mobile
-        public Dictionary<Vector2Int, List<int>> grid = new Dictionary<Vector2Int, List<int>>(256);
-        public List<List<int>> gridListPool = new List<List<int>>(256);
-        public int poolIndex = 0;
+        public int Count;
+        public int Capacity;
 
-        public void ClearGrid()
+        // Structure of Arrays (SOA) for Cache Locality & Zero Struct Copying
+        public Vector3[] position;
+        public Vector2[] velocity2D;
+        public float[] fallVelocity;
+        public float[] gravity;
+        public float[] conveyorForce;
+        public float[] fallDelay;
+        public float[] bounceRestitution;
+        public float[] bounceFriction;
+        public float[] impactToPathVelocity;
+        public int[] bounceCount;
+        public int[] maxBounces;
+        public bool[] onPath;
+        public bool[] bouncing;
+
+        // Graphics Matrices Array
+        public Matrix4x4[] matrices;
+
+        public FactionGroup(Color factionColor, Material baseMat, int initialCap = 1024)
         {
-            foreach (var kvp in grid)
-            {
-                kvp.Value.Clear();
-                gridListPool.Add(kvp.Value);
-            }
-            grid.Clear();
-            poolIndex = 0;
+            faction = factionColor;
+            material = new Material(baseMat);
+            Capacity = initialCap;
+            Allocate(initialCap);
         }
 
-        public List<int> GetPooledList()
+        private void Allocate(int cap)
         {
-            if (gridListPool.Count > 0)
-            {
-                int last = gridListPool.Count - 1;
-                List<int> list = gridListPool[last];
-                gridListPool.RemoveAt(last);
-                return list;
-            }
-            return new List<int>(16);
+            position = new Vector3[cap];
+            velocity2D = new Vector2[cap];
+            fallVelocity = new float[cap];
+            gravity = new float[cap];
+            conveyorForce = new float[cap];
+            fallDelay = new float[cap];
+            bounceRestitution = new float[cap];
+            bounceFriction = new float[cap];
+            impactToPathVelocity = new float[cap];
+            bounceCount = new int[cap];
+            maxBounces = new int[cap];
+            onPath = new bool[cap];
+            bouncing = new bool[cap];
+
+            matrices = new Matrix4x4[cap];
         }
 
-        public void EnsureMatrixCapacity(int count)
+        public void EnsureCapacity(int required)
         {
-            if (matrices.Length < count)
+            if (required <= Capacity) return;
+            int newCap = Mathf.Max(Capacity * 2, required);
+
+            Array.Resize(ref position, newCap);
+            Array.Resize(ref velocity2D, newCap);
+            Array.Resize(ref fallVelocity, newCap);
+            Array.Resize(ref gravity, newCap);
+            Array.Resize(ref conveyorForce, newCap);
+            Array.Resize(ref fallDelay, newCap);
+            Array.Resize(ref bounceRestitution, newCap);
+            Array.Resize(ref bounceFriction, newCap);
+            Array.Resize(ref impactToPathVelocity, newCap);
+            Array.Resize(ref bounceCount, newCap);
+            Array.Resize(ref maxBounces, newCap);
+            Array.Resize(ref onPath, newCap);
+            Array.Resize(ref bouncing, newCap);
+
+            Array.Resize(ref matrices, newCap);
+
+            Capacity = newCap;
+        }
+
+        public void RemoveAt(int index)
+        {
+            int lastIndex = Count - 1;
+            if (index < lastIndex)
             {
-                int newCap = Mathf.NextPowerOfTwo(count);
-                Array.Resize(ref matrices, newCap);
+                position[index] = position[lastIndex];
+                velocity2D[index] = velocity2D[lastIndex];
+                fallVelocity[index] = fallVelocity[lastIndex];
+                gravity[index] = gravity[lastIndex];
+                conveyorForce[index] = conveyorForce[lastIndex];
+                fallDelay[index] = fallDelay[lastIndex];
+                bounceRestitution[index] = bounceRestitution[lastIndex];
+                bounceFriction[index] = bounceFriction[lastIndex];
+                impactToPathVelocity[index] = impactToPathVelocity[lastIndex];
+                bounceCount[index] = bounceCount[lastIndex];
+                maxBounces[index] = maxBounces[lastIndex];
+                onPath[index] = onPath[lastIndex];
+                bouncing[index] = bouncing[lastIndex];
             }
+            Count--;
+        }
+
+        public void Clear()
+        {
+            Count = 0;
         }
     }
 
@@ -176,8 +208,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
-
         LevelLoader.startLevelEvent += Reset;
+        spatialNext = new int[2048];
     }
 
     void OnDestroy()
@@ -195,19 +227,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         float dt = Time.deltaTime;
 
-        // Combined Movement Pass (Fall, Bounce, Path)
         SimulateGrains(dt);
-
-        // Spatial Collision Pass
         ResolveCollisions();
-
-        // Edge Constraint Pass
-        ResolveEdges();
-
-        // Check async spawns
+        ResolveEdges(dt);
         CheckSpawnCompletion();
-
-        // Optimized Instanced Batch Render
         Render();
     }
 
@@ -217,7 +240,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     }
 
     // ------------------------------------------------------------------------
-    // Consolidated Simulation Loop (Combines Fall, Bounce, Path passes into 1)
+    // Optimized SOA Simulation Loop
 
     void SimulateGrains(float dt)
     {
@@ -226,173 +249,215 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         foreach (var group in factionGroups.Values)
         {
-            int count = group.grains.Count;
+            int count = group.Count;
             for (int i = 0; i < count; i++)
             {
-                Grain g = group.grains[i];
-
                 // 1. ON PATH STATE
-                if (g.onPath)
+                if (group.onPath[i])
                 {
-                    int sample = GetNearestSampleIndexFast(g.position, invCellSize);
+                    int sample = GetNearestSampleIndexFast(group.position[i], invCellSize);
                     Vector2 nearest = sampledPositions[sample];
                     Vector2 tangent = sampledTangents[sample];
 
-                    g.velocity2D += tangent * g.conveyorForce * dt;
+                    group.velocity2D[i] += tangent * (group.conveyorForce[i] * dt);
 
-                    Vector2 toCenter = nearest - (Vector2)g.position;
-                    g.velocity2D += toCenter * edgeForce * dt;
+                    Vector2 toCenter = nearest - (Vector2)group.position[i];
+                    group.velocity2D[i] += toCenter * (edgeForce * dt);
 
-                    if (g.velocity2D.sqrMagnitude > sqrMaxSpeed)
+                    if (group.velocity2D[i].sqrMagnitude > sqrMaxSpeed)
                     {
-                        g.velocity2D = g.velocity2D.normalized * maxSpeed;
+                        group.velocity2D[i] = group.velocity2D[i].normalized * maxSpeed;
                     }
 
-                    g.position.x += g.velocity2D.x * dt;
-                    g.position.y += g.velocity2D.y * dt;
+                    group.position[i].x += group.velocity2D[i].x * dt;
+                    group.position[i].y += group.velocity2D[i].y * dt;
 
-                    g.velocity2D *= (1f - airDrag * dt);
-                    g.position.z = g.zPosition;
-
-                    group.grains[i] = g;
+                    group.velocity2D[i] *= (1f - airDrag * dt);
                     continue;
                 }
 
                 // 2. FALLING DELAY STATE
-                if (g.fallDelay > 0f)
+                if (group.fallDelay[i] > 0f)
                 {
-                    g.fallDelay -= dt;
-                    group.grains[i] = g;
+                    group.fallDelay[i] -= dt;
                     continue;
                 }
 
                 // 3. BOUNCING STATE
-                if (g.bouncing)
+                if (group.bouncing[i])
                 {
-                    g.fallVelocity -= g.gravity * dt;
-                    g.position.y += g.fallVelocity * dt;
-                    g.position.x += g.velocity2D.x * dt;
+                    group.fallVelocity[i] -= group.gravity[i] * dt;
+                    group.position[i].y += group.fallVelocity[i] * dt;
+                    group.position[i].x += group.velocity2D[i].x * dt;
 
-                    int sample = GetNearestSampleIndexFast(g.position, invCellSize);
+                    int sample = GetNearestSampleIndexFast(group.position[i], invCellSize);
                     Vector2 surface = sampledPositions[sample];
 
-                    if (g.position.y <= surface.y)
+                    if (group.position[i].y <= surface.y)
                     {
-                        g.position.y = surface.y;
-                        float impact = Mathf.Abs(g.fallVelocity);
+                        group.position[i].y = surface.y;
+                        float impact = Mathf.Abs(group.fallVelocity[i]);
                         float personalSettle = UnityEngine.Random.Range(0.8f, 1.2f);
 
-                        if (impact < personalSettle || g.bounceCount >= g.maxBounces)
+                        if (impact < personalSettle || group.bounceCount[i] >= group.maxBounces[i])
                         {
-                            g.bouncing = false;
-                            g.onPath = true;
+                            group.bouncing[i] = false;
+                            group.onPath[i] = true;
                             Vector2 tangent = sampledTangents[sample];
-                            g.velocity2D = tangent * impact * g.impactToPathVelocity;
-                            g.fallVelocity = 0;
+                            group.velocity2D[i] = tangent * (impact * group.impactToPathVelocity[i]);
+                            group.fallVelocity[i] = 0f;
                         }
                         else
                         {
-                            g.fallVelocity = impact * g.bounceRestitution;
-                            g.velocity2D *= g.bounceFriction;
-                            g.bounceCount++;
+                            group.fallVelocity[i] = impact * group.bounceRestitution[i];
+                            group.velocity2D[i] *= group.bounceFriction[i];
+                            group.bounceCount[i]++;
                         }
                     }
-
-                    g.position.z = g.zPosition;
-                    group.grains[i] = g;
                     continue;
                 }
 
                 // 4. FREE FALL STATE
-                g.fallVelocity -= g.gravity * dt;
-                g.position.y += g.fallVelocity * dt;
+                group.fallVelocity[i] -= group.gravity[i] * dt;
+                group.position[i].y += group.fallVelocity[i] * dt;
 
-                int fallSample = GetNearestSampleIndexFast(g.position, invCellSize);
+                int fallSample = GetNearestSampleIndexFast(group.position[i], invCellSize);
                 Vector2 conveyorPoint = sampledPositions[fallSample];
 
-                if (g.position.y <= conveyorPoint.y)
+                if (group.position[i].y <= conveyorPoint.y)
                 {
-                    // g.position.y = conveyorPoint.y;
-                    g.onPath = true;
-                    g.bounceCount = 0;
-                    g.radius = grainSpacing * 0.5f;
+                    group.onPath[i] = true;
+                    group.bounceCount[i] = 0;
 
                     Vector2 tangent = sampledTangents[fallSample];
-                    float impact = Mathf.Abs(g.fallVelocity);
+                    float impact = Mathf.Abs(group.fallVelocity[i]);
 
-                    g.velocity2D = tangent * impact * g.impactToPathVelocity;
+                    group.velocity2D[i] = tangent * (impact * group.impactToPathVelocity[i]);
                     Vector2 sideKick = UnityEngine.Random.insideUnitCircle * randomBounceSideForce;
-                    g.velocity2D += sideKick;
+                    group.velocity2D[i] += sideKick;
 
-                    g.fallVelocity = impact * g.bounceRestitution;
+                    group.fallVelocity[i] = impact * group.bounceRestitution[i];
                 }
-
-                g.position.z = g.zPosition;
-                group.grains[i] = g;
             }
         }
     }
 
     // ------------------------------------------------------------------------
-    // Spatial Grid Collision Resolution
+    // Zero-Allocation Spatial Hash Grid Collision Resolution
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    private int HashGridCell(int cellX, int cellY)
+    {
+        unchecked
+        {
+            int hash = (cellX * 73856093) ^ (cellY * 19349663);
+            return (hash & 0x7FFFFFFF) % SPATIAL_GRID_SIZE;
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Hyper-Fast Fixed-Grid Spatial Binning Collision Engine
+    // ------------------------------------------------------------------------
+
+    private const int GRID_CELL_SIZE_SHIFT = 4; // Fast bitshift division for spatial indexing
+    private const int GRID_WIDTH = 128;
+    private const int GRID_HEIGHT = 128;
+    private const int TOTAL_CELLS = GRID_WIDTH * GRID_HEIGHT;
+
+    private int[] cellHeads = new int[TOTAL_CELLS];
+    private int[] cellNext = new int[4096]; // Dynamic capacity for grain linked-list pointers
 
     void ResolveCollisions()
     {
+        float sqrSpacing = grainSpacing * grainSpacing;
         float invCellSize = 1f / collisionCellSize;
-        float minDistSqr = grainSpacing * grainSpacing;
 
         foreach (var group in factionGroups.Values)
         {
-            group.ClearGrid();
-            var grid = group.grid;
-            int count = group.grains.Count;
+            int count = group.Count;
+            if (count == 0) continue;
 
-            // Spatial Partitioning
-            for (int i = 0; i < count; i++)
+            // Ensure capacity for linked-list pointers
+            if (cellNext.Length < count)
             {
-                Grain g = group.grains[i];
-                if (!g.onPath) continue;
-
-                Vector2Int cell = new Vector2Int(
-                    Mathf.FloorToInt(g.position.x * invCellSize),
-                    Mathf.FloorToInt(g.position.y * invCellSize)
-                );
-
-                if (!grid.TryGetValue(cell, out var list))
-                {
-                    list = group.GetPooledList();
-                    grid.Add(cell, list);
-                }
-                list.Add(i);
+                cellNext = new int[Mathf.NextPowerOfTwo(count)];
             }
 
-            // Neighbor Resolution
-            foreach (var pair in grid)
+            // Fast clear cell heads
+            Array.Clear(cellHeads, 0, TOTAL_CELLS);
+
+            // 1. BROADPHASE: Populate Flat Grid Cells (Zero Allocations)
+            for (int i = 0; i < count; i++)
             {
-                Vector2Int cell = pair.Key;
-                List<int> current = pair.Value;
-                int currentCount = current.Count;
+                if (!group.onPath[i]) continue;
 
-                for (int x = -1; x <= 1; x++)
+                int cx = (int)((group.position[i].x - worldMin.x) * invCellSize);
+                int cy = (int)((group.position[i].y - worldMin.y) * invCellSize);
+
+                if (cx >= 0 && cx < GRID_WIDTH && cy >= 0 && cy < GRID_HEIGHT)
                 {
-                    for (int y = -1; y <= 1; y++)
+                    int cellIndex = cx + cy * GRID_WIDTH;
+                    cellNext[i] = cellHeads[cellIndex];
+                    cellHeads[cellIndex] = i + 1; // 1-based indexing to keep 0 as empty marker
+                }
+            }
+
+            // 2. NARROWPHASE: Resolve Neighboring Cells
+            for (int i = 0; i < count; i++)
+            {
+                if (!group.onPath[i]) continue;
+
+                float posX = group.position[i].x;
+                float posY = group.position[i].y;
+
+                int cx = (int)((posX - worldMin.x) * invCellSize);
+                int cy = (int)((posY - worldMin.y) * invCellSize);
+
+                if (cx < 1 || cx >= GRID_WIDTH - 1 || cy < 1 || cy >= GRID_HEIGHT - 1) continue;
+
+                // Loop through 3x3 adjacent cells
+                for (int nx = -1; nx <= 1; nx++)
+                {
+                    int cellX = cx + nx;
+                    for (int ny = -1; ny <= 1; ny++)
                     {
-                        Vector2Int neighbor = new Vector2Int(cell.x + x, cell.y + y);
+                        int cellIndex = cellX + (cy + ny) * GRID_WIDTH;
+                        int j = cellHeads[cellIndex] - 1;
 
-                        if (!grid.TryGetValue(neighbor, out var others))
-                            continue;
-
-                        int othersCount = others.Count;
-                        for (int a = 0; a < currentCount; a++)
+                        while (j >= 0)
                         {
-                            int i = current[a];
-                            for (int b = 0; b < othersCount; b++)
+                            if (i < j && group.onPath[j])
                             {
-                                int j = others[b];
-                                if (i >= j) continue;
+                                float dx = group.position[j].x - posX;
+                                float dy = group.position[j].y - posY;
 
-                                ResolvePair(group, i, j, minDistSqr);
+                                // Fast bounding box check before square magnitude check
+                                if (Mathf.Abs(dx) < grainSpacing && Mathf.Abs(dy) < grainSpacing)
+                                {
+                                    float sqrDist = dx * dx + dy * dy;
+                                    if (sqrDist < sqrSpacing && sqrDist > 0.00001f)
+                                    {
+                                        float dist = Mathf.Sqrt(sqrDist);
+                                        float delta = (grainSpacing - dist) / dist * 0.5f;
+
+                                        float pushX = dx * delta;
+                                        float pushY = dy * delta;
+
+                                        // Apply position correction directly
+                                        group.position[i].x -= pushX;
+                                        group.position[i].y -= pushY;
+                                        group.position[j].x += pushX;
+                                        group.position[j].y += pushY;
+
+                                        // Damp velocity to reduce jitter
+                                        group.velocity2D[i].x -= pushX * collisionForce;
+                                        group.velocity2D[i].y -= pushY * collisionForce;
+                                        group.velocity2D[j].x += pushX * collisionForce;
+                                        group.velocity2D[j].y += pushY * collisionForce;
+                                    }
+                                }
                             }
+                            j = cellNext[j] - 1;
                         }
                     }
                 }
@@ -400,62 +465,24 @@ public class GrainSimulation : Singleton<GrainSimulation>
         }
     }
 
-    void ResolvePair(FactionGroup group, int i, int j, float minDistSqr)
-    {
-        Grain a = group.grains[i];
-        Grain b = group.grains[j];
-
-        float dx = b.position.x - a.position.x;
-        float dy = b.position.y - a.position.y;
-
-        float distSqr = dx * dx + dy * dy;
-        float minDist = grainSpacing;
-
-        if (distSqr >= minDistSqr || distSqr < 0.000001f)
-            return;
-
-        float dist = Mathf.Sqrt(distSqr);
-        float invDist = 1f / dist;
-
-        Vector2 normal = new Vector2(dx * invDist, dy * invDist);
-        float penetration = minDist - dist;
-
-        Vector2 push = normal * (penetration * collisionForce);
-
-        a.velocity2D -= push * 0.5f;
-        b.velocity2D += push * 0.5f;
-
-        Vector2 correction = normal * (penetration * 0.25f);
-        a.position.x -= correction.x;
-        a.position.y -= correction.y;
-
-        b.position.x += correction.x;
-        b.position.y += correction.y;
-
-        group.grains[i] = a;
-        group.grains[j] = b;
-    }
-
-    void ResolveEdges()
+    void ResolveEdges(float dt)
     {
         float invCellSize = 1f / lookupCellSize;
         float limit = conveyorWidth * 0.5f;
-        float dt = Time.deltaTime;
 
         foreach (var group in factionGroups.Values)
         {
-            int count = group.grains.Count;
+            int count = group.Count;
             for (int i = 0; i < count; i++)
             {
-                Grain g = group.grains[i];
-                if (!g.onPath) continue;
+                if (!group.onPath[i]) continue;
 
-                int sample = GetNearestSampleIndexFast(g.position, invCellSize);
+                int sample = GetNearestSampleIndexFast(group.position[i], invCellSize);
                 Vector2 center = sampledPositions[sample];
                 Vector2 tangent = sampledTangents[sample];
                 Vector2 normal = new Vector2(-tangent.y, tangent.x);
 
-                Vector2 pos2D = g.position;
+                Vector2 pos2D = group.position[i];
                 float side = Vector2.Dot(pos2D - center, normal);
 
                 if (Mathf.Abs(side) > limit)
@@ -463,12 +490,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     float penetration = Mathf.Abs(side) - limit;
                     float sign = Mathf.Sign(side);
 
-                    g.velocity2D -= normal * (sign * penetration * edgeForce * dt);
-                    g.position.x -= normal.x * sign * penetration;
-                    g.position.y -= normal.y * sign * penetration;
+                    group.velocity2D[i] -= normal * (sign * penetration * edgeForce * dt);
+                    group.position[i].x -= normal.x * sign * penetration;
+                    group.position[i].y -= normal.y * sign * penetration;
                 }
-
-                group.grains[i] = g;
             }
         }
     }
@@ -483,17 +508,16 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         foreach (var group in factionGroups.Values)
         {
-            int count = group.grains.Count;
+            int count = group.Count;
             if (count == 0) continue;
 
-            group.EnsureMatrixCapacity(count);
+            group.EnsureCapacity(count);
 
             for (int i = 0; i < count; i++)
             {
-                group.matrices[i] = Matrix4x4.TRS(group.grains[i].position, rot, size);
+                group.matrices[i] = Matrix4x4.TRS(group.position[i], rot, size);
             }
 
-            // Draw in GPU batches of 1024
             int rendered = 0;
             while (rendered < count)
             {
@@ -514,7 +538,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     }
 
     // ------------------------------------------------------------------------
-    // Lookups & Pathing Setup
+    // Spatial Lookups & Pathing Setup
 
     void BuildPath()
     {
@@ -588,28 +612,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 }
 
                 lookupGrid[x, y] = bestIndex;
-            }
-        }
-
-        PreCalculateFallDelay();
-    }
-
-    [ContextMenu("Pre Calculate Fall Delay")]
-    public void PreCalculateFallDelay()
-    {
-        fallDelayAtIndexes = new float[800];
-
-        for (int i = 0; i < fallDelayAtIndexes.Length; i++)
-        {
-            // fallDelayAtIndexes[i] = Mathf.Pow(1 + fallDelayIncreaseRatio * i, fallDelayPower) * maxFallDelay - 1;
-
-            if (i < 100)
-            {
-                fallDelayAtIndexes[i] = fallDelayIncreaseRatio * i * maxFallDelay;
-            }
-            else
-            {
-                fallDelayAtIndexes[i] = 5 * fallDelayIncreaseRatio * i * maxFallDelay;
             }
         }
     }
@@ -696,36 +698,32 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public void SpawnGrains(List<Vector3> grainPositions, Color faction, Action onAllGrainsPoured = null, Action onComplete = null)
     {
         FactionGroup group = GetFaction(faction);
-        int startIndex = group.grains.Count;
+        int startIndex = group.Count;
         int totalSpawn = grainPositions.Count;
+
+        group.EnsureCapacity(group.Count + totalSpawn);
 
         for (int i = 0; i < totalSpawn; i++)
         {
-            Grain g = new Grain
-            {
-                position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle,
-                zPosition = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000),
-                offset = 0f,
-                targetOffset = UnityEngine.Random.Range(-laneWidth, laneWidth),
-                velocity2D = Vector2.zero,
-                gravity = UnityEngine.Random.Range(gravityRange.x, gravityRange.y),
-                fallVelocity = 0,
-                conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y),
-                onPath = false,
-                radius = grainSpacing * 0.5f,
-                fallDelay = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay,
-                bouncing = false,
-                bounceCount = 0,
-                bounceRestitution = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y),
-                bounceFriction = UnityEngine.Random.Range(bounceFrictionRange.x, bounceFrictionRange.y),
-                maxBounces = UnityEngine.Random.Range(bounceCountRange.x, bounceCountRange.y + 1),
-                impactToPathVelocity = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y)
-            };
+            int idx = group.Count;
+            group.position[idx] = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
+            group.position[idx].z = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000);
 
-            group.grains.Add(g);
+            group.velocity2D[idx] = Vector2.zero;
+            group.gravity[idx] = UnityEngine.Random.Range(gravityRange.x, gravityRange.y);
+            group.fallVelocity[idx] = 0f;
+            group.conveyorForce[idx] = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y);
+            group.onPath[idx] = false;
+            group.fallDelay[idx] = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay;
+            group.bouncing[idx] = false;
+            group.bounceCount[idx] = 0;
+            group.bounceRestitution[idx] = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y);
+            group.bounceFriction[idx] = UnityEngine.Random.Range(bounceFrictionRange.x, bounceFrictionRange.y);
+            group.maxBounces[idx] = UnityEngine.Random.Range(bounceCountRange.x, bounceCountRange.y + 1);
+            group.impactToPathVelocity[idx] = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y);
+
+            group.Count++;
         }
-
-        group.EnsureMatrixCapacity(group.grains.Count);
 
         if (onComplete != null)
         {
@@ -742,69 +740,49 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public void RemoveLastGrain(Color faction)
     {
-        removedCallCount++;
         FactionGroup group = GetFaction(faction);
+        if (group.Count == 0) return;
 
-        if (group.grains.Count == 0) return;
-
-        group.grains.RemoveAt(group.grains.Count - 1);
-        removedCount++;
+        group.RemoveAt(group.Count - 1);
     }
 
     public void RemoveFirstGrain(Color faction)
     {
-        removedCallCount++;
         FactionGroup group = GetFaction(faction);
+        if (group.Count == 0) return;
 
-        if (group.grains.Count == 0) return;
-
-        group.grains.RemoveAt(0);
-        removedCount++;
+        group.RemoveAt(0);
     }
 
     public void RemoveAllGrains()
     {
-        foreach (var factionGroup in factionGroups)
+        foreach (var factionGroup in factionGroups.Values)
         {
-            factionGroup.Value.grains.Clear();
+            factionGroup.Clear();
         }
     }
 
     public void RemoveAllGrainsOfFaction(Color faction)
     {
-        foreach (var factionGroup in factionGroups)
+        if (factionGroups.TryGetValue(faction, out var group))
         {
-            if (factionGroup.Key == faction)
-            {
-                factionGroup.Value.grains.Clear();
-
-                break;
-            }
+            group.Clear();
         }
     }
 
     public bool IsAnyGrainNear(Vector2 position, Color faction)
     {
         float grainPoolPositionY = GrainPool.Ins.transform.position.y;
-        float range = 1;
+        float range = 1f;
 
-        foreach (var factionGroup in factionGroups)
+        if (factionGroups.TryGetValue(faction, out var group))
         {
-            if (factionGroup.Key == faction)
+            for (int i = 0; i < group.Count; i++)
             {
-                List<Grain> grains = factionGroup.Value.grains;
-
-                for (int i = 0; i < grains.Count; i++)
+                Vector3 pos = group.position[i];
+                if (pos.y > grainPoolPositionY && pos.x > position.x - range && pos.x < position.x + range)
                 {
-                    Grain grain = grains[i];
-
-                    if (grain.position.y > grainPoolPositionY &&
-                        grain.position.x > position.x - range &&
-                        grain.position.x < position.x + range
-                    )
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
         }
@@ -817,7 +795,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
         for (int i = pendingSpawns.Count - 1; i >= 0; i--)
         {
             SpawnRequest request = pendingSpawns[i];
-
             request.tryTime++;
 
             if (request.tryTime > 600)
@@ -825,7 +802,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 request.onAllGrainsPoured?.Invoke();
                 request.onComplete?.Invoke();
                 pendingSpawns.RemoveAt(i);
-
                 continue;
             }
 
@@ -837,17 +813,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
             for (int g = request.startIndex; g < end; g++)
             {
-                if (g >= request.group.grains.Count)
-                {
-                    break;
-                }
+                if (g >= request.group.Count) break;
 
-                if (request.group.grains[g].fallDelay > 0)
+                if (request.group.fallDelay[g] > 0)
                 {
                     allPoured = false;
                 }
 
-                if (request.group.grains[g].onPath)
+                if (request.group.onPath[g])
                 {
                     if (g > request.startIndex + percentNumGrainOnPathForChickenToEat * totalGrain)
                     {
@@ -875,12 +848,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         if (!factionGroups.TryGetValue(faction, out var group))
         {
-            group = new FactionGroup
-            {
-                faction = faction,
-                material = new Material(material)
-            };
-
+            group = new FactionGroup(faction, baseMaterial);
             Texture tex = FactionMapper.Ins.GetTileSprite(faction).texture;
             group.material.mainTexture = tex;
 
@@ -899,7 +867,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
         for (int i = 0; i < pathPoints.Length; i++)
         {
             int next = (i + 1) % pathPoints.Length;
-            Gizmos.DrawLine(pathPoints[i].position, pathPoints[next].position);
+            if (pathPoints[i] != null && pathPoints[next] != null)
+                Gizmos.DrawLine(pathPoints[i].position, pathPoints[next].position);
         }
     }
 #endif
