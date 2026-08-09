@@ -79,8 +79,6 @@ public class ChickenManager : Singleton<ChickenManager>
         if (waitingChickenSlots == null)
             return;
 
-        Gizmos.color = Color.yellow;
-
         foreach (var pair in waitingChickenSlots)
         {
             Vector2Int gridPosition = pair.Key;
@@ -89,18 +87,27 @@ public class ChickenManager : Singleton<ChickenManager>
             if (slot == null)
                 continue;
 
+            if (slot.chicken == null)
+            {
+                Gizmos.color = Color.green;
+            }
+            else
+            {
+                Gizmos.color = Color.red;
+            }
+
             Vector3 position = slot.position;
 
             // Circle
-            Gizmos.DrawSphere(position, 0.1f);
+            Gizmos.DrawSphere(position, 0.2f);
 
-#if UNITY_EDITOR
-            // Vector2Int text
-            UnityEditor.Handles.Label(
-                position + Vector3.up * 0.3f,
-                gridPosition.ToString()
-            );
-#endif
+// #if UNITY_EDITOR
+//             // Vector2Int text
+//             UnityEditor.Handles.Label(
+//                 position + Vector3.up * 0.3f,
+//                 gridPosition.ToString()
+//             );
+// #endif
         }
     }
 
@@ -470,23 +477,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
         BaseChicken chicken = ObjectPoolingEverything.GetFromPool<BaseChicken>(GameConstants.chicken);
 
-        // Vector3 position = new Vector3(
-        //     giant.coordinate.x,
-        //     giant.coordinate.y,
-        //     0);
-
-        // position.x -= (numColumn - 1) / 2f;
-        // position.x += 0.5f * (giant.coordinate.y % 2);
-        // position.y += chickenAreaOffsetY;
-        // position *= chickenDistanceRatio;
-        // position.z = -1 - 0.01f * (numRow - giant.coordinate.y);
-
-        // // Move to the center of the occupied area.
-        // position.x += (giant.sizeX - 1) * chickenDistanceRatio.x * 0.5f;
-        // position.y += (giant.sizeY - 1) * chickenDistanceRatio.y * 0.5f;
-
-        // chicken.transform.position = position;
-        // chicken.transform.position += Vector3.right * UnityEngine.Random.Range(-radius, radius);
         chicken.transform.localScale = giant.sizeX * Vector3.one;
 
         chicken.column = giant.coordinate.x;
@@ -500,6 +490,8 @@ public class ChickenManager : Singleton<ChickenManager>
         // Set faction if needed.
         int tileIndex = giant.coordinate.y * levelItem.numColumn + giant.coordinate.x;
         chicken.SetFaction(allFactions[tileIndex]);
+
+        chicken.SetActiveSpine(true);
 
         chickens.Add(chicken);
 
@@ -963,6 +955,8 @@ public class ChickenManager : Singleton<ChickenManager>
         for (int i = 0; i < chicken.waitingChickenSlots.Count; i++)
         {
             WaitingChickenSlot slot = chicken.waitingChickenSlots[i];
+
+            slot.chicken = null;
 
             Vector2Int pos = new(
                 slot.column + dir.x,
