@@ -24,8 +24,6 @@ public class GrainPile : MonoBehaviour
     public Color faction;
 
     #region Grain
-    public Grain grainPrefab;
-    public List<Grain> grains;
     public float radius = 0.35f;
     public float grainRandomRadius;
     public int amount = 50;
@@ -55,11 +53,6 @@ public class GrainPile : MonoBehaviour
 
     private Tween updateProgressTextTween;
 
-    void Awake()
-    {
-        SpawnGrains();
-    }
-
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
@@ -69,18 +62,6 @@ public class GrainPile : MonoBehaviour
 
     public void Reset()
     {
-        for (int i = 0; i < grains.Count; i++)
-        {
-            Grain grain = grains[i];
-
-            grain.gameObject.SetActive(false);
-
-            grain.transform.localScale = Vector3.one;
-
-            grain.isBeingEaten = false;
-            grain.isDone = false;
-        }
-
         progressText.gameObject.SetActive(false);
 
         numChickenEating = 0;
@@ -100,24 +81,7 @@ public class GrainPile : MonoBehaviour
 
     public void SetFaction(Color faction)
     {
-        for (int i = 0; i < amount; i++)
-        {
-            grains[i].SetFaction(faction);
-        }
-
         this.faction = faction;
-    }
-
-    private void SpawnGrains()
-    {
-        grains = new List<Grain>();
-
-        for (int i = 0; i < amount; i++)
-        {
-            Grain grain = Instantiate(grainPrefab, transform);
-
-            grains.Add(grain);
-        }
     }
 
     public void Pour(Quaternion rotation, Action onAllGrainsPoured = null, Action onCompleteAction = null)
@@ -146,10 +110,6 @@ public class GrainPile : MonoBehaviour
 
             grainPositions.Add(transform.TransformPoint(position));
         }
-
-        int grainCount = grains.Count;
-        int cols = Mathf.CeilToInt(Mathf.Sqrt(grainCount));
-        int rows = Mathf.CeilToInt((float)grainCount / cols);
 
         grainPositions = grainPositions
             .OrderBy(grain => grain.y)

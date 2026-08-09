@@ -43,6 +43,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public TMP_Text numberText;
 
+    [Header("State")]
     public Color faction;
     public bool isDisable;
     public bool isTemporarilyEnabled;
@@ -57,6 +58,7 @@ public class WashingMachineItem : MonoBehaviour
     public bool isStucking;
     public bool isPlayingWarningLoseAnimation;
     public bool isShuffled;
+    public bool isPouring;
 
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
@@ -186,6 +188,7 @@ public class WashingMachineItem : MonoBehaviour
         isDouble = false;
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
+        isPouring = false;
         remainingNumber = number;
         spawningAntCoroutine = null;
 
@@ -204,6 +207,7 @@ public class WashingMachineItem : MonoBehaviour
         isStucking = false;
         isPlayingWarningLoseAnimation = false;
         isShuffled = false;
+        isPouring = false;
 
         washingMachineStartSlot = null;
         washingMachineSlot = null;
@@ -238,126 +242,94 @@ public class WashingMachineItem : MonoBehaviour
 
         isPouringAll = maxAddNumber == number;
 
-        List<BaseChicken> possibleChickensToEat = GetPossibleChickensToEat(maxAddNumber);
+        PouringOut(maxAddNumber, isBucketMoveBack: !isPouringAll, onCompleteAction);
 
-        // List<GrainPoolSlot> grainPoolSlots = WashingMachineManager.Ins.grainPool.GetGrainPoolSlots(maxAddNumber, possibleChickensToEat);
+        WashingMachineManager.Ins.grainPool.AddGrain(maxAddNumber);
 
-        StartCoroutine(PouringOut(maxAddNumber, possibleChickensToEat, isBucketMoveBack: !isPouringAll, onCompleteAction));
-
-        WashingMachineManager.Ins.grainPool.AddGrain(number);
+        isPouring = true;
     }
 
-    private IEnumerator PouringOut(int numPile, List<BaseChicken> possibleChickensToEat, bool isBucketMoveBack, Action onCompleteAction)
+    private void PouringOut(int numPile, bool isBucketMoveBack, Action onCompleteAction)
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
-
-        bool isPouring = false;
         bool isRotated = false;
 
-        int remaining = numPile;
+        GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
 
-        while (remaining > 0)
+        Vector3 bucketDestination;
+
+        bucketDestination.x = UnityEngine.Random.Range(-pourRange, pourRange);
+        bucketDestination.y = pourOffsetY;
+        bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
+
+        bucketTopSprite.transform.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
+        numberText.transform.SetZ(LayerManager.GetBucketTextZ(GamePersistentVariable.bucketOrder));
+
+        GamePersistentVariable.bucketOrder++;
+
+        pileCenter.x = 0;
+        pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y;
+        pileCenter.z = -1;
+
+        Tween tween = Tween.Position(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
         {
-            if (!isPouring)
+            grainPile.gameObject.SetActive(true);
+
+            grainPile.transform.position = bucketDestination + grainsOffsetWhenPouring;
+
+            grainPile.Setup(this, numPile);
+
+            if (!isRotated)
             {
-                BaseChicken possibleChickenToEat = null;
-
-                if (possibleChickensToEat.Count > 0)
+                Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
+                .OnComplete(() =>
                 {
-                    possibleChickenToEat = possibleChickensToEat[0];
-                    possibleChickensToEat.RemoveAt(0);
-                }
+                    Tween.Alpha(grainSprite, 0, 0.4f);
 
-                GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
-
-                grainPile.gameObject.SetActive(false);
-
-                remaining -= numPile;
-                bool isLast = remaining == 0;
-
-                Vector3 bucketDestination;
-
-                bucketDestination.x = UnityEngine.Random.Range(-pourRange, pourRange);
-                bucketDestination.y = pourOffsetY;
-                bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
-
-                bucketTopSprite.transform.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
-                numberText.transform.SetZ(LayerManager.GetBucketTextZ(GamePersistentVariable.bucketOrder));
-
-                GamePersistentVariable.bucketOrder++;
-
-                pileCenter.x = 0;
-                pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y;
-                pileCenter.z = -1;
-
-                Tween.Position(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
-                {
-                    grainPile.gameObject.SetActive(true);
-
-                    grainPile.transform.position = bucketDestination + grainsOffsetWhenPouring;
-
-                    grainPile.Setup(this, numPile);
-
-                    if (!isRotated)
+                    PourGrainPile(grainPile, () =>
                     {
-                        Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
-                        .OnComplete(() =>
-                        {
-                            Tween.Alpha(grainSprite, 0, 0.4f);
+                        WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
+                    });
 
-                            PourGrainPile(grainPile, isLast, () =>
-                            {
-                                isPouring = false;
-
-                                WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
-                            });
-
-                            isRotated = true;
-                        });
-                    }
-                    else
-                    {
-                        PourGrainPile(grainPile, isLast, () =>
-                        {
-                            isPouring = false;
-
-                            WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
-                        });
-                    }
+                    isRotated = true;
                 });
-
-                isPouring = true;
             }
-
-            yield return waitForSeconds;
-
-            void PourGrainPile(GrainPile grainPile, bool isLast, Action onComplete)
+            else
             {
-                grainPile.Pour
-                (
-                    transform.rotation,
-                    onAllGrainsPoured: () =>
-                    {
-                        if (!isBucketMoveBack)
-                        {
-                            float duration = 0.5f;
-
-                            Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.1f);
-                            DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.1f, onComplete: () =>
-                            {
-                                GamePersistentVariable.bucketOrder--;
-                            });
-                        }
-                    },
-                    onCompleteAction: () =>
-                    {
-                        onComplete?.Invoke();
-                    }
-                );
+                PourGrainPile(grainPile, () =>
+                {
+                    WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
+                });
             }
-        }
+        });
+
+        TweenManager.Ins.AddTween(tween);
 
         onCompleteAction?.Invoke();
+
+        void PourGrainPile(GrainPile grainPile, Action onComplete)
+        {
+            grainPile.Pour
+            (
+                transform.rotation,
+                onAllGrainsPoured: () =>
+                {
+                    if (!isBucketMoveBack)
+                    {
+                        float duration = 0.5f;
+
+                        Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.1f);
+                        DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.1f, onComplete: () =>
+                        {
+                            GamePersistentVariable.bucketOrder--;
+                        });
+                    }
+                },
+                onCompleteAction: () =>
+                {
+                    onComplete?.Invoke();
+                }
+            );
+        }
     }
     #endregion
 
@@ -529,7 +501,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect()
     {
-        return !GamePersistentVariable.isPreventSelectAntBox && !GrainPool.Ins.IsMaxCapacity();
+        return !GamePersistentVariable.isPreventSelectAntBox && !GrainPool.Ins.IsMaxCapacity() && !isDisable && !isPouring;
 
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
@@ -539,7 +511,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
-        return !GamePersistentVariable.isPreventSelectAntBox && !GrainPool.Ins.IsMaxCapacity();
+        return !GamePersistentVariable.isPreventSelectAntBox && !GrainPool.Ins.IsMaxCapacity() && !isDisable && !isPouring;
 
         if (WashingMachineManager.Ins.grainPool.IsMaxCapacity())
         {

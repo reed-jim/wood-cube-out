@@ -78,6 +78,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
     private int gridWidth;
     private int gridHeight;
 
+    [Header("Path Movement")]
+    public int spawnCallCount;
+    public int removeCallCount;
+    public int actualRemoveCount;
+
     // Fast Spatial Hash Grid parameters
     private const int SPATIAL_GRID_SIZE = 1024;
     private int[] spatialHead = new int[SPATIAL_GRID_SIZE];
@@ -723,6 +728,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
             group.impactToPathVelocity[idx] = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y);
 
             group.Count++;
+
+            spawnCallCount++;
         }
 
         if (onComplete != null)
@@ -748,10 +755,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     public void RemoveFirstGrain(Color faction)
     {
+        removeCallCount++;
+
         FactionGroup group = GetFaction(faction);
         if (group.Count == 0) return;
 
         group.RemoveAt(0);
+
+        actualRemoveCount++;
     }
 
     public void RemoveAllGrains()

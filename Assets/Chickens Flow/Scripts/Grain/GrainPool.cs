@@ -83,6 +83,11 @@ public class GrainPool : Singleton<GrainPool>
             grainPiles = new List<GrainPile>();
         }
 
+        if (grainPiles.Contains(grainPile))
+        {
+            return;
+        }
+
         grainPiles.Add(grainPile);
     }
 
