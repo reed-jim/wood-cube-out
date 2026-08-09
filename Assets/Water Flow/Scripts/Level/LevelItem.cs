@@ -357,13 +357,26 @@ namespace AntsFlow
             LevelItem level = (LevelItem)target;
 
             if (level.factionMapper == null)
-            {
                 level.factionMapper = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
-            }
 
             if (level.factionMapper == null)
                 return;
 
+            ConfigureGrid(level, PaintNormalTile, EraseNormalTile);
+        }
+
+        private void PaintNormalTile(LevelItem level, int index)
+        {
+            level.chickenLevelTiles[index].factionIndex = level.factionMapper.GetFactionIndexEditMode(selectedColor);
+        }
+
+        private void EraseNormalTile(LevelItem level, int index)
+        {
+            level.chickenLevelTiles[index].factionIndex = 0;
+        }
+
+        private void ConfigureGrid(LevelItem level, Action<LevelItem, int> paintTile, Action<LevelItem, int> eraseTile)
+        {
             Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
 
             Event e = Event.current;
@@ -372,23 +385,21 @@ namespace AntsFlow
             int numRow = level.numRow;
             float tileDistance = 0.1f;
 
-            // Background
             float backgroundWidth = 10f;
 
             Vector3[] background =
             {
-        new Vector3(-backgroundWidth, -backgroundWidth, 1),
-        new Vector3(-backgroundWidth, +backgroundWidth, 1),
-        new Vector3(+backgroundWidth, +backgroundWidth, 1),
-        new Vector3(+backgroundWidth, -backgroundWidth, 1),
-    };
+                new Vector3(-backgroundWidth, -backgroundWidth, 1),
+                new Vector3(-backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, -backgroundWidth, 1),
+            };
 
             Handles.DrawSolidRectangleWithOutline(background, new Color(0, 0, 0, 0.85f), Color.white);
 
             List<AntLevelDataItem> chickenLevelTiles = level.chickenLevelTiles;
             Camera camera = SceneView.currentDrawingSceneView.camera;
 
-            // Brush size
             if (e.type == EventType.ScrollWheel)
             {
                 brushRadius += e.delta.y > 0 ? -1 : 1;
@@ -397,7 +408,6 @@ namespace AntsFlow
                 SceneView.RepaintAll();
             }
 
-            // Draw tiles
             for (int y = 0; y < numRow; y++)
             {
                 for (int x = 0; x < numColumn; x++)
@@ -417,7 +427,6 @@ namespace AntsFlow
                 }
             }
 
-            // Paint
             if (e.type == EventType.MouseDown && e.button == 0)
             {
                 isPainting = true;
@@ -425,13 +434,13 @@ namespace AntsFlow
                 lastPaintCoord = null;
                 GUIUtility.hotControl = GUIUtility.GetControlID(FocusType.Passive);
 
-                PaintAtMousePosition(level, e.mousePosition, tileDistance, numColumn, numRow, ref lastPaintCoord);
+                PaintAtMousePosition(level, e.mousePosition, tileDistance, numColumn, numRow, paintTile, eraseTile);
                 e.Use();
             }
 
             if (e.type == EventType.MouseDrag && e.button == 0 && isPainting)
             {
-                PaintAtMousePosition(level, e.mousePosition, tileDistance, numColumn, numRow, ref lastPaintCoord);
+                PaintAtMousePosition(level, e.mousePosition, tileDistance, numColumn, numRow, paintTile, eraseTile);
                 e.Use();
             }
 
@@ -444,7 +453,6 @@ namespace AntsFlow
                 e.Use();
             }
 
-            // Brush preview
             if (isPainting || e.type == EventType.MouseMove)
                 DrawBrushPreview(e.mousePosition, tileDistance, camera);
 
@@ -452,7 +460,7 @@ namespace AntsFlow
                 SceneView.RepaintAll();
         }
 
-        private void PaintAtMousePosition(LevelItem level, Vector2 mousePosition, float tileDistance, int numColumn, int numRow, ref Vector2Int? previousCoord)
+        private void PaintAtMousePosition(LevelItem level, Vector2 mousePosition, float tileDistance, int numColumn, int numRow, Action<LevelItem, int> paintTile, Action<LevelItem, int> eraseTile)
         {
             Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
             Plane gridPlane = new Plane(Vector3.forward, Vector3.zero);
@@ -467,23 +475,23 @@ namespace AntsFlow
                 Mathf.RoundToInt(worldPosition.y / tileDistance)
             );
 
-            if (previousCoord.HasValue)
-                PaintLine(level, previousCoord.Value, currentCoord, numColumn, numRow);
+            if (lastPaintCoord.HasValue)
+                PaintLine(level, lastPaintCoord.Value, currentCoord, numColumn, numRow, paintTile, eraseTile);
             else
-                PaintBrush(level, currentCoord, numColumn, numRow);
+                PaintBrush(level, currentCoord, numColumn, numRow, paintTile, eraseTile);
 
-            previousCoord = currentCoord;
+            lastPaintCoord = currentCoord;
 
             SceneView.RepaintAll();
         }
 
-        private void PaintLine(LevelItem level, Vector2Int from, Vector2Int to, int numColumn, int numRow)
+        private void PaintLine(LevelItem level, Vector2Int from, Vector2Int to, int numColumn, int numRow, Action<LevelItem, int> paintTile, Action<LevelItem, int> eraseTile)
         {
             int distance = Mathf.Max(Mathf.Abs(to.x - from.x), Mathf.Abs(to.y - from.y));
 
             if (distance == 0)
             {
-                PaintBrush(level, from, numColumn, numRow);
+                PaintBrush(level, from, numColumn, numRow, paintTile, eraseTile);
                 return;
             }
 
@@ -492,17 +500,17 @@ namespace AntsFlow
                 float t = i / (float)distance;
                 Vector2 interpolated = Vector2.Lerp(from, to, t);
                 Vector2Int coord = new Vector2Int(Mathf.RoundToInt(interpolated.x), Mathf.RoundToInt(interpolated.y));
-                PaintBrush(level, coord, numColumn, numRow);
+                PaintBrush(level, coord, numColumn, numRow, paintTile, eraseTile);
             }
         }
 
-        private void PaintBrush(LevelItem level, Vector2Int center, int numColumn, int numRow)
+        private void PaintBrush(LevelItem level, Vector2Int center, int numColumn, int numRow, Action<LevelItem, int> paintTile, Action<LevelItem, int> eraseTile)
         {
             List<AntLevelDataItem> chickenLevelTiles = level.chickenLevelTiles;
 
             if (!undoRecorded)
             {
-                Undo.RecordObject(level, "Paint Normal Config");
+                Undo.RecordObject(level, "Paint Grid");
                 undoRecorded = true;
             }
 
@@ -525,9 +533,9 @@ namespace AntsFlow
                         continue;
 
                     if (Event.current.shift)
-                        chickenLevelTiles[index].factionIndex = 0;
+                        eraseTile(level, index);
                     else
-                        chickenLevelTiles[index].factionIndex = level.factionMapper.GetFactionIndexEditMode(selectedColor);
+                        paintTile(level, index);
                 }
             }
 

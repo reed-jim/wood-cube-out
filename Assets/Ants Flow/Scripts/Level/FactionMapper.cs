@@ -229,7 +229,15 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public int GetFactionIndexEditMode(Color faction)
     {
-        return allFactions.IndexOf(faction);
+        if (allFactions.Contains(faction))
+        {
+            return allFactions.IndexOf(faction);
+        }
+        else
+        {
+            return 0;
+
+        }
     }
 
     public Color GetFaction(int factionIndex)
