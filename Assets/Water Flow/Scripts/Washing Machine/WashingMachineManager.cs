@@ -528,21 +528,7 @@ namespace AntsFlow
 
         public void UseBoosterShuffle()
         {
-            // Dictionary<Color, int> poolFactionSortedByDifficulty = GetRemaniningTilePerFaction();
-
-            // for (int i = 0; i < washingMachineSlots.Count; i++)
-            // {
-            //     WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
-
-            //     if (washingMachineSlot.washingMachineItem != null)
-            //     {
-            //         CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
-            //     }
-            // }
-
-            // poolFactionSortedByDifficulty = poolFactionSortedByDifficulty.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            // int index = 0;
+            Dictionary<WashingMachineItem, WashingMachineStartSlot> slotOfShuffleBuckets = new Dictionary<WashingMachineItem, WashingMachineStartSlot>();
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
@@ -550,24 +536,44 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
-                    WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
+                    WashingMachineItem bucket = washingMachineStartSlot.washingMachine;
 
-                    if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                    if (bucket.isDouble || bucket is HiddenAntBox || bucket is FreezedAntBox)
                     {
                         continue;
                     }
 
-                    Color nextFaction;
-                    int numAnt;
+                    slotOfShuffleBuckets.Add(bucket, washingMachineStartSlot);
 
-                    washingMachine.isShuffled = false;
+                    // restore faction required grain count
+                    if (factionGrainRequirements.Any(item => item.faction == bucket.faction))
+                    {
+                        FactionGrainRequirement factionGrainRequirement = factionGrainRequirements.First(item => item.faction == bucket.faction);
 
-                    GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt, isIncludeStartSlot: false);
-
-                    washingMachine.Init(washingMachineStartSlot, nextFaction, numAnt);
-
-                    washingMachine.isShuffled = true;
+                        factionGrainRequirement.totalGrain += bucket.number;
+                    }
                 }
+            }
+
+            foreach (var bucket in slotOfShuffleBuckets.Keys)
+            {
+                Color nextFaction;
+                int numAnt;
+
+                bucket.isShuffled = false;
+
+                GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt, isIncludeStartSlot: false);
+
+                if (numAnt <= 0)
+                {
+                    break;
+                }
+
+                bucket.Init(slotOfShuffleBuckets[bucket], nextFaction, numAnt);
+
+                bucket.isShuffled = true;
+
+                MinusFactionGrainRequirement(nextFaction, numAnt);
             }
         }
 
@@ -1064,7 +1070,10 @@ namespace AntsFlow
                 {
                     if (isIncludeStartSlot)
                     {
-                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        if (washingMachineStartSlot.washingMachine.number != 0)
+                        {
+                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
                     }
                     else
                     {
@@ -1072,7 +1081,11 @@ namespace AntsFlow
 
                         if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
                         {
-                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                            if (washingMachineStartSlot.washingMachine.number != 0)
+                            {
+                                CommonUtil.SumValueOfDictionary(
+                                    sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                            }
                         }
                     }
                 }
@@ -1108,7 +1121,7 @@ namespace AntsFlow
                     maxNumGrain = factionGrainRequirement.totalGrain;
                 }
 
-                // Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {ColorUtil.ColorToHex(faction)} {maxNumGrain}");
+                // DebugUtil.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {maxNumGrain}", faction);
 
                 int maxValue = maxNumGrain;
                 maxValue = Mathf.Min(maxValue, maxAntNumberThreshold);
