@@ -226,6 +226,16 @@ public class FactionMapper : Singleton<FactionMapper>
     {
         return colorsOfIndexes[faction];
     }
+
+    public int GetFactionIndexEditMode(Color faction)
+    {
+        return allFactions.IndexOf(faction);
+    }
+
+    public Color GetFaction(int factionIndex)
+    {
+        return allFactions[factionIndex];
+    }
 }
 
 [Serializable]

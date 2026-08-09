@@ -6,9 +6,6 @@ using System;
 using System.IO;
 using AntsFlow;
 
-
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -17,9 +14,97 @@ namespace AntsFlow
 {
     public enum ConfigTool
     {
-        None,
+        Normal,
         GiantChicken,
         Wall
+    }
+
+    public class ColorDropdown : PopupWindowContent
+    {
+        private readonly List<Color> colors;
+        private readonly Color selectedColor;
+        private readonly System.Action<Color> onSelected;
+
+        public ColorDropdown(
+            List<Color> colors,
+            Color selectedColor,
+            System.Action<Color> onSelected)
+        {
+            this.colors = colors;
+            this.selectedColor = selectedColor;
+            this.onSelected = onSelected;
+        }
+
+        public override Vector2 GetWindowSize()
+        {
+            return new Vector2(220, Mathf.Max(40, colors.Count * 32 + 10));
+        }
+
+        public override void OnGUI(Rect rect)
+        {
+            if (colors == null || colors.Count == 0)
+            {
+                EditorGUILayout.LabelField("No factions");
+                return;
+            }
+
+            for (int i = 0; i < colors.Count; i++)
+            {
+                Color color = colors[i];
+
+                Rect buttonRect = EditorGUILayout.GetControlRect(
+                    GUILayout.Height(26)
+                );
+
+                if (GUI.Button(buttonRect, GUIContent.none))
+                {
+                    onSelected?.Invoke(color);
+                    editorWindow.Close();
+                }
+
+                // Color square
+                Rect colorRect = new Rect(
+                    buttonRect.x + 4,
+                    buttonRect.y + 3,
+                    20,
+                    20
+                );
+
+                EditorGUI.DrawRect(
+                    colorRect,
+                    color
+                );
+
+                // Name
+                Rect labelRect = new Rect(
+                    buttonRect.x + 30,
+                    buttonRect.y,
+                    buttonRect.width - 30,
+                    buttonRect.height
+                );
+
+                EditorGUI.LabelField(
+                    labelRect,
+                    $"Faction {i}"
+                );
+
+                // Selected indicator
+                if (color == selectedColor)
+                {
+                    Rect checkRect = new Rect(
+                        buttonRect.xMax - 25,
+                        buttonRect.y,
+                        20,
+                        buttonRect.height
+                    );
+
+                    EditorGUI.LabelField(
+                        checkRect,
+                        "✓"
+                    );
+                }
+            }
+        }
     }
 
     public class LevelItem : MonoBehaviour
@@ -179,9 +264,17 @@ namespace AntsFlow
 
         private Vector2 tileSpacing = 1.6f * Vector2.one;
 
+        private Color selectedColor;
+
+        #region Normal Config
+        private int brushRadius = 0;
+        private Vector2Int? lastPaintCoord = null;
+        private bool isPainting = false;
+        private bool undoRecorded = false;
+        #endregion
+
         #region Snake
         private bool snakeConfigMode;
-        private bool isPainting;
         private bool isShowingNodeId;
         private bool paintValue; // true = add, false = remove
         private readonly HashSet<int> paintedThisDrag = new();
@@ -195,24 +288,9 @@ namespace AntsFlow
 
             LevelItem levelItem = (LevelItem)target;
 
-            GUILayout.Space(10);
-
-            GUILayout.Label("Generate Level", EditorStyles.boldLabel);
-
-            tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
-
-            EditorGUILayout.LabelField("Import Color Palette", EditorStyles.boldLabel);
-
-            hexInput = EditorGUILayout.TextArea(hexInput, GUILayout.MinHeight(180));
-
             if (GUILayout.Button("GenerateChickenLevelTiles"))
             {
                 GenerateChickenLevelTiles(levelItem);
-            }
-
-            if (GUILayout.Button("GENERATE LEVEL"))
-            {
-                GenerateLevel(levelItem);
             }
 
             if (GUILayout.Button("Convert to JSON"))
@@ -225,32 +303,36 @@ namespace AntsFlow
                 levelItem.ClearAllSpecialElements();
             }
 
-            if (GUILayout.Button(
-            snakeConfigMode
-                ? "Disable Snake Config Mode"
-                : "Enable Snake Config Mode"))
-            {
-                snakeConfigMode = !snakeConfigMode;
-
-                // Force Scene view repaint
-                SceneView.RepaintAll();
-            }
-
-
             GUILayout.Space(10);
             GUILayout.Label("Scene Config", EditorStyles.boldLabel);
 
+            if (GUILayout.Button(configTool == ConfigTool.Normal ? "Disable Giant Normal Config" : "Giant Normal Config"))
+            {
+                configTool = ConfigTool.Normal;
+                SceneView.RepaintAll();
+            }
+
             if (GUILayout.Button(configTool == ConfigTool.GiantChicken ? "Disable Giant Chicken Config" : "Giant Chicken Config"))
             {
-                configTool = configTool == ConfigTool.GiantChicken ? ConfigTool.None : ConfigTool.GiantChicken;
+                configTool = ConfigTool.GiantChicken;
                 SceneView.RepaintAll();
             }
 
             if (GUILayout.Button(configTool == ConfigTool.Wall ? "Disable Wall Config" : "Wall Config"))
             {
-                configTool = configTool == ConfigTool.Wall ? ConfigTool.None : ConfigTool.Wall;
+                configTool = ConfigTool.Wall;
                 SceneView.RepaintAll();
             }
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Colors", EditorStyles.boldLabel);
+
+            DrawColorButton(
+                levelItem,
+                selectedColor
+            );
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         #region Chicken Feed
@@ -258,6 +340,9 @@ namespace AntsFlow
         {
             switch (configTool)
             {
+                case ConfigTool.Normal:
+                    ConfiguringNormal();
+                    break;
                 case ConfigTool.GiantChicken:
                     ConfiguringChicken();
                     break;
@@ -265,6 +350,210 @@ namespace AntsFlow
                     ConfiguringWall();
                     break;
             }
+        }
+
+        private void ConfiguringNormal()
+        {
+            LevelItem level = (LevelItem)target;
+
+            if (level.factionMapper == null)
+            {
+                level.factionMapper = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+            }
+
+            if (level.factionMapper == null)
+                return;
+
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+
+            Event e = Event.current;
+
+            int numColumn = level.numColumn;
+            int numRow = level.numRow;
+            float tileDistance = 0.1f;
+
+            // Background
+            float backgroundWidth = 10f;
+
+            Vector3[] background =
+            {
+        new Vector3(-backgroundWidth, -backgroundWidth, 1),
+        new Vector3(-backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, +backgroundWidth, 1),
+        new Vector3(+backgroundWidth, -backgroundWidth, 1),
+    };
+
+            Handles.DrawSolidRectangleWithOutline(background, new Color(0, 0, 0, 0.85f), Color.white);
+
+            List<AntLevelDataItem> chickenLevelTiles = level.chickenLevelTiles;
+            Camera camera = SceneView.currentDrawingSceneView.camera;
+
+            // Brush size
+            if (e.type == EventType.ScrollWheel)
+            {
+                brushRadius += e.delta.y > 0 ? -1 : 1;
+                brushRadius = Mathf.Clamp(brushRadius, 0, 10);
+                e.Use();
+                SceneView.RepaintAll();
+            }
+
+            // Draw tiles
+            for (int y = 0; y < numRow; y++)
+            {
+                for (int x = 0; x < numColumn; x++)
+                {
+                    int index = x + y * numColumn;
+                    Vector3 worldPos = tileDistance * new Vector2(x, y);
+                    float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
+
+                    if (index < chickenLevelTiles.Count)
+                    {
+                        Handles.color = level.factionMapper.GetFaction(chickenLevelTiles[index].factionIndex);
+                        Handles.DrawSolidDisc(worldPos, camera.transform.forward, size);
+                    }
+
+                    Handles.color = Color.gray;
+                    Handles.DrawWireDisc(worldPos, camera.transform.forward, size);
+                }
+            }
+
+            // Paint
+            if (e.type == EventType.MouseDown && e.button == 0)
+            {
+                isPainting = true;
+                undoRecorded = false;
+                lastPaintCoord = null;
+                GUIUtility.hotControl = GUIUtility.GetControlID(FocusType.Passive);
+
+                PaintAtMousePosition(level, e.mousePosition, tileDistance, numColumn, numRow, ref lastPaintCoord);
+                e.Use();
+            }
+
+            if (e.type == EventType.MouseDrag && e.button == 0 && isPainting)
+            {
+                PaintAtMousePosition(level, e.mousePosition, tileDistance, numColumn, numRow, ref lastPaintCoord);
+                e.Use();
+            }
+
+            if (e.type == EventType.MouseUp && e.button == 0)
+            {
+                isPainting = false;
+                undoRecorded = false;
+                lastPaintCoord = null;
+                GUIUtility.hotControl = 0;
+                e.Use();
+            }
+
+            // Brush preview
+            if (isPainting || e.type == EventType.MouseMove)
+                DrawBrushPreview(e.mousePosition, tileDistance, camera);
+
+            if (GUI.changed)
+                SceneView.RepaintAll();
+        }
+
+        private void PaintAtMousePosition(LevelItem level, Vector2 mousePosition, float tileDistance, int numColumn, int numRow, ref Vector2Int? previousCoord)
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
+            Plane gridPlane = new Plane(Vector3.forward, Vector3.zero);
+
+            if (!gridPlane.Raycast(ray, out float distance))
+                return;
+
+            Vector3 worldPosition = ray.GetPoint(distance);
+
+            Vector2Int currentCoord = new Vector2Int(
+                Mathf.RoundToInt(worldPosition.x / tileDistance),
+                Mathf.RoundToInt(worldPosition.y / tileDistance)
+            );
+
+            if (previousCoord.HasValue)
+                PaintLine(level, previousCoord.Value, currentCoord, numColumn, numRow);
+            else
+                PaintBrush(level, currentCoord, numColumn, numRow);
+
+            previousCoord = currentCoord;
+
+            SceneView.RepaintAll();
+        }
+
+        private void PaintLine(LevelItem level, Vector2Int from, Vector2Int to, int numColumn, int numRow)
+        {
+            int distance = Mathf.Max(Mathf.Abs(to.x - from.x), Mathf.Abs(to.y - from.y));
+
+            if (distance == 0)
+            {
+                PaintBrush(level, from, numColumn, numRow);
+                return;
+            }
+
+            for (int i = 0; i <= distance; i++)
+            {
+                float t = i / (float)distance;
+                Vector2 interpolated = Vector2.Lerp(from, to, t);
+                Vector2Int coord = new Vector2Int(Mathf.RoundToInt(interpolated.x), Mathf.RoundToInt(interpolated.y));
+                PaintBrush(level, coord, numColumn, numRow);
+            }
+        }
+
+        private void PaintBrush(LevelItem level, Vector2Int center, int numColumn, int numRow)
+        {
+            List<AntLevelDataItem> chickenLevelTiles = level.chickenLevelTiles;
+
+            if (!undoRecorded)
+            {
+                Undo.RecordObject(level, "Paint Normal Config");
+                undoRecorded = true;
+            }
+
+            for (int y = -brushRadius; y <= brushRadius; y++)
+            {
+                for (int x = -brushRadius; x <= brushRadius; x++)
+                {
+                    if (x * x + y * y > brushRadius * brushRadius)
+                        continue;
+
+                    int tileX = center.x + x;
+                    int tileY = center.y + y;
+
+                    if (tileX < 0 || tileX >= numColumn || tileY < 0 || tileY >= numRow)
+                        continue;
+
+                    int index = tileX + tileY * numColumn;
+
+                    if (index >= chickenLevelTiles.Count)
+                        continue;
+
+                    if (Event.current.shift)
+                        chickenLevelTiles[index].factionIndex = 0;
+                    else
+                        chickenLevelTiles[index].factionIndex = level.factionMapper.GetFactionIndexEditMode(selectedColor);
+                }
+            }
+
+            EditorUtility.SetDirty(level);
+        }
+
+        private void DrawBrushPreview(Vector2 mousePosition, float tileDistance, Camera camera)
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
+            Plane gridPlane = new Plane(Vector3.forward, Vector3.zero);
+
+            if (!gridPlane.Raycast(ray, out float distance))
+                return;
+
+            Vector3 worldPosition = ray.GetPoint(distance);
+
+            Vector2Int coord = new Vector2Int(
+                Mathf.RoundToInt(worldPosition.x / tileDistance),
+                Mathf.RoundToInt(worldPosition.y / tileDistance)
+            );
+
+            Vector3 center = new Vector3(coord.x * tileDistance, coord.y * tileDistance, 0);
+            float brushSize = (brushRadius + 0.5f) * tileDistance;
+
+            Handles.color = Event.current.shift ? new Color(1f, 0.2f, 0.2f, 0.8f) : new Color(1f, 1f, 1f, 0.8f);
+            Handles.DrawWireDisc(center, camera.transform.forward, brushSize);
         }
 
         private void ConfiguringChicken()
@@ -288,11 +577,11 @@ namespace AntsFlow
 
             Vector3[] background =
             {
-        new Vector3(-backgroundWidth, -backgroundWidth, 1),
-        new Vector3(-backgroundWidth, +backgroundWidth, 1),
-        new Vector3(+backgroundWidth, +backgroundWidth, 1),
-        new Vector3(+backgroundWidth, -backgroundWidth, 1),
-    };
+                new Vector3(-backgroundWidth, -backgroundWidth, 1),
+                new Vector3(-backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, -backgroundWidth, 1),
+            };
 
             Handles.DrawSolidRectangleWithOutline(
                 background,
@@ -469,6 +758,58 @@ namespace AntsFlow
                     levelItem.chickenLevelTiles.Add(tileData);
                 }
             }
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        private void DrawColorButton(LevelItem levelItem, Color color)
+        {
+            // Main button
+            GUIContent content = new GUIContent();
+
+            Rect rect = EditorGUILayout.GetControlRect();
+
+            if (GUI.Button(rect, content))
+            {
+                PopupWindow.Show(
+                    rect,
+                    new ColorDropdown(
+                        levelItem.factionMapper.allFactions,
+                        color,
+                        selected =>
+                        {
+                            selectedColor = selected;
+                            Repaint();
+                        }
+                    )
+                );
+            }
+
+            // Draw selected color
+            Rect colorRect = new Rect(
+                rect.x + 4,
+                rect.y + 3,
+                24,
+                rect.height - 6
+            );
+
+            EditorGUI.DrawRect(
+                colorRect,
+                color
+            );
+
+            // Optional label
+            Rect labelRect = new Rect(
+                rect.x + 34,
+                rect.y,
+                rect.width - 34,
+                rect.height
+            );
+
+            EditorGUI.LabelField(
+                labelRect,
+                "Select Faction"
+            );
         }
         #endregion
 
