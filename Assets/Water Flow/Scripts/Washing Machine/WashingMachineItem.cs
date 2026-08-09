@@ -442,14 +442,16 @@ public class WashingMachineItem : MonoBehaviour
             return;
         }
 
-        if (isDouble)
-        {
-            Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
-        }
-        else
-        {
-            skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
-        }
+        // if (isDouble)
+        // {
+        //     Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+        // }
+        // else
+        // {
+        //     skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
+        // }
+
+        Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
 
         // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
 
@@ -527,7 +529,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect()
     {
-        return !GamePersistentVariable.isPreventSelectAntBox;
+        return !GamePersistentVariable.isPreventSelectAntBox && !GrainPool.Ins.IsMaxCapacity();
 
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
@@ -537,7 +539,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
-        return !GamePersistentVariable.isPreventSelectAntBox;
+        return !GamePersistentVariable.isPreventSelectAntBox && !GrainPool.Ins.IsMaxCapacity();
 
         if (WashingMachineManager.Ins.grainPool.IsMaxCapacity())
         {
@@ -1052,22 +1054,4 @@ public class WashingMachineItem : MonoBehaviour
             CheckAntsPath();
         }
     }
-
-    // private void OnSelectTrueCompleted(TrackEntry trackEntry)
-    // {
-    //     entry.Complete -= OnSelectTrueCompleted;
-
-    //     SwitchShadow();
-
-    //     WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
-    //     {
-
-    //     });
-
-    //     SoundManager.Instance.PlaySoundBoxTap();
-
-    //     this.washingMachineSlot = washingMachineSlot;
-
-    //     selectWashingMachineEvent?.Invoke(this);
-    // }
 }

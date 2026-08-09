@@ -190,6 +190,8 @@ public class BoosterUI : MonoBehaviour
 
         if (IsBoosterAvailable(GetBoosterIndex(boosterType)))
         {
+            GamePersistentVariable.isPreventSelectAntBox = true;
+
             PlayPreBoosterAnimation(boosterType, onCompleteAction: () =>
             {
                 UseBooster(boosterType);
@@ -213,10 +215,6 @@ public class BoosterUI : MonoBehaviour
             else if (boosterType == BoosterType.ClearScrewPorts)
             {
                 Shuffle();
-            }
-            else if (boosterType == BoosterType.ClearOneColor)
-            {
-                EnableClearOneColorMode();
             }
             else if (boosterType == BoosterType.ClearOneColor)
             {
@@ -410,6 +408,8 @@ public class BoosterUI : MonoBehaviour
             // AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
 
             _isInTransition = false;
+
+            GamePersistentVariable.isPreventSelectAntBox = false;
         });
     }
 
@@ -435,11 +435,16 @@ public class BoosterUI : MonoBehaviour
 
     private void DisableBreakObjectMode()
     {
+        GamePersistentVariable.isPreventSelectAntBox = true;
+
         Tween.LocalPositionY(boosterContainer, _initialBoosterContainerPosition.y, duration: transitionTime);
+
         SaferioTween.AlphaHide(breakModeContainerCanvasGroup, onCompleteAction: () =>
         {
             breakModeContainer.localPosition = breakModeContainer.localPosition.ChangeY(-canvasSizeOfReferenceDevice.Value.y);
             breakModeContainer.gameObject.SetActive(false);
+
+            GamePersistentVariable.isPreventSelectAntBox = false;
         });
     }
 
@@ -490,6 +495,8 @@ public class BoosterUI : MonoBehaviour
         .OnComplete(() =>
         {
             _isInTransition = false;
+
+            GamePersistentVariable.isPreventSelectAntBox = false;
         });
 
         WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();

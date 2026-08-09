@@ -354,6 +354,9 @@ public class WinPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
+        continueButton.interactable = true;
+        returnHomeButton.interactable = true;
+
         InvokeShowAdNotLoadedPopupEvent();
     }
 
