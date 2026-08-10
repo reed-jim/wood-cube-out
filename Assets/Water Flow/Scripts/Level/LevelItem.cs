@@ -267,7 +267,7 @@ namespace AntsFlow
         private Color selectedColor;
 
         #region Normal Config
-        private int brushRadius = 0;
+        private int brushRadius = 1;
         private Vector2Int? lastPaintCoord = null;
         private bool isPainting = false;
         private bool undoRecorded = false;
@@ -306,7 +306,7 @@ namespace AntsFlow
             GUILayout.Space(10);
             GUILayout.Label("Scene Config", EditorStyles.boldLabel);
 
-            if (GUILayout.Button(configTool == ConfigTool.Normal ? "Disable Giant Normal Config" : "Giant Normal Config"))
+            if (GUILayout.Button(configTool == ConfigTool.Normal ? "Disable Normal Config" : "Normal Config"))
             {
                 configTool = ConfigTool.Normal;
                 SceneView.RepaintAll();
@@ -323,6 +323,9 @@ namespace AntsFlow
                 configTool = ConfigTool.Wall;
                 SceneView.RepaintAll();
             }
+
+            brushRadius = EditorGUILayout.IntField("Brush Size", brushRadius);
+            brushRadius = Mathf.Max(brushRadius, 1);
 
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Colors", EditorStyles.boldLabel);
@@ -399,14 +402,6 @@ namespace AntsFlow
 
             List<AntLevelDataItem> chickenLevelTiles = level.chickenLevelTiles;
             Camera camera = SceneView.currentDrawingSceneView.camera;
-
-            if (e.type == EventType.ScrollWheel)
-            {
-                brushRadius += e.delta.y > 0 ? -1 : 1;
-                brushRadius = Mathf.Clamp(brushRadius, 0, 10);
-                e.Use();
-                SceneView.RepaintAll();
-            }
 
             for (int y = 0; y < numRow; y++)
             {
