@@ -555,25 +555,112 @@ namespace AntsFlow
                 }
             }
 
+            Dictionary<Color, int> maxGrainPerFaction = new Dictionary<Color, int>();
+
+            if (slotOfShuffleBuckets.Count > 6)
+            {
+                maxGrainPerFaction = GetNumAntSpawnPerFactionOrderByDifficulty();
+            }
+            else
+            {
+                foreach (var item in factionGrainRequirements)
+                {
+                    CommonUtil.SumValueOfDictionary(maxGrainPerFaction, item.faction, item.totalGrain);
+                }
+            }
+
+            List<FactionGrainRequirement> bucketDataItems = SplitGrain(maxGrainPerFaction, slotOfShuffleBuckets.Count);
+
+            int index = 0;
+
             foreach (var bucket in slotOfShuffleBuckets.Keys)
             {
-                Color nextFaction;
-                int numAnt;
+                FactionGrainRequirement bucketData = bucketDataItems[index];
 
-                bucket.isShuffled = false;
+                bucket.Init(slotOfShuffleBuckets[bucket], bucketData.faction, bucketData.totalGrain);
 
-                GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt, isIncludeStartSlot: false);
+                MinusFactionGrainRequirement(bucketData.faction, bucketData.totalGrain);
 
-                if (numAnt <= 0)
+                index++;
+            }
+
+            List<FactionGrainRequirement> SplitGrain(Dictionary<Color, int> grainByFaction, int exactCount)
+            {
+                List<FactionGrainRequirement> result = new List<FactionGrainRequirement>(exactCount);
+
+                Dictionary<Color, int> remaining = new Dictionary<Color, int>();
+
+                foreach (var faction in grainByFaction.Keys)
                 {
-                    break;
+                    remaining.Add(faction, grainByFaction[faction]);
                 }
 
-                bucket.Init(slotOfShuffleBuckets[bucket], nextFaction, numAnt);
+                Color validFaction = Color.white;
 
-                bucket.isShuffled = true;
+                for (int i = 0; i < exactCount; i++)
+                {
+                    bool isFound = false;
 
-                MinusFactionGrainRequirement(nextFaction, numAnt);
+                    foreach (var faction in remaining.Keys)
+                    {
+                        if (remaining[faction] >= 10)
+                        {
+                            if (result.Any(item => item.faction == faction))
+                            {
+                                validFaction = faction;
+
+                                continue;
+                            }
+                            else
+                            {
+                                FactionGrainRequirement factionGrainRequirement = new FactionGrainRequirement();
+
+                                factionGrainRequirement.faction = faction;
+                                factionGrainRequirement.totalGrain = 10;
+
+                                result.Add(factionGrainRequirement);
+
+                                remaining[faction] -= 10;
+
+                                isFound = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isFound)
+                    {
+                        FactionGrainRequirement factionGrainRequirement = new FactionGrainRequirement();
+
+                        factionGrainRequirement.faction = validFaction;
+                        factionGrainRequirement.totalGrain = 10;
+
+                        result.Add(factionGrainRequirement);
+
+                        remaining[validFaction] -= 10;
+                    }
+                }
+
+                foreach (var faction in remaining.Keys)
+                {
+                    if (remaining[faction] > 0)
+                    {
+                        for (int i = 0; i < result.Count; i++)
+                        {
+                            FactionGrainRequirement factionGrainRequirement = result[i];
+
+                            if (factionGrainRequirement.faction == faction)
+                            {
+                                factionGrainRequirement.totalGrain += remaining[faction];
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return result;
             }
         }
 
