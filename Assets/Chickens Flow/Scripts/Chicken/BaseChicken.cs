@@ -102,7 +102,15 @@ public class BaseChicken : MonoBehaviour
 
     public void SetFaction(Color faction)
     {
-        skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+        try
+        {
+            skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+        }
+        catch (System.Exception)
+        {
+
+        }
+        
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 

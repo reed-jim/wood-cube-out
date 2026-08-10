@@ -464,25 +464,27 @@ namespace NamPhuThuy.GamePlay
 
             List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
 
-            for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
-            {
-                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+            // for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
+            // {
+            //     AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
 
-                AntsFlow.BaseTile tile = new AntsFlow.BaseTile();
+            //     AntsFlow.BaseTile tile = new AntsFlow.BaseTile();
 
-                tile.tileName = i;
-                tile.position = antLevelDataItem.position;
-                tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
-                tile.ring = antLevelDataItem.ring;
-                tile.priority = antLevelDataItem.priority;
+            //     Debug.Log($"LevelLoader {antLevelDataItem.factionIndex} {FactionMapper.Ins.mapper.Count}");
 
-                tiles.Add(tile);
-            }
+            //     tile.tileName = i;
+            //     tile.position = antLevelDataItem.position;
+            //     tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
+            //     tile.ring = antLevelDataItem.ring;
+            //     tile.priority = antLevelDataItem.priority;
+
+            //     tiles.Add(tile);
+            // }
+
+            // spawnedLevelItem.tiles = tiles;
 
             GamePersistentVariable.numColumn = antLevelData.levelItemData.numColumn;
             GamePersistentVariable.numRow = antLevelData.levelItemData.numRow;
-
-            spawnedLevelItem.tiles = tiles;
 
             return spawnedLevelItem;
 
