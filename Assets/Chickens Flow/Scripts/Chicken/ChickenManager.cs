@@ -39,6 +39,16 @@ public class ChickenManager : Singleton<ChickenManager>
     [SerializeField] private Transform[] shapePoints;
     [SerializeField] private int middleRow = 12;
 
+    [Header("Shape Definition")]
+    [Tooltip("Vertices of any 2D closed polygon, ordered clockwise or counter-clockwise.")]
+    [SerializeField] private List<Transform> customPolygonVertices;
+
+    [Header("Gizmo Preview Settings")]
+    [SerializeField] private bool showBoardShapeGizmos = true;
+    [SerializeField] private Color boundaryColor = Color.green;
+    [SerializeField] private Color gridPointColor = Color.yellow;
+    [SerializeField] private float pointRadius = 0.08f;
+
     public List<Color> allFactions;
 
     private GrainPile lastGrainPileToFeed;
@@ -74,8 +84,55 @@ public class ChickenManager : Singleton<ChickenManager>
         GamePersistentVariable.numEatingChicken = 0;
     }
 
+    private void GizmosBoardShape()
+    {
+        if (!showBoardShapeGizmos || customPolygonVertices == null || customPolygonVertices.Count < 3)
+            return;
+
+        // 1. Draw Closed Polygon Outer Boundary
+        Gizmos.color = boundaryColor;
+        for (int i = 0; i < customPolygonVertices.Count; i++)
+        {
+            Transform current = customPolygonVertices[i];
+            Transform next = customPolygonVertices[(i + 1) % customPolygonVertices.Count];
+
+            if (current != null && next != null)
+            {
+                Gizmos.DrawLine(current.position, next.position);
+                Gizmos.DrawSphere(current.position, pointRadius * 1.2f);
+            }
+        }
+
+        // 2. Draw Interpolated Grid Preview
+        Gizmos.color = gridPointColor;
+        for (int x = 0; x < numColumn; x++)
+        {
+            for (int y = 0; y < numRow; y++)
+            {
+                Vector3 gridPos = GetShapePosition(x, y);
+                Gizmos.DrawSphere(gridPos, pointRadius);
+
+                // Optional grid lines (horizontal connections)
+                if (x < numColumn - 1)
+                {
+                    Vector3 nextXPos = GetShapePosition(x + 1, y);
+                    Gizmos.DrawLine(gridPos, nextXPos);
+                }
+
+                // Optional grid lines (vertical connections)
+                if (y < numRow - 1)
+                {
+                    Vector3 nextYPos = GetShapePosition(x, y + 1);
+                    Gizmos.DrawLine(gridPos, nextYPos);
+                }
+            }
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
+        GizmosBoardShape();
+
         if (waitingChickenSlots == null)
             return;
 
@@ -100,14 +157,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
             // Circle
             Gizmos.DrawSphere(position, 0.2f);
-
-// #if UNITY_EDITOR
-//             // Vector2Int text
-//             UnityEditor.Handles.Label(
-//                 position + Vector3.up * 0.3f,
-//                 gridPosition.ToString()
-//             );
-// #endif
         }
     }
 
@@ -383,67 +432,128 @@ public class ChickenManager : Singleton<ChickenManager>
         chickenRenderer.RenderChickens(chickens);
     }
 
+    /// <summary>
+    /// Maps grid (x, y) coordinates inside any arbitrary 2D polygon defined by customPolygonVertices.
+    /// </summary>
     private Vector3 GetShapePosition(int x, int y)
     {
-        float u = numColumn <= 1
-            ? 0.5f
-            : (float)x / (numColumn - 1);
+        // Amount to shift odd rows (in grid units relative to column spacing)
+        float rowOffset = (y % 2 == 1) ? 0.5f : 0.0f;
 
-        Vector3 position;
+        // 1. Incorporate offset into normalized 'u' coordinate (0.0 to 1.0)
+        // Adjust denominator so the last column shifted doesn't spill completely out
+        float u = numColumn <= 1 ? 0.5f : (x + rowOffset) / (numColumn - 1);
+        float v = numRow <= 1 ? 0.5f : (float)y / (numRow - 1);
 
-        // =========================
-        // BOTTOM RECTANGLE
-        // =========================
-        if (y <= middleRow)
-        {
-            float t = middleRow <= 0
-                ? 0f
-                : (float)y / middleRow;
-
-            Vector3 left = Vector3.Lerp(
-                shapePoints[0].position,
-                shapePoints[2].position,
-                t
-            );
-
-            Vector3 right = Vector3.Lerp(
-                shapePoints[1].position,
-                shapePoints[3].position,
-                t
-            );
-
-            position = Vector3.Lerp(left, right, u);
-        }
-        // =========================
-        // TOP PARALLELOGRAM
-        // =========================
-        else
-        {
-            int topRows = (numRow - 1) - middleRow;
-
-            float t = topRows <= 0
-                ? 0f
-                : (float)(y - middleRow) / topRows;
-
-            Vector3 left = Vector3.Lerp(
-                shapePoints[2].position,
-                shapePoints[4].position,
-                t
-            );
-
-            Vector3 right = Vector3.Lerp(
-                shapePoints[3].position,
-                shapePoints[5].position,
-                t
-            );
-
-            position = Vector3.Lerp(left, right, u);
-        }
-
-        // Odd rows are shifted slightly to the right
-        position.x += 0.5f * (y % 2);
+        // 2. Evaluate interpolated position inside polygon
+        Vector3 position = EvaluatePolygonPosition(u, v, customPolygonVertices);
 
         return position;
+    }
+
+    /// <summary>
+    /// Calculates a world position for a normalized (u, v) coordinate inside any closed polygon.
+    /// Supports 4-point quadrilaterals (Bilinear) and N-point arbitrary polygons (Mean Value Coordinates).
+    /// </summary>
+    private Vector3 EvaluatePolygonPosition(float u, float v, List<Transform> polygon)
+    {
+        if (polygon == null || polygon.Count < 3)
+        {
+            Debug.LogWarning("Polygon needs at least 3 vertices. Defaulting to Vector3.zero.");
+            return Vector3.zero;
+        }
+
+        int count = polygon.Count;
+
+        // OPTION A: Optimized 4-point Quadrilateral (Bilinear Interpolation)
+        if (count == 4)
+        {
+            Vector3 p0 = polygon[0].position; // Bottom-Left
+            Vector3 p1 = polygon[1].position; // Bottom-Right
+            Vector3 p2 = polygon[2].position; // Top-Right
+            Vector3 p3 = polygon[3].position; // Top-Left
+
+            Vector3 bottom = Vector3.Lerp(p0, p1, u);
+            Vector3 top = Vector3.Lerp(p3, p2, u);
+
+            return Vector3.Lerp(bottom, top, v);
+        }
+
+        // OPTION B: General N-Vertex Polygon Mapping using Mean Value Coordinates (MVC)
+        // Works for convex and concave polygons with any number of vertices (> 3).
+        return InterpolateMeanValueCoordinates(u, v, polygon);
+    }
+
+    /// <summary>
+    /// Computes interior coordinates for N-sided polygons using Mean Value Coordinates.
+    /// </summary>
+    private Vector3 InterpolateMeanValueCoordinates(float u, float v, List<Transform> polygon)
+    {
+        int count = polygon.Count;
+
+        // Calculate polygon centroid and bounding sphere to map normalized (u,v) to reference space
+        Vector3 centroid = Vector3.zero;
+        for (int i = 0; i < count; i++)
+        {
+            centroid += polygon[i].position;
+        }
+        centroid /= count;
+
+        // Estimate target point from bounding box / UV coordinates
+        Vector3 minBounds = polygon[0].position;
+        Vector3 maxBounds = polygon[0].position;
+        for (int i = 1; i < count; i++)
+        {
+            minBounds = Vector3.Min(minBounds, polygon[i].position);
+            maxBounds = Vector3.Max(maxBounds, polygon[i].position);
+        }
+
+        Vector3 targetPoint = new Vector3(
+            Mathf.Lerp(minBounds.x, maxBounds.x, u),
+            Mathf.Lerp(minBounds.y, maxBounds.y, v),
+            centroid.z
+        );
+
+        // Calculate MVC weights for targetPoint relative to polygon boundary vertices
+        float[] weights = new float[count];
+        float totalWeight = 0f;
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 prev = polygon[(i + count - 1) % count].position;
+            Vector3 curr = polygon[i].position;
+            Vector3 next = polygon[(i + 1) % count].position;
+
+            Vector3 dPrev = prev - targetPoint;
+            Vector3 dCurr = curr - targetPoint;
+            Vector3 dNext = next - targetPoint;
+
+            float rCurr = dCurr.magnitude;
+            if (rCurr < 0.0001f) return curr; // Exact match on vertex
+
+            float angle1 = Vector3.Angle(dPrev, dCurr) * Mathf.Deg2Rad;
+            float angle2 = Vector3.Angle(dCurr, dNext) * Mathf.Deg2Rad;
+
+            float w = (Mathf.Tan(angle1 / 2f) + Mathf.Tan(angle2 / 2f)) / rCurr;
+            weights[i] = w;
+            totalWeight += w;
+        }
+
+        // Blend vertex positions based on calculated weights
+        Vector3 interpolatedPosition = Vector3.zero;
+        if (totalWeight > 0.0001f)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                interpolatedPosition += polygon[i].position * (weights[i] / totalWeight);
+            }
+        }
+        else
+        {
+            interpolatedPosition = targetPoint;
+        }
+
+        return interpolatedPosition;
     }
 
     private GiantChickenItemConfig GetGiantChickenAt(

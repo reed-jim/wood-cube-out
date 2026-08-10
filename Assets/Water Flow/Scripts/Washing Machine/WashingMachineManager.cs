@@ -164,14 +164,14 @@ namespace AntsFlow
 
         public void SetupPourPositions()
         {
-            float distance = 3;
-            float start = -0.4f * GamePersistentVariable.screenSizeWorld.x;
+            float totalWidth = 0.8f * GamePersistentVariable.screenSizeWorld.x;
+            int numSlot = 8;
+            float distance = totalWidth / numSlot;
+            float start = -0.5f * totalWidth;
 
-            int total = (int)(GamePersistentVariable.screenSizeWorld.x / distance);
+            pourXPositions = new float[numSlot];
 
-            pourXPositions = new float[total];
-
-            for (int i = 0; i < total; i++)
+            for (int i = 0; i < numSlot; i++)
             {
                 pourXPositions[i] = start + i * distance;
             }
