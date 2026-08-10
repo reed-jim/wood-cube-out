@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Dreamteck.Utilities;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -15,6 +16,8 @@ namespace AntsFlow
     {
         [Header("Bucket")]
         public List<FactionGrainRequirement> factionGrainRequirements;
+        public float[] pourXPositions;
+        public int pourPositionIndex;
 
         public LevelItem levelItem;
         public Camera mainCamera;
@@ -134,14 +137,14 @@ namespace AntsFlow
                 {
                     FactionGrainRequirement factionGrainRequirement = factionGrainRequirements.First(item => item.faction == chicken.faction);
 
-                    factionGrainRequirement.totalGrain += ChickenManager.Ins.requiredGrainForNormalChicken;
+                    factionGrainRequirement.totalGrain += chicken.numGrainPileRequired;
                 }
                 else
                 {
                     FactionGrainRequirement factionGrainRequirement = new FactionGrainRequirement()
                     {
                         faction = chicken.faction,
-                        totalGrain = ChickenManager.Ins.requiredGrainForNormalChicken
+                        totalGrain = chicken.numGrainPileRequired
                     };
 
                     factionGrainRequirements.Add(factionGrainRequirement);
@@ -157,6 +160,44 @@ namespace AntsFlow
 
                 factionGrainRequirement.totalGrain -= number;
             }
+        }
+
+        public void SetupPourPositions()
+        {
+            float distance = 3;
+            float start = -0.4f * GamePersistentVariable.screenSizeWorld.x;
+
+            int total = (int)(GamePersistentVariable.screenSizeWorld.x / distance);
+
+            pourXPositions = new float[total];
+
+            for (int i = 0; i < total; i++)
+            {
+                pourXPositions[i] = start + i * distance;
+            }
+
+            pourXPositions.Shuffle();
+        }
+
+        public float GetPourPositionX()
+        {
+            if (pourXPositions == null || pourXPositions.Length == 0)
+            {
+                SetupPourPositions();
+            }
+
+            if (pourPositionIndex >= pourXPositions.Length - 1)
+            {
+                pourPositionIndex = 0;
+
+                pourXPositions.Shuffle();
+            }
+            else
+            {
+                pourPositionIndex++;
+            }
+
+            return pourXPositions[pourPositionIndex];
         }
         #endregion
 

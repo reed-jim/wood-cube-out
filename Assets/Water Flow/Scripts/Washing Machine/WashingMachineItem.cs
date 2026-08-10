@@ -257,7 +257,7 @@ public class WashingMachineItem : MonoBehaviour
 
         Vector3 bucketDestination;
 
-        bucketDestination.x = UnityEngine.Random.Range(-pourRange, pourRange);
+        bucketDestination.x = WashingMachineManager.Ins.GetPourPositionX();
         bucketDestination.y = pourOffsetY;
         bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
 
