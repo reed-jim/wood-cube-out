@@ -65,6 +65,14 @@ public class SpineSpriteSheetExporter : EditorWindow
     private string busyPhase = "";
     private Action step;
 
+    //
+    private Material baseMaterial;
+    private readonly List<Texture2D> textures = new();
+
+    private string outputFolder = "Assets/Materials";
+
+    private Vector2 scrollPosition;
+
     [MenuItem("Tools/Spine Sprite Sheet Exporter (Rebuilt)")]
     public static void Open() => GetWindow<SpineSpriteSheetExporter>("Spine ➜ SpriteSheet");
 
@@ -114,6 +122,60 @@ public class SpineSpriteSheetExporter : EditorWindow
             settings.enumName = EditorGUILayout.TextField("Enum Name", settings.enumName);
         }
 
+
+
+        // --------------------------------------------------
+        // Base Material
+        // --------------------------------------------------
+
+        baseMaterial = (Material)EditorGUILayout.ObjectField(
+            "Base Material",
+            baseMaterial,
+            typeof(Material),
+            false
+        );
+
+        EditorGUILayout.Space();
+
+        // --------------------------------------------------
+        // Texture Drop Zone
+        // --------------------------------------------------
+
+        EditorGUILayout.LabelField(
+            $"Textures ({textures.Count})",
+            EditorStyles.boldLabel
+        );
+
+        DrawTextureDropZone();
+
+        // --------------------------------------------------
+        // Output Folder
+        // --------------------------------------------------
+
+        EditorGUILayout.LabelField(
+            "Output Folder",
+            EditorStyles.boldLabel
+        );
+
+        EditorGUILayout.BeginHorizontal();
+
+        outputFolder = EditorGUILayout.TextField(
+            outputFolder
+        );
+
+        if (GUILayout.Button(
+            "Select",
+            GUILayout.Width(60)))
+        {
+            SelectOutputFolder();
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(20);
+
+
+
         EditorGUILayout.Space();
         using (new EditorGUI.DisabledScope(skeletonAnim == null || animationNames.Length == 0 || busy))
         {
@@ -121,6 +183,16 @@ public class SpineSpriteSheetExporter : EditorWindow
             {
                 BeginExport();
             }
+
+            if (GUILayout.Button("Export ALL Skins"))
+            {
+                BeginExportAllSkins();
+            }
+        }
+
+        if (GUILayout.Button("CreateMaterials"))
+        {
+            CreateMaterials();
         }
 
         if (busy)
@@ -455,6 +527,7 @@ public class SpineSpriteSheetExporter : EditorWindow
         }
         return layers;
     }
+
     private void RestoreLayerRecursive(GameObject go, int[] layers)
     {
         var trs = go.GetComponentsInChildren<Transform>(true);
@@ -516,5 +589,559 @@ namespace {settings.enumNamespace}
         if (busy) EditorUtility.ClearProgressBar();
         Cleanup();
     }
+
+    #region Chicken Feed
+    private void BeginExportAllSkins()
+    {
+        if (skeletonAnim == null || animationNames.Length == 0) return;
+
+        var data = skeletonAnim.SkeletonDataAsset?.GetSkeletonData(true);
+        if (data == null)
+        {
+            Debug.LogError("Could not read SkeletonData.");
+            return;
+        }
+
+        var skins = data.Skins;
+        if (skins == null || skins.Count == 0)
+        {
+            Debug.LogWarning("This Spine skeleton has no skins.");
+            return;
+        }
+
+        string animName = animationNames[Mathf.Clamp(selectedAnimIndex, 0, animationNames.Length - 1)];
+
+        Debug.Log($"Starting export of {skins.Count} skins for animation '{animName}'...");
+
+        for (int i = 0; i < skins.Count; i++)
+        {
+            var skin = skins.Items[i];
+            if (skin == null) continue;
+
+            string skinName = skin.Name;
+            Debug.Log($"[{i + 1}/{skins.Count}] Exporting skin: {skinName}");
+
+            if (!BeginExportForSkin(animName, skinName))
+            {
+                Debug.Log("Skin export cancelled.");
+                break;
+            }
+        }
+
+        Debug.Log($"Finished exporting all skins for animation '{animName}'.");
+    }
+
+
+    private bool BeginExportForSkin(string animName, string skinName)
+    {
+        if (skeletonAnim == null) return false;
+
+        string characterDir = Path.Combine(settings.exportRoot, targetGO.name);
+        Directory.CreateDirectory(characterDir);
+
+        string safeSkinName = SanitizeFileName(skinName);
+        string safeAnimName = SanitizeFileName(animName);
+        string framesDir = Path.Combine(characterDir, $"~tmp_{safeSkinName}_{safeAnimName}");
+
+        Directory.CreateDirectory(framesDir);
+
+        SetupIsolatedStage();
+
+        var clonedSkelAnim = clonedSkeleton.GetComponent<SkeletonAnimation>();
+
+        if (clonedSkelAnim == null)
+        {
+            Debug.LogError("Clone does not contain SkeletonAnimation.");
+            Cleanup();
+            return false;
+        }
+
+        var data = skeletonAnim.SkeletonDataAsset.GetSkeletonData(true);
+        var skin = data.FindSkin(skinName);
+
+        if (skin == null)
+        {
+            Debug.LogWarning($"Could not find skin '{skinName}'.");
+            Cleanup();
+            return false;
+        }
+
+        ApplySkin(clonedSkelAnim, skinName);
+
+        var anim = data.FindAnimation(animName);
+
+        if (anim == null)
+        {
+            Debug.LogError($"Could not find animation '{animName}'.");
+            Cleanup();
+            return false;
+        }
+
+        float duration = anim.Duration;
+        int frameCount = Mathf.CeilToInt(duration * settings.fps);
+
+        List<float> times = new List<float>(frameCount + 1);
+
+        for (int i = 0; i < frameCount; i++)
+            times.Add(i / settings.fps);
+
+        if (settings.includeLastFrame && duration > 0f)
+            times.Add(Mathf.Max(0f, duration - 1e-5f));
+
+        busy = true;
+        busyPhase = $"Prepass: {skinName}";
+        processed = 0;
+        totalFrames = times.Count;
+
+        Bounds preBounds = new Bounds(Vector3.zero, Vector3.zero);
+        bool hasBounds = false;
+
+        var renderer = clonedSkeleton.GetComponent<Renderer>();
+
+        for (int i = 0; i < times.Count; i++)
+        {
+            PoseAtTime(clonedSkelAnim, animName, times[i]);
+            clonedSkelAnim.LateUpdate();
+
+            if (renderer != null)
+            {
+                if (!hasBounds)
+                {
+                    preBounds = renderer.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    preBounds.Encapsulate(renderer.bounds);
+                }
+            }
+
+            processed = i + 1;
+
+            if (EditorUtility.DisplayCancelableProgressBar("Spine Sprite Export", $"Skin: {skinName} • {processed}/{totalFrames}", (float)processed / totalFrames))
+            {
+                CleanupTempFolder(framesDir);
+                Cleanup();
+                EditorUtility.ClearProgressBar();
+                busy = false;
+                return false;
+            }
+        }
+
+        if (!hasBounds)
+            preBounds = new Bounds(clonedSkeleton.transform.position, Vector3.one);
+
+        combinedWorldBounds = preBounds;
+
+        SetupCameraForBounds(combinedWorldBounds);
+
+        Vector2Int cell = ResolveFramePixelSize();
+
+        busyPhase = $"Rendering: {skinName}";
+        processed = 0;
+        totalFrames = times.Count;
+
+        var rt = new RenderTexture(cell.x, cell.y, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default)
+        {
+            antiAliasing = 1,
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp,
+            useMipMap = false,
+            autoGenerateMips = false
+        };
+
+        rt.Create();
+
+        Color clear = new Color(0, 0, 0, 0);
+
+        try
+        {
+            for (int i = 0; i < times.Count; i++)
+            {
+                PoseAtTime(clonedSkelAnim, animName, times[i]);
+                clonedSkelAnim.LateUpdate();
+
+                captureCam.targetTexture = rt;
+                RenderTexture.active = rt;
+                GL.Clear(true, true, clear, 1.0f);
+                captureCam.Render();
+                RenderTexture.active = null;
+
+                Texture2D tex = new Texture2D(cell.x, cell.y, TextureFormat.RGBA32, false, false);
+
+                RenderTexture.active = rt;
+                tex.ReadPixels(new Rect(0, 0, cell.x, cell.y), 0, 0, false);
+                tex.Apply(false, false);
+                RenderTexture.active = null;
+
+                string framePath = Path.Combine(framesDir, $"frame_{i:0000}.png");
+
+                if (settings.overwrite || !File.Exists(framePath))
+                    File.WriteAllBytes(framePath, tex.EncodeToPNG());
+
+                DestroyImmediate(tex);
+
+                processed = i + 1;
+
+                if (EditorUtility.DisplayCancelableProgressBar("Spine Sprite Export", $"Skin: {skinName} • {processed}/{totalFrames}", (float)processed / totalFrames))
+                {
+                    rt.Release();
+                    DestroyImmediate(rt);
+                    CleanupTempFolder(framesDir);
+                    Cleanup();
+                    EditorUtility.ClearProgressBar();
+                    busy = false;
+                    return false;
+                }
+            }
+
+            EditorUtility.DisplayProgressBar("Spine Sprite Export", $"Building sheet: {skinName}", 0.95f);
+
+            string[] frames = Directory.GetFiles(framesDir, "frame_*.png").OrderBy(p => p).ToArray();
+
+            if (frames.Length == 0)
+            {
+                Debug.LogWarning($"No frames generated for skin '{skinName}'.");
+                return true;
+            }
+
+            int cols = settings.columns > 0 ? settings.columns : Mathf.CeilToInt(Mathf.Sqrt(frames.Length));
+            cols = Mathf.Max(1, cols);
+
+            int rows = Mathf.CeilToInt(frames.Length / (float)cols);
+
+            int sheetW = cols * cell.x;
+            int sheetH = rows * cell.y;
+
+            Texture2D sheet = new Texture2D(sheetW, sheetH, TextureFormat.RGBA32, false, false);
+
+            var blank = Enumerable.Repeat(new Color(0, 0, 0, 0), sheetW * sheetH).ToArray();
+            sheet.SetPixels(blank);
+
+            for (int i = 0; i < frames.Length; i++)
+            {
+                int cx = i % cols;
+                int cy = i / cols;
+
+                int x = cx * cell.x;
+                int y = (rows - 1 - cy) * cell.y;
+
+                byte[] bytes = File.ReadAllBytes(frames[i]);
+
+                Texture2D ft = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                ft.LoadImage(bytes, false);
+
+                sheet.SetPixels(x, y, cell.x, cell.y, ft.GetPixels());
+
+                DestroyImmediate(ft);
+            }
+
+            sheet.Apply(false, false);
+
+            string outPng = Path.Combine(characterDir, $"{safeSkinName}_{safeAnimName}_sheet.png");
+
+            File.WriteAllBytes(outPng, sheet.EncodeToPNG());
+            DestroyImmediate(sheet);
+
+            Debug.Log($"✅ Skin exported: {skinName} -> {outPng}");
+        }
+        finally
+        {
+            if (rt != null)
+            {
+                if (RenderTexture.active == rt)
+                    RenderTexture.active = null;
+
+                rt.Release();
+                DestroyImmediate(rt);
+            }
+        }
+
+        CleanupTempFolder(framesDir);
+        AssetDatabase.Refresh();
+        EditorUtility.ClearProgressBar();
+        Cleanup();
+
+        busy = false;
+
+        return true;
+    }
+
+
+    private void ApplySkin(SkeletonAnimation skelAnim, string skinName)
+    {
+        if (skelAnim == null) return;
+
+        var skeleton = skelAnim.Skeleton;
+        if (skeleton == null) return;
+
+        var data = skelAnim.SkeletonDataAsset.GetSkeletonData(true);
+        var skin = data.FindSkin(skinName);
+
+        if (skin == null)
+        {
+            Debug.LogWarning($"Skin not found: {skinName}");
+            return;
+        }
+
+        skeleton.SetSkin(skin);
+        skeleton.SetSlotsToSetupPose();
+        skeleton.UpdateWorldTransform();
+    }
+
+
+    private string SanitizeFileName(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return "Unknown";
+
+        foreach (char c in Path.GetInvalidFileNameChars())
+            value = value.Replace(c, '_');
+
+        return value;
+    }
+
+
+    private void CleanupTempFolder(string folder)
+    {
+        try
+        {
+            if (Directory.Exists(folder))
+                Directory.Delete(folder, true);
+
+            string meta = folder + ".meta";
+
+            if (File.Exists(meta))
+                File.Delete(meta);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Could not delete temp folder '{folder}': {ex.Message}");
+        }
+    }
+
+
+
+    private void DrawTextureDropZone()
+    {
+        Rect dropArea = GUILayoutUtility.GetRect(
+            0,
+            100,
+            GUILayout.ExpandWidth(true)
+        );
+
+        GUI.Box(
+            dropArea,
+            "Drag & Drop Textures\n\n" +
+            "You can also drop folders",
+            EditorStyles.helpBox
+        );
+
+        Event evt = Event.current;
+
+        if (!dropArea.Contains(evt.mousePosition))
+            return;
+
+        switch (evt.type)
+        {
+            case EventType.DragUpdated:
+
+                DragAndDrop.visualMode =
+                    DragAndDropVisualMode.Copy;
+
+                evt.Use();
+
+                break;
+
+            case EventType.DragPerform:
+
+                DragAndDrop.AcceptDrag();
+
+                foreach (UnityEngine.Object draggedObject
+                         in DragAndDrop.objectReferences)
+                {
+                    AddDraggedObject(draggedObject);
+                }
+
+                evt.Use();
+
+                break;
+        }
+    }
+
+    // ======================================================
+    // HANDLE DRAGGED OBJECT
+    // ======================================================
+
+    private void AddDraggedObject(UnityEngine.Object obj)
+    {
+        if (obj == null)
+            return;
+
+        // Texture
+        if (obj is Texture2D texture)
+        {
+            AddTexture(texture);
+            return;
+        }
+
+        // Folder
+        string path = AssetDatabase.GetAssetPath(obj);
+
+        if (AssetDatabase.IsValidFolder(path))
+        {
+            AddTexturesFromFolder(path);
+        }
+    }
+
+    // ======================================================
+    // ADD TEXTURE
+    // ======================================================
+
+    private void AddTexture(Texture2D texture)
+    {
+        if (texture == null)
+            return;
+
+        if (!textures.Contains(texture))
+        {
+            textures.Add(texture);
+        }
+    }
+
+    // ======================================================
+    // ADD FOLDER
+    // ======================================================
+
+    private void AddTexturesFromFolder(string folderPath)
+    {
+        string[] guids = AssetDatabase.FindAssets(
+            "t:Texture2D",
+            new[] { folderPath }
+        );
+
+        foreach (string guid in guids)
+        {
+            string assetPath =
+                AssetDatabase.GUIDToAssetPath(guid);
+
+            Texture2D texture =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    assetPath
+                );
+
+            if (texture != null)
+            {
+                AddTexture(texture);
+            }
+        }
+    }
+
+    // ======================================================
+    // OUTPUT FOLDER
+    // ======================================================
+
+    private void SelectOutputFolder()
+    {
+        string selected =
+            EditorUtility.OpenFolderPanel(
+                "Select Material Output Folder",
+                Application.dataPath,
+                ""
+            );
+
+        if (string.IsNullOrEmpty(selected))
+            return;
+
+        if (!selected.StartsWith(Application.dataPath))
+        {
+            EditorUtility.DisplayDialog(
+                "Invalid Folder",
+                "Please select a folder inside the Unity Assets folder.",
+                "OK"
+            );
+
+            return;
+        }
+
+        outputFolder =
+            "Assets" +
+            selected.Substring(Application.dataPath.Length);
+    }
+
+    // ======================================================
+    // CREATE MATERIALS
+    // ======================================================
+
+    private void CreateMaterials()
+    {
+        if (baseMaterial == null)
+        {
+            Debug.LogError("Base Material is missing.");
+            return;
+        }
+
+        if (textures.Count == 0)
+        {
+            Debug.LogError("No textures.");
+            return;
+        }
+
+        if (!AssetDatabase.IsValidFolder(outputFolder))
+        {
+            Debug.LogError(
+                $"Output folder does not exist: {outputFolder}"
+            );
+
+            return;
+        }
+
+        int created = 0;
+
+        foreach (Texture2D texture in textures)
+        {
+            if (texture == null)
+                continue;
+
+            // Copy base material
+            Material material =
+                new Material(baseMaterial);
+
+            // Name = texture name
+            material.name = texture.name;
+
+            // URP Lit
+            material.SetTexture(
+                "_MainTex",
+                texture
+            );
+
+            // Save
+            string materialPath = Path.Combine(
+                outputFolder,
+                texture.name + ".mat"
+            );
+
+            materialPath =
+                AssetDatabase.GenerateUniqueAssetPath(
+                    materialPath
+                );
+
+            AssetDatabase.CreateAsset(
+                material,
+                materialPath
+            );
+
+            created++;
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        Debug.Log(
+            $"Created {created} materials."
+        );
+    }
+    #endregion
 }
 #endif

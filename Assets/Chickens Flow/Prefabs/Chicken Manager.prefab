@@ -154,14 +154,13 @@ MonoBehaviour:
   depthDistanceXRatio: 0.012
   requiredGrainForNormalChicken: 10
   maxGhostChicken: 10
-  shapePoints:
-  - {fileID: 5982425500363557545}
-  - {fileID: 1019775702037370422}
-  - {fileID: 2986330784220911032}
-  - {fileID: 997487064489979364}
-  - {fileID: 5598577688182643191}
-  - {fileID: 6558885994997188934}
-  middleRow: 12
+  boardShapePresets: []
+  customPolygonVertices: []
+  showBoardShapeGizmos: 1
+  selectedBoardShapedIndex: 0
+  boundaryColor: {r: 0, g: 1, b: 0, a: 1}
+  gridPointColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  pointRadius: 0.08
   allFactions: []
   numGhostChicken: 0
 --- !u!1 &6733566723886684792
@@ -274,9 +273,27 @@ MonoBehaviour:
   materialsForAnims:
   - animation: idle2
     materials:
-    - {fileID: 2100000, guid: 31178ea515e8bf14d8e0329c501ec6d4, type: 2}
-    - {fileID: 2100000, guid: cd42954edbef3ac40ba9fe4a670cb6ba, type: 2}
-    - {fileID: 2100000, guid: f1376fc8fd1da584f95ae13639546331, type: 2}
+    - {fileID: 2100000, guid: 7701385fb03e21c44b4cb330baecc8aa, type: 2}
+    - {fileID: 2100000, guid: 9efc21384bb5d524b9a455f2b3b72044, type: 2}
+    - {fileID: 2100000, guid: 56ce5bbe74e3d4a419ad0954ab06edbe, type: 2}
+    - {fileID: 2100000, guid: 0065438e1073d9243872c3516fcbc911, type: 2}
+    - {fileID: 2100000, guid: 116364ac381574649b5c2731bf633d6c, type: 2}
+    - {fileID: 2100000, guid: d88dd5f220ca179498de37701f32b824, type: 2}
+    - {fileID: 2100000, guid: 1433c436922df4244af3af4b21dee334, type: 2}
+    - {fileID: 2100000, guid: 6c131ba06b52d044696a5e3c85a241b1, type: 2}
+    - {fileID: 2100000, guid: 061238d2122607b489eb12f5901fabb5, type: 2}
+    - {fileID: 2100000, guid: 256084e82aca14a4d9bfa8ecdc8350f8, type: 2}
+    - {fileID: 2100000, guid: 1c8693be211fddf44bf73d6ca6c7bfe5, type: 2}
+    - {fileID: 2100000, guid: 76343d3c957614a4a9985b14ef92ab99, type: 2}
+    - {fileID: 2100000, guid: cb326aa7c6fb5484cb0629863df95b98, type: 2}
+    - {fileID: 2100000, guid: 1f622406aa481ae43a3d80696e8beb69, type: 2}
+    - {fileID: 2100000, guid: 9c81c14f02762014da018e0686abb63a, type: 2}
+    - {fileID: 2100000, guid: 8b08a876f5f064b4c8da832e240510f5, type: 2}
+    - {fileID: 2100000, guid: 761d967cca4f2de4b944ccdfabc92d7d, type: 2}
+    - {fileID: 2100000, guid: 036802cddead42b44b9ad4d4f28612ec, type: 2}
+    - {fileID: 2100000, guid: c8af23315c81e3d4588da12ddc30fdca, type: 2}
+    - {fileID: 2100000, guid: 151f7db79e69e044a916fdef64f1e67c, type: 2}
+    - {fileID: 2100000, guid: 6cd23dfa037455b43af1ecf831e94dab, type: 2}
   - animation: action_fly2
     materials:
     - {fileID: 2100000, guid: 8c8ab2e21d381344e99e1ce1db8ae1f1, type: 2}

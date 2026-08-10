@@ -240,6 +240,30 @@ public class FactionMapper : Singleton<FactionMapper>
         }
     }
 
+    public int GetNearestFactionIndexEditMode(Color faction)
+    {
+        int closestIndex = 0;
+        float closestDistance = float.MaxValue;
+
+        for (int i = 0; i < allFactions.Count; i++)
+        {
+            Color color = allFactions[i];
+
+            float distance =
+                Mathf.Pow(faction.r - color.r, 2) +
+                Mathf.Pow(faction.g - color.g, 2) +
+                Mathf.Pow(faction.b - color.b, 2);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestIndex = i;
+            }
+        }
+
+        return closestIndex;
+    }
+
     public Color GetFaction(int factionIndex)
     {
         return allFactions[factionIndex];

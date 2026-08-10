@@ -305,6 +305,11 @@ namespace AntsFlow
                 levelItem.ClearAllSpecialElements();
             }
 
+            if (GUILayout.Button("ReadLevel"))
+            {
+                ReadLevel(levelItem);
+            }
+
             GUILayout.Space(10);
             GUILayout.Label("Scene Config", EditorStyles.boldLabel);
 
@@ -928,20 +933,12 @@ namespace AntsFlow
 
             level.tiles = new List<BaseTile>();
 
+            level.chickenLevelTiles = new List<AntLevelDataItem>();
+
             for (float y = 0.25f * pixelStepY; y < height; y += pixelStepY)
             {
                 for (float x = 0.25f * pixelStepX; x < width; x += pixelStepX)
                 {
-                    // if (x + 0.5f * pixelStepX > width)
-                    // {
-                    //     continue;
-                    // }
-
-                    // if (y + 0.5f * pixelStepY > height)
-                    // {
-                    //     continue;
-                    // }
-
                     int pixelX = Mathf.FloorToInt(x);
                     int pixelY = Mathf.FloorToInt(y);
 
@@ -951,26 +948,21 @@ namespace AntsFlow
                     if (pixelColor.a < 1)
                         continue;
 
-                    // Create tile
-                    Vector3 spawnPos = new Vector3(pixelX / pixelStepX * tileSpacing.x, pixelY / pixelStepY * tileSpacing.y, 0.01f * y);
 
-                    // BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
-                    //     level.tilePrefab,
-                    //     level.transform
-                    // );
-                    // tile.name = $"Tile {index}";
-                    // tile.transform.position = spawnPos;
 
                     BaseTile tile = new BaseTile();
 
                     tile.tileName = index;
                     tile.position = new Vector3(Mathf.FloorToInt(x / pixelStepX), Mathf.FloorToInt(y / pixelStepY));
 
-                    // Debug.Log($"Gen Level {tile.position} {x / pixelStepX}");
-
                     tile.Faction = pixelColor;
 
                     level.tiles.Add(tile);
+
+                    AntLevelDataItem antLevelDataItem = new AntLevelDataItem();
+                    antLevelDataItem.position = new Vector3(pixelX, pixelY);
+                    antLevelDataItem.factionIndex = level.factionMapper.GetNearestFactionIndexEditMode(pixelColor);
+                    level.chickenLevelTiles.Add(antLevelDataItem);
 
                     index++;
                 }
@@ -1157,13 +1149,6 @@ namespace AntsFlow
             // }
 
             EditorUtility.SetDirty(level);
-        }
-
-        private Color HexToColor(string hex)
-        {
-            Color color;
-            ColorUtility.TryParseHtmlString(hex, out color);
-            return color;
         }
 
         [Serializable]
