@@ -244,12 +244,12 @@ public class WashingMachineItem : MonoBehaviour
 
         PouringOut(maxAddNumber, isBucketMoveBack: !isPouringAll, onCompleteAction);
 
-        WashingMachineManager.Ins.grainPool.AddGrain(maxAddNumber);
+        // WashingMachineManager.Ins.grainPool.AddGrain(maxAddNumber);
 
         isPouring = true;
     }
 
-    private void PouringOut(int numPile, bool isBucketMoveBack, Action onCompleteAction)
+    private void PouringOut(int grainCount, bool isBucketMoveBack, Action onCompleteAction)
     {
         bool isRotated = false;
 
@@ -276,7 +276,7 @@ public class WashingMachineItem : MonoBehaviour
 
             grainPile.transform.position = bucketDestination + grainsOffsetWhenPouring;
 
-            grainPile.Setup(this, numPile);
+            grainPile.Setup(this, grainCount);
 
             if (!isRotated)
             {
@@ -288,6 +288,7 @@ public class WashingMachineItem : MonoBehaviour
                     PourGrainPile(grainPile, () =>
                     {
                         WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
+                        WashingMachineManager.Ins.grainPool.AddGrain(grainCount);
                     });
 
                     isRotated = true;
@@ -298,6 +299,7 @@ public class WashingMachineItem : MonoBehaviour
                 PourGrainPile(grainPile, () =>
                 {
                     WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
+                    WashingMachineManager.Ins.grainPool.AddGrain(grainCount);
                 });
             }
         });

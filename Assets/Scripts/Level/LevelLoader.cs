@@ -445,6 +445,7 @@ namespace NamPhuThuy.GamePlay
             spawnedLevelItem.poolFaction = poolFaction;
             spawnedLevelItem.numColumn = antLevelData.levelItemData.numColumn;
             spawnedLevelItem.numRow = antLevelData.levelItemData.numRow;
+            spawnedLevelItem.boardShapePresetIndex = antLevelData.levelItemData.boardShapePresetIndex;
             spawnedLevelItem.chickenLevelTiles = antLevelData.levelItemData.chickenLevelTiles;
             spawnedLevelItem.isLevelHavingTransparentPixels = antLevelData.levelItemData.isLevelHavingTransparentPixels;
             spawnedLevelItem.isOverrideLevelScale = antLevelData.levelItemData.isOverrideLevelScale;

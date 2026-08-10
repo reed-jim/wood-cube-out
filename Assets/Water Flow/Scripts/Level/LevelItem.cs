@@ -113,6 +113,7 @@ namespace AntsFlow
 
         public int numColumn;
         public int numRow;
+        public int boardShapePresetIndex;
         public bool isLevelHavingTransparentPixels;
         public bool isOverrideLevelScale;
         public float levelScaleXRatio;
@@ -216,6 +217,7 @@ namespace AntsFlow
                 levelScale = transform.localScale,
                 numColumn = numColumn,
                 numRow = numRow,
+                boardShapePresetIndex = boardShapePresetIndex,
                 chickenLevelTiles = chickenLevelTiles,
                 isLevelHavingTransparentPixels = isLevelHavingTransparentPixels,
                 isOverrideLevelScale = isOverrideLevelScale,
@@ -235,7 +237,7 @@ namespace AntsFlow
             };
 
             // Use level name as file name
-            string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
+            string filePath = Path.Combine("Assets/Chickens Flow/JSON/Levels", $"{name}.json");
 
             // Serialize and save
             string json = JsonUtility.ToJson(antLevelData, false);
@@ -1230,6 +1232,7 @@ public class LevelItemData
     public Vector3 levelScale;
     public int numColumn;
     public int numRow;
+    public int boardShapePresetIndex;
     public List<AntLevelDataItem> chickenLevelTiles;
     public bool isLevelHavingTransparentPixels;
     public bool isOverrideLevelScale;

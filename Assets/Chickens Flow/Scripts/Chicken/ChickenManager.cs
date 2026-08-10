@@ -35,16 +35,14 @@ public class ChickenManager : Singleton<ChickenManager>
     public int requiredGrainForNormalChicken;
     public int maxGhostChicken;
 
-    [Header("Board Shape")]
-    [SerializeField] private Transform[] shapePoints;
-    [SerializeField] private int middleRow = 12;
-
     [Header("Shape Definition")]
     [Tooltip("Vertices of any 2D closed polygon, ordered clockwise or counter-clockwise.")]
-    [SerializeField] private List<Transform> customPolygonVertices;
+    [SerializeField] private BoardShapePreset[] boardShapePresets;
+    [SerializeField] private List<Vector2> customPolygonVertices;
 
     [Header("Gizmo Preview Settings")]
     [SerializeField] private bool showBoardShapeGizmos = true;
+    [SerializeField] private int selectedBoardShapedIndex = 0;
     [SerializeField] private Color boundaryColor = Color.green;
     [SerializeField] private Color gridPointColor = Color.yellow;
     [SerializeField] private float pointRadius = 0.08f;
@@ -89,17 +87,19 @@ public class ChickenManager : Singleton<ChickenManager>
         if (!showBoardShapeGizmos || customPolygonVertices == null || customPolygonVertices.Count < 3)
             return;
 
+        customPolygonVertices = boardShapePresets[selectedBoardShapedIndex].points;
+
         // 1. Draw Closed Polygon Outer Boundary
         Gizmos.color = boundaryColor;
         for (int i = 0; i < customPolygonVertices.Count; i++)
         {
-            Transform current = customPolygonVertices[i];
-            Transform next = customPolygonVertices[(i + 1) % customPolygonVertices.Count];
+            Vector2 current = customPolygonVertices[i];
+            Vector2 next = customPolygonVertices[(i + 1) % customPolygonVertices.Count];
 
             if (current != null && next != null)
             {
-                Gizmos.DrawLine(current.position, next.position);
-                Gizmos.DrawSphere(current.position, pointRadius * 1.2f);
+                Gizmos.DrawLine(current, next);
+                Gizmos.DrawSphere(current, pointRadius * 1.2f);
             }
         }
 
@@ -262,7 +262,6 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         numColumn = levelItem.numColumn;
         numRow = levelItem.numRow;
-        float radius = 0.1f;
 
         Vector3 position;
 
@@ -281,6 +280,9 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         waitingChickenSlots = new Dictionary<Vector2Int, WaitingChickenSlot>();
+
+        customPolygonVertices = boardShapePresets[levelItem.boardShapePresetIndex].points;
+        selectedBoardShapedIndex = levelItem.boardShapePresetIndex;
 
         for (int i = 0; i < levelItem.chickenLevelTiles.Count; i++)
         {
@@ -455,7 +457,7 @@ public class ChickenManager : Singleton<ChickenManager>
     /// Calculates a world position for a normalized (u, v) coordinate inside any closed polygon.
     /// Supports 4-point quadrilaterals (Bilinear) and N-point arbitrary polygons (Mean Value Coordinates).
     /// </summary>
-    private Vector3 EvaluatePolygonPosition(float u, float v, List<Transform> polygon)
+    private Vector3 EvaluatePolygonPosition(float u, float v, List<Vector2> polygon)
     {
         if (polygon == null || polygon.Count < 3)
         {
@@ -468,10 +470,10 @@ public class ChickenManager : Singleton<ChickenManager>
         // OPTION A: Optimized 4-point Quadrilateral (Bilinear Interpolation)
         if (count == 4)
         {
-            Vector3 p0 = polygon[0].position; // Bottom-Left
-            Vector3 p1 = polygon[1].position; // Bottom-Right
-            Vector3 p2 = polygon[2].position; // Top-Right
-            Vector3 p3 = polygon[3].position; // Top-Left
+            Vector3 p0 = polygon[0]; // Bottom-Left
+            Vector3 p1 = polygon[1]; // Bottom-Right
+            Vector3 p2 = polygon[2]; // Top-Right
+            Vector3 p3 = polygon[3]; // Top-Left
 
             Vector3 bottom = Vector3.Lerp(p0, p1, u);
             Vector3 top = Vector3.Lerp(p3, p2, u);
@@ -487,7 +489,7 @@ public class ChickenManager : Singleton<ChickenManager>
     /// <summary>
     /// Computes interior coordinates for N-sided polygons using Mean Value Coordinates.
     /// </summary>
-    private Vector3 InterpolateMeanValueCoordinates(float u, float v, List<Transform> polygon)
+    private Vector3 InterpolateMeanValueCoordinates(float u, float v, List<Vector2> polygon)
     {
         int count = polygon.Count;
 
@@ -495,17 +497,17 @@ public class ChickenManager : Singleton<ChickenManager>
         Vector3 centroid = Vector3.zero;
         for (int i = 0; i < count; i++)
         {
-            centroid += polygon[i].position;
+            centroid += (Vector3)polygon[i];
         }
         centroid /= count;
 
         // Estimate target point from bounding box / UV coordinates
-        Vector3 minBounds = polygon[0].position;
-        Vector3 maxBounds = polygon[0].position;
+        Vector3 minBounds = polygon[0];
+        Vector3 maxBounds = polygon[0];
         for (int i = 1; i < count; i++)
         {
-            minBounds = Vector3.Min(minBounds, polygon[i].position);
-            maxBounds = Vector3.Max(maxBounds, polygon[i].position);
+            minBounds = Vector3.Min(minBounds, polygon[i]);
+            maxBounds = Vector3.Max(maxBounds, polygon[i]);
         }
 
         Vector3 targetPoint = new Vector3(
@@ -520,9 +522,9 @@ public class ChickenManager : Singleton<ChickenManager>
 
         for (int i = 0; i < count; i++)
         {
-            Vector3 prev = polygon[(i + count - 1) % count].position;
-            Vector3 curr = polygon[i].position;
-            Vector3 next = polygon[(i + 1) % count].position;
+            Vector3 prev = polygon[(i + count - 1) % count];
+            Vector3 curr = polygon[i];
+            Vector3 next = polygon[(i + 1) % count];
 
             Vector3 dPrev = prev - targetPoint;
             Vector3 dCurr = curr - targetPoint;
@@ -545,7 +547,7 @@ public class ChickenManager : Singleton<ChickenManager>
         {
             for (int i = 0; i < count; i++)
             {
-                interpolatedPosition += polygon[i].position * (weights[i] / totalWeight);
+                interpolatedPosition += (Vector3)polygon[i] * (weights[i] / totalWeight);
             }
         }
         else
@@ -602,6 +604,7 @@ public class ChickenManager : Singleton<ChickenManager>
         chicken.SetFaction(allFactions[tileIndex]);
 
         chicken.SetActiveSpine(true);
+        chicken.PlayIdleAnim();
 
         chickens.Add(chicken);
 
@@ -1260,4 +1263,10 @@ public struct ChickenMoveData
 {
     public Vector3 destination;
     public Vector2Int direction;
+}
+
+[Serializable]
+public struct BoardShapePreset
+{
+    public List<Vector2> points;
 }
