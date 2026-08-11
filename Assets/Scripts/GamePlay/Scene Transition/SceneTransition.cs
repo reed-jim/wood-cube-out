@@ -13,17 +13,10 @@ using UnityEngine.UI;
 public class SceneTransition : MonoBehaviour
 {
     [SerializeField] private RectTransform canvas;
-    [SerializeField] private RectTransform container;
-    [SerializeField] private RectTransform loadingContent;
-    [SerializeField] private RectTransform progressFillRT;
-    [SerializeField] private RectTransform loadingTextRT;
-    [SerializeField] private Image fadeBackground;
     [SerializeField] private CanvasGroup almostThereBackground;
     [SerializeField] private Image progressBarFill;
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] private SkeletonGraphic loadingSpine;
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private RectTransform[] scrollingAntBoxes;
     [SerializeField] private Vector3[] scrollingAntBoxInitialPositions;
 
 
@@ -37,11 +30,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _loadingLevelInProgressCoroutine;
 
-    [SerializeField] private IntVariable currentLevel;
-
     [Header("CUSTOMIZE")]
-    [SerializeField] private float startDelay;
-    [SerializeField] private float blackScreenStartDelay;
     [SerializeField] private float fadeOutDuration;
 
     private Vector2 _canvasSize;
@@ -83,13 +72,6 @@ public class SceneTransition : MonoBehaviour
         }
 
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
-
-        scrollingAntBoxInitialPositions = new Vector3[scrollingAntBoxes.Length];
-
-        for (int i = 0; i < scrollingAntBoxes.Length; i++)
-        {
-            scrollingAntBoxInitialPositions[i] = scrollingAntBoxes[i].localPosition;
-        }
     }
 
     private void OnDestroy()
@@ -185,13 +167,6 @@ public class SceneTransition : MonoBehaviour
         progressBarFill.fillAmount = 0;
         loadingText.text = "0%";
 
-        if (_loadingLevelInProgressCoroutine != null)
-        {
-            StopCoroutine(_loadingLevelInProgressCoroutine);
-        }
-
-        _loadingLevelInProgressCoroutine = StartCoroutine(ScrollingBackground());
-
         yield return new WaitUntil(() => _isLevelLoaded);
 
         loadingSpine.gameObject.SetActive(true);
@@ -281,65 +256,13 @@ public class SceneTransition : MonoBehaviour
             })
             .OnComplete(() =>
                 {
-                    for (int i = 0; i < scrollingAntBoxes.Length; i++)
-                    {
-                        scrollingAntBoxes[i].localPosition = scrollingAntBoxInitialPositions[i];
-                    }
-
                     loadLevelInProgressContainer.gameObject.SetActive(false);
 
                     levelSceneTransitionCompleteEvent?.Invoke();
                 })
             );
             Tween.Alpha(loadingSpine, 0, duration: 0.3f);
-
-            StopCoroutine(_loadingLevelInProgressCoroutine);
         }));
-    }
-
-    private IEnumerator RotatingIcon()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
-
-        while (true)
-        {
-            rotatingLoadingIcon.eulerAngles -= new Vector3(0, 0, 8);
-
-            yield return waitForSeconds;
-        }
-    }
-    private IEnumerator ScrollingBackground()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60f);
-
-        float moveSpeed = 300f;
-        Vector2 resetOffset = scrollingAntBoxes[0].sizeDelta;
-        Vector2 direction = new Vector2(1f, 1f).normalized;
-
-        for (int i = 0; i < scrollingAntBoxes.Length; i++)
-        {
-            scrollingAntBoxes[i].localPosition = scrollingAntBoxInitialPositions[i];
-        }
-
-        while (true)
-        {
-            for (int i = 0; i < scrollingAntBoxes.Length; i++)
-            {
-                RectTransform box = scrollingAntBoxes[i];
-
-                // Move toward top-right
-                box.anchoredPosition += direction * moveSpeed * Time.deltaTime;
-
-                // If it has moved too far, wrap it back
-                if (box.anchoredPosition.x > resetOffset.x ||
-                    box.anchoredPosition.y > resetOffset.y)
-                {
-                    box.anchoredPosition -= resetOffset;
-                }
-            }
-
-            yield return waitForSeconds;
-        }
     }
     #endregion
 }
