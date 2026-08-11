@@ -14,21 +14,18 @@ namespace AntsFlow
     public class HardLevelManager : Singleton<HardLevelManager>
     {
         [SerializeField] private CanvasGroup canvasGroup;
-        [SerializeField] private SkeletonGraphic hardLevelSpine;
+        [SerializeField] private SkeletonGraphic selectedHardModeSpine;
         [SerializeField] private Image blackOverlay;
         [SerializeField] private TMP_Text hardLevelText;
         [SerializeField] private LeanLocalizedTextMeshProUGUI localizedHardLevelText;
 
         [SerializeField] private Material hardTextMaterial;
         [SerializeField] private Material superHardTextMaterial;
+        public SkeletonGraphic hardLevelSpine;
+        public SkeletonGraphic superHardLevelSpine;
 
         [SpineAnimation] public string appearAnimation;
-        [SpineAnimation] public string idleAnimation;
-        [SpineSkin] public string hardSkin;
-        [SpineSkin] public string superHardSkin;
-
-        public float hardLevelThreshold;
-        public float superHardLevelThreshold;
+        // [SpineAnimation] public string idleAnimation;
 
         public int[] hardLevels;
         public int[] superHardLevels;
@@ -59,48 +56,64 @@ namespace AntsFlow
                 canvasGroup.gameObject.SetActive(true);
                 canvasGroup.alpha = 1;
 
-                hardLevelSpine.gameObject.SetActive(true);
-                hardLevelSpine.color = Color.white;
+                if (isHardLevel)
+                {
+                    selectedHardModeSpine = hardLevelSpine;
+
+                    superHardLevelSpine.gameObject.SetActive(false);
+                }
+                else
+                {
+                    selectedHardModeSpine = superHardLevelSpine;
+
+                    hardLevelSpine.gameObject.SetActive(false);
+                }
+
+                selectedHardModeSpine.gameObject.SetActive(true);
+                selectedHardModeSpine.color = Color.white;
 
                 if (isSuperHardLevel)
                 {
-                    hardLevelSpine.Skeleton.SetSkin(superHardSkin);
-
                     hardLevelText.fontMaterial = superHardTextMaterial;
                     localizedHardLevelText.TranslationName = "Super Hard";
                 }
                 else
                 {
-                    hardLevelSpine.Skeleton.SetSkin(hardSkin);
-
                     hardLevelText.fontMaterial = hardTextMaterial;
                     localizedHardLevelText.TranslationName = "Hard";
                 }
 
-                hardLevelSpine.Skeleton.SetToSetupPose();
-                hardLevelSpine.AnimationState.ClearTracks();
-                TrackEntry entry = hardLevelSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+                selectedHardModeSpine.Skeleton.SetToSetupPose();
+                selectedHardModeSpine.AnimationState.ClearTracks();
+                TrackEntry entry = selectedHardModeSpine.AnimationState.SetAnimation(0, appearAnimation, false);
                 entry.TrackTime = 0;
-                hardLevelSpine.AnimationState.Apply(hardLevelSpine.Skeleton);
-                hardLevelSpine.Skeleton.UpdateWorldTransform();
-                hardLevelSpine.AnimationState.Complete += OnAnimationComplete;
+                selectedHardModeSpine.AnimationState.Apply(selectedHardModeSpine.Skeleton);
+                selectedHardModeSpine.Skeleton.UpdateWorldTransform();
+                selectedHardModeSpine.AnimationState.Complete += OnAnimationComplete;
             }
 
             void OnAnimationComplete(TrackEntry entry)
             {
-                hardLevelSpine.AnimationState.Complete -= OnAnimationComplete;
+                selectedHardModeSpine.AnimationState.Complete -= OnAnimationComplete;
 
-                hardLevelSpine.AnimationState.SetAnimation(0, idleAnimation, true);
+                // selectedHardModeSpine.AnimationState.SetAnimation(0, idleAnimation, true);
 
-                Tween.Delay(2).OnComplete(() =>
-                {
-                    Tween.Alpha(hardLevelSpine, 0, duration: 0.3f)
+                Tween.Alpha(selectedHardModeSpine, 0, duration: 0.3f)
                     .OnComplete(() =>
                     {
-                        hardLevelSpine.gameObject.SetActive(false);
+                        selectedHardModeSpine.gameObject.SetActive(false);
                     });
-                    SaferioTween.AlphaHide(canvasGroup);
-                });
+                SaferioTween.AlphaHide(canvasGroup);
+
+                // Tween.Delay(2).OnComplete(() =>
+                // {
+                //     Tween.Alpha(selectedHardModeSpine, 0, duration: 0.3f)
+                //     .OnComplete(() =>
+                //     {
+                //         selectedHardModeSpine.gameObject.SetActive(false);
+                //     });
+                //     SaferioTween.AlphaHide(canvasGroup);
+                // });
             }
         }
 
@@ -112,7 +125,7 @@ namespace AntsFlow
 
             if (GamePersistentVariable.levelItem == null || isNotHardLevel)
             {
-                hardLevelSpine.gameObject.SetActive(false);
+                selectedHardModeSpine.gameObject.SetActive(false);
                 SaferioTween.AlphaHide(canvasGroup);
             }
         }
