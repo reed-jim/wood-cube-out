@@ -12,7 +12,6 @@ using Falcon.FalconAnalytics.Scripts.Enum;
 public class RevivePopup : BasePopup
 {
     [SerializeField] private Button reviveByDiamondButton;
-    [SerializeField] private Image reviveByDiamondButtonForeground;
     [SerializeField] private Image boosterImage;
     [SerializeField] private Button reviveByAdsButton;
     [SerializeField] private TMP_Text costText;
