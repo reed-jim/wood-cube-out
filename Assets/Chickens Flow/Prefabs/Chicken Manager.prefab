@@ -154,8 +154,30 @@ MonoBehaviour:
   depthDistanceXRatio: 0.012
   requiredGrainForNormalChicken: 10
   maxGhostChicken: 10
-  boardShapePresets: []
-  customPolygonVertices: []
+  boardShapePresets:
+  - points:
+    - {x: -12.3, y: -3.8}
+    - {x: 12.3, y: -3.8}
+    - {x: 12.3, y: 9.7}
+    - {x: 8.7, y: 18.3}
+    - {x: -8.7, y: 18.3}
+    - {x: -12.3, y: 9.7}
+  - points:
+    - {x: -9, y: -3.8}
+    - {x: 9, y: -3.8}
+    - {x: 9, y: 16}
+    - {x: -9, y: 16}
+  - points:
+    - {x: -9, y: 9.04}
+    - {x: 9, y: 9}
+    - {x: -0.06, y: -3.36}
+  customPolygonVertices:
+  - {x: -12.3, y: -3.8}
+  - {x: 12.3, y: -3.8}
+  - {x: 12.3, y: 9.7}
+  - {x: 8.7, y: 18.3}
+  - {x: -8.7, y: 18.3}
+  - {x: -12.3, y: 9.7}
   showBoardShapeGizmos: 1
   selectedBoardShapedIndex: 0
   boundaryColor: {r: 0, g: 1, b: 0, a: 1}
