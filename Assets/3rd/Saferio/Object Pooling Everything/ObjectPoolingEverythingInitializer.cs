@@ -120,7 +120,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void InitPool()
     {
-        RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 500);
+        RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);
         RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 50);
         RegisterPool<Wall>(GameConstants.wall, wall, 50);
 
