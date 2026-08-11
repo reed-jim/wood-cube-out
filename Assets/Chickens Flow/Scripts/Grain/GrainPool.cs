@@ -57,7 +57,7 @@ public class GrainPool : Singleton<GrainPool>
 
         SetupLoopPathArrows();
 
-        StartCoroutine(MoveAlongSpline());
+        // StartCoroutine(MoveAlongSpline());
     }
 
     void OnDestroy()

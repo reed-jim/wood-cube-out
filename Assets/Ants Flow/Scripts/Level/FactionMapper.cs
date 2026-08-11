@@ -187,6 +187,19 @@ public class FactionMapper : Singleton<FactionMapper>
         // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 
+    public Texture GetTileTexture(Color faction)
+    {
+        try
+        {
+            return spriteContainersOfColors[faction].tileSprite.texture;
+        }
+        catch (System.Exception)
+        {
+
+            return spriteContainersOfColors.First().Value.tileSprite.texture;
+        }
+    }
+
     public Sprite GetDoubleAntLinkSprite(Color faction)
     {
         return spriteContainersOfColors[faction].doubleBoxLink;

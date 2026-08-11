@@ -88,6 +88,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
     private int[] spatialHead = new int[SPATIAL_GRID_SIZE];
     private int[] spatialNext; // Resized with max capacity
 
+    private int[] collisionNext;
+    private int[] collisionGroup;
+    private int[] collisionParticle;
+
+    private int collisionParticleCount;
+
+    private List<FactionGroup> collisionGroups = new List<FactionGroup>();
+
     public class FactionGroup
     {
         public Color faction;
@@ -374,43 +382,100 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     void ResolveCollisions()
     {
+        collisionGroups.Clear();
+
+        foreach (var group in factionGroups.Values)
+        {
+            collisionGroups.Add(group);
+        }
+
         float sqrSpacing = grainSpacing * grainSpacing;
         float invCellSize = 1f / collisionCellSize;
+
+        // ---------------------------------------------------------
+        // Count all particles across all groups
+        // ---------------------------------------------------------
+        int totalCount = 0;
+
+        foreach (var group in factionGroups.Values)
+            totalCount += group.Count;
+
+        if (totalCount == 0)
+            return;
+
+        // ---------------------------------------------------------
+        // Ensure global collision arrays have enough capacity
+        // ---------------------------------------------------------
+        if (collisionNext == null || collisionNext.Length < totalCount)
+        {
+            int capacity = Mathf.NextPowerOfTwo(totalCount);
+
+            collisionNext = new int[capacity];
+            collisionGroup = new int[capacity];
+            collisionParticle = new int[capacity];
+        }
+
+        collisionParticleCount = 0;
+
+        // Clear grid
+        Array.Clear(cellHeads, 0, TOTAL_CELLS);
+
+        // ---------------------------------------------------------
+        // 1. BROADPHASE
+        //
+        // Put EVERY grain from EVERY faction into the same grid.
+        // ---------------------------------------------------------
+        int groupIndex = 0;
 
         foreach (var group in factionGroups.Values)
         {
             int count = group.Count;
-            if (count == 0) continue;
 
-            // Ensure capacity for linked-list pointers
-            if (cellNext.Length < count)
-            {
-                cellNext = new int[Mathf.NextPowerOfTwo(count)];
-            }
-
-            // Fast clear cell heads
-            Array.Clear(cellHeads, 0, TOTAL_CELLS);
-
-            // 1. BROADPHASE: Populate Flat Grid Cells (Zero Allocations)
             for (int i = 0; i < count; i++)
             {
-                if (!group.onPath[i]) continue;
+                if (!group.onPath[i])
+                    continue;
 
-                int cx = (int)((group.position[i].x - worldMin.x) * invCellSize);
-                int cy = (int)((group.position[i].y - worldMin.y) * invCellSize);
+                float x = group.position[i].x;
+                float y = group.position[i].y;
 
-                if (cx >= 0 && cx < GRID_WIDTH && cy >= 0 && cy < GRID_HEIGHT)
-                {
-                    int cellIndex = cx + cy * GRID_WIDTH;
-                    cellNext[i] = cellHeads[cellIndex];
-                    cellHeads[cellIndex] = i + 1; // 1-based indexing to keep 0 as empty marker
-                }
+                int cx = (int)((x - worldMin.x) * invCellSize);
+                int cy = (int)((y - worldMin.y) * invCellSize);
+
+                if (cx < 0 || cx >= GRID_WIDTH ||
+                    cy < 0 || cy >= GRID_HEIGHT)
+                    continue;
+
+                int globalIndex = collisionParticleCount++;
+
+                collisionGroup[globalIndex] = groupIndex;
+                collisionParticle[globalIndex] = i;
+
+                int cellIndex = cx + cy * GRID_WIDTH;
+
+                // +1 because 0 means empty
+                collisionNext[globalIndex] = cellHeads[cellIndex];
+                cellHeads[cellIndex] = globalIndex + 1;
             }
 
-            // 2. NARROWPHASE: Resolve Neighboring Cells
+            groupIndex++;
+        }
+
+        // ---------------------------------------------------------
+        // 2. NARROWPHASE
+        //
+        // Compare grains against ALL grains in neighboring cells.
+        // ---------------------------------------------------------
+        groupIndex = 0;
+
+        foreach (var group in factionGroups.Values)
+        {
+            int count = group.Count;
+
             for (int i = 0; i < count; i++)
             {
-                if (!group.onPath[i]) continue;
+                if (!group.onPath[i])
+                    continue;
 
                 float posX = group.position[i].x;
                 float posY = group.position[i].y;
@@ -418,55 +483,108 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 int cx = (int)((posX - worldMin.x) * invCellSize);
                 int cy = (int)((posY - worldMin.y) * invCellSize);
 
-                if (cx < 1 || cx >= GRID_WIDTH - 1 || cy < 1 || cy >= GRID_HEIGHT - 1) continue;
+                if (cx < 1 || cx >= GRID_WIDTH - 1 ||
+                    cy < 1 || cy >= GRID_HEIGHT - 1)
+                    continue;
 
-                // Loop through 3x3 adjacent cells
+                // Loop through 3x3 neighboring cells
                 for (int nx = -1; nx <= 1; nx++)
                 {
                     int cellX = cx + nx;
+
                     for (int ny = -1; ny <= 1; ny++)
                     {
-                        int cellIndex = cellX + (cy + ny) * GRID_WIDTH;
-                        int j = cellHeads[cellIndex] - 1;
+                        int cellIndex =
+                            cellX + (cy + ny) * GRID_WIDTH;
 
-                        while (j >= 0)
+                        int globalJ = cellHeads[cellIndex] - 1;
+
+                        while (globalJ >= 0)
                         {
-                            if (i < j && group.onPath[j])
+                            int otherGroupIndex = collisionGroup[globalJ];
+                            int j = collisionParticle[globalJ];
+
+                            // Avoid processing the same pair twice
+                            //
+                            // Same group:
+                            //     i < j
+                            //
+                            // Different groups:
+                            //     only process based on group index
+                            bool processPair;
+
+                            if (groupIndex == otherGroupIndex)
                             {
-                                float dx = group.position[j].x - posX;
-                                float dy = group.position[j].y - posY;
+                                processPair = i < j;
+                            }
+                            else
+                            {
+                                processPair = groupIndex < otherGroupIndex;
+                            }
 
-                                // Fast bounding box check before square magnitude check
-                                if (Mathf.Abs(dx) < grainSpacing && Mathf.Abs(dy) < grainSpacing)
+                            if (processPair)
+                            {
+                                var otherGroup = collisionGroups[otherGroupIndex];
+
+                                if (otherGroup.onPath[j])
                                 {
-                                    float sqrDist = dx * dx + dy * dy;
-                                    if (sqrDist < sqrSpacing && sqrDist > 0.00001f)
+                                    float dx =
+                                        otherGroup.position[j].x - posX;
+
+                                    float dy =
+                                        otherGroup.position[j].y - posY;
+
+                                    // Fast bounding box check
+                                    if (Mathf.Abs(dx) < grainSpacing &&
+                                        Mathf.Abs(dy) < grainSpacing)
                                     {
-                                        float dist = Mathf.Sqrt(sqrDist);
-                                        float delta = (grainSpacing - dist) / dist * 0.5f;
+                                        float sqrDist =
+                                            dx * dx + dy * dy;
 
-                                        float pushX = dx * delta;
-                                        float pushY = dy * delta;
+                                        if (sqrDist < sqrSpacing &&
+                                            sqrDist > 0.00001f)
+                                        {
+                                            float dist =
+                                                Mathf.Sqrt(sqrDist);
 
-                                        // Apply position correction directly
-                                        group.position[i].x -= pushX;
-                                        group.position[i].y -= pushY;
-                                        group.position[j].x += pushX;
-                                        group.position[j].y += pushY;
+                                            float delta =
+                                                (grainSpacing - dist)
+                                                / dist * 0.5f;
 
-                                        // Damp velocity to reduce jitter
-                                        group.velocity2D[i].x -= pushX * collisionForce;
-                                        group.velocity2D[i].y -= pushY * collisionForce;
-                                        group.velocity2D[j].x += pushX * collisionForce;
-                                        group.velocity2D[j].y += pushY * collisionForce;
+                                            float pushX = dx * delta;
+                                            float pushY = dy * delta;
+
+                                            // Push both grains apart
+                                            group.position[i].x -= pushX;
+                                            group.position[i].y -= pushY;
+
+                                            otherGroup.position[j].x += pushX;
+                                            otherGroup.position[j].y += pushY;
+
+                                            // Damp velocity
+                                            group.velocity2D[i].x -=
+                                                pushX * collisionForce;
+
+                                            group.velocity2D[i].y -=
+                                                pushY * collisionForce;
+
+                                            otherGroup.velocity2D[j].x +=
+                                                pushX * collisionForce;
+
+                                            otherGroup.velocity2D[j].y +=
+                                                pushY * collisionForce;
+                                        }
                                     }
                                 }
                             }
-                            j = cellNext[j] - 1;
+
+                            globalJ = collisionNext[globalJ] - 1;
                         }
                     }
                 }
             }
+
+            groupIndex++;
         }
     }
 
@@ -860,7 +978,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         if (!factionGroups.TryGetValue(faction, out var group))
         {
             group = new FactionGroup(faction, baseMaterial);
-            Texture tex = FactionMapper.Ins.GetTileSprite(faction).texture;
+            Texture tex = FactionMapper.Ins.GetTileTexture(faction);
             group.material.mainTexture = tex;
 
             factionGroups.Add(faction, group);
