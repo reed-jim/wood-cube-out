@@ -125,7 +125,8 @@ namespace AntsFlow
 
             if (GamePersistentVariable.levelItem == null || isNotHardLevel)
             {
-                selectedHardModeSpine.gameObject.SetActive(false);
+                hardLevelSpine.gameObject.SetActive(false);
+                superHardLevelSpine.gameObject.SetActive(false);
                 SaferioTween.AlphaHide(canvasGroup);
             }
         }

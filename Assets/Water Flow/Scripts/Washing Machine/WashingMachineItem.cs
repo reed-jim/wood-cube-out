@@ -555,134 +555,6 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
-    public virtual void CheckAntsPath(bool isAlsoCheckLose = true)
-    {
-        if (remainingNumber <= 0)
-        {
-            return;
-        }
-
-        if (isMoving || GamePersistentVariable.isLevelLost || isGhostMode || WashingMachineManager.Ins.IsAnyGhostAntBox())
-        {
-            return;
-        }
-
-        int addedTile = 0;
-
-        int max = AntsFlow.TileManager.Ins.tiles.Count(tile => !tile.isAntApproaching && !tile.isDone && tile.Faction == faction);
-
-        bool isCenter = Math.Abs(transform.position.x) < 0.1f;
-        Vector3 antBoxPosition = transform.position;
-
-        if (isCenter)
-        {
-            antBoxPosition = antBoxPosition.AddX(3);
-        }
-
-        List<AntsFlow.BaseTile> foundTiles = AntsFlow.TileManager.Ins.GetFirstNMovableTiles(faction, max, antBoxPosition);
-
-        foundTiles = foundTiles
-            // .Where(item => item.numStepToReach < 5)
-            .OrderBy(item => item.position.y)
-            .ThenBy(item => item.position.x)
-            .Take(remainingNumber)
-            .ToList();
-
-        for (int i = 0; i < foundTiles.Count; i++)
-        {
-            AntsFlow.BaseTile tile = foundTiles[i];
-
-            if (!tilesToMove.Contains(tile))
-            {
-                tilesToMove.Add(tile);
-
-                tile.isAntApproaching = true;
-
-                addedTile++;
-            }
-        }
-
-        // Debug.Log($"CheckAntsPath {name} {max} {remainingNumber} {tilesToMove.Count}");
-
-        // for (int i = 0; i < remainingNumber; i++)
-        // {
-        //     AntsFlow.BaseTile tile;
-
-        //     bool isFound = AntsFlow.TileManager.Ins.GetAvailableTile(faction, out tile);
-
-        //     if (!isFound)
-        //     {
-        //         break;
-        //     }
-
-        //     if (!tilesToMove.Contains(tile))
-        //     {
-        //         tilesToMove.Add(tile);
-
-        //         tile.isAntApproaching = true;
-        //         // tile.InvokeRemoveTileAsBlockageEvent();
-
-        //         addedTile++;
-        //     }
-        // }
-
-        remainingNumber -= addedTile;
-
-        // var left = tilesToMove
-        //     .Where(t => t.position.x < 0)
-        //     .OrderBy(t => t.position.y)
-        //     .ThenBy(t => t.position.x);
-
-        // var right = tilesToMove
-        //     .Where(t => t.position.x >= 0)
-        //     .OrderBy(t => t.position.y)
-        //     .ThenByDescending(t => t.position.x);
-
-        // tilesToMove = left.Concat(right).ToList();
-
-        // tilesToMove = tilesToMove.OrderBy(t => t.GetTotalPathDistance(transform.position)).ToList();
-
-        if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
-        {
-            TurnOffWarningLoseAnimation();
-        }
-
-        if (tilesToMove.Count > 0)
-        {
-            isStucking = false;
-
-            if (spawningAntCoroutine == null)
-            {
-                spawningAntCoroutine = StartCoroutine(SpawningAnts(antType: GameConstants.ant));
-            }
-        }
-        else if (isAlsoCheckLose)
-        {
-            isStucking = true;
-
-            WashingMachineManager.Ins.CheckLoseLevel();
-        }
-    }
-
-    public void CheckAntsPathGhostMode()
-    {
-        if (isMoving)
-        {
-            return;
-        }
-
-        List<AntsFlow.BaseTile> tilesForGhostAnt = AntsFlow.TileManager.Ins.GetAvailableTileForGhostModeAnt(faction).Take(number).ToList();
-
-        for (int i = 0; i < tilesForGhostAnt.Count; i++)
-        {
-            tilesForGhostAnt[i].isAntApproaching = true;
-        }
-
-        StartCoroutine(SpawningGhostAnts(tilesForGhostAnt));
-
-        isGhostMode = true;
-    }
-
     protected IEnumerator SpawningAnts(string antType)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.35f);
@@ -935,10 +807,7 @@ public class WashingMachineItem : MonoBehaviour
 
     private void OnTileMoveToAnt(AntsFlow.BaseTile tile)
     {
-        if (isInSlot)
-        {
-            CheckAntsPath();
-        }
+
     }
 
     private bool IsMovable(AntsFlow.BaseTile tile)
@@ -1016,9 +885,7 @@ public class WashingMachineItem : MonoBehaviour
     {
         if (isInSlot)
         {
-            CheckAntsPath();
 
-            skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
         }
     }
 
@@ -1032,9 +899,6 @@ public class WashingMachineItem : MonoBehaviour
 
     private void OnAllGhostAntBoxesCompleted()
     {
-        if (isInSlot)
-        {
-            CheckAntsPath();
-        }
+
     }
 }
