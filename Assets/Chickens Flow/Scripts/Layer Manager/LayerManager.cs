@@ -9,17 +9,17 @@ public static class LayerManager
 
     public static float GetBucketZ(int order)
     {
-        return -9 - 0.00001f * order;
+        return -9 - 0.00001f;
     }
 
     public static float GetBucketTopZ(int order)
     {
-        return -9 - 1.1f * order;
+        return -9 - 1.1f;
     }
 
     public static float GetBucketTextZ(int order)
     {
-        return -9 - 1.2f * order;
+        return -9 - 1.2f;
     }
 
     public static float GetGhostChickenZ()

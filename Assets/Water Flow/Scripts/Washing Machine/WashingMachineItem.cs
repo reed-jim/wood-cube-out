@@ -19,10 +19,12 @@ public class WashingMachineItem : MonoBehaviour
 {
     #region  Chicken Feed
     public Vector3 pileCenter;
-    public SpriteRenderer bucketSprite;
-    public SpriteRenderer bucketTopSprite;
+    public Transform bucket;
+    public Transform bucketTop;
     public SpriteRenderer grainSprite;
     public Transform[] grainSpriteRanges;
+
+    [SpineAnimation] public string jumpAnimation;
     #endregion
 
     public SpriteRenderer lid;
@@ -99,7 +101,7 @@ public class WashingMachineItem : MonoBehaviour
 
         numberTextInitialPosition = numberText.transform.localPosition;
 
-        bucketTopInitialPosition = bucketTopSprite.transform.localPosition;
+        bucketTopInitialPosition = bucketTop.transform.localPosition;
         bucketTextInitialPosition = numberText.transform.localPosition;
     }
 
@@ -149,7 +151,7 @@ public class WashingMachineItem : MonoBehaviour
         transform.localPosition = new Vector3(0, 0, -1);
         transform.localScale = Vector3.zero;
         transform.rotation = Quaternion.identity;
-        bucketTopSprite.transform.localPosition = bucketTopInitialPosition;
+        bucketTop.transform.localPosition = bucketTopInitialPosition;
         numberText.transform.localPosition = bucketTextInitialPosition;
 
         Tween.Scale(transform, 2.3f, duration: 0.3f)
@@ -162,16 +164,16 @@ public class WashingMachineItem : MonoBehaviour
 
         isAnimating = true;
 
-        // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
-        // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-        // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+        skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+        skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+        skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
 
         grainSprite.gameObject.SetActive(true);
         grainSprite.color = Color.white;
 
-        bucketSprite.sprite = FactionMapper.Ins.GetBucketSprite(faction);
-        bucketTopSprite.sprite = FactionMapper.Ins.GetBucketTopSprite(faction);
+        // bucketSprite.sprite = FactionMapper.Ins.GetBucketSprite(faction);
+        // bucketTopSprite.sprite = FactionMapper.Ins.GetBucketTopSprite(faction);
         grainSprite.sprite = FactionMapper.Ins.GetGrainSprite(faction);
 
         float grainSpriteYRatio = number / 100f;
@@ -261,7 +263,8 @@ public class WashingMachineItem : MonoBehaviour
         bucketDestination.y = pourOffsetY;
         bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
 
-        bucketTopSprite.transform.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
+        // bucketTopSprite.transform.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
+        bucketTop.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
         numberText.transform.SetZ(LayerManager.GetBucketTextZ(GamePersistentVariable.bucketOrder));
 
         GamePersistentVariable.bucketOrder++;
@@ -270,7 +273,13 @@ public class WashingMachineItem : MonoBehaviour
         pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y;
         pileCenter.z = -1;
 
-        Tween tween = Tween.Position(transform, bucketDestination, duration: 0.3f).OnComplete(() =>
+        skeletonAnimation.AnimationState.SetAnimation(0, jumpAnimation, false);
+
+        Spine.Animation animation = skeletonAnimation.AnimationState.Data.SkeletonData.FindAnimation(jumpAnimation);
+
+        float duration = animation.Duration / skeletonAnimation.timeScale;
+
+        Tween tween = Tween.Position(transform, bucketDestination, duration: duration).OnComplete(() =>
         {
             grainPile.gameObject.SetActive(true);
 
@@ -381,7 +390,7 @@ public class WashingMachineItem : MonoBehaviour
 
         Enable();
 
-        skeletonAnimation.AnimationState.SetAnimation(0, selectTrueAnimation, false);
+        // skeletonAnimation.AnimationState.SetAnimation(0, selectTrueAnimation, false);
 
         OnSelectTrueCompleted();
 

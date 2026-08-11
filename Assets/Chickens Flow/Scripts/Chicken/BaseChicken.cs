@@ -188,9 +188,9 @@ public class BaseChicken : MonoBehaviour
 
                 PlayFlyAnim();
 
-                Tween.PositionX(transform, outPosition.x, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+                Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
                 {
-                    gameObject.SetActive(false);
+                    SaferioTween.ScaleDownWithPunch(transform);
 
                     ChickenManager.Ins.CheckWinLevel();
 
@@ -259,9 +259,9 @@ public class BaseChicken : MonoBehaviour
 
         PlayFlyAnim();
 
-        Tween.PositionX(transform, outPosition.x, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+        Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
         {
-            gameObject.SetActive(false);
+            SaferioTween.ScaleDownWithPunch(transform);
 
             if (isLast)
             {
