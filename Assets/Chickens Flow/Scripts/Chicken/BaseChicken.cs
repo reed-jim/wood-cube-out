@@ -9,6 +9,7 @@ using Spine;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static Spine.AnimationState;
 
 public class BaseChicken : MonoBehaviour
@@ -18,6 +19,19 @@ public class BaseChicken : MonoBehaviour
     [SpineAnimation] public string moveAnimation;
     [SpineAnimation] public string[] eatAnimations;
     [SpineAnimation] public string[] flyAnimations;
+
+    #region Circle Progress
+    public Image circleProgressFill;
+    #endregion
+
+    #region Fill Progress
+    public MeshRenderer meshRenderer;
+    private MaterialPropertyBlock propertyBlock;
+    // Property ID caches for performance (avoids string hash overhead)
+    private static readonly int MinYProperty = Shader.PropertyToID("_MinY");
+    private static readonly int MaxYProperty = Shader.PropertyToID("_MaxY");
+    private static readonly int DissolveProgressProperty = Shader.PropertyToID("_DissolveProgress");
+    #endregion
 
     public LazyHealthBar eatingProgress;
     public TMP_Text eatingProgressText;
@@ -52,6 +66,10 @@ public class BaseChicken : MonoBehaviour
         SettingPopup.replayLevelEvent += Reset;
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
+
+        propertyBlock = new MaterialPropertyBlock();
+
+        SetDissolveProgress(0);
     }
 
     void OnDestroy()
@@ -104,13 +122,17 @@ public class BaseChicken : MonoBehaviour
     {
         try
         {
-            skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+            string skin = FactionMapper.Ins.GetAntBoxSkin(faction);
+            SkeletonDataAsset skeletonDataAsset = FactionMapper.Ins.GetSkeletonDataAsset(skin);
+
+            skeletonAnimation.skeletonDataAsset = skeletonDataAsset;
+            skeletonAnimation.Skeleton.SetSkin(skin);
         }
         catch (System.Exception)
         {
 
         }
-        
+
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
@@ -160,7 +182,8 @@ public class BaseChicken : MonoBehaviour
                     transform.eulerAngles = Vector3.zero;
                 }
 
-                SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
+                // SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
+                SaferioTween.ScaleDownWithPunch(circleProgressFill.transform);
 
                 PlayFlyAnim();
 
@@ -230,7 +253,8 @@ public class BaseChicken : MonoBehaviour
             transform.eulerAngles = Vector3.zero;
         }
 
-        SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
+        // SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
+        SaferioTween.ScaleDownWithPunch(circleProgressFill.transform);
 
         PlayFlyAnim();
 
@@ -258,18 +282,41 @@ public class BaseChicken : MonoBehaviour
     #region Progress
     public void UpdateEatingProgress(float progress, float prevProgress, float duration = 1f)
     {
-        if (!eatingProgressText.gameObject.activeSelf)
-        {
-            SaferioTween.ShowWithPunch(eatingProgressText.transform, 1, onCompleteAction: () =>
-            {
+        // if (!eatingProgressText.gameObject.activeSelf)
+        // {
+        //     SaferioTween.ShowWithPunch(eatingProgressText.transform, 1, onCompleteAction: () =>
+        //     {
 
-            });
-        }
+        //     });
+        // }
 
-        Tween.Custom(prevProgress, progress, duration, onValueChange: newVal =>
+        TweenManager.Ins.AddTween(Tween.Custom(prevProgress, progress, duration, onValueChange: newVal =>
         {
-            eatingProgressText.text = $"{(int)(newVal * 100)}%";
-        });
+            // eatingProgressText.text = $"{(int)(newVal * 100)}%";
+            circleProgressFill.fillAmount = newVal;
+        }));
+    }
+
+    public void UpdateMeshBounds()
+    {
+        if (meshRenderer == null) return;
+
+        // Get bounds in local space relative to the transform
+        Bounds bounds = meshRenderer.bounds;
+        Vector3 minLocal = transform.InverseTransformPoint(bounds.min);
+        Vector3 maxLocal = transform.InverseTransformPoint(bounds.max);
+
+        meshRenderer.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetFloat(MinYProperty, minLocal.y);
+        propertyBlock.SetFloat(MaxYProperty, maxLocal.y);
+        meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void SetDissolveProgress(float progress)
+    {
+        meshRenderer.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetFloat(DissolveProgressProperty, Mathf.Clamp01(progress));
+        meshRenderer.SetPropertyBlock(propertyBlock);
     }
     #endregion
 

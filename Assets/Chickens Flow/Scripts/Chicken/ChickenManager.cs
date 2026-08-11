@@ -393,7 +393,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
             waitingChickenSlot.chicken = chicken;
 
-            chicken.transform.position = waitingChickenSlot.position;
+            chicken.transform.position = waitingChickenSlot.GetRandomPosition();
 
             chickens.Add(chicken);
         }

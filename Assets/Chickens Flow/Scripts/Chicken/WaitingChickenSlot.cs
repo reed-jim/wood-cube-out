@@ -19,6 +19,7 @@ public class WaitingChickenSlot
 
         randomPosition = position;
         randomPosition.x = position.x + UnityEngine.Random.Range(-radius, radius);
+        randomPosition.y = position.y + UnityEngine.Random.Range(-radius, radius);
 
         return randomPosition;
     }
