@@ -948,19 +948,8 @@ namespace AntsFlow
                     if (pixelColor.a < 1)
                         continue;
 
-
-
-                    BaseTile tile = new BaseTile();
-
-                    tile.tileName = index;
-                    tile.position = new Vector3(Mathf.FloorToInt(x / pixelStepX), Mathf.FloorToInt(y / pixelStepY));
-
-                    tile.Faction = pixelColor;
-
-                    level.tiles.Add(tile);
-
                     AntLevelDataItem antLevelDataItem = new AntLevelDataItem();
-                    antLevelDataItem.position = new Vector3(pixelX, pixelY);
+                    antLevelDataItem.position = new Vector3(Mathf.FloorToInt(x / pixelStepX), Mathf.FloorToInt(y / pixelStepY));
                     antLevelDataItem.factionIndex = level.factionMapper.GetNearestFactionIndexEditMode(pixelColor);
                     level.chickenLevelTiles.Add(antLevelDataItem);
 
