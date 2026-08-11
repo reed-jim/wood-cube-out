@@ -454,8 +454,6 @@ namespace NamPhuThuy.GamePlay
             spawnedLevelItem.multiplierScaleX = antLevelData.levelItemData.multiplierScaleX;
             spawnedLevelItem.multiplierScaleY = antLevelData.levelItemData.multiplierScaleY;
             spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
-            spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
-            spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
             spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;
             spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;
             spawnedLevelItem.overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty;

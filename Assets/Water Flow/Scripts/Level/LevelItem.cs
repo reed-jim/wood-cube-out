@@ -124,8 +124,8 @@ namespace AntsFlow
         public List<BaseTile> tiles;
         public List<AntLevelDataItem> chickenLevelTiles;
         public bool isTutorialLevel;
-        public bool isUseManualFactionSetupForFirstAntBoxes;
-        public LevelFactionConfig levelFactionConfig;
+        // public bool isUseManualFactionSetupForFirstAntBoxes;
+        // public LevelFactionConfig levelFactionConfig;
         public int difficulty;
         public int initialDifficulty;
         public bool overrideInitialDifficulty;
@@ -227,8 +227,6 @@ namespace AntsFlow
                 multiplierScaleY = multiplierScaleY,
                 poolFactionIndexes = poolFactionIndexes,
                 isTutorialLevel = isTutorialLevel,
-                isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
-                levelFactionConfig = levelFactionConfig,
                 difficulty = difficulty,
                 initialDifficulty = initialDifficulty,
                 overrideInitialDifficulty = overrideInitialDifficulty,
@@ -332,7 +330,7 @@ namespace AntsFlow
             }
 
             brushRadius = EditorGUILayout.IntField("Brush Size", brushRadius);
-            brushRadius = Mathf.Max(brushRadius, 1);
+            brushRadius = Mathf.Max(brushRadius, 0);
 
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Colors", EditorStyles.boldLabel);
