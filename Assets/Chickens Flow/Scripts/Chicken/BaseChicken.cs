@@ -14,6 +14,7 @@ using static Spine.AnimationState;
 
 public class BaseChicken : MonoBehaviour
 {
+    public SkeletonAnimation[] skeletonAnimations;
     public SkeletonAnimation skeletonAnimation;
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string moveAnimation;
@@ -21,6 +22,7 @@ public class BaseChicken : MonoBehaviour
     [SpineAnimation] public string[] flyAnimations;
 
     #region Circle Progress
+    public Image circleProgress;
     public Image circleProgressFill;
     #endregion
 
@@ -120,19 +122,18 @@ public class BaseChicken : MonoBehaviour
 
     public void SetFaction(Color faction)
     {
-        try
-        {
-            string skin = FactionMapper.Ins.GetAntBoxSkin(faction);
-            SkeletonDataAsset skeletonDataAsset = FactionMapper.Ins.GetSkeletonDataAsset(skin);
+        string skin = FactionMapper.Ins.GetAntBoxSkin(faction);
 
-            skeletonAnimation.skeletonDataAsset = skeletonDataAsset;
-            skeletonAnimation.Skeleton.SetSkin(skin);
-        }
-        catch (System.Exception)
-        {
+        int skeletonAnimationIndex = FactionMapper.Ins.GetSkeletonAnimationIndex(skin);
 
+        foreach (var item in skeletonAnimations)
+        {
+            item.gameObject.SetActive(false);
         }
 
+        skeletonAnimation = skeletonAnimations[skeletonAnimationIndex];
+
+        skeletonAnimation.Skeleton.SetSkin(skin);
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
@@ -183,7 +184,7 @@ public class BaseChicken : MonoBehaviour
                 }
 
                 // SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
-                SaferioTween.ScaleDownWithPunch(circleProgressFill.transform);
+                SaferioTween.ScaleDownWithPunch(circleProgress.transform);
 
                 PlayFlyAnim();
 
@@ -254,7 +255,7 @@ public class BaseChicken : MonoBehaviour
         }
 
         // SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
-        SaferioTween.ScaleDownWithPunch(circleProgressFill.transform);
+        SaferioTween.ScaleDownWithPunch(circleProgress.transform);
 
         PlayFlyAnim();
 
@@ -282,13 +283,13 @@ public class BaseChicken : MonoBehaviour
     #region Progress
     public void UpdateEatingProgress(float progress, float prevProgress, float duration = 1f)
     {
-        // if (!eatingProgressText.gameObject.activeSelf)
-        // {
-        //     SaferioTween.ShowWithPunch(eatingProgressText.transform, 1, onCompleteAction: () =>
-        //     {
+        if (!circleProgress.gameObject.activeSelf)
+        {
+            SaferioTween.ShowWithPunch(circleProgress.transform, 1, onCompleteAction: () =>
+            {
 
-        //     });
-        // }
+            });
+        }
 
         TweenManager.Ins.AddTween(Tween.Custom(prevProgress, progress, duration, onValueChange: newVal =>
         {

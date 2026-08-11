@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using Spine.Unity;
+
 
 
 
@@ -17,6 +19,7 @@ public class FactionMapper : Singleton<FactionMapper>
     public Dictionary<Color, SpriteContainer> spriteContainersOfColors;
     public Dictionary<int, Color> indexesOfColors;
     public Dictionary<Color, int> colorsOfIndexes;
+    public SpineSkinGroup[] spineSkinGroups;
 
     protected override void MoreActionOnAwake()
     {
@@ -175,6 +178,11 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public Sprite GetTileSprite(Color faction)
     {
+        if (!spriteContainersOfColors.ContainsKey(faction))
+        {
+            return spriteContainersOfColors.First().Value.tileSprite;
+        }
+
         return spriteContainersOfColors[faction].tileSprite;
         // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
@@ -268,6 +276,30 @@ public class FactionMapper : Singleton<FactionMapper>
     {
         return allFactions[factionIndex];
     }
+
+    public SkeletonDataAsset GetSkeletonDataAsset(string skin)
+    {
+        if (spineSkinGroups[0].skins.Contains(skin))
+        {
+            return spineSkinGroups[0].skeletonDataAsset;
+        }
+        else
+        {
+            return spineSkinGroups[1].skeletonDataAsset;
+        }
+    }
+
+    public int GetSkeletonAnimationIndex(string skin)
+    {
+        if (spineSkinGroups[0].skins.Contains(skin))
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
 }
 
 [Serializable]
@@ -289,6 +321,13 @@ public class SpriteContainer
     public Sprite doubleBoxHole;
     public Sprite spawningTileBoxTop;
     public string antBoxSkin;
+}
+
+[Serializable]
+public class SpineSkinGroup
+{
+    public SkeletonDataAsset skeletonDataAsset;
+    public string[] skins;
 }
 
 // #if UNITY_EDITOR
