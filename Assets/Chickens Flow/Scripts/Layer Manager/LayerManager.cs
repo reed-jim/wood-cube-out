@@ -22,9 +22,9 @@ public static class LayerManager
         return -9 - 1.2f;
     }
 
-    public static float GetGhostChickenZ()
+    public static float GetGhostChickenZ(int order)
     {
-        return -10;
+        return -10 - 0.0001f * order;
     }
 
     public static float GetTutorialLevelOneHandZOffset()

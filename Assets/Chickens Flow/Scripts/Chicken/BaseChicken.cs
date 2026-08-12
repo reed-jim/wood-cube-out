@@ -67,6 +67,9 @@ public class BaseChicken : MonoBehaviour
     public int remaingEatingGrainCount;
     public int totalGrainEaten;
 
+    private Spine.TrackEntry _waitingEntry;
+    private string _pendingAnimation;
+
     void Awake()
     {
         SettingPopup.replayLevelEvent += Reset;
@@ -77,6 +80,8 @@ public class BaseChicken : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
 
         SetDissolveProgress(0);
+
+        currentAnimation = idleAnimation;
     }
 
     void OnDestroy()
@@ -207,6 +212,7 @@ public class BaseChicken : MonoBehaviour
                     SaferioTween.ScaleDownWithPunch(transform);
 
                     ChickenManager.Ins.CheckWinLevel();
+                    WashingMachineManager.Ins.CheckLoseLevel();
 
                     onChickenFlyOut?.Invoke();
                 });
@@ -246,6 +252,11 @@ public class BaseChicken : MonoBehaviour
             GamePersistentVariable.numEatingChicken++;
         }
 
+        if (!GamePersistentVariable.eatingChickens.Contains(this))
+        {
+            GamePersistentVariable.eatingChickens.Add(this);
+        }
+
         int numGrainToEat = numGrain * GameConstants.grainMultiplier;
 
         remaingEatingGrainCount += numGrainToEat;
@@ -257,31 +268,44 @@ public class BaseChicken : MonoBehaviour
         int waitingForGrainCountThreshold = 60;
         int waitingForGrainCount = 0;
 
+        int notPlayingEatAnimThreshold = 20;
+        int notPlayingEatAnimCount = 0;
+        bool isNotPlayingEatAnim = false;
+
         while (remaingEatingGrainCount > 0 && !isForceFlyOut)
         {
             if (GrainSimulation.Ins.IsAnyGrainNear(transform.position, faction))
             {
-                if (remaingEatingGrainCount % 5 == 0)
+                if (isNotPlayingEatAnim)
                 {
-                    if (remaingEatingGrainCount == 0)
-                    {
-                        float randomDelay = UnityEngine.Random.Range(0, 0.5f);
+                    PlayEatAnim();
 
-                        DG.Tweening.DOVirtual.DelayedCall(randomDelay, () =>
-                        {
-                            if (isEating)
-                            {
-                                PlayEatAnim();
-                            }
-                        });
-                    }
-                    else
+                    isNotPlayingEatAnim = false;
+                }
+                else
+                {
+                    if (remaingEatingGrainCount % 5 == 0)
                     {
-                        PlayEatAnim();
+                        if (remaingEatingGrainCount == 0)
+                        {
+                            float randomDelay = UnityEngine.Random.Range(0, 0.5f);
+
+                            DG.Tweening.DOVirtual.DelayedCall(randomDelay, () =>
+                            {
+                                if (isEating)
+                                {
+                                    PlayEatAnim();
+                                }
+                            });
+                        }
+                        else
+                        {
+                            PlayEatAnim();
+                        }
+
+                        PlaySoundAndFx(transform.position);
                     }
                 }
-
-                PlaySoundAndFx(transform.position);
 
                 GrainSimulation.Ins.RemoveFirstGrain(faction);
 
@@ -305,9 +329,11 @@ public class BaseChicken : MonoBehaviour
             {
                 PlayIdleAnim();
 
+                waitingForGrainCount++;
+
                 if (waitingForGrainCount <= waitingForGrainCountThreshold)
                 {
-                    waitingForGrainCount++;
+
                 }
                 else
                 {
@@ -316,12 +342,23 @@ public class BaseChicken : MonoBehaviour
                         GamePersistentVariable.numEatingChicken--;
                     }
                 }
+
+                notPlayingEatAnimCount++;
+
+                if (notPlayingEatAnimCount > notPlayingEatAnimThreshold)
+                {
+                    isNotPlayingEatAnim = true;
+
+                    notPlayingEatAnimCount = 0;
+                }
             }
 
             yield return delayPerGrainWait;
         }
 
         GamePersistentVariable.numEatingChicken--;
+
+        GamePersistentVariable.eatingChickens.Remove(this);
 
         onCompleteAction?.Invoke();
 
@@ -498,25 +535,58 @@ public class BaseChicken : MonoBehaviour
         var state = skeletonAnimation.AnimationState;
         var current = state.GetCurrent(0);
 
+        // If nothing is playing, or current animation is looping,
+        // play immediately.
         if (current == null || current.Loop)
         {
+            CancelPendingAnimation();
+
             state.SetAnimation(0, anim, true);
             currentAnimation = anim;
             return;
         }
 
-        void OnComplete(Spine.TrackEntry entry)
+        // Replace any previous pending request.
+        _pendingAnimation = anim;
+
+        if (_waitingEntry == current)
+            return;
+
+        CancelPendingAnimation();
+
+        _waitingEntry = current;
+        state.Complete += OnAnimationComplete;
+    }
+
+    private void OnAnimationComplete(Spine.TrackEntry entry)
+    {
+        if (entry != _waitingEntry)
+            return;
+
+        var state = skeletonAnimation.AnimationState;
+
+        state.Complete -= OnAnimationComplete;
+        _waitingEntry = null;
+
+        if (string.IsNullOrEmpty(_pendingAnimation))
+            return;
+
+        string anim = _pendingAnimation;
+        _pendingAnimation = null;
+
+        state.SetAnimation(0, anim, true);
+        currentAnimation = anim;
+    }
+
+    private void CancelPendingAnimation()
+    {
+        if (_waitingEntry != null)
         {
-            if (entry != current)
-                return;
-
-            state.Complete -= OnComplete;
-
-            state.SetAnimation(0, anim, true);
-            currentAnimation = anim;
+            skeletonAnimation.AnimationState.Complete -= OnAnimationComplete;
+            _waitingEntry = null;
         }
 
-        state.Complete += OnComplete;
+        _pendingAnimation = null;
     }
 
     public void PlayMoveAnim()

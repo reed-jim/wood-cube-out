@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.9}
+  m_AnchoredPosition: {x: 0, y: 2.9}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2469588663177530507
@@ -308,7 +308,8 @@ MeshRenderer:
   m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials: []
+  m_Materials:
+  - {fileID: 2100000, guid: 2a0409d1b92889b44b89b86048dc52af, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -369,7 +370,7 @@ MonoBehaviour:
   disableRenderingOnOverride: 1
   updateTiming: 1
   unscaledTime: 0
-  _animationName: idle
+  _animationName: idle4
   loop: 1
   timeScale: 1
 --- !u!1 &3056389753301995330
@@ -493,7 +494,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4261045330628767458
 Transform:
   m_ObjectHideFlags: 0
@@ -529,7 +530,7 @@ MonoBehaviour:
   - {fileID: 320630214948327204}
   - {fileID: 8563305162491534366}
   skeletonAnimation: {fileID: 320630214948327204}
-  idleAnimation: idle2
+  idleAnimation: idle4
   moveAnimation: move
   eatAnimations:
   - action_eat5
@@ -561,6 +562,8 @@ MonoBehaviour:
   prevEatingProgress: 0
   currentEatingProgress: 0
   waitingChickenSlots: []
+  remaingEatingGrainCount: 0
+  totalGrainEaten: 0
 --- !u!61 &271464109191427687
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -985,7 +988,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6734858105619798863
 Transform:
   m_ObjectHideFlags: 0
@@ -1071,7 +1074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonAnimation
   skeletonDataAsset: {fileID: 11400000, guid: ad0b1edab6413d94e8010ee07a646a07, type: 2}
-  initialSkinName: 393939
+  initialSkinName: 767676
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
@@ -1095,7 +1098,7 @@ MonoBehaviour:
   disableRenderingOnOverride: 1
   updateTiming: 1
   unscaledTime: 0
-  _animationName: idle
+  _animationName: idle4
   loop: 1
   timeScale: 1
 --- !u!1 &6458373569931189456

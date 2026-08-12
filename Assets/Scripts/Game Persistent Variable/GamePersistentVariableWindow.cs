@@ -31,7 +31,7 @@ public class GamePersistentVariableWindow : EditorWindow
         using (new EditorGUI.DisabledScope(true))
         {
             EditorGUILayout.IntField("Bucket Order", GamePersistentVariable.bucketOrder);
-            EditorGUILayout.IntField("Eating Chicken", GamePersistentVariable.numEatingChicken);
+            EditorGUILayout.IntField("Eating Chicken", GamePersistentVariable.eatingChickens.Count);
             EditorGUILayout.IntField("Moving Chicken", GamePersistentVariable.numMovingChicken);
         }
 

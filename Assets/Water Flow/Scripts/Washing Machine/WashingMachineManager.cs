@@ -351,7 +351,7 @@ namespace AntsFlow
                             }
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
-                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
+                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f, startDelay: GameConstants.bucketDelayMove)
                             .OnComplete(() =>
                             {
                                 washingMachineItem.Setup(washingMachineStartSlot);
@@ -863,7 +863,7 @@ namespace AntsFlow
         {
             int numAntBoxLeftOnStartSlots = washingMachineStartSlots.Count(item => item.washingMachine != null);
 
-            if (numAntBoxLeftOnStartSlots <= 1)
+            if (numAntBoxLeftOnStartSlots <= 0)
             {
                 UpSpeedAnt.Ins.UpSpeedNearEndLevel();
             }
@@ -887,7 +887,7 @@ namespace AntsFlow
         {
             return
                 GrainPool.Ins.IsMaxCapacity() &&
-                GamePersistentVariable.numEatingChicken <= 0 &&
+                GamePersistentVariable.eatingChickens.Count <= 0 &&
                 GamePersistentVariable.numMovingChicken <= 0;
         }
 
@@ -916,7 +916,7 @@ namespace AntsFlow
 
             yield return new WaitForSeconds(GameConstants.delayActualLoseLevel);
 
-            while (GamePersistentVariable.numEatingChicken > 0)
+            while (GamePersistentVariable.eatingChickens.Count > 0)
             {
                 yield return waitForSeconds;
             }
