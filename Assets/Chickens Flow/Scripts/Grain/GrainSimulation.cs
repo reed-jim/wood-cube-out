@@ -220,7 +220,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
+
         LevelLoader.startLevelEvent += Reset;
+
         spatialNext = new int[2048];
     }
 

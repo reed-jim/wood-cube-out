@@ -77,6 +77,7 @@ public class ChickenRenderer : MonoBehaviour
         SettingPopup.replayLevelEvent += Reset;
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
+        WinPopup.resetLevelEvent += Reset;
 
         propertyBlock = new MaterialPropertyBlock();
     }
@@ -86,6 +87,7 @@ public class ChickenRenderer : MonoBehaviour
         SettingPopup.replayLevelEvent -= Reset;
         LosePopup.replayLevelEvent -= Reset;
         DebugPopup.switchLevelEvent -= Reset;
+        WinPopup.resetLevelEvent -= Reset;
     }
 
     private void Update()

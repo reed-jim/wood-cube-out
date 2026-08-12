@@ -72,6 +72,7 @@ public class BaseChicken : MonoBehaviour
         SettingPopup.replayLevelEvent += Reset;
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
+        WinPopup.resetLevelEvent += Reset;
 
         propertyBlock = new MaterialPropertyBlock();
 
@@ -83,6 +84,7 @@ public class BaseChicken : MonoBehaviour
         SettingPopup.replayLevelEvent -= Reset;
         LosePopup.replayLevelEvent -= Reset;
         DebugPopup.switchLevelEvent -= Reset;
+        WinPopup.resetLevelEvent -= Reset;
     }
 
     // void Awake()
@@ -100,22 +102,32 @@ public class BaseChicken : MonoBehaviour
 
     public void Reset()
     {
+        if (chickenEatingGrainsCoroutine != null)
+        {
+            StopCoroutine(chickenEatingGrainsCoroutine);
+        }
+
         // State
         isMoving = false;
         isEating = false;
         isDone = false;
         isStuck = false;
+        isForceFlyOut = false;
 
         currentAnimation = idleAnimation;
 
         prevEatingProgress = 0f;
         currentEatingProgress = 0f;
+        remaingEatingGrainCount = 0;
+        totalGrainEaten = 0;
 
         // Gameplay
         numGrainPileRequiredLeft = numGrainPileRequired;
         skeletonAnimation.gameObject.SetActive(false);
         eatingProgress.gameObject.SetActive(false);
         eatingProgressText.gameObject.SetActive(false);
+        circleProgress.gameObject.SetActive(false);
+        transform.localScale = Vector3.one;
         transform.rotation = Quaternion.identity;
 
         // Waiting slots
@@ -186,7 +198,6 @@ public class BaseChicken : MonoBehaviour
                     transform.eulerAngles = Vector3.zero;
                 }
 
-                // SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
                 SaferioTween.ScaleDownWithPunch(circleProgress.transform);
 
                 PlayFlyAnim();
@@ -215,25 +226,7 @@ public class BaseChicken : MonoBehaviour
 
                 isEating = false;
             }
-
-            if (numGrainPileRequired > 1)
-            {
-                // if (!eatingProgress.gameObject.activeSelf)
-                // {
-                //     SaferioTween.ShowWithPunch(eatingProgress.transform, 1, onCompleteAction: () =>
-                //     {
-                //         eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-                //     });
-                // }
-                // else
-                // {
-                //     eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
-                // }
-            }
         }));
-
-        float prevProgress = 1 - (numGrainPileRequiredLeft) / (float)numGrainPileRequired;
-        float progress = 1 - (numGrainPileRequiredLeft - numGrain) / (float)numGrainPileRequired;
 
         isEating = true;
     }

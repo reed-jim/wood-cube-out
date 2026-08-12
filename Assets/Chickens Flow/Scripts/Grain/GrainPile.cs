@@ -53,6 +53,22 @@ public class GrainPile : MonoBehaviour
 
     private Tween updateProgressTextTween;
 
+    void Awake()
+    {
+        SettingPopup.replayLevelEvent += Reset;
+        LosePopup.replayLevelEvent += Reset;
+        DebugPopup.switchLevelEvent += Reset;
+        WinPopup.resetLevelEvent += Reset;
+    }
+
+    void OnDestroy()
+    {
+        SettingPopup.replayLevelEvent -= Reset;
+        LosePopup.replayLevelEvent -= Reset;
+        DebugPopup.switchLevelEvent -= Reset;
+        WinPopup.resetLevelEvent -= Reset;
+    }
+
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR

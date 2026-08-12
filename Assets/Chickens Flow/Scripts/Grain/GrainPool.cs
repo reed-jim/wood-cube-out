@@ -54,6 +54,7 @@ public class GrainPool : Singleton<GrainPool>
         SettingPopup.replayLevelEvent += Reset;
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
+        WinPopup.resetLevelEvent += Reset;
 
         Reset();
 
@@ -67,6 +68,7 @@ public class GrainPool : Singleton<GrainPool>
         SettingPopup.replayLevelEvent -= Reset;
         LosePopup.replayLevelEvent -= Reset;
         DebugPopup.switchLevelEvent -= Reset;
+        WinPopup.resetLevelEvent -= Reset;
     }
 
     void Start()
@@ -81,6 +83,8 @@ public class GrainPool : Singleton<GrainPool>
 
         UpdatePercent(currentPercent);
         lazyHealthBar.SetProgress(currentPercent);
+
+        grainPiles.Clear();
     }
 
     private void SetupGrainPool()

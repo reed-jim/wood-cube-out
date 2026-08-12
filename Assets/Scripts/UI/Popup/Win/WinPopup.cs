@@ -59,9 +59,9 @@ public class WinPopup : BasePopup
 
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
-    // public static event Action<Vector3, int> collectCoinEvent;
     public static event Action<int> collectCoinEvent;
     public static event Action fetchLocalizedPriceIAPEvent;
+    public static event Action resetLevelEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -70,7 +70,6 @@ public class WinPopup : BasePopup
         // RewardCollectingUI.collectCoinCompleteEvent += OnCollectCoinCompleted;
 
         continueButton.onClick.AddListener(Continue);
-        returnHomeButton.onClick.AddListener(ReturnHome);
         x5CoinButton.onClick.AddListener(X5Coin);
     }
 
@@ -245,6 +244,8 @@ public class WinPopup : BasePopup
         {
             NextLevel();
         });
+
+        resetLevelEvent?.Invoke();
     }
 
     private void NextLevel()
@@ -307,6 +308,8 @@ public class WinPopup : BasePopup
     {
         GameController.Instance.admobAds.ShowVideoReward(
            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+
+        resetLevelEvent?.Invoke();
     }
 
     private void OnRewaredAdCompleted()

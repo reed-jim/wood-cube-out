@@ -13,6 +13,7 @@ public class TweenManager : Singleton<TweenManager>
         SettingPopup.replayLevelEvent += Reset;
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
+        WinPopup.resetLevelEvent += Reset;
 
         tweens = new List<Tween>();
     }
@@ -22,6 +23,7 @@ public class TweenManager : Singleton<TweenManager>
         SettingPopup.replayLevelEvent -= Reset;
         LosePopup.replayLevelEvent -= Reset;
         DebugPopup.switchLevelEvent -= Reset;
+        WinPopup.resetLevelEvent -= Reset;
     }
 
     public void Reset()

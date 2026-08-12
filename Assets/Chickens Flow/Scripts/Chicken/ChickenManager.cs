@@ -61,6 +61,7 @@ public class ChickenManager : Singleton<ChickenManager>
         SettingPopup.replayLevelEvent += Reset;
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
+        WinPopup.resetLevelEvent += Reset;
     }
 
     void OnDestroy()
@@ -68,6 +69,7 @@ public class ChickenManager : Singleton<ChickenManager>
         SettingPopup.replayLevelEvent -= Reset;
         LosePopup.replayLevelEvent -= Reset;
         DebugPopup.switchLevelEvent -= Reset;
+        WinPopup.resetLevelEvent -= Reset;
     }
 
     public void Reset()
