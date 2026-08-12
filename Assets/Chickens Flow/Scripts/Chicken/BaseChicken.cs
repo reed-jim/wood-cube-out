@@ -351,6 +351,11 @@ public class BaseChicken : MonoBehaviour
 
                     notPlayingEatAnimCount = 0;
                 }
+
+                if (numGrainPileRequiredLeft > 0)
+                {
+                    GrainPool.Ins.CheckFeedChickens();
+                }
             }
 
             yield return delayPerGrainWait;
