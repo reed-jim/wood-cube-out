@@ -32,7 +32,7 @@ public struct GrainParticle
 }
 
 // ------------------------------------------------------------------------
-// 2. BURST JOBS FOR SIMULATION, COLLISION & MATRICES
+// 2. BURST JOBS FOR SIMULATION, COLLISION, COPY & MATRICES
 // ------------------------------------------------------------------------
 
 [BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
@@ -305,6 +305,38 @@ public struct ResolveCollisionsJob : IJobFor
 }
 
 [BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+public struct CopyParticlesToGlobalJob : IJob
+{
+    [ReadOnly] public NativeArray<GrainParticle> sourceParticles;
+    public NativeArray<GrainParticle> targetParticles;
+    public int targetOffset;
+
+    public void Execute()
+    {
+        if (sourceParticles.Length > 0)
+        {
+            NativeArray<GrainParticle>.Copy(sourceParticles, 0, targetParticles, targetOffset, sourceParticles.Length);
+        }
+    }
+}
+
+[BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+public struct CopyParticlesToFactionJob : IJob
+{
+    [ReadOnly] public NativeArray<GrainParticle> sourceParticles;
+    public NativeArray<GrainParticle> targetParticles;
+    public int sourceOffset;
+
+    public void Execute()
+    {
+        if (targetParticles.Length > 0)
+        {
+            NativeArray<GrainParticle>.Copy(sourceParticles, sourceOffset, targetParticles, 0, targetParticles.Length);
+        }
+    }
+}
+
+[BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
 public struct ResolveEdgesJob : IJobParallelFor
 {
     public NativeArray<GrainParticle> particles;
@@ -451,6 +483,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
     private NativeArray<float2> nativeSampledTangents;
     private NativeArray<int> nativeLookupGrid;
 
+    // GLOBAL BUFFERS FOR CROSS-FACTION COLLISIONS
+    private NativeArray<GrainParticle> globalParticles;
+    private NativeArray<int> globalCellHeads;
+    private NativeArray<int> globalParticleNext;
+
     private Vector2 worldMin;
     private Vector2 worldMax;
     private int gridWidth;
@@ -584,10 +621,31 @@ public class GrainSimulation : Singleton<GrainSimulation>
         if (nativeSampledTangents.IsCreated) nativeSampledTangents.Dispose();
         if (nativeLookupGrid.IsCreated) nativeLookupGrid.Dispose();
 
+        DisposeGlobalBuffers();
+
         foreach (var group in factionGroups.Values)
         {
             group.Dispose();
         }
+    }
+
+    private void DisposeGlobalBuffers()
+    {
+        if (globalParticles.IsCreated) globalParticles.Dispose();
+        if (globalCellHeads.IsCreated) globalCellHeads.Dispose();
+        if (globalParticleNext.IsCreated) globalParticleNext.Dispose();
+    }
+
+    private void EnsureGlobalCapacity(int requiredCapacity)
+    {
+        if (globalParticles.IsCreated && globalParticles.Length >= requiredCapacity) return;
+
+        DisposeGlobalBuffers();
+
+        int capacity = math.max(1024, requiredCapacity * 2);
+        globalParticles = new NativeArray<GrainParticle>(capacity, Allocator.Persistent);
+        globalCellHeads = new NativeArray<int>(TOTAL_CELLS, Allocator.Persistent);
+        globalParticleNext = new NativeArray<int>(capacity, Allocator.Persistent);
     }
 
     void Start()
@@ -610,7 +668,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     }
 
     // ------------------------------------------------------------------------
-    // JOB CHAINING EXECUTION PIPELINE
+    // JOB CHAINING EXECUTION PIPELINE (ASYNCHRONOUS CHAIN VIA lastFrameJobHandle)
     // ------------------------------------------------------------------------
 
     private JobHandle lastFrameJobHandle;
@@ -619,19 +677,30 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         if (!nativeLookupGrid.IsCreated) return;
 
-        // Start this frame's dependencies chained from the end of LAST frame
-        JobHandle combinedPipelineHandle = lastFrameJobHandle;
+        // Count total active grains across all factions
+        int totalGrains = 0;
+        foreach (var group in factionGroups.Values)
+        {
+            totalGrains += group.Count;
+        }
 
+        if (totalGrains == 0) return;
+
+        EnsureGlobalCapacity(totalGrains);
+
+        // Dependency handle chained asynchronously from LAST frame's end
+        JobHandle pipelineHandle = lastFrameJobHandle;
+
+        // -------------------------------------------------------------------------
+        // Phase 1: Simulate Grains Per Faction
+        // -------------------------------------------------------------------------
         foreach (var group in factionGroups.Values)
         {
             int count = group.Count;
             if (count == 0) continue;
 
             NativeArray<GrainParticle> activeParticles = group.particles.GetSubArray(0, count);
-            NativeArray<Matrix4x4> activeMatrices = group.matrices.GetSubArray(0, count);
-            NativeArray<int> activeParticleNext = group.particleNext.GetSubArray(0, count);
 
-            // Pass combinedPipelineHandle into Schedule(...) so it depends on prior work!
             SimulateGrainsJob simJob = new SimulateGrainsJob
             {
                 particles = activeParticles,
@@ -648,32 +717,101 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 gridHeight = gridHeight,
                 randomBounceSideForce = randomBounceSideForce
             };
-            // Explicitly chain from combinedPipelineHandle
-            JobHandle handle = simJob.Schedule(count, 64, combinedPipelineHandle);
 
-            BuildSpatialGridJob buildGridJob = new BuildSpatialGridJob
-            {
-                particles = activeParticles,
-                cellHeads = group.cellHeads,
-                particleNext = activeParticleNext,
-                worldMin = worldMin,
-                collisionCellSize = collisionCellSize,
-                gridWidth = GRID_WIDTH,
-                gridHeight = GRID_HEIGHT
-            };
-            handle = buildGridJob.Schedule(handle);
+            JobHandle handle = simJob.Schedule(count, 64, pipelineHandle);
+            pipelineHandle = JobHandle.CombineDependencies(pipelineHandle, handle);
+        }
 
-            ResolveCollisionsJob collisionJob = new ResolveCollisionsJob
+        // -------------------------------------------------------------------------
+        // Phase 2: Copy Faction Particles into the Global Buffer (Jobified)
+        // -------------------------------------------------------------------------
+        int globalOffset = 0;
+        List<int> groupOffsets = new List<int>();
+
+        foreach (var group in factionGroups.Values)
+        {
+            groupOffsets.Add(globalOffset);
+            int count = group.Count;
+
+            if (count > 0)
             {
-                particles = activeParticles,
-                cellHeads = group.cellHeads,
-                particleNext = activeParticleNext,
-                grainSpacing = grainSpacing,
-                collisionForce = collisionForce,
-                gridWidth = GRID_WIDTH,
-                gridHeight = GRID_HEIGHT
-            };
-            handle = collisionJob.Schedule(TOTAL_CELLS, handle);
+                CopyParticlesToGlobalJob copyJob = new CopyParticlesToGlobalJob
+                {
+                    sourceParticles = group.particles.GetSubArray(0, count),
+                    targetParticles = globalParticles,
+                    targetOffset = globalOffset
+                };
+
+                JobHandle handle = copyJob.Schedule(pipelineHandle);
+                pipelineHandle = JobHandle.CombineDependencies(pipelineHandle, handle);
+
+                globalOffset += count;
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Phase 3: Build Spatial Grid & Resolve Cross-Faction Collisions
+        // -------------------------------------------------------------------------
+        NativeArray<GrainParticle> activeGlobalParticles = globalParticles.GetSubArray(0, totalGrains);
+        NativeArray<int> activeGlobalNext = globalParticleNext.GetSubArray(0, totalGrains);
+
+        BuildSpatialGridJob globalBuildGridJob = new BuildSpatialGridJob
+        {
+            particles = activeGlobalParticles,
+            cellHeads = globalCellHeads,
+            particleNext = activeGlobalNext,
+            worldMin = worldMin,
+            collisionCellSize = collisionCellSize,
+            gridWidth = GRID_WIDTH,
+            gridHeight = GRID_HEIGHT
+        };
+        pipelineHandle = globalBuildGridJob.Schedule(pipelineHandle);
+
+        ResolveCollisionsJob globalCollisionJob = new ResolveCollisionsJob
+        {
+            particles = activeGlobalParticles,
+            cellHeads = globalCellHeads,
+            particleNext = activeGlobalNext,
+            grainSpacing = grainSpacing,
+            collisionForce = collisionForce,
+            gridWidth = GRID_WIDTH,
+            gridHeight = GRID_HEIGHT
+        };
+        pipelineHandle = globalCollisionJob.Schedule(TOTAL_CELLS, pipelineHandle);
+
+        // -------------------------------------------------------------------------
+        // Phase 4: Copy Updated Global Particles Back to Factions (Jobified)
+        // -------------------------------------------------------------------------
+        int groupIdx = 0;
+        foreach (var group in factionGroups.Values)
+        {
+            int offset = groupOffsets[groupIdx++];
+            int count = group.Count;
+
+            if (count > 0)
+            {
+                CopyParticlesToFactionJob copyBackJob = new CopyParticlesToFactionJob
+                {
+                    sourceParticles = globalParticles,
+                    targetParticles = group.particles.GetSubArray(0, count),
+                    sourceOffset = offset
+                };
+
+                JobHandle handle = copyBackJob.Schedule(pipelineHandle);
+                pipelineHandle = JobHandle.CombineDependencies(pipelineHandle, handle);
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Phase 5: Resolve Edges & Update Matrices Per Faction
+        // -------------------------------------------------------------------------
+        foreach (var group in factionGroups.Values)
+        {
+            int count = group.Count;
+            if (count == 0) continue;
+
+            NativeArray<GrainParticle> activeParticles = group.particles.GetSubArray(0, count);
+            NativeArray<Matrix4x4> activeMatrices = group.matrices.GetSubArray(0, count);
 
             ResolveEdgesJob edgesJob = new ResolveEdgesJob
             {
@@ -689,7 +827,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 gridWidth = gridWidth,
                 gridHeight = gridHeight
             };
-            handle = edgesJob.Schedule(count, 64, handle);
+            JobHandle handle = edgesJob.Schedule(count, 64, pipelineHandle);
 
             UpdateMatricesJob matrixJob = new UpdateMatricesJob
             {
@@ -699,11 +837,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
             };
             handle = matrixJob.Schedule(count, 64, handle);
 
-            combinedPipelineHandle = JobHandle.CombineDependencies(combinedPipelineHandle, handle);
+            pipelineHandle = JobHandle.CombineDependencies(pipelineHandle, handle);
         }
 
-        // Save and complete
-        lastFrameJobHandle = combinedPipelineHandle;
+        // Store pipeline dependency handle and wait for completion prior to rendering
+        lastFrameJobHandle = pipelineHandle;
         lastFrameJobHandle.Complete();
     }
 
