@@ -306,6 +306,9 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
+        x5CoinButton.interactable = false;
+        continueButton.interactable = false;
+
         GameController.Instance.admobAds.ShowVideoReward(
            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
 

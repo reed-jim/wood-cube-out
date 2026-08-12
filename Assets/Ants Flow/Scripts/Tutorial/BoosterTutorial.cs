@@ -148,9 +148,9 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
             {
                 localizedDescription.TranslationName = "Select a color to clear all matching tiles.";
 
-                worldTutorialHand.transform.position = AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-6.1f);
+                // worldTutorialHand.transform.position = AntsFlow.TileManager.Ins.GetTilePosition(AntsFlow.TileManager.Ins.tiles[0]).ChangeZ(-6.1f);
 
-                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.9f);
+                // SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.9f);
                 SaferioTween.AlphaHide(canvasGroup);
                 Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
                 {

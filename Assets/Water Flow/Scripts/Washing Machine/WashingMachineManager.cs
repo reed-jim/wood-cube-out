@@ -721,6 +721,8 @@ namespace AntsFlow
             List<BaseChicken> chickensToClear = ChickenManager.Ins.chickens
                 .Where(chicken => !chicken.isDone && chicken.faction == selectedFaction && !chicken.isEating).ToList();
 
+            List<BaseChicken> eatingChickens = ChickenManager.Ins.chickens.Where(chicken => chicken.isEating).ToList();
+
             bool isLast = false;
 
             int numGrainRequiredRemoved = 0;
@@ -792,14 +794,6 @@ namespace AntsFlow
             Color factionToClear = chickensToClear[0].faction;
 
             List<WashingMachineItem> antBoxes = new List<WashingMachineItem>();
-
-            for (int i = 0; i < washingMachineSlots.Count; i++)
-            {
-                if (washingMachineSlots[i].washingMachineItem != null)
-                {
-                    antBoxes.Add(washingMachineSlots[i].washingMachineItem);
-                }
-            }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
