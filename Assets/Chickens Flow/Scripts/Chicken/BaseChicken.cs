@@ -158,10 +158,10 @@ public class BaseChicken : MonoBehaviour
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
-        Tween.Delay(0.02f).OnComplete(() =>
+        TweenManager.Ins.AddTween(Tween.Delay(0.02f).OnComplete(() =>
         {
             skeletonAnimation.enabled = false;
-        });
+        }));
 
         this.faction = faction;
     }
@@ -207,15 +207,15 @@ public class BaseChicken : MonoBehaviour
 
                 PlayFlyAnim();
 
-                Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+                TweenManager.Ins.AddTween(Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
                 {
-                    SaferioTween.ScaleDownWithPunch(transform);
+                    TweenManager.Ins.AddSequence(SaferioTween.ScaleDownWithPunch(transform));
 
                     ChickenManager.Ins.CheckWinLevel();
                     WashingMachineManager.Ins.CheckLoseLevel();
 
                     onChickenFlyOut?.Invoke();
-                });
+                }));
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
                 {
@@ -416,7 +416,7 @@ public class BaseChicken : MonoBehaviour
 
         PlayFlyAnim();
 
-        Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+        TweenManager.Ins.AddTween(Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
         {
             SaferioTween.ScaleDownWithPunch(transform);
 
@@ -426,7 +426,7 @@ public class BaseChicken : MonoBehaviour
             }
 
             ChickenManager.Ins.CheckWinLevel();
-        });
+        }));
 
         foreach (var waitingChickenSlot in waitingChickenSlots)
         {
@@ -450,7 +450,6 @@ public class BaseChicken : MonoBehaviour
 
         TweenManager.Ins.AddTween(Tween.Custom(prevProgress, progress, duration, onValueChange: newVal =>
         {
-            // eatingProgressText.text = $"{(int)(newVal * 100)}%";
             circleProgressFill.fillAmount = newVal;
         }));
     }

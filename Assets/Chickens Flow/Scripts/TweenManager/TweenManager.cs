@@ -5,6 +5,7 @@ using UnityEngine;
 public class TweenManager : Singleton<TweenManager>
 {
     private List<Tween> tweens;
+    private List<Sequence> sequences;
 
     protected override void MoreActionOnAwake()
     {
@@ -16,6 +17,7 @@ public class TweenManager : Singleton<TweenManager>
         WinPopup.resetLevelEvent += Reset;
 
         tweens = new List<Tween>();
+        sequences = new List<Sequence>();
     }
 
     void OnDestroy()
@@ -29,10 +31,16 @@ public class TweenManager : Singleton<TweenManager>
     public void Reset()
     {
         CommonUtil.StopAllTweens(tweens);
+        CommonUtil.StopAllSequences(sequences);
     }
 
     public void AddTween(Tween tween)
     {
         tweens.Add(tween);
+    }
+
+    public void AddSequence(Sequence sequence)
+    {
+        sequences.Add(sequence);
     }
 }

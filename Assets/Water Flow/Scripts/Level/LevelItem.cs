@@ -19,6 +19,7 @@ namespace AntsFlow
         Wall
     }
 
+#if UNITY_EDITOR
     public class ColorDropdown : PopupWindowContent
     {
         private readonly List<Color> colors;
@@ -106,6 +107,7 @@ namespace AntsFlow
             }
         }
     }
+#endif
 
     public class LevelItem : MonoBehaviour
     {
@@ -792,6 +794,7 @@ namespace AntsFlow
 
             if (GUI.Button(rect, content))
             {
+#if UNITY_EDITOR
                 PopupWindow.Show(
                     rect,
                     new ColorDropdown(
@@ -804,6 +807,7 @@ namespace AntsFlow
                         }
                     )
                 );
+#endif
             }
 
             // Draw selected color

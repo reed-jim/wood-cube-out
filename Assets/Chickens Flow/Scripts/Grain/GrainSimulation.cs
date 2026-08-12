@@ -871,6 +871,14 @@ public class GrainSimulation : Singleton<GrainSimulation>
         group.RemoveAt(group.Count - 1);
     }
 
+    public Vector3 GetFirstGrainPosition(Color faction)
+    {
+        FactionGroup group = GetFaction(faction);
+        if (group.Count == 0) return Vector3.zero;
+
+        return group.position[0];
+    }
+
     public void RemoveFirstGrain(Color faction)
     {
         removeCallCount++;
