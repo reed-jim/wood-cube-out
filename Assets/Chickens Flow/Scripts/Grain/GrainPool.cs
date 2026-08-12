@@ -23,6 +23,9 @@ public class GrainPool : Singleton<GrainPool>
     List<float> distanceTable = new List<float>();
     List<float> percentTable = new List<float>();
 
+    [Header("Sprite")]
+    public SpriteRenderer grainPoolSpriteRenderer;
+
     [Header("Customize")]
     public float offsetPourGrainPileX;
 

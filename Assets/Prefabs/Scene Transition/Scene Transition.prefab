@@ -46,19 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 2264269400014756116}
-  container: {fileID: 0}
-  loadingContent: {fileID: 0}
-  progressFillRT: {fileID: 0}
-  loadingTextRT: {fileID: 0}
-  fadeBackground: {fileID: 0}
   almostThereBackground: {fileID: 2128206042370819001}
   progressBarFill: {fileID: 2551406691497104283}
   loadingText: {fileID: 3068280607731061390}
   loadingSpine: {fileID: 1541719869815007359}
-  canvasGroup: {fileID: 0}
-  scrollingAntBoxes:
-  - {fileID: 0}
-  - {fileID: 0}
   scrollingAntBoxInitialPositions: []
   idleAnimation: idle
   appearAnimation: appear
@@ -66,9 +57,6 @@ MonoBehaviour:
   loadLevelInProgressCanvasGroup: {fileID: 1233964761200914696}
   rotatingLoadingIcon: {fileID: 4257591286331040465}
   blackBackgroundToPassPolicy: {fileID: 7935447767154837941}
-  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
-  startDelay: 3
-  blackScreenStartDelay: 1.5
   fadeOutDuration: 0.3
 --- !u!1 &531885537626133164
 GameObject:
@@ -1694,7 +1682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d85b887af7e6c3f45a2e2d2920d641bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonGraphic
-  m_Material: {fileID: 2100000, guid: b66cf7a186d13054989b33a5c90044e4, type: 2}
+  m_Material: {fileID: 2100000, guid: fb695deefc5d37b45a04b34e66be76a2, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

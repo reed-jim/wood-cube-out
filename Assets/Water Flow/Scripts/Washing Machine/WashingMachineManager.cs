@@ -164,7 +164,9 @@ namespace AntsFlow
 
         public void SetupPourPositions()
         {
-            float totalWidth = 0.8f * GamePersistentVariable.screenSizeWorld.x;
+            Vector2 grainPoolWorldSize = GrainPool.Ins.grainPoolSpriteRenderer.bounds.size;
+
+            float totalWidth = 0.8f * grainPoolWorldSize.x;
             int numSlot = 8;
             float distance = totalWidth / numSlot;
             float start = -0.5f * totalWidth;

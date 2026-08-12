@@ -292,6 +292,10 @@ public class ChickenManager : Singleton<ChickenManager>
         {
             customPolygonVertices = ScalePolygon(customPolygonVertices, levelItem.chickenAreaScaleX, levelItem.chickenAreaScaleY);
         }
+        else
+        {
+            customPolygonVertices = ScalePolygonToScreen(customPolygonVertices);
+        }
 
         selectedBoardShapedIndex = levelItem.boardShapePresetIndex;
 
@@ -459,11 +463,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public static List<Vector2> ScalePolygonToScreen(List<Vector2> points)
     {
-        const float referenceWidth = 1080f;
-        const float referenceHeight = 1920f;
-
-        float scaleX = Screen.width / referenceWidth;
-        float scaleY = Screen.height / referenceHeight;
+        float scaleX = GamePersistentVariable.screenSizeWorld.x / GameConstants.standardScreenWorldSize.x;
+        float scaleY = GamePersistentVariable.screenSizeWorld.y / GameConstants.standardScreenWorldSize.y;
 
         if (points == null || points.Count == 0)
             return new List<Vector2>();
