@@ -77,6 +77,8 @@ public class BaseChicken : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
 
         SetDissolveProgress(0);
+
+        currentAnimation = idleAnimation;
     }
 
     void OnDestroy()

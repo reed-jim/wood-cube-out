@@ -261,8 +261,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
         //     CommonUtil.AddValueOfDictionary(slotByColumn, waitingChickenSlot.column, waitingChickenSlot);
         // }
-
-        StartCoroutine(RandomlyAnimateChickens());
     }
 
     public void SpawnFirstChickensUsingLevelConfig(AntsFlow.LevelItem levelItem)
@@ -1233,13 +1231,15 @@ public class ChickenManager : Singleton<ChickenManager>
                 {
                     chicken.SetActiveSpine(true);
                     chicken.PlayIdleAnim();
+
+                    chickenRenderer.RemoveChickenRendering(chicken);
                 }
                 else
                 {
                     chicken.PlayIdleAnimNoLoop();
-                }
 
-                chickenRenderer.UpdateChickenRendering(chicken);
+                    chickenRenderer.UpdateChickenRendering(chicken);
+                }
 
                 chicken.isMoving = false;
 

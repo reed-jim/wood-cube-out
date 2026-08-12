@@ -94,6 +94,7 @@ public class WashingMachineItem : MonoBehaviour
         RevivePopup.reviveEvent += OnRevive;
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
+        // skeletonAnimation.AnimationState.Event += OnSpineEvent;
 
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
 
@@ -103,6 +104,8 @@ public class WashingMachineItem : MonoBehaviour
 
         bucketTopInitialPosition = bucketTop.transform.localPosition;
         bucketTextInitialPosition = numberText.transform.localPosition;
+
+        GameConstants.bucketDelayMove = GetEventTime(skeletonAnimation, jumpAnimation, "call");
     }
 
     void OnDestroy()
@@ -119,6 +122,7 @@ public class WashingMachineItem : MonoBehaviour
         RevivePopup.reviveEvent -= OnRevive;
         spawnAntEvent -= OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
+        // skeletonAnimation.AnimationState.Event -= OnSpineEvent;
 
         ExtendOnDestroy();
     }
@@ -251,6 +255,35 @@ public class WashingMachineItem : MonoBehaviour
         isPouring = true;
     }
 
+    // private void OnBucketJump(TrackEntry trackEntry, Spine.Event e)
+    // {
+    //     if (e.Data.Name == "call")
+    //     {
+
+    //     }
+    // }
+
+    public float GetEventTime(SkeletonAnimation skeletonAnimation, string animationName, string eventName)
+    {
+        var animation = skeletonAnimation.Skeleton.Data.FindAnimation(animationName);
+        if (animation == null)
+            return -1f;
+
+        foreach (var timeline in animation.Timelines)
+        {
+            if (timeline is EventTimeline eventTimeline)
+            {
+                for (int i = 0; i < eventTimeline.Events.Length; i++)
+                {
+                    if (eventTimeline.Events[i].Data.Name == eventName)
+                        return eventTimeline.Events[i].Time;
+                }
+            }
+        }
+
+        return -1f;
+    }
+
     private void PouringOut(int grainCount, bool isBucketMoveBack, Action onCompleteAction)
     {
         bool isRotated = false;
@@ -279,7 +312,9 @@ public class WashingMachineItem : MonoBehaviour
 
         float duration = animation.Duration / skeletonAnimation.timeScale;
 
-        Tween tween = Tween.Position(transform, bucketDestination, duration: duration).OnComplete(() =>
+        duration -= GameConstants.bucketDelayMove;
+
+        Tween tween = Tween.Position(transform, bucketDestination, duration: duration, startDelay: GameConstants.bucketDelayMove).OnComplete(() =>
         {
             grainPile.gameObject.SetActive(true);
 
