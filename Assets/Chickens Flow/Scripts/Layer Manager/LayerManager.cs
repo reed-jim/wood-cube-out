@@ -26,4 +26,9 @@ public static class LayerManager
     {
         return -10;
     }
+
+    public static float GetTutorialLevelOneHandZOffset()
+    {
+        return -3;
+    }
 }

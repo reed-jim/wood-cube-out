@@ -75,8 +75,6 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
         int maxStep = 0;
 
-        description.text = $"Select the ant box to spawn ants.";
-
         MoveTutorialHandToTile(toSelectWashingMachines[0]);
 
         while (step <= maxStep)
@@ -122,7 +120,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     private void MoveTutorialHandToTile(WashingMachineItem washingMachine)
     {
-        Tween.Position(tutorialHand.transform, washingMachine.transform.position.AddZ(-1), duration: 0.3f);
+        Tween.Position(tutorialHand.transform, washingMachine.transform.position.AddZ(LayerManager.GetTutorialLevelOneHandZOffset()), duration: 0.3f);
     }
 
     private void OnWashingMachineSelected(WashingMachineItem washingMachine)

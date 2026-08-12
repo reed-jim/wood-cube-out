@@ -370,6 +370,7 @@ GameObject:
   - component: {fileID: 3398338197358782523}
   - component: {fileID: 1033064464242792566}
   - component: {fileID: 4655908037490611305}
+  - component: {fileID: 4464122953663968243}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -424,7 +425,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select the ant box to spawn ants
+  m_text: Select the Bucket to pour the grains!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 1345362923132317015, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
@@ -496,6 +497,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4464122953663968243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201878182995335003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization.TMP::Lean.Localization.LeanLocalizedTextMeshProUGUI
+  translationName: Select the bucket to pour the grains.
+  FallbackText: Select the ant box to spawn ants
 --- !u!1 &3352704048867856845
 GameObject:
   m_ObjectHideFlags: 0
