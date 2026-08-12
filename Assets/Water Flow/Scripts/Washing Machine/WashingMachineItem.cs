@@ -78,7 +78,8 @@ public class WashingMachineItem : MonoBehaviour
     public static event Action loseLevelEvent;
 
     public List<AntsFlow.BaseTile> tilesToMove;
-    private int walkableMask;
+    private Tween disableBucketTween;
+
 
     void Awake()
     {
@@ -223,6 +224,11 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {
+        if (disableBucketTween.isAlive)
+        {
+            disableBucketTween.Stop();
+        }
+
         isDisable = !(washingMachineStartSlot.row == 0);
 
         numberText.alpha = isDisable ? 0.2f : 1;
@@ -524,7 +530,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual void Disable()
     {
-        Tween.Alpha(numberText, 0.2f, duration: 0.3f)
+        disableBucketTween = Tween.Alpha(numberText, 0.2f, duration: 0.3f)
         .OnComplete(() =>
         {
             isTemporarilyEnabled = false;
@@ -534,6 +540,8 @@ public class WashingMachineItem : MonoBehaviour
 
     public void TemporarilyEnable()
     {
+        GamePersistentVariable.isPreventSelectAntBox = true;
+        
         if (isDisable)
         {
             Tween.Alpha(numberText, 1, duration: 0.3f)
@@ -541,6 +549,8 @@ public class WashingMachineItem : MonoBehaviour
             {
                 isTemporarilyEnabled = true;
                 isDisable = false;
+
+                GamePersistentVariable.isPreventSelectAntBox = false;
             });
         }
     }
@@ -588,160 +598,6 @@ public class WashingMachineItem : MonoBehaviour
         {
             skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
         }
-    }
-
-    protected IEnumerator SpawningAnts(string antType)
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.35f);
-
-        int currentAntIndex = 0;
-
-        while (tilesToMove.Count > 0)
-        {
-            if (GamePersistentVariable.isLevelLost)
-            {
-                for (int i = 0; i < tilesToMove.Count; i++)
-                {
-                    tilesToMove[i].isAntApproaching = false;
-                }
-
-                remainingNumber += tilesToMove.Count;
-
-                tilesToMove.Clear();
-
-                break;
-            }
-
-            if (GamePersistentVariable.isPauseGame)
-            {
-                yield return waitForSeconds;
-
-                continue;
-            }
-
-            BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(antType);
-
-            ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
-            ant.transform.eulerAngles = Vector3.zero;
-
-            ant.Init(faction);
-            // ant.MoveToTile(tilesToMove[currentAntIndex]);
-            // BFS
-            // tilesToMove[currentAntIndex].path = AntsFlow.TileManager.Ins.FindPath(tilesToMove[currentAntIndex], transform.position);
-            ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
-
-            SoundManager.Instance.PlaySoundAntPop();
-
-            number--;
-            numberText.text = $"{number}";
-
-            if (!isAnimating)
-            {
-                SaferioTween.Punch(numberText.transform, 1.1f, onCompleteAction: () =>
-                {
-                    isAnimating = false;
-                });
-
-                isAnimating = true;
-            }
-
-            tilesToMove.RemoveAt(currentAntIndex);
-
-            currentAntIndex = 0;
-
-            GamePersistentVariable.numActiveAnt++;
-
-            spawnAntEvent?.Invoke();
-
-            yield return waitForSeconds;
-        }
-
-        if (number == 0)
-        {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
-            {
-                if (washingMachineSlot != null)
-                {
-                    washingMachineSlot.washingMachineItem = null;
-                }
-
-                antBoxDoneEvent?.Invoke(this);
-            });
-
-            isInSlot = false;
-        }
-
-        spawningAntCoroutine = null;
-    }
-
-    private IEnumerator SpawningGhostAnts(List<AntsFlow.BaseTile> tilesForGhostAnts)
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.25f);
-
-        int currentAntIndex = 0;
-
-        List<AntsFlow.BaseTile> tilesToMove = new List<AntsFlow.BaseTile>();
-
-        tilesToMove.AddRange(tilesForGhostAnts);
-
-        isStucking = false;
-
-        while (tilesToMove.Count > 0)
-        {
-            BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
-
-            ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
-            ant.transform.eulerAngles = Vector3.zero;
-
-            ant.Init(faction);
-            ant.SetGhostMode();
-            ant.MoveToTileGhostMode(tilesToMove[0]);
-
-            SoundManager.Instance.PlaySoundAntPop();
-
-            number--;
-            numberText.text = $"{number}";
-
-            if (!isAnimating)
-            {
-                SaferioTween.Punch(numberText.transform, 1.1f, onCompleteAction: () =>
-                {
-                    isAnimating = false;
-                });
-
-                isAnimating = true;
-            }
-
-            tilesToMove.RemoveAt(0);
-
-            GamePersistentVariable.numActiveAnt++;
-
-            yield return waitForSeconds;
-        }
-
-        if (number == 0)
-        {
-            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
-            {
-                if (washingMachineSlot.washingMachineItem != null)
-                {
-                    washingMachineSlot.washingMachineItem = null;
-                }
-
-                antBoxDoneEvent?.Invoke(this);
-            });
-
-            isInSlot = false;
-
-            WashingMachineManager.Ins.CompleteGhostAntBox(this);
-        }
-    }
-
-    private void LoseLevel()
-    {
-        loseLevelEvent?.Invoke();
-
-        GamePersistentVariable.isLevelLost = true;
     }
 
     private void OnLevelStarted()
@@ -843,69 +699,6 @@ public class WashingMachineItem : MonoBehaviour
     private void OnTileMoveToAnt(AntsFlow.BaseTile tile)
     {
 
-    }
-
-    private bool IsMovable(AntsFlow.BaseTile tile)
-    {
-        // // check using navmesh
-        // float tileSize = GamePersistentVariable.tileMapScaleFactor;
-        // Vector3 tilePosition = AntsFlow.TileManager.Ins.GetTilePosition(tile);
-        // NavMeshPath path = new NavMeshPath();
-        // Vector3 nearestMovableStartPoint = GetNearestMovableNavMeshPoint(transform.position, 1f * tileSize);
-        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 2f * tileSize);
-
-        // NavMesh.CalculatePath(nearestMovableStartPoint, nearestMovablePoint, walkableMask, path);
-
-        // return path.status == NavMeshPathStatus.PathComplete;
-
-        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tilePosition, 0.6f * tileSize).ChangeZ(0);
-        // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint);
-
-        // return Vector2.Distance(furthestPoint, nearestMovablePoint) < 1f * tileSize;
-        // return !AntsFlow.TileManager.Ins.IsBlocked(tile);
-
-        // return tile.IsBlocked();
-
-
-        // BFS
-        return true;
-    }
-
-    public Vector3 GetNearestMovableNavMeshPoint(Vector3 targetPosition, float maxDistance)
-    {
-        NavMeshHit hit;
-
-        if (NavMesh.SamplePosition(
-            targetPosition,
-            out hit,
-            maxDistance,
-            walkableMask))
-        {
-            return hit.position;
-        }
-
-        return targetPosition;
-    }
-
-    public Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition)
-    {
-        NavMeshPath path = new NavMeshPath();
-
-        NavMesh.CalculatePath(startPosition, targetPosition, walkableMask, path);
-
-        if (path.corners == null || path.corners.Length == 0)
-        {
-            return startPosition;
-        }
-
-        // Fully reachable
-        if (path.status == NavMeshPathStatus.PathComplete)
-        {
-            return targetPosition;
-        }
-
-        // Partial path → last corner is furthest reachable point
-        return path.corners[path.corners.Length - 1];
     }
 
     private void OnLevelLose()
