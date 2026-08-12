@@ -755,6 +755,17 @@ namespace AntsFlow
                         }
                     }
 
+
+                    if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+                    {
+                        if (neighbor.tile != null && neighbor.tile.isLocked)
+                        {
+                            isBlocked = true;
+                            isReachTarget = false;
+                        }
+                    }
+
+
                     if (isBlocked && !isReachTarget)
                     {
                         continue;
@@ -779,11 +790,24 @@ namespace AntsFlow
 
         public List<BaseTile> GetFirstNMovableTilesForWarriorAnts(int count, Vector2 antBoxPosition)
         {
+            // Warrior ant chỉ được spawn khi đã có đường đi thông tới ít nhất 1 node trống/clear ở rìa
+            // sát boss (borderNodes). Kiến sinh ra sẽ đi thẳng tới vị trí rìa boss đó để bắn.
+            // (Revive/ghost đi theo nhánh riêng - đứng rìa map bắn boss - nên không gọi hàm này.)
+            HashSet<Node> bossBorderNodes = null;
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.bossArea != null)
+            {
+                bossBorderNodes = SpecialElementManager.Ins.bossArea.borderNodes;
+            }
+
+            if (bossBorderNodes == null || bossBorderNodes.Count == 0)
+            {
+                return new List<BaseTile>();
+            }
+
             Node start = bottomMostNodes
                     .OrderBy(node => ((Vector2)node.initialPosition - antBoxPosition).sqrMagnitude)
                     .First();
 
-            var result = new List<BaseTile>();
             Queue<Node> edgeQueue = new();
             Queue<Node> normalQueue = new();
             var visited = new HashSet<Node>();
@@ -793,17 +817,24 @@ namespace AntsFlow
             visited.Add(start);
             parent[start] = null;
 
-            while ((edgeQueue.Count > 0 || normalQueue.Count > 0) && result.Count < count)
+            List<Node> reachableBorderNodes = new List<Node>();
+
+            while (edgeQueue.Count > 0 || normalQueue.Count > 0)
             {
                 Node current = edgeQueue.Count > 0
                     ? edgeQueue.Dequeue()
                     : normalQueue.Dequeue();
 
-                if (current.tile != null && current.tile.isDone)
+                // Nếu current là node rìa boss và node này trống / đã clear
+                if (bossBorderNodes.Contains(current))
                 {
-                    current.tile.path = ReconstructPath(current, parent);
+                    bool isPassable = !current.isObstacle &&
+                        (current.tile == null || current.tile.isMovedToAnt || current.tile.isDone);
 
-                    result.Add(current.tile);
+                    if (isPassable && !reachableBorderNodes.Contains(current))
+                    {
+                        reachableBorderNodes.Add(current);
+                    }
                 }
 
                 if (current.tile != null)
@@ -859,6 +890,13 @@ namespace AntsFlow
                         isBlocked = true;
                     }
 
+                    // Giống GetFirstNMovableTiles: tile đang bị khóa (BossArea/HardPixel/FreezedTileRegion
+                    // còn che) luôn là tường chặn dù đã isDone, tới khi vật che đó biến mất hẳn.
+                    if (neighbor.tile != null && neighbor.tile.isLocked)
+                    {
+                        isBlocked = true;
+                    }
+
                     if (isBlocked)
                     {
                         continue;
@@ -878,11 +916,45 @@ namespace AntsFlow
                 }
             }
 
+            if (reachableBorderNodes.Count == 0)
+            {
+                return new List<BaseTile>();
+            }
+
+            var result = new List<BaseTile>();
+
+            for (int i = 0; i < count; i++)
+            {
+                Node targetBorderNode = reachableBorderNodes[i % reachableBorderNodes.Count];
+                List<Node> borderPath = ReconstructPath(targetBorderNode, parent);
+
+                BaseTile antTargetTile;
+                if (targetBorderNode.tile != null)
+                {
+                    antTargetTile = targetBorderNode.tile;
+                    antTargetTile.path = borderPath;
+                }
+                else
+                {
+                    antTargetTile = new BaseTile()
+                    {
+                        tilemapPosition = CommonUtil.GetVector3Int(
+                            (targetBorderNode.initialPosition - (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1)) / GamePersistentVariable.tileMapScaleFactor),
+                        isDone = true,
+                        path = borderPath
+                    };
+                    targetBorderNode.tile = antTargetTile;
+                }
+
+                result.Add(antTargetTile);
+            }
+
             return result;
         }
 
         public void FindSingleAntPath(BaseTile tile)
         {
+            tile.path = null;
             Node start = bottomMostNodes
                 .OrderBy(node => (node.initialPosition - GetTilePosition(tile)).sqrMagnitude)
                 .First();
@@ -958,6 +1030,14 @@ namespace AntsFlow
                     {
                         isBlocked = false;
                     }
+                    if (WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
+                    {
+                        if (neighbor.isObstacle && neighbor.tile != tile)
+                        {
+                            isBlocked = true;
+                        }
+                    }
+
 
                     if (neighbor.tile != null && neighbor.tile.Faction == tile.Faction)
                     {
@@ -1066,6 +1146,11 @@ namespace AntsFlow
                     // blocked
                     bool isStarterTileAvailable = current.isStarter && !current.tile.isMovedToAnt;
                     bool isReachTarget = !isStarterTileAvailable && neighbor.tile == target;
+
+                    if (neighbor.isObstacle && neighbor.tile != target)
+                    {
+                        continue;
+                    }
 
                     if (neighbor.tile != null && !isReachTarget)
                     {
@@ -1312,7 +1397,23 @@ namespace AntsFlow
 
         public void CheckWinLevel()
         {
+            if (SpecialElementManager.Ins != null && SpecialElementManager.Ins.activeSpawningTileBoxes != null)
+            {
+                if (SpecialElementManager.Ins.activeSpawningTileBoxes.Any(b => b != null && b.gameObject.activeSelf && b.numberLeft > 0))
+                {
+                    return;
+                }
+            }
+
             bool isWon = !tiles.Any(tile => !tile.isDone);
+
+            // Level có boss/rắn: chưa hạ hết thì chưa win, dù đã clear hết tile (vd booster clear-one-color).
+            if (isWon && SpecialElementManager.Ins != null && !SpecialElementManager.Ins.AreSpecialBossElementsCleared())
+            {
+                UpSpeedAnt.Ins.UpSpeedNearEndLevel();
+
+                isWon = false;
+            }
 
             if (isWon)
             {
@@ -1351,9 +1452,28 @@ namespace AntsFlow
             // });
         }
 
+        private Coroutine highlightCoroutine;
+
         public void StartHightlightEachFactionSequentially()
         {
-            StartCoroutine(HightlightEachFactionSequentially());
+            if (highlightCoroutine != null)
+            {
+                StopCoroutine(highlightCoroutine);
+            }
+            highlightCoroutine = StartCoroutine(HightlightEachFactionSequentially());
+        }
+
+        public void StopHighlightEachFaction()
+        {
+            if (highlightCoroutine != null)
+            {
+                StopCoroutine(highlightCoroutine);
+                highlightCoroutine = null;
+            }
+            if (tileGlowTilemap != null)
+            {
+                tileGlowTilemap.gameObject.SetActive(false);
+            }
         }
 
         private IEnumerator HightlightEachFactionSequentially()

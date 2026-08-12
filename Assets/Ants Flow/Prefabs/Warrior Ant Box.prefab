@@ -165,10 +165,14 @@ MonoBehaviour:
   isAnimating: 0
   isInSlot: 0
   isDouble: 0
+  isMagnet: 0
+  magnetPartner: {fileID: 0}
   isGhostMode: 0
   isStucking: 0
   isPlayingWarningLoseAnimation: 0
   isShuffled: 0
+  isOpen: 1
+  isOpenCloseType: 0
   washingMachineStartSlot: {fileID: 0}
   washingMachineSlot: {fileID: 0}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
@@ -496,7 +500,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1015
 --- !u!1 &3422034594232483778
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,7 +757,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6106337565580250619
 Transform:
   m_ObjectHideFlags: 0
@@ -1120,4 +1124,4 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1015

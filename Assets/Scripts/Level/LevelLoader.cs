@@ -462,6 +462,7 @@ namespace NamPhuThuy.GamePlay
             spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;
             spawnedLevelItem.overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty;
             spawnedLevelItem.numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes;
+            spawnedLevelItem.easySpawnOrder = antLevelData.levelItemData.easySpawnOrder;
             spawnedLevelItem.specialElementConfig = antLevelData.levelItemData.specialElementConfig;
 
             List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();

@@ -39,6 +39,9 @@ namespace AntsFlow
         public int initialDifficulty;
         public bool overrideInitialDifficulty;
         public int numStartAntBoxes = 6;
+
+        public List<int> easySpawnOrder;
+
         public SpecialElementConfig specialElementConfig;
 
         public Vector3 spawnPosition = new Vector3(0, 3, 0);
@@ -138,6 +141,7 @@ namespace AntsFlow
                 initialDifficulty = initialDifficulty,
                 overrideInitialDifficulty = overrideInitialDifficulty,
                 numStartAntBoxes = numStartAntBoxes,
+                easySpawnOrder = easySpawnOrder,
                 specialElementConfig = specialElementConfig
             };
 
@@ -412,6 +416,45 @@ namespace AntsFlow
                         labelStyle.normal.textColor = new Color(1f, 0.7f, 0f, 1f);
                         Handles.Label(centerPos + Vector3.up * 0.02f, $"HP {config.id}\n({config.numCols}x{config.numRows})", labelStyle);
                     }
+                }
+            }
+
+            // Highlight Boss Area
+            if (level.specialElementConfig != null && level.specialElementConfig.bossAreaConfig != null)
+            {
+                var bossConfig = level.specialElementConfig.bossAreaConfig;
+                if (bossConfig.startNodeId >= 0 && bossConfig.numCoverColumn > 0 && bossConfig.numCoverRow > 0)
+                {
+                    int startX = bossConfig.startNodeId % numColumn;
+                    int startY = bossConfig.startNodeId / numColumn;
+
+                    float left = (startX - 0.5f) * tileDistance;
+                    float right = (startX + bossConfig.numCoverColumn - 0.5f) * tileDistance;
+                    float bottom = (startY - 0.5f) * tileDistance;
+                    float top = (startY + bossConfig.numCoverRow - 0.5f) * tileDistance;
+
+                    Vector3[] corners =
+                    {
+                        new Vector3(left, bottom, 0.5f),
+                        new Vector3(left, top, 0.5f),
+                        new Vector3(right, top, 0.5f),
+                        new Vector3(right, bottom, 0.5f)
+                    };
+
+                    Handles.DrawSolidRectangleWithOutline(
+                        corners,
+                        new Color(0f, 0.8f, 1f, 0.25f), // Cyan fill with transparency
+                        new Color(0f, 0.8f, 1f, 1f)    // Solid cyan outline
+                    );
+
+                    Vector3 centerPos = new Vector3((left + right) * 0.5f, (bottom + top) * 0.5f, 0);
+                    GUIStyle labelStyle = new GUIStyle(EditorStyles.whiteBoldLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 11
+                    };
+                    labelStyle.normal.textColor = new Color(0f, 0.9f, 1f, 1f);
+                    Handles.Label(centerPos + Vector3.up * 0.02f, $"Boss Area\n({bossConfig.numCoverColumn}x{bossConfig.numCoverRow})", labelStyle);
                 }
             }
 
@@ -1334,6 +1377,7 @@ public class LevelItemData
     public int initialDifficulty;
     public bool overrideInitialDifficulty;
     public int numStartAntBoxes = 6;
+    public List<int> easySpawnOrder;
     public SpecialElementConfig specialElementConfig;
 }
 
@@ -1465,6 +1509,9 @@ public class SpawningTileBoxItemConfig
 {
     public Color faction;
     public int number;
+    public int startNodeId = -1;
+    public int numCoverColumn = 4;
+    public int numCoverRow = 6;
 }
 
 [Serializable]
@@ -1491,6 +1538,11 @@ public class SnakeConfig : SpecialElementItemConfig
 {
     public List<int> snakeSegmentIndexes;
     public int health;
+    public Vector2 tailOffset;
+    public float tailAngle;
+    public float width;
+    public float scaleHead;
+    public bool isFlipHead;
 }
 
 

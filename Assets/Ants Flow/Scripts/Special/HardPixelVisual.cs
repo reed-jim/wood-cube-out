@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using PrimeTween;
 using UnityEngine.UI;
+using CandyCoded.HapticFeedback;
 
 namespace AntsFlow
 {
@@ -147,7 +148,10 @@ namespace AntsFlow
 
             if (lastStateIndex != -1 && lastStateIndex != stateIndex)
             {
-                CandyCoded.HapticFeedback.HapticFeedback.LightFeedback();
+                if (GamePersistentVariable.IsVibrate)
+                {
+                    HapticFeedback.LightFeedback();
+                }
                 Transform imgTransform = imgHardPixel.transform;
                 Tween.StopAll(imgTransform);
                 imgTransform.localScale = Vector3.one;

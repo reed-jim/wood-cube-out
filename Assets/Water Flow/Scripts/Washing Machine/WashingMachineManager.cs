@@ -221,10 +221,7 @@ namespace AntsFlow
                 if (HardPixelManager.Ins != null)
                 {
                     HardPixelManager.Ins.Setup(levelItem);
-
                 }
-
-
             }
             if (GamePersistentVariable.levelItem.specialElementConfig.isContainsHiddenTiles)
             {
@@ -276,7 +273,7 @@ namespace AntsFlow
 
             washingMachineItem.isMoving = true;
             washingMachineItem.washingMachineStartSlot.washingMachine = null;
-            if(isLevelContainingNewSpecialElements)
+            if (isLevelContainingNewSpecialElements)
             {
                 if (washingMachineItem.skeletonAnimation != null)
                 {
@@ -287,7 +284,7 @@ namespace AntsFlow
 
             // Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
             Vector3 initialScale = washingMachineItem.transform.localScale;
-            if(isLevelContainingNewSpecialElements)
+            if (isLevelContainingNewSpecialElements)
             {
                 Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.2f).AddZ(-3f), duration: 0.2f, ease: Ease.Linear);
 
@@ -403,6 +400,23 @@ namespace AntsFlow
                 {
                     nextFaction = levelItem.levelFactionConfig.items[i].faction;
                     numAnt = levelItem.levelFactionConfig.items[i].numAnt;
+                }
+
+                // GD control độ khó: nếu index của hộp này nằm trong easySpawnOrder thì ép hộp
+                // sinh ra với faction trùng tile đang ăn được ngay trên map (difficulty 0 = faction
+                // có nhiều tile không bị chặn nhất), ghi đè faction/số lượng ở trên.
+                if (levelItem.easySpawnOrder != null &&
+                    levelItem.easySpawnOrder.Count > 0 &&
+                    levelItem.easySpawnOrder.Contains(i))
+                {
+                    Color easyFaction;
+                    int easyNumAnt;
+
+                    if (GetNextAntSpawnByDifficulty(difficultyLevel: 0, out easyFaction, out easyNumAnt))
+                    {
+                        nextFaction = easyFaction;
+                        numAnt = easyNumAnt;
+                    }
                 }
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt, onCompleteAction: () =>
@@ -542,7 +556,6 @@ namespace AntsFlow
                 }
             }
 
-            // Kiểm tra deadlock nếu hàng đầu chỉ có các hộp đóng/mở đang đóng và các hộp magnet đang bị kẹt
             if (isLevelContainingNewSpecialElements)
             {
                 List<WashingMachineItem> closedOpenCloseBoxesOnRow0 = new List<WashingMachineItem>();
@@ -584,13 +597,26 @@ namespace AntsFlow
             Color nextFaction;
             int numAnt;
 
-            if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
-            {
+            bool forceSpecialBox = false;
 
-            }
-            else
+            if (!GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
             {
-                return;
+                // Pool faction thường đã hết ants để sinh. Bình thường thì dừng ở đây. NHƯNG nếu boss/rắn
+                // vẫn còn box chờ theo spawnOrder thì phải ép sinh nốt: khi clear hết tile (vd booster3)
+                // numAntBoxSpawned không tăng tới các mốc spawnOrder lớn, khiến warrior/snake box "sinh
+                // thiếu" và boss/rắn không bao giờ bị hạ (bug khi spawnOrder lớn hơn số hộp sinh ban đầu).
+                if (!SpecialElementManager.Ins.HasPendingSpecialBossBox())
+                {
+                    return;
+                }
+
+                forceSpecialBox = true;
+
+                // Faction chỉ để hiển thị màu (số lượng do boss/rắn quyết định trong Init).
+                if (poolFaction != null && poolFaction.Count > 0)
+                {
+                    nextFaction = poolFaction[0];
+                }
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
@@ -601,7 +627,7 @@ namespace AntsFlow
                 {
                     numAntBoxSpawned++;
 
-                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column);
+                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column, forceSpecialBox);
 
                     washingMachineItem.gameObject.SetActive(true);
                     washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
@@ -624,11 +650,13 @@ namespace AntsFlow
             }
         }
 
-        private WashingMachineItem GetAntBoxFromPool(int rowIndex, int columnIndex)
+        private WashingMachineItem GetAntBoxFromPool(int rowIndex, int columnIndex, bool forceSpecialBox = false)
         {
             string key = GameConstants.washingMachine;
 
-            LevelElement levelElement = SpecialElementManager.Ins.GetNextLevelElement(rowIndex, columnIndex);
+            LevelElement levelElement = forceSpecialBox
+                ? SpecialElementManager.Ins.GetNextForcedSpecialElement()
+                : SpecialElementManager.Ins.GetNextLevelElement(rowIndex, columnIndex);
 
             if (levelElement == LevelElement.NormalAntBox)
             {
@@ -776,22 +804,7 @@ namespace AntsFlow
 
         public void UseBoosterShuffle()
         {
-            // Dictionary<Color, int> poolFactionSortedByDifficulty = GetRemaniningTilePerFaction();
-
-            // for (int i = 0; i < washingMachineSlots.Count; i++)
-            // {
-            //     WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
-
-            //     if (washingMachineSlot.washingMachineItem != null)
-            //     {
-            //         CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
-            //     }
-            // }
-
-            // poolFactionSortedByDifficulty = poolFactionSortedByDifficulty.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            // int index = 0;
-
+            // 1. Shuffle normal boxes
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
                 WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
@@ -800,7 +813,10 @@ namespace AntsFlow
                 {
                     WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-                    if (washingMachine.isDouble || washingMachine.isMagnet || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                    if (washingMachine.isDouble || washingMachine.isMagnet ||
+                        washingMachine is HiddenAntBox || washingMachine is FreezedAntBox ||
+                        washingMachine is KeyAntBox
+                        || washingMachine is WarriorAntBox || washingMachine is SnakeAntBox)
                     {
                         continue;
                     }
@@ -817,6 +833,121 @@ namespace AntsFlow
                     washingMachine.isShuffled = true;
                 }
             }
+
+            // 2. Shuffle Warrior Ant Boxes separately
+            List<WarriorAntBox> warriorBoxes = new List<WarriorAntBox>();
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                if (washingMachineStartSlots[i].washingMachine is WarriorAntBox warriorBox)
+                {
+                    warriorBoxes.Add(warriorBox);
+                }
+            }
+
+            if (warriorBoxes.Count > 0)
+            {
+                int totalWarriorAnts = warriorBoxes.Sum(b => b.number);
+                List<int> newWarriorCounts = DistributeSpecialAntBoxCounts(warriorBoxes.Count, totalWarriorAnts);
+
+                for (int i = 0; i < warriorBoxes.Count; i++)
+                {
+                    warriorBoxes[i].ShuffleBox(newWarriorCounts[i]);
+                }
+            }
+
+            // 3. Shuffle Snake Ant Boxes separately
+            List<SnakeAntBox> snakeBoxes = new List<SnakeAntBox>();
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                if (washingMachineStartSlots[i].washingMachine is SnakeAntBox snakeBox)
+                {
+                    snakeBoxes.Add(snakeBox);
+                }
+            }
+
+            if (snakeBoxes.Count > 0)
+            {
+                int totalSnakeAnts = snakeBoxes.Sum(b => b.number);
+                List<int> newSnakeCounts = DistributeSpecialAntBoxCounts(snakeBoxes.Count, totalSnakeAnts);
+
+                for (int i = 0; i < snakeBoxes.Count; i++)
+                {
+                    snakeBoxes[i].ShuffleBox(newSnakeCounts[i]);
+                }
+            }
+        }
+
+        public static List<int> DistributeSpecialAntBoxCounts(int totalBox, int totalSum)
+        {
+            List<int> result = new List<int>();
+
+            if (totalBox <= 0)
+            {
+                return result;
+            }
+
+            if (totalBox == 1)
+            {
+                result.Add(totalSum);
+                return result;
+            }
+
+            const int minAllowed = 5;
+            const int maxAllowed = 95;
+
+            int remainingHealth = totalSum;
+
+            for (int i = 0; i < totalBox; i++)
+            {
+                int remainingBoxes = totalBox - i;
+
+                if (remainingBoxes == 1)
+                {
+                    result.Add(Mathf.Clamp(remainingHealth, 1, maxAllowed));
+                    break;
+                }
+
+                if (remainingHealth >= remainingBoxes * minAllowed)
+                {
+                    int requiredMin = remainingHealth - (remainingBoxes - 1) * maxAllowed;
+                    int minUnits = Mathf.Max(minAllowed, requiredMin);
+                    minUnits = Mathf.CeilToInt(minUnits / 5f) * 5;
+
+                    int maxUnits = remainingHealth - (remainingBoxes - 1) * minAllowed;
+                    maxUnits = Mathf.Min(maxUnits, maxAllowed);
+                    int maxUnitsMultipleOf5 = (maxUnits / 5) * 5;
+
+                    if (maxUnitsMultipleOf5 < minUnits)
+                    {
+                        int units = Mathf.Clamp(minUnits, minAllowed, maxAllowed);
+                        result.Add(units);
+                        remainingHealth -= units;
+                    }
+                    else
+                    {
+                        int stepCount = ((maxUnitsMultipleOf5 - minUnits) / 5) + 1;
+                        int units = minUnits + UnityEngine.Random.Range(0, stepCount) * 5;
+                        result.Add(units);
+                        remainingHealth -= units;
+                    }
+                }
+                else
+                {
+                    int units = Mathf.Max(1, remainingHealth / remainingBoxes);
+                    result.Add(units);
+                    remainingHealth -= units;
+                }
+            }
+
+            for (int i = result.Count - 1; i > 0; i--)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, i + 1);
+                int temp = result[i];
+                result[i] = result[randomIndex];
+                result[randomIndex] = temp;
+            }
+
+            return result;
         }
 
         public void UseBoosterEnableAllAntBoxes()
@@ -850,22 +981,26 @@ namespace AntsFlow
                 SpawnFakeTile(tilesToClear[i], isLast);
             }
 
+            if (SpecialElementManager.Ins != null)
+            {
+                SpecialElementManager.Ins.OnBoosterClearOneColor(selectedFaction, tilesToClear);
+            }
+
             TileManager.Ins.CheckWinLevel();
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
+
             if (isLevelContainingNewSpecialElements)
             {
                 HardPixelManager.Ins.OnBoosterClearTiles(tilesToClear.Count);
                 HardPixelManager.Ins.CheckBoosterClear();
-                //comment de test
-                //try
-                //{
-                //    SpecialElementManager.Ins.spawningTileBox.ClearSpawningTileBoxesOnUsingClearOneColorBooster(tilesToClear);
-                //}
-                //catch (System.Exception)
-                //{
-
-                //}
+                for (int i = 0; i < washingMachineSlots.Count; i++)
+                {
+                    if (washingMachineSlots[i].washingMachineItem != null)
+                    {
+                        washingMachineSlots[i].washingMachineItem.CheckAntsPath();
+                    }
+                }
             }
 
 
@@ -939,13 +1074,27 @@ namespace AntsFlow
                     break;
                 }
 
+                // Box warrior/snake có number = phần máu boss/rắn, KHÔNG liên quan tới màu tile.
+                // Booster clear-one-color chỉ dọn tile màu thường nên không được trừ count của chúng
+                // (trừ nhầm sẽ làm thiếu sát thương -> boss/rắn không hạ hết -> kẹt/lỗi game).
+                if (antBox is WarriorAntBox || antBox is SnakeAntBox)
+                {
+                    continue;
+                }
+
                 if (antBox.number > 0 && antBox.faction == tilesToClear[0].Faction)
                 {
-                    int numToRemove = Mathf.Min(antBox.number, numToClear) - antBox.tilesToMove.Count;
+                    int numToRemove = Mathf.Min(antBox.remainingNumber, numToClear);
+                    if (numToRemove <= 0)
+                    {
+                        continue;
+                    }
+
                     antBox.number -= numToRemove;
+                    antBox.remainingNumber -= numToRemove;
                     numToClear -= numToRemove;
 
-                    if (numToRemove >= antBox.number)
+                    if (antBox.number <= 0)
                     {
                         if (antBox.isInSlot)
                         {
@@ -962,18 +1111,9 @@ namespace AntsFlow
                 }
             }
 
-            MoveAntBoxTop();
-
-            for (int i = 0; i < antBoxes.Count; i++)
-            {
-                WashingMachineItem antBox = antBoxes[i];
-
-                if (antBox.faction == tilesToClear[0].Faction)
-                {
-                    antBox.UpdateNumber();
-                }
-            }
-
+            // Cập nhật poolFaction TRƯỚC khi MoveAntBoxTop: ở lần clear màu cuối, pool cạn ngay tại đây
+            // để SpawnNewWashingMachine (gọi trong MoveAntBoxTop) ép sinh nốt boss/snake box còn lại,
+            // thay vì phải chờ người chơi tương tác thêm mới "đẩy" chúng lên.
             if (numToClear > 0)
             {
                 var indices = poolFaction
@@ -986,6 +1126,18 @@ namespace AntsFlow
                 foreach (int index in indices)
                 {
                     poolFaction.RemoveAt(index);
+                }
+            }
+
+            MoveAntBoxTop();
+
+            for (int i = 0; i < antBoxes.Count; i++)
+            {
+                WashingMachineItem antBox = antBoxes[i];
+
+                if (antBox.faction == tilesToClear[0].Faction)
+                {
+                    antBox.UpdateNumber();
                 }
             }
         }
@@ -1005,6 +1157,12 @@ namespace AntsFlow
         private void CheckWinLevel()
         {
             bool isWin = poolFaction.Count + ClothesManager.Ins.clothingPieces.Count == 0;
+
+            // Level có boss/rắn: chưa hạ hết thì chưa win, dù ant box màu thường đã hết.
+            if (isWin && SpecialElementManager.Ins != null && !SpecialElementManager.Ins.AreSpecialBossElementsCleared())
+            {
+                isWin = false;
+            }
 
             if (isWin)
             {
@@ -1040,6 +1198,27 @@ namespace AntsFlow
 
             if (spec.hardPixelConfigs != null &&
                 spec.hardPixelConfigs.Count > 0)
+            {
+                return true;
+            }
+
+            if (spec.spawningTileBoxConfig != null &&
+                spec.spawningTileBoxConfig.items != null &&
+                spec.spawningTileBoxConfig.items.Count > 0)
+            {
+                return true;
+            }
+
+            if (spec.bossAreaConfig != null &&
+                spec.bossAreaConfig.spawnOrder != null &&
+                spec.bossAreaConfig.spawnOrder.Count > 0)
+            {
+                return true;
+            }
+
+            if (spec.snakeConfig != null &&
+                spec.snakeConfig.spawnOrder != null &&
+                spec.snakeConfig.spawnOrder.Count > 0)
             {
                 return true;
             }
@@ -1161,7 +1340,7 @@ namespace AntsFlow
                 List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
 
                 // Only turn on warning lose animation if all occupied slots are actually stuck
-                if(isLevelContainingNewSpecialElements)
+                if (isLevelContainingNewSpecialElements)
                 {
                     bool allActuallyStuck = true;
                     for (int i = 0; i < stuckAntBoxes.Count; i++)
@@ -1376,6 +1555,16 @@ namespace AntsFlow
 
             GamePersistentVariable.numActiveAnt = 0;
 
+            if (mainCamera != null)
+            {
+                Tween.StopAll(mainCamera.transform);
+                var pos = mainCamera.transform.position;
+                pos.y = 0;
+                mainCamera.transform.position = pos;
+            }
+
+            GamePersistentVariable.boosterMode = BoosterMode.None;
+
             // if (currentLevel.Value < 10)
             // {
             //     maxAntNumberThreshold = 80;
@@ -1561,17 +1750,22 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
+                    WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                    if (antBox is WarriorAntBox || antBox is SnakeAntBox || antBox is KeyAntBox)
+                    {
+                        continue;
+                    }
+
                     if (isIncludeStartSlot)
                     {
-                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        CommonUtil.SumValueOfDictionary(result, antBox.faction, -antBox.number);
                     }
                     else
                     {
-                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
-
                         if (antBox.isShuffled || antBox.isDouble || antBox.isMagnet || antBox is HiddenAntBox || antBox is FreezedAntBox)
                         {
-                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                            CommonUtil.SumValueOfDictionary(result, antBox.faction, -antBox.number);
                         }
                     }
                 }
@@ -1583,7 +1777,14 @@ namespace AntsFlow
 
                 if (washingMachineSlot.washingMachineItem != null)
                 {
-                    CommonUtil.SumValueOfDictionary(result, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.remainingNumber);
+                    WashingMachineItem antBox = washingMachineSlot.washingMachineItem;
+
+                    if (antBox is WarriorAntBox || antBox is SnakeAntBox || antBox is KeyAntBox)
+                    {
+                        continue;
+                    }
+
+                    CommonUtil.SumValueOfDictionary(result, antBox.faction, -antBox.remainingNumber);
                 }
             }
 
@@ -1614,17 +1815,22 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
+                    WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+                    if (antBox is WarriorAntBox || antBox is SnakeAntBox || antBox is KeyAntBox)
+                    {
+                        continue;
+                    }
+
                     if (isIncludeStartSlot)
                     {
-                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        CommonUtil.SumValueOfDictionary(sortedPoolFaction, antBox.faction, -antBox.number);
                     }
                     else
                     {
-                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
-
                         if (antBox.isShuffled || antBox.isDouble || antBox.isMagnet || antBox is HiddenAntBox || antBox is FreezedAntBox)
                         {
-                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, antBox.faction, -antBox.number);
                         }
                     }
                 }
@@ -1636,7 +1842,14 @@ namespace AntsFlow
 
                 if (washingMachineSlot.washingMachineItem != null)
                 {
-                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.remainingNumber);
+                    WashingMachineItem antBox = washingMachineSlot.washingMachineItem;
+
+                    if (antBox is WarriorAntBox || antBox is SnakeAntBox || antBox is KeyAntBox)
+                    {
+                        continue;
+                    }
+
+                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, antBox.faction, -antBox.remainingNumber);
                 }
             }
 

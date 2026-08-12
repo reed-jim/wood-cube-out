@@ -52,6 +52,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject spawnPopSoundPrefab;
     [SerializeField] private GameObject woodBreakStateSoundPrefab;
     [SerializeField] private GameObject woodBreakEndSoundPrefab;
+    [SerializeField] private GameObject warriorAntBowSoundPrefab;
+    [SerializeField] private GameObject bossAreaHitSoundPrefab;
+    [SerializeField] private GameObject snakeCountSoundPrefab;
+    [SerializeField] private GameObject bossAreaDieSoundPrefab;
 
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -166,7 +170,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.spawnPopSound, spawnPopSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.woodBreakStateSound, woodBreakStateSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.woodBreakEndSound, woodBreakEndSoundPrefab, 8);
-
+        RegisterPool<AudioSource>(GameConstants.warriorAntBowSound, warriorAntBowSoundPrefab, 15);
+        RegisterPool<AudioSource>(GameConstants.bossAreaHitSound, bossAreaHitSoundPrefab, 15);
+        RegisterPool<AudioSource>(GameConstants.snakeCountSound, snakeCountSoundPrefab, 15);
+        RegisterPool<AudioSource>(GameConstants.bossAreaDieSound, bossAreaDieSoundPrefab, 15);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
@@ -183,17 +190,17 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
         RegisterPool<PathSlot>(GameConstants.pathSlot, pathSlotPrefab, 50);
         RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 200);
-        RegisterPool<BaseAnt>(GameConstants.warriorAnt, warriorAntPrefab, 50);
-        RegisterPool<BaseAnt>(GameConstants.snakeAnt, snakeAntPrefab, 50);
+        RegisterPool<BaseAnt>(GameConstants.warriorAnt, warriorAntPrefab, 200);
+        RegisterPool<BaseAnt>(GameConstants.snakeAnt, snakeAntPrefab, 200);
         RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 30);
         RegisterPool<KeyAntBox>(GameConstants.keyAntBox, keyAntBoxPrefab, 10);
         RegisterPool<MagnetAntBoxLink>(GameConstants.magnetAntBoxLink, magnetAntBoxLink, 30);
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 30);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 30);
-        RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);
+        RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 50);
         RegisterPool<OpenCloseAntBox>(GameConstants.openCloseAntBox, openCloseAntBoxPrefab, 50);
-        RegisterPool<SnakeAntBox>(GameConstants.snakeAntBox, snakeAntBoxPrefab, 5);
+        RegisterPool<SnakeAntBox>(GameConstants.snakeAntBox, snakeAntBoxPrefab, 50);
         RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
         RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);
         RegisterPool<Transform>(GameConstants.tileMap, tilemapPrefab, 40);

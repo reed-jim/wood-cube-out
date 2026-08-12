@@ -9,7 +9,7 @@ public class DamageText : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private float lifetime = 0.7f;
     [SerializeField] private float floatDistance = 1f;
-
+    [SerializeField] private float horizontalRandomRange = 2.5f;
     public void ShowDamage(int damage, Vector3 spawnPosition)
     {
         transform.DOKill();
@@ -27,7 +27,7 @@ public class DamageText : MonoBehaviour
 
         Vector3 targetPos = spawnPosition +
                     Vector3.up * floatDistance +
-                    Vector3.right * Random.Range(-0.3f, 0.3f);
+                    Vector3.right * Random.Range(-horizontalRandomRange, horizontalRandomRange);
 
         sequence.Join(
             transform.DOMove(targetPos, lifetime)

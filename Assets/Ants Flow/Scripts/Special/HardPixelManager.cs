@@ -1,4 +1,5 @@
 using AntsFlow;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,11 @@ namespace AntsFlow
             {
                 ins = this;
                 RevivePopup.reviveEvent += OnRevived;
+                LevelLoader.startLevelEvent += OnLevelReplayed;
+                SettingPopup.replayLevelEvent += OnLevelReplayed;
+                LosePopup.replayLevelEvent += OnLevelReplayed;
+                DebugPopup.switchLevelEvent += OnLevelReplayed;
+                TileManager.winLevelEvent += OnLevelReplayed;
             }
         }
 
@@ -53,7 +59,17 @@ namespace AntsFlow
             if (ins == this)
             {
                 RevivePopup.reviveEvent -= OnRevived;
+                LevelLoader.startLevelEvent -= OnLevelReplayed;
+                SettingPopup.replayLevelEvent -= OnLevelReplayed;
+                LosePopup.replayLevelEvent -= OnLevelReplayed;
+                DebugPopup.switchLevelEvent -= OnLevelReplayed;
+                TileManager.winLevelEvent -= OnLevelReplayed;
             }
+        }
+
+        private void OnLevelReplayed()
+        {
+            Reset();
         }
 
         private void OnRevived(BoosterType boosterType)
@@ -66,20 +82,40 @@ namespace AntsFlow
         private List<HardPixelInstance> listHardPixels = new List<HardPixelInstance>();
         private Dictionary<int, int> idToRemainingEatCount = new Dictionary<int, int>();
 
-        public void Setup(LevelItem levelItem)
+        public void Reset()
         {
             foreach (var inst in listHardPixels)
             {
-                foreach (var visual in inst.visualObjects)
+                if (inst != null && inst.visualObjects != null)
                 {
-                    if (visual != null)
+                    foreach (var visual in inst.visualObjects)
                     {
-                        Destroy(visual);
+                        if (visual != null)
+                        {
+                            Tween.StopAll(visual.transform);
+                            Destroy(visual);
+                        }
                     }
+                    inst.visualObjects.Clear();
                 }
             }
             listHardPixels.Clear();
             idToRemainingEatCount.Clear();
+
+            var allHardPixelVisuals = FindObjectsOfType<HardPixelVisual>();
+            foreach (var hpVisual in allHardPixelVisuals)
+            {
+                if (hpVisual != null && hpVisual.gameObject != null)
+                {
+                    Tween.StopAll(hpVisual.transform);
+                    Destroy(hpVisual.gameObject);
+                }
+            }
+        }
+
+        public void Setup(LevelItem levelItem)
+        {
+            Reset();
             if (levelItem == null || levelItem.specialElementConfig == null || levelItem.specialElementConfig.hardPixelConfigs == null)
             {
                 return;

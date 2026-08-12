@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &558761628351839054
 Transform:
   m_ObjectHideFlags: 0
@@ -139,6 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.SnakeAnt
   antRenderer: {fileID: 251625072949987562}
   skeletonAnimation: {fileID: 793793920769624515}
+  antAntennaeAttachments: []
   rotationSpeed: 22.5
   faction: {r: 0, g: 0, b: 0, a: 0}
   walkableMask: 0
@@ -239,7 +240,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0f0bd0692efd69a40842e48e65a6c8aa, type: 2}
+  - {fileID: 2100000, guid: 600ef939dbf4c2c47bec11fc3525e06a, type: 2}
+  - {fileID: 2100000, guid: 7320c49359597f5478f948e8cbf165d7, type: 2}
+  - {fileID: 2100000, guid: 600ef939dbf4c2c47bec11fc3525e06a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -275,8 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonAnimation
-  skeletonDataAsset: {fileID: 11400000, guid: ef003efe91e8704429db3540e93bc276, type: 2}
-  initialSkinName: 00b64f
+  skeletonDataAsset: {fileID: 11400000, guid: 6fc075129fd670841bd29e50566f39a7, type: 2}
+  initialSkinName: 
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
@@ -294,8 +297,14 @@ MonoBehaviour:
   calculateTangents: 0
   maskInteraction: 0
   maskMaterials:
-    materialsMaskDisabled: []
-    materialsInsideMask: []
+    materialsMaskDisabled:
+    - {fileID: 2100000, guid: 600ef939dbf4c2c47bec11fc3525e06a, type: 2}
+    - {fileID: 2100000, guid: 7320c49359597f5478f948e8cbf165d7, type: 2}
+    - {fileID: 2100000, guid: 600ef939dbf4c2c47bec11fc3525e06a, type: 2}
+    materialsInsideMask:
+    - {fileID: 2100000, guid: 86969b5db11abe3499fe03ca54300bd1, type: 2}
+    - {fileID: 2100000, guid: ea0772cb24b4fb84ea6587fb7e9186d6, type: 2}
+    - {fileID: 2100000, guid: 86969b5db11abe3499fe03ca54300bd1, type: 2}
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
   updateTiming: 1

@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
+using Spine.Unity;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,11 +17,16 @@ namespace AntsFlow
     public class Snake : MonoBehaviour
     {
         [SerializeField] private SpriteShapeController spriteShape;
-        [SerializeField] private Transform head;
         [SerializeField] private Transform tail;
-
+        public Transform Tail => tail;
+        [SerializeField] private SkeletonAnimation skeletonAnimHead;
+        [SpineAnimation] public string idleAnim = "idle";
+        [SpineAnimation] public string actionAnim = "action";
         // Head -> Tail
         public List<Vector2> allPoints = new();
+
+        [SerializeField] private Vector2 tailOffset;
+        [SerializeField] private float tailAngle;
 
         [Range(0, 1)]
         public float snakeLength = 1f;
@@ -30,6 +39,10 @@ namespace AntsFlow
 
         public int maxHealth;
         public int health;
+
+        // Level còn rắn sống thì chưa được tính win (kể cả khi đã clear hết tile màu thường
+        // bằng booster). Rắn chỉ hết chặn win khi máu về 0.
+        public bool BlocksWin => gameObject.activeInHierarchy && health > 0;
         public List<int> numAntPerBox;
         public BaseTile snakeNestTile;
 
@@ -37,16 +50,65 @@ namespace AntsFlow
         List<int> allAffectedNodeIndexes;
 
         private Tween updateSnakeLengthTween;
+        private Tween scaleTween;
+        private PrimeTween.Sequence tailScaleSequence;
 
         void OnValidate()
         {
             RebuildSpline(snakeLength);
+            if (tail != null && allPoints != null && allPoints.Count > 0)
+            {
+                tail.transform.position = allPoints[^1] + tailOffset;
+                tail.transform.localPosition = tail.transform.position.ChangeZ(-0.2f);
+
+                float baseAngle = 0f;
+                if (allPoints.Count > 1)
+                {
+                    Vector2 dir = allPoints[^1] - allPoints[^2];
+                    baseAngle = 90f - Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                }
+                tail.transform.localRotation = Quaternion.Euler(0, 0, baseAngle + tailAngle);
+            }
+        }
+
+        private void Awake()
+        {
+            LevelLoader.startLevelEvent += OnLevelReplayed;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            TileManager.winLevelEvent += OnLevelReplayed;
+        }
+
+        private void OnDestroy()
+        {
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
+            TileManager.winLevelEvent -= OnLevelReplayed;
+        }
+
+        private void OnLevelReplayed()
+        {
+            Reset();
+            gameObject.SetActive(false);
         }
 
         public void Setup(SnakeConfig snakeConfig)
         {
-            gameObject.SetActive(true);
+            Reset();
 
+            gameObject.SetActive(true);
+            tail.gameObject.SetActive(true);
+            skeletonAnimHead.gameObject.SetActive(true);
+
+            this.tailOffset = snakeConfig.tailOffset;
+            this.tailAngle = snakeConfig.tailAngle;
+            if (snakeConfig.width > 0f)
+            {
+                this.width = snakeConfig.width;
+            }
             List<int> indexes;
 
             if (snakeConfig.snakeSegmentIndexes.Count == 0)
@@ -108,8 +170,18 @@ namespace AntsFlow
             allPoints.AddRange(points);
             allPoints = SmoothCorners(allPoints, cornerSize, curveResolution);
 
-            tail.transform.position = allPoints[^1];
+            tail.transform.position = allPoints[^1] + tailOffset;
             tail.transform.localPosition = tail.transform.position.ChangeZ(-0.1f);
+
+            float baseAngle = 0f;
+            if (allPoints.Count > 1)
+            {
+                Vector2 dir = allPoints[^1] - allPoints[^2];
+                baseAngle = 90f - Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            }
+            tail.transform.localRotation = Quaternion.Euler(0, 0, baseAngle + tailAngle);
+
+
 
             RebuildSpline(1);
             UpdateNodeObstacleState(1);
@@ -118,14 +190,107 @@ namespace AntsFlow
             health = maxHealth;
 
             GenerateAntNumberPerBox(snakeConfig.spawnOrder.Count, maxHealth);
-
-            Reset();
+            ApplyScale(snakeConfig.scaleHead, snakeConfig.isFlipHead);
         }
 
         public void Reset()
         {
-            head.transform.localScale = Vector3.one;
-            tail.transform.localScale = Vector3.one;
+            if (scaleTween.isAlive)
+            {
+                scaleTween.Stop();
+            }
+            if (updateSnakeLengthTween.isAlive)
+            {
+                updateSnakeLengthTween.Stop();
+            }
+            if (tailScaleSequence.isAlive)
+            {
+                tailScaleSequence.Stop();
+            }
+
+            PrimeTween.Tween.StopAll(transform);
+            transform.localScale = Vector3.one;
+
+            if (skeletonAnimHead != null)
+            {
+                PrimeTween.Tween.StopAll(skeletonAnimHead.transform);
+                skeletonAnimHead.gameObject.SetActive(true);
+                skeletonAnimHead.transform.localScale = Vector3.one * 0.5f;
+                skeletonAnimHead.transform.localRotation = Quaternion.identity;
+
+                if (skeletonAnimHead.AnimationState != null)
+                {
+                    skeletonAnimHead.AnimationState.ClearTracks();
+                    skeletonAnimHead.AnimationState.SetAnimation(0, idleAnim, true);
+                }
+            }
+
+            if (tail != null)
+            {
+                PrimeTween.Tween.StopAll(tail.transform);
+                tail.gameObject.SetActive(true);
+                tail.transform.localScale = Vector3.one * 1.5f;
+                tail.transform.localRotation = Quaternion.identity;
+            }
+
+            if (spriteShape != null)
+            {
+                spriteShape.enabled = true;
+                if (spriteShape.spline != null)
+                {
+                    spriteShape.spline.Clear();
+                }
+            }
+
+            snakeLength = 1f;
+            health = 0;
+            maxHealth = 0;
+            snakeNestTile = null;
+
+            if (allPoints != null)
+            {
+                allPoints.Clear();
+            }
+            if (allAffectedNodeIndexes != null)
+            {
+                allAffectedNodeIndexes.Clear();
+            }
+            if (affectedNodes != null)
+            {
+                affectedNodes.Clear();
+            }
+            if (numAntPerBox != null)
+            {
+                numAntPerBox.Clear();
+            }
+        }
+
+        private void ApplyScale(float scaleHead, bool isFlipHead)
+        {
+            if (scaleHead > 0f)
+            {
+                skeletonAnimHead.transform.localScale = Vector3.one * scaleHead;
+                if (isFlipHead)
+                {
+                    skeletonAnimHead.transform.localScale = new Vector3(skeletonAnimHead.transform.localScale.x, -skeletonAnimHead.transform.localScale.y, skeletonAnimHead.transform.localScale.z);
+                }
+            }
+        }
+
+        public void PunchTailScale()
+        {
+            if (tail != null)
+            {
+                if (tailScaleSequence.isAlive)
+                {
+                    tailScaleSequence.Stop();
+                }
+
+                Vector3 baseScale = Vector3.one * 1.5f;
+                tailScaleSequence = PrimeTween.Sequence.Create()
+                    .Chain(Tween.Scale(tail, endValue: baseScale * 1.2f, duration: 0.1f, ease: Ease.OutQuad))
+                    .Chain(Tween.Scale(tail, endValue: baseScale, duration: 0.15f, ease: Ease.InQuad));
+            }
         }
 
         public static List<Vector2> SmoothCorners(
@@ -189,10 +354,38 @@ namespace AntsFlow
             return result;
         }
 
+        public void PlayAnimAction(string animName)
+        {
+            TrackEntry trackEntry = skeletonAnimHead.AnimationState.SetAnimation(0, animName, false);
+            trackEntry.Complete += OnAnimationComplete;
+        }
+        private void OnAnimationComplete(TrackEntry trackEntry)
+        {
+            trackEntry.Complete -= OnAnimationComplete;
+            skeletonAnimHead.AnimationState.SetAnimation(0, "idle", true);
+        }
+
         public void Hit()
         {
+            PlayAnimAction(actionAnim);
             health--;
+            SoundManager.Instance.PlaySound(GameConstants.snakeCountSound);
 
+            if (health > 0)
+            {
+                PunchTailScale();
+            }
+            else
+            {
+                if (scaleTween.isAlive)
+                {
+                    scaleTween.Stop();
+                }
+                scaleTween = Tween.Custom(transform.localScale, Vector3.zero, duration: 0.3f, onValueChange: newVal =>
+                {
+                    transform.localScale = newVal;
+                });
+            }
             float prevSnakeLength = snakeLength;
             snakeLength = (float)health / maxHealth;
 
@@ -206,33 +399,130 @@ namespace AntsFlow
                 RebuildSpline(newVal);
             });
 
+            int prevObstacleIndex = GetObstacleIndex(prevSnakeLength);
+
             UpdateNodeObstacleState(snakeLength);
+
+            // Rắn co lại làm lộ thêm node/đường đi. Các hộp đang kẹt chờ trên slot phải được
+            // check lại path ngay, nếu không chúng chỉ nhả kiến khi người chơi bấm hộp khác.
+            if (GetObstacleIndex(snakeLength) > prevObstacleIndex)
+            {
+                RecheckInSlotAntBoxes();
+            }
+
+            if (health <= 0)
+            {
+                // Rắn vừa bị hạ: tile màu thường có thể đã được clear hết từ trước (vd booster
+                // clear-one-color) nên win đang bị chặn chờ rắn. Re-check để win ngay bây giờ.
+                TileManager.Ins.CheckWinLevel();
+            }
+        }
+
+        private int GetObstacleIndex(float snakeLengthRatio)
+        {
+            if (allAffectedNodeIndexes == null)
+            {
+                return 0;
+            }
+
+            return (int)(allAffectedNodeIndexes.Count * (1 - snakeLengthRatio));
+        }
+
+        private void RecheckInSlotAntBoxes()
+        {
+            var slots = WashingMachineManager.Ins.washingMachineSlots;
+
+            if (slots == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < slots.Count; i++)
+            {
+                WashingMachineItem item = slots[i].washingMachineItem;
+
+                if (item != null)
+                {
+                    item.CheckAntsPath();
+                }
+            }
         }
 
         public void GenerateAntNumberPerBox(int totalBox, int maxHealth)
         {
             numAntPerBox = new List<int>();
 
-            int totalUnits = maxHealth / 5;
+            if (totalBox <= 0)
+            {
+                return;
+            }
 
-            // Base units per number
-            int baseUnits = totalUnits / totalBox;
-            int remainder = totalUnits % totalBox;
+            const int minAllowed = 5;
+            const int maxAllowed = 95;
+
+            if (totalBox == 1)
+            {
+                numAntPerBox.Add(Mathf.Clamp(maxHealth, 1, maxAllowed));
+                return;
+            }
+
+            int remainingHealth = maxHealth;
 
             for (int i = 0; i < totalBox; i++)
             {
-                int units = baseUnits;
+                int remainingBoxes = totalBox - i;
 
-                // Distribute remaining units
-                if (i < remainder)
-                    units++;
+                // Hộp cuối cùng: lấy toàn bộ số count còn lại để đảm bảo chắc chắn tổng bằng maxHealth (clear được rắn)
+                if (remainingBoxes == 1)
+                {
+                    numAntPerBox.Add(Mathf.Clamp(remainingHealth, 1, maxAllowed));
+                    break;
+                }
 
-                numAntPerBox.Add(units * 5);
+                // Nếu máu còn lại đủ để chia tối thiểu 5 cho mỗi hộp
+                if (remainingHealth >= remainingBoxes * minAllowed)
+                {
+                    // Để các hộp phía sau không bị vượt quá maxAllowed (95), hộp này phải gánh tối thiểu lượng dư
+                    int requiredMin = remainingHealth - (remainingBoxes - 1) * maxAllowed;
+                    int minUnits = Mathf.Max(minAllowed, requiredMin);
+                    minUnits = Mathf.CeilToInt(minUnits / 5f) * 5;
+
+                    // Để các hộp phía sau có tối thiểu minAllowed (5), hộp này có thể lấy tối đa:
+                    int maxUnits = remainingHealth - (remainingBoxes - 1) * minAllowed;
+                    maxUnits = Mathf.Min(maxUnits, maxAllowed);
+                    int maxUnitsMultipleOf5 = (maxUnits / 5) * 5;
+
+                    if (maxUnitsMultipleOf5 < minUnits)
+                    {
+                        int units = Mathf.Clamp(minUnits, minAllowed, maxAllowed);
+                        numAntPerBox.Add(units);
+                        remainingHealth -= units;
+                    }
+                    else
+                    {
+                        int stepCount = ((maxUnitsMultipleOf5 - minUnits) / 5) + 1;
+                        int units = minUnits + UnityEngine.Random.Range(0, stepCount) * 5;
+                        numAntPerBox.Add(units);
+                        remainingHealth -= units;
+                    }
+                }
+                else
+                {
+                    // Fallback trong trường hợp máu quá ít (không đủ 5 cho mỗi hộp)
+                    int units = Mathf.Max(1, remainingHealth / remainingBoxes);
+                    numAntPerBox.Add(units);
+                    remainingHealth -= units;
+                }
             }
         }
 
         public int GetNextAntNumberOfBox()
         {
+            if (numAntPerBox == null || numAntPerBox.Count == 0)
+            {
+                return health > 0 ? health : 5;
+            }
+
             int antNumber = numAntPerBox[0];
 
             numAntPerBox.RemoveAt(0);
@@ -246,7 +536,7 @@ namespace AntsFlow
             {
                 if (spriteShape.enabled)
                 {
-                    SaferioTween.ScaleDownWithPunch(head);
+                    SaferioTween.ScaleDownWithPunch(skeletonAnimHead.transform);
                     SaferioTween.ScaleDownWithPunch(tail);
                 }
 
@@ -310,7 +600,7 @@ namespace AntsFlow
             }
 
             // Head
-            head.position = visible[0];
+            skeletonAnimHead.transform.position = visible[0];
 
             if (visible.Count > 1)
             {
@@ -318,18 +608,18 @@ namespace AntsFlow
 
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-                head.SetPositionAndRotation(
+                skeletonAnimHead.transform.SetPositionAndRotation(
                     visible[0],
                     Quaternion.Euler(0, 0, angle)
                 );
 
-                head.localPosition = head.localPosition.ChangeZ(-0.1f);
+                skeletonAnimHead.transform.localPosition = skeletonAnimHead.transform.localPosition.ChangeZ(-0.1f);
             }
         }
 
         private void UpdateNodeObstacleState(float snakeLengthRatio)
         {
-            int obstacleIndex = (int)(allAffectedNodeIndexes.Count * (1 - snakeLengthRatio));
+            int obstacleIndex = GetObstacleIndex(snakeLengthRatio);
 
             for (int i = 0; i < allAffectedNodeIndexes.Count; i++)
             {
@@ -499,16 +789,16 @@ namespace AntsFlow
                 int x2 = to % width;
                 int y2 = to / width;
 
-                int dx = Mathf.Clamp(x2 - x1, -1, 1);
-                int dy = Mathf.Clamp(y2 - y1, -1, 1);
+                int stepX = System.Math.Sign(x2 - x1);
+                int stepY = System.Math.Sign(y2 - y1);
 
                 int x = x1;
                 int y = y1;
 
                 while (x != x2 || y != y2)
                 {
-                    x += dx;
-                    y += dy;
+                    if (x != x2) x += stepX;
+                    if (y != y2) y += stepY;
 
                     result.Add(y * width + x);
                 }
