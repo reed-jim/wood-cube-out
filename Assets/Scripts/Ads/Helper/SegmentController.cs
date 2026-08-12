@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static AdsNewSegmentData;
+using static AdsSegmentData;
 using static ChallengeSegemtData;
+using static CoreGameData;
 using static SaleSegemntData;
 using static SuggetBuyItemSegmentData;
 using Random = UnityEngine.Random;
@@ -75,6 +79,8 @@ public class SegmentData
     public CoreGameData coreGameData;
     public ReviveData reviveData;
     public AdsSegmentData adsData;
+    public SegmentUserData segmentUserData;
+
     public SaleSegemntData saleData;
     public SaleVideoData saleVideoData;
     public ChallengeSegemtData challengeData;
@@ -291,7 +297,49 @@ public class CoreGameData : BaseDataSegemnt
         public bool is_video_x_reward;
         public int num_x_reward;
     }
+    [System.Serializable]
+    public class SegmentUserData : BaseDataSegemnt
+    {
+        public const string Segment_User_Data = "segment_user_data";
 
+        [System.Serializable]
+        public class SegmentUserModel
+        {
+            public string idCampSegemnt;
+            public bool reloadConfig = false;
+            public AdsDataConfig adsConfig;
+            public SaleConfig saleConfig;
+        }
+
+        [System.Serializable]
+        public class SegmentUserConfig
+        {
+            public List<SegmentUserModel> dataSegment;
+        }
+
+        public SegmentUserConfig config;
+
+
+        public override void InitSegemnt(SegmentData data, int idSegment)
+        {
+            SegmentUserConfig temp = default;
+            if (!RemoteConfigController.GetJsonConfig(Segment_User_Data, out temp))
+            {
+                config = data.segmentUserData.config;
+            }
+            else
+            {
+                config = temp;
+            }
+        }
+
+        public override string ToJsonConfig()
+        {
+            string outputJson = JsonConvert.SerializeObject(config, Formatting.Indented);
+            File.WriteAllText("Assets/Resources/Data/SegmentData.json", outputJson);
+            return outputJson;
+        }
+    }
     [System.Serializable]
     public class RateConfig
     {
@@ -381,23 +429,55 @@ public class AdsSegmentData : BaseDataSegemnt
     [System.Serializable]
     public class AdsDataConfig
     {
+        public BannerCollapAds collap;
         public BannerAds banner;
         public InterstitialsAds interstitials;
         public RewardedAds reward;
+        public NativeAds native;
+
     }
 
     [System.Serializable]
     public class AdsBase
     {
+        public bool isActive;
         public int minimumLevel;
+        public int minimumInterval = 30;//Khoảng thời gian giữa 2 lần hiện
+
+        public bool IsActive()
+        {
+            if (GameController.Instance.useProfile.CurrentLevel > minimumLevel && isActive)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
+    [System.Serializable]
+    public class NativeAds
+    {
+        public BannerNativeAds bannerNative;
+        public AdsBase interNative;
+        public AdsBase rewardNative;
+    }
+    [System.Serializable]
+    public class BannerNativeAds : AdsBase
+    {
+        public bool canShowCollap = false; // show collap at the same time with collap native
+    }
+
 
     [System.Serializable]
     public class BannerAds : AdsBase
     {
 
     }
+    [System.Serializable]
+    public class BannerCollapAds : AdsBase
+    {
 
+    }
     [System.Serializable]
     public class InterstitialsAds : AdsBase
     {
@@ -639,7 +719,7 @@ public class SaleSegemntData : BaseDataSegemnt
     [System.Serializable]
     public class EndlessSale : FuncOnlineConfig
     {
-        
+
         [HideInInspector]
         public DateTime start;
         [HideInInspector]
@@ -728,7 +808,7 @@ public class SaleSegemntData : BaseDataSegemnt
         }
     }
 
-    
+
 
     public EndlessSale GetEndLessActive()
     {
@@ -754,7 +834,7 @@ public class SaleSegemntData : BaseDataSegemnt
             return null;
     }
 
-    
+
 
     public override string ToJsonConfig()
     {
@@ -824,7 +904,7 @@ public class SaleVideoData : BaseDataSegemnt
         }
     }
 
-   
+
 
     public override string ToJsonConfig()
     {
@@ -1123,11 +1203,11 @@ public class MinigameConnectSegmentData : BaseDataSegemnt
     public const string MiniGameConnectConfig = "minigame_connect_config";
 
 
-   
+
 
     public override void InitSegemnt(SegmentData data, int idSegment)
     {
-        
+
     }
     public override string ToJsonConfig()
     {

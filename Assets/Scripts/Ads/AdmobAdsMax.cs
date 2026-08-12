@@ -1,20 +1,21 @@
-using UnityEngine;
-using System.Collections;
-using System;
-using System.Collections.Generic;
-using UnityEngine.Events;
-using GoogleMobileAds.Api;
-using GoogleMobileAds.Common;
+using AppsFlyerSDK;
+using EventDispatcher;
+using Falcon;
+using Falcon.FalconAnalytics.Scripts.Enum;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
+using Falcon.Modules.Core.ThirdParty.Mediation.Runtime;
 //using com.adjust.sdk;
 using Firebase.Analytics;
+using GoogleMobileAds.Api;
+using GoogleMobileAds.Common;
 using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using AppsFlyerSDK;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon;
 using static MaxSdkBase;
-using EventDispatcher;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 
 public class AdmobAdsMax
     : MonoBehaviour
@@ -50,6 +51,10 @@ public class AdmobAdsMax
     // true nếu user đã thực sự nhận reward trong lần show hiện tại; dùng để phân biệt
     // "đóng ad sau khi nhận thưởng" với "đóng ad khi chưa nhận" (vd thoát app giữa chừng).
     private bool _isRewardVideoGranted;
+    // Chỉ set khi đang show qua FsnAdManager.ShowRewardedThenNative. Dùng riêng cho trường hợp
+    // MAX rewarded ad KHÔNG hiển thị được (khác với "user skip/close mà chưa nhận thưởng"),
+    // để không đụng vào callbacks.OnHidden() đã bắn qua _actionClose.
+    private Action _rewardDisplayFailedCallback;
     private ActionWatchVideo actionWatchVideo;
     public Coroutine coroutineShowAppOpen;
 
@@ -109,12 +114,26 @@ public class AdmobAdsMax
             AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
             LoadInterstitialAd();
             isAdmobInitDone = true;
+            FsnAdManager.Instance.InitFsnAd();
             //nativeAdsManager.Instance.OnInitAdmobDone();
             //LoadRewardedInterstitialAd();
         });
         //#endif
+        GameController.Instance.appsFlyerManager.CampChange += ChangeActiveVal;
+
     }
 
+    private void ChangeActiveVal()
+    {
+
+        _isShowAdmobCollap = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.collap.IsActive();
+        _isShowAdmobBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.IsActive();
+    }
+
+    private void OnDestroy()
+    {
+        GameController.Instance.appsFlyerManager.CampChange -= ChangeActiveVal;
+    }
     //public IEnumerator ShowAppOpenAds()
     //{
     //    yield return new WaitUntil(() => GameController.Instance.progessLoading > 0.9f);
@@ -180,10 +199,9 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-            //#if APPSFLYER_BANNER
-            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-            //                value, "USD", dic);
-            //#endif
+
+            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+                value, "USD", dic);
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -468,10 +486,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-            //#if APPSFLYER_BANNER
-            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-            //                value, "USD", dic);
-            //#endif
+
+            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+              value, "USD", dic);
+
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -512,20 +530,44 @@ public class AdmobAdsMax
         }
 
         Debug.LogFormat("[TestCollapse]_isShowAdmobCollap: {0},isLoadedCollap: {1}", _isShowAdmobCollap, isLoadedCollap);
-        if (_isShowAdmobCollap && isLoadedCollap)
+        var config = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.native.bannerNative;
+        if (config.IsActive())
         {
-            Debug.Log("show banner collap===========");
-            _bannerView?.Hide();
-            MaxSdk.HideBanner(BanerAdUnitId);
-            _bannerViewCollap?.Show();
-            isShowingCollap = true;
+            Debug.Log("Native Banner Show =************");
+            FsnAdManager.Instance.ShowTrackedNativeWithFallback(FsnAdType.Collapsible, onDone: () =>
+            {
+                if (_isShowAdmobCollap && isLoadedCollap)
+                {
+                    Debug.Log("show banner collap===========");
+                    _bannerView?.Hide();
+                    MaxSdk.HideBanner(BanerAdUnitId);
+                    _bannerViewCollap?.Show();
+                    isShowingCollap = true;
+                }
+            });
         }
-
+        else
+        {
+            Debug.Log("Native Collap Off =************");
+            if (_isShowAdmobCollap)
+            {
+                if (isLoadedCollap)
+                {
+                    Debug.Log("show banner collap===========");
+                    _bannerView?.Hide();
+                    MaxSdk.HideBanner(BanerAdUnitId);
+                    _bannerViewCollap?.Show();
+                    isShowingCollap = true;
+                }
+            }
+        }
     }
 
     public void DestroyBannerCollap()
     {
         Debug.Log("destroy banner admob collap========");
+        FsnAdManager.Instance.HideTrackedNative(FsnAdType.Collapsible);
+
         isShowingCollap = false;
         timerCooldownDestroyCollap = 0;
         _bannerViewCollap?.Hide();
@@ -536,6 +578,8 @@ public class AdmobAdsMax
 
     public void HideBannerCollap()
     {
+        Debug.Log("Hide Native_____________");
+        FsnAdManager.Instance.HideTrackedNative(FsnAdType.Collapsible);
         IsCooldownAdmobBanner = true;
         _bannerViewCollap?.Hide();
         ShowBanner();
@@ -554,16 +598,17 @@ public class AdmobAdsMax
 
     private void RefreshAdmobBanner()
     {
-        _cooldownAdmobBannerTimer = RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 30);
+        _cooldownAdmobBannerTimer = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumInterval;
         _isTryLoadAdmobBanner = true;
         _bannerView.LoadAd(bannerHomeLoadRequest);
     }
 
     public void LoadBannerAdmob()
     {
+        int levelShowBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumLevel;
         Debug.Log("LoadBannerAdmob================== CurrentLevel = " + GameController.Instance.useProfile.CurrentLevel);
-        Debug.Log("LoadBannerAdmob================== levelShowBanner = " + GamePersistentVariable.levelShowBanner);
-        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowBanner)
+        Debug.Log("LoadBannerAdmob================== levelShowBanner = " + levelShowBanner);
+        if (GameController.Instance.useProfile.CurrentLevel < levelShowBanner)
         {
             return;
         }
@@ -591,16 +636,14 @@ public class AdmobAdsMax
         void OnBannerAdLoaded()
         {
             _isTryLoadAdmobBanner = false;
-#if TEST_BANNER_MAX
-            var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, false);
-#elif TEST_BANNER
+#if TEST_BANNER
             var isEnableAdmobBanner = true;
 #else
-            var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, true);
+            var isEnableAdmobBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.IsActive();
 #endif
             _isShowAdmobBanner = isEnableAdmobBanner;
             _cooldownAdmobBannerTimer =
-                RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 30);
+                GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumInterval;
             isLoadedAdBanner = true;
             ShowBanner();
         }
@@ -623,10 +666,8 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-            //#if APPSFLYER_BANNER
-            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-            //                value, "USD", dic);
-            //#endif
+            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+                 value, "USD", dic);
             try
             {
                 BannerLogStatistic.Instance.Log("GamePlay_Bottom", adValue.Precision.ToString(), adValue.CurrencyCode,
@@ -743,6 +784,13 @@ public class AdmobAdsMax
         _isLoading = false;
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
+
+        // MAX interstitial không hiển thị được: báo cho FsnAdManager để nó kết thúc flow
+        // "interstitial then native" ngay, thay vì treo overlay đen vĩnh viễn.
+        interFail?.Invoke();
+        interFail = null;
+        interSuccess = null;
+
         RequestInterstitial();
     }
 
@@ -760,6 +808,12 @@ public class AdmobAdsMax
 
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
+
+        // MAX interstitial đã đóng: báo cho FsnAdManager để nó tiến sang bước show native ad.
+        interSuccess?.Invoke();
+        interSuccess = null;
+        interFail = null;
+
         countdownAdsInterImage = 0;
         countdownAds = 0;
         RequestInterstitial();
@@ -840,9 +894,10 @@ public class AdmobAdsMax
     {
         return MaxSdk.IsInterstitialReady(InterstitialAdUnitId);
     }
-
+    Action interSuccess;
+    Action interFail;
     private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other",
-        UnityAction actionIniterClose = null, string level = null)
+        UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
     {
         actionIniterClose += () => { IsCooldownAdmobBanner = true; };
         if (GameController.Instance.useProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
@@ -856,22 +911,83 @@ public class AdmobAdsMax
             isShowingAds = true;
             oldTime = DateTime.Now;
 
-            Debug.Log("show inter ======");
-            actionInterstitialClose = actionIniterClose;
-            IsCooldownAdmobBanner = false;
-            MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-            countdownAds = 0;
-            GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
-            try
+            if (isInGame)
             {
-                //DWHLog.Log.AdsLog( GameController.Instance.useProfile, AdType.Interstitial, actionWatchLog);
+                Debug.Log("show inter ======");
+                actionInterstitialClose = actionIniterClose;
+                IsCooldownAdmobBanner = false;
+                if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.native.interNative.IsActive())
+                {
+                    Debug.Log("Native Inter Show =************");
+                    FsnAdManager.Instance.ShowInterstitialThenNative(
+    showInterstitial: callbacks =>
+    {
+        interSuccess = () =>
+        {
+            callbacks.OnHidden();
+        };
+        interFail = () =>
+        {
+            callbacks.OnDisplayFailed();
+        };
+
+        MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+    },
+    // Các callback thật cho gameplay (actionInterstitialClose) đã được bắn trực tiếp từ
+    // OnInterstitialHiddenEvent/InterstitialFailedToDisplayEvent, không cần lặp lại ở đây.
+    onSuccess: () => { },
+    onFailed: () => { }
+    );
+                }
+                else
+                {
+                    Debug.Log("Native Inter Off =************");
+                    MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+                }
+                countdownAds = 0;
+                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+
+                UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
+                UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
             }
-            catch (Exception e)
+            else
             {
-                Debug.LogError(e.Message);
+                actionInterstitialClose = actionIniterClose;
+                IsCooldownAdmobBanner = false;
+                if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.native.interNative.IsActive())
+                {
+                    Debug.Log("Native Inter Show =************");
+                    FsnAdManager.Instance.ShowInterstitialThenNative(
+    showInterstitial: callbacks =>
+    {
+        interSuccess = () =>
+        {
+            callbacks.OnHidden();
+        };
+        interFail = () =>
+        {
+            callbacks.OnDisplayFailed();
+        };
+
+        MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+    },
+    // Các callback thật cho gameplay (actionInterstitialClose) đã được bắn trực tiếp từ
+    // OnInterstitialHiddenEvent/InterstitialFailedToDisplayEvent, không cần lặp lại ở đây.
+    onSuccess: () => { },
+    onFailed: () => { }
+    );
+                }
+                else
+                {
+                    Debug.Log("Native Inter Off =************");
+                    MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+                }
+                countdownAds = 0;
+                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+
+                UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
+                UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
             }
-            UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
-            UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
         }
         else
         {
@@ -1142,6 +1258,11 @@ public class AdmobAdsMax
         _actionNotLoadedVideo?.Invoke();
         _actionNotLoadedVideo = null;
 
+        // MAX rewarded ad thật sự không hiển thị được: báo cho FsnAdManager để nó kết
+        // thúc flow "rewarded then native" ngay, không chờ OnHidden (vì ad chưa từng hiện).
+        _rewardDisplayFailedCallback?.Invoke();
+        _rewardDisplayFailedCallback = null;
+
         LoadRewardedAd();
 
         SaferioTracking.TrackAdsInterLoadFail();
@@ -1185,6 +1306,7 @@ public class AdmobAdsMax
             _actionNotLoadedVideo?.Invoke();
         }
         _actionNotLoadedVideo = null;
+        _rewardDisplayFailedCallback = null;
 
         LoadRewardedAd();
         Invoke("RefeshCloseAds", 1);
@@ -1200,6 +1322,7 @@ public class AdmobAdsMax
         _actionRewardVideo?.Invoke();
         _actionRewardVideo = null;
         _actionNotLoadedVideo = null;
+        _rewardDisplayFailedCallback = null;
         countdownAds = 0;
         GameController.Instance.AnalyticsController.LogVideoRewardShowDone(actionWatchVideo.ToString());
 
@@ -1269,14 +1392,42 @@ public class AdmobAdsMax
             this._actionClose = actionClose;
             this._actionRewardVideo = actionReward;
 
-            MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
-            try
+            if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.native.rewardNative.IsActive())
             {
-                //DWHLog.Log.AdsLog( GameController.Instance.useProfile, AdType.Reward, adWhere);
+                Debug.Log("Native Reward Show =************");
+                FsnAdManager.Instance.ShowRewardedThenNative(
+showRewarded: callbacks =>
+{
+    this._actionRewardVideo = () =>
+    {
+        actionReward?.Invoke();
+        callbacks.OnRewardReceived();
+    };
+    this._actionClose = () =>
+    {
+        actionClose?.Invoke();
+        callbacks.OnHidden();
+    };
+    // Không gọi callbacks.OnDisplayFailed() ở đây: field này còn được dùng cho case
+    // "user skip/close mà chưa nhận thưởng" (OnRewardedAdDismissedEvent), lúc đó
+    // callbacks.OnHidden() ở trên đã báo flow chuyển sang bước native rồi, gọi thêm
+    // OnDisplayFailed() sẽ làm flow kết thúc "failed" trong khi native ad có thể đang
+    // hiển thị dở, gây race. OnDisplayFailed() chỉ nên bắn khi MAX rewarded ad thật sự
+    // không hiển thị được, xem OnRewardedAdFailedToDisplayEvent.
+    this._actionNotLoadedVideo = () => { actionNotLoadedVideo?.Invoke(); };
+    _rewardDisplayFailedCallback = callbacks.OnDisplayFailed;
+    MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
+},
+// Các callback thật cho gameplay (actionReward/actionClose/actionNotLoadedVideo) đã được
+// bắn trực tiếp từ sự kiện MAX SDK ở trên, không cần lặp lại ở đây.
+onSuccess: () => { },
+onFailed: () => { }
+);
             }
-            catch (Exception e)
+            else
             {
-                Debug.LogError(e.Message);
+                Debug.Log("Native Reward Off =************");
+                MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
             }
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
                  GameController.Instance.useProfile.CurrentLevel.ToString());
@@ -1323,7 +1474,8 @@ public class AdmobAdsMax
 
     public void ShowBanner()
     {
-        Debug.Log("[ShowBanner]show banner level=" + GamePersistentVariable.levelShowBanner);
+        int levelShowBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumLevel;
+        Debug.Log("[ShowBanner]show banner level=" + levelShowBanner);
         Debug.Log("[ShowBanner]Current level=" + GameController.Instance.useProfile.CurrentLevel);
         //// Chưa có remote config thật từ Firebase:
         ////  - Còn mạng: config đang tải, chờ đã (tránh flash banner sai ngưỡng khi config thật > 0).
@@ -1332,7 +1484,7 @@ public class AdmobAdsMax
         if (!GamePersistentVariable.isFirebaseRemoteConfigLoaded
             && Application.internetReachability != NetworkReachability.NotReachable)
             return;
-        if (GameController.Instance.useProfile.CurrentLevel < GamePersistentVariable.levelShowBanner)
+        if (GameController.Instance.useProfile.CurrentLevel < levelShowBanner)
             return;
 
         if (GameController.Instance.useProfile.IsRemoveAds)

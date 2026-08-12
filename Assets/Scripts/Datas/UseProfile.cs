@@ -17,14 +17,14 @@ public class UseProfile : MonoBehaviour
             return IsLoggedIn;
         }
     }
-    public  int CurrentLevel
+    public int CurrentLevel
     {
         get
         {
             // return PlayerPrefs.GetInt(StringHelper.CURRENT_LEVEL, 1);
 
             return currentLevel.Value;
-}
+        }
         set
         {
             GPlayerPrefs.SetInt(StringHelper.CURRENT_LEVEL, value);
@@ -32,7 +32,7 @@ public class UseProfile : MonoBehaviour
         }
     }
 
-   
+
 
     public int CurrentLevelPlay
     {
@@ -74,7 +74,7 @@ public class UseProfile : MonoBehaviour
         }
     }
 
-   
+
 
     public static bool OnNotification
     {
@@ -112,7 +112,7 @@ public class UseProfile : MonoBehaviour
         }
     }
 
-    
+
 
     public static int RetentionD
     {
@@ -278,7 +278,7 @@ public class UseProfile : MonoBehaviour
             PlayerPrefs.SetString(StringHelper.LAST_TIME_MINIGAME_SHOW_HOME, value.ToBinary().ToString());
             PlayerPrefs.Save();
         }
-    
+
     }
     public static DateTime FirstTimeOpenGame
     {
@@ -481,7 +481,7 @@ public class UseProfile : MonoBehaviour
         }
         set
         {
-           // Debug.Log("========== VersionData sssss " + value);
+            // Debug.Log("========== VersionData sssss " + value);
             PlayerPrefs.SetString(StringHelper.VERSION_DATA, value.ToString());
             PlayerPrefs.Save();
         }
@@ -944,7 +944,7 @@ public class UseProfile : MonoBehaviour
         }
     }
     public static bool hadBuySuggest { get; set; }
-    
+
     public string OwnedBranchSkin
     {
         get { return GPlayerPrefs.GetString(StringHelper.OWNED_BRANCH_SKIN, ""); }
@@ -970,10 +970,10 @@ public class UseProfile : MonoBehaviour
         {
             GPlayerPrefs.SetString(StringHelper.OWNED_THEME, value);
             GPlayerPrefs.Save();
-        } 
+        }
     }
 
-   
+
     #region MiniGame
     public static int ConnectBirdTurnBuy
     {
@@ -1031,8 +1031,8 @@ public class UseProfile : MonoBehaviour
             PlayerPrefs.Save();
         }
     }
-   
-    
+
+
     public static int FirstOpenConnectBirdMNGame
     {
         get
@@ -1128,14 +1128,14 @@ public class UseProfile : MonoBehaviour
         set
         {
 
-            Debug.Log("Current num " + value );
+            Debug.Log("Current num " + value);
             var temp = JsonConvert.SerializeObject(value);
             PlayerPrefs.SetString(StringHelper.DATA_TO_RESET_MINI_GAME_SHOP_CONNECT_BIRD, temp);
         }
     }
     public static void ResetDayMiniGame()
     {
-       
+
         var nowTime = UnbiasedTime.Instance.Now().AddDays(1);
         var newDayStartTime = new DateTime(nowTime.Year, nowTime.Month, nowTime.Day, 0, 0, 0);
         DataToResetShopMiniGame = newDayStartTime;
@@ -1154,6 +1154,21 @@ public class UseProfile : MonoBehaviour
         {
             PlayerPrefs.SetInt(StringHelper.NUM_PLAYED_LEVEL_IN_DAY, value);
             PlayerPrefs.Save();
+        }
+    }
+    #endregion
+
+    #region CampUser
+    public static int CurrentCampUser
+    {
+        get
+        {
+            return PlayerPrefs.GetInt(StringHelper.CURRENT_CAMP, -1);
+        }
+        set
+        {
+            GPlayerPrefs.SetInt(StringHelper.CURRENT_CAMP, value);
+            GPlayerPrefs.Save();
         }
     }
     #endregion

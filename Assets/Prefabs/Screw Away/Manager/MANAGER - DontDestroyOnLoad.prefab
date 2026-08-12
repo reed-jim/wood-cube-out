@@ -685,6 +685,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Refuerzo
     Object: {fileID: 0}
+--- !u!1 &460274826355695421
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3437108249186365580}
+  - component: {fileID: 7557560222673631085}
+  m_Layer: 0
+  m_Name: Spider Hunter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3437108249186365580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460274826355695421}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7557560222673631085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460274826355695421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spider Hunter
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Chasseur d'araign\xE9es"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Spinnenj\xE4ger"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Cacciatore di ragni
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30D1\u30A4\u30C0\u30FC\u30CF\u30F3\u30BF\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2A4\uD30C\uC774\uB354\uD5CC\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Ca\xE7ador de Aranhas"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0445\u043E\u0442\u043D\u0438\u043A \u043D\u0430 \u043F\u0430\u0443\u043A\u043E\u0432"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Cazador de ara\xF1as"
+    Object: {fileID: 0}
 --- !u!1 &503890376857374517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1297,6 +1370,91 @@ MonoBehaviour:
   maxExpectedMenuLoadTime: 0
   loadingDuration: 0
   fadeOutDuration: 0
+--- !u!1 &863954206251481373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5669292287891405183}
+  - component: {fileID: 1419563553690703101}
+  m_Layer: 0
+  m_Name: Spawns hunter ants that defeat the boss spider to clear its webbed tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5669292287891405183
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863954206251481373}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1419563553690703101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863954206251481373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawns hunter ants that defeat the boss spider to clear its webbed tiles
+    Object: {fileID: 0}
+  - Language: French
+    Text: "G\xE9n\xE8re des fourmis chasseuses qui battent l'araign\xE9e patronne
+      pour nettoyer ses tuiles palm\xE9es."
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Bringt J\xE4gerameisen hervor, die die Boss-Spinne besiegen, um ihre vernetzten
+      Kacheln freizumachen"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Genera formiche cacciatrici che sconfiggono il ragno boss per ripulire
+      le sue tessere ragnatele
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30DC\u30B9 \u30B9\u30D1\u30A4\u30C0\u30FC\u3092\u5012\u3057\u3066\u6C34\u304B\u304D\u306E\u3042\u308B\u30BF\u30A4\u30EB\u3092\u53D6\u308A\u9664\u304F\u30CF\u30F3\u30BF\u30FC
+      \u30A2\u30EA\u3092\u30B9\u30DD\u30FC\u30F3\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBB3C\uAC08\uD034\uAC00 \uC788\uB294 \uD0C0\uC77C\uC744 \uCCAD\uC18C\uD558\uAE30
+      \uC704\uD574 \uBCF4\uC2A4 \uAC70\uBBF8\uB97C \uBB3C\uB9AC\uCE58\uB294 \uC0AC\uB0E5\uAFBC
+      \uAC1C\uBBF8\uB97C \uC0DD\uC131\uD569\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Gera formigas ca\xE7adoras que derrotam a aranha-chefe para limpar seus
+      ladrilhos com membranas"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0437\u0434\u0430\u0435\u0442 \u043C\u0443\u0440\u0430\u0432\u044C\u0435\u0432-\u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u0432,
+      \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u043E\u0431\u0435\u0436\u0434\u0430\u044E\u0442
+      \u043F\u0430\u0443\u043A\u0430-\u0431\u043E\u0441\u0441\u0430 \u0438 \u043E\u0447\u0438\u0449\u0430\u044E\u0442
+      \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u043F\u043E\u043D\u0447\u0430\u0442\u044B\u0435
+      \u043F\u043B\u0438\u0442\u043A\u0438."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Genera hormigas cazadoras que derrotan a la ara\xF1a jefa para limpiar
+      sus mosaicos palmeados."
+    Object: {fileID: 0}
 --- !u!1 &901504633059052292
 GameObject:
   m_ObjectHideFlags: 0
@@ -1898,6 +2056,7 @@ Transform:
   - {fileID: 330429040761909539}
   - {fileID: 2384043939316195246}
   - {fileID: 3296122427204928389}
+  - {fileID: 8542626404463911213}
   m_Father: {fileID: 6629955821744465093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6041947459616754546
@@ -1921,6 +2080,7 @@ MonoBehaviour:
   dataContain: {fileID: 4581752521961539694}
   moneyEffectController: {fileID: 3182590657058669889}
   gameLoading: {fileID: 0}
+  appsFlyerManager: {fileID: 5805167755757558248}
   currentScene: 0
   openFeatureBox: 0
 --- !u!1 &1273913627103953827
@@ -4584,6 +4744,12 @@ MonoBehaviour:
   closeBoxSoundPrefab: {fileID: 7606835583939712495, guid: eb0118a3943a7004d8d7f20bd1b8bb49, type: 3}
   linkMagnetSoundPrefab: {fileID: 7606835583939712495, guid: c0d2dd589bb6c884c9fb72bc62a9a669, type: 3}
   spawnPopSoundPrefab: {fileID: 7606835583939712495, guid: 1eb012d391ae03648986d17b204b7147, type: 3}
+  woodBreakStateSoundPrefab: {fileID: 7606835583939712495, guid: 20e202cbb0411ae4c8efb28f81e218fc, type: 3}
+  woodBreakEndSoundPrefab: {fileID: 7606835583939712495, guid: a31687f6e28992448b56a527c6de6d99, type: 3}
+  warriorAntBowSoundPrefab: {fileID: 7606835583939712495, guid: ca8717d5b6696924ca16dc9a2e60d404, type: 3}
+  bossAreaHitSoundPrefab: {fileID: 7606835583939712495, guid: 37496ba68c5bb7743980bd5f7f1c9c5d, type: 3}
+  snakeCountSoundPrefab: {fileID: 7606835583939712495, guid: 95e9e59590038ba4a9b5f118b6b3c010, type: 3}
+  bossAreaDieSoundPrefab: {fileID: 7606835583939712495, guid: cd8d97562152b6a46b7d808ec925ce46, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
@@ -5517,6 +5683,89 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UseProfile
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
+--- !u!1 &3284243342664465250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2763319481799207159}
+  - component: {fileID: 2585074485724665721}
+  m_Layer: 0
+  m_Name: Spawns a fixed-color tile into any empty space when a tile is cleared
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2763319481799207159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284243342664465250}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2585074485724665721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284243342664465250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Spawns a fixed-color tile into any empty space when a tile is cleared
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Fait appara\xEEtre une tuile de couleur fixe dans n'importe quel espace
+      vide lorsqu'une tuile est effac\xE9e"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Erzeugt eine Kachel mit fester Farbe auf einem beliebigen leeren Feld,
+      wenn eine Kachel abger\xE4umt wird"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Genera una tessera di colore fisso in qualsiasi spazio vuoto quando una
+      tessera viene eliminata
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30BF\u30A4\u30EB\u304C\u30AF\u30EA\u30A2\u3055\u308C\u308B\u3068\u3001\u4EFB\u610F\u306E\u7A7A\u304D\u30B9\u30DA\u30FC\u30B9\u306B\u56FA\u5B9A\u8272\u306E\u30BF\u30A4\u30EB\u3092\u751F\u6210\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD0C0\uC77C\uC744 \uC9C0\uC6B8 \uB54C \uBE48 \uACF5\uAC04\uC5D0 \uACE0\uC815
+      \uC0C9\uC0C1 \uD0C0\uC77C\uC744 \uC0DD\uC131\uD569\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Gera uma pe\xE7a de cor fixa em qualquer espa\xE7o vazio quando uma pe\xE7a
+      \xE9 limpa"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0437\u0434\u0430\u0435\u0442 \u043F\u043B\u0438\u0442\u043A\u0443
+      \u0444\u0438\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0433\u043E
+      \u0446\u0432\u0435\u0442\u0430 \u0432 \u043B\u044E\u0431\u043E\u043C \u043F\u0443\u0441\u0442\u043E\u043C
+      \u043C\u0435\u0441\u0442\u0435, \u043A\u043E\u0433\u0434\u0430 \u043F\u043B\u0438\u0442\u043A\u0430
+      \u043E\u0447\u0438\u0449\u0430\u0435\u0442\u0441\u044F."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Genera un mosaico de color fijo en cualquier espacio vac\xEDo cuando se
+      limpia un mosaico"
+    Object: {fileID: 0}
 --- !u!1 &3334727521343460239
 GameObject:
   m_ObjectHideFlags: 0
@@ -5589,6 +5838,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Venta de fin de semana
+    Object: {fileID: 0}
+--- !u!1 &3381179766404390228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3784626667681027589}
+  - component: {fileID: 5391344448925891589}
+  m_Layer: 0
+  m_Name: Snake Cutter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3784626667681027589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3381179766404390228}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5391344448925891589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3381179766404390228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Snake Cutter
+    Object: {fileID: 0}
+  - Language: French
+    Text: Coupeur de serpent
+    Object: {fileID: 0}
+  - Language: German
+    Text: Schlangenschneider
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Tagliatore di serpenti
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30CD\u30FC\u30AF\u30AB\u30C3\u30BF\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2A4\uB124\uC774\uD06C \uCEE4\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Cortador de Cobra
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u043C\u0435\u0438\u043D\u044B\u0439 \u0440\u0435\u0437\u0430\u043A"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cortador de serpientes
     Object: {fileID: 0}
 --- !u!1 &3447332618122708098
 GameObject:
@@ -6488,6 +6810,50 @@ MonoBehaviour:
   - Language: Spanish
     Text: No hay anuncios cargados
     Object: {fileID: 0}
+--- !u!1 &3714238866653765277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8542626404463911213}
+  - component: {fileID: 5805167755757558248}
+  m_Layer: 0
+  m_Name: Appsflyer Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8542626404463911213
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3714238866653765277}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7084406448650777634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5805167755757558248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3714238866653765277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdd8f6d4ddc5e394291644bbe31f47bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AppsFlyerManager
 --- !u!1 &3725865485692150432
 GameObject:
   m_ObjectHideFlags: 0
@@ -10178,6 +10544,11 @@ Transform:
   - {fileID: 357129858098490128}
   - {fileID: 8439072589204572968}
   - {fileID: 2078312484244912260}
+  - {fileID: 3437108249186365580}
+  - {fileID: 3784626667681027589}
+  - {fileID: 2763319481799207159}
+  - {fileID: 5669292287891405183}
+  - {fileID: 3488582976091861495}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -10361,10 +10732,18 @@ MonoBehaviour:
         reviveData: []
     adsData:
       config:
-        banner:
+        collap:
+          isActive: 0
           minimumLevel: 0
+          minimumInterval: 30
+        banner:
+          isActive: 0
+          minimumLevel: 0
+          minimumInterval: 30
         interstitials:
+          isActive: 0
           minimumLevel: 15
+          minimumInterval: 150
           minimumInterval: 150
           showAfterDefeat: 1
           showAfterQuit: 1
@@ -10372,12 +10751,31 @@ MonoBehaviour:
           appResumedThreshold: 60
           showBeforeLevel: 0
         reward:
+          isActive: 0
           minimumLevel: 0
+          minimumInterval: 30
           isRewardedGetMoreLivesEnabled: 1
           isRewardedStoreEnabled: 1
           limitRVStoreEnabled: 1
           maximumRVStorePerDay: 10
           amountRV: 10
+        native:
+          bannerNative:
+            isActive: 0
+            minimumLevel: 0
+            minimumInterval: 30
+            canShowCollap: 0
+          interNative:
+            isActive: 0
+            minimumLevel: 0
+            minimumInterval: 30
+          rewardNative:
+            isActive: 0
+            minimumLevel: 0
+            minimumInterval: 30
+    segmentUserData:
+      config:
+        dataSegment: []
     saleData:
       config:
         beginerPack:
@@ -11071,6 +11469,93 @@ MonoBehaviour:
       config:
         isActive: 1
         levelStart: 15
+--- !u!1 &5593507797288309374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3488582976091861495}
+  - component: {fileID: 1085092285678389906}
+  m_Layer: 0
+  m_Name: A snake blocks paths to tiles, collect special ants to defeat it and clear
+    the path
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3488582976091861495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5593507797288309374}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1085092285678389906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5593507797288309374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: A snake blocks paths to tiles, collect special ants to defeat it and clear
+      the path
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Un serpent bloque les chemins vers les tuiles, collectez des fourmis sp\xE9ciales
+      pour le vaincre et d\xE9gager le chemin"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Eine Schlange blockiert den Weg zu den Spielfeldern. Sammle spezielle Ameisen,
+      um sie zu besiegen und den Weg freizumachen
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Un serpente blocca i percorsi verso le tessere, raccogli formiche speciali
+      per sconfiggerlo e liberare il percorso
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D8\u30D3\u304C\u30BF\u30A4\u30EB\u3078\u306E\u9053\u3092\u585E\u3044\u3067\u3044\u308B\u3002\u7279\u5225\u306A\u30A2\u30EA\u3092\u96C6\u3081\u3066\u30D8\u30D3\u3092\u5012\u3057\u3001\u9053\u3092\u7A7A\u3051\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBC40\uC774 \uD0C0\uC77C\uB85C \uAC00\uB294 \uAE38\uC744 \uB9C9\uACE0,
+      \uD2B9\uBCC4\uD55C \uAC1C\uBBF8\uB97C \uBAA8\uC544 \uD0C0\uC77C\uC744 \uBB3C\uB9AC\uCE58\uACE0
+      \uAE38\uC744 \uBE44\uC6B0\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Uma cobra bloqueia o caminho at\xE9 os ladrilhos, colete formigas especiais
+      para derrot\xE1-la e limpar o caminho"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u043C\u0435\u044F \u043F\u0440\u0435\u0433\u0440\u0430\u0436\u0434\u0430\u0435\u0442
+      \u043F\u0443\u0442\u044C \u043A \u043F\u043B\u0438\u0442\u043A\u0430\u043C,
+      \u0441\u043E\u0431\u0438\u0440\u0430\u0439\u0442\u0435 \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445
+      \u043C\u0443\u0440\u0430\u0432\u044C\u0435\u0432, \u0447\u0442\u043E\u0431\u044B
+      \u043F\u043E\u0431\u0435\u0434\u0438\u0442\u044C \u0435\u0435 \u0438 \u0440\u0430\u0441\u0447\u0438\u0441\u0442\u0438\u0442\u044C
+      \u043F\u0443\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Una serpiente bloquea los caminos hacia las baldosas, recolecta hormigas
+      especiales para derrotarla y despejar el camino.
+    Object: {fileID: 0}
 --- !u!1 &5599778077581793924
 GameObject:
   m_ObjectHideFlags: 0
@@ -18098,6 +18583,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7084406448650777634}
     m_Modifications:
+    - target: {fileID: 4405976200006927252, guid: 0bfe3b149145747cc92dc53bb4df4e9b, type: 3}
+      propertyPath: appID
+      value: 6782749554
+      objectReference: {fileID: 0}
     - target: {fileID: 4405976200006927252, guid: 0bfe3b149145747cc92dc53bb4df4e9b, type: 3}
       propertyPath: devKey
       value: UAVHtuYSgwSPXxXQVDGA65
