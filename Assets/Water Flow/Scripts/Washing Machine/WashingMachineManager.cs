@@ -914,6 +914,8 @@ namespace AntsFlow
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
+            yield return new WaitForSeconds(GameConstants.delayActualLoseLevel);
+
             while (GamePersistentVariable.numEatingChicken > 0)
             {
                 yield return waitForSeconds;

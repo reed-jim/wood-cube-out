@@ -79,6 +79,7 @@ public class GrainPool : Singleton<GrainPool>
     public void Reset()
     {
         maxCapacity = initialMaxCapacity;
+        currentAmount = 0;
         currentPercent = 0;
 
         UpdatePercent(currentPercent);
