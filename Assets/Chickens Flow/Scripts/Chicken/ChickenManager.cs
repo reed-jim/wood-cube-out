@@ -81,6 +81,8 @@ public class ChickenManager : Singleton<ChickenManager>
         chickenByColumn.Clear();
         slotByColumn.Clear();
 
+        numGhostChicken = 0;
+
         GamePersistentVariable.numEatingChicken = 0;
     }
 
@@ -856,7 +858,7 @@ public class ChickenManager : Singleton<ChickenManager>
             chicken.SetActiveSpine(true);
             chicken.PlayFlyAnim(flyAnimationIndex: 0);
 
-            chicken.transform.SetZ(LayerManager.GetGhostChickenZ());
+            chicken.transform.SetZ(LayerManager.GetGhostChickenZ(numGhostChicken));
 
             Vector3 destination = GrainPool.Ins.transform.position;
 
@@ -869,7 +871,7 @@ public class ChickenManager : Singleton<ChickenManager>
             {
                 destination.y -= 1.5f;
             }
-            destination.z = LayerManager.GetGhostChickenZ();
+            destination.z = LayerManager.GetGhostChickenZ(numGhostChicken);
 
             chicken.isEating = true;
 
@@ -1243,10 +1245,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 chicken.isMoving = false;
 
-                if (remaining == 0)
-                {
-                    WashingMachineManager.Ins.grainPool.CheckFeedChickens();
-                }
+                WashingMachineManager.Ins.grainPool.CheckFeedChickens();
 
                 GamePersistentVariable.numMovingChicken--;
             });
