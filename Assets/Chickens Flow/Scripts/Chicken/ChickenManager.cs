@@ -62,6 +62,8 @@ public class ChickenManager : Singleton<ChickenManager>
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
         WinPopup.resetLevelEvent += Reset;
+
+        GamePersistentVariable.eatingChickens = new List<BaseChicken>();
     }
 
     void OnDestroy()
@@ -84,6 +86,7 @@ public class ChickenManager : Singleton<ChickenManager>
         numGhostChicken = 0;
 
         GamePersistentVariable.numEatingChicken = 0;
+        GamePersistentVariable.eatingChickens = new List<BaseChicken>();
     }
 
     private void GizmosBoardShape()

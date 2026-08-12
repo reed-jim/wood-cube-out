@@ -15,6 +15,7 @@ public static class GamePersistentVariable
     public static int numEatingChicken;
     public static int numStuckEatingChicken;
     public static int numMovingChicken;
+    public static List<BaseChicken> eatingChickens;
     #endregion
 
     public static Vector2 canvasSize;
