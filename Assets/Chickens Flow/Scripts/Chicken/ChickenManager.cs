@@ -704,8 +704,7 @@ public class ChickenManager : Singleton<ChickenManager>
         CheckChickensStuck(false);
 
         List<BaseChicken> chickensToFeed = chickens
-            .Where(chicken => !chicken.isEating &&
-                              !chicken.isDone &&
+            .Where(chicken => !chicken.isDone &&
                               !chicken.isStuck &&
                               chicken.faction == grainPile.faction)
             .OrderBy(chicken => chicken.transform.position.x)
@@ -931,8 +930,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 continue;
             }
 
-            int bottomRow = chicken.waitingChickenSlots
-                    .Min(s => s.row);
+            int bottomRow = chicken.GetFirstRow();
 
             if (bottomRow > 0)
             {

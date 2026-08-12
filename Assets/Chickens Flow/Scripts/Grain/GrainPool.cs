@@ -96,7 +96,7 @@ public class GrainPool : Singleton<GrainPool>
         progressBarBackground.sizeDelta = sizeDelta;
         progressBarFill.sizeDelta = sizeDelta;
 
-        GrainSimulation.Ins.capsuleStraightLength = 0.85f * sizeDelta.x;
+        GrainSimulation.Ins.capsuleStraightLength = 0.76f * sizeDelta.x;
         GrainSimulation.Ins.GenerateCapsulePath();
         GrainSimulation.Ins.BuildPath();
     }
@@ -121,6 +121,7 @@ public class GrainPool : Singleton<GrainPool>
         grainPiles.Remove(grainPile);
     }
 
+    [ContextMenu("CheckFeedChickens")]
     public void CheckFeedChickens()
     {
         for (int i = 0; i < grainPiles.Count; i++)

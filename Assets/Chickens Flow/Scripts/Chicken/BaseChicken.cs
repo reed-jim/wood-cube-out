@@ -63,6 +63,10 @@ public class BaseChicken : MonoBehaviour
 
     public List<WaitingChickenSlot> waitingChickenSlots;
 
+    private Coroutine chickenEatingGrainsCoroutine;
+    public int remaingEatingGrainCount;
+    public int totalGrainEaten;
+
     void Awake()
     {
         SettingPopup.replayLevelEvent += Reset;
@@ -156,13 +160,12 @@ public class BaseChicken : MonoBehaviour
 
     public void Feed(GrainPile grainPile, int numGrain, bool isLastChickenInTheWave, Action onChickenFlyOut = null)
     {
-        // prevEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
+        if (chickenEatingGrainsCoroutine != null)
+        {
+            StopCoroutine(chickenEatingGrainsCoroutine);
+        }
 
-        // numGrainPileRequiredLeft -= numGrain;
-
-        // currentEatingProgress = 1 - (float)numGrainPileRequiredLeft / numGrainPileRequired;
-
-        grainPile.BeEaten(this, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
+        chickenEatingGrainsCoroutine = StartCoroutine(ChickenEatingGrains(grainPile, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
         {
             if (numGrainPileRequiredLeft == 0)
             {
@@ -227,12 +230,136 @@ public class BaseChicken : MonoBehaviour
                 //     eatingProgress.SetProgress((float)numGrainPileRequiredLeft / numGrainPileRequired);
                 // }
             }
-        });
+        }));
 
         float prevProgress = 1 - (numGrainPileRequiredLeft) / (float)numGrainPileRequired;
         float progress = 1 - (numGrainPileRequiredLeft - numGrain) / (float)numGrainPileRequired;
 
         isEating = true;
+    }
+
+    private IEnumerator ChickenEatingGrains(GrainPile grainPile, int numGrain, bool isLast, Action onCompleteAction)
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+        WaitForSeconds delayPerGrainWait = new WaitForSeconds(grainPile.delayPerGrain);
+
+        float prevChickenEatingProgress = prevEatingProgress;
+
+        if (remaingEatingGrainCount == 0)
+        {
+            SetActiveSpine(true);
+            PlayIdleAnim();
+
+            GamePersistentVariable.numEatingChicken++;
+        }
+
+        int numGrainToEat = numGrain * GameConstants.grainMultiplier;
+
+        remaingEatingGrainCount += numGrainToEat;
+
+        ChickenManager.Ins.chickenRenderer.RemoveChickenRendering(this);
+
+        WashingMachineManager.Ins.grainPool.AddGrain(-numGrain, durationUpdateProgress: GetUpdatingProgressDuration(numGrainToEat));
+
+        int waitingForGrainCountThreshold = 60;
+        int waitingForGrainCount = 0;
+
+        while (remaingEatingGrainCount > 0 && !isForceFlyOut)
+        {
+            if (GrainSimulation.Ins.IsAnyGrainNear(transform.position, faction))
+            {
+                if (remaingEatingGrainCount % 5 == 0)
+                {
+                    if (remaingEatingGrainCount == 0)
+                    {
+                        float randomDelay = UnityEngine.Random.Range(0, 0.5f);
+
+                        DG.Tweening.DOVirtual.DelayedCall(randomDelay, () =>
+                        {
+                            if (isEating)
+                            {
+                                PlayEatAnim();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        PlayEatAnim();
+                    }
+                }
+
+                PlaySoundAndFx(transform.position);
+
+                GrainSimulation.Ins.RemoveFirstGrain(faction);
+
+                remaingEatingGrainCount--;
+                totalGrainEaten++;
+
+                float currentPercent = (float)totalGrainEaten / (numGrainPileRequired * GameConstants.grainMultiplier);
+
+                UpdateEatingProgress(currentPercent, prevChickenEatingProgress, grainPile.delayPerGrain);
+
+                prevChickenEatingProgress = currentPercent;
+
+                if (waitingForGrainCount > waitingForGrainCountThreshold)
+                {
+                    GamePersistentVariable.numEatingChicken++;
+
+                    waitingForGrainCount = 0;
+                }
+            }
+            else
+            {
+                PlayIdleAnim();
+
+                if (waitingForGrainCount <= waitingForGrainCountThreshold)
+                {
+                    waitingForGrainCount++;
+                }
+                else
+                {
+                    if (waitingForGrainCount == waitingForGrainCountThreshold + 1)
+                    {
+                        GamePersistentVariable.numEatingChicken--;
+                    }
+                }
+            }
+
+            yield return delayPerGrainWait;
+        }
+
+        GamePersistentVariable.numEatingChicken--;
+
+        onCompleteAction?.Invoke();
+
+        bool IsGrainNearChicken(Transform grainPileTransform)
+        {
+            float range = grainPile.grainPileSizeX;
+
+            return transform.position.x > grainPileTransform.position.x - 0.5f * range &&
+                transform.position.x < grainPileTransform.position.x + 0.5f * range;
+        }
+
+        void PlaySoundAndFx(Vector3 position)
+        {
+            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+            position.y -= 1;
+            position.z -= 1;
+            fx.transform.position = position;
+            var main = fx.main;
+            main.startColor = faction;
+            fx.Play();
+
+            SoundManager.Instance.PlaySoundCubeLand();
+        }
+
+        float GetUpdatingProgressDuration(int numGrainToEat)
+        {
+            float baseDuration = 1f;
+            float growthRate = 0.5f;
+
+            return baseDuration + growthRate * Mathf.Log(numGrainToEat + 1);
+        }
     }
 
     public void ForceFlyOut(bool isLast)
