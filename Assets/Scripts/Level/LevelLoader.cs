@@ -449,10 +449,8 @@ namespace NamPhuThuy.GamePlay
             spawnedLevelItem.chickenLevelTiles = antLevelData.levelItemData.chickenLevelTiles;
             spawnedLevelItem.isLevelHavingTransparentPixels = antLevelData.levelItemData.isLevelHavingTransparentPixels;
             spawnedLevelItem.isOverrideLevelScale = antLevelData.levelItemData.isOverrideLevelScale;
-            spawnedLevelItem.levelScaleXRatio = antLevelData.levelItemData.levelScaleXRatio;
-            spawnedLevelItem.levelScaleYRatio = antLevelData.levelItemData.levelScaleYRatio;
-            spawnedLevelItem.multiplierScaleX = antLevelData.levelItemData.multiplierScaleX;
-            spawnedLevelItem.multiplierScaleY = antLevelData.levelItemData.multiplierScaleY;
+            spawnedLevelItem.chickenAreaScaleX = antLevelData.levelItemData.chickenAreaScaleX;
+            spawnedLevelItem.chickenAreaScaleY = antLevelData.levelItemData.chickenAreaScaleY;
             spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
             spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;
             spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;

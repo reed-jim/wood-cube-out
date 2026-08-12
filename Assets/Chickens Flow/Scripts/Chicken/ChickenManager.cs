@@ -187,6 +187,11 @@ public class ChickenManager : Singleton<ChickenManager>
         {
             AntLevelDataItem tileData = levelItem.chickenLevelTiles[i];
 
+            if (tileData.factionIndex == -1)
+            {
+                continue;
+            }
+
             allFactions.Add(FactionMapper.Ins.allFactions[tileData.factionIndex]);
         }
 
@@ -282,6 +287,12 @@ public class ChickenManager : Singleton<ChickenManager>
         waitingChickenSlots = new Dictionary<Vector2Int, WaitingChickenSlot>();
 
         customPolygonVertices = boardShapePresets[levelItem.boardShapePresetIndex].points;
+
+        if (levelItem.isOverrideLevelScale)
+        {
+            customPolygonVertices = ScalePolygon(customPolygonVertices, levelItem.chickenAreaScaleX, levelItem.chickenAreaScaleY);
+        }
+
         selectedBoardShapedIndex = levelItem.boardShapePresetIndex;
 
         for (int i = 0; i < levelItem.chickenLevelTiles.Count; i++)
@@ -335,6 +346,11 @@ public class ChickenManager : Singleton<ChickenManager>
         {
             AntLevelDataItem tileData = levelItem.chickenLevelTiles[i];
 
+            if (tileData.factionIndex == -1)
+            {
+                continue;
+            }
+
             allFactions.Add(FactionMapper.Ins.allFactions[tileData.factionIndex]);
         }
 
@@ -342,11 +358,16 @@ public class ChickenManager : Singleton<ChickenManager>
 
         slotByColumn = new Dictionary<int, List<WaitingChickenSlot>>();
 
+        int index = 0;
+
         for (int i = 0; i < levelItem.chickenLevelTiles.Count; i++)
         {
-            int index = i;
+            AntLevelDataItem tileData = levelItem.chickenLevelTiles[i];
 
-            AntLevelDataItem tileData = levelItem.chickenLevelTiles[index];
+            if (tileData.factionIndex == -1)
+            {
+                continue;
+            }
 
             int tileColumn = (int)levelItem.chickenLevelTiles[i].position.x;
             int tileRow = (int)levelItem.chickenLevelTiles[i].position.y;
@@ -396,6 +417,8 @@ public class ChickenManager : Singleton<ChickenManager>
             chicken.transform.position = waitingChickenSlot.GetRandomPosition();
 
             chickens.Add(chicken);
+
+            index++;
         }
 
         chickenByColumn = new Dictionary<int, List<BaseChicken>>();
@@ -432,6 +455,52 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         chickenRenderer.RenderChickens(chickens);
+    }
+
+    public static List<Vector2> ScalePolygonToScreen(List<Vector2> points)
+    {
+        const float referenceWidth = 1080f;
+        const float referenceHeight = 1920f;
+
+        float scaleX = Screen.width / referenceWidth;
+        float scaleY = Screen.height / referenceHeight;
+
+        if (points == null || points.Count == 0)
+            return new List<Vector2>();
+
+        float bottomY = points.Min(p => p.y);
+
+        var result = new List<Vector2>(points.Count);
+
+        foreach (var p in points)
+        {
+            result.Add(new Vector2(
+                p.x * scaleX,
+                bottomY + (p.y - bottomY) * scaleY
+            ));
+        }
+
+        return result;
+    }
+
+    List<Vector2> ScalePolygon(List<Vector2> points, float scaleX, float scaleY)
+    {
+        if (points == null || points.Count == 0)
+            return new List<Vector2>();
+
+        float bottomY = points.Min(p => p.y);
+
+        var result = new List<Vector2>(points.Count);
+
+        foreach (var p in points)
+        {
+            result.Add(new Vector2(
+                p.x * scaleX,
+                bottomY + (p.y - bottomY) * scaleY
+            ));
+        }
+
+        return result;
     }
 
     /// <summary>

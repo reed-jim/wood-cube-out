@@ -116,16 +116,12 @@ namespace AntsFlow
         public int boardShapePresetIndex;
         public bool isLevelHavingTransparentPixels;
         public bool isOverrideLevelScale;
-        public float levelScaleXRatio;
-        public float levelScaleYRatio;
-        public float multiplierScaleX;
-        public float multiplierScaleY;
+        public float chickenAreaScaleX;
+        public float chickenAreaScaleY;
         public List<Color> poolFaction;
         public List<BaseTile> tiles;
         public List<AntLevelDataItem> chickenLevelTiles;
         public bool isTutorialLevel;
-        // public bool isUseManualFactionSetupForFirstAntBoxes;
-        // public LevelFactionConfig levelFactionConfig;
         public int difficulty;
         public int initialDifficulty;
         public bool overrideInitialDifficulty;
@@ -133,9 +129,6 @@ namespace AntsFlow
         public SpecialElementConfig specialElementConfig;
 
         public FactionMapper factionMapper;
-
-        public Vector3 spawnPosition = new Vector3(0, 3, 0);
-        public Vector3 spawnScale = 0.6f * Vector3.one;
 
         public List<Color> factions;
 
@@ -221,10 +214,8 @@ namespace AntsFlow
                 chickenLevelTiles = chickenLevelTiles,
                 isLevelHavingTransparentPixels = isLevelHavingTransparentPixels,
                 isOverrideLevelScale = isOverrideLevelScale,
-                levelScaleXRatio = levelScaleXRatio,
-                levelScaleYRatio = levelScaleYRatio,
-                multiplierScaleX = multiplierScaleX,
-                multiplierScaleY = multiplierScaleY,
+                chickenAreaScaleX = chickenAreaScaleX,
+                chickenAreaScaleY = chickenAreaScaleY,
                 poolFactionIndexes = poolFactionIndexes,
                 isTutorialLevel = isTutorialLevel,
                 difficulty = difficulty,
@@ -267,10 +258,11 @@ namespace AntsFlow
         private Color selectedColor;
 
         #region Normal Config
-        private int brushRadius = 1;
+        private int brushRadius = 0;
         private Vector2Int? lastPaintCoord = null;
         private bool isPainting = false;
         private bool undoRecorded = false;
+        private bool isErase;
         #endregion
 
         #region Snake
@@ -288,7 +280,12 @@ namespace AntsFlow
 
             LevelItem levelItem = (LevelItem)target;
 
-            if (GUILayout.Button("GenerateChickenLevelTiles"))
+            if (GUILayout.Button("Generate Level From A Picture"))
+            {
+                ReadLevel(levelItem);
+            }
+
+            if (GUILayout.Button("Randomize Level"))
             {
                 GenerateChickenLevelTiles(levelItem);
             }
@@ -301,11 +298,6 @@ namespace AntsFlow
             if (GUILayout.Button("Clear All Special Elements"))
             {
                 levelItem.ClearAllSpecialElements();
-            }
-
-            if (GUILayout.Button("ReadLevel"))
-            {
-                ReadLevel(levelItem);
             }
 
             GUILayout.Space(10);
@@ -331,6 +323,8 @@ namespace AntsFlow
 
             brushRadius = EditorGUILayout.IntField("Brush Size", brushRadius);
             brushRadius = Mathf.Max(brushRadius, 0);
+
+            isErase = EditorGUILayout.Toggle("isErase", isErase);
 
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Colors", EditorStyles.boldLabel);
@@ -380,7 +374,7 @@ namespace AntsFlow
 
         private void EraseNormalTile(LevelItem level, int index)
         {
-            level.chickenLevelTiles[index].factionIndex = 0;
+            level.chickenLevelTiles[index].factionIndex = -1;
         }
 
         private void ConfigureGrid(LevelItem level, Action<LevelItem, int> paintTile, Action<LevelItem, int> eraseTile)
@@ -414,12 +408,31 @@ namespace AntsFlow
                 {
                     int index = x + y * numColumn;
                     Vector3 worldPos = tileDistance * new Vector2(x, y);
+
+                    // if (y % 2 == 1)
+                    // {
+                    //     worldPos.x += 0.5f * tileDistance;
+                    // }
+
                     float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
 
                     if (index < chickenLevelTiles.Count)
                     {
-                        Handles.color = level.factionMapper.GetFaction(chickenLevelTiles[index].factionIndex);
-                        Handles.DrawSolidDisc(worldPos, camera.transform.forward, size);
+                        if (chickenLevelTiles[index].factionIndex == -1)
+                        {
+                            GUIStyle style = new GUIStyle(EditorStyles.boldLabel)
+                            {
+                                alignment = TextAnchor.MiddleCenter,
+                                fontSize = 18
+                            };
+
+                            Handles.Label(worldPos, "❌", style);
+                        }
+                        else
+                        {
+                            Handles.color = level.factionMapper.GetFaction(chickenLevelTiles[index].factionIndex);
+                            Handles.DrawSolidDisc(worldPos, camera.transform.forward, size);
+                        }
                     }
 
                     Handles.color = Color.gray;
@@ -532,7 +545,7 @@ namespace AntsFlow
                     if (index >= chickenLevelTiles.Count)
                         continue;
 
-                    if (Event.current.shift)
+                    if (isErase)
                         eraseTile(level, index);
                     else
                         paintTile(level, index);
@@ -955,9 +968,6 @@ namespace AntsFlow
                 }
             }
 
-            level.transform.position = level.spawnPosition;
-            level.transform.localScale = level.spawnScale;
-
             EditorUtility.SetDirty(level);
         }
 
@@ -1208,10 +1218,8 @@ public class LevelItemData
     public List<AntLevelDataItem> chickenLevelTiles;
     public bool isLevelHavingTransparentPixels;
     public bool isOverrideLevelScale;
-    public float levelScaleXRatio = 18f;
-    public float levelScaleYRatio = 15f;
-    public float multiplierScaleX;
-    public float multiplierScaleY;
+    public float chickenAreaScaleX;
+    public float chickenAreaScaleY;
     public List<int> poolFactionIndexes;
     public bool isTutorialLevel;
     public bool isUseManualFactionSetupForFirstAntBoxes;
