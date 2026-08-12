@@ -463,7 +463,9 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public static List<Vector2> ScalePolygonToScreen(List<Vector2> points)
     {
-        float scaleX = GamePersistentVariable.screenSizeWorld.x / GameConstants.standardScreenWorldSize.x;
+        float sizeX = Mathf.Min(GamePersistentVariable.screenSizeWorld.x, GameConstants.standardScreenWorldSize.x);
+
+        float scaleX = sizeX / GameConstants.standardScreenWorldSize.x;
         float scaleY = GamePersistentVariable.screenSizeWorld.y / GameConstants.standardScreenWorldSize.y;
 
         if (points == null || points.Count == 0)

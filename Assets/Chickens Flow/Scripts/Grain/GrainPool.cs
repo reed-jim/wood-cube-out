@@ -23,11 +23,10 @@ public class GrainPool : Singleton<GrainPool>
     List<float> distanceTable = new List<float>();
     List<float> percentTable = new List<float>();
 
-    [Header("Sprite")]
+    [Header("GrainPool")]
     public SpriteRenderer grainPoolSpriteRenderer;
-
-    [Header("Customize")]
-    public float offsetPourGrainPileX;
+    public RectTransform progressBarBackground;
+    public RectTransform progressBarFill;
 
     public List<GrainPile> grainPiles;
     public int maxGrainPoolSlots;
@@ -70,6 +69,11 @@ public class GrainPool : Singleton<GrainPool>
         DebugPopup.switchLevelEvent -= Reset;
     }
 
+    void Start()
+    {
+        SetupGrainPool();
+    }
+
     public void Reset()
     {
         maxCapacity = initialMaxCapacity;
@@ -77,6 +81,24 @@ public class GrainPool : Singleton<GrainPool>
 
         UpdatePercent(currentPercent);
         lazyHealthBar.SetProgress(currentPercent);
+    }
+
+    private void SetupGrainPool()
+    {
+        float sizeX = Mathf.Min(GamePersistentVariable.screenSizeWorld.x, GameConstants.standardScreenWorldSize.x);
+
+        grainPoolSpriteRenderer.size = new Vector2(
+            sizeX / grainPoolSpriteRenderer.transform.localScale.x, grainPoolSpriteRenderer.size.y);
+
+        Vector2 sizeDelta = progressBarBackground.sizeDelta;
+        sizeDelta.x = grainPoolSpriteRenderer.transform.localScale.x * grainPoolSpriteRenderer.size.x;
+
+        progressBarBackground.sizeDelta = sizeDelta;
+        progressBarFill.sizeDelta = sizeDelta;
+
+        GrainSimulation.Ins.capsuleStraightLength = 0.85f * sizeDelta.x;
+        GrainSimulation.Ins.GenerateCapsulePath();
+        GrainSimulation.Ins.BuildPath();
     }
 
     public void AddGrainPile(GrainPile grainPile)

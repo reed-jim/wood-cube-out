@@ -58,8 +58,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public Mesh quadMesh;
     public Material baseMaterial;
     public float grainSize = 0.08f;
-    public float initialGrainSize;
-
     [Header("Closed Path")]
     public Transform[] pathPoints;
 
@@ -224,8 +222,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
         base.MoreActionOnAwake();
         LevelLoader.startLevelEvent += Reset;
         spatialNext = new int[2048];
-
-        initialGrainSize = grainSize;
     }
 
     void OnDestroy()
@@ -235,7 +231,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     void Start()
     {
-        BuildPath();
         factionGroups.Clear();
     }
 
@@ -666,7 +661,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     // ------------------------------------------------------------------------
     // Spatial Lookups & Pathing Setup
 
-    void BuildPath()
+    public void BuildPath()
     {
         int count = pathPoints.Length;
         points = new Vector2[count];
@@ -828,15 +823,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
         int totalSpawn = grainPositions.Count;
 
         group.EnsureCapacity(group.Count + totalSpawn);
-
-        float maxGrain = 5000;
-        int totalGrainNow = 0;
-        foreach (var item in factionGroups)
-        {
-            totalGrainNow += item.Value.Count;
-        }
-        grainSize = initialGrainSize * ((maxGrain - totalGrainNow) / maxGrain);
-        grainSize = Math.Max(grainSize, 0.1f);
 
         for (int i = 0; i < totalSpawn; i++)
         {

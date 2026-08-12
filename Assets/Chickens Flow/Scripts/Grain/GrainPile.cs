@@ -174,6 +174,9 @@ public class GrainPile : MonoBehaviour
 
         GamePersistentVariable.numEatingChicken++;
 
+        int waitingForGrainCountThreshold = 60;
+        int waitingForGrainCount = 0;
+
         while (!isDone && !chicken.isForceFlyOut)
         {
             if (GrainSimulation.Ins.IsAnyGrainNear(chicken.transform.position, chicken.faction))
@@ -214,10 +217,29 @@ public class GrainPile : MonoBehaviour
                 chicken.UpdateEatingProgress(currentPercent, prevChickenEatingProgress, delayPerGrain);
 
                 prevChickenEatingProgress = currentPercent;
+
+                if (waitingForGrainCount > waitingForGrainCountThreshold)
+                {
+                    GamePersistentVariable.numEatingChicken++;
+
+                    waitingForGrainCount = 0;
+                }
             }
             else
             {
                 chicken.PlayIdleAnim();
+
+                if (waitingForGrainCount <= waitingForGrainCountThreshold)
+                {
+                    waitingForGrainCount++;
+                }
+                else
+                {
+                    if (waitingForGrainCount == waitingForGrainCountThreshold + 1)
+                    {
+                        GamePersistentVariable.numEatingChicken--;
+                    }
+                }
             }
 
             yield return delayPerGrainWait;
