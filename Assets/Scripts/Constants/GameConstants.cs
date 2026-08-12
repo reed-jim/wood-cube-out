@@ -254,12 +254,13 @@ public static class GameConstants
     public static string tile = "tile";
     #endregion
 
-    #region Chicken Flow
+    #region Chicken Feed
     public static string chicken = "chicken";
     public static string waitingChickenSlot = "waitingChickenSlot";
     public static string grainPile = "grainPile";
     public static int grainMultiplier = 8;
     public static string wall = "wall";
+    public static Vector2 standardScreenWorldSize = new Vector2(24.75f, 44f); // 1080x1920
     #endregion
 
     #region Ant Out
