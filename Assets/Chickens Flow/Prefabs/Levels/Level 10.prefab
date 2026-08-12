@@ -47,7 +47,7 @@ MonoBehaviour:
   picture: {fileID: 21300000, guid: 540b3e18cdbc963419a9b355a03158a1, type: 3}
   numColumn: 19
   numRow: 20
-  boardShapePresetIndex: 1
+  boardShapePresetIndex: 0
   isLevelHavingTransparentPixels: 1
   isOverrideLevelScale: 0
   levelScaleXRatio: 0
@@ -1964,7 +1964,22 @@ MonoBehaviour:
   numStartAntBoxes: 6
   specialElementConfig:
     giantChickenConfig:
-      giantChickenItemConfigs: []
+      giantChickenItemConfigs:
+      - coordinate: {x: 14, y: 12}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 12, y: 17}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 3, y: 8}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 8, y: 4}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 6, y: 14}
+        sizeX: 2
+        sizeY: 2
     wallConfig:
       coordinates: []
     hiddenAntBoxConfig:
