@@ -1,12 +1,386 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
+using UnityEngine;
 using NamPhuThuy.GamePlay;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+// ------------------------------------------------------------------------
+// 1. BURST-COMPATIBLE PARTICLE STRUCT
+// ------------------------------------------------------------------------
+public struct GrainParticle
+{
+    public float3 position;
+    public float2 velocity2D;
+    public float fallVelocity;
+    public float gravity;
+    public float conveyorForce;
+    public float fallDelay;
+    public float bounceRestitution;
+    public float bounceFriction;
+    public float impactToPathVelocity;
+    public int bounceCount;
+    public int maxBounces;
+    public bool onPath;
+    public bool bouncing;
+}
+
+// ------------------------------------------------------------------------
+// 2. BURST JOBS FOR SIMULATION, COLLISION & MATRICES
+// ------------------------------------------------------------------------
+
+[BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+public struct SimulateGrainsJob : IJobParallelFor
+{
+    public NativeArray<GrainParticle> particles;
+
+    [ReadOnly, NativeDisableParallelForRestriction] public NativeArray<float2> sampledPositions;
+    [ReadOnly, NativeDisableParallelForRestriction] public NativeArray<float2> sampledTangents;
+    [ReadOnly, NativeDisableParallelForRestriction] public NativeArray<int> lookupGrid;
+
+    public float dt;
+    public float maxSpeed;
+    public float edgeForce;
+    public float airDrag;
+    public float lookupCellSize;
+    public float2 worldMin;
+    public int gridWidth;
+    public int gridHeight;
+    public float randomBounceSideForce;
+
+    public void Execute(int i)
+    {
+        GrainParticle p = particles[i];
+        float invCellSize = 1f / lookupCellSize;
+        float sqrMaxSpeed = maxSpeed * maxSpeed;
+
+        if (p.onPath)
+        {
+            int sample = GetNearestSampleIndexFast(p.position, invCellSize);
+            float2 nearest = sampledPositions[sample];
+            float2 tangent = sampledTangents[sample];
+
+            p.velocity2D += tangent * (p.conveyorForce * dt);
+
+            float2 toCenter = nearest - p.position.xy;
+            p.velocity2D += toCenter * (edgeForce * dt);
+
+            if (math.lengthsq(p.velocity2D) > sqrMaxSpeed)
+            {
+                p.velocity2D = math.normalize(p.velocity2D) * maxSpeed;
+            }
+
+            p.position.xy += p.velocity2D * dt;
+            p.velocity2D *= (1f - airDrag * dt);
+
+            particles[i] = p;
+            return;
+        }
+
+        if (p.fallDelay > 0f)
+        {
+            p.fallDelay -= dt;
+            particles[i] = p;
+            return;
+        }
+
+        if (p.bouncing)
+        {
+            p.fallVelocity -= p.gravity * dt;
+            p.position.y += p.fallVelocity * dt;
+            p.position.x += p.velocity2D.x * dt;
+
+            int sample = GetNearestSampleIndexFast(p.position, invCellSize);
+            float2 surface = sampledPositions[sample];
+
+            if (p.position.y <= surface.y)
+            {
+                p.position.y = surface.y;
+                float impact = math.abs(p.fallVelocity);
+
+                uint seed = (uint)(i + 1) * 0x9E3779B9u;
+                float personalSettle = 0.8f + (seed % 100) * 0.004f;
+
+                if (impact < personalSettle || p.bounceCount >= p.maxBounces)
+                {
+                    p.bouncing = false;
+                    p.onPath = true;
+                    float2 tangent = sampledTangents[sample];
+                    p.velocity2D = tangent * (impact * p.impactToPathVelocity);
+                    p.fallVelocity = 0f;
+                }
+                else
+                {
+                    p.fallVelocity = impact * p.bounceRestitution;
+                    p.velocity2D *= p.bounceFriction;
+                    p.bounceCount++;
+                }
+            }
+            particles[i] = p;
+            return;
+        }
+
+        p.fallVelocity -= p.gravity * dt;
+        p.position.y += p.fallVelocity * dt;
+
+        int fallSample = GetNearestSampleIndexFast(p.position, invCellSize);
+        float2 conveyorPoint = sampledPositions[fallSample];
+
+        if (p.position.y <= conveyorPoint.y)
+        {
+            p.onPath = true;
+            p.bounceCount = 0;
+
+            float2 tangent = sampledTangents[fallSample];
+            float impact = math.abs(p.fallVelocity);
+
+            p.velocity2D = tangent * (impact * p.impactToPathVelocity);
+
+            uint seedX = (uint)(i * 1664525 + 1013904223);
+            uint seedY = (uint)(i * 22695477 + 1);
+            float rx = ((seedX % 2000) / 1000f) - 1f;
+            float ry = ((seedY % 2000) / 1000f) - 1f;
+
+            p.velocity2D += new float2(rx, ry) * randomBounceSideForce;
+            p.fallVelocity = impact * p.bounceRestitution;
+        }
+
+        particles[i] = p;
+    }
+
+    private int GetNearestSampleIndexFast(float3 position, float invCellSize)
+    {
+        int x = (int)((position.x - worldMin.x) * invCellSize);
+        int y = (int)((position.y - worldMin.y) * invCellSize);
+
+        x = math.clamp(x, 0, gridWidth - 1);
+        y = math.clamp(y, 0, gridHeight - 1);
+
+        return lookupGrid[x + y * gridWidth];
+    }
+}
+
+[BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+public struct BuildSpatialGridJob : IJob
+{
+    [ReadOnly] public NativeArray<GrainParticle> particles;
+    public NativeArray<int> cellHeads;
+    public NativeArray<int> particleNext;
+
+    public float2 worldMin;
+    public float collisionCellSize;
+    public int gridWidth;
+    public int gridHeight;
+
+    public void Execute()
+    {
+        for (int i = 0; i < cellHeads.Length; i++) cellHeads[i] = -1;
+
+        for (int i = 0; i < particles.Length; i++)
+        {
+            GrainParticle p = particles[i];
+            if (!p.onPath)
+            {
+                particleNext[i] = -1;
+                continue;
+            }
+
+            int cx = (int)((p.position.x - worldMin.x) / collisionCellSize);
+            int cy = (int)((p.position.y - worldMin.y) / collisionCellSize);
+
+            if (cx >= 0 && cx < gridWidth && cy >= 0 && cy < gridHeight)
+            {
+                int cellIndex = cx + cy * gridWidth;
+                particleNext[i] = cellHeads[cellIndex];
+                cellHeads[cellIndex] = i;
+            }
+            else
+            {
+                particleNext[i] = -1;
+            }
+        }
+    }
+}
+
+[BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+public struct ResolveCollisionsJob : IJobFor
+{
+    public NativeArray<GrainParticle> particles;
+    [ReadOnly] public NativeArray<int> cellHeads;
+    [ReadOnly] public NativeArray<int> particleNext;
+
+    public float grainSpacing;
+    public float collisionForce;
+    public int gridWidth;
+    public int gridHeight;
+
+    public void Execute(int cellIndex)
+    {
+        int headA = cellHeads[cellIndex];
+        if (headA < 0) return;
+
+        int cx = cellIndex % gridWidth;
+        int cy = cellIndex / gridWidth;
+
+        float sqrSpacing = grainSpacing * grainSpacing;
+
+        // 5 neighboring directions (including self-cell)
+        int2 offsets0 = new int2(0, 0);
+        int2 offsets1 = new int2(1, 0);
+        int2 offsets2 = new int2(-1, 1);
+        int2 offsets3 = new int2(0, 1);
+        int2 offsets4 = new int2(1, 1);
+
+        for (int n = 0; n < 5; n++)
+        {
+            int2 offset = n switch
+            {
+                0 => offsets0,
+                1 => offsets1,
+                2 => offsets2,
+                3 => offsets3,
+                _ => offsets4
+            };
+
+            int nx = cx + offset.x;
+            int ny = cy + offset.y;
+
+            if (nx < 0 || nx >= gridWidth || ny < 0 || ny >= gridHeight) continue;
+
+            int neighborCellIndex = nx + ny * gridWidth;
+            int headB = cellHeads[neighborCellIndex];
+
+            int currA = headA;
+            while (currA >= 0)
+            {
+                GrainParticle pA = particles[currA];
+                int currB = (n == 0) ? particleNext[currA] : headB;
+
+                while (currB >= 0)
+                {
+                    GrainParticle pB = particles[currB];
+
+                    float dx = pB.position.x - pA.position.x;
+                    float dy = pB.position.y - pA.position.y;
+                    float sqrDist = dx * dx + dy * dy;
+
+                    if (sqrDist < sqrSpacing && sqrDist > 0.00001f)
+                    {
+                        float dist = math.sqrt(sqrDist);
+                        float delta = (grainSpacing - dist) / dist * 0.5f;
+
+                        float pushX = dx * delta;
+                        float pushY = dy * delta;
+
+                        pA.position.x -= pushX;
+                        pA.position.y -= pushY;
+                        pB.position.x += pushX;
+                        pB.position.y += pushY;
+
+                        float forceX = pushX * collisionForce;
+                        float forceY = pushY * collisionForce;
+
+                        pA.velocity2D.x -= forceX;
+                        pA.velocity2D.y -= forceY;
+                        pB.velocity2D.x += forceX;
+                        pB.velocity2D.y += forceY;
+
+                        particles[currB] = pB;
+                    }
+
+                    currB = particleNext[currB];
+                }
+
+                particles[currA] = pA;
+                currA = particleNext[currA];
+            }
+        }
+    }
+}
+
+[BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+public struct ResolveEdgesJob : IJobParallelFor
+{
+    public NativeArray<GrainParticle> particles;
+
+    [ReadOnly, NativeDisableParallelForRestriction] public NativeArray<float2> sampledPositions;
+    [ReadOnly, NativeDisableParallelForRestriction] public NativeArray<float2> sampledTangents;
+    [ReadOnly, NativeDisableParallelForRestriction] public NativeArray<int> lookupGrid;
+
+    public float dt;
+    public float conveyorWidth;
+    public float edgeForce;
+    public float lookupCellSize;
+    public float2 worldMin;
+    public int gridWidth;
+    public int gridHeight;
+
+    public void Execute(int i)
+    {
+        GrainParticle p = particles[i];
+        if (!p.onPath) return;
+
+        float invCellSize = 1f / lookupCellSize;
+        float limit = conveyorWidth * 0.5f;
+
+        int sample = GetNearestSampleIndexFast(p.position, invCellSize);
+        float2 center = sampledPositions[sample];
+        float2 tangent = sampledTangents[sample];
+        float2 normal = new float2(-tangent.y, tangent.x);
+
+        float2 pos2D = p.position.xy;
+        float side = math.dot(pos2D - center, normal);
+
+        if (math.abs(side) > limit)
+        {
+            float penetration = math.abs(side) - limit;
+            float sign = math.sign(side);
+
+            p.velocity2D -= normal * (sign * penetration * edgeForce * dt);
+            p.position.xy -= normal * (sign * penetration);
+
+            particles[i] = p;
+        }
+    }
+
+    private int GetNearestSampleIndexFast(float3 position, float invCellSize)
+    {
+        int x = (int)((position.x - worldMin.x) * invCellSize);
+        int y = (int)((position.y - worldMin.y) * invCellSize);
+
+        x = math.clamp(x, 0, gridWidth - 1);
+        y = math.clamp(y, 0, gridHeight - 1);
+
+        return lookupGrid[x + y * gridWidth];
+    }
+}
+
+[BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+public struct UpdateMatricesJob : IJobParallelFor
+{
+    [ReadOnly] public NativeArray<GrainParticle> particles;
+    public NativeArray<Matrix4x4> matrices;
+    public float grainSize;
+
+    public void Execute(int i)
+    {
+        matrices[i] = Matrix4x4.TRS(
+            particles[i].position,
+            Quaternion.identity,
+            new Vector3(grainSize, grainSize, 1f)
+        );
+    }
+}
+
+// ------------------------------------------------------------------------
+// 3. MAIN MANAGER COMPONENT (NO NATIVE LIST)
+// ------------------------------------------------------------------------
 public class GrainSimulation : Singleton<GrainSimulation>
 {
     [Header("Fall")]
@@ -58,6 +432,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public Mesh quadMesh;
     public Material baseMaterial;
     public float grainSize = 0.08f;
+
     [Header("Closed Path")]
     public Transform[] pathPoints;
 
@@ -68,135 +443,113 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     [Header("Path Lookup Cache")]
     public float lookupCellSize = 0.05f;
+
     [HideInInspector] public Vector2[] sampledPositions;
     [HideInInspector] public Vector2[] sampledTangents;
 
-    private int[,] lookupGrid;
+    private NativeArray<float2> nativeSampledPositions;
+    private NativeArray<float2> nativeSampledTangents;
+    private NativeArray<int> nativeLookupGrid;
+
     private Vector2 worldMin;
     private Vector2 worldMax;
     private int gridWidth;
     private int gridHeight;
 
-    [Header("Path Movement")]
+    [Header("Path Movement Debug")]
     public int spawnCallCount;
     public int removeCallCount;
     public int actualRemoveCount;
 
-    // Fast Spatial Hash Grid parameters
-    private const int SPATIAL_GRID_SIZE = 1024;
-    private int[] spatialHead = new int[SPATIAL_GRID_SIZE];
-    private int[] spatialNext; // Resized with max capacity
-
-    private int[] collisionNext;
-    private int[] collisionGroup;
-    private int[] collisionParticle;
-
-    private int collisionParticleCount;
-
-    private List<FactionGroup> collisionGroups = new List<FactionGroup>();
+    private const int GRID_WIDTH = 128;
+    private const int GRID_HEIGHT = 128;
+    private const int TOTAL_CELLS = GRID_WIDTH * GRID_HEIGHT;
 
     public class FactionGroup
     {
         public Color faction;
         public Material material;
 
-        public int Count;
-        public int Capacity;
+        // NativeArray backing storage instead of NativeList
+        public NativeArray<GrainParticle> particles;
+        public NativeArray<Matrix4x4> matrices;
 
-        // Structure of Arrays (SOA) for Cache Locality & Zero Struct Copying
-        public Vector3[] position;
-        public Vector2[] velocity2D;
-        public float[] fallVelocity;
-        public float[] gravity;
-        public float[] conveyorForce;
-        public float[] fallDelay;
-        public float[] bounceRestitution;
-        public float[] bounceFriction;
-        public float[] impactToPathVelocity;
-        public int[] bounceCount;
-        public int[] maxBounces;
-        public bool[] onPath;
-        public bool[] bouncing;
+        // Flat buffers for Spatial Collision Grid
+        public NativeArray<int> cellHeads;
+        public NativeArray<int> particleNext;
 
-        // Graphics Matrices Array
-        public Matrix4x4[] matrices;
+        public int Count { get; private set; }
+        public int Capacity { get; private set; }
 
         public FactionGroup(Color factionColor, Material baseMat, int initialCap = 1024)
         {
             faction = factionColor;
             material = new Material(baseMat);
             Capacity = initialCap;
-            Allocate(initialCap);
+            Count = 0;
+
+            particles = new NativeArray<GrainParticle>(Capacity, Allocator.Persistent);
+            matrices = new NativeArray<Matrix4x4>(Capacity, Allocator.Persistent);
+            cellHeads = new NativeArray<int>(TOTAL_CELLS, Allocator.Persistent);
+            particleNext = new NativeArray<int>(Capacity, Allocator.Persistent);
         }
 
-        private void Allocate(int cap)
+        public void Add(GrainParticle particle, Matrix4x4 matrix)
         {
-            position = new Vector3[cap];
-            velocity2D = new Vector2[cap];
-            fallVelocity = new float[cap];
-            gravity = new float[cap];
-            conveyorForce = new float[cap];
-            fallDelay = new float[cap];
-            bounceRestitution = new float[cap];
-            bounceFriction = new float[cap];
-            impactToPathVelocity = new float[cap];
-            bounceCount = new int[cap];
-            maxBounces = new int[cap];
-            onPath = new bool[cap];
-            bouncing = new bool[cap];
-
-            matrices = new Matrix4x4[cap];
-        }
-
-        public void EnsureCapacity(int required)
-        {
-            if (required <= Capacity) return;
-            int newCap = Mathf.Max(Capacity * 2, required);
-
-            Array.Resize(ref position, newCap);
-            Array.Resize(ref velocity2D, newCap);
-            Array.Resize(ref fallVelocity, newCap);
-            Array.Resize(ref gravity, newCap);
-            Array.Resize(ref conveyorForce, newCap);
-            Array.Resize(ref fallDelay, newCap);
-            Array.Resize(ref bounceRestitution, newCap);
-            Array.Resize(ref bounceFriction, newCap);
-            Array.Resize(ref impactToPathVelocity, newCap);
-            Array.Resize(ref bounceCount, newCap);
-            Array.Resize(ref maxBounces, newCap);
-            Array.Resize(ref onPath, newCap);
-            Array.Resize(ref bouncing, newCap);
-
-            Array.Resize(ref matrices, newCap);
-
-            Capacity = newCap;
+            EnsureCapacity(Count + 1);
+            particles[Count] = particle;
+            matrices[Count] = matrix;
+            Count++;
         }
 
         public void RemoveAt(int index)
         {
-            int lastIndex = Count - 1;
-            if (index < lastIndex)
+            if (index < Count)
             {
-                position[index] = position[lastIndex];
-                velocity2D[index] = velocity2D[lastIndex];
-                fallVelocity[index] = fallVelocity[lastIndex];
-                gravity[index] = gravity[lastIndex];
-                conveyorForce[index] = conveyorForce[lastIndex];
-                fallDelay[index] = fallDelay[lastIndex];
-                bounceRestitution[index] = bounceRestitution[lastIndex];
-                bounceFriction[index] = bounceFriction[lastIndex];
-                impactToPathVelocity[index] = impactToPathVelocity[lastIndex];
-                bounceCount[index] = bounceCount[lastIndex];
-                maxBounces[index] = maxBounces[lastIndex];
-                onPath[index] = onPath[lastIndex];
-                bouncing[index] = bouncing[lastIndex];
+                int lastIndex = Count - 1;
+                particles[index] = particles[lastIndex];
+                matrices[index] = matrices[lastIndex];
+                Count--;
             }
-            Count--;
         }
 
         public void Clear()
         {
             Count = 0;
+        }
+
+        private void EnsureCapacity(int requiredCap)
+        {
+            if (requiredCap <= Capacity) return;
+
+            int newCap = math.max(Capacity * 2, requiredCap);
+
+            var newParticles = new NativeArray<GrainParticle>(newCap, Allocator.Persistent);
+            var newMatrices = new NativeArray<Matrix4x4>(newCap, Allocator.Persistent);
+            var newParticleNext = new NativeArray<int>(newCap, Allocator.Persistent);
+
+            if (Count > 0)
+            {
+                NativeArray<GrainParticle>.Copy(particles, 0, newParticles, 0, Count);
+                NativeArray<Matrix4x4>.Copy(matrices, 0, newMatrices, 0, Count);
+            }
+
+            particles.Dispose();
+            matrices.Dispose();
+            particleNext.Dispose();
+
+            particles = newParticles;
+            matrices = newMatrices;
+            particleNext = newParticleNext;
+            Capacity = newCap;
+        }
+
+        public void Dispose()
+        {
+            if (particles.IsCreated) particles.Dispose();
+            if (matrices.IsCreated) matrices.Dispose();
+            if (cellHeads.IsCreated) cellHeads.Dispose();
+            if (particleNext.IsCreated) particleNext.Dispose();
         }
     }
 
@@ -220,15 +573,21 @@ public class GrainSimulation : Singleton<GrainSimulation>
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
-
         LevelLoader.startLevelEvent += Reset;
-
-        spatialNext = new int[2048];
     }
 
     void OnDestroy()
     {
         LevelLoader.startLevelEvent -= Reset;
+
+        if (nativeSampledPositions.IsCreated) nativeSampledPositions.Dispose();
+        if (nativeSampledTangents.IsCreated) nativeSampledTangents.Dispose();
+        if (nativeLookupGrid.IsCreated) nativeLookupGrid.Dispose();
+
+        foreach (var group in factionGroups.Values)
+        {
+            group.Dispose();
+        }
     }
 
     void Start()
@@ -240,9 +599,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         float dt = Time.deltaTime;
 
-        SimulateGrains(dt);
-        ResolveCollisions();
-        ResolveEdges(dt);
+        ExecuteGrainPipelineJobified(dt);
         CheckSpawnCompletion();
         Render();
     }
@@ -253,346 +610,130 @@ public class GrainSimulation : Singleton<GrainSimulation>
     }
 
     // ------------------------------------------------------------------------
-    // Optimized SOA Simulation Loop
-
-    void SimulateGrains(float dt)
-    {
-        float sqrMaxSpeed = maxSpeed * maxSpeed;
-        float invCellSize = 1f / lookupCellSize;
-
-        foreach (var group in factionGroups.Values)
-        {
-            int count = group.Count;
-            for (int i = 0; i < count; i++)
-            {
-                // 1. ON PATH STATE
-                if (group.onPath[i])
-                {
-                    int sample = GetNearestSampleIndexFast(group.position[i], invCellSize);
-                    Vector2 nearest = sampledPositions[sample];
-                    Vector2 tangent = sampledTangents[sample];
-
-                    group.velocity2D[i] += tangent * (group.conveyorForce[i] * dt);
-
-                    Vector2 toCenter = nearest - (Vector2)group.position[i];
-                    group.velocity2D[i] += toCenter * (edgeForce * dt);
-
-                    if (group.velocity2D[i].sqrMagnitude > sqrMaxSpeed)
-                    {
-                        group.velocity2D[i] = group.velocity2D[i].normalized * maxSpeed;
-                    }
-
-                    group.position[i].x += group.velocity2D[i].x * dt;
-                    group.position[i].y += group.velocity2D[i].y * dt;
-
-                    group.velocity2D[i] *= (1f - airDrag * dt);
-                    continue;
-                }
-
-                // 2. FALLING DELAY STATE
-                if (group.fallDelay[i] > 0f)
-                {
-                    group.fallDelay[i] -= dt;
-                    continue;
-                }
-
-                // 3. BOUNCING STATE
-                if (group.bouncing[i])
-                {
-                    group.fallVelocity[i] -= group.gravity[i] * dt;
-                    group.position[i].y += group.fallVelocity[i] * dt;
-                    group.position[i].x += group.velocity2D[i].x * dt;
-
-                    int sample = GetNearestSampleIndexFast(group.position[i], invCellSize);
-                    Vector2 surface = sampledPositions[sample];
-
-                    if (group.position[i].y <= surface.y)
-                    {
-                        group.position[i].y = surface.y;
-                        float impact = Mathf.Abs(group.fallVelocity[i]);
-                        float personalSettle = UnityEngine.Random.Range(0.8f, 1.2f);
-
-                        if (impact < personalSettle || group.bounceCount[i] >= group.maxBounces[i])
-                        {
-                            group.bouncing[i] = false;
-                            group.onPath[i] = true;
-                            Vector2 tangent = sampledTangents[sample];
-                            group.velocity2D[i] = tangent * (impact * group.impactToPathVelocity[i]);
-                            group.fallVelocity[i] = 0f;
-                        }
-                        else
-                        {
-                            group.fallVelocity[i] = impact * group.bounceRestitution[i];
-                            group.velocity2D[i] *= group.bounceFriction[i];
-                            group.bounceCount[i]++;
-                        }
-                    }
-                    continue;
-                }
-
-                // 4. FREE FALL STATE
-                group.fallVelocity[i] -= group.gravity[i] * dt;
-                group.position[i].y += group.fallVelocity[i] * dt;
-
-                int fallSample = GetNearestSampleIndexFast(group.position[i], invCellSize);
-                Vector2 conveyorPoint = sampledPositions[fallSample];
-
-                if (group.position[i].y <= conveyorPoint.y)
-                {
-                    group.onPath[i] = true;
-                    group.bounceCount[i] = 0;
-
-                    Vector2 tangent = sampledTangents[fallSample];
-                    float impact = Mathf.Abs(group.fallVelocity[i]);
-
-                    group.velocity2D[i] = tangent * (impact * group.impactToPathVelocity[i]);
-                    Vector2 sideKick = UnityEngine.Random.insideUnitCircle * randomBounceSideForce;
-                    group.velocity2D[i] += sideKick;
-
-                    group.fallVelocity[i] = impact * group.bounceRestitution[i];
-                }
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // Zero-Allocation Spatial Hash Grid Collision Resolution
-
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    private int HashGridCell(int cellX, int cellY)
-    {
-        unchecked
-        {
-            int hash = (cellX * 73856093) ^ (cellY * 19349663);
-            return (hash & 0x7FFFFFFF) % SPATIAL_GRID_SIZE;
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // Hyper-Fast Fixed-Grid Spatial Binning Collision Engine
+    // JOB CHAINING EXECUTION PIPELINE
     // ------------------------------------------------------------------------
 
-    private const int GRID_CELL_SIZE_SHIFT = 4; // Fast bitshift division for spatial indexing
-    private const int GRID_WIDTH = 128;
-    private const int GRID_HEIGHT = 128;
-    private const int TOTAL_CELLS = GRID_WIDTH * GRID_HEIGHT;
+    private JobHandle lastFrameJobHandle;
 
-    private int[] cellHeads = new int[TOTAL_CELLS];
-    private int[] cellNext = new int[4096]; // Dynamic capacity for grain linked-list pointers
-
-    void ResolveCollisions()
+    private void ExecuteGrainPipelineJobified(float dt)
     {
-        int totalCount = 0;
+        if (!nativeLookupGrid.IsCreated) return;
 
-        // Cache active groups into flat arrays once
-        int activeGroupCount = 0;
-        foreach (var group in factionGroups.Values)
-        {
-            totalCount += group.Count;
-            activeGroupCount++;
-        }
-
-        if (totalCount == 0) return;
-
-        // Ensure capacity for flat collision buffers
-        if (collisionNext == null || collisionNext.Length < totalCount)
-        {
-            int capacity = Mathf.NextPowerOfTwo(totalCount);
-            collisionNext = new int[capacity];
-            collisionGroup = new int[capacity];
-            collisionParticle = new int[capacity];
-        }
-
-        // Single pass array mapping
-        collisionGroups.Clear();
-        int gIdx = 0;
-        foreach (var group in factionGroups.Values)
-        {
-            collisionGroups.Add(group);
-            int count = group.Count;
-            for (int i = 0; i < count; i++)
-            {
-                if (!group.onPath[i]) continue;
-
-                int globalIndex = collisionParticleCount;
-                collisionGroup[globalIndex] = gIdx;
-                collisionParticle[globalIndex] = i;
-
-                float x = group.position[i].x;
-                float y = group.position[i].y;
-
-                int cx = (int)((x - worldMin.x) / collisionCellSize);
-                int cy = (int)((y - worldMin.y) / collisionCellSize);
-
-                if (cx >= 0 && cx < GRID_WIDTH && cy >= 0 && cy < GRID_HEIGHT)
-                {
-                    int cellIndex = cx + cy * GRID_WIDTH;
-                    collisionNext[globalIndex] = cellHeads[cellIndex];
-                    cellHeads[cellIndex] = globalIndex + 1; // 1-based indexing for 0-check
-                    collisionParticleCount++;
-                }
-            }
-            gIdx++;
-        }
-
-        float sqrSpacing = grainSpacing * grainSpacing;
-        float halfSpacing = grainSpacing * 0.5f;
-
-        // Directional offsets for 4-neighbor scanning: Current Cell, Right, Bottom-Left, Bottom, Bottom-Right
-        ReadOnlySpan<int> offsetX = stackalloc int[5] { 0, 1, -1, 0, 1 };
-        ReadOnlySpan<int> offsetY = stackalloc int[5] { 0, 0, 1, 1, 1 };
-
-        // ---------------------------------------------------------
-        // BROADPHASE & NARROWPHASE (Single-Pass 4-Neighbor Search)
-        // ---------------------------------------------------------
-        for (int cy = 0; cy < GRID_HEIGHT; cy++)
-        {
-            int rowOffset = cy * GRID_WIDTH;
-
-            for (int cx = 0; cx < GRID_WIDTH; cx++)
-            {
-                int cellIndex = cx + rowOffset;
-                int headA = cellHeads[cellIndex] - 1;
-
-                if (headA < 0) continue;
-
-                // Search self-cell and 4 unique neighboring directions
-                for (int n = 0; n < 5; n++)
-                {
-                    int nx = cx + offsetX[n];
-                    int ny = cy + offsetY[n];
-
-                    if (nx < 0 || nx >= GRID_WIDTH || ny >= GRID_HEIGHT) continue;
-
-                    int neighborCellIndex = nx + ny * GRID_WIDTH;
-                    int headB = cellHeads[neighborCellIndex] - 1;
-
-                    while (headA >= 0)
-                    {
-                        int grpAIdx = collisionGroup[headA];
-                        int pAIdx = collisionParticle[headA];
-                        var groupA = collisionGroups[grpAIdx];
-
-                        float posXA = groupA.position[pAIdx].x;
-                        float posYA = groupA.position[pAIdx].y;
-
-                        // If checking same cell, skip self and lower indices to prevent duplicate checks
-                        int currB = (n == 0) ? collisionNext[headA] - 1 : headB;
-
-                        while (currB >= 0)
-                        {
-                            int grpBIdx = collisionGroup[currB];
-                            int pBIdx = collisionParticle[currB];
-                            var groupB = collisionGroups[grpBIdx];
-
-                            float dx = groupB.position[pBIdx].x - posXA;
-                            float dy = groupB.position[pBIdx].y - posYA;
-
-                            // Fast Bounding Box check using sqrMagnitude (Skip Abs math calls)
-                            float sqrDist = dx * dx + dy * dy;
-
-                            if (sqrDist < sqrSpacing && sqrDist > 0.00001f)
-                            {
-                                float dist = Mathf.Sqrt(sqrDist);
-                                float delta = (grainSpacing - dist) / dist * 0.5f;
-
-                                float pushX = dx * delta;
-                                float pushY = dy * delta;
-
-                                // Apply separation impulse
-                                groupA.position[pAIdx].x -= pushX;
-                                groupA.position[pAIdx].y -= pushY;
-                                groupB.position[pBIdx].x += pushX;
-                                groupB.position[pBIdx].y += pushY;
-
-                                float forceX = pushX * collisionForce;
-                                float forceY = pushY * collisionForce;
-
-                                groupA.velocity2D[pAIdx].x -= forceX;
-                                groupA.velocity2D[pAIdx].y -= forceY;
-                                groupB.velocity2D[pBIdx].x += forceX;
-                                groupB.velocity2D[pBIdx].y += forceY;
-                            }
-
-                            currB = collisionNext[currB] - 1;
-                        }
-
-                        headA = collisionNext[headA] - 1;
-                    }
-                }
-            }
-        }
-
-        // Clear grid pointers for the next frame
-        Array.Clear(cellHeads, 0, TOTAL_CELLS);
-        collisionParticleCount = 0;
-    }
-
-    void ResolveEdges(float dt)
-    {
-        float invCellSize = 1f / lookupCellSize;
-        float limit = conveyorWidth * 0.5f;
-
-        foreach (var group in factionGroups.Values)
-        {
-            int count = group.Count;
-            for (int i = 0; i < count; i++)
-            {
-                if (!group.onPath[i]) continue;
-
-                int sample = GetNearestSampleIndexFast(group.position[i], invCellSize);
-                Vector2 center = sampledPositions[sample];
-                Vector2 tangent = sampledTangents[sample];
-                Vector2 normal = new Vector2(-tangent.y, tangent.x);
-
-                Vector2 pos2D = group.position[i];
-                float side = Vector2.Dot(pos2D - center, normal);
-
-                if (Mathf.Abs(side) > limit)
-                {
-                    float penetration = Mathf.Abs(side) - limit;
-                    float sign = Mathf.Sign(side);
-
-                    group.velocity2D[i] -= normal * (sign * penetration * edgeForce * dt);
-                    group.position[i].x -= normal.x * sign * penetration;
-                    group.position[i].y -= normal.y * sign * penetration;
-                }
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // Hardware Instanced Rendering
-
-    void Render()
-    {
-        Vector3 size = new Vector3(grainSize, grainSize, 1f);
-        Quaternion rot = Quaternion.identity;
+        // Start this frame's dependencies chained from the end of LAST frame
+        JobHandle combinedPipelineHandle = lastFrameJobHandle;
 
         foreach (var group in factionGroups.Values)
         {
             int count = group.Count;
             if (count == 0) continue;
 
-            group.EnsureCapacity(count);
+            NativeArray<GrainParticle> activeParticles = group.particles.GetSubArray(0, count);
+            NativeArray<Matrix4x4> activeMatrices = group.matrices.GetSubArray(0, count);
+            NativeArray<int> activeParticleNext = group.particleNext.GetSubArray(0, count);
 
-            for (int i = 0; i < count; i++)
+            // Pass combinedPipelineHandle into Schedule(...) so it depends on prior work!
+            SimulateGrainsJob simJob = new SimulateGrainsJob
             {
-                group.matrices[i] = Matrix4x4.TRS(group.position[i], rot, size);
-            }
+                particles = activeParticles,
+                sampledPositions = nativeSampledPositions,
+                sampledTangents = nativeSampledTangents,
+                lookupGrid = nativeLookupGrid,
+                dt = dt,
+                maxSpeed = maxSpeed,
+                edgeForce = edgeForce,
+                airDrag = airDrag,
+                lookupCellSize = lookupCellSize,
+                worldMin = worldMin,
+                gridWidth = gridWidth,
+                gridHeight = gridHeight,
+                randomBounceSideForce = randomBounceSideForce
+            };
+            // Explicitly chain from combinedPipelineHandle
+            JobHandle handle = simJob.Schedule(count, 64, combinedPipelineHandle);
+
+            BuildSpatialGridJob buildGridJob = new BuildSpatialGridJob
+            {
+                particles = activeParticles,
+                cellHeads = group.cellHeads,
+                particleNext = activeParticleNext,
+                worldMin = worldMin,
+                collisionCellSize = collisionCellSize,
+                gridWidth = GRID_WIDTH,
+                gridHeight = GRID_HEIGHT
+            };
+            handle = buildGridJob.Schedule(handle);
+
+            ResolveCollisionsJob collisionJob = new ResolveCollisionsJob
+            {
+                particles = activeParticles,
+                cellHeads = group.cellHeads,
+                particleNext = activeParticleNext,
+                grainSpacing = grainSpacing,
+                collisionForce = collisionForce,
+                gridWidth = GRID_WIDTH,
+                gridHeight = GRID_HEIGHT
+            };
+            handle = collisionJob.Schedule(TOTAL_CELLS, handle);
+
+            ResolveEdgesJob edgesJob = new ResolveEdgesJob
+            {
+                particles = activeParticles,
+                sampledPositions = nativeSampledPositions,
+                sampledTangents = nativeSampledTangents,
+                lookupGrid = nativeLookupGrid,
+                dt = dt,
+                conveyorWidth = conveyorWidth,
+                edgeForce = edgeForce,
+                lookupCellSize = lookupCellSize,
+                worldMin = worldMin,
+                gridWidth = gridWidth,
+                gridHeight = gridHeight
+            };
+            handle = edgesJob.Schedule(count, 64, handle);
+
+            UpdateMatricesJob matrixJob = new UpdateMatricesJob
+            {
+                particles = activeParticles,
+                matrices = activeMatrices,
+                grainSize = grainSize
+            };
+            handle = matrixJob.Schedule(count, 64, handle);
+
+            combinedPipelineHandle = JobHandle.CombineDependencies(combinedPipelineHandle, handle);
+        }
+
+        // Save and complete
+        lastFrameJobHandle = combinedPipelineHandle;
+        lastFrameJobHandle.Complete();
+    }
+
+    // ------------------------------------------------------------------------
+    // HARDWARE INSTANCED RENDERING
+    // ------------------------------------------------------------------------
+
+    void Render()
+    {
+        foreach (var group in factionGroups.Values)
+        {
+            int count = group.Count;
+            if (count == 0) continue;
 
             int rendered = 0;
+            NativeArray<Matrix4x4> nativeMatrices = group.matrices.GetSubArray(0, count);
+
             while (rendered < count)
             {
                 int batchSize = Mathf.Min(1024, count - rendered);
+
+                Matrix4x4[] batch = new Matrix4x4[batchSize];
+                NativeArray<Matrix4x4>.Copy(nativeMatrices, rendered, batch, 0, batchSize);
 
                 Graphics.RenderMeshInstanced(
                     new RenderParams(group.material),
                     quadMesh,
                     0,
-                    group.matrices,
-                    batchSize,
-                    rendered
+                    batch,
+                    batchSize
                 );
 
                 rendered += batchSize;
@@ -601,7 +742,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
     }
 
     // ------------------------------------------------------------------------
-    // Spatial Lookups & Pathing Setup
+    // PATH GENERATION & CACHING
+    // ------------------------------------------------------------------------
 
     public void BuildPath()
     {
@@ -654,7 +796,21 @@ public class GrainSimulation : Singleton<GrainSimulation>
         gridWidth = Mathf.CeilToInt((worldMax.x - worldMin.x) / lookupCellSize);
         gridHeight = Mathf.CeilToInt((worldMax.y - worldMin.y) / lookupCellSize);
 
-        lookupGrid = new int[gridWidth, gridHeight];
+        int totalGridCells = gridWidth * gridHeight;
+
+        if (nativeLookupGrid.IsCreated) nativeLookupGrid.Dispose();
+        if (nativeSampledPositions.IsCreated) nativeSampledPositions.Dispose();
+        if (nativeSampledTangents.IsCreated) nativeSampledTangents.Dispose();
+
+        nativeLookupGrid = new NativeArray<int>(totalGridCells, Allocator.Persistent);
+        nativeSampledPositions = new NativeArray<float2>(sampleCount, Allocator.Persistent);
+        nativeSampledTangents = new NativeArray<float2>(sampleCount, Allocator.Persistent);
+
+        for (int i = 0; i < sampleCount; i++)
+        {
+            nativeSampledPositions[i] = sampledPositions[i];
+            nativeSampledTangents[i] = sampledTangents[i];
+        }
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -674,21 +830,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
                     }
                 }
 
-                lookupGrid[x, y] = bestIndex;
+                nativeLookupGrid[x + y * gridWidth] = bestIndex;
             }
         }
-    }
-
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    int GetNearestSampleIndexFast(Vector3 position, float invCellSize)
-    {
-        int x = (int)((position.x - worldMin.x) * invCellSize);
-        int y = (int)((position.y - worldMin.y) * invCellSize);
-
-        if (x < 0) x = 0; else if (x >= gridWidth) x = gridWidth - 1;
-        if (y < 0) y = 0; else if (y >= gridHeight) y = gridHeight - 1;
-
-        return lookupGrid[x, y];
     }
 
     Vector2 Evaluate(float distance)
@@ -758,35 +902,36 @@ public class GrainSimulation : Singleton<GrainSimulation>
         BuildPath();
     }
 
+    // ------------------------------------------------------------------------
+    // API & FACTORY HANDLERS
+    // ------------------------------------------------------------------------
+
     public void SpawnGrains(List<Vector3> grainPositions, Color faction, Action onAllGrainsPoured = null, Action onComplete = null)
     {
         FactionGroup group = GetFaction(faction);
         int startIndex = group.Count;
         int totalSpawn = grainPositions.Count;
 
-        group.EnsureCapacity(group.Count + totalSpawn);
-
         for (int i = 0; i < totalSpawn; i++)
         {
-            int idx = group.Count;
-            group.position[idx] = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
-            group.position[idx].z = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000);
+            GrainParticle p = new GrainParticle();
+            p.position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
+            p.position.z = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000);
 
-            group.velocity2D[idx] = Vector2.zero;
-            group.gravity[idx] = UnityEngine.Random.Range(gravityRange.x, gravityRange.y);
-            group.fallVelocity[idx] = 0f;
-            group.conveyorForce[idx] = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y);
-            group.onPath[idx] = false;
-            group.fallDelay[idx] = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay;
-            group.bouncing[idx] = false;
-            group.bounceCount[idx] = 0;
-            group.bounceRestitution[idx] = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y);
-            group.bounceFriction[idx] = UnityEngine.Random.Range(bounceFrictionRange.x, bounceFrictionRange.y);
-            group.maxBounces[idx] = UnityEngine.Random.Range(bounceCountRange.x, bounceCountRange.y + 1);
-            group.impactToPathVelocity[idx] = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y);
+            p.velocity2D = float2.zero;
+            p.gravity = UnityEngine.Random.Range(gravityRange.x, gravityRange.y);
+            p.fallVelocity = 0f;
+            p.conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y);
+            p.onPath = false;
+            p.fallDelay = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay;
+            p.bouncing = false;
+            p.bounceCount = 0;
+            p.bounceRestitution = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y);
+            p.bounceFriction = UnityEngine.Random.Range(bounceFrictionRange.x, bounceFrictionRange.y);
+            p.maxBounces = UnityEngine.Random.Range(bounceCountRange.x, bounceCountRange.y + 1);
+            p.impactToPathVelocity = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y);
 
-            group.Count++;
-
+            group.Add(p, Matrix4x4.identity);
             spawnCallCount++;
         }
 
@@ -816,7 +961,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         FactionGroup group = GetFaction(faction);
         if (group.Count == 0) return Vector3.zero;
 
-        return group.position[0];
+        return group.particles[0].position;
     }
 
     public void RemoveFirstGrain(Color faction)
@@ -827,7 +972,6 @@ public class GrainSimulation : Singleton<GrainSimulation>
         if (group.Count == 0) return;
 
         group.RemoveAt(0);
-
         actualRemoveCount++;
     }
 
@@ -856,7 +1000,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             for (int i = 0; i < group.Count; i++)
             {
-                Vector3 pos = group.position[i];
+                float3 pos = group.particles[i].position;
                 if (pos.y > grainPoolPositionY && pos.x > position.x - range && pos.x < position.x + range)
                 {
                     return true;
@@ -892,12 +1036,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
             {
                 if (g >= request.group.Count) break;
 
-                if (request.group.fallDelay[g] > 0)
+                if (request.group.particles[g].fallDelay > 0)
                 {
                     allPoured = false;
                 }
 
-                if (request.group.onPath[g])
+                if (request.group.particles[g].onPath)
                 {
                     if (g > request.startIndex + percentNumGrainOnPathForChickenToEat * totalGrain)
                     {
