@@ -382,210 +382,150 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     void ResolveCollisions()
     {
-        collisionGroups.Clear();
-
-        foreach (var group in factionGroups.Values)
-        {
-            collisionGroups.Add(group);
-        }
-
-        float sqrSpacing = grainSpacing * grainSpacing;
-        float invCellSize = 1f / collisionCellSize;
-
-        // ---------------------------------------------------------
-        // Count all particles across all groups
-        // ---------------------------------------------------------
         int totalCount = 0;
 
+        // Cache active groups into flat arrays once
+        int activeGroupCount = 0;
         foreach (var group in factionGroups.Values)
+        {
             totalCount += group.Count;
+            activeGroupCount++;
+        }
 
-        if (totalCount == 0)
-            return;
+        if (totalCount == 0) return;
 
-        // ---------------------------------------------------------
-        // Ensure global collision arrays have enough capacity
-        // ---------------------------------------------------------
+        // Ensure capacity for flat collision buffers
         if (collisionNext == null || collisionNext.Length < totalCount)
         {
             int capacity = Mathf.NextPowerOfTwo(totalCount);
-
             collisionNext = new int[capacity];
             collisionGroup = new int[capacity];
             collisionParticle = new int[capacity];
         }
 
-        collisionParticleCount = 0;
-
-        // Clear grid
-        Array.Clear(cellHeads, 0, TOTAL_CELLS);
-
-        // ---------------------------------------------------------
-        // 1. BROADPHASE
-        //
-        // Put EVERY grain from EVERY faction into the same grid.
-        // ---------------------------------------------------------
-        int groupIndex = 0;
-
+        // Single pass array mapping
+        collisionGroups.Clear();
+        int gIdx = 0;
         foreach (var group in factionGroups.Values)
         {
+            collisionGroups.Add(group);
             int count = group.Count;
-
             for (int i = 0; i < count; i++)
             {
-                if (!group.onPath[i])
-                    continue;
+                if (!group.onPath[i]) continue;
+
+                int globalIndex = collisionParticleCount;
+                collisionGroup[globalIndex] = gIdx;
+                collisionParticle[globalIndex] = i;
 
                 float x = group.position[i].x;
                 float y = group.position[i].y;
 
-                int cx = (int)((x - worldMin.x) * invCellSize);
-                int cy = (int)((y - worldMin.y) * invCellSize);
+                int cx = (int)((x - worldMin.x) / collisionCellSize);
+                int cy = (int)((y - worldMin.y) / collisionCellSize);
 
-                if (cx < 0 || cx >= GRID_WIDTH ||
-                    cy < 0 || cy >= GRID_HEIGHT)
-                    continue;
-
-                int globalIndex = collisionParticleCount++;
-
-                collisionGroup[globalIndex] = groupIndex;
-                collisionParticle[globalIndex] = i;
-
-                int cellIndex = cx + cy * GRID_WIDTH;
-
-                // +1 because 0 means empty
-                collisionNext[globalIndex] = cellHeads[cellIndex];
-                cellHeads[cellIndex] = globalIndex + 1;
+                if (cx >= 0 && cx < GRID_WIDTH && cy >= 0 && cy < GRID_HEIGHT)
+                {
+                    int cellIndex = cx + cy * GRID_WIDTH;
+                    collisionNext[globalIndex] = cellHeads[cellIndex];
+                    cellHeads[cellIndex] = globalIndex + 1; // 1-based indexing for 0-check
+                    collisionParticleCount++;
+                }
             }
-
-            groupIndex++;
+            gIdx++;
         }
 
-        // ---------------------------------------------------------
-        // 2. NARROWPHASE
-        //
-        // Compare grains against ALL grains in neighboring cells.
-        // ---------------------------------------------------------
-        groupIndex = 0;
+        float sqrSpacing = grainSpacing * grainSpacing;
+        float halfSpacing = grainSpacing * 0.5f;
 
-        foreach (var group in factionGroups.Values)
+        // Directional offsets for 4-neighbor scanning: Current Cell, Right, Bottom-Left, Bottom, Bottom-Right
+        ReadOnlySpan<int> offsetX = stackalloc int[5] { 0, 1, -1, 0, 1 };
+        ReadOnlySpan<int> offsetY = stackalloc int[5] { 0, 0, 1, 1, 1 };
+
+        // ---------------------------------------------------------
+        // BROADPHASE & NARROWPHASE (Single-Pass 4-Neighbor Search)
+        // ---------------------------------------------------------
+        for (int cy = 0; cy < GRID_HEIGHT; cy++)
         {
-            int count = group.Count;
+            int rowOffset = cy * GRID_WIDTH;
 
-            for (int i = 0; i < count; i++)
+            for (int cx = 0; cx < GRID_WIDTH; cx++)
             {
-                if (!group.onPath[i])
-                    continue;
+                int cellIndex = cx + rowOffset;
+                int headA = cellHeads[cellIndex] - 1;
 
-                float posX = group.position[i].x;
-                float posY = group.position[i].y;
+                if (headA < 0) continue;
 
-                int cx = (int)((posX - worldMin.x) * invCellSize);
-                int cy = (int)((posY - worldMin.y) * invCellSize);
-
-                if (cx < 1 || cx >= GRID_WIDTH - 1 ||
-                    cy < 1 || cy >= GRID_HEIGHT - 1)
-                    continue;
-
-                // Loop through 3x3 neighboring cells
-                for (int nx = -1; nx <= 1; nx++)
+                // Search self-cell and 4 unique neighboring directions
+                for (int n = 0; n < 5; n++)
                 {
-                    int cellX = cx + nx;
+                    int nx = cx + offsetX[n];
+                    int ny = cy + offsetY[n];
 
-                    for (int ny = -1; ny <= 1; ny++)
+                    if (nx < 0 || nx >= GRID_WIDTH || ny >= GRID_HEIGHT) continue;
+
+                    int neighborCellIndex = nx + ny * GRID_WIDTH;
+                    int headB = cellHeads[neighborCellIndex] - 1;
+
+                    while (headA >= 0)
                     {
-                        int cellIndex =
-                            cellX + (cy + ny) * GRID_WIDTH;
+                        int grpAIdx = collisionGroup[headA];
+                        int pAIdx = collisionParticle[headA];
+                        var groupA = collisionGroups[grpAIdx];
 
-                        int globalJ = cellHeads[cellIndex] - 1;
+                        float posXA = groupA.position[pAIdx].x;
+                        float posYA = groupA.position[pAIdx].y;
 
-                        while (globalJ >= 0)
+                        // If checking same cell, skip self and lower indices to prevent duplicate checks
+                        int currB = (n == 0) ? collisionNext[headA] - 1 : headB;
+
+                        while (currB >= 0)
                         {
-                            int otherGroupIndex = collisionGroup[globalJ];
-                            int j = collisionParticle[globalJ];
+                            int grpBIdx = collisionGroup[currB];
+                            int pBIdx = collisionParticle[currB];
+                            var groupB = collisionGroups[grpBIdx];
 
-                            // Avoid processing the same pair twice
-                            //
-                            // Same group:
-                            //     i < j
-                            //
-                            // Different groups:
-                            //     only process based on group index
-                            bool processPair;
+                            float dx = groupB.position[pBIdx].x - posXA;
+                            float dy = groupB.position[pBIdx].y - posYA;
 
-                            if (groupIndex == otherGroupIndex)
+                            // Fast Bounding Box check using sqrMagnitude (Skip Abs math calls)
+                            float sqrDist = dx * dx + dy * dy;
+
+                            if (sqrDist < sqrSpacing && sqrDist > 0.00001f)
                             {
-                                processPair = i < j;
-                            }
-                            else
-                            {
-                                processPair = groupIndex < otherGroupIndex;
-                            }
+                                float dist = Mathf.Sqrt(sqrDist);
+                                float delta = (grainSpacing - dist) / dist * 0.5f;
 
-                            if (processPair)
-                            {
-                                var otherGroup = collisionGroups[otherGroupIndex];
+                                float pushX = dx * delta;
+                                float pushY = dy * delta;
 
-                                if (otherGroup.onPath[j])
-                                {
-                                    float dx =
-                                        otherGroup.position[j].x - posX;
+                                // Apply separation impulse
+                                groupA.position[pAIdx].x -= pushX;
+                                groupA.position[pAIdx].y -= pushY;
+                                groupB.position[pBIdx].x += pushX;
+                                groupB.position[pBIdx].y += pushY;
 
-                                    float dy =
-                                        otherGroup.position[j].y - posY;
+                                float forceX = pushX * collisionForce;
+                                float forceY = pushY * collisionForce;
 
-                                    // Fast bounding box check
-                                    if (Mathf.Abs(dx) < grainSpacing &&
-                                        Mathf.Abs(dy) < grainSpacing)
-                                    {
-                                        float sqrDist =
-                                            dx * dx + dy * dy;
-
-                                        if (sqrDist < sqrSpacing &&
-                                            sqrDist > 0.00001f)
-                                        {
-                                            float dist =
-                                                Mathf.Sqrt(sqrDist);
-
-                                            float delta =
-                                                (grainSpacing - dist)
-                                                / dist * 0.5f;
-
-                                            float pushX = dx * delta;
-                                            float pushY = dy * delta;
-
-                                            // Push both grains apart
-                                            group.position[i].x -= pushX;
-                                            group.position[i].y -= pushY;
-
-                                            otherGroup.position[j].x += pushX;
-                                            otherGroup.position[j].y += pushY;
-
-                                            // Damp velocity
-                                            group.velocity2D[i].x -=
-                                                pushX * collisionForce;
-
-                                            group.velocity2D[i].y -=
-                                                pushY * collisionForce;
-
-                                            otherGroup.velocity2D[j].x +=
-                                                pushX * collisionForce;
-
-                                            otherGroup.velocity2D[j].y +=
-                                                pushY * collisionForce;
-                                        }
-                                    }
-                                }
+                                groupA.velocity2D[pAIdx].x -= forceX;
+                                groupA.velocity2D[pAIdx].y -= forceY;
+                                groupB.velocity2D[pBIdx].x += forceX;
+                                groupB.velocity2D[pBIdx].y += forceY;
                             }
 
-                            globalJ = collisionNext[globalJ] - 1;
+                            currB = collisionNext[currB] - 1;
                         }
+
+                        headA = collisionNext[headA] - 1;
                     }
                 }
             }
-
-            groupIndex++;
         }
+
+        // Clear grid pointers for the next frame
+        Array.Clear(cellHeads, 0, TOTAL_CELLS);
+        collisionParticleCount = 0;
     }
 
     void ResolveEdges(float dt)
