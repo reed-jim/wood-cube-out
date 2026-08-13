@@ -33,11 +33,7 @@ public class GrainPile : MonoBehaviour
     public int totalNumber;
     public int remainingNumber;
     public float currentProgress;
-    public float timeEatOneGrain;
     public float delayPerGrain;
-    public int numGrainToSwitchEatAnimation;
-    public int numChickenEating;
-    public int numGrainBeEating;
     #endregion
 
     [Header("Customize")]
@@ -78,9 +74,6 @@ public class GrainPile : MonoBehaviour
         ObjectPoolingEverything.ReturnToPool(GameConstants.grainPile, gameObject);
 
         progressText.gameObject.SetActive(false);
-
-        numChickenEating = 0;
-        numGrainBeEating = 0;
     }
 
     public void Setup(WashingMachineItem grainBusket, int amount)
@@ -92,9 +85,6 @@ public class GrainPile : MonoBehaviour
         currentProgress = 1;
 
         progressText.gameObject.SetActive(false);
-
-        numChickenEating = 0;
-        numGrainBeEating = 0;
     }
 
     public void SetFaction(Color faction)

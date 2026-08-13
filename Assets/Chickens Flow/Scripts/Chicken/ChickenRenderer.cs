@@ -174,6 +174,17 @@ public class ChickenRenderer : MonoBehaviour
             index++;
         }
 
+        for (int i = index; i < shadowMatrices.Length; i++)
+        {
+            position = Vector3.zero.ChangeX(outsideScreenX);
+
+            shadowMatrices[i] = Matrix4x4.TRS(
+                    position,
+                    Quaternion.identity,
+                    shadowSize
+                );
+        }
+
         Graphics.DrawMeshInstanced(
                 chickenMesh,
                 0,
