@@ -283,7 +283,7 @@ public class BaseChicken : MonoBehaviour
 
         while (remaingEatingGrainCount > 0 && !isForceFlyOut)
         {
-            if (GrainSimulation.Ins.IsAnyGrainNear(transform.position, faction))
+            if (GamePersistentVariable.isNearWinLevel || GrainSimulation.Ins.IsAnyGrainNear(transform.position, faction))
             {
                 if (isNotPlayingEatAnim)
                 {

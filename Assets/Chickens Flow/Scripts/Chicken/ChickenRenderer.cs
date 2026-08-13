@@ -179,7 +179,7 @@ public class ChickenRenderer : MonoBehaviour
                 0,
                 shadowMaterial,
                 shadowMatrices,
-                ChickenManager.Ins.chickens.Count
+                shadowMatrices.Length
             );
     }
 
