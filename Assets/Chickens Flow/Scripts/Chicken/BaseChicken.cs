@@ -210,6 +210,8 @@ public class BaseChicken : MonoBehaviour
         if (chickenEatingGrainsCoroutine != null)
         {
             StopCoroutine(chickenEatingGrainsCoroutine);
+
+            GamePersistentVariable.eatingChickens.Remove(this);
         }
 
         chickenEatingGrainsCoroutine = StartCoroutine(ChickenEatingGrains(grainPile, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
@@ -241,13 +243,15 @@ public class BaseChicken : MonoBehaviour
 
                     smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
-                    TrackEntry trackEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
+                    smokeAnimEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 
-                    trackEntry.Complete += OnSmokeAnimComplete;
+                    smokeAnimEntry.Complete += OnSmokeAnimComplete;
 
                     gameObject.SetActive(false);
 
                     onChickenFlyOut?.Invoke();
+
+                    ChickenManager.Ins.MoveChickensDown();
                 });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
@@ -256,8 +260,6 @@ public class BaseChicken : MonoBehaviour
                 }
 
                 isDone = true;
-
-                ChickenManager.Ins.MoveChickensDown();
             }
             else
             {
@@ -486,9 +488,9 @@ public class BaseChicken : MonoBehaviour
 
             smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
-            TrackEntry trackEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
+            smokeAnimForceFlyOutEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 
-            trackEntry.Complete += OnSmokeAnimCompleteForceFlyOut;
+            smokeAnimForceFlyOutEntry.Complete += OnSmokeAnimCompleteForceFlyOut;
 
             gameObject.SetActive(false);
         });

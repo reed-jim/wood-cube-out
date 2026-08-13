@@ -937,32 +937,6 @@ namespace AntsFlow
             grainPool.CheckFeedGhostChickens();
 
             GamePersistentVariable.isLevelLost = false;
-
-            // List<WashingMachineItem> antBoxesToClear = new List<WashingMachineItem>();
-            // ghostAntBoxes = new List<WashingMachineItem>();
-
-            // for (int i = 0; i < washingMachineSlots.Count; i++)
-            // {
-            //     WashingMachineSlot slot = washingMachineSlots[i];
-
-            //     if (slot.washingMachineItem != null)
-            //     {
-            //         antBoxesToClear.Add(slot.washingMachineItem);
-            //         ghostAntBoxes.Add(slot.washingMachineItem);
-
-            //         if (antBoxesToClear.Count == 2)
-            //         {
-            //             break;
-            //         }
-            //     }
-            // }
-
-            // foreach (var item in antBoxesToClear)
-            // {
-            //     item.CheckAntsPathGhostMode();
-            // }
-
-            // GamePersistentVariable.isLevelLost = false;
         }
         #endregion
 
@@ -992,7 +966,7 @@ namespace AntsFlow
 
             ghostAntBoxes.Clear();
 
-            GamePersistentVariable.numActiveAnt = 0;
+            GamePersistentVariable.isLevelLost = false;
 
             mainCamera.transform.position = Vector3.zero.ChangeZ(mainCamera.transform.position.z);
         }
