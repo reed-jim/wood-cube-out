@@ -940,10 +940,10 @@ public class ChickenManager : Singleton<ChickenManager>
 
             Vector2Int[] directions =
             {
-        Vector2Int.down,
-        // Vector2Int.left,
-        // Vector2Int.right
-    };
+                Vector2Int.down,
+                    // Vector2Int.left,
+                    // Vector2Int.right
+            };
 
             foreach (Vector2Int dir in directions)
             {

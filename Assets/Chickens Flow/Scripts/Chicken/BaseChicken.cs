@@ -413,11 +413,6 @@ public class BaseChicken : MonoBehaviour
 
                     notPlayingEatAnimCount = 0;
                 }
-
-                if (numGrainPileRequiredLeft > 0)
-                {
-                    GrainPool.Ins.CheckFeedChickens();
-                }
             }
 
             yield return delayPerGrainWait;
@@ -426,6 +421,11 @@ public class BaseChicken : MonoBehaviour
         GamePersistentVariable.numEatingChicken--;
 
         GamePersistentVariable.eatingChickens.Remove(this);
+
+        if (numGrainPileRequiredLeft > 0)
+        {
+            GrainPool.Ins.CheckFeedChickens();
+        }
 
         WashingMachineManager.Ins.CheckLoseLevel();
 
