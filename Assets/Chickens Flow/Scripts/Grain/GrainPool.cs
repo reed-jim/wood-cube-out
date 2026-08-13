@@ -28,6 +28,9 @@ public class GrainPool : Singleton<GrainPool>
     public RectTransform progressBarBackground;
     public RectTransform progressBarFill;
 
+    [Header("Customize")]
+    public int expectedGrainToClearOnRevive;
+
     public List<GrainPile> grainPiles;
     public int maxGrainPoolSlots;
     public int maxShowingGrainPoolSlots;
@@ -143,13 +146,24 @@ public class GrainPool : Singleton<GrainPool>
                 ChickenManager.Ins.FeedTheChicken(grainPiles[i]);
             }
         }
+
+        WashingMachineManager.Ins.CheckLoseLevel();
     }
 
     public void CheckFeedGhostChickens()
     {
+        int amountGrainCleared = 0;
+
         for (int i = 0; i < grainPiles.Count; i++)
         {
+            if (amountGrainCleared > expectedGrainToClearOnRevive)
+            {
+                break;
+            }
+
             ChickenManager.Ins.FeedTheGhostChicken(grainPiles[i]);
+
+            amountGrainCleared += grainPiles[i].remainingNumber;
         }
     }
 

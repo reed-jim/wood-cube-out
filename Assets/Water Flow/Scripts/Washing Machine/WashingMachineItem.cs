@@ -414,6 +414,8 @@ public class WashingMachineItem : MonoBehaviour
         {
             PlayInvalidSelectAnimation();
 
+            WashingMachineManager.Ins.CheckLoseLevel();
+
             return;
         }
 

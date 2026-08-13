@@ -28,13 +28,6 @@ public class ChickenManager : Singleton<ChickenManager>
     public int numColumn;
     public int numRow;
 
-    [Header("Customize")]
-    public Vector2 chickenDistanceRatio;
-    public float chickenAreaOffsetY;
-    public float depthDistanceXRatio;
-    public int requiredGrainForNormalChicken;
-    public int maxGhostChicken;
-
     [Header("Shape Definition")]
     [Tooltip("Vertices of any 2D closed polygon, ordered clockwise or counter-clockwise.")]
     [SerializeField] private BoardShapePreset[] boardShapePresets;
@@ -829,11 +822,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void FeedTheGhostChicken(GrainPile grainPile)
     {
-        if (numGhostChicken > maxGhostChicken)
-        {
-            return;
-        }
-
         List<BaseChicken> ghostChickens = chickens
             .Where(chicken => !chicken.isEating &&
                               !chicken.isDone &&
@@ -881,6 +869,7 @@ public class ChickenManager : Singleton<ChickenManager>
             destination.z = LayerManager.GetGhostChickenZ(numGhostChicken);
 
             chicken.isEating = true;
+            chicken.isGhost = true;
 
             DOTweenUtil.MoveParabol(chicken.transform, destination, duration: 1f, onComplete: () =>
             {
