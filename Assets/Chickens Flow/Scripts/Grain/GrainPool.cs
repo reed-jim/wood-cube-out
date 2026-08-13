@@ -159,6 +159,8 @@ public class GrainPool : Singleton<GrainPool>
 
         float percent = (float)currentAmount / maxCapacity;
 
+        percent = Mathf.Max(percent, 0);
+
         if (percentTextTween.isAlive)
         {
             percentTextTween.Stop();

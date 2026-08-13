@@ -837,7 +837,6 @@ public class ChickenManager : Singleton<ChickenManager>
         List<BaseChicken> ghostChickens = chickens
             .Where(chicken => !chicken.isEating &&
                               !chicken.isDone &&
-                              !chicken.isStuck &&
                               chicken.faction == grainPile.faction)
             .OrderByDescending(chicken => chicken.numGrainPileRequiredLeft)
             .ToList();
@@ -1239,26 +1238,18 @@ public class ChickenManager : Singleton<ChickenManager>
     #endregion
 
     #region Booster
-    public Color PickChickenColor(Vector2 position)
-    {
-        Vector2 offset = new Vector2(0, 1f);
-
-        Vector2 chickenPosition = position + offset;
-
-        BaseChicken chicken = chickens.OrderBy(chicken => (chickenPosition - (Vector2)chicken.transform.position).sqrMagnitude).First();
-
-        return chicken.faction;
-    }
-
     public BaseChicken PickChicken(Vector2 position)
     {
-        Vector2 offset = new Vector2(0, 0.3f);
+        if (chickens.Any(chicken => chicken.IsInSide(position)))
+        {
+            BaseChicken chicken = chickens.First(chicken => chicken.IsInSide(position));
 
-        Vector2 chickenPosition = position + offset;
-
-        BaseChicken chicken = chickens.OrderBy(chicken => (chickenPosition - (Vector2)chicken.transform.position).sqrMagnitude).First();
-
-        return chicken;
+            return chicken;
+        }
+        else
+        {
+            return null;
+        }
     }
     #endregion
 

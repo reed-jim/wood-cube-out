@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
 using DG.Tweening;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Saferio.Util.SaferioTween;
 using TMPro;
 
@@ -78,6 +75,8 @@ public class GrainPile : MonoBehaviour
 
     public void Reset()
     {
+        ObjectPoolingEverything.ReturnToPool(GameConstants.grainPile, gameObject);
+
         progressText.gameObject.SetActive(false);
 
         numChickenEating = 0;

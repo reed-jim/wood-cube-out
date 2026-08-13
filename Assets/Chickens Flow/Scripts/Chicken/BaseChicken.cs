@@ -16,7 +16,6 @@ public class BaseChicken : MonoBehaviour
 {
     public SkeletonAnimation[] skeletonAnimations;
     public SkeletonAnimation skeletonAnimation;
-    public SkeletonAnimation smokeAnimation;
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string moveAnimation;
     [SpineAnimation] public string[] eatAnimations;
@@ -71,6 +70,16 @@ public class BaseChicken : MonoBehaviour
 
     private Spine.TrackEntry _waitingEntry;
     private string _pendingAnimation;
+
+    public bool IsInSide(Vector2 position)
+    {
+        Vector2 chickenPos = transform.position;
+
+        return position.x > chickenPos.x - 0.8f &&
+                position.x < chickenPos.x + 0.8f &&
+                position.y > chickenPos.y - 0.2f &&
+                position.y < chickenPos.y + 2f;
+    }
 
     void Awake()
     {
@@ -134,7 +143,6 @@ public class BaseChicken : MonoBehaviour
         eatingProgress.gameObject.SetActive(false);
         eatingProgressText.gameObject.SetActive(false);
         circleProgress.gameObject.SetActive(false);
-        smokeAnimation.gameObject.SetActive(false);
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.identity;
 
