@@ -839,6 +839,11 @@ public class ChickenManager : Singleton<ChickenManager>
             if (grainPile.remainingNumber <= 0)
                 break;
 
+            if (chicken.numGrainPileRequiredLeft > grainPile.remainingNumber)
+            {
+                break;
+            }
+
             int amount = Mathf.Min(
                 chicken.numGrainPileRequiredLeft,
                 grainPile.remainingNumber
@@ -897,14 +902,6 @@ public class ChickenManager : Singleton<ChickenManager>
             lastGrainPileToFeed = grainPile;
 
             numGhostChicken++;
-
-            // Tween tween = Tween.PositionY(chicken.transform, GrainPool.Ins.transform.position.y, duration: 0.6f)
-            // .OnComplete(() =>
-            // {
-
-            // });
-
-            // TweenManager.Ins.AddTween(tween);
         }
 
         grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);
