@@ -690,8 +690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrainSimulation
   gravityRange: {x: 9.8, y: 15}
-  fallDelayIncreaseRatio: 0.001
-  fallDelayPower: 3
+  fallImpactTimerMaxCount: 300
   pourDelayCurve:
     serializedVersion: 2
     m_Curve:
@@ -761,14 +760,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxSpeed: 3
-  grainSpacing: 0.3
+  maxSpeed: 5
+  grainSpacing: 0.33
   collisionForce: 1
   collisionCellSize: 0.2
   conveyorForceRange: {x: 150, y: 300}
   edgeForce: 150
   airDrag: 0
-  conveyorWidth: 3
+  conveyorWidth: 1
   impactToPathVelocityRange: {x: -0.2, y: 0.3}
   percentNumGrainOnPathForChickenToEat: 0.6
   bounceRestitutionRange: {x: 0.25, y: 0.35}

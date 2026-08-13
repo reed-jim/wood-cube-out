@@ -29,6 +29,7 @@ public struct GrainParticle
     public int maxBounces;
     public bool onPath;
     public bool bouncing;
+    public float fallImpactTimer;
 }
 
 // ------------------------------------------------------------------------
@@ -47,12 +48,12 @@ public struct SimulateGrainsJob : IJobParallelFor
     public float dt;
     public float maxSpeed;
     public float edgeForce;
-    public float airDrag;
     public float lookupCellSize;
     public float2 worldMin;
     public int gridWidth;
     public int gridHeight;
     public float randomBounceSideForce;
+    public int fallImpactTimerMaxCount;
 
     public void Execute(int i)
     {
@@ -71,13 +72,29 @@ public struct SimulateGrainsJob : IJobParallelFor
             float2 toCenter = nearest - p.position.xy;
             p.velocity2D += toCenter * (edgeForce * dt);
 
-            if (math.lengthsq(p.velocity2D) > sqrMaxSpeed)
+            if (p.bouncing)
             {
-                p.velocity2D = math.normalize(p.velocity2D) * maxSpeed;
+                p.fallImpactTimer++;
+
+                if (p.fallImpactTimer > fallImpactTimerMaxCount)
+                {
+                    p.bouncing = false;
+                }
+
+                if (math.lengthsq(p.velocity2D) > sqrMaxSpeed)
+                {
+                    p.velocity2D = math.lerp(p.velocity2D, math.normalize(p.velocity2D) * maxSpeed, (float)p.fallImpactTimer / fallImpactTimerMaxCount);
+                }
+            }
+            else
+            {
+                if (math.lengthsq(p.velocity2D) > sqrMaxSpeed)
+                {
+                    p.velocity2D = math.normalize(p.velocity2D) * maxSpeed;
+                }
             }
 
             p.position.xy += p.velocity2D * dt;
-            p.velocity2D *= (1f - airDrag * dt);
 
             particles[i] = p;
             return;
@@ -90,41 +107,41 @@ public struct SimulateGrainsJob : IJobParallelFor
             return;
         }
 
-        if (p.bouncing)
-        {
-            p.fallVelocity -= p.gravity * dt;
-            p.position.y += p.fallVelocity * dt;
-            p.position.x += p.velocity2D.x * dt;
+        // if (p.bouncing)
+        // {
+        //     p.fallVelocity -= p.gravity * dt;
+        //     p.position.y += p.fallVelocity * dt;
+        //     p.position.x += p.velocity2D.x * dt;
 
-            int sample = GetNearestSampleIndexFast(p.position, invCellSize);
-            float2 surface = sampledPositions[sample];
+        //     int sample = GetNearestSampleIndexFast(p.position, invCellSize);
+        //     float2 surface = sampledPositions[sample];
 
-            if (p.position.y <= surface.y)
-            {
-                p.position.y = surface.y;
-                float impact = math.abs(p.fallVelocity);
+        //     if (p.position.y <= surface.y)
+        //     {
+        //         p.position.y = surface.y;
+        //         float impact = math.abs(p.fallVelocity);
 
-                uint seed = (uint)(i + 1) * 0x9E3779B9u;
-                float personalSettle = 0.8f + (seed % 100) * 0.004f;
+        //         uint seed = (uint)(i + 1) * 0x9E3779B9u;
+        //         float personalSettle = 0.8f + (seed % 100) * 0.004f;
 
-                if (impact < personalSettle || p.bounceCount >= p.maxBounces)
-                {
-                    p.bouncing = false;
-                    p.onPath = true;
-                    float2 tangent = sampledTangents[sample];
-                    p.velocity2D = tangent * (impact * p.impactToPathVelocity);
-                    p.fallVelocity = 0f;
-                }
-                else
-                {
-                    p.fallVelocity = impact * p.bounceRestitution;
-                    p.velocity2D *= p.bounceFriction;
-                    p.bounceCount++;
-                }
-            }
-            particles[i] = p;
-            return;
-        }
+        //         if (impact < personalSettle || p.bounceCount >= p.maxBounces)
+        //         {
+        //             p.bouncing = false;
+        //             p.onPath = true;
+        //             float2 tangent = sampledTangents[sample];
+        //             p.velocity2D = tangent * (impact * p.impactToPathVelocity);
+        //             p.fallVelocity = 0f;
+        //         }
+        //         else
+        //         {
+        //             p.fallVelocity = impact * p.bounceRestitution;
+        //             p.velocity2D *= p.bounceFriction;
+        //             p.bounceCount++;
+        //         }
+        //     }
+        //     particles[i] = p;
+        //     return;
+        // }
 
         p.fallVelocity -= p.gravity * dt;
         p.position.y += p.fallVelocity * dt;
@@ -135,6 +152,7 @@ public struct SimulateGrainsJob : IJobParallelFor
         if (p.position.y <= conveyorPoint.y)
         {
             p.onPath = true;
+            p.bouncing = true;
             p.bounceCount = 0;
 
             float2 tangent = sampledTangents[fallSample];
@@ -417,8 +435,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 {
     [Header("Fall")]
     public Vector2 gravityRange = new Vector2(9.8f, 15f);
-    public float fallDelayIncreaseRatio = 0.001f;
-    public float fallDelayPower = 3f;
+    public int fallImpactTimerMaxCount = 100;
     [SerializeField]
     private AnimationCurve pourDelayCurve = new AnimationCurve(
         new Keyframe(0.00f, 0.00f),
@@ -710,12 +727,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 dt = dt,
                 maxSpeed = maxSpeed,
                 edgeForce = edgeForce,
-                airDrag = airDrag,
                 lookupCellSize = lookupCellSize,
                 worldMin = worldMin,
                 gridWidth = gridWidth,
                 gridHeight = gridHeight,
-                randomBounceSideForce = randomBounceSideForce
+                randomBounceSideForce = randomBounceSideForce,
+                fallImpactTimerMaxCount = fallImpactTimerMaxCount
             };
 
             JobHandle handle = simJob.Schedule(count, 64, pipelineHandle);
@@ -1062,6 +1079,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
             p.conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y);
             p.onPath = false;
             p.fallDelay = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay;
+            p.fallImpactTimer = 0;
             p.bouncing = false;
             p.bounceCount = 0;
             p.bounceRestitution = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y);
