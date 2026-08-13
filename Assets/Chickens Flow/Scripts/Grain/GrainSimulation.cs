@@ -6,6 +6,8 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using NamPhuThuy.GamePlay;
+using PrimeTween;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -463,6 +465,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     [Header("Landing")]
     public Vector2 impactToPathVelocityRange = new Vector2(0, 0.4f);
+    public float fallTimePerGrain = 0.01f;
     public float percentNumGrainOnPathForChickenToEat = 0.5f;
 
     [Header("Bounce")]
@@ -675,7 +678,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         float dt = Time.deltaTime;
 
         ExecuteGrainPipelineJobified(dt);
-        CheckSpawnCompletion();
+        // CheckSpawnCompletion();
         Render();
     }
 
@@ -1091,17 +1094,29 @@ public class GrainSimulation : Singleton<GrainSimulation>
             spawnCallCount++;
         }
 
-        if (onComplete != null)
+        int numGrain = grainPositions.Count;
+
+        TweenManager.Ins.AddTween(Tween.Delay(0.5f * numGrain * fallTimePerGrain).OnComplete(() =>
         {
-            pendingSpawns.Add(new SpawnRequest
-            {
-                group = group,
-                startIndex = startIndex,
-                count = grainPositions.Count,
-                onAllGrainsPoured = onAllGrainsPoured,
-                onComplete = onComplete
-            });
-        }
+            onAllGrainsPoured?.Invoke();
+        }));
+
+        TweenManager.Ins.AddTween(Tween.Delay(numGrain * fallTimePerGrain).OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        }));
+
+        // if (onComplete != null)
+        // {
+        //     pendingSpawns.Add(new SpawnRequest
+        //     {
+        //         group = group,
+        //         startIndex = startIndex,
+        //         count = grainPositions.Count,
+        //         onAllGrainsPoured = onAllGrainsPoured,
+        //         onComplete = onComplete
+        //     });
+        // }
     }
 
     public void RemoveLastGrain(Color faction)

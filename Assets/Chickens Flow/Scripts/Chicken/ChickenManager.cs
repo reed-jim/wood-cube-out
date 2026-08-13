@@ -1241,7 +1241,7 @@ public class ChickenManager : Singleton<ChickenManager>
     #region Booster
     public Color PickChickenColor(Vector2 position)
     {
-        Vector2 offset = new Vector2(0, 0.5f);
+        Vector2 offset = new Vector2(0, 1f);
 
         Vector2 chickenPosition = position + offset;
 
