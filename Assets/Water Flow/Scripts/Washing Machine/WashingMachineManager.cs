@@ -1166,8 +1166,6 @@ namespace AntsFlow
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
 
-            ChickenManager.Ins.CheckChickensStuck();
-
             for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
             {
                 BaseChicken chicken = ChickenManager.Ins.chickens[i];

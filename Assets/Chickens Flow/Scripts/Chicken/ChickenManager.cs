@@ -423,6 +423,15 @@ public class ChickenManager : Singleton<ChickenManager>
 
             waitingChickenSlot.chicken = chicken;
 
+            if (chicken.GetFirstRow() == 0)
+            {
+                chicken.isStuck = false;
+            }
+            else
+            {
+                chicken.isStuck = true;
+            }
+
             chicken.transform.position = waitingChickenSlot.GetRandomPosition();
 
             chickens.Add(chicken);
@@ -706,8 +715,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void FeedTheChicken(GrainPile grainPile)
     {
-        CheckChickensStuck(false);
-
         List<BaseChicken> chickensToFeed = chickens
             .Where(chicken => !chicken.isDone &&
                               !chicken.isStuck &&
@@ -827,8 +834,6 @@ public class ChickenManager : Singleton<ChickenManager>
             return;
         }
 
-        CheckChickensStuck(isGhostChicken: true);
-
         List<BaseChicken> ghostChickens = chickens
             .Where(chicken => !chicken.isEating &&
                               !chicken.isDone &&
@@ -917,81 +922,6 @@ public class ChickenManager : Singleton<ChickenManager>
         grainPile.remainingNumber = Mathf.Max(grainPile.remainingNumber, 0);
 
         GamePersistentVariable.isPreventSelectAntBox = true;
-    }
-
-    public void CheckChickensStuck(bool isGhostChicken = false)
-    {
-        foreach (BaseChicken chicken in chickens)
-        {
-            chicken.isStuck = false;
-
-            if (isGhostChicken)
-                continue;
-
-            if (chicken.isMoving)
-            {
-                chicken.isStuck = true;
-
-                continue;
-            }
-
-            int bottomRow = chicken.GetFirstRow();
-
-            if (bottomRow > 0)
-            {
-                chicken.isStuck = true;
-            }
-
-            // // Check every column occupied by this chicken.
-            // var occupiedColumns = chicken.waitingChickenSlots
-            //     .Select(s => s.column)
-            //     .Distinct();
-
-            // foreach (int column in occupiedColumns)
-            // {
-            //     // Bottom-most slot of this chicken in this column.
-            //     int bottomRow = chicken.waitingChickenSlots
-            //         .Where(s => s.column == column)
-            //         .Min(s => s.row);
-
-            //     if (bottomRow > 0)
-            //     {
-            //         chicken.isStuck = true;
-            //     }
-
-            //     // bool foundSelf = false;
-
-            //     // for (int row = 0; row < numRow; row++)
-            //     // {
-            //     //     BaseChicken other = waitingChickenSlots[new Vector2Int(column, row)].chicken;
-
-            //     //     if (other == null)
-            //     //         continue;
-
-            //     //     if (!foundSelf)
-            //     //     {
-            //     //         if (other == chicken && row == bottomRow)
-            //     //             foundSelf = true;
-            //     //     }
-
-            //     //     if (foundSelf)
-            //     //     {
-            //     //         break;
-            //     //     }
-
-            //     //     // First chicken in front of us.
-            //     //     if (!other.isEating && !other.isDone)
-            //     //     {
-            //     //         chicken.isStuck = true;
-            //     //         break;
-            //     //     }
-            //     // }
-
-            //     // ANY blocked column => stuck.
-            //     if (chicken.isStuck)
-            //         break;
-            // }
-        }
     }
 
     public void MoveChickensDown()
@@ -1140,6 +1070,8 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         RemoveChickenFromOccupied(chicken, occupied);
 
+        int minRow = int.MaxValue;
+
         for (int i = 0; i < chicken.waitingChickenSlots.Count; i++)
         {
             WaitingChickenSlot slot = chicken.waitingChickenSlots[i];
@@ -1151,6 +1083,16 @@ public class ChickenManager : Singleton<ChickenManager>
                 slot.row + dir.y);
 
             chicken.waitingChickenSlots[i] = waitingChickenSlots[pos];
+
+            if (pos.y < minRow)
+            {
+                minRow = pos.y;
+            }
+        }
+
+        if (minRow == 0)
+        {
+            chicken.isStuck = false;
         }
     }
 
