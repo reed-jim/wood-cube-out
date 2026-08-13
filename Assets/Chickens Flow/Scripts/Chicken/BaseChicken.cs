@@ -264,6 +264,8 @@ public class BaseChicken : MonoBehaviour
                 PlayIdleAnim();
 
                 isEating = false;
+
+                GrainPool.Ins.CheckFeedChickens();
             }
         }));
 
@@ -421,11 +423,6 @@ public class BaseChicken : MonoBehaviour
         GamePersistentVariable.numEatingChicken--;
 
         GamePersistentVariable.eatingChickens.Remove(this);
-
-        if (numGrainPileRequiredLeft > 0)
-        {
-            GrainPool.Ins.CheckFeedChickens();
-        }
 
         WashingMachineManager.Ins.CheckLoseLevel();
 
