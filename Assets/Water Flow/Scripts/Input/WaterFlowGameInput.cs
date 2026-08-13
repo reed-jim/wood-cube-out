@@ -16,6 +16,7 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
     public AntsFlowInputMode inputMode;
 
     public static event Action<Color> useClearOneColorBoosterEvent;
+    public static event Action<string, string> showNotificationEvent;
 
     void Update()
     {
@@ -48,7 +49,16 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
 
             if (inputMode == AntsFlowInputMode.SelectTile)
             {
-                useClearOneColorBoosterEvent?.Invoke(ChickenManager.Ins.PickChickenColor(worldPoint));
+                BaseChicken chicken = ChickenManager.Ins.PickChicken(worldPoint);
+
+                if (chicken.isDone || chicken.isMoving || chicken.isEating)
+                {
+                    showNotificationEvent?.Invoke(GameConstants.WARNING, "That chicken isn’t valid. Pick another one");
+                    
+                    return;
+                }
+
+                useClearOneColorBoosterEvent?.Invoke(chicken.faction);
 
                 inputMode = AntsFlowInputMode.Normal;
             }

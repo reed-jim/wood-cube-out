@@ -50,6 +50,7 @@ public class BaseChicken : MonoBehaviour
     [Header("Customize")]
     public float eatingRange;
     public float flyOutDuration;
+    public float smokeOffsetY;
 
     [Header("State")]
     public bool isMoving;
@@ -211,7 +212,7 @@ public class BaseChicken : MonoBehaviour
                 {
                     SkeletonAnimation smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
 
-                    smokeAnimation.transform.position = transform.position.AddY(1);
+                    smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
                     TrackEntry trackEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 
@@ -438,7 +439,7 @@ public class BaseChicken : MonoBehaviour
         {
             SkeletonAnimation smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
 
-            smokeAnimation.transform.position = transform.position.AddY(1.3f);
+            smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
             TrackEntry trackEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 

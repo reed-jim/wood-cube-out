@@ -27,6 +27,7 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationEvent += ShowNotification;
         MenuScreen.showNotificationWithParamEvent += ShowNotification;
         BoosterUI.showNotificationWithParamEvent += ShowNotification;
+        WaterFlowGameInput.showNotificationEvent += ShowNotification;
 
         showNotificationEvent += ShowNotification;
 
@@ -46,6 +47,7 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationEvent -= ShowNotification;
         MenuScreen.showNotificationWithParamEvent -= ShowNotification;
         BoosterUI.showNotificationWithParamEvent -= ShowNotification;
+        WaterFlowGameInput.showNotificationEvent -= ShowNotification;
         
         showNotificationEvent -= ShowNotification;
     }

@@ -1249,6 +1249,17 @@ public class ChickenManager : Singleton<ChickenManager>
 
         return chicken.faction;
     }
+
+    public BaseChicken PickChicken(Vector2 position)
+    {
+        Vector2 offset = new Vector2(0, 0.3f);
+
+        Vector2 chickenPosition = position + offset;
+
+        BaseChicken chicken = chickens.OrderBy(chicken => (chickenPosition - (Vector2)chicken.transform.position).sqrMagnitude).First();
+
+        return chicken;
+    }
     #endregion
 
     #region Util
