@@ -1,6 +1,7 @@
 using System.Collections;
 using AntsFlow;
 using NamPhuThuy.GamePlay;
+using Spine.Unity;
 using UnityEngine;
 
 public class ObjectPoolingEverythingInitializer : MonoBehaviour
@@ -10,7 +11,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject grainPile;
     [SerializeField] private GameObject wall;
     [SerializeField] private GameObject smokeFx;
-    
+    [SerializeField] private GameObject smokeAnim;
+
     public static ObjectPoolingEverythingInitializer Instance;
 
     [Header("CONTAINER")]
@@ -124,7 +126,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);
         RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 50);
         RegisterPool<Wall>(GameConstants.wall, wall, 50);
-         RegisterPool<ParticleSystem>(GameConstants.smokeFx, smokeFx, 25);
+        RegisterPool<SkeletonAnimation>(GameConstants.smokeFx, smokeAnim, 25);
 
 
 
