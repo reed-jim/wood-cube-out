@@ -96,8 +96,6 @@ public class BaseChicken : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
 
         SetDissolveProgress(0);
-
-        currentAnimation = idleAnimation;
     }
 
     void OnDestroy()
@@ -149,8 +147,6 @@ public class BaseChicken : MonoBehaviour
         isLastChickenForcedFlyOut = false;
         isGhost = false;
 
-        currentAnimation = idleAnimation;
-
         prevEatingProgress = 0f;
         currentEatingProgress = 0f;
         remaingEatingGrainCount = 0;
@@ -187,11 +183,6 @@ public class BaseChicken : MonoBehaviour
         skeletonAnimation.Skeleton.SetSkin(skin);
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
-
-        TweenManager.Ins.AddTween(Tween.Delay(0.02f).OnComplete(() =>
-        {
-            skeletonAnimation.enabled = false;
-        }));
 
         this.faction = faction;
     }
@@ -580,6 +571,11 @@ public class BaseChicken : MonoBehaviour
         PlayAnimWhenFinished(idleAnimation);
     }
 
+    public void ForcePlayIdleAnim()
+    {
+        PlayAnim(idleAnimation);
+    }
+
     public void PlayAnim(string anim)
     {
         if (currentAnimation == anim)
@@ -684,7 +680,9 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayFlyAnim(Action onComplete)
     {
-        TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, flyAnimations[0], false);
+        string flyAnimation = flyAnimations[0];
+
+        TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, flyAnimation, false);
 
         trackEntry.Complete += OnFlyAnimationComplete;
 
@@ -694,6 +692,8 @@ public class BaseChicken : MonoBehaviour
 
             entry.Complete -= OnFlyAnimationComplete;
         }
+
+        currentAnimation = flyAnimation;
     }
 
     public static void PlayForCycles

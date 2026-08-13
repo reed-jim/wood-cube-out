@@ -419,10 +419,15 @@ public class ChickenManager : Singleton<ChickenManager>
             if (chicken.GetFirstRow() == 0)
             {
                 chicken.isStuck = false;
+
+                chicken.SetActiveSpine(true);
+                chicken.ForcePlayIdleAnim();
             }
             else
             {
                 chicken.isStuck = true;
+
+                chicken.SetActiveSpine(false);
             }
 
             chicken.transform.position = waitingChickenSlot.GetRandomPosition();
@@ -1152,8 +1157,6 @@ public class ChickenManager : Singleton<ChickenManager>
                 }
                 else
                 {
-                    chicken.PlayIdleAnimNoLoop();
-
                     chickenRenderer.UpdateChickenRendering(chicken);
                 }
 

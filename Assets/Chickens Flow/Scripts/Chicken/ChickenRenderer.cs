@@ -270,6 +270,12 @@ public class ChickenRenderer : MonoBehaviour
         {
             BaseChicken chicken = chickens[i];
 
+            // skip chickens in first row
+            if (!chicken.isStuck)
+            {
+                continue;
+            }
+
             ChickenData chickenData = new ChickenData();
 
             chickenData.position = chicken.transform.position;
