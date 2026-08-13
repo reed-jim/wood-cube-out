@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
@@ -17,6 +18,25 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
 
     public static event Action<Color> useClearOneColorBoosterEvent;
     public static event Action<string, string> showNotificationEvent;
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        LevelLoader.startLevelEvent += Reset;
+    }
+
+    void OnDestroy()
+    {
+        LevelLoader.startLevelEvent -= Reset;
+    }
+
+    private void Reset()
+    {
+        inputMode = AntsFlowInputMode.Normal;
+
+        GamePersistentVariable.isPreventSelectAntBox = false;
+    }
 
     void Update()
     {

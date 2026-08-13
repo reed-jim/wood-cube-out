@@ -360,8 +360,8 @@ public class WinPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
+        x5CoinButton.interactable = true;
         continueButton.interactable = true;
-        returnHomeButton.interactable = true;
 
         InvokeShowAdNotLoadedPopupEvent();
     }

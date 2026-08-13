@@ -474,6 +474,13 @@ public class BoosterUI : MonoBehaviour
             return;
         }
 
+        if (GrainPool.Ins.IsMaxCapacity())
+        {
+            showNotificationEvent?.Invoke(GameConstants.WARNING, "Max Grail Pool Capacity Reached");
+
+            return;
+        }
+
         if (_isInTransition)
         {
             return;

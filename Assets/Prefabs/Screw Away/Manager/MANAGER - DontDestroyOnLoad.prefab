@@ -8072,6 +8072,80 @@ MonoBehaviour:
     Text: "Un color de tornillo est\xE1 bloqueado, desatorn\xEDllelo lo suficiente
       para desbloquearlo."
     Object: {fileID: 0}
+--- !u!1 &4581470959175303930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3916203326727640320}
+  - component: {fileID: 2846095804853351753}
+  m_Layer: 0
+  m_Name: Max Grail Pool Capacity Reached
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3916203326727640320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4581470959175303930}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2846095804853351753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4581470959175303930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Max Grail Pool Capacity Reached!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Capacit\xE9 maximale du pool du Graal atteinte\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Maximale Kapazit\xE4t des Grail-Pools erreicht!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Capacit\xE0 massima della piscina del Graal raggiunta!"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u8056\u676F\u30D7\u30FC\u30EB\u306E\u6700\u5927\u5BB9\u91CF\u306B\u9054\u3057\u307E\u3057\u305F!"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uCD5C\uB300 \uC131\uBC30 \uD480 \uC6A9\uB7C9\uC5D0 \uB3C4\uB2EC\uD588\uC2B5\uB2C8\uB2E4!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Capacidade m\xE1xima do pool do Graal alcan\xE7ada!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0414\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u0430 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F
+      \u0435\u043C\u043A\u043E\u0441\u0442\u044C \u043F\u0443\u043B\u0430 \u0413\u0440\u0430\u0430\u043B\u044F!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Se alcanz\xF3 la capacidad m\xE1xima de la piscina Grail!"
+    Object: {fileID: 0}
 --- !u!1 &4638771515024714343
 GameObject:
   m_ObjectHideFlags: 0
@@ -9710,6 +9784,7 @@ Transform:
   - {fileID: 2511448271447738636}
   - {fileID: 3394153984473453341}
   - {fileID: 4470867910170821905}
+  - {fileID: 3916203326727640320}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269

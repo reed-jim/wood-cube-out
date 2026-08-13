@@ -917,7 +917,7 @@ public class ChickenManager : Singleton<ChickenManager>
         Dictionary<BaseChicken, ChickenMoveData> destinations = new();
 
         List<BaseChicken> validChickens = chickens
-            .Where(c => !c.isDone)
+            .Where(c => !c.isEating && !c.isDone && !c.isGhost)
             .OrderBy(c => c.waitingChickenSlots.Min(s => s.row))
             .ThenBy(c => c.waitingChickenSlots.Min(s => s.column))
             .ToList();

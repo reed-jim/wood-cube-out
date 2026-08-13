@@ -310,11 +310,6 @@ public class BaseChicken : MonoBehaviour
             GamePersistentVariable.numEatingChicken++;
         }
 
-        if (!GamePersistentVariable.eatingChickens.Contains(this))
-        {
-            GamePersistentVariable.eatingChickens.Add(this);
-        }
-
         int numGrainToEat = numGrain * GameConstants.grainMultiplier;
 
         remaingEatingGrainCount += numGrainToEat;
@@ -334,6 +329,11 @@ public class BaseChicken : MonoBehaviour
         {
             if (GamePersistentVariable.isNearWinLevel || isGhost || GrainSimulation.Ins.IsAnyGrainNear(transform.position, faction))
             {
+                if (!GamePersistentVariable.eatingChickens.Contains(this))
+                {
+                    GamePersistentVariable.eatingChickens.Add(this);
+                }
+
                 if (isNotPlayingEatAnim)
                 {
                     PlayEatAnim();
@@ -398,6 +398,10 @@ public class BaseChicken : MonoBehaviour
                     if (waitingForGrainCount == waitingForGrainCountThreshold + 1)
                     {
                         GamePersistentVariable.numEatingChicken--;
+
+                        GamePersistentVariable.eatingChickens.Remove(this);
+
+                        WashingMachineManager.Ins.CheckLoseLevel();
                     }
                 }
 
