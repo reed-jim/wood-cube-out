@@ -78,6 +78,11 @@ public class GrainPool : Singleton<GrainPool>
 
     public void Reset()
     {
+        if (percentTextTween.isAlive)
+        {
+            percentTextTween.Stop();
+        }
+
         maxCapacity = initialMaxCapacity;
         currentAmount = 0;
         currentPercent = 0;
