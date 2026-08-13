@@ -91,7 +91,10 @@ public class GrainPile : MonoBehaviour
         remainingNumber = totalNumber;
         currentProgress = 1;
 
-        Reset();
+        progressText.gameObject.SetActive(false);
+
+        numChickenEating = 0;
+        numGrainBeEating = 0;
     }
 
     public void SetFaction(Color faction)

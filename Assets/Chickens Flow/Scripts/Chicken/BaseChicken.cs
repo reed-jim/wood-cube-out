@@ -461,6 +461,11 @@ public class BaseChicken : MonoBehaviour
                 ObjectPoolingEverything.ReturnToPool(GameConstants.smokeFx, smokeAnimation.gameObject);
 
                 trackEntry.Complete -= OnSmokeComplete;
+
+                if (isLast)
+                {
+                    ChickenManager.Ins.MoveChickensDown();
+                }
             }
 
             gameObject.SetActive(false);
