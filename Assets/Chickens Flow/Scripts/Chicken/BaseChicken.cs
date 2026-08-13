@@ -211,6 +211,15 @@ public class BaseChicken : MonoBehaviour
                 {
                     TweenManager.Ins.AddSequence(SaferioTween.ScaleDownWithPunch(transform));
 
+                    ParticleSystem smokeFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.smokeFx);
+
+                    Vector3 smokeFxPosition = transform.position;
+                    smokeFxPosition.y += 0.2f;
+                    smokeFxPosition.z -= 2f;
+                    smokeFx.transform.position = smokeFxPosition;
+
+                    smokeFx.Play();
+
                     ChickenManager.Ins.CheckWinLevel();
                     WashingMachineManager.Ins.CheckLoseLevel();
 
