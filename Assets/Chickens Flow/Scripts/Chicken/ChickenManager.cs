@@ -933,12 +933,6 @@ public class ChickenManager : Singleton<ChickenManager>
             .ThenBy(c => c.waitingChickenSlots.Min(s => s.column))
             .ToList();
 
-        // Clear chicken references but keep walls
-        // foreach (var slot in waitingChickenSlots.Values)
-        // {
-        //     slot.chicken = null;
-        // }
-
         HashSet<Vector2Int> occupied = new();
 
         // Add walls as occupied
@@ -957,37 +951,27 @@ public class ChickenManager : Singleton<ChickenManager>
 
             Vector2Int[] directions =
             {
-                Vector2Int.down,
-                // Vector2Int.left,
-                // Vector2Int.right
-            };
+        Vector2Int.down,
+        // Vector2Int.left,
+        // Vector2Int.right
+    };
 
             foreach (Vector2Int dir in directions)
             {
-                MoveBlockReason downResult = GetMoveBlockReason(chicken, Vector2Int.down, occupied);
+                direction = dir;
 
-                if (downResult == MoveBlockReason.None)
+                // Keep moving in this direction until blocked
+                while (GetMoveBlockReason(chicken, dir, occupied) == MoveBlockReason.None)
                 {
-                    MoveChicken(chicken, Vector2Int.down, occupied);
+                    MoveChicken(chicken, dir, occupied);
                     moved = true;
                 }
-                // else if (chicken.GetFirstRow() > 0)
-                // {
-                //     if (GetMoveBlockReason(chicken, Vector2Int.left, occupied) == MoveBlockReason.None)
-                //     {
-                //         MoveChicken(chicken, Vector2Int.left, occupied);
-                //         moved = true;
-                //     }
-                //     else if (GetMoveBlockReason(chicken, Vector2Int.right, occupied) == MoveBlockReason.None)
-                //     {
-                //         MoveChicken(chicken, Vector2Int.right, occupied);
-                //         moved = true;
-                //     }
-                // }
 
-                direction = dir;
+                // If this direction is blocked, you can try another direction
+                // if you enable left/right later.
             }
 
+            // Add the chicken's FINAL position to occupied
             OccupyChicken(chicken, occupied);
 
             if (moved)
@@ -1240,9 +1224,9 @@ public class ChickenManager : Singleton<ChickenManager>
     #region Booster
     public BaseChicken PickChicken(Vector2 position)
     {
-        if (chickens.Any(chicken => chicken.IsInSide(position)))
+        if (chickens.Any(chicken => !chicken.isDone && chicken.IsInSide(position)))
         {
-            BaseChicken chicken = chickens.First(chicken => chicken.IsInSide(position));
+            BaseChicken chicken = chickens.First(chicken => !chicken.isDone && chicken.IsInSide(position));
 
             return chicken;
         }
