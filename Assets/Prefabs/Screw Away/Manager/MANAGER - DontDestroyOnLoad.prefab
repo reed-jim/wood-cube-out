@@ -4469,6 +4469,7 @@ MonoBehaviour:
   grainPile: {fileID: 6594524114510125756, guid: 12bf1b185ed71ec4e9ad88a1f6294da7, type: 3}
   wall: {fileID: 4146874037232387856, guid: 881218b3fe27ebc4e8d2a96150578c71, type: 3}
   smokeFx: {fileID: 3706638999165854190, guid: c91d17c19fb71e04b80a93ded89bc61a, type: 3}
+  smokeAnim: {fileID: 3601143290301515631, guid: bd30da0186ae70347837ac0a5d8bd392, type: 3}
   screwBoxContainer: {fileID: 2395158976308048392}
   screwBox: {fileID: 4363298669875526981, guid: 6286f3aa69f2b6d43bfda7063dc91718, type: 3}
   screwPortPrefab: {fileID: 1624755046582764907, guid: a8f542764ca926e4394f230d1143fc91, type: 3}
@@ -9708,6 +9709,7 @@ Transform:
   - {fileID: 7181139005054408791}
   - {fileID: 2511448271447738636}
   - {fileID: 3394153984473453341}
+  - {fileID: 4470867910170821905}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -14286,6 +14288,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Recoge {task_requirement_value} tornillos
+    Object: {fileID: 0}
+--- !u!1 &7637141683175464177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4470867910170821905}
+  - component: {fileID: 4215962585845268247}
+  m_Layer: 0
+  m_Name: "That chicken isn\u2019t valid. Pick another one"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4470867910170821905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7637141683175464177}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4215962585845268247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7637141683175464177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: "That chicken isn\u2019t valid. Pick another one!"
+    Object: {fileID: 0}
+  - Language: French
+    Text: 'Ce poulet n''est pas valide. '
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Dieses Huhn ist nicht g\xFCltig. "
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Quel pollo non \xE8 valido. "
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u305D\u306E\u30C1\u30AD\u30F3\u306F\u7121\u52B9\u3067\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uADF8 \uB2ED\uC740 \uC720\uD6A8\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. "
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Essa galinha n\xE3o \xE9 v\xE1lida. "
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u042D\u0442\u0430 \u043A\u0443\u0440\u0438\u0446\u0430 \u043D\u0435\u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u0430. "
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Ese pollo no es v\xE1lido. "
     Object: {fileID: 0}
 --- !u!1 &7645710362847411250
 GameObject:

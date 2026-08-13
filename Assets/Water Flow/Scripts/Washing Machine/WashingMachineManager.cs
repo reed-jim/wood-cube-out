@@ -567,6 +567,8 @@ namespace AntsFlow
         {
             Dictionary<WashingMachineItem, WashingMachineStartSlot> slotOfShuffleBuckets = new Dictionary<WashingMachineItem, WashingMachineStartSlot>();
 
+            bool isNoGrainRequiredLeft = factionGrainRequirements.Sum(item => item.totalGrain) == 0;
+
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
                 WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
@@ -594,16 +596,16 @@ namespace AntsFlow
 
             Dictionary<Color, int> maxGrainPerFaction = new Dictionary<Color, int>();
 
-            if (slotOfShuffleBuckets.Count > 6)
-            {
-                maxGrainPerFaction = GetNumAntSpawnPerFactionOrderByDifficulty();
-            }
-            else
+            if (isNoGrainRequiredLeft)
             {
                 foreach (var item in factionGrainRequirements)
                 {
                     CommonUtil.SumValueOfDictionary(maxGrainPerFaction, item.faction, item.totalGrain);
                 }
+            }
+            else
+            {
+                maxGrainPerFaction = GetNumAntSpawnPerFactionOrderByDifficulty();
             }
 
             List<FactionGrainRequirement> bucketDataItems = SplitGrain(maxGrainPerFaction, slotOfShuffleBuckets.Count);
@@ -1165,8 +1167,6 @@ namespace AntsFlow
         public Dictionary<Color, int> GetNumNotBlockedTilePerFaction(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
-
-            ChickenManager.Ins.CheckChickensStuck();
 
             for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
             {

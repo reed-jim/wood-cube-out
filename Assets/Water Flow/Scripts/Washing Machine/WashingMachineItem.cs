@@ -235,18 +235,6 @@ public class WashingMachineItem : MonoBehaviour
     }
 
     #region Chicken Feed
-    public List<BaseChicken> GetPossibleChickensToEat(int max)
-    {
-        List<BaseChicken> result = new List<BaseChicken>();
-
-        List<BaseChicken> chickensInFirstRow =
-            ChickenManager.Ins.chickens.Where(item => !item.isMoving && !item.isEating && !item.isDone && item.GetFirstRow() == 0).ToList();
-
-        result = chickensInFirstRow.Where(item => item.faction == faction).ToList();
-
-        return result.Take(max).ToList();
-    }
-
     public void PourGrainOur(out bool isPouringAll, Action onCompleteAction)
     {
         // int maxAddNumber = Mathf.Min(number, WashingMachineManager.Ins.grainPool.AmountLeft);
@@ -426,6 +414,8 @@ public class WashingMachineItem : MonoBehaviour
         {
             PlayInvalidSelectAnimation();
 
+            WashingMachineManager.Ins.CheckLoseLevel();
+
             return;
         }
 
@@ -475,9 +465,7 @@ public class WashingMachineItem : MonoBehaviour
         //     skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
         // }
 
-        Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
-
-        // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
+        skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
 
         if (GamePersistentVariable.IsVibrate)
         {
@@ -541,7 +529,7 @@ public class WashingMachineItem : MonoBehaviour
     public void TemporarilyEnable()
     {
         GamePersistentVariable.isPreventSelectAntBox = true;
-        
+
         if (isDisable)
         {
             Tween.Alpha(numberText, 1, duration: 0.3f)

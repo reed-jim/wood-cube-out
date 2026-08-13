@@ -49,6 +49,7 @@ public class BaseChicken : MonoBehaviour
     [Header("Customize")]
     public float eatingRange;
     public float flyOutDuration;
+    public float smokeOffsetY;
 
     [Header("State")]
     public bool isMoving;
@@ -56,6 +57,7 @@ public class BaseChicken : MonoBehaviour
     public bool isDone;
     public bool isStuck;
     public bool isForceFlyOut;
+    public bool isGhost;
     public string currentAnimation;
 
     public float prevEatingProgress;
@@ -68,7 +70,21 @@ public class BaseChicken : MonoBehaviour
     public int totalGrainEaten;
 
     private Spine.TrackEntry _waitingEntry;
+    private Spine.TrackEntry smokeAnimEntry;
+    private Spine.TrackEntry smokeAnimForceFlyOutEntry;
     private string _pendingAnimation;
+    private SkeletonAnimation smokeAnimation;
+    private bool isLastChickenForcedFlyOut;
+
+    public bool IsInSide(Vector2 position)
+    {
+        Vector2 chickenPos = transform.position;
+
+        return position.x > chickenPos.x - 0.8f &&
+                position.x < chickenPos.x + 0.8f &&
+                position.y > chickenPos.y - 0.2f &&
+                position.y < chickenPos.y + 2f;
+    }
 
     void Awake()
     {
@@ -112,12 +128,26 @@ public class BaseChicken : MonoBehaviour
             StopCoroutine(chickenEatingGrainsCoroutine);
         }
 
+        if (smokeAnimEntry != null)
+        {
+            smokeAnimEntry.Complete -= OnSmokeAnimComplete;
+            smokeAnimEntry = null;
+        }
+
+        if (smokeAnimForceFlyOutEntry != null)
+        {
+            smokeAnimForceFlyOutEntry.Complete -= OnSmokeAnimCompleteForceFlyOut;
+            smokeAnimForceFlyOutEntry = null;
+        }
+
         // State
         isMoving = false;
         isEating = false;
         isDone = false;
         isStuck = false;
         isForceFlyOut = false;
+        isLastChickenForcedFlyOut = false;
+        isGhost = false;
 
         currentAnimation = idleAnimation;
 
@@ -205,26 +235,20 @@ public class BaseChicken : MonoBehaviour
 
                 SaferioTween.ScaleDownWithPunch(circleProgress.transform);
 
-                PlayFlyAnim();
-
-                TweenManager.Ins.AddTween(Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+                PlayFlyAnim(onComplete: () =>
                 {
-                    TweenManager.Ins.AddSequence(SaferioTween.ScaleDownWithPunch(transform));
+                    smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
 
-                    ParticleSystem smokeFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.smokeFx);
+                    smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
-                    Vector3 smokeFxPosition = transform.position;
-                    smokeFxPosition.y += 0.2f;
-                    smokeFxPosition.z -= 2f;
-                    smokeFx.transform.position = smokeFxPosition;
+                    TrackEntry trackEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 
-                    smokeFx.Play();
+                    trackEntry.Complete += OnSmokeAnimComplete;
 
-                    ChickenManager.Ins.CheckWinLevel();
-                    WashingMachineManager.Ins.CheckLoseLevel();
+                    gameObject.SetActive(false);
 
                     onChickenFlyOut?.Invoke();
-                }));
+                });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
                 {
@@ -244,6 +268,31 @@ public class BaseChicken : MonoBehaviour
         }));
 
         isEating = true;
+    }
+
+    void OnSmokeAnimComplete(TrackEntry entry)
+    {
+        ChickenManager.Ins.CheckWinLevel();
+        WashingMachineManager.Ins.CheckLoseLevel();
+
+        ObjectPoolingEverything.ReturnToPool(GameConstants.smokeFx, smokeAnimation.gameObject);
+
+        entry.Complete -= OnSmokeAnimComplete;
+    }
+
+    void OnSmokeAnimCompleteForceFlyOut(TrackEntry entry)
+    {
+        ChickenManager.Ins.CheckWinLevel();
+        WashingMachineManager.Ins.CheckLoseLevel();
+
+        ObjectPoolingEverything.ReturnToPool(GameConstants.smokeFx, smokeAnimation.gameObject);
+
+        entry.Complete -= OnSmokeAnimCompleteForceFlyOut;
+
+        if (isLastChickenForcedFlyOut)
+        {
+            ChickenManager.Ins.MoveChickensDown();
+        }
     }
 
     private IEnumerator ChickenEatingGrains(GrainPile grainPile, int numGrain, bool isLast, Action onCompleteAction)
@@ -283,7 +332,7 @@ public class BaseChicken : MonoBehaviour
 
         while (remaingEatingGrainCount > 0 && !isForceFlyOut)
         {
-            if (GrainSimulation.Ins.IsAnyGrainNear(transform.position, faction))
+            if (GamePersistentVariable.isNearWinLevel || isGhost || GrainSimulation.Ins.IsAnyGrainNear(transform.position, faction))
             {
                 if (isNotPlayingEatAnim)
                 {
@@ -374,6 +423,8 @@ public class BaseChicken : MonoBehaviour
 
         GamePersistentVariable.eatingChickens.Remove(this);
 
+        WashingMachineManager.Ins.CheckLoseLevel();
+
         onCompleteAction?.Invoke();
 
         bool IsGrainNearChicken(Transform grainPileTransform)
@@ -428,19 +479,18 @@ public class BaseChicken : MonoBehaviour
         // SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
         SaferioTween.ScaleDownWithPunch(circleProgress.transform);
 
-        PlayFlyAnim();
-
-        TweenManager.Ins.AddTween(Tween.PositionY(transform, transform.position.y + 3, duration: flyOutDuration, ease: Ease.Linear).OnComplete(() =>
+        PlayFlyAnim(onComplete: () =>
         {
-            SaferioTween.ScaleDownWithPunch(transform);
+            smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
 
-            if (isLast)
-            {
-                ChickenManager.Ins.MoveChickensDown();
-            }
+            smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
-            ChickenManager.Ins.CheckWinLevel();
-        }));
+            TrackEntry trackEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
+
+            trackEntry.Complete += OnSmokeAnimCompleteForceFlyOut;
+
+            gameObject.SetActive(false);
+        });
 
         foreach (var waitingChickenSlot in waitingChickenSlots)
         {
@@ -449,6 +499,7 @@ public class BaseChicken : MonoBehaviour
 
         isForceFlyOut = true;
         isDone = true;
+        isLastChickenForcedFlyOut = isLast;
     }
 
     #region Progress
@@ -626,6 +677,20 @@ public class BaseChicken : MonoBehaviour
     public void PlayFlyAnim(int flyAnimationIndex = 1)
     {
         PlayAnimWhenFinished(flyAnimations[flyAnimationIndex]);
+    }
+
+    public void PlayFlyAnim(Action onComplete)
+    {
+        TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, flyAnimations[0], false);
+
+        trackEntry.Complete += OnFlyAnimationComplete;
+
+        void OnFlyAnimationComplete(TrackEntry entry)
+        {
+            onComplete?.Invoke();
+
+            entry.Complete -= OnFlyAnimationComplete;
+        }
     }
 
     public static void PlayForCycles

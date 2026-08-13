@@ -17,6 +17,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     private Button _button;
     private Sequence _sequence;
     private List<Tween> _tweens;
+    private bool _isAnimating;
 
     public static event Action preventMultiClickEvent;
 
@@ -62,6 +63,11 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 
     private void PlayAnimationOnClick()
     {
+        if (_isAnimating)
+        {
+            return;
+        }
+
         if (_sequence.isAlive)
         {
             _sequence.Stop();
@@ -71,7 +77,12 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 
         _sequence = Tween.Scale(transform, scaleMultiplier * currentScale, duration: animationDuration)
         .Chain(Tween.Scale(transform, 1 / scaleMultiplier * currentScale, duration: animationDuration))
-        .Chain(Tween.Scale(transform, 1f * currentScale, duration: animationDuration));
+        .Chain(Tween.Scale(transform, 1f * currentScale, duration: animationDuration).OnComplete(() =>
+        {
+            _isAnimating = false;
+        }));
+
+        _isAnimating = true;
     }
 
     private void PlaySoundOnClick()

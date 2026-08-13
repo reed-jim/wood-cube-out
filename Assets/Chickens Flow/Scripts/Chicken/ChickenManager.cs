@@ -28,13 +28,6 @@ public class ChickenManager : Singleton<ChickenManager>
     public int numColumn;
     public int numRow;
 
-    [Header("Customize")]
-    public Vector2 chickenDistanceRatio;
-    public float chickenAreaOffsetY;
-    public float depthDistanceXRatio;
-    public int requiredGrainForNormalChicken;
-    public int maxGhostChicken;
-
     [Header("Shape Definition")]
     [Tooltip("Vertices of any 2D closed polygon, ordered clockwise or counter-clockwise.")]
     [SerializeField] private BoardShapePreset[] boardShapePresets;
@@ -423,6 +416,15 @@ public class ChickenManager : Singleton<ChickenManager>
 
             waitingChickenSlot.chicken = chicken;
 
+            if (chicken.GetFirstRow() == 0)
+            {
+                chicken.isStuck = false;
+            }
+            else
+            {
+                chicken.isStuck = true;
+            }
+
             chicken.transform.position = waitingChickenSlot.GetRandomPosition();
 
             chickens.Add(chicken);
@@ -706,8 +708,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void FeedTheChicken(GrainPile grainPile)
     {
-        CheckChickensStuck(false);
-
         List<BaseChicken> chickensToFeed = chickens
             .Where(chicken => !chicken.isDone &&
                               !chicken.isStuck &&
@@ -822,17 +822,9 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public void FeedTheGhostChicken(GrainPile grainPile)
     {
-        if (numGhostChicken > maxGhostChicken)
-        {
-            return;
-        }
-
-        CheckChickensStuck(isGhostChicken: true);
-
         List<BaseChicken> ghostChickens = chickens
             .Where(chicken => !chicken.isEating &&
                               !chicken.isDone &&
-                              !chicken.isStuck &&
                               chicken.faction == grainPile.faction)
             .OrderByDescending(chicken => chicken.numGrainPileRequiredLeft)
             .ToList();
@@ -877,6 +869,7 @@ public class ChickenManager : Singleton<ChickenManager>
             destination.z = LayerManager.GetGhostChickenZ(numGhostChicken);
 
             chicken.isEating = true;
+            chicken.isGhost = true;
 
             DOTweenUtil.MoveParabol(chicken.transform, destination, duration: 1f, onComplete: () =>
             {
@@ -919,81 +912,6 @@ public class ChickenManager : Singleton<ChickenManager>
         GamePersistentVariable.isPreventSelectAntBox = true;
     }
 
-    public void CheckChickensStuck(bool isGhostChicken = false)
-    {
-        foreach (BaseChicken chicken in chickens)
-        {
-            chicken.isStuck = false;
-
-            if (isGhostChicken)
-                continue;
-
-            if (chicken.isMoving)
-            {
-                chicken.isStuck = true;
-
-                continue;
-            }
-
-            int bottomRow = chicken.GetFirstRow();
-
-            if (bottomRow > 0)
-            {
-                chicken.isStuck = true;
-            }
-
-            // // Check every column occupied by this chicken.
-            // var occupiedColumns = chicken.waitingChickenSlots
-            //     .Select(s => s.column)
-            //     .Distinct();
-
-            // foreach (int column in occupiedColumns)
-            // {
-            //     // Bottom-most slot of this chicken in this column.
-            //     int bottomRow = chicken.waitingChickenSlots
-            //         .Where(s => s.column == column)
-            //         .Min(s => s.row);
-
-            //     if (bottomRow > 0)
-            //     {
-            //         chicken.isStuck = true;
-            //     }
-
-            //     // bool foundSelf = false;
-
-            //     // for (int row = 0; row < numRow; row++)
-            //     // {
-            //     //     BaseChicken other = waitingChickenSlots[new Vector2Int(column, row)].chicken;
-
-            //     //     if (other == null)
-            //     //         continue;
-
-            //     //     if (!foundSelf)
-            //     //     {
-            //     //         if (other == chicken && row == bottomRow)
-            //     //             foundSelf = true;
-            //     //     }
-
-            //     //     if (foundSelf)
-            //     //     {
-            //     //         break;
-            //     //     }
-
-            //     //     // First chicken in front of us.
-            //     //     if (!other.isEating && !other.isDone)
-            //     //     {
-            //     //         chicken.isStuck = true;
-            //     //         break;
-            //     //     }
-            //     // }
-
-            //     // ANY blocked column => stuck.
-            //     if (chicken.isStuck)
-            //         break;
-            // }
-        }
-    }
-
     public void MoveChickensDown()
     {
         Dictionary<BaseChicken, ChickenMoveData> destinations = new();
@@ -1003,12 +921,6 @@ public class ChickenManager : Singleton<ChickenManager>
             .OrderBy(c => c.waitingChickenSlots.Min(s => s.row))
             .ThenBy(c => c.waitingChickenSlots.Min(s => s.column))
             .ToList();
-
-        // Clear chicken references but keep walls
-        // foreach (var slot in waitingChickenSlots.Values)
-        // {
-        //     slot.chicken = null;
-        // }
 
         HashSet<Vector2Int> occupied = new();
 
@@ -1028,37 +940,27 @@ public class ChickenManager : Singleton<ChickenManager>
 
             Vector2Int[] directions =
             {
-                Vector2Int.down,
-                // Vector2Int.left,
-                // Vector2Int.right
-            };
+        Vector2Int.down,
+        // Vector2Int.left,
+        // Vector2Int.right
+    };
 
             foreach (Vector2Int dir in directions)
             {
-                MoveBlockReason downResult = GetMoveBlockReason(chicken, Vector2Int.down, occupied);
+                direction = dir;
 
-                if (downResult == MoveBlockReason.None)
+                // Keep moving in this direction until blocked
+                while (GetMoveBlockReason(chicken, dir, occupied) == MoveBlockReason.None)
                 {
-                    MoveChicken(chicken, Vector2Int.down, occupied);
+                    MoveChicken(chicken, dir, occupied);
                     moved = true;
                 }
-                // else if (chicken.GetFirstRow() > 0)
-                // {
-                //     if (GetMoveBlockReason(chicken, Vector2Int.left, occupied) == MoveBlockReason.None)
-                //     {
-                //         MoveChicken(chicken, Vector2Int.left, occupied);
-                //         moved = true;
-                //     }
-                //     else if (GetMoveBlockReason(chicken, Vector2Int.right, occupied) == MoveBlockReason.None)
-                //     {
-                //         MoveChicken(chicken, Vector2Int.right, occupied);
-                //         moved = true;
-                //     }
-                // }
 
-                direction = dir;
+                // If this direction is blocked, you can try another direction
+                // if you enable left/right later.
             }
 
+            // Add the chicken's FINAL position to occupied
             OccupyChicken(chicken, occupied);
 
             if (moved)
@@ -1140,6 +1042,8 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         RemoveChickenFromOccupied(chicken, occupied);
 
+        int minRow = int.MaxValue;
+
         for (int i = 0; i < chicken.waitingChickenSlots.Count; i++)
         {
             WaitingChickenSlot slot = chicken.waitingChickenSlots[i];
@@ -1151,6 +1055,16 @@ public class ChickenManager : Singleton<ChickenManager>
                 slot.row + dir.y);
 
             chicken.waitingChickenSlots[i] = waitingChickenSlots[pos];
+
+            if (pos.y < minRow)
+            {
+                minRow = pos.y;
+            }
+        }
+
+        if (minRow == 0)
+        {
+            chicken.isStuck = false;
         }
     }
 
@@ -1297,15 +1211,18 @@ public class ChickenManager : Singleton<ChickenManager>
     #endregion
 
     #region Booster
-    public Color PickChickenColor(Vector2 position)
+    public BaseChicken PickChicken(Vector2 position)
     {
-        Vector2 offset = new Vector2(0, 0.5f);
+        if (chickens.Any(chicken => !chicken.isDone && chicken.IsInSide(position)))
+        {
+            BaseChicken chicken = chickens.First(chicken => !chicken.isDone && chicken.IsInSide(position));
 
-        Vector2 chickenPosition = position + offset;
-
-        BaseChicken chicken = chickens.OrderBy(chicken => (chickenPosition - (Vector2)chicken.transform.position).sqrMagnitude).First();
-
-        return chicken.faction;
+            return chicken;
+        }
+        else
+        {
+            return null;
+        }
     }
     #endregion
 

@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
 using DG.Tweening;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Saferio.Util.SaferioTween;
 using TMPro;
 
@@ -36,11 +33,7 @@ public class GrainPile : MonoBehaviour
     public int totalNumber;
     public int remainingNumber;
     public float currentProgress;
-    public float timeEatOneGrain;
     public float delayPerGrain;
-    public int numGrainToSwitchEatAnimation;
-    public int numChickenEating;
-    public int numGrainBeEating;
     #endregion
 
     [Header("Customize")]
@@ -78,10 +71,9 @@ public class GrainPile : MonoBehaviour
 
     public void Reset()
     {
-        progressText.gameObject.SetActive(false);
+        ObjectPoolingEverything.ReturnToPool(GameConstants.grainPile, gameObject);
 
-        numChickenEating = 0;
-        numGrainBeEating = 0;
+        progressText.gameObject.SetActive(false);
     }
 
     public void Setup(WashingMachineItem grainBusket, int amount)
@@ -92,7 +84,7 @@ public class GrainPile : MonoBehaviour
         remainingNumber = totalNumber;
         currentProgress = 1;
 
-        Reset();
+        progressText.gameObject.SetActive(false);
     }
 
     public void SetFaction(Color faction)

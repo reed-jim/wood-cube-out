@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -25,6 +26,7 @@ public class LanguageButton : MonoBehaviour
     [SerializeField] private string language;
 
     private Action _onSelect;
+    private PrimeTween.Tween tickTween;
 
     void Awake()
     {
@@ -42,19 +44,24 @@ public class LanguageButton : MonoBehaviour
     {
         isSelected = language == this.language;
 
+        if (tickTween.isAlive)
+        {
+            tickTween.Stop();
+        }
+
         if (isSelected)
         {
             selectedBackground.gameObject.SetActive(true);
             unselectedBackground.gameObject.SetActive(false);
             languageText.fontMaterial = activeTextMaterial;
-            SaferioTween.AlphaShow(tick);
+            tickTween = SaferioTween.AlphaShow(tick);
         }
         else
         {
             selectedBackground.gameObject.SetActive(false);
             unselectedBackground.gameObject.SetActive(true);
             languageText.fontMaterial = inactiveTextMaterial;
-            SaferioTween.AlphaHide(tick);
+            tickTween = SaferioTween.AlphaHide(tick);
         }
     }
 
@@ -75,7 +82,6 @@ public class LanguageButton : MonoBehaviour
 
     private void OnLanguageChanged(string language)
     {
-        Debug.Log($"OnLanguageChanged {language}");
         SetStateBasedOnLanguage(language);
     }
 }

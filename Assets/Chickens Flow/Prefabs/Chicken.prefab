@@ -494,7 +494,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4261045330628767458
 Transform:
   m_ObjectHideFlags: 0
@@ -530,12 +530,13 @@ MonoBehaviour:
   - {fileID: 320630214948327204}
   - {fileID: 8563305162491534366}
   skeletonAnimation: {fileID: 320630214948327204}
+  smokeAnimation: {fileID: 0}
   idleAnimation: idle4
   moveAnimation: move
   eatAnimations:
-  - action_eat5
-  - action_eat4
-  - action_eat6
+  - action_eat1
+  - action_eat2
+  - action_eat3
   flyAnimations:
   - action_fly
   - action_fly
@@ -553,6 +554,7 @@ MonoBehaviour:
   numGrainPileRequiredLeft: 0
   eatingRange: 0.5
   flyOutDuration: 0.6
+  smokeOffsetY: 1.6
   isMoving: 0
   isEating: 0
   isDone: 0
@@ -988,7 +990,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6734858105619798863
 Transform:
   m_ObjectHideFlags: 0

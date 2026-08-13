@@ -62,7 +62,7 @@ public class ChickenRenderer : MonoBehaviour
     private readonly List<ChickenData> chickenDataItems = new();
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[BatchSize];
-    private readonly Matrix4x4[] shadowMatrices = new Matrix4x4[BatchSize];
+    private readonly Matrix4x4[] shadowMatrices = new Matrix4x4[40];
     private readonly Vector4[] animData = new Vector4[BatchSize];
     private readonly float[] animStartFrame = new float[BatchSize];
 
@@ -147,18 +147,36 @@ public class ChickenRenderer : MonoBehaviour
 
         Vector3 position;
 
+        int index = 0;
+
         for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
         {
+            if (index >= shadowMatrices.Length)
+            {
+                break;
+            }
+
             BaseChicken chicken = ChickenManager.Ins.chickens[i];
 
-            if (chicken.isDone)
+            if (chicken.isDone || chicken.isStuck)
             {
-                position = new Vector3(outsideScreenX, 0, 0);
+                continue;
             }
-            else
-            {
-                position = chicken.transform.position + shadowOffset;
-            }
+
+            position = chicken.transform.position + shadowOffset;
+
+            shadowMatrices[index] = Matrix4x4.TRS(
+                    position,
+                    Quaternion.identity,
+                    shadowSize
+                );
+
+            index++;
+        }
+
+        for (int i = index; i < shadowMatrices.Length; i++)
+        {
+            position = Vector3.zero.ChangeX(outsideScreenX);
 
             shadowMatrices[i] = Matrix4x4.TRS(
                     position,
@@ -172,7 +190,7 @@ public class ChickenRenderer : MonoBehaviour
                 0,
                 shadowMaterial,
                 shadowMatrices,
-                ChickenManager.Ins.chickens.Count
+                shadowMatrices.Length
             );
     }
 

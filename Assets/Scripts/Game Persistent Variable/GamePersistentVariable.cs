@@ -23,6 +23,7 @@ public static class GamePersistentVariable
     public static Vector2 canvasScale;
     public static string iapInitializeFailReason;
     public static Vector2 screenSizeWorld;
+    public static bool isNearWinLevel;
 
     #region LEVEL OBSERVER
     public static int currentLevel;

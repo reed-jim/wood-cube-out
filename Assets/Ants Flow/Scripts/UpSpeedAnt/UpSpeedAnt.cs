@@ -121,6 +121,8 @@ public class UpSpeedAnt : Singleton<UpSpeedAnt>
 
             ChangeGameSpeed();
         });
+
+        GamePersistentVariable.isNearWinLevel = true;
     }
 
     public void ResetSpeedOnWinLevel()
@@ -131,6 +133,8 @@ public class UpSpeedAnt : Singleton<UpSpeedAnt>
         GameplayScreen.Ins.UpdateUpSpeedState(speedUpMultiplier);
 
         ChangeGameSpeed();
+
+        GamePersistentVariable.isNearWinLevel = false;
     }
 
     private void OnLevelStarted()

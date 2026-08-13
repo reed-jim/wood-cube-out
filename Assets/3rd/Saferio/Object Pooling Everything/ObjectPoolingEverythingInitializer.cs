@@ -1,6 +1,7 @@
 using System.Collections;
 using AntsFlow;
 using NamPhuThuy.GamePlay;
+using Spine.Unity;
 using UnityEngine;
 
 public class ObjectPoolingEverythingInitializer : MonoBehaviour
@@ -10,7 +11,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject grainPile;
     [SerializeField] private GameObject wall;
     [SerializeField] private GameObject smokeFx;
-    
+    [SerializeField] private GameObject smokeAnim;
+
     public static ObjectPoolingEverythingInitializer Instance;
 
     [Header("CONTAINER")]
@@ -122,11 +124,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     private void InitPool()
     {
         RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);
-        RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 50);
+        RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 500);
         RegisterPool<Wall>(GameConstants.wall, wall, 50);
-         RegisterPool<ParticleSystem>(GameConstants.smokeFx, smokeFx, 25);
-
-
+        RegisterPool<SkeletonAnimation>(GameConstants.smokeFx, smokeAnim, 25);
 
         RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);
         RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);
@@ -172,25 +172,13 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
         RegisterPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED, lockedScrewBox, 2);
 
-        // RegisterPool<RescueStory.BaseTile>(GameConstants.tile, baseTile, 100);
-        // RegisterPool<AntsFlow.BaseTile>(GameConstants.tile, baseTile, 1600);
-
         RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 50);
-        RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
-        RegisterPool<PathSlot>(GameConstants.pathSlot, pathSlotPrefab, 50);
-        RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 200);
-        RegisterPool<BaseAnt>(GameConstants.warriorAnt, warriorAntPrefab, 50);
-        RegisterPool<BaseAnt>(GameConstants.snakeAnt, snakeAntPrefab, 50);
         RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 20);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 20);
         RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);
         RegisterPool<SnakeAntBox>(GameConstants.snakeAntBox, snakeAntBoxPrefab, 5);
-        RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
-        RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);
-        RegisterPool<Transform>(GameConstants.tileMap, tilemapPrefab, 40);
-        RegisterPool<Transform>(GameConstants.missile, missilePrefab, 50);
         RegisterPool<DamageText>(GameConstants.damageText, damageTextPrefab, 10);
     }
 

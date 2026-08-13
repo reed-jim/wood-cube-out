@@ -545,12 +545,12 @@ namespace Saferio.Util.SaferioTween
         #endregion
 
         #region COLOR
-        public static void AlphaShow(Image image, float endAlpha = 1)
+        public static Tween AlphaShow(Image image, float endAlpha = 1)
         {
             image.gameObject.SetActive(true);
             image.color = image.color.ChangeAlpha(0);
 
-            Tween.Alpha(image, endAlpha, duration: 0.3f);
+            return Tween.Alpha(image, endAlpha, duration: 0.3f);
         }
 
         public static void AlphaShow(TMP_Text text, float endAlpha = 1)
@@ -593,9 +593,9 @@ namespace Saferio.Util.SaferioTween
             });
         }
 
-        public static void AlphaHide(Image image, Action onCompleteAction = null)
+        public static Tween AlphaHide(Image image, Action onCompleteAction = null)
         {
-            Tween.Alpha(image, 0, duration: 0.3f)
+            return Tween.Alpha(image, 0, duration: 0.3f)
             .OnComplete(() =>
             {
                 image.gameObject.SetActive(false);
