@@ -994,27 +994,7 @@ namespace AntsFlow
 
             GamePersistentVariable.numActiveAnt = 0;
 
-            // if (currentLevel.Value < 10)
-            // {
-            //     maxAntNumberThreshold = 80;
-            // }
-            // else
-            // {
-            //     maxAntNumberThreshold = 35;
-            // }
-
-            // if (currentLevel.Value <= 5)
-            // {
-            //     minAntNumberThreshold = 50;
-            // }
-            // else if (currentLevel.Value <= 10)
-            // {
-            //     minAntNumberThreshold = 40;
-            // }
-            // else
-            // {
-            //     minAntNumberThreshold = 10;
-            // }
+            mainCamera.transform.position = Vector3.zero.ChangeZ(mainCamera.transform.position.z);
         }
 
         #region Util

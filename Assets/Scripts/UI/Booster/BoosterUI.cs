@@ -399,18 +399,15 @@ public class BoosterUI : MonoBehaviour
         localizedDescription.TranslationName = clearOneColorTranslationName;
 
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
-        // Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
         Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y, duration: transitionTime)
         .OnComplete(() =>
         {
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
 
-            // AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
-
             _isInTransition = false;
-
-            GamePersistentVariable.isPreventSelectAntBox = false;
         });
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
     }
 
     private void IncreaseGrainCapacity()

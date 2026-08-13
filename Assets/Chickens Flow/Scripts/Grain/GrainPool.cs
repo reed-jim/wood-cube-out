@@ -161,9 +161,9 @@ public class GrainPool : Singleton<GrainPool>
                 break;
             }
 
-            ChickenManager.Ins.FeedTheGhostChicken(grainPiles[i]);
-
             amountGrainCleared += grainPiles[i].remainingNumber;
+
+            ChickenManager.Ins.FeedTheGhostChicken(grainPiles[i]);
         }
     }
 
