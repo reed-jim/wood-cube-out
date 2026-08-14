@@ -27,7 +27,7 @@ public class AdmobAdsMax
     private const string MaxSdkKey =
         "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
 
-    private const string InterstitialAdUnitId = "040ac39c872e76f3"; // check this
+    private const string InterstitialAdUnitId = "040ac39c872e76f3"; // check this 040ac39c872e76f3
     private const string RewardedAdUnitId = "1cf078100bda612e"; // check this
     private const string BanerAdUnitId = "b15d9760f47aa099"; // check this
 #elif UNITY_IOS
@@ -125,14 +125,48 @@ public class AdmobAdsMax
 
     private void ChangeActiveVal()
     {
-
         _isShowAdmobCollap = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.collap.IsActive();
         _isShowAdmobBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.IsActive();
+        GamePersistentVariable.isEnableRewardedAds = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.reward.isActive;
+        ReloadAllAdsForSegment();
     }
 
     private void OnDestroy()
     {
         GameController.Instance.appsFlyerManager.CampChange -= ChangeActiveVal;
+    }
+
+    /// <summary>
+    /// Gọi lại các hàm Load ad sau khi config segment/camp bị GHI ĐÈ lúc runtime
+    /// (vd đổi camp test từ DebugPopup). KHÔNG attach lại callback / init lại SDK,
+    /// chỉ nạp lại inventory theo config mới. Các hàm Load bên dưới đều tự huỷ instance cũ
+    /// trước khi tạo mới nên gọi lại nhiều lần vẫn an toàn.
+    /// </summary>
+    public void ReloadAllAdsForSegment()
+    {
+        Debug.Log("[ReloadAllAdsForSegment] Reload lại toàn bộ ad theo camp mới.");
+
+        // Cập nhật lại cờ enable banner/collap từ config mới.
+
+
+        // Ẩn banner cũ (MAX + Admob + Collap) trước khi reload. Bắt buộc vì nếu camp mới có
+        // banner.minimumLevel cao hơn level hiện tại thì LoadBannerAdmob return sớm, KHÔNG tự
+        // ẩn banner cũ -> banner của camp trước sẽ dính lại trên màn hình.
+        DestroyBanner();
+
+        // Banner Admob + MREC + Collap (mỗi hàm tự Destroy instance cũ rồi tạo mới nếu đủ điều kiện).
+        InitBannerAdmob();
+
+        // MAX interstitial: reset cờ để không bị kẹt guard `if (_isLoading) return;` rồi load lại.
+        _isLoading = false;
+        RequestInterstitial();
+
+        // MAX rewarded.
+        LoadRewardedAd();
+
+        // Admob interstitial (short/double inter).
+        LoadInterstitialAd();
+
     }
     //public IEnumerator ShowAppOpenAds()
     //{
@@ -359,7 +393,7 @@ public class AdmobAdsMax
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2523627104"; // check this  id chinh : ca-app-pub-3046520253844875/2523627104, id test: ca-app-pub-3940256099942544/2014213617
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2523627104"; // check this
 #endif
 #elif UNITY_IOS
 #if TESTER
@@ -860,11 +894,12 @@ public class AdmobAdsMax
             return false;
         }
 
-#if UNITY_EDITOR
-        actionIniterClose?.Invoke();
-        return true;
-#endif
-
+        //#if UNITY_EDITOR
+        //        actionIniterClose?.Invoke();
+        //        return true;
+        //#endif
+        Debug.Log("show inter ======== CurrentLevel " + GameController.Instance.useProfile.CurrentLevel);
+        Debug.Log("show inter ======== LevelShowInter " + GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.minimumLevel);
         if (GameController.Instance.useProfile.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.minimumLevel)
         {
             GameController.Instance.AnalyticsController.LoadInterEligible();
@@ -935,8 +970,8 @@ public class AdmobAdsMax
     },
     // Các callback thật cho gameplay (actionInterstitialClose) đã được bắn trực tiếp từ
     // OnInterstitialHiddenEvent/InterstitialFailedToDisplayEvent, không cần lặp lại ở đây.
-    onSuccess: () => { },
-    onFailed: () => { }
+    onSuccess: () => { interSuccess?.Invoke(); },
+    onFailed: () => { interFail?.Invoke(); }
     );
                 }
                 else
@@ -973,8 +1008,8 @@ public class AdmobAdsMax
     },
     // Các callback thật cho gameplay (actionInterstitialClose) đã được bắn trực tiếp từ
     // OnInterstitialHiddenEvent/InterstitialFailedToDisplayEvent, không cần lặp lại ở đây.
-    onSuccess: () => { },
-    onFailed: () => { }
+    onSuccess: () => { interSuccess?.Invoke(); },
+    onFailed: () => { interFail?.Invoke(); }
     );
                 }
                 else
@@ -1414,14 +1449,17 @@ showRewarded: callbacks =>
     // OnDisplayFailed() sẽ làm flow kết thúc "failed" trong khi native ad có thể đang
     // hiển thị dở, gây race. OnDisplayFailed() chỉ nên bắn khi MAX rewarded ad thật sự
     // không hiển thị được, xem OnRewardedAdFailedToDisplayEvent.
-    this._actionNotLoadedVideo = () => { actionNotLoadedVideo?.Invoke(); };
-    _rewardDisplayFailedCallback = callbacks.OnDisplayFailed;
+    this._actionNotLoadedVideo = () =>
+    {
+        actionNotLoadedVideo?.Invoke();
+        callbacks.OnDisplayFailed();
+    };
     MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
 },
 // Các callback thật cho gameplay (actionReward/actionClose/actionNotLoadedVideo) đã được
 // bắn trực tiếp từ sự kiện MAX SDK ở trên, không cần lặp lại ở đây.
-onSuccess: () => { },
-onFailed: () => { }
+onSuccess: () => { _actionRewardVideo?.Invoke(); },
+onFailed: () => { _actionNotLoadedVideo?.Invoke(); }
 );
             }
             else

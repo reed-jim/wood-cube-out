@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -126,6 +126,7 @@ public class SegmentData
         Debug.Log(MinigameConnectSegmentData.MiniGameConnectConfig + " " + minigameConnectSegmentData.ToJsonConfig());
         Debug.Log(AdsNewSegmentData.Ads_New_Config + " " + adsNewData.ToJsonConfig());
         Debug.Log(ChallengeGameplayData.CHALLENGE_MODE_CONFIG + " " + challengeModeData.ToJsonConfig());
+        Debug.Log(SegmentUserData.Segment_User_Data + " " + segmentUserData.ToJsonConfig());
     }
 }
 
@@ -308,7 +309,7 @@ public class CoreGameData : BaseDataSegemnt
             public string idCampSegemnt;
             public bool reloadConfig = false;
             public AdsDataConfig adsConfig;
-            public SaleConfig saleConfig;
+
         }
 
         [System.Serializable]
@@ -336,7 +337,13 @@ public class CoreGameData : BaseDataSegemnt
         public override string ToJsonConfig()
         {
             string outputJson = JsonConvert.SerializeObject(config, Formatting.Indented);
-            File.WriteAllText("Assets/Resources/Data/SegmentData.json", outputJson);
+            string path = "Assets/Resources/Data/SegmentData.json";
+            string dir = System.IO.Path.GetDirectoryName(path);
+            if (!System.IO.Directory.Exists(dir))
+            {
+                System.IO.Directory.CreateDirectory(dir);
+            }
+            File.WriteAllText(path, outputJson);
             return outputJson;
         }
     }
@@ -481,7 +488,9 @@ public class AdsSegmentData : BaseDataSegemnt
     [System.Serializable]
     public class InterstitialsAds : AdsBase
     {
-        public int minimumInterval;//Khoảng thời gian giữa 2 lần hiện inter
+        // Đã bỏ field `minimumInterval` ở đây vì nó ĐÈ (field hiding) lên AdsBase.minimumInterval,
+        // khiến code đọc nhầm field mặc định 0 -> inter hiện mỗi win không tôn trọng delay.
+        // Delay giữa 2 lần inter giờ dùng chung AdsBase.minimumInterval (kế thừa).
 
         public bool showAfterDefeat;//On/Off Hiện inter khi thua
         public bool showAfterQuit;//On/Off Hiện inter khi ấn quit 

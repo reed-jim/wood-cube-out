@@ -11,6 +11,10 @@ public class DebugPopup : BasePopup
     [SerializeField] private TMP_InputField levelInput;
     [SerializeField] private TMP_InputField backgroundColorInput;
 
+    [Header("=== TEST CAMP ===")]
+    [SerializeField] private TMP_InputField campTestInput; // nhập idCamp test, vd "testCamp0"
+    [SerializeField] private Button applyCampTestButton;
+
     [SerializeField] private Button hideDebugButton;
     [SerializeField] private Button debugPlayLevelButton;
     [SerializeField] private Button debugNextLevelButton;
@@ -58,6 +62,9 @@ public class DebugPopup : BasePopup
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
         hideDebugButton.onClick.AddListener(HideDebug);
         hideUIButton.onClick.AddListener(HideUI);
+
+        if (applyCampTestButton != null)
+            applyCampTestButton.onClick.AddListener(ApplyTestCamp);
 
         gameSpeedText.text = $"Game Speed: x{(int)Time.timeScale}";
     }
@@ -183,6 +190,25 @@ public class DebugPopup : BasePopup
 
             debugAdsText.text = "Enable Ads";
         }
+    }
+
+    private void ApplyTestCamp()
+    {
+        if (campTestInput == null)
+        {
+            return;
+        }
+
+        string campId = campTestInput.text;
+        if (string.IsNullOrEmpty(campId))
+        {
+            Debug.LogWarning("TEST_CAMP_ [DEBUG] Chưa nhập idCamp test.");
+            return;
+        }
+
+        GameController.Instance.appsFlyerManager.ApplyTestCampById(campId);
+
+        Hide();
     }
 
     private void HideDebug()
