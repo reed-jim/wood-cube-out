@@ -32,6 +32,7 @@ public struct GrainParticle
     public bool onPath;
     public bool bouncing;
     public float fallImpactTimer;
+    public bool isFake;
 }
 
 // ------------------------------------------------------------------------
@@ -153,6 +154,14 @@ public struct SimulateGrainsJob : IJobParallelFor
 
         if (p.position.y <= conveyorPoint.y)
         {
+            // Check if it's a fake grain hitting the ground
+            if (p.isFake)
+            {
+                p.position = new float3(-99999f, -99999f, 0f); // Flag for removal
+                particles[i] = p;
+                return;
+            }
+
             p.onPath = true;
             p.bouncing = true;
             p.bounceCount = 0;
@@ -863,6 +872,18 @@ public class GrainSimulation : Singleton<GrainSimulation>
         // Store pipeline dependency handle and wait for completion prior to rendering
         lastFrameJobHandle = pipelineHandle;
         lastFrameJobHandle.Complete();
+
+        // Cleanup fake grains that hit the ground
+        foreach (var group in factionGroups.Values)
+        {
+            for (int i = group.Count - 1; i >= 0; i--)
+            {
+                if (group.particles[i].position.x <= -99000f)
+                {
+                    group.RemoveAt(i);
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -1064,59 +1085,53 @@ public class GrainSimulation : Singleton<GrainSimulation>
     // API & FACTORY HANDLERS
     // ------------------------------------------------------------------------
 
-    public void SpawnGrains(List<Vector3> grainPositions, Color faction, Action onAllGrainsPoured = null, Action onComplete = null)
+    public void SpawnGrains(List<Vector3> grainPositions, Color faction, int fakeGrainsPerRealGrain = 5, Action onAllGrainsPoured = null, Action onComplete = null)
     {
         FactionGroup group = GetFaction(faction);
-        int startIndex = group.Count;
         int totalSpawn = grainPositions.Count;
 
         for (int i = 0; i < totalSpawn; i++)
         {
-            GrainParticle p = new GrainParticle();
-            p.position = grainPositions[i] + 0.1f * (Vector3)UnityEngine.Random.insideUnitCircle;
-            p.position.z = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000);
+            int totalToSpawnForThis = 1 + fakeGrainsPerRealGrain;
 
-            p.velocity2D = float2.zero;
-            p.gravity = UnityEngine.Random.Range(gravityRange.x, gravityRange.y);
-            p.fallVelocity = 0f;
-            p.conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y);
-            p.onPath = false;
-            p.fallDelay = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay;
-            p.fallImpactTimer = 0;
-            p.bouncing = false;
-            p.bounceCount = 0;
-            p.bounceRestitution = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y);
-            p.bounceFriction = UnityEngine.Random.Range(bounceFrictionRange.x, bounceFrictionRange.y);
-            p.maxBounces = UnityEngine.Random.Range(bounceCountRange.x, bounceCountRange.y + 1);
-            p.impactToPathVelocity = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y);
+            for (int f = 0; f < totalToSpawnForThis; f++)
+            {
+                bool isFake = f > 0; // First is real, remaining are fake
 
-            group.Add(p, Matrix4x4.identity);
-            spawnCallCount++;
+                GrainParticle p = new GrainParticle();
+                p.position = grainPositions[i] + (Vector3)UnityEngine.Random.insideUnitCircle * (isFake ? 0.2f : 0.1f);
+                p.position.z = LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000);
+
+                p.velocity2D = float2.zero;
+                p.gravity = UnityEngine.Random.Range(gravityRange.x, gravityRange.y);
+                p.fallVelocity = 0f;
+                p.conveyorForce = UnityEngine.Random.Range(conveyorForceRange.x, conveyorForceRange.y);
+                p.onPath = false;
+                p.fallDelay = pourDelayCurve.Evaluate((float)i / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay + (isFake ? UnityEngine.Random.Range(0f, 0.05f) : 0f);
+                p.fallImpactTimer = 0;
+                p.bouncing = false;
+                p.bounceCount = 0;
+                p.bounceRestitution = UnityEngine.Random.Range(bounceRestitutionRange.x, bounceRestitutionRange.y);
+                p.bounceFriction = UnityEngine.Random.Range(bounceFrictionRange.x, bounceFrictionRange.y);
+                p.maxBounces = UnityEngine.Random.Range(bounceCountRange.x, bounceCountRange.y + 1);
+                p.impactToPathVelocity = UnityEngine.Random.Range(impactToPathVelocityRange.x, impactToPathVelocityRange.y);
+                p.isFake = isFake; // Set fake flag
+
+                group.Add(p, Matrix4x4.identity);
+                if (!isFake) spawnCallCount++;
+            }
         }
 
-        int numGrain = grainPositions.Count;
-
-        TweenManager.Ins.AddTween(Tween.Delay(0.8f * numGrain * fallTimePerGrain).OnComplete(() =>
+        // Callbacks stay tied to real grain duration
+        TweenManager.Ins.AddTween(Tween.Delay(0.8f * totalSpawn * fallTimePerGrain).OnComplete(() =>
         {
             onAllGrainsPoured?.Invoke();
         }));
 
-        TweenManager.Ins.AddTween(Tween.Delay(numGrain * fallTimePerGrain).OnComplete(() =>
+        TweenManager.Ins.AddTween(Tween.Delay(totalSpawn * fallTimePerGrain).OnComplete(() =>
         {
             onComplete?.Invoke();
         }));
-
-        // if (onComplete != null)
-        // {
-        //     pendingSpawns.Add(new SpawnRequest
-        //     {
-        //         group = group,
-        //         startIndex = startIndex,
-        //         count = grainPositions.Count,
-        //         onAllGrainsPoured = onAllGrainsPoured,
-        //         onComplete = onComplete
-        //     });
-        // }
     }
 
     public void RemoveLastGrain(Color faction)
