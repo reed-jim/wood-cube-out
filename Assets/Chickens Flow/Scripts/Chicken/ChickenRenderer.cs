@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 
-public struct ChickenBatchKey
+// 1. Keep strings, but implement fast IEquatable to eliminate Boxing GC
+public readonly struct ChickenBatchKey : IEquatable<ChickenBatchKey>
 {
-    public int factionIndex;
-    public string anim;
+    public readonly int factionIndex;
+    public readonly string anim;
 
     public ChickenBatchKey(int factionIndex, string anim)
     {
@@ -14,30 +15,29 @@ public struct ChickenBatchKey
         this.anim = anim;
     }
 
+    public bool Equals(ChickenBatchKey other)
+    {
+        return factionIndex == other.factionIndex && string.Equals(anim, other.anim, StringComparison.Ordinal);
+    }
+
     public override bool Equals(object obj)
     {
-        if (obj is ChickenBatchKey other)
-        {
-            return factionIndex == other.factionIndex &&
-                   anim == other.anim;
-        }
-
-        return false;
+        return obj is ChickenBatchKey other && Equals(other);
     }
 
     public override int GetHashCode()
     {
-        return System.HashCode.Combine(factionIndex, anim);
+        // Faster hash calculation without System.HashCode.Combine overhead
+        return (factionIndex * 397) ^ (anim != null ? anim.GetHashCode() : 0);
     }
 }
 
+// 2. ChickenData remains intact as a class matching your structure
 public class ChickenData
 {
     public Vector3 position;
-
     public int factionIndex;
     public string anim;
-
     public float animStartFrame;
 }
 
@@ -45,8 +45,6 @@ public class ChickenRenderer : MonoBehaviour
 {
     [Header("Rendering")]
     [SerializeField] private Mesh chickenMesh;
-    // [SerializeField] private Material[] idleMaterials;
-    // [SerializeField] private Material[] walkMaterials;
     [SerializeField] private MaterialsForAnim[] materialsForAnims;
     [SerializeField] private Material shadowMaterial;
 
@@ -59,18 +57,22 @@ public class ChickenRenderer : MonoBehaviour
 
     private const int BatchSize = 1023;
 
-    private readonly List<ChickenData> chickenDataItems = new();
+    private readonly List<ChickenData> chickenDataItems = new(128);
+    private readonly Dictionary<BaseChicken, ChickenData> dataOfChicken = new(128);
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[BatchSize];
     private readonly Matrix4x4[] shadowMatrices = new Matrix4x4[40];
     private readonly Vector4[] animData = new Vector4[BatchSize];
     private readonly float[] animStartFrame = new float[BatchSize];
 
-    private Dictionary<BaseChicken, ChickenData> dataOfChicken = new();
+    // Reuse collections across frames to achieve ZERO GC in Update/Render
+    private readonly Dictionary<ChickenBatchKey, List<int>> batchBuffers = new();
+    private readonly List<List<int>> listPool = new();
 
     private MaterialPropertyBlock propertyBlock;
 
     private static readonly int AnimDataID = Shader.PropertyToID("_AnimData");
+    private static readonly int AnimStartFrame = Shader.PropertyToID("_AnimStartFrame");
 
     private void Awake()
     {
@@ -82,7 +84,7 @@ public class ChickenRenderer : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         SettingPopup.replayLevelEvent -= Reset;
         LosePopup.replayLevelEvent -= Reset;
@@ -100,42 +102,35 @@ public class ChickenRenderer : MonoBehaviour
         chickenDataItems.Clear();
         dataOfChicken.Clear();
 
-        System.Array.Clear(matrices, 0, matrices.Length);
-        System.Array.Clear(animData, 0, animData.Length);
-        System.Array.Clear(animStartFrame, 0, animStartFrame.Length);
+        Array.Clear(matrices, 0, matrices.Length);
+        Array.Clear(animData, 0, animData.Length);
+        Array.Clear(animStartFrame, 0, animStartFrame.Length);
     }
 
     private void Render()
     {
-        Dictionary<ChickenBatchKey, List<int>> batches = new();
+        ClearBatchBuffers();
 
-        // Group chickens
-        for (int i = 0; i < chickenDataItems.Count; i++)
+        // Group chickens without allocating 'new Dictionary' or 'new List' every frame
+        int totalItems = chickenDataItems.Count;
+        for (int i = 0; i < totalItems; i++)
         {
             ChickenData chicken = chickenDataItems[i];
+            ChickenBatchKey key = new(chicken.factionIndex, chicken.anim);
 
-            ChickenBatchKey key = new(
-                chicken.factionIndex,
-                chicken.anim
-            );
-
-            if (!batches.TryGetValue(key, out var list))
+            if (!batchBuffers.TryGetValue(key, out var list))
             {
-                list = new List<int>();
-                batches.Add(key, list);
+                list = GetPooledList();
+                batchBuffers.Add(key, list);
             }
 
             list.Add(i);
         }
 
-
         // Draw each group
-        foreach (var batch in batches)
+        foreach (var batch in batchBuffers)
         {
-            DrawBatch(
-                batch.Key,
-                batch.Value
-            );
+            DrawBatch(batch.Key, batch.Value);
         }
 
         RenderShadow();
@@ -143,107 +138,64 @@ public class ChickenRenderer : MonoBehaviour
 
     private void RenderShadow()
     {
-        float outsideScreenX = 999;
-
-        Vector3 position;
-
+        var chickens = ChickenManager.Ins.chickens;
+        int maxShadows = shadowMatrices.Length;
         int index = 0;
 
-        for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
+        for (int i = 0; i < chickens.Count; i++)
         {
-            if (index >= shadowMatrices.Length)
-            {
-                break;
-            }
+            if (index >= maxShadows) break;
 
-            BaseChicken chicken = ChickenManager.Ins.chickens[i];
+            BaseChicken chicken = chickens[i];
+            if (chicken.isDone || chicken.isStuck) continue;
 
-            if (chicken.isDone || chicken.isStuck)
-            {
-                continue;
-            }
-
-            position = chicken.transform.position + shadowOffset;
-
-            shadowMatrices[index] = Matrix4x4.TRS(
-                    position,
-                    Quaternion.identity,
-                    shadowSize
-                );
-
+            Vector3 position = chicken.transform.position + shadowOffset;
+            shadowMatrices[index] = Matrix4x4.TRS(position, Quaternion.identity, shadowSize);
             index++;
         }
 
-        for (int i = index; i < shadowMatrices.Length; i++)
+        // Draw only active shadows directly (avoids writing off-screen matrices)
+        if (index > 0)
         {
-            position = Vector3.zero.ChangeX(outsideScreenX);
-
-            shadowMatrices[i] = Matrix4x4.TRS(
-                    position,
-                    Quaternion.identity,
-                    shadowSize
-                );
-        }
-
-        Graphics.DrawMeshInstanced(
+            Graphics.DrawMeshInstanced(
                 chickenMesh,
                 0,
                 shadowMaterial,
                 shadowMatrices,
-                shadowMatrices.Length
+                index
             );
+        }
     }
 
-    private void DrawBatch(
-        ChickenBatchKey key,
-        List<int> indexes)
+    private void DrawBatch(ChickenBatchKey key, List<int> indexes)
     {
         Material material = GetMaterial(key);
+        Vector3 localScale = chickenSize * Vector3.one;
 
         int start = 0;
+        int totalIndexes = indexes.Count;
 
-        while (start < indexes.Count)
+        while (start < totalIndexes)
         {
-            int count = Mathf.Min(
-                BatchSize,
-                indexes.Count - start
-            );
+            int count = Mathf.Min(BatchSize, totalIndexes - start);
 
             for (int i = 0; i < count; i++)
             {
-                ChickenData chicken =
-                    chickenDataItems[indexes[start + i]];
+                ChickenData chicken = chickenDataItems[indexes[start + i]];
 
                 matrices[i] = Matrix4x4.TRS(
                     chicken.position + offset,
                     Quaternion.identity,
-                    chickenSize * Vector3.one
+                    localScale
                 );
 
-                // x = animation
-                // y = faction
-                animData[i] = new Vector4(
-                    0,
-                    chicken.factionIndex,
-                    0,
-                    0
-                );
-
-                animStartFrame[i] =
-                    chicken.animStartFrame;
+                animData[i] = new Vector4(0, chicken.factionIndex, 0, 0);
+                animStartFrame[i] = chicken.animStartFrame;
             }
 
             propertyBlock.Clear();
-
-            propertyBlock.SetVectorArray(
-                AnimDataID,
-                animData
-            );
-
-            propertyBlock.SetFloatArray(
-                "_AnimStartFrame",
-                animStartFrame
-            );
+            propertyBlock.SetVectorArray(AnimDataID, animData);
+            propertyBlock.SetFloatArray(AnimStartFrame, animStartFrame);
 
             Graphics.DrawMeshInstanced(
                 chickenMesh,
@@ -265,36 +217,30 @@ public class ChickenRenderer : MonoBehaviour
     public void RenderChickens(List<BaseChicken> chickens)
     {
         chickenDataItems.Clear();
+        dataOfChicken.Clear();
 
         for (int i = 0; i < chickens.Count; i++)
         {
             BaseChicken chicken = chickens[i];
+            if (!chicken.isStuck) continue;
 
-            // skip chickens in first row
-            if (!chicken.isStuck)
+            ChickenData chickenData = new ChickenData
             {
-                continue;
-            }
-
-            ChickenData chickenData = new ChickenData();
-
-            chickenData.position = chicken.transform.position;
-            chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
-            chickenData.anim = chicken.currentAnimation;
-            chickenData.animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame);
+                position = chicken.transform.position,
+                factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction),
+                anim = chicken.currentAnimation,
+                animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame)
+            };
 
             chickenDataItems.Add(chickenData);
-
             dataOfChicken.Add(chicken, chickenData);
         }
     }
 
     public void UpdateChickenRendering(BaseChicken chicken)
     {
-        if (dataOfChicken.ContainsKey(chicken))
+        if (dataOfChicken.TryGetValue(chicken, out ChickenData chickenData))
         {
-            ChickenData chickenData = dataOfChicken[chicken];
-
             chickenData.position = chicken.transform.position;
             chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
             chickenData.anim = chicken.currentAnimation;
@@ -303,10 +249,8 @@ public class ChickenRenderer : MonoBehaviour
 
     public void RemoveChickenRendering(BaseChicken chicken)
     {
-        if (dataOfChicken.ContainsKey(chicken))
+        if (dataOfChicken.TryGetValue(chicken, out ChickenData chickenData))
         {
-            ChickenData chickenData = dataOfChicken[chicken];
-
             chickenDataItems.Remove(chickenData);
             dataOfChicken.Remove(chicken);
         }
@@ -314,15 +258,42 @@ public class ChickenRenderer : MonoBehaviour
 
     private Material GetMaterial(ChickenBatchKey key)
     {
-        foreach (var materialsForAnim in materialsForAnims)
+        for (int i = 0; i < materialsForAnims.Length; i++)
         {
-            if (key.anim == materialsForAnim.animation)
+            var materialsForAnim = materialsForAnims[i];
+            if (string.Equals(key.anim, materialsForAnim.animation, StringComparison.Ordinal))
             {
                 return materialsForAnim.materials[key.factionIndex];
             }
         }
 
         return materialsForAnims[0].materials[key.factionIndex];
+    }
+
+    // =====================================================
+    // Internal Buffer Pooling (Prevents Frame-rate Spikes)
+    // =====================================================
+
+    private void ClearBatchBuffers()
+    {
+        foreach (var list in batchBuffers.Values)
+        {
+            list.Clear();
+            listPool.Add(list);
+        }
+        batchBuffers.Clear();
+    }
+
+    private List<int> GetPooledList()
+    {
+        int poolCount = listPool.Count;
+        if (poolCount > 0)
+        {
+            List<int> list = listPool[poolCount - 1];
+            listPool.RemoveAt(poolCount - 1);
+            return list;
+        }
+        return new List<int>(64);
     }
 }
 

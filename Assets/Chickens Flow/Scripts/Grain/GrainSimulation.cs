@@ -1166,13 +1166,15 @@ public class GrainSimulation : Singleton<GrainSimulation>
     {
         float grainPoolPositionY = GrainPool.Ins.transform.position.y;
         float range = 1f;
+        float leftBound = position.x - range;
+        float rightBound = position.x + range;
 
         if (factionGroups.TryGetValue(faction, out var group))
         {
             for (int i = 0; i < group.Count; i++)
             {
                 float3 pos = group.particles[i].position;
-                if (pos.y > grainPoolPositionY && pos.x > position.x - range && pos.x < position.x + range)
+                if (pos.y > grainPoolPositionY && pos.x > leftBound && pos.x < rightBound)
                 {
                     return true;
                 }

@@ -13,9 +13,18 @@ public class LazyHealthBar : MonoBehaviour
     [Header("Customize")]
     public float duration = 0.3f;
     public float lazyFillDurationRatio = 2f;
+    public bool isLazy = true;
 
     private Tween _progressTween;
     private Tween _lazyProgressTween;
+
+    void Awake()
+    {
+        if (!isLazy)
+        {
+            lazyFill.gameObject.SetActive(false);
+        }
+    }
 
     public void SetProgress(float progress)
     {
@@ -44,13 +53,16 @@ public class LazyHealthBar : MonoBehaviour
             fill.fillAmount = newVal;
         });
 
-        _lazyProgressTween = Tween.Custom(lazyFill.fillAmount, progress, duration: lazyFillDurationRatio * duration, onValueChange: newVal =>
+        if (isLazy)
         {
-            lazyFill.fillAmount = newVal;
-        })
-        .OnComplete(() =>
-        {
+            _lazyProgressTween = Tween.Custom(lazyFill.fillAmount, progress, duration: lazyFillDurationRatio * duration, onValueChange: newVal =>
+            {
+                lazyFill.fillAmount = newVal;
+            })
+            .OnComplete(() =>
+            {
 
-        });
+            });
+        }
     }
 }

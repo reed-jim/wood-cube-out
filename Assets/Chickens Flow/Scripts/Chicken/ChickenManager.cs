@@ -711,16 +711,19 @@ public class ChickenManager : Singleton<ChickenManager>
         chicken.transform.position = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
     }
 
-
     public void FeedTheChicken(GrainPile grainPile)
     {
         List<BaseChicken> chickensToFeed = chickens
             .Where(chicken => !chicken.isDone &&
-                              !chicken.isStuck &&
-                              chicken.faction == grainPile.faction)
-            .OrderBy(chicken => chicken.transform.position.x)
+                            !chicken.isStuck &&
+                            chicken.faction == grainPile.faction)
             .ToList();
 
+        FeedTheChicken(chickensToFeed, grainPile);
+    }
+
+    public void FeedTheChicken(List<BaseChicken> chickensToFeed, GrainPile grainPile)
+    {
         Dictionary<BaseChicken, ChickenFeedData> chickenFeedDataItems = new Dictionary<BaseChicken, ChickenFeedData>();
 
         if (grainPile.remainingNumber <= 0 || chickensToFeed.Count == 0)
@@ -932,17 +935,17 @@ public class ChickenManager : Singleton<ChickenManager>
             }
         }
 
-        // 2. Sort by bottom-most (min row), then left-most (min column)
-        validChickens.Sort((a, b) =>
-        {
-            int aMinRow = GetMinRow(a.waitingChickenSlots);
-            int bMinRow = GetMinRow(b.waitingChickenSlots);
-            if (aMinRow != bMinRow) return aMinRow.CompareTo(bMinRow);
+        // // 2. Sort by bottom-most (min row), then left-most (min column)
+        // validChickens.Sort((a, b) =>
+        // {
+        //     int aMinRow = GetMinRow(a.waitingChickenSlots);
+        //     int bMinRow = GetMinRow(b.waitingChickenSlots);
+        //     if (aMinRow != bMinRow) return aMinRow.CompareTo(bMinRow);
 
-            int aMinCol = GetMinColumn(a.waitingChickenSlots);
-            int bMinCol = GetMinColumn(b.waitingChickenSlots);
-            return aMinCol.CompareTo(bMinCol);
-        });
+        //     int aMinCol = GetMinColumn(a.waitingChickenSlots);
+        //     int bMinCol = GetMinColumn(b.waitingChickenSlots);
+        //     return aMinCol.CompareTo(bMinCol);
+        // });
 
         // 3. Process movement
         for (int i = 0; i < validChickens.Count; i++)

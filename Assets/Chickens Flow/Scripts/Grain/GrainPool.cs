@@ -137,13 +137,24 @@ public class GrainPool : Singleton<GrainPool>
     [ContextMenu("CheckFeedChickens")]
     public void CheckFeedChickens()
     {
+        List<BaseChicken> validChickensToFeed = ChickenManager.Ins.chickens
+            .Where(chicken => !chicken.isDone && !chicken.isStuck)
+            .ToList();
+
+        Dictionary<Color, List<BaseChicken>> chickensByFaction = validChickensToFeed
+            .GroupBy(chicken => chicken.faction)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
         for (int i = 0; i < grainPiles.Count; i++)
         {
             GrainPile grainPile = grainPiles[i];
 
             if (grainPile.remainingNumber > 0)
             {
-                ChickenManager.Ins.FeedTheChicken(grainPiles[i]);
+                if (chickensByFaction.ContainsKey(grainPile.faction))
+                {
+                    ChickenManager.Ins.FeedTheChicken(chickensByFaction[grainPile.faction], grainPiles[i]);
+                }
             }
         }
 

@@ -105,8 +105,6 @@ public class WashingMachineItem : MonoBehaviour
 
         bucketTopInitialPosition = bucketTop.transform.localPosition;
         bucketTextInitialPosition = numberText.transform.localPosition;
-
-        GameConstants.bucketDelayMove = GetEventTime(skeletonAnimation, jumpAnimation, "call");
     }
 
     void OnDestroy()
@@ -300,15 +298,15 @@ public class WashingMachineItem : MonoBehaviour
         pileCenter.y = WashingMachineManager.Ins.grainPool.transform.position.y;
         pileCenter.z = -1;
 
-        skeletonAnimation.AnimationState.SetAnimation(0, jumpAnimation, false);
+        Vector3 initialScale = transform.localScale;
 
-        Spine.Animation animation = skeletonAnimation.AnimationState.Data.SkeletonData.FindAnimation(jumpAnimation);
-
-        float duration = animation.Duration / skeletonAnimation.timeScale;
-
-        duration -= GameConstants.bucketDelayMove;
-
-        Tween tween = Tween.Position(transform, bucketDestination, duration: duration, startDelay: GameConstants.bucketDelayMove).OnComplete(() =>
+        TweenManager.Ins.AddTween(Tween.ScaleY(transform, 1.5f * initialScale.y, duration: 0.2f)
+            .OnComplete(() =>
+            {
+                TweenManager.Ins.AddTween(Tween.Scale(transform, initialScale, duration: 0.2f));
+            })
+        );
+        Tween tween = Tween.Position(transform, bucketDestination, duration: 0.4f).OnComplete(() =>
         {
             grainPile.gameObject.SetActive(true);
 

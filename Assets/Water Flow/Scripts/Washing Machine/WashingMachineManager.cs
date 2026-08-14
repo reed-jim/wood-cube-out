@@ -357,7 +357,7 @@ namespace AntsFlow
                             }
 
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
-                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f, startDelay: GameConstants.bucketDelayMove)
+                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
                             .OnComplete(() =>
                             {
                                 washingMachineItem.Setup(washingMachineStartSlot);
@@ -379,30 +379,20 @@ namespace AntsFlow
                         }
                     }
 
-                    if (currentLevel.Value <= 10)
+                    if (!isFound && !isAlreadySpawnNewBox)
                     {
-                        if (!isFound && !isAlreadySpawnNewBox)
-                        {
-                            if (washingMachineStartSlot.row < 2)
-                            {
-                                SpawnNewWashingMachine();
-                            }
-                            else
-                            {
-                                if (!isAlreadySpawnNewBox)
-                                {
-                                    SpawnNewWashingMachine();
-
-                                    isAlreadySpawnNewBox = true;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!isFound)
+                        if (washingMachineStartSlot.row < 2)
                         {
                             SpawnNewWashingMachine();
+                        }
+                        else
+                        {
+                            if (!isAlreadySpawnNewBox)
+                            {
+                                SpawnNewWashingMachine();
+
+                                isAlreadySpawnNewBox = true;
+                            }
                         }
                     }
                 }
