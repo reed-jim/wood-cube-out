@@ -575,7 +575,7 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayIdleAnim()
     {
-        PlayAnimWhenFinished(idleAnimation);
+        PlayAnim(idleAnimation);
     }
 
     public void ForcePlayIdleAnim()
@@ -699,7 +699,7 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayFlyAnim(int flyAnimationIndex = 1)
     {
-        PlayAnimWhenFinished(flyAnimations[flyAnimationIndex]);
+        PlayAnim(flyAnimations[flyAnimationIndex]);
     }
 
     public void PlayFlyAnim(Action onComplete)
@@ -707,7 +707,7 @@ public class BaseChicken : MonoBehaviour
         string flyAnimation = flyAnimations[0];
 
         skeletonAnimation.AnimationState.SetAnimation(0, flyAnimation, false);
-        
+
         TweenManager.Ins.AddTween(Tween.Delay(flyAnimDuration).OnComplete(() =>
         {
             onComplete?.Invoke();
