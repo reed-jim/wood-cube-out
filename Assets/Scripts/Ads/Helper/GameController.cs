@@ -26,10 +26,14 @@ public class GameController : MonoBehaviour
     public DataContain dataContain;
     public MoneyEffectController moneyEffectController;
     public GameLoading gameLoading;
+    public AppsFlyerManager appsFlyerManager;
+
     [HideInInspector] public SceneType currentScene;
 
     [HideInInspector] public bool openFeatureBox = false;
     public static bool isFirstLoadLevel = false;
+    public static bool isInited = false;
+
     protected void Start()
     {
         Instance = this;
@@ -39,10 +43,10 @@ public class GameController : MonoBehaviour
     public void Init()
     {
         Application.targetFrameRate = 60;
-         // GameController.Instance.useProfile.CurrentLevel =  GameController.Instance.useProfile;
+        // GameController.Instance.useProfile.CurrentLevel =  GameController.Instance.useProfile;
 
-       
-       // iapController.Init();
+
+        // iapController.Init();
         //MMVibrationManager.SetHapticsActive(useProfile.OnVibration);
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         ResetDay();
@@ -58,17 +62,20 @@ public class GameController : MonoBehaviour
 #endif
             InitLoadScene();
         });
-       
+
         FalconMain.Init();
     }
-   
+
 
     public void InitLoadScene()
     {
+        appsFlyerManager.Inits();
         segmentController.Init();
         admobAds.Init();
         ActionLimitQueue.Init();
         gameLoading.Init();
+        isInited = true;
+
     }
 
     public static void SetUserProperties()
@@ -120,7 +127,7 @@ public class GameController : MonoBehaviour
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.BlockBrand_BirdSort, 0);
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddBrandItem_BirdSort, 0);
 
-           
+
             UseProfile.NumPlayedInDay = 0;
 
             UseProfile.ResetDayMiniGame();

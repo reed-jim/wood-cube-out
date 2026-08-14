@@ -1518,8 +1518,9 @@ public class SpawningTileBoxItemConfig
 public class BossAreaConfig : SpecialElementItemConfig
 {
     public int startNodeId;
-    public int numCoverColumn;
     public int numCoverRow;
+    public int numCoverColumn;
+
     public int bossHealth;
 
     public override bool IsValidToSpawn(int numAntBoxesSpawned, bool isOpenClose = false)
