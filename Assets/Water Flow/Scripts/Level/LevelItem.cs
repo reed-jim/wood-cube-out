@@ -292,6 +292,11 @@ namespace AntsFlow
                 GenerateChickenLevelTiles(levelItem);
             }
 
+            if (GUILayout.Button("Refresh Slots"))
+            {
+                RefreshSlots(levelItem);
+            }
+
             if (GUILayout.Button("Convert to JSON"))
             {
                 levelItem.ConvertToJson();
@@ -777,6 +782,31 @@ namespace AntsFlow
 
                     tileData.position = new Vector3(x, y);
                     tileData.factionIndex = factionMapper.allFactions.IndexOf(allFactions[index]);
+
+                    levelItem.chickenLevelTiles.Add(tileData);
+                }
+            }
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        private void RefreshSlots(LevelItem levelItem)
+        {
+            for (int y = 0; y < levelItem.numRow; y++)
+            {
+                for (int x = 0; x < levelItem.numColumn; x++)
+                {
+                    int index = x + y * levelItem.numColumn;
+
+                    if (index < levelItem.chickenLevelTiles.Count)
+                    {
+                        continue;
+                    }
+
+                    AntLevelDataItem tileData = new AntLevelDataItem();
+
+                    tileData.position = new Vector3(x, y);
+                    tileData.factionIndex = -1;
 
                     levelItem.chickenLevelTiles.Add(tileData);
                 }
