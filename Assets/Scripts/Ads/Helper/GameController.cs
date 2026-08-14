@@ -69,9 +69,9 @@ public class GameController : MonoBehaviour
 
     public void InitLoadScene()
     {
-        appsFlyerManager.Inits();
         segmentController.Init();
         admobAds.Init();
+        appsFlyerManager.Inits();
         ActionLimitQueue.Init();
         gameLoading.Init();
         isInited = true;

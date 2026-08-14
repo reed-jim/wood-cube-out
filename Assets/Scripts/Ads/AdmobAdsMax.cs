@@ -128,6 +128,9 @@ public class AdmobAdsMax
         _isShowAdmobCollap = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.collap.IsActive();
         _isShowAdmobBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.IsActive();
         GamePersistentVariable.isEnableRewardedAds = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.reward.isActive;
+        Debug.Log("[ChangeActiveVal] isEnableRewardedAds =" + GamePersistentVariable.isEnableRewardedAds);
+        GamePersistentVariable.levelShowBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumLevel;
+        GamePersistentVariable.levelShowCollapseBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.collap.minimumLevel;
         ReloadAllAdsForSegment();
     }
 
@@ -233,9 +236,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-
-            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-                value, "USD", dic);
+//#if APPSFLYER_BANNER
+//            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+//                value, "USD", dic);
+//#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -381,7 +385,7 @@ public class AdmobAdsMax
         Debug.Log("MREC=============MRec ad clicked");
     }
 
-    #endregion
+#endregion
     #region Admob Banner
     private BannerView _bannerView;
 #if UNITY_ANDROID || UNITY_EDITOR
@@ -520,10 +524,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-
-            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-              value, "USD", dic);
-
+//#if APPSFLYER_BANNER
+//            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+//              value, "USD", dic);
+//#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -619,7 +623,7 @@ public class AdmobAdsMax
         ShowBanner();
         LoadBannerCollap();
     }
-    #endregion
+#endregion
 
     /*public void RefreshCollapseBanner()
     {
@@ -639,7 +643,7 @@ public class AdmobAdsMax
 
     public void LoadBannerAdmob()
     {
-        int levelShowBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumLevel;
+        int levelShowBanner = GamePersistentVariable.levelShowBanner;
         Debug.Log("LoadBannerAdmob================== CurrentLevel = " + GameController.Instance.useProfile.CurrentLevel);
         Debug.Log("LoadBannerAdmob================== levelShowBanner = " + levelShowBanner);
         if (GameController.Instance.useProfile.CurrentLevel < levelShowBanner)
@@ -700,8 +704,8 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-                 value, "USD", dic);
+            //AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //     value, "USD", dic);
             try
             {
                 BannerLogStatistic.Instance.Log("GamePlay_Bottom", adValue.Precision.ToString(), adValue.CurrencyCode,
@@ -723,7 +727,7 @@ public class AdmobAdsMax
         }
     }
 
-    #endregion
+#endregion
 
 
     public void InitializeBannerMax()

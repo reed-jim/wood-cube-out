@@ -9,6 +9,7 @@ public static class StringHelper
     public const string ONOFF_VIBRATION = "ONOFF_VIBRATION";
     public const string ONOFF_NOTIFICATION = "ONOFF_NOTIFICATION";
     public const string FIRST_TIME_INSTALL = "FIRST_TIME_INSTALL";
+    public const string IS_RELOAD_FIREBASE_DONE = "IS_RELOAD_FIREBASE_DONE";
     public const string IS_REINSTALL_SYNC_DATA = "IS_REINSTALL_SYNC_DATA";
     public const string LastTimeSyncName = "lasttimesyncname";
 

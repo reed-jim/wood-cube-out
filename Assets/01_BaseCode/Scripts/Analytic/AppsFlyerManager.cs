@@ -182,7 +182,7 @@ public class AppsFlyerManager : MonoBehaviour
 
     IEnumerator ApplyCampChange()
     {
-        yield return new WaitUntil(() => UseProfile.CurrentCampUser != -1);
+        yield return new WaitUntil(() => UseProfile.CurrentCampUser != -1 && UseProfile.IsReloadFirebaseDone);
         CampChange?.Invoke();
     }
 }

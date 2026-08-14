@@ -55,6 +55,9 @@ AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(60);
     {
         AppsFlyer.AFLog("didReceiveConversionData", conversionData);
         _conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
+        //check this
+
+        //_conversionDataDictionary.Add("campaign_id", "6a7e73dbb4fab82f0f36b2a9");
         // add deferred deeplink logic here
         Debug.Log("====== GPLAY 2 =====: didReceiveConversionData");
         foreach (var cv in _conversionDataDictionary)

@@ -85,6 +85,18 @@ public class UseProfile : MonoBehaviour
             GPlayerPrefs.Save();
         }
     }
+    public static bool IsReloadFirebaseDone
+    {
+        get
+        {
+            return PlayerPrefs.GetInt(StringHelper.IS_RELOAD_FIREBASE_DONE, 1) == 1;
+        }
+        set
+        {
+            GPlayerPrefs.SetInt(StringHelper.IS_RELOAD_FIREBASE_DONE, value ? 1 : 0);
+            GPlayerPrefs.Save();
+        }
+    }
 
     public static bool IsFirstTimeInstall
     {
@@ -1171,6 +1183,7 @@ public class UseProfile : MonoBehaviour
             GPlayerPrefs.Save();
         }
     }
+
     #endregion
 
 }
