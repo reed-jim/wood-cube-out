@@ -307,6 +307,18 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    #region Chicken Jam
+    public void PlaySoundGrainHit()
+    {
+        PlaySound(GameConstants.grainHitSound);
+    }
+
+    public void PlayChickenComplete()
+    {
+        PlaySound(GameConstants.chickenCompleteSound);
+    }
+    #endregion
+
     #region Ants Flow
     public void PlaySoundAntPop()
     {
