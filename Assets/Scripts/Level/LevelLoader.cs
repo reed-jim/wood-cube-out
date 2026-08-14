@@ -452,132 +452,18 @@ namespace NamPhuThuy.GamePlay
             spawnedLevelItem.chickenAreaScaleX = antLevelData.levelItemData.chickenAreaScaleX;
             spawnedLevelItem.chickenAreaScaleY = antLevelData.levelItemData.chickenAreaScaleY;
             spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
+            spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
+            spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
             spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;
             spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;
             spawnedLevelItem.overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty;
             spawnedLevelItem.numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes;
             spawnedLevelItem.specialElementConfig = antLevelData.levelItemData.specialElementConfig;
 
-            List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
-
-            // for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
-            // {
-            //     AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
-
-            //     AntsFlow.BaseTile tile = new AntsFlow.BaseTile();
-
-            //     Debug.Log($"LevelLoader {antLevelDataItem.factionIndex} {FactionMapper.Ins.mapper.Count}");
-
-            //     tile.tileName = i;
-            //     tile.position = antLevelDataItem.position;
-            //     tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
-            //     tile.ring = antLevelDataItem.ring;
-            //     tile.priority = antLevelDataItem.priority;
-
-            //     tiles.Add(tile);
-            // }
-
-            // spawnedLevelItem.tiles = tiles;
-
             GamePersistentVariable.numColumn = antLevelData.levelItemData.numColumn;
             GamePersistentVariable.numRow = antLevelData.levelItemData.numRow;
 
             return spawnedLevelItem;
-
-            bool SameRow(int indexA, int indexB, int numCol)
-            {
-                return (indexA / numCol) == (indexB / numCol);
-            }
-        }
-
-        private void CenterLevel(Transform level)
-        {
-            Vector2 average = Vector2.zero;
-
-            foreach (Transform child in level.transform)
-            {
-                average += (Vector2)child.position;
-            }
-
-            average /= level.transform.childCount;
-
-            level.transform.position += Vector3.left * average.x;
-            // level.transform.position += Vector3.down * average.y;
-
-            float distance = Mathf.Abs(Camera.main.transform.position.z);
-
-            Vector3 worldPos = Camera.main.ViewportToWorldPoint(
-                new Vector3(0, 0.55f, distance)
-            );
-
-            transform.position = transform.position.ChangeY(worldPos.y);
-        }
-
-        public AntLevelData AutoSpacingAllTiles(AntLevelData antLevelData)
-        {
-            AntLevelData result = antLevelData;
-
-            if (antLevelData.levelItemData.isLevelHavingTransparentPixels)
-            {
-                int numRows = antLevelData.levelItemData.numRow;
-                int numCols = antLevelData.levelItemData.numColumn;
-
-                for (int i = 0; i < result.antLevelDataItems.Count; i++)
-                {
-                    AntLevelDataItem antLevelDataItem = result.antLevelDataItems[i];
-
-                    antLevelDataItem.position = antLevelDataItem.position.AddX(-(numCols - 1) / 2f).AddY(levelYOffsetRatio * numRows);
-                }
-            }
-            else
-            {
-                int numRows = GamePersistentVariable.numRow;
-                int numCols = GamePersistentVariable.numColumn;
-
-                for (int row = 0; row < numRows; row++)
-                {
-                    for (int col = 0; col < numCols; col++)
-                    {
-                        Vector3 position = new Vector3(
-                            -(numCols - 1) / 2f + col * 1,
-                            (levelYOffsetRatio * numRows) + row * 1,
-                            0f
-                        );
-
-                        int index = col + row * numCols;
-
-                        result.antLevelDataItems[index].position = position;
-
-                        AntsFlow.TileManager.Ins.tiles[index].position = scaleFactor * position;
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        void FitLevelToScreenArea(Transform level)
-        {
-            // Get level bounds
-            Bounds bounds = GetBoundsFromTiles(level);
-
-            float levelWidth = bounds.size.x;
-            float levelHeight = bounds.size.y;
-
-            // Orthographic camera size
-            float camHeight = Camera.main.orthographicSize * 2f;
-            float camWidth = camHeight * Camera.main.aspect;
-
-            // Available screen area
-            float availableHeight = camHeight * 0.35f;
-            float availableWidth = 0.9f * camWidth;
-
-            float scaleX = level.localScale.x * availableWidth / levelWidth;
-            float scaleY = level.localScale.y * availableHeight / levelHeight;
-
-            float scale = Mathf.Min(scaleX, scaleY);
-
-            level.localScale = Vector3.one * scale;
         }
 
         public Bounds GetBoundsFromTiles(Transform level)

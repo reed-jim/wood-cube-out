@@ -124,6 +124,8 @@ namespace AntsFlow
         public List<BaseTile> tiles;
         public List<AntLevelDataItem> chickenLevelTiles;
         public bool isTutorialLevel;
+        public bool isUseManualFactionSetupForFirstAntBoxes;
+        public LevelFactionConfig levelFactionConfig;
         public int difficulty;
         public int initialDifficulty;
         public bool overrideInitialDifficulty;
@@ -177,9 +179,6 @@ namespace AntsFlow
         public void ConvertToJson()
         {
 #if UNITY_EDITOR
-            FactionMapper factionMapper =
-                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
-
             AntLevelData antLevelData = new AntLevelData();
 
             antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
@@ -191,16 +190,6 @@ namespace AntsFlow
                 AntLevelDataItem dataItem = new AntLevelDataItem();
                 dataItem.position = tile.position;
                 dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
-
-                dataItem.blockageIndexes = new List<int>();
-
-                if (tile.blockages != null)
-                {
-                    for (int j = 0; j < tile.blockages.Count; j++)
-                    {
-                        dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
-                    }
-                }
 
                 antLevelData.antLevelDataItems.Add(dataItem);
             }
@@ -220,6 +209,8 @@ namespace AntsFlow
                 chickenAreaScaleY = chickenAreaScaleY,
                 poolFactionIndexes = poolFactionIndexes,
                 isTutorialLevel = isTutorialLevel,
+                isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
+                levelFactionConfig = levelFactionConfig,
                 difficulty = difficulty,
                 initialDifficulty = initialDifficulty,
                 overrideInitialDifficulty = overrideInitialDifficulty,
@@ -267,13 +258,6 @@ namespace AntsFlow
         private bool isErase;
         #endregion
 
-        #region Snake
-        private bool snakeConfigMode;
-        private bool isShowingNodeId;
-        private bool paintValue; // true = add, false = remove
-        private readonly HashSet<int> paintedThisDrag = new();
-        #endregion
-
         private ConfigTool configTool;
 
         public override void OnInspectorGUI()
@@ -295,6 +279,31 @@ namespace AntsFlow
             if (GUILayout.Button("Refresh Slots"))
             {
                 RefreshSlots(levelItem);
+            }
+
+            if (GUILayout.Button("AddBottomRow"))
+            {
+                AddBottomRow(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+
+            if (GUILayout.Button("AddTopRow"))
+            {
+                AddTopRow(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+
+            if (GUILayout.Button("AddLeftColumn"))
+            {
+                AddLeftColumn(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+
+            if (GUILayout.Button("AddRightColumn"))
+            {
+                AddRightColumn(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+
+            if (GUILayout.Button("GetPoolFaction"))
+            {
+                GetPoolFaction(levelItem);
             }
 
             if (GUILayout.Button("Convert to JSON"))
@@ -815,6 +824,132 @@ namespace AntsFlow
             EditorUtility.SetDirty(levelItem);
         }
 
+        public void AddTopRow(LevelItem levelItem, int columns, int rows)
+        {
+            for (int col = 0; col < columns; col++)
+            {
+                Vector3 pos = levelItem.chickenLevelTiles[(rows - 1) * columns + col].position;
+                pos.y += 1;
+
+                levelItem.chickenLevelTiles.Add(new AntLevelDataItem
+                {
+                    position = pos,
+                    factionIndex = -1
+                });
+            }
+
+            levelItem.numRow++;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void AddBottomRow(LevelItem levelItem, int columns, int rows)
+        {
+            // Shift all existing tiles up by 1
+            for (int i = 0; i < levelItem.chickenLevelTiles.Count; i++)
+            {
+                Vector3 pos = levelItem.chickenLevelTiles[i].position;
+                pos.y += 1;
+
+                levelItem.chickenLevelTiles[i].position = pos;
+            }
+
+            // Add new row at y = 0
+            var newTiles = new List<AntLevelDataItem>(columns);
+
+            for (int col = 0; col < columns; col++)
+            {
+                newTiles.Add(new AntLevelDataItem
+                {
+                    position = new Vector3(col, 0, 0),
+                    factionIndex = -1
+                });
+            }
+
+            levelItem.chickenLevelTiles.InsertRange(0, newTiles);
+
+            levelItem.numRow++;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void AddLeftColumn(LevelItem levelItem, int columns, int rows)
+        {
+            var oldTiles = levelItem.chickenLevelTiles;
+            var newTiles = new List<AntLevelDataItem>((columns + 1) * rows);
+
+            for (int row = 0; row < rows; row++)
+            {
+                // New left tile
+                Vector3 newPos = oldTiles[row * columns].position;
+                newPos.x = 0;
+
+                newTiles.Add(new AntLevelDataItem
+                {
+                    position = newPos,
+                    factionIndex = -1
+                });
+
+                // Existing tiles
+                for (int col = 0; col < columns; col++)
+                {
+                    AntLevelDataItem oldTile = oldTiles[row * columns + col];
+
+                    Vector3 pos = oldTile.position;
+                    pos.x += 1;
+
+                    oldTile.position = pos;
+
+                    newTiles.Add(oldTile);
+                }
+            }
+
+            levelItem.chickenLevelTiles = newTiles;
+            levelItem.numColumn++;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void AddRightColumn(LevelItem levelItem, int columns, int rows)
+        {
+            for (int row = rows - 1; row >= 0; row--)
+            {
+                int index = row * columns + (columns - 1);
+
+                Vector3 pos = levelItem.chickenLevelTiles[index].position;
+                pos.x += 1;
+
+                levelItem.chickenLevelTiles.Insert(index + 1, new AntLevelDataItem
+                {
+                    position = pos,
+                    factionIndex = -1
+                });
+            }
+
+            levelItem.numColumn++;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void GetPoolFaction(LevelItem levelItem)
+        {
+            List<int> uniqueFactionIndexes = levelItem.chickenLevelTiles.Select(item => item.factionIndex).Distinct().ToList();
+
+            levelItem.poolFaction = new List<Color>();
+
+            for (int i = 0; i < uniqueFactionIndexes.Count; i++)
+            {
+                if (uniqueFactionIndexes[i] == -1)
+                {
+                    continue;
+                }
+
+                levelItem.poolFaction.Add(levelItem.factionMapper.allFactions[uniqueFactionIndexes[i]]);
+            }
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
         private void DrawColorButton(LevelItem levelItem, Color color)
         {
             // Main button
@@ -926,15 +1061,6 @@ namespace AntsFlow
             EditorUtility.SetDirty(item);
         }
 
-        private void GetPoolFaction(LevelItem levelItem)
-        {
-            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(levelItem.transform);
-
-            levelItem.poolFaction = levelItem.tiles.Select(item => item.Faction).ToList();
-
-            EditorUtility.SetDirty(levelItem);
-        }
-
         private void GenerateLevel(LevelItem levelItem)
         {
             ReadLevel(levelItem);
@@ -942,7 +1068,6 @@ namespace AntsFlow
             ReassignFactionForTiles(levelItem);
             AssignLevelPriority(levelItem);
             // FindTileBlockages(levelItem);
-            GetPoolFaction(levelItem);
             // CenterOnX(levelItem);
             // MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
         }
@@ -1237,9 +1362,6 @@ public class AntLevelDataItem
 {
     public Vector3 position;
     public int factionIndex;
-    public List<int> blockageIndexes;
-    public int ring;
-    public int priority;
 }
 
 [Serializable]
