@@ -519,7 +519,6 @@ public class WashingMachineItem : MonoBehaviour
         disableBucketTween = Tween.Alpha(numberText, 0.2f, duration: 0.3f)
         .OnComplete(() =>
         {
-            isTemporarilyEnabled = false;
             isDisable = true;
         });
     }
@@ -535,7 +534,6 @@ public class WashingMachineItem : MonoBehaviour
             {
                 isTemporarilyEnabled = true;
                 isDisable = false;
-
                 GamePersistentVariable.isPreventSelectAntBox = false;
             });
         }
@@ -612,6 +610,8 @@ public class WashingMachineItem : MonoBehaviour
         if (isTemporarilyEnabled)
         {
             Disable();
+
+            isTemporarilyEnabled = false;
         }
 
         if (antBox != this)
