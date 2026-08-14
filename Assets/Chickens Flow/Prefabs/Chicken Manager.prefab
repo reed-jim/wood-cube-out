@@ -149,11 +149,6 @@ MonoBehaviour:
   debugWaitingChickenSlots: []
   numColumn: 0
   numRow: 0
-  chickenDistanceRatio: {x: 1.42, y: 1}
-  chickenAreaOffsetY: -4
-  depthDistanceXRatio: 0.012
-  requiredGrainForNormalChicken: 10
-  maxGhostChicken: 10
   boardShapePresets:
   - points:
     - {x: -11.8, y: -3.8}
@@ -168,18 +163,21 @@ MonoBehaviour:
     - {x: 9, y: 16}
     - {x: -9, y: 16}
   - points:
-    - {x: -9, y: 9.04}
-    - {x: 9, y: 9}
-    - {x: -0.06, y: -3.36}
+    - {x: -11.8, y: -3.8}
+    - {x: 11.8, y: -3.8}
+    - {x: 11.8, y: 9.7}
+    - {x: 11.8, y: 18.3}
+    - {x: -11.8, y: 18.3}
+    - {x: -11.8, y: 9.7}
   customPolygonVertices:
   - {x: -11.8, y: -3.8}
   - {x: 11.8, y: -3.8}
   - {x: 11.8, y: 9.7}
-  - {x: 8.7, y: 18.3}
-  - {x: -8.7, y: 18.3}
+  - {x: 11.8, y: 18.3}
+  - {x: -11.8, y: 18.3}
   - {x: -11.8, y: 9.7}
   showBoardShapeGizmos: 1
-  selectedBoardShapedIndex: 0
+  selectedBoardShapedIndex: 2
   boundaryColor: {r: 0, g: 1, b: 0, a: 1}
   gridPointColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   pointRadius: 0.08
