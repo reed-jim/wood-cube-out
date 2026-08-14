@@ -428,6 +428,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 chicken.isStuck = true;
 
                 chicken.SetActiveSpine(false);
+                chicken.ForcePlayRandomIdleAnim();
             }
 
             chicken.transform.position = waitingChickenSlot.GetRandomPosition();
@@ -1163,6 +1164,8 @@ public class ChickenManager : Singleton<ChickenManager>
                 }
                 else
                 {
+                    chicken.PlayIdleAnim();
+
                     chickenRenderer.UpdateChickenRendering(chicken);
                 }
 

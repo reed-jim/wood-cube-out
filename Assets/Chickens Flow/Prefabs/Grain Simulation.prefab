@@ -689,7 +689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d331f6b234055847a60cdd94ce570ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrainSimulation
-  gravityRange: {x: 9.8, y: 15}
+  gravityRange: {x: 40, y: 60}
   fallImpactTimerMaxCount: 300
   pourDelayCurve:
     serializedVersion: 2
@@ -769,7 +769,7 @@ MonoBehaviour:
   airDrag: 0
   conveyorWidth: 1
   impactToPathVelocityRange: {x: -0.2, y: 0.3}
-  fallTimePerGrain: 0.004
+  fallTimePerGrain: 0.0035
   percentNumGrainOnPathForChickenToEat: 0.6
   bounceRestitutionRange: {x: 0.25, y: 0.35}
   bounceFrictionRange: {x: 0.65, y: 0.8}

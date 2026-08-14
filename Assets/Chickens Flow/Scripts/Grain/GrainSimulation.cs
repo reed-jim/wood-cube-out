@@ -1096,7 +1096,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         int numGrain = grainPositions.Count;
 
-        TweenManager.Ins.AddTween(Tween.Delay(0.5f * numGrain * fallTimePerGrain).OnComplete(() =>
+        TweenManager.Ins.AddTween(Tween.Delay(0.8f * numGrain * fallTimePerGrain).OnComplete(() =>
         {
             onAllGrainsPoured?.Invoke();
         }));

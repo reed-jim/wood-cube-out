@@ -54,6 +54,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject iceBreakSoundPrefab;
     [SerializeField] private GameObject boosterAppearSoundPrefab;
 
+    [SerializeField] private GameObject grainHitSoundPrefab;
+    [SerializeField] private GameObject chickenCompleteSoundPrefab;
+
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
     [SerializeField] private GameObject looseScrewFxPrefab;
@@ -71,17 +74,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     [Header("Washing Machine")]
     public GameObject washingMachineItemPrefab;
-    public GameObject clothingPiecePrefab;
-    public GameObject pathSlotPrefab;
-    public GameObject antPrefab;
-    public GameObject warriorAntPrefab;
-    public GameObject snakeAntPrefab;
     public GameObject antDissapearFxPrefab;
     public GameObject antBoxLink;
     public GameObject hiddenAntBoxPrefab;
     public GameObject freezedAntBoxPrefab;
-    public GameObject warriorAntBoxPrefab;
-    public GameObject snakeAntBoxPrefab;
     public GameObject tileRemainingPrefab;
     public GameObject missilePrefab;
     public GameObject damageTextPrefab;
@@ -163,6 +159,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.startFreezeSound, startFreezeSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.iceBreakSound, iceBreakSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.boosterAppearSound, boosterAppearSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.grainHitSound, grainHitSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.chickenCompleteSound, chickenCompleteSoundPrefab, 8);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
@@ -177,8 +175,6 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 20);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 20);
-        RegisterPool<WarriorAntBox>(GameConstants.warriorAntBox, warriorAntBoxPrefab, 5);
-        RegisterPool<SnakeAntBox>(GameConstants.snakeAntBox, snakeAntBoxPrefab, 5);
         RegisterPool<DamageText>(GameConstants.damageText, damageTextPrefab, 10);
     }
 

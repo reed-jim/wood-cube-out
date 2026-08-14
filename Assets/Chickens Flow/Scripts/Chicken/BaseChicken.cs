@@ -20,6 +20,7 @@ public class BaseChicken : MonoBehaviour
     [SpineAnimation] public string moveAnimation;
     [SpineAnimation] public string[] eatAnimations;
     [SpineAnimation] public string[] flyAnimations;
+    [SpineAnimation] public string[] idleAnimations;
 
     #region Circle Progress
     public Image circleProgress;
@@ -237,6 +238,8 @@ public class BaseChicken : MonoBehaviour
                     smokeAnimEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 
                     smokeAnimEntry.Complete += OnSmokeAnimComplete;
+
+                    SoundManager.Instance.PlayChickenComplete();
 
                     gameObject.SetActive(false);
 
@@ -573,7 +576,12 @@ public class BaseChicken : MonoBehaviour
 
     public void ForcePlayIdleAnim()
     {
-        PlayAnim(idleAnimation);
+        ForcePlayAnim(idleAnimation);
+    }
+
+    public void ForcePlayRandomIdleAnim()
+    {
+        ForcePlayAnim(idleAnimations[UnityEngine.Random.Range(0, idleAnimations.Length)]);
     }
 
     public void PlayAnim(string anim)
@@ -583,6 +591,18 @@ public class BaseChicken : MonoBehaviour
             return;
         }
 
+        if (!skeletonAnimation.enabled)
+        {
+            skeletonAnimation.enabled = true;
+        }
+
+        skeletonAnimation.AnimationState.SetAnimation(0, anim, true);
+
+        currentAnimation = anim;
+    }
+
+    public void ForcePlayAnim(string anim)
+    {
         if (!skeletonAnimation.enabled)
         {
             skeletonAnimation.enabled = true;
