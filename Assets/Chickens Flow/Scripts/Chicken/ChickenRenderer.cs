@@ -36,6 +36,7 @@ public readonly struct ChickenBatchKey : IEquatable<ChickenBatchKey>
 public class ChickenData
 {
     public Vector3 position;
+    public float scale;
     public int factionIndex;
     public string anim;
     public float animStartFrame;
@@ -54,6 +55,7 @@ public class ChickenRenderer : MonoBehaviour
     public Vector3 shadowSize;
     public float chickenSize;
     public float maxAnimationFrame;
+    public float defaultSpriteSize;
 
     private const int BatchSize = 1023;
 
@@ -64,6 +66,7 @@ public class ChickenRenderer : MonoBehaviour
     private readonly Matrix4x4[] shadowMatrices = new Matrix4x4[40];
     private readonly Vector4[] animData = new Vector4[BatchSize];
     private readonly float[] animStartFrame = new float[BatchSize];
+    private readonly float[] spriteSizes = new float[BatchSize];
 
     // Reuse collections across frames to achieve ZERO GC in Update/Render
     private readonly Dictionary<ChickenBatchKey, List<int>> batchBuffers = new();
@@ -73,6 +76,7 @@ public class ChickenRenderer : MonoBehaviour
 
     private static readonly int AnimDataID = Shader.PropertyToID("_AnimData");
     private static readonly int AnimStartFrame = Shader.PropertyToID("_AnimStartFrame");
+    private static readonly int SpriteSize = Shader.PropertyToID("_SpriteSize");
 
     private void Awake()
     {
@@ -105,6 +109,7 @@ public class ChickenRenderer : MonoBehaviour
         Array.Clear(matrices, 0, matrices.Length);
         Array.Clear(animData, 0, animData.Length);
         Array.Clear(animStartFrame, 0, animStartFrame.Length);
+        Array.Clear(spriteSizes, 0, spriteSizes.Length);
     }
 
     private void Render()
@@ -194,11 +199,13 @@ public class ChickenRenderer : MonoBehaviour
 
                 animData[i] = new Vector4(0, chicken.factionIndex, 0, 0);
                 animStartFrame[i] = chicken.animStartFrame;
+                spriteSizes[i] = chicken.scale * defaultSpriteSize;
             }
 
             propertyBlock.Clear();
             propertyBlock.SetVectorArray(AnimDataID, animData);
             propertyBlock.SetFloatArray(AnimStartFrame, animStartFrame);
+            propertyBlock.SetFloatArray(SpriteSize, spriteSizes);
 
             Graphics.DrawMeshInstanced(
                 chickenMesh,
@@ -230,6 +237,7 @@ public class ChickenRenderer : MonoBehaviour
             ChickenData chickenData = new ChickenData
             {
                 position = chicken.transform.position,
+                scale = chicken.numColumnTaken,
                 factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction),
                 anim = chicken.currentAnimation,
                 animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame)

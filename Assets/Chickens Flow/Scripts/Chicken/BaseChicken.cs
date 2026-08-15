@@ -250,6 +250,8 @@ public class BaseChicken : MonoBehaviour
                     gameObject.SetActive(false);
 
                     onChickenFlyOut?.Invoke();
+
+                    ChickenManager.Ins.MoveChickensDown();
                 });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
@@ -274,8 +276,6 @@ public class BaseChicken : MonoBehaviour
 
     void OnSmokeAnimComplete(TrackEntry entry)
     {
-        ChickenManager.Ins.MoveChickensDown();
-
         ChickenManager.Ins.CheckWinLevel();
         WashingMachineManager.Ins.CheckLoseLevel();
 

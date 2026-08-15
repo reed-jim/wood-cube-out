@@ -693,10 +693,6 @@ public class ChickenManager : Singleton<ChickenManager>
         int tileIndex = giant.coordinate.y * levelItem.numColumn + giant.coordinate.x;
         chicken.SetFaction(allFactions[tileIndex]);
 
-        chicken.SetActiveSpine(true);
-        chicken.PlayIdleAnim();
-        chicken.SetLayer(1);
-
         chickens.Add(chicken);
 
         for (int x = 0; x < giant.sizeX; x++)
@@ -717,10 +713,16 @@ public class ChickenManager : Singleton<ChickenManager>
         if (chicken.GetFirstRow() == 0)
         {
             chicken.isStuck = false;
+
+            chicken.SetActiveSpine(true);
+            chicken.ForcePlayRandomIdleAnim();
         }
         else
         {
             chicken.isStuck = true;
+
+            chicken.SetActiveSpine(false);
+            chicken.ForcePlayRandomIdleAnim();
         }
 
         chicken.transform.position = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
