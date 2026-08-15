@@ -1067,4 +1067,34 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         return group;
     }
+
+    /// <summary>
+    /// Scales the capsule geometry and all force zones based on the screen scale ratio.
+    /// </summary>
+    /// <param name="scaleRatio">The target screen scale multiplier.</param>
+    public void ScaleScreenVariables(float scaleRatio)
+    {
+        if (Mathf.Approximately(scaleRatio, 1f) || scaleRatio <= 0f) return;
+
+        // 1. Scale distance lengths & widths
+        innerHalfLength *= scaleRatio;
+        outerHalfLength *= scaleRatio;
+        gapHalfWidth *= scaleRatio;
+
+        // 2. Scale ForceZone list elements
+        if (forceZones != null)
+        {
+            for (int i = 0; i < forceZones.Count; i++)
+            {
+                var zone = forceZones[i];
+
+                // Scale spatial positions, sizes, and force magnitude
+                zone.center.x *= scaleRatio;
+                zone.size.x *= scaleRatio;
+
+                // Reassign back because ForceZone is a struct (value type)
+                forceZones[i] = zone;
+            }
+        }
+    }
 }
