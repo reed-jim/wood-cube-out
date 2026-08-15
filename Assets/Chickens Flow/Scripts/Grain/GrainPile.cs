@@ -124,7 +124,10 @@ public class GrainPile : MonoBehaviour
             .ThenBy(grain => grain.x)
             .ToList();
 
-        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, onAllGrainsPoured: onAllGrainsPoured, onComplete: () =>
+        Vector3 pourDirection3D = rotation * Vector3.down;
+        Vector2 pourDirection = new Vector2(pourDirection3D.x, pourDirection3D.y);
+
+        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, pourDirection, onAllGrainsPoured: onAllGrainsPoured, onComplete: () =>
         {
             ChickenManager.Ins.FeedTheChicken(this);
 
