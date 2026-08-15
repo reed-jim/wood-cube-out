@@ -203,6 +203,7 @@ public struct BuildGrainHashJob : IJobParallelFor
     public void Execute(int i)
     {
         if (particles[i].fallDelay > 0f) return;
+        if (!particles[i].settled) return;
         int2 cell = (int2)math.floor(particles[i].position.xy / cellSize);
         writer.Add(Hash(cell), i);
     }
@@ -396,6 +397,9 @@ public class GrainSimulation : Singleton<GrainSimulation>
         new Keyframe(0.97f, 0.45f),
         new Keyframe(1.00f, 0.8f)
     );
+
+    public float pourInitialSpeed = 2.5f;
+    public float pourDirectionSpreadDeg = 12f;
 
     [Header("Rendering")]
     public Mesh quadMesh;
@@ -697,7 +701,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
     private float stepAccumulator;
 
-    void Update()
+    void FixedUpdate()
     {
         stepAccumulator += simulationSpeed;
         while (stepAccumulator >= 1f)
@@ -705,7 +709,10 @@ public class GrainSimulation : Singleton<GrainSimulation>
             ExecuteGrainPipelineJobified(Time.fixedDeltaTime);
             stepAccumulator -= 1f;
         }
+    }
 
+    void Update()
+    {
         Render();
     }
 
@@ -906,14 +913,19 @@ public class GrainSimulation : Singleton<GrainSimulation>
     // API & FACTORY HANDLERS
     // ------------------------------------------------------------------------
 
-    public void SpawnGrains(List<Vector3> grainPositions, Color faction, int fakeGrainsPerRealGrain = 0, Action onAllGrainsPoured = null, Action onComplete = null)
+    public void SpawnGrains(List<Vector3> grainPositions, Color faction, Vector2 pourDirection = default, int fakeGrainsPerRealGrain = 0, Action onAllGrainsPoured = null, Action onComplete = null)
     {
+        if (pourDirection == default)
+        {
+            pourDirection = Vector2.down;
+        }
+
         FactionGroup group = GetFaction(faction);
         int totalSpawn = grainPositions.Count;
 
         for (int i = 0; i < totalSpawn; i++)
         {
-            group.Add(CreateGrain(i, grainPositions[i], totalSpawn, isFake: false), Matrix4x4.identity);
+            group.Add(CreateGrain(i, grainPositions[i], totalSpawn, isFake: false, pourDirection), Matrix4x4.identity);
             spawnCallCount++;
         }
 
@@ -921,7 +933,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             for (int f = 0; f < fakeGrainsPerRealGrain; f++)
             {
-                group.Add(CreateGrain(i, grainPositions[i], totalSpawn, isFake: true), Matrix4x4.identity);
+                group.Add(CreateGrain(i, grainPositions[i], totalSpawn, isFake: true, pourDirection), Matrix4x4.identity);
             }
         }
 
@@ -936,15 +948,20 @@ public class GrainSimulation : Singleton<GrainSimulation>
         }));
     }
 
-    GrainParticle CreateGrain(int index, Vector3 grainPosition, int totalSpawn, bool isFake)
+    GrainParticle CreateGrain(int index, Vector3 grainPosition, int totalSpawn, bool isFake, Vector2 pourDirection)
     {
         // Convert Vector3 to Vector2/float2 first
         Vector2 initialPos = grainPosition + (Vector3)UnityEngine.Random.insideUnitCircle * (isFake ? 0.2f : 0.1f);
 
+        float baseAngle = Mathf.Atan2(pourDirection.y, pourDirection.x) * Mathf.Rad2Deg;
+        float angle = (baseAngle + UnityEngine.Random.Range(-pourDirectionSpreadDeg, pourDirectionSpreadDeg)) * Mathf.Deg2Rad;
+        Vector2 initialVelocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * pourInitialSpeed;
+        Vector2 prevPos = initialPos - initialVelocity * Time.fixedDeltaTime;
+
         GrainParticle p = new GrainParticle
         {
             position = new float3(initialPos.x, initialPos.y, 0f),
-            prevPosition = initialPos, // Fixed vector conversion
+            prevPosition = prevPos,
             mass = UnityEngine.Random.Range(minMass, maxMass),
             settled = false,
             fallDelay = pourDelayCurve.Evaluate((float)index / Mathf.Max(1, totalSpawn - 1)) * maxFallDelay,
@@ -981,7 +998,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         for (int i = 0; i < count; i++)
         {
-            if (!group.particles[i].isFake)
+            if (!group.particles[i].isFake && group.particles[i].settled)
             {
                 int lastIndex = count - 1;
 
@@ -1024,6 +1041,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             for (int i = 0; i < group.Count; i++)
             {
+                if (!group.particles[i].settled) continue;
+
                 float3 pos = group.particles[i].position;
                 if (pos.y > grainPoolPositionY && pos.x > leftBound && pos.x < rightBound)
                 {
