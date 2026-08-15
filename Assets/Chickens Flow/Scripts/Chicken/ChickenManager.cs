@@ -384,6 +384,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
             if (giant != null)
             {
+                index++;
+
                 // Only spawn once at the origin tile.
                 if (tileColumn != giant.coordinate.x ||
                     tileRow != giant.coordinate.y)
