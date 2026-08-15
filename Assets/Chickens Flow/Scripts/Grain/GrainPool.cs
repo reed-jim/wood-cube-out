@@ -109,9 +109,9 @@ public class GrainPool : Singleton<GrainPool>
         progressBarBackground.sizeDelta = sizeDelta;
         progressBarFill.sizeDelta = sizeDelta;
 
-        GrainSimulation.Ins.capsuleStraightLength = 0.76f * sizeDelta.x;
-        GrainSimulation.Ins.GenerateCapsulePath();
-        GrainSimulation.Ins.BuildPath();
+        // GrainSimulation.Ins.capsuleStraightLength = 0.76f * sizeDelta.x;
+        // GrainSimulation.Ins.GenerateCapsulePath();
+        // GrainSimulation.Ins.BuildPath();
     }
 
     public void AddGrainPile(GrainPile grainPile)
