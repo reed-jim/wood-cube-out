@@ -141,6 +141,7 @@ public class ChickenRenderer : MonoBehaviour
         var chickens = ChickenManager.Ins.chickens;
         int maxShadows = shadowMatrices.Length;
         int index = 0;
+        int shadowScale = 1;
 
         for (int i = 0; i < chickens.Count; i++)
         {
@@ -149,8 +150,10 @@ public class ChickenRenderer : MonoBehaviour
             BaseChicken chicken = chickens[i];
             if (chicken.isDone || chicken.isStuck) continue;
 
+            shadowScale = chicken.numColumnTaken;
+
             Vector3 position = chicken.transform.position + shadowOffset;
-            shadowMatrices[index] = Matrix4x4.TRS(position, Quaternion.identity, shadowSize);
+            shadowMatrices[index] = Matrix4x4.TRS(position, Quaternion.identity, shadowScale * shadowSize);
             index++;
         }
 

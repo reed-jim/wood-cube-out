@@ -28,6 +28,9 @@ public class ChickenManager : Singleton<ChickenManager>
     public int numColumn;
     public int numRow;
 
+    [Header("Customize")]
+    public int giantChickenGrainMultiplier = 3;
+
     [Header("Shape Definition")]
     [Tooltip("Vertices of any 2D closed polygon, ordered clockwise or counter-clockwise.")]
     [SerializeField] private BoardShapePreset[] boardShapePresets;
@@ -80,6 +83,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
         GamePersistentVariable.numEatingChicken = 0;
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
+        GamePersistentVariable.numMovingChicken = 0;
     }
 
     private void GizmosBoardShape()
@@ -406,6 +410,8 @@ public class ChickenManager : Singleton<ChickenManager>
             chicken.SetFaction(allFactions[index]);
             chicken.column = column;
             chicken.row = row;
+            chicken.numColumnTaken = 1;
+            chicken.numRowTaken = 1;
             chicken.numGrainPileRequired = 10;
             chicken.numGrainPileRequiredLeft = chicken.numGrainPileRequired;
 
@@ -432,6 +438,8 @@ public class ChickenManager : Singleton<ChickenManager>
                 chicken.SetActiveSpine(false);
                 chicken.ForcePlayRandomIdleAnim();
             }
+
+            chicken.SetLayer(0);
 
             chicken.transform.position = waitingChickenSlot.GetRandomPosition();
 
@@ -463,8 +471,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
             list.Add(kvp.Value);
         }
-
-        StartCoroutine(RandomlyAnimateChickens());
 
         List<Vector3> positions = new List<Vector3>();
 
@@ -671,9 +677,6 @@ public class ChickenManager : Singleton<ChickenManager>
 
     private void SpawnGiantChicken(AntsFlow.LevelItem levelItem, GiantChickenItemConfig giant)
     {
-        int numColumn = levelItem.numColumn;
-        float radius = 0.1f;
-
         BaseChicken chicken = ObjectPoolingEverything.GetFromPool<BaseChicken>(GameConstants.chicken);
 
         chicken.transform.localScale = giant.sizeX * Vector3.one;
@@ -683,7 +686,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
         chicken.numColumnTaken = giant.sizeX;
         chicken.numRowTaken = giant.sizeY;
-        chicken.numGrainPileRequired = 10 * giant.sizeX;
+        chicken.numGrainPileRequired = giantChickenGrainMultiplier * 10 * (giant.sizeX - 1);
         chicken.numGrainPileRequiredLeft = chicken.numGrainPileRequired;
 
         // Set faction if needed.
@@ -692,6 +695,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
         chicken.SetActiveSpine(true);
         chicken.PlayIdleAnim();
+        chicken.SetLayer(1);
 
         chickens.Add(chicken);
 
@@ -710,7 +714,17 @@ public class ChickenManager : Singleton<ChickenManager>
             }
         }
 
+        if (chicken.GetFirstRow() == 0)
+        {
+            chicken.isStuck = false;
+        }
+        else
+        {
+            chicken.isStuck = true;
+        }
+
         chicken.transform.position = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
+        chicken.transform.SetZ(GetLowestSlot(chicken.waitingChickenSlots).position.z);
     }
 
     public void FeedTheChicken(GrainPile grainPile)
@@ -1251,6 +1265,25 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         result /= slots.Count;
+
+        return result;
+    }
+
+    public WaitingChickenSlot GetLowestSlot(List<WaitingChickenSlot> slots)
+    {
+        int minRow = int.MaxValue;
+        WaitingChickenSlot result = null;
+
+        for (int i = 0; i < slots.Count; i++)
+        {
+            WaitingChickenSlot slot = slots[i];
+
+            if (slot.row < minRow)
+            {
+                minRow = slot.row;
+                result = slot;
+            }
+        }
 
         return result;
     }

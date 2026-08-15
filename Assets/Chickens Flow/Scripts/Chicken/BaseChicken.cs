@@ -189,6 +189,8 @@ public class BaseChicken : MonoBehaviour
         skeletonAnimation.Skeleton.SetSlotsToSetupPose();
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
+        meshRenderer = skeletonAnimation.GetComponent<MeshRenderer>();
+
         this.faction = faction;
     }
 
@@ -248,8 +250,6 @@ public class BaseChicken : MonoBehaviour
                     gameObject.SetActive(false);
 
                     onChickenFlyOut?.Invoke();
-
-                    ChickenManager.Ins.MoveChickensDown();
                 });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
@@ -274,6 +274,8 @@ public class BaseChicken : MonoBehaviour
 
     void OnSmokeAnimComplete(TrackEntry entry)
     {
+        ChickenManager.Ins.MoveChickensDown();
+
         ChickenManager.Ins.CheckWinLevel();
         WashingMachineManager.Ins.CheckLoseLevel();
 
@@ -438,13 +440,13 @@ public class BaseChicken : MonoBehaviour
 
         void PlaySoundAndFx(Vector3 position)
         {
-            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            position.y -= 1;
-            position.z -= 1;
-            fx.transform.position = position;
-            var main = fx.main;
-            main.startColor = faction;
-            fx.Play();
+            // ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+            // position.y -= 1;
+            // position.z -= 1;
+            // fx.transform.position = position;
+            // var main = fx.main;
+            // main.startColor = faction;
+            // fx.Play();
 
             SoundManager.Instance.PlaySoundCubeLand();
         }
@@ -520,7 +522,10 @@ public class BaseChicken : MonoBehaviour
     {
         if (!circleProgress.gameObject.activeSelf)
         {
-            SaferioTween.ShowWithPunch(circleProgress.transform, 1, onCompleteAction: () =>
+            float targetLossyScale = Mathf.Min(numColumnTaken, 2);
+            float targetLocalScale = targetLossyScale / transform.localScale.x;
+
+            SaferioTween.ShowWithPunch(circleProgress.transform, targetLocalScale, onCompleteAction: () =>
             {
 
             });
@@ -560,6 +565,13 @@ public class BaseChicken : MonoBehaviour
     {
         skeletonAnimation.gameObject.SetActive(isActive);
         skeletonAnimation.enabled = true;
+    }
+
+    public void SetLayer(int layer)
+    {
+        return;
+
+        meshRenderer.sortingOrder = layer;
     }
 
     public void PlayIdleAnim(int loopTime, bool isDisableSpineOnComplete = true)
@@ -776,17 +788,13 @@ public class BaseChicken : MonoBehaviour
     }
     #endregion
 
-    void Rotate(Vector2 direction)
-    {
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-        transform.rotation = targetRotation;
-    }
-
     public int GetFirstRow()
     {
         return waitingChickenSlots.Min(item => item.row);
+    }
+
+    public bool IsGiantChicken()
+    {
+        return numColumnTaken > 1 || numRowTaken > 1;
     }
 }
