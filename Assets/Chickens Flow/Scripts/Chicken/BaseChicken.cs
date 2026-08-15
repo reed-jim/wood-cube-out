@@ -503,6 +503,18 @@ public class BaseChicken : MonoBehaviour
         isLastChickenForcedFlyOut = isLast;
     }
 
+    public void ForceStopEatingAndFlyOut(bool isLast)
+    {
+        if (chickenEatingGrainsCoroutine != null)
+        {
+            StopCoroutine(chickenEatingGrainsCoroutine);
+
+            GamePersistentVariable.eatingChickens.Remove(this);
+        }
+
+        ForceFlyOut(isLast);
+    }
+
     #region Progress
     public void UpdateEatingProgress(float progress, float prevProgress, float duration = 1f)
     {

@@ -77,7 +77,6 @@ public class WashingMachineItem : MonoBehaviour
     public static event Action spawnAntEvent;
     public static event Action loseLevelEvent;
 
-    public List<AntsFlow.BaseTile> tilesToMove;
     private Tween disableBucketTween;
 
 
@@ -183,8 +182,6 @@ public class WashingMachineItem : MonoBehaviour
         grainSpriteYRatio = Mathf.Min(grainSpriteYRatio, 1);
         grainSprite.transform.localPosition = Vector3.Lerp(grainSpriteRanges[0].localPosition, grainSpriteRanges[1].localPosition, grainSpriteYRatio);
 
-        tilesToMove = new List<AntsFlow.BaseTile>();
-
         Setup(washingMachineStartSlot);
 
         isMoving = false;
@@ -203,6 +200,7 @@ public class WashingMachineItem : MonoBehaviour
     private void Reset()
     {
         doubleAntBoxHole.gameObject.SetActive(false);
+        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
 
         isMoving = false;
         isAnimating = false;
@@ -216,8 +214,6 @@ public class WashingMachineItem : MonoBehaviour
 
         washingMachineStartSlot = null;
         washingMachineSlot = null;
-
-        tilesToMove = new List<AntsFlow.BaseTile>();
     }
 
     public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)
@@ -358,6 +354,8 @@ public class WashingMachineItem : MonoBehaviour
                         Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.1f);
                         DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.1f, onComplete: () =>
                         {
+                            Reset();
+
                             GamePersistentVariable.bucketOrder--;
                         });
                     }

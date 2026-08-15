@@ -717,9 +717,7 @@ namespace AntsFlow
         public void UseBoosterClearOneColor(Color selectedFaction)
         {
             List<BaseChicken> chickensToClear = ChickenManager.Ins.chickens
-                .Where(chicken => !chicken.isDone && chicken.faction == selectedFaction && !chicken.isEating).ToList();
-
-            List<BaseChicken> eatingChickens = ChickenManager.Ins.chickens.Where(chicken => chicken.isEating).ToList();
+                .Where(chicken => !chicken.isDone && chicken.faction == selectedFaction).ToList();
 
             bool isLast = false;
 
@@ -732,7 +730,7 @@ namespace AntsFlow
                 isLast = i == chickensToClear.Count - 1;
 
                 chicken.SetActiveSpine(true);
-                chicken.ForceFlyOut(isLast);
+                chicken.ForceStopEatingAndFlyOut(isLast);
 
                 ChickenManager.Ins.chickenRenderer.RemoveChickenRendering(chicken);
 
@@ -742,44 +740,6 @@ namespace AntsFlow
             MinusFactionGrainRequirement(selectedFaction, numGrainRequiredRemoved);
 
             AdjustAntBoxAfterClearingOneColor(chickensToClear);
-
-            // for (int i = 0; i < chickensToClear.Count; i++)
-            // {
-            //     int index = i;
-
-            //     BaseChicken chicken = chickensToClear[i];
-
-            //     Vector3 initialPosition = chicken.transform.position;
-
-            //     chicken.isEating = true;
-
-            //     Tween.ScaleY(chicken.transform, 1.6f, duration: 0.3f);
-            //     Tween.PositionY(chicken.transform, chicken.transform.position.y + 1.6f, duration: 0.3f)
-            //     .OnComplete(() =>
-            //     {
-            //         Tween.ScaleY(chicken.transform, 1, duration: 0.15f);
-            //         Tween.Position(chicken.transform, initialPosition, duration: 0.15f)
-            //         .OnComplete(() =>
-            //         {
-            //             SaferioTween.ScaleDownWithPunch(chicken.transform, onCompleteAction: () =>
-            //             {
-            //                 chicken.Complete();
-
-            //                 if (index == chickensToClear.Count - 1)
-            //                 {
-            //                     ChickenManager.Ins.CheckWinLevel();
-            //                 }
-            //             });
-
-            //             if (index == chickensToClear.Count - 1)
-            //             {
-            //                 SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
-            //             }
-            //         });
-            //     });
-            // }
-
-            // ChickenManager.Ins.MoveChickensDown();
         }
 
         private void AdjustAntBoxAfterClearingOneColor(List<BaseChicken> chickensToClear)
@@ -844,8 +804,19 @@ namespace AntsFlow
                 }
             }
 
-            GrainPool.Ins.AddGrain(-totalRemovedGrain);
+            // // Clear eating chickens
+            // List<BaseChicken> eatingChickensOfFaction =
+            //     ChickenManager.Ins.chickens.Where(
+            //         chicken => chicken.faction == factionToClear && chicken.isEating && !chicken.isDone).ToList();
 
+            // for (int i = 0; i < eatingChickensOfFaction.Count; i++)
+            // {
+            //     bool isLast = i == eatingChickensOfFaction.Count - 1;
+
+            //     eatingChickensOfFaction[i].ForceStopEatingAndFlyOut(isLast);
+            // }
+
+            GrainPool.Ins.AddGrain(-totalRemovedGrain);
             GrainSimulation.Ins.RemoveAllGrainsOfFaction(factionToClear);
         }
         #endregion

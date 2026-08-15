@@ -71,7 +71,7 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
             {
                 BaseChicken chicken = ChickenManager.Ins.PickChicken(worldPoint);
 
-                if (chicken == null || chicken.isDone || chicken.isMoving || chicken.isEating)
+                if (chicken == null || chicken.isDone || chicken.isMoving)
                 {
                     showNotificationEvent?.Invoke(GameConstants.WARNING, "That chicken isn’t valid. Pick another one");
 
