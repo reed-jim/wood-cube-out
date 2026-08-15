@@ -129,8 +129,14 @@ public class AdmobAdsMax
         _isShowAdmobBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.IsActive();
         GamePersistentVariable.isEnableRewardedAds = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.reward.isActive;
         Debug.Log("[ChangeActiveVal] isEnableRewardedAds =" + GamePersistentVariable.isEnableRewardedAds);
-        GamePersistentVariable.levelShowBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumLevel;
-        GamePersistentVariable.levelShowCollapseBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.collap.minimumLevel;
+        // Ưu tiên minimumLevel theo camp CHỈ khi user thực sự khớp 1 camp (CurrentCampUser != -1).
+        // Không có camp -> GIỮ NGUYÊN giá trị config rời Firebase (level_unlock_banner / level_unlock_collapse_banner)
+        // đã set ở RemoteConfigController.ReloadFirebaseKeys, KHÔNG lấy theo ads_config của segment.
+        if (UseProfile.CurrentCampUser != -1)
+        {
+            GamePersistentVariable.levelShowBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumLevel;
+            GamePersistentVariable.levelShowCollapseBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.collap.minimumLevel;
+        }
         ReloadAllAdsForSegment();
     }
 
@@ -1516,7 +1522,10 @@ onFailed: () => { _actionNotLoadedVideo?.Invoke(); }
 
     public void ShowBanner()
     {
-        int levelShowBanner = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.banner.minimumLevel;
+        // Dùng chung GamePersistentVariable.levelShowBanner để thống nhất nguồn với LoadBannerAdmob/LoadBannerMrecAdmob.
+        // Biến này được set theo thứ tự ưu tiên: config (level_unlock_banner/ads_config) trước, camp GHI ĐÈ sau (ChangeActiveVal)
+        // -> có camp thì lấy theo camp, không có camp thì lấy theo config.
+        int levelShowBanner = GamePersistentVariable.levelShowBanner;
         Debug.Log("[ShowBanner]show banner level=" + levelShowBanner);
         Debug.Log("[ShowBanner]Current level=" + GameController.Instance.useProfile.CurrentLevel);
         //// Chưa có remote config thật từ Firebase:
