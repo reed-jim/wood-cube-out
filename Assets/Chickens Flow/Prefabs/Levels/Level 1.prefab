@@ -52,7 +52,10 @@ MonoBehaviour:
   isOverrideLevelScale: 0
   chickenAreaScaleX: 1
   chickenAreaScaleY: 0.9
-  poolFaction: []
+  poolFaction:
+  - {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+  - {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+  - {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
   tiles: []
   chickenLevelTiles:
   - position: {x: 0, y: 0, z: 0}
@@ -500,7 +503,7 @@ MonoBehaviour:
   - position: {x: 11, y: 15, z: 0}
     factionIndex: 4
   - position: {x: 12, y: 15, z: 0}
-    factionIndex: 2
+    factionIndex: 4
   - position: {x: 13, y: 15, z: 0}
     factionIndex: -1
   - position: {x: 0, y: 16, z: 0}
@@ -560,9 +563,21 @@ MonoBehaviour:
   - position: {x: 13, y: 17, z: 0}
     factionIndex: -1
   isTutorialLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
+    items:
+    - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+      numAnt: 0
+    - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+      numAnt: 0
+    - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+      numAnt: 0
+    - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+      numAnt: 0
+    - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+      numAnt: 0
+    - faction: {r: 0.05490196, g: 0.31764707, b: 0.7882353, a: 1}
+      numAnt: 0
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0

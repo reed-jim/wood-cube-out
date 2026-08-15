@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.LevelItem
   picture: {fileID: 21300000, guid: da3087c3014e3724ea3059f16442839d, type: 3}
   numColumn: 34
-  numRow: 34
+  numRow: 28
   boardShapePresetIndex: 2
   isLevelHavingTransparentPixels: 0
   isOverrideLevelScale: 0
@@ -2377,7 +2377,52 @@ MonoBehaviour:
   numStartAntBoxes: 6
   specialElementConfig:
     giantChickenConfig:
-      giantChickenItemConfigs: []
+      giantChickenItemConfigs:
+      - coordinate: {x: 1, y: 23}
+        sizeX: 3
+        sizeY: 3
+      - coordinate: {x: 4, y: 25}
+        sizeX: 3
+        sizeY: 3
+      - coordinate: {x: 29, y: 25}
+        sizeX: 3
+        sizeY: 3
+      - coordinate: {x: 29, y: 21}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 31, y: 18}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 31, y: 1}
+        sizeX: 3
+        sizeY: 3
+      - coordinate: {x: 27, y: 3}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 31, y: 8}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 25, y: 7}
+        sizeX: 4
+        sizeY: 4
+      - coordinate: {x: 0, y: 0}
+        sizeX: 3
+        sizeY: 3
+      - coordinate: {x: 3, y: 3}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 0, y: 6}
+        sizeX: 3
+        sizeY: 3
+      - coordinate: {x: 6, y: 6}
+        sizeX: 2
+        sizeY: 2
+      - coordinate: {x: 6, y: 0}
+        sizeX: 3
+        sizeY: 3
+      - coordinate: {x: 4, y: 16}
+        sizeX: 4
+        sizeY: 4
     wallConfig:
       coordinates: []
     hiddenAntBoxConfig:
