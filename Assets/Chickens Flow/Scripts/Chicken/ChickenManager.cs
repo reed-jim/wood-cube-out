@@ -421,7 +421,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 chicken.isStuck = false;
 
                 chicken.SetActiveSpine(true);
-                chicken.ForcePlayIdleAnim();
+                chicken.ForcePlayRandomIdleAnim();
             }
             else
             {
@@ -1161,13 +1161,13 @@ public class ChickenManager : Singleton<ChickenManager>
                 if (chicken.GetFirstRow() == 0)
                 {
                     chicken.SetActiveSpine(true);
-                    chicken.PlayIdleAnim();
+                    chicken.ForcePlayIdleAnim();
 
                     chickenRenderer.RemoveChickenRendering(chicken);
                 }
                 else
                 {
-                    chicken.PlayIdleAnim();
+                    chicken.ForcePlayRandomIdleAnim();
 
                     chickenRenderer.UpdateChickenRendering(chicken);
                 }

@@ -76,6 +76,7 @@ public class BaseChicken : MonoBehaviour
     private string _pendingAnimation;
     private SkeletonAnimation smokeAnimation;
     private bool isLastChickenForcedFlyOut;
+    private float flyAnimDuration;
 
     public bool IsInSide(Vector2 position)
     {
@@ -97,6 +98,9 @@ public class BaseChicken : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
 
         SetDissolveProgress(0);
+
+        // flyAnimDuration = skeletonAnimation.Skeleton.Data.FindAnimation(flyAnimations[0]).Duration;
+        flyAnimDuration = 0.533f;
     }
 
     void OnDestroy()
@@ -571,7 +575,7 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayIdleAnim()
     {
-        PlayAnimWhenFinished(idleAnimation);
+        PlayAnim(idleAnimation);
     }
 
     public void ForcePlayIdleAnim()
@@ -695,23 +699,30 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayFlyAnim(int flyAnimationIndex = 1)
     {
-        PlayAnimWhenFinished(flyAnimations[flyAnimationIndex]);
+        PlayAnim(flyAnimations[flyAnimationIndex]);
     }
 
     public void PlayFlyAnim(Action onComplete)
     {
         string flyAnimation = flyAnimations[0];
 
-        TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, flyAnimation, false);
+        skeletonAnimation.AnimationState.SetAnimation(0, flyAnimation, false);
 
-        trackEntry.Complete += OnFlyAnimationComplete;
-
-        void OnFlyAnimationComplete(TrackEntry entry)
+        TweenManager.Ins.AddTween(Tween.Delay(flyAnimDuration).OnComplete(() =>
         {
             onComplete?.Invoke();
+        }));
 
-            entry.Complete -= OnFlyAnimationComplete;
-        }
+        // TrackEntry trackEntry = skeletonAnimation.AnimationState.SetAnimation(0, flyAnimation, false);
+
+        // trackEntry.Complete += OnFlyAnimationComplete;
+
+        // void OnFlyAnimationComplete(TrackEntry entry)
+        // {
+        //     onComplete?.Invoke();
+
+        //     entry.Complete -= OnFlyAnimationComplete;
+        // }
 
         currentAnimation = flyAnimation;
     }
