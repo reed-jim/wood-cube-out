@@ -261,7 +261,7 @@ public static class GameConstants
     public static string waitingChickenSlot = "waitingChickenSlot";
     public static string grainPile = "grainPile";
     public static string smokeFx = "smokeFx";
-    public static int grainMultiplier = 2;
+    public static int grainMultiplier = 3;
     public static string wall = "wall";
     public static Vector2 standardScreenWorldSize = new Vector2(24.75f, 44f); // 1080x1920
     public static float delayActualLoseLevel = 2;
