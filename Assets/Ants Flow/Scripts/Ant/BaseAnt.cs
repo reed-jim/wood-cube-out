@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +48,6 @@ namespace AntsFlow
         private Vector2 direction;
 
         public static event Action requestUpdateNavmeshEvent;
-
         #region Debug
 #if UNITY_EDITOR
         List<Vector3> debugMovePoints;
@@ -66,8 +65,12 @@ namespace AntsFlow
         public float noiseMagnitude = 2f;
         private float randomNoiseOffset;
 
-        private float speedMove;
+        protected float speedMove;
         public float initialSpeedMove;
+
+        [Header("Depth Settings")]
+        [SerializeField] protected float baseZPosition = -3f;
+        [SerializeField] protected float ghostBaseZPosition = -7f;
 
         protected virtual void Awake()
         {
@@ -250,8 +253,8 @@ namespace AntsFlow
             {
                 StopCoroutine(movingCoroutine);
             }
-
-            movingCoroutine = StartCoroutine(MovingCurved(reversePath, 2));
+            if (gameObject.activeInHierarchy)
+                movingCoroutine = StartCoroutine(MovingCurved(reversePath, 2));
         }
 
         public static List<Vector3> Simplify(List<Vector3> points)
@@ -315,17 +318,17 @@ namespace AntsFlow
             }
         }
 
-#if UNITY_EDITOR
-        void OnDrawGizmosSelected()
-        {
-            foreach (var point in debugMovePoints)
-            {
-                Gizmos.color = Color.green;
+        //#if UNITY_EDITOR
+        //        void OnDrawGizmosSelected()
+        //        {
+        //            foreach (var point in debugMovePoints)
+        //            {
+        //                Gizmos.color = Color.green;
 
-                Gizmos.DrawSphere(point, 0.15f);
-            }
-        }
-#endif
+        //                Gizmos.DrawSphere(point, 0.15f);
+        //            }
+        //        }
+        //#endif
 
         public static List<Vector3> RemoveNearbyPoints(List<Vector3> points, float minDistance)
         {
@@ -378,6 +381,31 @@ namespace AntsFlow
             }
 
             return result;
+        }
+
+        // remove uneccessary points
+        protected virtual void TrimRedundantPoints(List<Vector3> points, int firstBottomMostPointIndex)
+        {
+            if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+
+            if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
+                points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
+            {
+                points.RemoveAt(firstBottomMostPointIndex + 1);
+            }
+        }
+
+        protected virtual void AppendNearNestPointAndTrim(List<Vector3> points, Vector3 antNestPosition, Vector3 closestPointToNest)
+        {
+            Vector3 nearAntNestPosition = antNestPosition + 1f * (points[^1] - antNestPosition).normalized;
+
+            points.Add(nearAntNestPosition);
+
+            points.RemoveAt(0);
         }
 
         private IEnumerator MovingCurved(List<Node> path, int count)
@@ -456,18 +484,7 @@ namespace AntsFlow
                     points.Insert(cachePointIndex, cachePoint);
                 }
 
-                // remove uneccessary points
-                if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 1].x &&
-                    points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 2].x)
-                {
-                    points.RemoveAt(firstBottomMostPointIndex + 1);
-                }
-
-                if (points[firstBottomMostPointIndex].x > points[firstBottomMostPointIndex + 2].x &&
-                    points[firstBottomMostPointIndex].x < points[firstBottomMostPointIndex + 1].x)
-                {
-                    points.RemoveAt(firstBottomMostPointIndex + 1);
-                }
+                TrimRedundantPoints(points, firstBottomMostPointIndex);
 
                 points = RemoveNearbyPoints(points, 0.8f * GamePersistentVariable.tileDistance.x);
             }
@@ -517,11 +534,7 @@ namespace AntsFlow
                     points.Remove(pointInFirstRow[i]);
                 }
 
-                Vector3 nearAntNestPosition = antNestPosition + 1f * (points[^1] - antNestPosition).normalized;
-
-                points.Add(nearAntNestPosition);
-
-                points.RemoveAt(0);
+                AppendNearNestPointAndTrim(points, antNestPosition, closestPointToNest);
             }
 
             float totalDistance = GetTotalDistance(points, transform.position);
@@ -535,7 +548,7 @@ namespace AntsFlow
             float totalTimePassed = 0;
             int zigZagSign = siblingIndex % 2 == 0 ? 1 : -1;
             float zigzagControl = zigZagSign * zigZagFrequency * Mathf.PI * 2f;
-            float zPosition = -3 - 0.001f * siblingIndex;
+            float zPosition = baseZPosition - 0.001f * siblingIndex;
             Quaternion targetRotation;
 
             for (int i = 0; i < points.Count; i++)
@@ -613,7 +626,7 @@ namespace AntsFlow
             }
         }
 
-        public void MoveToTileGhostMode(BaseTile tile)
+        public virtual void MoveToTileGhostMode(BaseTile tile)
         {
             tile.isAntApproaching = true;
 
@@ -641,7 +654,7 @@ namespace AntsFlow
             float speed = 10;
             float distance;
             float duration;
-            float zPosition = -7 - 0.001f * siblingIndex;
+            float zPosition = ghostBaseZPosition - 0.001f * siblingIndex;
 
             Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
 

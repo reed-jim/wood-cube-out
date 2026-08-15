@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
 using Dreamteck.Utilities;
+using NamPhuThuy.GamePlay;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -32,6 +33,7 @@ namespace AntsFlow
         public List<AntBoxLink> antBoxLinks;
         public List<MagnetAntBoxLink> magnetAntBoxLinks;
         public SpawningTileBox spawningTileBox;
+        public List<SpawningTileBox> activeSpawningTileBoxes = new List<SpawningTileBox>();
         public BossArea bossArea;
         public Snake snake;
 
@@ -42,6 +44,31 @@ namespace AntsFlow
         public int[] levelsShowSpecialElementIntroduction;
 
         public static event Action<int> showSpecialElementIntroduction;
+
+        protected override void MoreActionOnAwake()
+        {
+            base.MoreActionOnAwake();
+
+            LevelLoader.startLevelEvent += OnLevelReplayed;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
+            TileManager.winLevelEvent += OnLevelReplayed;
+        }
+
+        private void OnDestroy()
+        {
+            LevelLoader.startLevelEvent -= OnLevelReplayed;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
+            TileManager.winLevelEvent -= OnLevelReplayed;
+        }
+
+        private void OnLevelReplayed()
+        {
+            Reset();
+        }
 
         public void Setup(AntsFlow.LevelItem levelItem)
         {
@@ -68,7 +95,7 @@ namespace AntsFlow
                 showSpecialElementIntroduction?.Invoke(Array.IndexOf(levelsShowSpecialElementIntroduction, currentLevel.Value));
             }
 
-//            SetupSpawningTileBoxes();
+            SetupSpawningTileBoxes();
             SetupBossArea(levelItem.specialElementConfig.bossAreaConfig);
             SetupSnake(levelItem.specialElementConfig.snakeConfig);
         }
@@ -76,8 +103,23 @@ namespace AntsFlow
         private void Reset()
         {
             spawningTileBox.gameObject.SetActive(false);
+            foreach (var box in activeSpawningTileBoxes)
+            {
+                if (box != null && box != spawningTileBox) Destroy(box.gameObject);
+            }
+            activeSpawningTileBoxes.Clear();
             bossArea.gameObject.SetActive(false);
-            snake.gameObject.SetActive(false);
+
+            if (snake != null)
+            {
+                snake.Reset();
+                snake.gameObject.SetActive(false);
+            }
+
+            if (HardPixelManager.Ins != null)
+            {
+                HardPixelManager.Ins.Reset();
+            }
         }
 
         public void SpawnAntBoxLinkFirstAntBoxes(int order)
@@ -100,7 +142,7 @@ namespace AntsFlow
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
-                    washingMachine is not WarriorAntBox &&
+                    washingMachine is not WarriorAntBox && washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType && !washingMachine.isMagnet)
                 {
                     if (washingMachine.numSlotRequired == 1)
@@ -153,6 +195,7 @@ namespace AntsFlow
                     washingMachine is not FreezedAntBox &&
                     washingMachine is not KeyAntBox &&
                     washingMachine is not WarriorAntBox &&
+                    washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isMagnet
                 )
@@ -197,7 +240,7 @@ namespace AntsFlow
 
                 if (washingMachine != null && washingMachine is not HiddenAntBox &&
                     washingMachine is not FreezedAntBox && washingMachine is not KeyAntBox &&
-                    washingMachine is not WarriorAntBox &&
+                    washingMachine is not WarriorAntBox && washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType && !washingMachine.isDouble &&
                     !washingMachine.isMagnet)
                 {
@@ -273,6 +316,7 @@ namespace AntsFlow
                     washingMachine is not FreezedAntBox &&
                     washingMachine is not KeyAntBox &&
                     washingMachine is not WarriorAntBox &&
+                    washingMachine is not SnakeAntBox &&
                     !washingMachine.isOpenCloseType &&
                     !washingMachine.isDouble &&
                     !washingMachine.isMagnet
@@ -343,7 +387,16 @@ namespace AntsFlow
 
         public LevelElement GetNextLevelElement(int rowIndex, int columnIndex)
         {
-            if (specialElementConfig.hiddenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            // Boss/Warrior box được ưu tiên kiểm tra TRƯỚC: nếu spawnOrder của boss trùng spawnOrder của
+            // loại box khác (vd Hidden) thì hộp hiện ra vẫn là warrior box đúng thứ tự, boss luôn đủ hộp.
+            // Loại kia chỉ nhường đúng slot trùng đó, không ảnh hưởng gì.
+            if (specialElementConfig.bossAreaConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+            {
+                specialElementConfig.bossAreaConfig.RemoveOneSpecialElementInPool();
+
+                return LevelElement.WarriorAntBox;
+            }
+            else if (specialElementConfig.hiddenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
             {
                 specialElementConfig.hiddenAntBoxConfig.RemoveOneSpecialElementInPool();
 
@@ -376,12 +429,6 @@ namespace AntsFlow
                 specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
 
                 return LevelElement.FreezedAntBox;
-            }
-            else if (specialElementConfig.bossAreaConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
-            {
-                specialElementConfig.bossAreaConfig.RemoveOneSpecialElementInPool();
-
-                return LevelElement.WarriorAntBox;
             }
             else if (specialElementConfig.openCloseAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned, true))
             {
@@ -417,6 +464,63 @@ namespace AntsFlow
             }
         }
 
+        // Boss còn warrior box chờ trong spawnOrder hay không (không đụng gì tới state).
+        public bool HasPendingBossBox()
+        {
+            return specialElementConfig != null &&
+                   specialElementConfig.bossAreaConfig != null &&
+                   specialElementConfig.bossAreaConfig.spawnOrder != null &&
+                   specialElementConfig.bossAreaConfig.spawnOrder.Count > 0;
+        }
+
+        // Rắn còn snake box chờ trong spawnOrder hay không (không đụng gì tới state).
+        public bool HasPendingSnakeBox()
+        {
+            return specialElementConfig != null &&
+                   specialElementConfig.snakeConfig != null &&
+                   specialElementConfig.snakeConfig.spawnOrder != null &&
+                   specialElementConfig.snakeConfig.spawnOrder.Count > 0;
+        }
+
+        // Còn box đặc biệt (boss hoặc rắn) chờ trong spawnOrder hay không.
+        public bool HasPendingSpecialBossBox()
+        {
+            return HasPendingBossBox() || HasPendingSnakeBox();
+        }
+
+        public LevelElement GetNextForcedSpecialElement()
+        {
+            if (HasPendingBossBox())
+            {
+                specialElementConfig.bossAreaConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.WarriorAntBox;
+            }
+
+            if (HasPendingSnakeBox())
+            {
+                specialElementConfig.snakeConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.SnakeAntBox;
+            }
+
+            return LevelElement.NormalAntBox;
+        }
+
+        // Ép lấy 1 warrior box còn lại của boss (bỏ qua so khớp đúng numAntBoxSpawned). Dùng khi pool
+        // faction thường đã cạn: lúc này thứ tự không còn ý nghĩa, chỉ cần nhả nốt cho boss đủ hộp.
+        public LevelElement GetNextForcedBossElement()
+        {
+            if (HasPendingBossBox())
+            {
+                specialElementConfig.bossAreaConfig.spawnOrder.RemoveAt(0);
+
+                return LevelElement.WarriorAntBox;
+            }
+
+            return LevelElement.NormalAntBox;
+        }
+
         public int GetMaxValueFreezedAntBox(int rowIndex, int columnIndex)
         {
             int maxFreezedAntBoxRequiredNumberToUnfreeze = 0;
@@ -450,6 +554,11 @@ namespace AntsFlow
 
         public void FillHiddenTiles(Tilemap tilemap, int width, int height, int manualStart = -1)
         {
+            // Tile đang bị chiếm bởi rắn/boss/hộp (node.isObstacle) hoặc đã done thì KHÔNG được biến thành
+            // hidden tile: nó đã bị tách khỏi chuỗi blockage nên không bao giờ được reveal -> hidden tile
+            // kẹt trên map, không clear được. Đặc biệt là các ô đường đi con rắn đang chiếm hiện tại.
+            HashSet<BaseTile> blockedTiles = GetTilesBlockedForHidden();
+
             if (manualStart != -1)
             {
                 Color targetColor = ColorUtil.HexToColor("#B792FA");
@@ -460,6 +569,11 @@ namespace AntsFlow
 
                     if (tile.Faction == targetColor)
                     {
+                        if (tile.isDone || tile.isHidden || blockedTiles.Contains(tile))
+                        {
+                            continue;
+                        }
+
                         Vector3Int cellPos = tile.tilemapPosition;
 
                         Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
@@ -499,6 +613,11 @@ namespace AntsFlow
 
                 BaseTile tile = TileManager.Ins.tiles[index];
 
+                if (tile.isDone || tile.isHidden || blockedTiles.Contains(tile))
+                {
+                    continue;
+                }
+
                 Vector3Int cellPos = tile.tilemapPosition;
 
                 Tile tilemapTile = ScriptableObject.CreateInstance<Tile>();
@@ -508,6 +627,33 @@ namespace AntsFlow
 
                 tile.isHidden = true;
             }
+        }
+
+        // Tập tile không được phép chuyển thành hidden tile: các tile nằm trên node đang là obstacle
+        // (rắn/boss/hộp spawn... đang chiếm). Những tile này nằm ngoài chuỗi blockage bình thường nên
+        // hidden tile đặt lên đó sẽ không bao giờ được reveal/clear.
+        private HashSet<BaseTile> GetTilesBlockedForHidden()
+        {
+            HashSet<BaseTile> blockedTiles = new HashSet<BaseTile>();
+
+            List<Node> nodes = TileManager.Ins.nodes;
+
+            if (nodes == null)
+            {
+                return blockedTiles;
+            }
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+
+                if (node.isObstacle && node.tile != null)
+                {
+                    blockedTiles.Add(node.tile);
+                }
+            }
+
+            return blockedTiles;
         }
 
         public void FillWallTiles(Tilemap tilemap, int width, int height)
@@ -671,31 +817,31 @@ namespace AntsFlow
             return cluster.ToArray();
         }
 
-        public void SetupSpawningTileBoxes()
-        {
-            /*
-            if (specialElementConfig.spawningTileBoxConfig.items == null)
-            {
-                return;
-            }
+        //public void SetupSpawningTileBoxes()
+        //{
+        //    /*
+        //    if (specialElementConfig.spawningTileBoxConfig.items == null)
+        //    {
+        //        return;
+        //    }
 
-            spawningTileBox.spawnNumberOfFactions = new Dictionary<Color, int>();
+        //    spawningTileBox.spawnNumberOfFactions = new Dictionary<Color, int>();
 
-            for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
-            {
-                SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
+        //    for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
+        //    {
+        //        SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
 
-                for (int j = 0; j < item.number; j++)
-                {
-                    WashingMachineManager.Ins.poolFaction.Add(item.faction);
-                }
+        //        for (int j = 0; j < item.number; j++)
+        //        {
+        //            WashingMachineManager.Ins.poolFaction.Add(item.faction);
+        //        }
 
-                spawningTileBox.spawnNumberOfFactions.Add(item.faction, item.number);
-            }
+        //        spawningTileBox.spawnNumberOfFactions.Add(item.faction, item.number);
+        //    }
 
-            spawningTileBox.NextSpawningTileBoxes();
-            */
-        }
+        //    spawningTileBox.NextSpawningTileBoxes();
+        //    */
+        //}
 
         public void SetupBossArea(BossAreaConfig bossAreaConfig)
         {
@@ -746,14 +892,27 @@ namespace AntsFlow
             bossArea.Setup(nodes, bossAreaConfig);
         }
 
-        public void SetupSnake(SnakeConfig snakeConfig)
+        // Level có boss/rắn thì chỉ được tính win khi cả hai đã bị hạ. Dùng để chặn win sớm khi
+        // người chơi clear hết tile màu thường (vd booster clear-one-color) mà chưa hạ boss/rắn.
+        // Level không có yếu tố nào (bossArea/snake inactive) thì luôn trả về true -> không ảnh hưởng.
+        public bool AreSpecialBossElementsCleared()
         {
-            if (snakeConfig.spawnOrder == null)
+            if (bossArea != null && bossArea.BlocksWin)
             {
-                return;
+                return false;
             }
 
-            if (snakeConfig.spawnOrder.Count == 0)
+            if (snake != null && snake.BlocksWin)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void SetupSnake(SnakeConfig snakeConfig)
+        {
+            if (snakeConfig == null || snakeConfig.spawnOrder == null || snakeConfig.spawnOrder.Count == 0)
             {
                 return;
             }
@@ -784,5 +943,89 @@ namespace AntsFlow
 
         //     return true;
         // }
+        public void SetupSpawningTileBoxes()
+        {
+            if (specialElementConfig.spawningTileBoxConfig == null || specialElementConfig.spawningTileBoxConfig.items == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < specialElementConfig.spawningTileBoxConfig.items.Count; i++)
+            {
+                SpawningTileBoxItemConfig item = specialElementConfig.spawningTileBoxConfig.items[i];
+
+                if (item.number <= 0) continue;
+
+                SpawningTileBox newBox = Instantiate(spawningTileBox, spawningTileBox.transform.parent);
+                newBox.gameObject.SetActive(true);
+
+                List<Node> boxNodes = new List<Node>();
+                int destroyedTileCount = 0;
+                if (item.startNodeId >= 0 && item.startNodeId < TileManager.Ins.nodes.Count)
+                {
+                    Node startNode = TileManager.Ins.nodes[item.startNodeId];
+                    int startX = startNode.x;
+                    int startY = startNode.y;
+
+                    Vector3 centerPos = Vector3.zero;
+                    int count = 0;
+                    for (int r = 0; r < item.numCoverRow; r++)
+                    {
+                        for (int c = 0; c < item.numCoverColumn; c++)
+                        {
+                            int targetX = startX + c;
+                            int targetY = startY + r;
+
+                            Node node = TileManager.Ins.nodes.FirstOrDefault(n => n.x == targetX && n.y == targetY);
+                            if (node != null)
+                            {
+                                centerPos += node.initialPosition;
+                                count++;
+                                node.isObstacle = true;
+                                boxNodes.Add(node);
+
+                                if (node.tile != null)
+                                {
+                                    // Remove the tile's color from poolFaction
+                                    GamePersistentVariable.levelItem.poolFaction.Remove(node.tile.Faction);
+
+                                    // Remove from TileManager tiles
+                                    TileManager.Ins.tiles.Remove(node.tile);
+
+                                    // Destroy the tile
+                                    node.tile.Hide();
+                                    node.tile = null;
+                                    destroyedTileCount++;
+                                }
+                            }
+                        }
+                    }
+                    if (count > 0)
+                    {
+                        centerPos /= count;
+                        newBox.transform.position = centerPos.ChangeZ(-7);
+                    }
+                }
+
+                newBox.Setup(item.faction, item.number, boxNodes);
+                activeSpawningTileBoxes.Add(newBox);
+            }
+        }
+
+        public void OnBoosterClearOneColor(Color selectedFaction, List<BaseTile> clearedTiles)
+        {
+            if (activeSpawningTileBoxes == null || activeSpawningTileBoxes.Count == 0 || clearedTiles == null || clearedTiles.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var box in activeSpawningTileBoxes)
+            {
+                if (box != null && box.gameObject.activeSelf && box.faction == selectedFaction && box.numberLeft > 0)
+                {
+                    box.ForceComplete();
+                }
+            }
+        }
     }
 }

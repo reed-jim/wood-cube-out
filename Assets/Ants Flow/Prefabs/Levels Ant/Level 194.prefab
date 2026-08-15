@@ -18964,6 +18964,7 @@ MonoBehaviour:
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 
@@ -18975,15 +18976,7 @@ MonoBehaviour:
     magnetAntBoxConfig:
       spawnOrder: 
     spawningTileBoxConfig:
-      items:
-      - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352943, a: 1}
-        number: 0
-      - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490197, a: 1}
-        number: 0
-      - faction: {r: 0.9921569, g: 0.6039216, b: 0.827451, a: 1}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
+      items: []
     bossAreaConfig:
       spawnOrder: 
       startNodeId: 0
@@ -19002,6 +18995,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 1
     isContainsWallTiles: 1
   spawnPosition: {x: 0, y: 3, z: 0}

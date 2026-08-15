@@ -10640,10 +10640,11 @@ MonoBehaviour:
   isUseManualFactionSetupForFirstAntBoxes: 0
   levelFactionConfig:
     items: []
-  difficulty: 5
+  difficulty: 2
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 070000000a0000000b0000000d0000001500000018000000190000001b0000001e0000001f0000002300000027000000290000002c00000031000000
@@ -10651,7 +10652,7 @@ MonoBehaviour:
       spawnOrder: 
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
-      spawnOrder: 
+      spawnOrder: 010000000300000007000000320000003c0000000f0000001700000021000000
     magnetAntBoxConfig:
       spawnOrder: 
     spawningTileBoxConfig:
@@ -10674,6 +10675,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 1
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}

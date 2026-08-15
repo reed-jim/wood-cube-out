@@ -10,9 +10,28 @@ public class GameSetting : ScriptableObject
     [SerializeField] private bool isVibrate = true;
     [SerializeField] private string currentLanguage;
 
+    [Header("=== TEST SEGMENT (tick để ép dùng 1 kịch bản trong dataSegment) ===")]
+    [Tooltip("Bật để ép dùng kịch bản theo Test Segment Index, bỏ qua dữ liệu AppsFlyer thật. Nhớ TẮT trước khi build release chính thức.")]
+    [SerializeField] private bool forceTestSegment;
+
+    [Tooltip("Thứ tự kịch bản trong dataSegment muốn test: 0 = kịch bản đầu tiên, 1 = kịch bản thứ hai, ...")]
+    [SerializeField] private int testSegmentIndex;
+
     public bool IsDebug
     {
         get => isDebug;
+    }
+
+    // Các field test bên dưới KHÔNG được LoadAsync ghi đè (giống isDebug),
+    // nên chỉ điều khiển trực tiếp trên asset GameSetting trong Inspector.
+    public bool ForceTestSegment
+    {
+        get => forceTestSegment;
+    }
+
+    public int TestSegmentIndex
+    {
+        get => testSegmentIndex;
     }
 
     public bool IsTurnOnBackgroundMusic

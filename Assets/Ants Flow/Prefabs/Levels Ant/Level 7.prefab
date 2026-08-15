@@ -8057,13 +8057,26 @@ MonoBehaviour:
     worldSize: 0
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
+    items:
+    - faction: {r: 0.1254902, g: 0.4431373, b: 0.9803922, a: 1}
+      numAnt: 25
+    - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+      numAnt: 20
+    - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+      numAnt: 15
+    - faction: {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+      numAnt: 20
+    - faction: {r: 0.98823535, g: 0.20000002, b: 0.22352943, a: 1}
+      numAnt: 10
+    - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+      numAnt: 5
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
+  easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
       spawnOrder: 07000000090000000c0000000f000000120000001500000017000000190000001b0000001e000000
@@ -8094,6 +8107,11 @@ MonoBehaviour:
       spawnOrder: 
       snakeSegmentIndexes: 
       health: 0
+      tailOffset: {x: 0, y: 0}
+      tailAngle: 0
+      width: 0
+      scaleHead: 0
+      isFlipHead: 0
     isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 0.5, z: 0}
