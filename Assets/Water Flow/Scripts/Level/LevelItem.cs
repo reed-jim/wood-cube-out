@@ -356,21 +356,10 @@ namespace AntsFlow
         #region Chicken Feed
         private void OnSceneGUI()
         {
-            switch (configTool)
-            {
-                case ConfigTool.Normal:
-                    ConfiguringNormal();
-                    break;
-                case ConfigTool.GiantChicken:
-                    ConfiguringChicken();
-                    break;
-                case ConfigTool.Wall:
-                    ConfiguringWall();
-                    break;
-            }
+            ConfiguringLevel();
         }
 
-        private void ConfiguringNormal()
+        private void ConfiguringLevel()
         {
             LevelItem level = (LevelItem)target;
 
@@ -380,7 +369,14 @@ namespace AntsFlow
             if (level.factionMapper == null)
                 return;
 
-            ConfigureGrid(level, PaintNormalTile, EraseNormalTile);
+            if (configTool == ConfigTool.GiantChicken)
+            {
+                ConfigureGrid(level, PaintGiantChickenTile, EraseGiantChickenTile);
+            }
+            else
+            {
+                ConfigureGrid(level, PaintNormalTile, EraseNormalTile);
+            }
         }
 
         private void PaintNormalTile(LevelItem level, int index)
@@ -418,17 +414,13 @@ namespace AntsFlow
             List<AntLevelDataItem> chickenLevelTiles = level.chickenLevelTiles;
             Camera camera = SceneView.currentDrawingSceneView.camera;
 
+            // Draw Normal Slots
             for (int y = 0; y < numRow; y++)
             {
                 for (int x = 0; x < numColumn; x++)
                 {
                     int index = x + y * numColumn;
                     Vector3 worldPos = tileDistance * new Vector2(x, y);
-
-                    // if (y % 2 == 1)
-                    // {
-                    //     worldPos.x += 0.5f * tileDistance;
-                    // }
 
                     float size = HandleUtility.GetHandleSize(worldPos) * 0.15f;
 
@@ -453,6 +445,18 @@ namespace AntsFlow
 
                     Handles.color = Color.gray;
                     Handles.DrawWireDisc(worldPos, camera.transform.forward, size);
+                }
+            }
+
+            // Draw Giant Chicken Slots
+            var giantChickenConfigs =
+                    level.specialElementConfig.giantChickenConfig.giantChickenItemConfigs;
+
+            if (giantChickenConfigs != null)
+            {
+                foreach (GiantChickenItemConfig chicken in giantChickenConfigs)
+                {
+                    DrawGiantChicken(chicken, tileDistance);
                 }
             }
 
@@ -717,6 +721,93 @@ namespace AntsFlow
 
             if (GUI.changed)
                 SceneView.RepaintAll();
+        }
+
+        private void PaintGiantChickenTile(LevelItem level, int index)
+        {
+            int numColumn = level.numColumn;
+
+            int x = index % numColumn;
+            int y = index / numColumn;
+
+            Vector2Int coord = new Vector2Int(x, y);
+
+            var configs = level.specialElementConfig
+                .giantChickenConfig
+                .giantChickenItemConfigs;
+
+            GiantChickenItemConfig chicken =
+                configs.Find(c => c.coordinate == coord);
+
+            if (chicken == null)
+            {
+                chicken = new GiantChickenItemConfig
+                {
+                    coordinate = coord
+                };
+
+                configs.Add(chicken);
+            }
+        }
+
+        private void EraseGiantChickenTile(LevelItem level, int index)
+        {
+            int numColumn = level.numColumn;
+
+            int x = index % numColumn;
+            int y = index / numColumn;
+
+            Vector2Int coord = new Vector2Int(x, y);
+
+            var configs = level.specialElementConfig
+                .giantChickenConfig
+                .giantChickenItemConfigs;
+
+            GiantChickenItemConfig chicken =
+                configs.Find(c => c.coordinate == coord);
+
+            if (chicken != null)
+            {
+                configs.Remove(chicken);
+            }
+        }
+
+        private void DrawGiantChicken(GiantChickenItemConfig chicken, float tileDistance)
+        {
+            Vector3 worldPos =
+                tileDistance * new Vector2(
+                    chicken.coordinate.x,
+                    chicken.coordinate.y);
+
+            Vector3 center = worldPos +
+                             new Vector3(
+                                 (chicken.sizeX - 1) * tileDistance * 0.5f,
+                                 (chicken.sizeY - 1) * tileDistance * 0.5f);
+
+            Vector3 rectSize = new Vector3(
+                chicken.sizeX * tileDistance,
+                chicken.sizeY * tileDistance);
+
+            Handles.color = Color.yellow;
+
+            Handles.DrawAAPolyLine(
+                2f,
+                new Vector3[]
+                {
+                    center + new Vector3(-rectSize.x / 2, -rectSize.y / 2),
+                    center + new Vector3(-rectSize.x / 2,  rectSize.y / 2),
+                    center + new Vector3( rectSize.x / 2,  rectSize.y / 2),
+                    center + new Vector3( rectSize.x / 2, -rectSize.y / 2),
+                    center + new Vector3(-rectSize.x / 2, -rectSize.y / 2),
+                });
+
+            GUIStyle style = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 18
+            };
+
+            Handles.Label(center, "🐔", style);
         }
 
         private void ConfiguringWall()
