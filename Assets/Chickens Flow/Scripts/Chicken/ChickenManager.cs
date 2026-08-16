@@ -726,7 +726,6 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         chicken.transform.position = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
-        chicken.transform.SetZ(GetLowestSlot(chicken.waitingChickenSlots).position.z);
     }
 
     public void FeedTheChicken(GrainPile grainPile)
@@ -990,10 +989,13 @@ public class ChickenManager : Singleton<ChickenManager>
 
             if (moved)
             {
-                WaitingChickenSlot bottomLeft = GetBottomLeftSlot(chicken);
+                // WaitingChickenSlot bottomLeft = GetBottomLeftSlot(chicken);
+
+                Vector3 destination = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
+
                 destinations[chicken] = new ChickenMoveData
                 {
-                    destination = bottomLeft.GetRandomPosition(),
+                    destination = destination,
                     direction = lastDir
                 };
             }
@@ -1261,12 +1263,22 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         Vector3 result = Vector3.zero;
 
+        int minRow = int.MaxValue;
+        WaitingChickenSlot lowestSlot = null;
+
         foreach (var slot in slots)
         {
             result += slot.position;
+
+            if (slot.row < minRow)
+            {
+                minRow = slot.row;
+                lowestSlot = slot;
+            }
         }
 
         result /= slots.Count;
+        result.z = lowestSlot.position.z;
 
         return result;
     }
