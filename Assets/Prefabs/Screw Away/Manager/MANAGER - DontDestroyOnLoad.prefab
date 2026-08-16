@@ -3383,6 +3383,80 @@ MonoBehaviour:
     Text: "Al principio, una caja de tornillos est\xE1 bloqueada, desatorn\xEDllela
       lo suficiente para desbloquearla."
     Object: {fileID: 0}
+--- !u!1 &2292835762916223386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1637084031230060450}
+  - component: {fileID: 2693494373530515923}
+  m_Layer: 0
+  m_Name: Shuffle the Bucket in queue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1637084031230060450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292835762916223386}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2693494373530515923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292835762916223386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Shuffle the Buckets in queue!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "M\xE9langez les seaux dans la file d'attente\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Mische die Eimer in der Warteschlange!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Mescola i secchi in coda!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AD\u30E5\u30FC\u5185\u306E\u30D0\u30B1\u30C4\u3092\u30B7\u30E3\u30C3\u30D5\u30EB\u3057\u307E\u3057\u3087\u3046\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB300\uAE30\uC5F4\uC5D0 \uC788\uB294 \uBC84\uD0B7\uC744 \uC11E\uC73C\uC138\uC694!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Embaralhe os baldes na fila!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0439\u0442\u0435 \u0432\u0435\u0434\u0440\u0430
+      \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Mezcla los cubos en la cola!"
+    Object: {fileID: 0}
 --- !u!1 &2331834489442589578
 GameObject:
   m_ObjectHideFlags: 0
@@ -4469,7 +4543,7 @@ MonoBehaviour:
   grainPile: {fileID: 6594524114510125756, guid: 12bf1b185ed71ec4e9ad88a1f6294da7, type: 3}
   wall: {fileID: 4146874037232387856, guid: 881218b3fe27ebc4e8d2a96150578c71, type: 3}
   smokeFx: {fileID: 3706638999165854190, guid: c91d17c19fb71e04b80a93ded89bc61a, type: 3}
-  smokeAnim: {fileID: 4646876380315138317, guid: 5e422c9938dcea6408a5a20d35f47f32, type: 3}
+  smokeAnim: {fileID: 1282192969157447735, guid: ea3badb3ce9d16a439537c894d4ac331, type: 3}
   screwBoxContainer: {fileID: 2395158976308048392}
   screwBox: {fileID: 4363298669875526981, guid: 6286f3aa69f2b6d43bfda7063dc91718, type: 3}
   screwPortPrefab: {fileID: 1624755046582764907, guid: a8f542764ca926e4394f230d1143fc91, type: 3}
@@ -4910,34 +4984,34 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: Use the booster to shuffle all ant boxes!
+    Text: Use the booster to shuffle all Buckets!
     Object: {fileID: 0}
   - Language: French
-    Text: "Utilisez le booster pour m\xE9langer toutes les bo\xEEtes \xE0 fourmis\_!"
+    Text: "Utilisez le booster pour m\xE9langer tous les seaux\_!"
     Object: {fileID: 0}
   - Language: German
-    Text: "Benutze den Booster, um alle Ameisenk\xE4sten zu mischen!"
+    Text: Benutze den Booster, um alle Eimer zu mischen!
     Object: {fileID: 0}
   - Language: Italian
-    Text: Usa il booster per mescolare tutte le scatole delle formiche!
+    Text: Usa il booster per mescolare tutti i secchi!
     Object: {fileID: 0}
   - Language: Japanese
-    Text: "\u30D6\u30FC\u30B9\u30BF\u30FC\u3092\u4F7F\u3063\u3066\u3059\u3079\u3066\u306E\u30A2\u30EA\u30DC\u30C3\u30AF\u30B9\u3092\u30B7\u30E3\u30C3\u30D5\u30EB\u3057\u307E\u3057\u3087\u3046\uFF01"
+    Text: "\u30D6\u30FC\u30B9\u30BF\u30FC\u3092\u4F7F\u3063\u3066\u3059\u3079\u3066\u306E\u30D0\u30B1\u30C3\u30C8\u3092\u30B7\u30E3\u30C3\u30D5\u30EB\u3057\u307E\u3057\u3087\u3046\uFF01"
     Object: {fileID: 0}
   - Language: Korean
-    Text: "\uBD80\uC2A4\uD130\uB97C \uC0AC\uC6A9\uD558\uC5EC \uBAA8\uB4E0 \uAC1C\uBBF8
-      \uC0C1\uC790\uB97C \uC11E\uC73C\uC138\uC694!"
+    Text: "\uBD80\uC2A4\uD130\uB97C \uC0AC\uC6A9\uD558\uC5EC \uBAA8\uB4E0 \uBC84\uD0B7\uC744
+      \uC11E\uC73C\uC138\uC694!"
     Object: {fileID: 0}
   - Language: Portuguese
-    Text: "Use o refor\xE7o para embaralhar todas as caixas de formigas!"
+    Text: Use o booster para embaralhar todos os baldes!
     Object: {fileID: 0}
   - Language: Russian
     Text: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0431\u0443\u0441\u0442\u0435\u0440,
       \u0447\u0442\u043E\u0431\u044B \u043F\u0435\u0440\u0435\u0442\u0430\u0441\u043E\u0432\u0430\u0442\u044C
-      \u0432\u0441\u0435 \u044F\u0449\u0438\u043A\u0438 \u0441 \u043C\u0443\u0440\u0430\u0432\u044C\u044F\u043C\u0438!"
+      \u0432\u0441\u0435 \u0432\u0435\u0434\u0440\u0430!"
     Object: {fileID: 0}
   - Language: Spanish
-    Text: "\xA1Usa el refuerzo para barajar todas las cajas de hormigas!"
+    Text: "\xA1Usa el refuerzo para barajar todos los cubos!"
     Object: {fileID: 0}
 --- !u!1 &3047062466952997462
 GameObject:
@@ -9780,6 +9854,11 @@ Transform:
   - {fileID: 3394153984473453341}
   - {fileID: 4470867910170821905}
   - {fileID: 3916203326727640320}
+  - {fileID: 8132281232832459043}
+  - {fileID: 6582874903983383409}
+  - {fileID: 1637084031230060450}
+  - {fileID: 1257002241101718844}
+  - {fileID: 8627940084077650031}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -12447,6 +12526,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Consejos
     Object: {fileID: 0}
+--- !u!1 &6653591384781163110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8132281232832459043}
+  - component: {fileID: 4487102006696048148}
+  m_Layer: 0
+  m_Name: Choose Any Bucket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8132281232832459043
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6653591384781163110}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4487102006696048148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6653591384781163110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Choose Any Bucket
+    Object: {fileID: 0}
+  - Language: French
+    Text: Choisissez n'importe quel seau
+    Object: {fileID: 0}
+  - Language: German
+    Text: "W\xE4hlen Sie einen beliebigen Eimer"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Scegli qualsiasi secchio
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u4EFB\u610F\u306E\u30D0\u30B1\u30C3\u30C8\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBC84\uD0B7\uC744 \uC120\uD0DD\uD558\uC138\uC694"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Escolha qualquer balde
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043B\u044E\u0431\u043E\u0435
+      \u0432\u0435\u0434\u0440\u043E"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Elija cualquier cubo
+    Object: {fileID: 0}
 --- !u!1 &6715828839335917079
 GameObject:
   m_ObjectHideFlags: 0
@@ -12569,35 +12722,34 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: Select a color to clear all matching tiles.
+    Text: Select a color to clear all matching chickens.
     Object: {fileID: 0}
   - Language: French
-    Text: "S\xE9lectionnez une couleur pour effacer toutes les tuiles correspondantes."
+    Text: "S\xE9lectionnez une couleur pour effacer tous les poulets correspondants."
     Object: {fileID: 0}
   - Language: German
-    Text: "W\xE4hlen Sie eine Farbe aus, um alle passenden Kacheln zu l\xF6schen."
+    Text: "W\xE4hlen Sie eine Farbe aus, um alle passenden H\xFChner zu entfernen."
     Object: {fileID: 0}
   - Language: Italian
-    Text: Seleziona un colore per eliminare tutte le tessere corrispondenti.
+    Text: Seleziona un colore per eliminare tutti i polli corrispondenti.
     Object: {fileID: 0}
   - Language: Japanese
-    Text: "\u4E00\u81F4\u3059\u308B\u30BF\u30A4\u30EB\u3092\u3059\u3079\u3066\u30AF\u30EA\u30A2\u3059\u308B\u306B\u306F\u3001\u8272\u3092\u9078\u629E\u3057\u307E\u3059\u3002"
+    Text: "\u8272\u3092\u9078\u629E\u3057\u3066\u3001\u4E00\u81F4\u3059\u308B\u30CB\u30EF\u30C8\u30EA\u3092\u3059\u3079\u3066\u30AF\u30EA\u30A2\u3057\u307E\u3059\u3002"
     Object: {fileID: 0}
   - Language: Korean
-    Text: "\uC77C\uCE58\uD558\uB294 \uD0C0\uC77C\uC744 \uBAA8\uB450 \uC9C0\uC6B0\uB824\uBA74
-      \uC0C9\uC0C1\uC744 \uC120\uD0DD\uD558\uC138\uC694."
+    Text: "\uC77C\uCE58\uD558\uB294 \uBAA8\uB4E0 \uB2ED\uC744 \uC9C0\uC6B0\uB824\uBA74
+      \uC0C9\uC0C1\uC744 \uC120\uD0DD\uD558\uC2ED\uC2DC\uC624."
     Object: {fileID: 0}
   - Language: Portuguese
-    Text: "Selecione uma cor para limpar todas as pe\xE7as correspondentes."
+    Text: Selecione uma cor para eliminar todas as galinhas correspondentes.
     Object: {fileID: 0}
   - Language: Russian
     Text: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442,
-      \u0447\u0442\u043E\u0431\u044B \u043E\u0447\u0438\u0441\u0442\u0438\u0442\u044C
-      \u0432\u0441\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u044E\u0449\u0438\u0435
-      \u043F\u043B\u0438\u0442\u043A\u0438."
+      \u0447\u0442\u043E\u0431\u044B \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435\u0445
+      \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0446\u044B\u043F\u043B\u044F\u0442."
     Object: {fileID: 0}
   - Language: Spanish
-    Text: Seleccione un color para borrar todos los mosaicos coincidentes.
+    Text: Seleccione un color para eliminar todos los pollos que coincidan.
     Object: {fileID: 0}
 --- !u!1 &6730577493203586332
 GameObject:
@@ -14948,33 +15100,32 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: Pick any Ant Box in the queue!
+    Text: Pick any Bucket in the queue!
     Object: {fileID: 0}
   - Language: French
-    Text: "Choisissez n'importe quelle bo\xEEte \xE0 fourmis dans la file d'attente\_!"
+    Text: "Choisissez n'importe quel bucket dans la file d'attente\_!"
     Object: {fileID: 0}
   - Language: German
-    Text: "W\xE4hlen Sie eine beliebige Ameisenbox in der Warteschlange aus!"
+    Text: "W\xE4hlen Sie einen beliebigen Eimer in der Warteschlange!"
     Object: {fileID: 0}
   - Language: Italian
-    Text: Scegli qualsiasi formicaio in coda!
+    Text: Scegli qualsiasi secchio in coda!
     Object: {fileID: 0}
   - Language: Japanese
-    Text: "\u30AD\u30E5\u30FC\u5185\u306E\u4EFB\u610F\u306E Ant Box \u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
+    Text: "\u30AD\u30E5\u30FC\u5185\u306E\u30D0\u30B1\u30C3\u30C8\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
     Object: {fileID: 0}
   - Language: Korean
-    Text: "\uB300\uAE30\uC5F4\uC5D0\uC11C \uAC1C\uBBF8 \uC0C1\uC790\uB97C \uC120\uD0DD\uD558\uC138\uC694!"
+    Text: "\uB300\uAE30\uC5F4\uC5D0\uC11C \uBC84\uD0B7\uC744 \uC120\uD0DD\uD558\uC138\uC694!"
     Object: {fileID: 0}
   - Language: Portuguese
-    Text: Escolha qualquer Ant Box na fila!
+    Text: Escolha qualquer balde na fila!
     Object: {fileID: 0}
   - Language: Russian
-    Text: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043B\u044E\u0431\u043E\u0439
-      \u044F\u0449\u0438\u043A \u0441 \u043C\u0443\u0440\u0430\u0432\u044C\u044F\u043C\u0438
-      \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438!"
+    Text: "\u0412\u044B\u0431\u0438\u0440\u0430\u0439\u0442\u0435 \u043B\u044E\u0431\u043E\u0435
+      \u0432\u0435\u0434\u0440\u043E \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438!"
     Object: {fileID: 0}
   - Language: Spanish
-    Text: "\xA1Elige cualquier Ant Box de la cola!"
+    Text: "\xA1Elige cualquier cubo de la cola!"
     Object: {fileID: 0}
 --- !u!1 &7803656482894124069
 GameObject:
@@ -15605,6 +15756,80 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Proceder de todos modos
+    Object: {fileID: 0}
+--- !u!1 &8191151649437725433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6582874903983383409}
+  - component: {fileID: 7777920028867288691}
+  m_Layer: 0
+  m_Name: Pick any Bucket in queue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6582874903983383409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8191151649437725433}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7777920028867288691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8191151649437725433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Pick any Bucket in queue!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Choisissez n'importe quel bucket dans la file d'attente\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "W\xE4hlen Sie einen beliebigen Eimer in der Warteschlange!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Scegli qualsiasi secchio in coda!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AD\u30E5\u30FC\u5185\u306E\u30D0\u30B1\u30C3\u30C8\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044!"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB300\uAE30\uC5F4\uC5D0 \uC788\uB294 \uBC84\uD0B7\uC744 \uC120\uD0DD\uD558\uC138\uC694!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Escolha qualquer balde na fila!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043B\u044E\u0431\u043E\u0435
+      \u0432\u0435\u0434\u0440\u043E \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Elige cualquier cubo en la cola!"
     Object: {fileID: 0}
 --- !u!1 &8233930287549432216
 GameObject:
@@ -16723,6 +16948,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Hogar
     Object: {fileID: 0}
+--- !u!1 &8942101422154633803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1257002241101718844}
+  - component: {fileID: 7481456891640440668}
+  m_Layer: 0
+  m_Name: Clear all Chickens of one color
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1257002241101718844
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8942101422154633803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7481456891640440668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8942101422154633803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Clear all Chickens of one color!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "\xC9liminez tous les poulets d'une m\xEAme couleur\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "L\xF6sche alle H\xFChner einer Farbe!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Elimina tutti i polli di un colore!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u540C\u3058\u8272\u306E\u30CB\u30EF\u30C8\u30EA\u3092\u3059\u3079\u3066\u30AF\u30EA\u30A2\u3057\u307E\u3057\u3087\u3046\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD55C \uAC00\uC9C0 \uC0C9\uC0C1\uC758 \uB2ED\uC744 \uBAA8\uB450 \uD074\uB9AC\uC5B4\uD558\uC138\uC694!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Elimine todas as galinhas de uma cor!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0435 \u0432\u0441\u0435\u0445
+      \u0446\u044B\u043F\u043B\u044F\u0442 \u043E\u0434\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Elimina todos los pollos de un color!"
+    Object: {fileID: 0}
 --- !u!1 &8951160080346720416
 GameObject:
   m_ObjectHideFlags: 0
@@ -17538,6 +17837,83 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "\xA1El desaf\xEDo se ha completado!"
+    Object: {fileID: 0}
+--- !u!1 &9186944646222732219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8627940084077650031}
+  - component: {fileID: 2707786530775498506}
+  m_Layer: 0
+  m_Name: Clear up to 50% of the grain trough, then continue playing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8627940084077650031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9186944646222732219}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2707786530775498506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9186944646222732219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Clear up to 50% of the grain trough, then continue playing.
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Videz jusqu'\xE0 50\_% du bac \xE0 grains, puis continuez \xE0 jouer."
+    Object: {fileID: 0}
+  - Language: German
+    Text: "R\xE4umen Sie bis zu 50 % des Getreidetrogs frei und spielen Sie dann
+      weiter."
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pulisci fino al 50% della vasca del grano, quindi continua a giocare.
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u7A40\u7269\u306E\u8C37\u306E\u6700\u5927 50% \u3092\u30AF\u30EA\u30A2\u3057\u3066\u304B\u3089\u3001\u30D7\u30EC\u30A4\u3092\u7D9A\u3051\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uACE1\uBB3C \uC5EC\uBB3C\uD1B5\uC744 \uCD5C\uB300 50%\uAE4C\uC9C0 \uBE44\uC6B4
+      \uB2E4\uC74C \uACC4\uC18D\uD574\uC11C \uD50C\uB808\uC774\uD558\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Limpe at\xE9 50% da calha de gr\xE3os e continue jogando."
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0435 \u0434\u043E 50% \u0437\u0435\u0440\u043D\u043E\u0432\u043E\u0433\u043E
+      \u0431\u0443\u043D\u043A\u0435\u0440\u0430, \u0430 \u0437\u0430\u0442\u0435\u043C
+      \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0439\u0442\u0435 \u0438\u0433\u0440\u0443."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Limpia hasta el 50% del canal de grano y luego contin\xFAa jugando."
     Object: {fileID: 0}
 --- !u!1001 &607108650494495274
 PrefabInstance:
