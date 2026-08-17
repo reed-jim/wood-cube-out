@@ -258,11 +258,12 @@ public static class GameConstants
     public static string tile = "tile";
     #endregion
 
-    #region Chicken Feed
+    #region Chicken Jam
     public static string chicken = "chicken";
     public static string waitingChickenSlot = "waitingChickenSlot";
     public static string grainPile = "grainPile";
     public static string smokeFx = "smokeFx";
+    public static string chickenCompleteFx = "chickenCompleteFx";
     public static int grainMultiplier = 3;
     public static string wall = "wall";
     public static Vector2 standardScreenWorldSize = new Vector2(24.75f, 44f); // 1080x1920

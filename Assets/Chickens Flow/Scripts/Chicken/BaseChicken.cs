@@ -52,6 +52,7 @@ public class BaseChicken : MonoBehaviour
     public float eatingRange;
     public float flyOutDuration;
     public float smokeOffsetY;
+    public Vector3 completeFxOffset;
 
     [Header("State")]
     public bool isMoving;
@@ -242,13 +243,18 @@ public class BaseChicken : MonoBehaviour
 
                 PlayFlyAnim(onComplete: () =>
                 {
-                    smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
+                    // smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
 
-                    smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
+                    // smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
-                    smokeAnimEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
+                    // smokeAnimEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 
-                    smokeAnimEntry.Complete += OnSmokeAnimComplete;
+                    // smokeAnimEntry.Complete += OnSmokeAnimComplete;
+
+                    ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.chickenCompleteFx);
+
+                    fx.transform.position = transform.position + completeFxOffset;
+                    fx.Play();
 
                     SoundManager.Instance.PlayChickenComplete();
 
@@ -257,6 +263,8 @@ public class BaseChicken : MonoBehaviour
                     onChickenFlyOut?.Invoke();
 
                     ChickenManager.Ins.MoveChickensDown();
+                    ChickenManager.Ins.CheckWinLevel();
+                    WashingMachineManager.Ins.CheckLoseLevel();
                 });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
@@ -489,15 +497,30 @@ public class BaseChicken : MonoBehaviour
 
         PlayFlyAnim(onComplete: () =>
         {
-            smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
+            // smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
 
-            smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
+            // smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
 
-            smokeAnimForceFlyOutEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
+            // smokeAnimForceFlyOutEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
 
-            smokeAnimForceFlyOutEntry.Complete += OnSmokeAnimCompleteForceFlyOut;
+            // smokeAnimForceFlyOutEntry.Complete += OnSmokeAnimCompleteForceFlyOut;
+
+            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.chickenCompleteFx);
+
+            fx.transform.position = transform.position + completeFxOffset;
+            fx.Play();
+
+            SoundManager.Instance.PlayChickenComplete();
 
             gameObject.SetActive(false);
+
+            ChickenManager.Ins.CheckWinLevel();
+            WashingMachineManager.Ins.CheckLoseLevel();
+
+            if (isLastChickenForcedFlyOut)
+            {
+                ChickenManager.Ins.MoveChickensDown();
+            }
         });
 
         foreach (var waitingChickenSlot in waitingChickenSlots)
