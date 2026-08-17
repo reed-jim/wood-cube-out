@@ -1,7 +1,8 @@
 #if UNITY_EDITOR
 using UnityEditor;
-
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneHelper : MonoBehaviour
 {
@@ -61,6 +62,8 @@ public class SceneHelperEditor : Editor
         }
 
         sceneHelper.isHidingUI = false;
+
+        SetSceneDirty();
     }
 
     public void HideUI(SceneHelper sceneHelper)
@@ -71,6 +74,8 @@ public class SceneHelperEditor : Editor
         }
 
         sceneHelper.isHidingUI = true;
+
+        SetSceneDirty();
     }
 
     public void ShowBar(SceneHelper sceneHelper, bool isShow)
@@ -78,6 +83,18 @@ public class SceneHelperEditor : Editor
         sceneHelper.bar.SetActive(isShow);
 
         sceneHelper.isHidingBar = !isShow;
+
+        SetSceneDirty();
+    }
+
+    private void SetSceneDirty()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+#endif
     }
 }
 #endif

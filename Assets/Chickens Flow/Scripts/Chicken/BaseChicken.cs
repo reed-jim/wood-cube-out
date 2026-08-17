@@ -8,6 +8,7 @@ using Saferio.Util.SaferioTween;
 using Spine;
 using Spine.Unity;
 using TMPro;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 using static Spine.AnimationState;
@@ -60,6 +61,7 @@ public class BaseChicken : MonoBehaviour
     public bool isForceFlyOut;
     public bool isGhost;
     public string currentAnimation;
+    public int currentIdleIndex;
 
     public float prevEatingProgress;
     public float currentEatingProgress;
@@ -73,6 +75,7 @@ public class BaseChicken : MonoBehaviour
     private Spine.TrackEntry _waitingEntry;
     private Spine.TrackEntry smokeAnimEntry;
     private Spine.TrackEntry smokeAnimForceFlyOutEntry;
+    private Spine.TrackEntry playIdleSequentiallyTrackEntry;
     private string _pendingAnimation;
     private SkeletonAnimation smokeAnimation;
     private bool isLastChickenForcedFlyOut;
@@ -101,6 +104,8 @@ public class BaseChicken : MonoBehaviour
 
         // flyAnimDuration = skeletonAnimation.Skeleton.Data.FindAnimation(flyAnimations[0]).Duration;
         flyAnimDuration = 0.533f;
+
+        currentIdleIndex = UnityEngine.Random.Range(0, idleAnimations.Length);
     }
 
     void OnDestroy()
@@ -599,17 +604,54 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayIdleAnim()
     {
-        PlayAnim(idleAnimation);
+        PlayIdleSequence();
+        // PlayAnim(idleAnimation);
     }
 
     public void ForcePlayIdleAnim()
     {
-        ForcePlayAnim(idleAnimation);
+        PlayIdleSequence();
+        // ForcePlayAnim(idleAnimation);
     }
 
     public void ForcePlayRandomIdleAnim()
     {
-        ForcePlayAnim(idleAnimations[UnityEngine.Random.Range(0, idleAnimations.Length)]);
+        PlayIdleSequence();
+        // ForcePlayAnim(idleAnimations[UnityEngine.Random.Range(0, idleAnimations.Length)]);
+    }
+
+    public void PlayIdleSequence()
+    {
+        Spine.AnimationState state = skeletonAnimation.AnimationState;
+
+        string nextIdleAnim = idleAnimations[currentIdleIndex];
+
+        playIdleSequentiallyTrackEntry = state.SetAnimation(0, nextIdleAnim, false);
+
+        currentIdleIndex++;
+
+        if (currentIdleIndex >= idleAnimations.Length)
+        {
+            currentIdleIndex = 0;
+        }
+
+        if (playIdleSequentiallyTrackEntry != null)
+        {
+            playIdleSequentiallyTrackEntry.Complete -= OnIdleComplete;
+        }
+
+        playIdleSequentiallyTrackEntry.Complete += OnIdleComplete;
+
+        currentAnimation = nextIdleAnim;
+    }
+
+    private void OnIdleComplete(TrackEntry entry)
+    {
+        entry.Complete -= OnIdleComplete;
+
+        playIdleSequentiallyTrackEntry = null;
+
+        PlayIdleSequence();
     }
 
     public void PlayAnim(string anim)
