@@ -1154,8 +1154,11 @@ namespace Falcon.Modules.Core.ThirdParty.Mediation.Runtime
                 { "ad_format", adFormat ?? "" },
                 { "placement", placement ?? "" }
             };
-            AppsFlyerAdRevenue.logAdRevenue(adSource ?? "admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-                revenue, currencyCode ?? "USD", dic);
+            // AppsFlyerAdRevenue.logAdRevenue(adSource ?? "admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //     revenue, currencyCode ?? "USD", dic);
+            var revenueData = new AFAdRevenueData(adSource , MediationNetwork.ApplovinMax,
+                "USD", revenue);
+            AppsFlyer.logAdRevenue(revenueData, additionalParams);
         }
 
         private void LogAll(string adFormat, string adSource, string adUnitId, long valueMicros, string currencyCode,
