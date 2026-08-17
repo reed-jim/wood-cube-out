@@ -383,24 +383,24 @@ public class ChickenManager : Singleton<ChickenManager>
                 continue;
             }
 
-            GiantChickenItemConfig giant =
-                GetGiantChickenAt(levelItem, tileColumn, tileRow);
+            // GiantChickenItemConfig giant =
+            //     GetGiantChickenAt(levelItem, tileColumn, tileRow);
 
-            if (giant != null)
-            {
-                index++;
+            // if (giant != null)
+            // {
+            //     index++;
 
-                // Only spawn once at the origin tile.
-                if (tileColumn != giant.coordinate.x ||
-                    tileRow != giant.coordinate.y)
-                {
-                    continue;
-                }
+            //     // Only spawn once at the origin tile.
+            //     if (tileColumn != giant.coordinate.x ||
+            //         tileRow != giant.coordinate.y)
+            //     {
+            //         continue;
+            //     }
 
-                SpawnGiantChicken(levelItem, giant);
+            //     SpawnGiantChicken(levelItem, giant);
 
-                continue;
-            }
+            //     continue;
+            // }
 
             BaseChicken chicken = ObjectPoolingEverything.GetFromPool<BaseChicken>(GameConstants.chicken);
 
