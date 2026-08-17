@@ -1136,14 +1136,19 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         if (destinations.Count == 0)
         {
-            WashingMachineManager.Ins.grainPool.CheckFeedChickens();
             return;
         }
 
         int remaining = destinations.Count;
 
+        int index = 0;
+
         foreach (var pair in destinations)
         {
+            bool isLast = index == destinations.Count - 1;
+
+            index++;
+
             BaseChicken chicken = pair.Key;
 
             ChickenMoveData chickenMoveData = pair.Value;
@@ -1194,7 +1199,10 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 chicken.isMoving = false;
 
-                WashingMachineManager.Ins.grainPool.CheckFeedChickens();
+                if (isLast)
+                {
+                    WashingMachineManager.Ins.grainPool.CheckFeedChickens();
+                }
 
                 GamePersistentVariable.numMovingChicken--;
             });
