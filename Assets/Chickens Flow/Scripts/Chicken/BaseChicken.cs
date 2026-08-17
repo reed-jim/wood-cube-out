@@ -8,7 +8,6 @@ using Saferio.Util.SaferioTween;
 using Spine;
 using Spine.Unity;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 using static Spine.AnimationState;
@@ -314,7 +313,7 @@ public class BaseChicken : MonoBehaviour
 
     private IEnumerator ChickenEatingGrains(GrainPile grainPile, int numGrain, bool isLast, Action onCompleteAction)
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 5);
         WaitForSeconds delayPerGrainWait = new WaitForSeconds(grainPile.delayPerGrain);
 
         float prevChickenEatingProgress = prevEatingProgress;
@@ -403,6 +402,7 @@ public class BaseChicken : MonoBehaviour
             else
             {
                 PlayIdleAnim();
+                // PlayAnimWhenFinished(idleAnimations[UnityEngine.Random.Range(0, idleAnimations.Length)]);
 
                 waitingForGrainCount++;
 
@@ -731,7 +731,7 @@ public class BaseChicken : MonoBehaviour
         CancelPendingAnimation();
 
         _waitingEntry = current;
-        state.Complete += OnAnimationComplete;
+        _waitingEntry.Complete += OnAnimationComplete;
     }
 
     private void OnAnimationComplete(Spine.TrackEntry entry)
@@ -741,7 +741,7 @@ public class BaseChicken : MonoBehaviour
 
         var state = skeletonAnimation.AnimationState;
 
-        state.Complete -= OnAnimationComplete;
+        entry.Complete -= OnAnimationComplete;
         _waitingEntry = null;
 
         if (string.IsNullOrEmpty(_pendingAnimation))

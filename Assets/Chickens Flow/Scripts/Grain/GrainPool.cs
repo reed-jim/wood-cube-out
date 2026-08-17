@@ -139,7 +139,7 @@ public class GrainPool : Singleton<GrainPool>
     public void CheckFeedChickens()
     {
         List<BaseChicken> validChickensToFeed = ChickenManager.Ins.chickens
-            .Where(chicken => !chicken.isDone && !chicken.isStuck)
+            .Where(chicken => !chicken.isDone && !chicken.isStuck && !chicken.isMoving)
             .ToList();
 
         Dictionary<Color, List<BaseChicken>> chickensByFaction = validChickensToFeed

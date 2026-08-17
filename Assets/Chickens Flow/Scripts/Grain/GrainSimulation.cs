@@ -388,6 +388,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float maxFallDelay = 0.8f;
     public float fallTimePerGrain = 0.01f;
     public float firstGrainHitGroundTime = 0.1f;
+    public float completeTime = 1f;
     [SerializeField]
     private AnimationCurve pourDelayCurve = new AnimationCurve(
         new Keyframe(0.00f, 0.00f),
@@ -952,12 +953,12 @@ public class GrainSimulation : Singleton<GrainSimulation>
             onFirstGrainHitGround?.Invoke();
         }));
 
-        TweenManager.Ins.AddTween(Tween.Delay(0.8f * totalSpawn * fallTimePerGrain).OnComplete(() =>
+        TweenManager.Ins.AddTween(Tween.Delay(0.8f * completeTime).OnComplete(() =>
         {
             onAllGrainsPoured?.Invoke();
         }));
 
-        TweenManager.Ins.AddTween(Tween.Delay(totalSpawn * fallTimePerGrain).OnComplete(() =>
+        TweenManager.Ins.AddTween(Tween.Delay(completeTime).OnComplete(() =>
         {
             onComplete?.Invoke();
         }));

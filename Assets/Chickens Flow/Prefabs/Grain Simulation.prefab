@@ -689,31 +689,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d331f6b234055847a60cdd94ce570ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrainSimulation
-  center: {x: 0, y: 0}
-  innerHalfLength: 2
-  outerHalfLength: 2
-  innerRadius: 1.5
-  outerRadius: 3
-  gapHalfWidth: 0.3
-  particleRadius: 0.09
-  gravity: 9
-  damping: 0.995
+  center: {x: 0.1, y: -6.45}
+  innerHalfLength: 9.3
+  outerHalfLength: 9.6
+  innerRadius: 0.86
+  outerRadius: 1.925
+  gapHalfWidth: 12
+  particleRadius: 0.095
+  gravity: 20
+  damping: 0.93
   minMass: 0.7
   maxMass: 1.4
   maxStepPerFrame: 0.5
   collisionIterations: 6
   maxPbdCorrection: 0.15
-  collisionAbsorption: 0.85
-  simulationSpeed: 1
-  outsideGravity: 9
-  outsideDamping: 0.999
-  outsideCollisionAbsorption: 0.85
-  outsideWallFriction: 0.05
-  forceZones: []
+  collisionAbsorption: 0
+  simulationSpeed: 1.55
+  outsideGravity: 60
+  outsideDamping: 0.91
+  outsideCollisionAbsorption: 0.522
+  outsideWallFriction: 0
+  forceZones:
+  - name: 1
+    center: {x: 0, y: -4.87}
+    size: {x: 19.91, y: 2}
+    angleDegrees: 0
+    force: 40
+  - name: 2
+    center: {x: 0, y: -8.09}
+    size: {x: 19.5, y: 2}
+    angleDegrees: 180
+    force: 50
+  - name: 3
+    center: {x: -11.03, y: -6.6}
+    size: {x: 4.2, y: 2.69}
+    angleDegrees: 90
+    force: 30
+  - name: 4
+    center: {x: 9.59, y: -6.6}
+    size: {x: 6, y: 4.36}
+    angleDegrees: 270
+    force: 30
+  - name: 5
+    center: {x: -11.64, y: -6.62}
+    size: {x: 6.74, y: 2.47}
+    angleDegrees: 42
+    force: 20
+  - name: 6
+    center: {x: -10.02, y: -7.76}
+    size: {x: 6.74, y: 2.47}
+    angleDegrees: 159
+    force: 50
   walls: []
   maxFallDelay: 1
-  fallTimePerGrain: 0.003
+  fallTimePerGrain: 0.002
   firstGrainHitGroundTime: 0.5
+  completeTime: 0.6
   pourDelayCurve:
     serializedVersion: 2
     m_Curve:
@@ -787,10 +818,10 @@ MonoBehaviour:
   pourDirectionSpreadDeg: 12
   quadMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   baseMaterial: {fileID: 2100000, guid: 7c77a6acaed3b80468be047b34327873, type: 2}
-  grainSize: 0.35
-  spawnCallCount: 0
-  removeCallCount: 0
-  actualRemoveCount: 0
+  grainSize: 0.3
+  spawnCallCount: 13190
+  removeCallCount: 7165
+  actualRemoveCount: 7165
 --- !u!1 &7594728918474315792
 GameObject:
   m_ObjectHideFlags: 0
