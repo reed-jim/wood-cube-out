@@ -31,6 +31,12 @@ public class GrainPool : Singleton<GrainPool>
 
     [Header("Customize")]
     public int expectedGrainToClearOnRevive;
+    public float updateProgressBarSpeedMultiplier = 3;
+    private float updateProgressBarSpeed;
+
+    [Header("Warning")]
+    [SerializeField] private Material normalTextMaterial;
+    [SerializeField] private Material warningTextMaterial;
 
     public List<GrainPile> grainPiles;
     public int maxGrainPoolSlots;
@@ -44,10 +50,17 @@ public class GrainPool : Singleton<GrainPool>
     public int maxCapacity;
     public int currentAmount;
     public float currentPercent;
+    public float displayedPercent;
 
     public bool isAnimating;
 
     private Tween percentTextTween;
+
+    #region Warning
+    private Tween warningTween;
+    private Tween warningColorTween;
+    private bool isTurningOffWarning;
+    #endregion
 
     public int AmountLeft => maxCapacity - currentAmount;
 
@@ -64,7 +77,7 @@ public class GrainPool : Singleton<GrainPool>
 
         SetupLoopPathArrows();
 
-        // StartCoroutine(MoveAlongSpline());
+        updateProgressBarSpeed = updateProgressBarSpeedMultiplier * Time.deltaTime;
     }
 
     void OnDestroy()
@@ -80,6 +93,44 @@ public class GrainPool : Singleton<GrainPool>
         SetupGrainPool();
     }
 
+    void Update()
+    {
+        displayedPercent = Mathf.Lerp(displayedPercent, currentPercent, updateProgressBarSpeed);
+
+        UpdatePercent(displayedPercent);
+
+        lazyHealthBar.SetProgressImmediately(displayedPercent);
+
+        if (displayedPercent > 1)
+        {
+            if (!warningTween.isAlive)
+            {
+                percentText.fontMaterial = warningTextMaterial;
+
+                warningTween = Tween.Scale(percentText.transform, 1.2f, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
+                warningColorTween = Tween.Color(percentText, Color.red, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
+            }
+        }
+        else
+        {
+            if (warningTween.isAlive && !isTurningOffWarning)
+            {
+                warningTween.Stop();
+                warningColorTween.Stop();
+
+                percentText.fontMaterial = normalTextMaterial;
+
+                warningTween = Tween.Scale(percentText.transform, 1f, duration: 0.8f);
+                warningColorTween = Tween.Color(percentText, Color.white, duration: 0.8f).OnComplete(() =>
+                {
+                    isTurningOffWarning = false;
+                });
+
+                isTurningOffWarning = true;
+            }
+        }
+    }
+
     public void Reset()
     {
         if (percentTextTween.isAlive)
@@ -90,9 +141,12 @@ public class GrainPool : Singleton<GrainPool>
         maxCapacity = initialMaxCapacity;
         currentAmount = 0;
         currentPercent = 0;
+        displayedPercent = currentPercent;
 
         UpdatePercent(currentPercent);
         lazyHealthBar.SetProgress(currentPercent);
+
+        percentText.fontMaterial = normalTextMaterial;
 
         grainPiles.Clear();
     }
@@ -187,23 +241,25 @@ public class GrainPool : Singleton<GrainPool>
 
         percent = Mathf.Max(percent, 0);
 
-        if (percentTextTween.isAlive)
-        {
-            percentTextTween.Stop();
-        }
+        currentPercent = percent;
 
-        percentTextTween = Tween.Custom(currentPercent, percent, duration: durationUpdateProgress, onValueChange: newVal =>
-        {
-            UpdatePercent(newVal);
+        // if (percentTextTween.isAlive)
+        // {
+        //     percentTextTween.Stop();
+        // }
 
-            currentPercent = newVal;
-        })
-        .OnComplete(() =>
-        {
+        // percentTextTween = Tween.Custom(currentPercent, percent, duration: durationUpdateProgress, onValueChange: newVal =>
+        // {
+        //     UpdatePercent(newVal);
 
-        });
+        //     currentPercent = newVal;
+        // })
+        // .OnComplete(() =>
+        // {
 
-        lazyHealthBar.SetProgress(percent, durationUpdateProgress);
+        // });
+
+        // lazyHealthBar.SetProgress(percent, durationUpdateProgress);
 
         if (number > 0)
         {

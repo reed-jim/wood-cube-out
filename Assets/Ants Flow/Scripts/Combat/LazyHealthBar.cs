@@ -65,4 +65,9 @@ public class LazyHealthBar : MonoBehaviour
             });
         }
     }
+
+    public void SetProgressImmediately(float progress)
+    {
+        fill.fillAmount = progress;
+    }
 }

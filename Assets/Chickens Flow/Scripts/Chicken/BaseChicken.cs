@@ -332,7 +332,7 @@ public class BaseChicken : MonoBehaviour
 
         ChickenManager.Ins.chickenRenderer.RemoveChickenRendering(this);
 
-        WashingMachineManager.Ins.grainPool.AddGrain(-numGrain, durationUpdateProgress: GetUpdatingProgressDuration(numGrainToEat));
+        // WashingMachineManager.Ins.grainPool.AddGrain(-numGrain, durationUpdateProgress: GetUpdatingProgressDuration(numGrainToEat));
 
         int waitingForGrainCountThreshold = 60;
         int waitingForGrainCount = 0;
@@ -389,6 +389,11 @@ public class BaseChicken : MonoBehaviour
                 float currentPercent = (float)totalGrainEaten / (numGrainPileRequired * GameConstants.grainMultiplier);
 
                 UpdateEatingProgress(currentPercent, prevChickenEatingProgress, grainPile.delayPerGrain);
+
+                if (remaingEatingGrainCount % GameConstants.grainMultiplier == 0)
+                {
+                    WashingMachineManager.Ins.grainPool.AddGrain(-1, durationUpdateProgress: GetUpdatingProgressDuration(numGrainToEat));
+                }
 
                 prevChickenEatingProgress = currentPercent;
 
