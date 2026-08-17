@@ -387,6 +387,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     [Header("Pouring Parameters")]
     public float maxFallDelay = 0.8f;
     public float fallTimePerGrain = 0.01f;
+    public float firstGrainHitGroundTime = 0.1f;
     [SerializeField]
     private AnimationCurve pourDelayCurve = new AnimationCurve(
         new Keyframe(0.00f, 0.00f),
@@ -913,7 +914,16 @@ public class GrainSimulation : Singleton<GrainSimulation>
     // API & FACTORY HANDLERS
     // ------------------------------------------------------------------------
 
-    public void SpawnGrains(List<Vector3> grainPositions, Color faction, Vector2 pourDirection = default, int fakeGrainsPerRealGrain = 0, Action onAllGrainsPoured = null, Action onComplete = null)
+    public void SpawnGrains
+    (
+        List<Vector3> grainPositions,
+        Color faction,
+        Vector2 pourDirection = default,
+        int fakeGrainsPerRealGrain = 0,
+        Action onFirstGrainHitGround = null,
+        Action onAllGrainsPoured = null,
+        Action onComplete = null
+    )
     {
         if (pourDirection == default)
         {
@@ -936,6 +946,11 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 group.Add(CreateGrain(i, grainPositions[i], totalSpawn, isFake: true, pourDirection), Matrix4x4.identity);
             }
         }
+
+        TweenManager.Ins.AddTween(Tween.Delay(firstGrainHitGroundTime).OnComplete(() =>
+        {
+            onFirstGrainHitGround?.Invoke();
+        }));
 
         TweenManager.Ins.AddTween(Tween.Delay(0.8f * totalSpawn * fallTimePerGrain).OnComplete(() =>
         {

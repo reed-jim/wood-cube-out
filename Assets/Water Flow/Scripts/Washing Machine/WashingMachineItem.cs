@@ -42,6 +42,7 @@ public class WashingMachineItem : MonoBehaviour
     public float pourRange = 6;
     public float pourOffsetY = 7;
     public Vector3 grainsOffsetWhenPouring;
+    public float durationUpdateGrainTroughProgress = 0.3f;
 
     public TMP_Text numberText;
 
@@ -274,8 +275,6 @@ public class WashingMachineItem : MonoBehaviour
 
     private void PouringOut(int grainCount, bool isBucketMoveBack, Action onCompleteAction)
     {
-        bool isRotated = false;
-
         GrainPile grainPile = ObjectPoolingEverything.GetFromPool<GrainPile>(GameConstants.grainPile);
 
         Vector3 bucketDestination;
@@ -310,41 +309,29 @@ public class WashingMachineItem : MonoBehaviour
 
             grainPile.Setup(this, grainCount);
 
-            if (!isRotated)
-            {
-                Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
+            Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
                 .OnComplete(() =>
                 {
                     Tween.Alpha(grainSprite, 0, 0.4f);
 
-                    PourGrainPile(grainPile, () =>
+                    PourGrainPile(grainPile, onFirstGrainHitGround: () =>
                     {
                         WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
-                        WashingMachineManager.Ins.grainPool.AddGrain(grainCount);
+                        WashingMachineManager.Ins.grainPool.AddGrain(grainCount, durationUpdateGrainTroughProgress);
                     });
-
-                    isRotated = true;
                 });
-            }
-            else
-            {
-                PourGrainPile(grainPile, () =>
-                {
-                    WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
-                    WashingMachineManager.Ins.grainPool.AddGrain(grainCount);
-                });
-            }
         });
 
         TweenManager.Ins.AddTween(tween);
 
         onCompleteAction?.Invoke();
 
-        void PourGrainPile(GrainPile grainPile, Action onComplete)
+        void PourGrainPile(GrainPile grainPile, Action onFirstGrainHitGround = null, Action onComplete = null)
         {
             grainPile.Pour
             (
                 transform.rotation,
+                onFirstGrainHitGround: onFirstGrainHitGround,
                 onAllGrainsPoured: () =>
                 {
                     if (!isBucketMoveBack)
@@ -360,10 +347,7 @@ public class WashingMachineItem : MonoBehaviour
                         });
                     }
                 },
-                onCompleteAction: () =>
-                {
-                    onComplete?.Invoke();
-                }
+                onCompleteAction: onComplete
             );
         }
     }

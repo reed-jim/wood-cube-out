@@ -92,7 +92,7 @@ public class GrainPile : MonoBehaviour
         this.faction = faction;
     }
 
-    public void Pour(Quaternion rotation, Action onAllGrainsPoured = null, Action onCompleteAction = null)
+    public void Pour(Quaternion rotation, Action onFirstGrainHitGround = null, Action onAllGrainsPoured = null, Action onCompleteAction = null)
     {
         Vector3 position;
 
@@ -127,7 +127,8 @@ public class GrainPile : MonoBehaviour
         Vector3 pourDirection3D = rotation * Vector3.down;
         Vector2 pourDirection = new Vector2(pourDirection3D.x, pourDirection3D.y);
 
-        GrainSimulation.Ins.SpawnGrains(grainPositions, faction, pourDirection, onAllGrainsPoured: onAllGrainsPoured, onComplete: () =>
+        GrainSimulation.Ins.SpawnGrains(
+            grainPositions, faction, pourDirection, onFirstGrainHitGround: onFirstGrainHitGround, onAllGrainsPoured: onAllGrainsPoured, onComplete: () =>
         {
             ChickenManager.Ins.FeedTheChicken(this);
 

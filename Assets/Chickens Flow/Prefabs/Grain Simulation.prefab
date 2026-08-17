@@ -689,8 +689,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d331f6b234055847a60cdd94ce570ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrainSimulation
-  gravityRange: {x: 40, y: 60}
-  fallImpactTimerMaxCount: 300
+  center: {x: 0, y: 0}
+  innerHalfLength: 2
+  outerHalfLength: 2
+  innerRadius: 1.5
+  outerRadius: 3
+  gapHalfWidth: 0.3
+  particleRadius: 0.09
+  gravity: 9
+  damping: 0.995
+  minMass: 0.7
+  maxMass: 1.4
+  maxStepPerFrame: 0.5
+  collisionIterations: 6
+  maxPbdCorrection: 0.15
+  collisionAbsorption: 0.85
+  simulationSpeed: 1
+  outsideGravity: 9
+  outsideDamping: 0.999
+  outsideCollisionAbsorption: 0.85
+  outsideWallFriction: 0.05
+  forceZones: []
+  walls: []
+  maxFallDelay: 1
+  fallTimePerGrain: 0.0035
+  firstGrainHitGroundTime: 0.5
   pourDelayCurve:
     serializedVersion: 2
     m_Curve:
@@ -760,57 +783,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxSpeed: 8
-  grainSpacing: 0.33
-  collisionForce: 1
-  collisionCellSize: 0.2
-  conveyorForceRange: {x: 150, y: 300}
-  edgeForce: 150
-  airDrag: 0
-  conveyorWidth: 1
-  impactToPathVelocityRange: {x: -0.2, y: 0.3}
-  fallTimePerGrain: 0.0035
-  percentNumGrainOnPathForChickenToEat: 0.6
-  bounceRestitutionRange: {x: 0.25, y: 0.35}
-  bounceFrictionRange: {x: 0.65, y: 0.8}
-  bounceCountRange: {x: 1, y: 1}
-  randomBounceSideForce: 30
-  maxFallDelay: 1
-  laneWidth: 2.6
+  pourInitialSpeed: 2.5
+  pourDirectionSpreadDeg: 12
   quadMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   baseMaterial: {fileID: 2100000, guid: 7c77a6acaed3b80468be047b34327873, type: 2}
   grainSize: 0.35
-  pathPoints:
-  - {fileID: 1163712795221317563}
-  - {fileID: 8432170042097920136}
-  - {fileID: 3709442475791786082}
-  - {fileID: 3575879973305318863}
-  - {fileID: 3471870965835178602}
-  - {fileID: 7414736937626751835}
-  - {fileID: 9110204554495769537}
-  - {fileID: 5880468374006812031}
-  - {fileID: 2892036025541167618}
-  - {fileID: 5885196095823030574}
-  - {fileID: 5161843785727526301}
-  - {fileID: 6789648656755017493}
-  - {fileID: 1357167677322120790}
-  - {fileID: 5381089241665076686}
-  - {fileID: 533534666045097578}
-  - {fileID: 5418589388773049648}
-  - {fileID: 295003050481303047}
-  - {fileID: 7076364388819495576}
-  - {fileID: 6262983330155650273}
-  - {fileID: 5722524364853898909}
-  - {fileID: 1575597417465967691}
-  - {fileID: 6592925034886751782}
-  - {fileID: 3532353191172980079}
-  - {fileID: 447443981148729275}
-  capsuleRadius: 1.45
-  capsuleStraightLength: 19.8
-  capsuleResolution: 12
-  lookupCellSize: 0.05
-  sampledPositions: []
-  sampledTangents: []
   spawnCallCount: 0
   removeCallCount: 0
   actualRemoveCount: 0
