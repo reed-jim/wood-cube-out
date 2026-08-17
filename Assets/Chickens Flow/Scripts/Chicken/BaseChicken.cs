@@ -359,7 +359,7 @@ public class BaseChicken : MonoBehaviour
                 }
                 else
                 {
-                    if (remaingEatingGrainCount % 5 == 0)
+                    if (remaingEatingGrainCount % 10 == 0)
                     {
                         if (remaingEatingGrainCount == 0)
                         {

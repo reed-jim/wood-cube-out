@@ -281,6 +281,9 @@ namespace AntsFlow
                 RefreshSlots(levelItem);
             }
 
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Add Rows / Columns", EditorStyles.boldLabel);
+
             if (GUILayout.Button("AddBottomRow"))
             {
                 AddBottomRow(levelItem, levelItem.numColumn, levelItem.numRow);
@@ -300,6 +303,34 @@ namespace AntsFlow
             {
                 AddRightColumn(levelItem, levelItem.numColumn, levelItem.numRow);
             }
+
+            #region Remove
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Remove Rows / Columns", EditorStyles.boldLabel);
+
+            if (GUILayout.Button("RemoveBottomRow"))
+            {
+                RemoveBottomRow(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+
+            if (GUILayout.Button("RemoveTopRow"))
+            {
+                RemoveTopRow(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+
+            if (GUILayout.Button("RemoveLeftColumn"))
+            {
+                RemoveLeftColumn(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+
+            if (GUILayout.Button("RemoveRightColumn"))
+            {
+                RemoveRightColumn(levelItem, levelItem.numColumn, levelItem.numRow);
+            }
+            #endregion
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("General", EditorStyles.boldLabel);
 
             if (GUILayout.Button("GetPoolFaction"))
             {
@@ -1018,6 +1049,97 @@ namespace AntsFlow
             }
 
             levelItem.numColumn++;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void RemoveTopRow(LevelItem levelItem, int columns, int rows)
+        {
+            if (rows <= 1)
+                return;
+
+            // Remove the last row
+            int startIndex = (rows - 1) * columns;
+
+            levelItem.chickenLevelTiles.RemoveRange(startIndex, columns);
+
+            levelItem.numRow--;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void RemoveBottomRow(LevelItem levelItem, int columns, int rows)
+        {
+            if (rows <= 1)
+                return;
+
+            // Remove the first row
+            levelItem.chickenLevelTiles.RemoveRange(0, columns);
+
+            // Shift all remaining tiles down by 1
+            for (int i = 0; i < levelItem.chickenLevelTiles.Count; i++)
+            {
+                Vector3 pos = levelItem.chickenLevelTiles[i].position;
+                pos.y -= 1;
+
+                levelItem.chickenLevelTiles[i].position = pos;
+            }
+
+            levelItem.numRow--;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void RemoveLeftColumn(LevelItem levelItem, int columns, int rows)
+        {
+            if (columns <= 1)
+                return;
+
+            var oldTiles = levelItem.chickenLevelTiles;
+            var newTiles = new List<AntLevelDataItem>((columns - 1) * rows);
+
+            for (int row = 0; row < rows; row++)
+            {
+                // Skip/remove the left-most tile
+                for (int col = 1; col < columns; col++)
+                {
+                    AntLevelDataItem tile = oldTiles[row * columns + col];
+
+                    // Shift remaining tiles left
+                    Vector3 pos = tile.position;
+                    pos.x -= 1;
+
+                    tile.position = pos;
+
+                    newTiles.Add(tile);
+                }
+            }
+
+            levelItem.chickenLevelTiles = newTiles;
+            levelItem.numColumn--;
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        public void RemoveRightColumn(LevelItem levelItem, int columns, int rows)
+        {
+            if (columns <= 1)
+                return;
+
+            var oldTiles = levelItem.chickenLevelTiles;
+            var newTiles = new List<AntLevelDataItem>((columns - 1) * rows);
+
+            for (int row = 0; row < rows; row++)
+            {
+                // Keep everything except the right-most tile
+                for (int col = 0; col < columns - 1; col++)
+                {
+                    newTiles.Add(oldTiles[row * columns + col]);
+                }
+            }
+
+            levelItem.chickenLevelTiles = newTiles;
+            levelItem.numColumn--;
 
             EditorUtility.SetDirty(levelItem);
         }
