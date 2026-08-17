@@ -766,6 +766,8 @@ public class BaseChicken : MonoBehaviour
     public void PlayFlyAnim(int flyAnimationIndex = 1)
     {
         PlayAnim(flyAnimations[flyAnimationIndex]);
+
+        SoundManager.Instance.PlayChickenFly();
     }
 
     public void PlayFlyAnim(Action onComplete)
@@ -791,6 +793,8 @@ public class BaseChicken : MonoBehaviour
         // }
 
         currentAnimation = flyAnimation;
+
+        SoundManager.Instance.PlayChickenFly();
     }
 
     public static void PlayForCycles

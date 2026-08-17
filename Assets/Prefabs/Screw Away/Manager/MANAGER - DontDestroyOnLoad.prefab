@@ -46,7 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 8517707550276581621}
+  grainInTroughSound: {fileID: 0}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+  grainInTroughSoundVolume: 0.3
 --- !u!1 &91373835428622801
 GameObject:
   m_ObjectHideFlags: 0
@@ -4572,14 +4574,16 @@ MonoBehaviour:
   antPopSoundPrefab: {fileID: 7606835583939712495, guid: 53e9ddc1fc22ab542af2c2483bec86d5, type: 3}
   boxTapSoundPrefab: {fileID: 7606835583939712495, guid: 353cf5c80eeff1a4b93b59d3c60261dd, type: 3}
   cubeEatSoundPrefab: {fileID: 7606835583939712495, guid: 11e9ac52287778445a73c1dc67b6aef8, type: 3}
-  cubeLandSoundPrefab: {fileID: 7606835583939712495, guid: ee2521679b931074e9f274a90155e5bc, type: 3}
+  cubeLandSoundPrefab: {fileID: 7606835583939712495, guid: db72ec1ab15f17546bf172e981a066d5, type: 3}
   slotDoneSoundPrefab: {fileID: 7606835583939712495, guid: cbe01e5737217e04a8d7fc6c17791bf2, type: 3}
   tileHitGroundSoundPrefab: {fileID: 7606835583939712495, guid: 7bbf6876240888b40967bc06393f5fb7, type: 3}
   startFreezeSoundPrefab: {fileID: 7606835583939712495, guid: db5b0ffd200286f46a26df36cc43d6a3, type: 3}
   iceBreakSoundPrefab: {fileID: 7606835583939712495, guid: 6b6fb74965827734da56b2c47b379873, type: 3}
   boosterAppearSoundPrefab: {fileID: 7606835583939712495, guid: 33a9f735f0f6ee94e9007ec65df7319d, type: 3}
-  grainHitSoundPrefab: {fileID: 7606835583939712495, guid: 7bbf6876240888b40967bc06393f5fb7, type: 3}
-  chickenCompleteSoundPrefab: {fileID: 7606835583939712495, guid: ee2521679b931074e9f274a90155e5bc, type: 3}
+  grainHitSoundPrefab: {fileID: 7606835583939712495, guid: 8220cdcb684541347a61d12989ce79d1, type: 3}
+  grainInTroughSoundPrefab: {fileID: 7606835583939712495, guid: 6774d6ac38d4a034981cce642bbf4f55, type: 3}
+  chickenFlySoundPrefab: {fileID: 7606835583939712495, guid: 1a69252477934d5498787e2af3b6864d, type: 3}
+  chickenCompleteSoundPrefab: {fileID: 7606835583939712495, guid: 9c2edf416aa2b5548b76a3f51f2755c3, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
@@ -16093,7 +16097,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 80489c0c01d62a04291602604ba15716, type: 3}
+  m_Resource: {fileID: 8300000, guid: fae261ff564b88d44a9167c664200d31, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.15
   m_Pitch: 1

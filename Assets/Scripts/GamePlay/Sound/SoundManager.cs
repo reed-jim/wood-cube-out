@@ -7,13 +7,21 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
 
     [SerializeField] private AudioSource backgroundMusic;
+    [SerializeField] private AudioSource grainInTroughSound;
 
     [SerializeField] private GameSetting gameSetting;
+
+    [Header("CUSTOMIZE")]
+    public float grainInTroughSoundVolume;
 
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private bool _isEnableGameSound;
     private bool _isEnableGameMusic;
+    #endregion
+
+    #region Chicken Jam
+    private Tween grainInTroughSoundTween;
     #endregion
 
     void Awake()
@@ -61,6 +69,15 @@ public class SoundManager : MonoBehaviour
     public void EnableGameSound(bool isEnable)
     {
         _isEnableGameSound = isEnable;
+
+        if (isEnable)
+        {
+            ResumeGrainInTroughSound();
+        }
+        else
+        {
+            StopGrainInTroughSound();
+        }
     }
 
     public void PlaySoundLoosenScrew()
@@ -313,9 +330,76 @@ public class SoundManager : MonoBehaviour
         PlaySound(GameConstants.grainHitSound);
     }
 
+    public void PlayChickenFly()
+    {
+        PlaySound(GameConstants.chickenFlySound);
+    }
+
     public void PlayChickenComplete()
     {
         PlaySound(GameConstants.chickenCompleteSound);
+    }
+
+    public void PlayGrainInTroughSound()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        if (grainInTroughSound == null)
+        {
+            grainInTroughSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.grainInTroughSound);
+
+            grainInTroughSound.Play();
+        }
+        else
+        {
+            if (grainInTroughSound.volume < grainInTroughSoundVolume)
+            {
+                if (grainInTroughSoundTween.isAlive)
+                {
+                    grainInTroughSoundTween.Stop();
+                }
+
+                grainInTroughSoundTween = Tween.AudioVolume(grainInTroughSound, grainInTroughSoundVolume, duration: 0.3f);
+            }
+        }
+    }
+
+    public void ResumeGrainInTroughSound()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        if (grainInTroughSound == null)
+        {
+            return;
+        }
+
+        if (grainInTroughSoundTween.isAlive)
+        {
+            grainInTroughSoundTween.Stop();
+        }
+
+        grainInTroughSoundTween = Tween.AudioVolume(grainInTroughSound, grainInTroughSoundVolume, duration: 0.3f);
+    }
+
+    public void StopGrainInTroughSound()
+    {
+        if (grainInTroughSound == null)
+        {
+            return;
+        }
+
+        if (grainInTroughSoundTween.isAlive)
+        {
+            grainInTroughSoundTween.Stop();
+        }
+
+        grainInTroughSoundTween = Tween.AudioVolume(grainInTroughSound, 0, duration: 0.3f);
     }
     #endregion
 

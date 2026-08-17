@@ -87,6 +87,8 @@ public static class GameConstants
     public static string iceBreakSound = "iceBreakSound";
     public static string boosterAppearSound = "boosterAppearSound";
     public static string grainHitSound = "grainHitSound";
+    public static string grainInTroughSound = "grainInTroughSound";
+    public static string chickenFlySound = "chickenFlySound";
     public static string chickenCompleteSound = "chickenCompleteSound";
     #endregion
 

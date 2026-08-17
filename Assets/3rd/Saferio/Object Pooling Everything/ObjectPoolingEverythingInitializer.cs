@@ -55,6 +55,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject boosterAppearSoundPrefab;
 
     [SerializeField] private GameObject grainHitSoundPrefab;
+    [SerializeField] private GameObject grainInTroughSoundPrefab;
+    [SerializeField] private GameObject chickenFlySoundPrefab;
     [SerializeField] private GameObject chickenCompleteSoundPrefab;
 
     [Header("VFXs")]
@@ -160,6 +162,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.iceBreakSound, iceBreakSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.boosterAppearSound, boosterAppearSoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.grainHitSound, grainHitSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.grainInTroughSound, grainInTroughSoundPrefab, 1);
+        RegisterPool<AudioSource>(GameConstants.chickenFlySound, chickenFlySoundPrefab, 8);
         RegisterPool<AudioSource>(GameConstants.chickenCompleteSound, chickenCompleteSoundPrefab, 8);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);

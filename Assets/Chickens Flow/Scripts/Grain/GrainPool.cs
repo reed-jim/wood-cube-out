@@ -202,7 +202,22 @@ public class GrainPool : Singleton<GrainPool>
         {
 
         });
+
         lazyHealthBar.SetProgress(percent, durationUpdateProgress);
+
+        if (number > 0)
+        {
+            SoundManager.Instance.PlaySoundGrainHit();
+        }
+
+        if (currentAmount > 0)
+        {
+            SoundManager.Instance.PlayGrainInTroughSound();
+        }
+        else
+        {
+            SoundManager.Instance.StopGrainInTroughSound();
+        }
     }
 
     public void IncreaseGrainCapacity(int amount)
