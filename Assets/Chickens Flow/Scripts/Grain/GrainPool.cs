@@ -25,6 +25,7 @@ public class GrainPool : Singleton<GrainPool>
 
     [Header("GrainPool")]
     public SpriteRenderer grainPoolSpriteRenderer;
+    public SpriteRenderer grainTroughUpperLayerSpriteRenderer;
     public RectTransform progressBarBackground;
     public RectTransform progressBarFill;
 
@@ -103,13 +104,15 @@ public class GrainPool : Singleton<GrainPool>
         grainPoolSpriteRenderer.size = new Vector2(
             sizeX / grainPoolSpriteRenderer.transform.localScale.x, grainPoolSpriteRenderer.size.y);
 
+        grainTroughUpperLayerSpriteRenderer.size = grainPoolSpriteRenderer.size;
+
         Vector2 sizeDelta = progressBarBackground.sizeDelta;
         sizeDelta.x = grainPoolSpriteRenderer.transform.localScale.x * grainPoolSpriteRenderer.size.x;
 
         progressBarBackground.sizeDelta = sizeDelta;
         progressBarFill.sizeDelta = sizeDelta;
 
-        GrainSimulation.Ins.ScaleScreenVariables(GamePersistentVariable.screenSizeWorld.x / GameConstants.standardScreenWorldSize.x);
+        GrainSimulation.Ins.ScaleScreenVariables(sizeX / GameConstants.standardScreenWorldSize.x);
     }
 
     public void AddGrainPile(GrainPile grainPile)
