@@ -242,14 +242,6 @@ public class BaseChicken : MonoBehaviour
 
                 PlayFlyAnim(onComplete: () =>
                 {
-                    // smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
-
-                    // smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
-
-                    // smokeAnimEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
-
-                    // smokeAnimEntry.Complete += OnSmokeAnimComplete;
-
                     ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.chickenCompleteFx);
 
                     fx.transform.position = transform.position + completeFxOffset;
@@ -264,6 +256,11 @@ public class BaseChicken : MonoBehaviour
                     ChickenManager.Ins.MoveChickensDown();
                     ChickenManager.Ins.CheckWinLevel();
                     WashingMachineManager.Ins.CheckLoseLevel();
+
+                    if (GamePersistentVariable.eatingChickens.Count == 0)
+                    {
+                        GrainPool.Ins.CheckFeedChickens();
+                    }
                 });
 
                 foreach (var waitingChickenSlot in waitingChickenSlots)
@@ -596,8 +593,19 @@ public class BaseChicken : MonoBehaviour
     #region Animation
     public void SetActiveSpine(bool isActive)
     {
+        if (skeletonAnimation.gameObject.activeSelf == isActive)
+        {
+            return;
+        }
+
         skeletonAnimation.gameObject.SetActive(isActive);
         skeletonAnimation.enabled = true;
+
+        if (isActive)
+        {
+            skeletonAnimation.Skeleton.SetToSetupPose();
+            skeletonAnimation.AnimationState.ClearTracks();
+        }
     }
 
     public void SetLayer(int layer)

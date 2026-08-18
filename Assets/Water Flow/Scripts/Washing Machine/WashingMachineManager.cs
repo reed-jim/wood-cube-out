@@ -166,7 +166,7 @@ namespace AntsFlow
         {
             Vector2 grainPoolWorldSize = GrainPool.Ins.grainPoolSpriteRenderer.bounds.size;
 
-            float totalWidth = 0.8f * grainPoolWorldSize.x;
+            float totalWidth = 0.7f * grainPoolWorldSize.x;
             int numSlot = 8;
             float distance = totalWidth / numSlot;
             float start = -0.5f * totalWidth;
