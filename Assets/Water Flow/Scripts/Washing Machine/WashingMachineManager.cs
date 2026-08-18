@@ -387,9 +387,19 @@ namespace AntsFlow
 
                     if (!isFound && !isAlreadySpawnNewBox)
                     {
-                        SpawnNewWashingMachine();
+                        if (washingMachineStartSlot.row < 2)
+                        {
+                            SpawnNewWashingMachine();
+                        }
+                        else
+                        {
+                            if (!isAlreadySpawnNewBox)
+                            {
+                                SpawnNewWashingMachine();
 
-                        isAlreadySpawnNewBox = true;
+                                isAlreadySpawnNewBox = true;
+                            }
+                        }
                     }
                 }
             }

@@ -694,14 +694,14 @@ MonoBehaviour:
   outerHalfLength: 9.6
   innerRadius: 0.86
   outerRadius: 1.925
-  gapHalfWidth: 12
+  gapHalfWidth: 8
   particleRadius: 0.095
   gravity: 20
   damping: 0.93
   minMass: 0.7
   maxMass: 1.4
   maxStepPerFrame: 0.5
-  collisionIterations: 6
+  collisionIterations: 1
   maxPbdCorrection: 0.15
   collisionAbsorption: 0
   simulationSpeed: 1.55
@@ -712,7 +712,7 @@ MonoBehaviour:
   forceZones:
   - name: 1
     center: {x: 0, y: -4.87}
-    size: {x: 19.91, y: 2}
+    size: {x: 17, y: 2}
     angleDegrees: 0
     force: 40
   - name: 2
