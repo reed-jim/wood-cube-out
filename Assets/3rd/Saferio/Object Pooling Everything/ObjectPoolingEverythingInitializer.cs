@@ -125,7 +125,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);
         RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 500);
         RegisterPool<Wall>(GameConstants.wall, wall, 50);
-        RegisterPool<ParticleSystem>(GameConstants.chickenCompleteFx, chickenCompleteFx, 25);
+        RegisterPool<BaseFX>(GameConstants.chickenCompleteFx, chickenCompleteFx, 25);
         RegisterPool<SkeletonAnimation>(GameConstants.smokeFx, smokeAnim, 25);
 
         RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);

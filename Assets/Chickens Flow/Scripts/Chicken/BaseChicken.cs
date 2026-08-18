@@ -48,9 +48,6 @@ public class BaseChicken : MonoBehaviour
     public int numGrainPileRequiredLeft;
 
     [Header("Customize")]
-    public float eatingRange;
-    public float flyOutDuration;
-    public float smokeOffsetY;
     public Vector3 completeFxOffset;
 
     [Header("State")]
@@ -102,8 +99,7 @@ public class BaseChicken : MonoBehaviour
 
         SetDissolveProgress(0);
 
-        // flyAnimDuration = skeletonAnimation.Skeleton.Data.FindAnimation(flyAnimations[0]).Duration;
-        flyAnimDuration = 0.533f;
+        flyAnimDuration = skeletonAnimation.Skeleton.Data.FindAnimation(flyAnimations[0]).Duration;
 
         currentIdleIndex = UnityEngine.Random.Range(0, idleAnimations.Length);
     }
@@ -242,10 +238,7 @@ public class BaseChicken : MonoBehaviour
 
                 PlayFlyAnim(onComplete: () =>
                 {
-                    ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.chickenCompleteFx);
-
-                    fx.transform.position = transform.position + completeFxOffset;
-                    fx.Play();
+                    PlayCompleteFx();
 
                     SoundManager.Instance.PlayChickenComplete();
 
@@ -306,6 +299,17 @@ public class BaseChicken : MonoBehaviour
         {
             ChickenManager.Ins.MoveChickensDown();
         }
+    }
+
+    private void PlayCompleteFx()
+    {
+        BaseFX fx = ObjectPoolingEverything.GetFromPool<BaseFX>(GameConstants.chickenCompleteFx);
+
+        // var main = fx.ripple.main;
+        // main.startColor = faction;
+
+        fx.transform.position = transform.position + completeFxOffset;
+        fx.containerParticle.Play();
     }
 
     private IEnumerator ChickenEatingGrains(GrainPile grainPile, int numGrain, bool isLast, Action onCompleteAction)
@@ -499,18 +503,7 @@ public class BaseChicken : MonoBehaviour
 
         PlayFlyAnim(onComplete: () =>
         {
-            // smokeAnimation = ObjectPoolingEverything.GetFromPool<SkeletonAnimation>(GameConstants.smokeFx);
-
-            // smokeAnimation.transform.position = transform.position.AddY(smokeOffsetY);
-
-            // smokeAnimForceFlyOutEntry = smokeAnimation.AnimationState.SetAnimation(0, "animation", false);
-
-            // smokeAnimForceFlyOutEntry.Complete += OnSmokeAnimCompleteForceFlyOut;
-
-            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.chickenCompleteFx);
-
-            fx.transform.position = transform.position + completeFxOffset;
-            fx.Play();
+            PlayCompleteFx();
 
             SoundManager.Instance.PlayChickenComplete();
 

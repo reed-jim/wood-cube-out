@@ -882,7 +882,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
             // Feed until this chicken is full
             chicken.SetActiveSpine(true);
-            chicken.PlayFlyAnim(flyAnimationIndex: 0);
+            chicken.PlayFlyAnim(flyAnimationIndex: 1);
 
             chicken.transform.SetZ(LayerManager.GetGhostChickenZ(numGhostChicken));
 

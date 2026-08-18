@@ -444,12 +444,11 @@ MonoBehaviour:
   - action_eat2
   - action_eat3
   flyAnimations:
-  - action_fly
+  - action_fly3
   - action_fly
   idleAnimations:
   - idle
   - idle2
-  - idle3
   - idle4
   circleProgress: {fileID: 5607891719626491938}
   circleProgressFill: {fileID: 5686765085403555032}
@@ -463,10 +462,7 @@ MonoBehaviour:
   numRowTaken: 0
   numGrainPileRequired: 0
   numGrainPileRequiredLeft: 0
-  eatingRange: 0.5
-  flyOutDuration: 0.6
-  smokeOffsetY: 0.8
-  completeFxOffset: {x: 0, y: 1, z: -0.01}
+  completeFxOffset: {x: 0, y: 1.6, z: -0.01}
   isMoving: 0
   isEating: 0
   isDone: 0
@@ -635,7 +631,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6734858105619798863
 Transform:
   m_ObjectHideFlags: 0

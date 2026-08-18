@@ -21,7 +21,10 @@ public class SoundManager : MonoBehaviour
     #endregion
 
     #region Chicken Jam
+    [Header("Chicken Jam")]
     private Tween grainInTroughSoundTween;
+    private float _lastChickenPeckSoundTime;
+    public float chickenPeckSoundCooldown;
     #endregion
 
     void Awake()
@@ -400,6 +403,25 @@ public class SoundManager : MonoBehaviour
         }
 
         grainInTroughSoundTween = Tween.AudioVolume(grainInTroughSound, 0, duration: 0.3f);
+    }
+
+    public void PlaySoundChickenPeck()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        if (Time.time - _lastChickenPeckSoundTime < chickenPeckSoundCooldown)
+        {
+            return;
+        }
+
+        _lastChickenPeckSoundTime = Time.time;
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.cubeLandSound);
+
+        sound.Play();
     }
     #endregion
 
