@@ -55,7 +55,6 @@ public class ChickenRenderer : MonoBehaviour
     public Vector3 shadowSize;
     public float chickenSize;
     public float maxAnimationFrame;
-    public float defaultSpriteSize;
 
     private const int BatchSize = 1023;
 
@@ -177,7 +176,10 @@ public class ChickenRenderer : MonoBehaviour
 
     private void DrawBatch(ChickenBatchKey key, List<int> indexes)
     {
-        Material material = GetMaterial(key);
+        MaterialsForAnim materialsForAnim = GetMaterialsForAnim(key);
+        Material material = materialsForAnim.materials[key.factionIndex];
+        float defaultSpriteSize = materialsForAnim.defaultSpriteSize;
+
         Vector3 localScale = chickenSize * Vector3.one;
 
         int start = 0;
@@ -267,18 +269,18 @@ public class ChickenRenderer : MonoBehaviour
         }
     }
 
-    private Material GetMaterial(ChickenBatchKey key)
+    private MaterialsForAnim GetMaterialsForAnim(ChickenBatchKey key)
     {
         for (int i = 0; i < materialsForAnims.Length; i++)
         {
             var materialsForAnim = materialsForAnims[i];
             if (string.Equals(key.anim, materialsForAnim.animation, StringComparison.Ordinal))
             {
-                return materialsForAnim.materials[key.factionIndex];
+                return materialsForAnim;
             }
         }
 
-        return materialsForAnims[0].materials[key.factionIndex];
+        return materialsForAnims[0];
     }
 
     // =====================================================
@@ -313,4 +315,5 @@ public class MaterialsForAnim
 {
     public string animation;
     public Material[] materials;
+    public float defaultSpriteSize;
 }

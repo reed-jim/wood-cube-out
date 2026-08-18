@@ -131,7 +131,7 @@ Shader "Instanced/ChickenSpriteAtlas"
                     );
 
 
-                clip(col.a - 0.5);
+                clip(col.a - 0.8);
 
 
                 return col;
