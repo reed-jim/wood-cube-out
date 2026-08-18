@@ -30,7 +30,7 @@ public class GrainPool : Singleton<GrainPool>
     public RectTransform progressBarFill;
 
     [Header("Customize")]
-    public int expectedGrainToClearOnRevive;
+    public int expectedGrainRemainingOnRevive;
     public float updateProgressBarSpeedMultiplier = 3;
     private float updateProgressBarSpeed;
 
@@ -218,16 +218,16 @@ public class GrainPool : Singleton<GrainPool>
 
     public void CheckFeedGhostChickens()
     {
-        int amountGrainCleared = 0;
+        int currentGrainTroughAmount = currentAmount;
 
         for (int i = 0; i < grainPiles.Count; i++)
         {
-            if (amountGrainCleared > expectedGrainToClearOnRevive)
+            if (currentGrainTroughAmount < expectedGrainRemainingOnRevive)
             {
                 break;
             }
 
-            amountGrainCleared += grainPiles[i].remainingNumber;
+            currentGrainTroughAmount -= grainPiles[i].remainingNumber;
 
             ChickenManager.Ins.FeedTheGhostChicken(grainPiles[i]);
         }

@@ -211,7 +211,7 @@ public class BaseChicken : MonoBehaviour
         {
             StopCoroutine(chickenEatingGrainsCoroutine);
 
-            GamePersistentVariable.eatingChickens.Remove(this);
+            // GamePersistentVariable.eatingChickens.Remove(this);
         }
 
         chickenEatingGrainsCoroutine = StartCoroutine(ChickenEatingGrains(grainPile, numGrain, isLastChickenInTheWave, onCompleteAction: () =>
