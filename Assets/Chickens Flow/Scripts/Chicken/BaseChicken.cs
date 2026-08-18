@@ -77,6 +77,7 @@ public class BaseChicken : MonoBehaviour
     private SkeletonAnimation smokeAnimation;
     private bool isLastChickenForcedFlyOut;
     private float flyAnimDuration;
+    private Tween updateProgressTween;
 
     public bool IsInSide(Vector2 position)
     {
@@ -314,8 +315,7 @@ public class BaseChicken : MonoBehaviour
 
     private IEnumerator ChickenEatingGrains(GrainPile grainPile, int numGrain, bool isLast, Action onCompleteAction)
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 5);
-        WaitForSeconds delayPerGrainWait = new WaitForSeconds(grainPile.delayPerGrain);
+        WaitForSeconds delayPerGrainWait = new WaitForSeconds(UnityEngine.Random.Range(1, 2f) * grainPile.delayPerGrain);
 
         float prevChickenEatingProgress = prevEatingProgress;
 
@@ -398,12 +398,7 @@ public class BaseChicken : MonoBehaviour
 
                 prevChickenEatingProgress = currentPercent;
 
-                if (waitingForGrainCount > waitingForGrainCountThreshold)
-                {
-                    GamePersistentVariable.numEatingChicken++;
-
-                    waitingForGrainCount = 0;
-                }
+                waitingForGrainCount = 0;
             }
             else
             {
@@ -412,11 +407,7 @@ public class BaseChicken : MonoBehaviour
 
                 waitingForGrainCount++;
 
-                if (waitingForGrainCount <= waitingForGrainCountThreshold)
-                {
-
-                }
-                else
+                if (waitingForGrainCount > waitingForGrainCountThreshold)
                 {
                     if (waitingForGrainCount == waitingForGrainCountThreshold + 1)
                     {
@@ -554,10 +545,17 @@ public class BaseChicken : MonoBehaviour
             });
         }
 
-        TweenManager.Ins.AddTween(Tween.Custom(prevProgress, progress, duration, onValueChange: newVal =>
+        if (updateProgressTween.isAlive)
+        {
+            updateProgressTween.Stop();
+        }
+
+        updateProgressTween = Tween.Custom(circleProgressFill.fillAmount, progress, duration, onValueChange: newVal =>
         {
             circleProgressFill.fillAmount = newVal;
-        }));
+        });
+
+        TweenManager.Ins.AddTween(updateProgressTween);
     }
 
     public void UpdateMeshBounds()
