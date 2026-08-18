@@ -25,11 +25,9 @@ namespace GoogleMobileAds.Mediation.Pangle.Api
             client.SetGDPRConsent(gdpr);
         }
 
-        // Refer to https://www.pangleglobal.com/integration/android-initialize-pangle-sdk for what
-        // values may be provided.
-        public static void SetPAConsent(int paConsent)
+        public static void SetDoNotSell(int doNotSell)
         {
-            client.SetPAConsent(paConsent);
+            client.SetDoNotSell(doNotSell);
         }
 
         internal static IPangleClient GetPangleClient()
@@ -49,9 +47,9 @@ namespace GoogleMobileAds.Api.Mediation.Pangle
             GoogleMobileAds.Mediation.Pangle.Api.Pangle.SetGDPRConsent(gdpr);
         }
 
-        public static void SetPAConsent(int paConsent)
+        public static void SetDoNotSell(int doNotSell)
         {
-            GoogleMobileAds.Mediation.Pangle.Api.Pangle.SetPAConsent(paConsent);
+            GoogleMobileAds.Mediation.Pangle.Api.Pangle.SetDoNotSell(doNotSell);
         }
 
         private static IPangleClient GetPangleClient()

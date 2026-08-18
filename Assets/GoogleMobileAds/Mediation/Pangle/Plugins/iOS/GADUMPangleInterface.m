@@ -14,6 +14,17 @@
 
 #import <PangleAdapter/PangleAdapter.h>
 
-void GADUMPangleSetPAConsent(int paConsent) {
-  [GADMediationAdapterPangle setPAConsent:paConsent];
+void GADUMPangleSetGDPRConsent(int GDPR) {
+  [GADMediationAdapterPangle setGDPRConsent:GDPR];
+}
+
+// Pangle adapter 7.1.1.0.1 renamed +setDoNotSell: to +setPAConsent:, so the old
+// selector no longer exists in the 7.9.1.1.1 pod this project pins and calling it
+// fails to compile. The C symbol name is kept because Externs.cs binds to it.
+// Polarity is inverted between the two APIs: doNotSell=1 (opted out of sale) is
+// equivalent to PAConsent=0 (no consent for personalized ads).
+// NOTE: nothing in this project calls Pangle.SetDoNotSell, so this path is unused.
+// Reimporting the GoogleMobileAds Pangle plugin resets this file -> re-apply.
+void GADUMPangleSetDoNotSell(int doNotSell) {
+  [GADMediationAdapterPangle setPAConsent:(doNotSell != 0 ? 0 : 1)];
 }

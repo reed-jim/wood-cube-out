@@ -16,7 +16,7 @@
 
 <dependencies>
   <androidPackages>
-    <androidPackage spec="com.google.ads.mediation:facebook:6.21.0.2">
+    <androidPackage spec="com.google.ads.mediation:facebook:6.21.0.4">
       <repositories>
         <repository>https://repo.maven.apache.org/maven2/</repository>
         <repository>https://dl.google.com/dl/android/maven2/</repository>
@@ -25,7 +25,10 @@
   </androidPackages>
 
   <iosPods>
-    <iosPod name="GoogleMobileAdsMediationFacebook" version="6.21.1.0"/>
+    <!-- 6.21.1.1 pins GMA "~> 13.3.0" (13.3.x) and FBAudienceNetwork 6.21.1 — this is the
+         adapter the whole 13.3.0 alignment is built around. Do NOT move to 6.21.1.1.1:
+         that one requires GMA "~> 13.4" and would break the 13.3.0 pin. -->
+    <iosPod name="GoogleMobileAdsMediationFacebook" version="6.21.1.1"/>
     <iosPod name="FBAudienceNetwork" addToAllTargets="true"/>
   </iosPods>
 </dependencies>

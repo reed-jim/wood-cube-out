@@ -5,6 +5,9 @@
         <androidPackage spec="com.applovin.mediation:google-adapter:[25.4.0.0]" />
     </androidPackages>
     <iosPods>
+        <!-- Held at 13.3.0.0 (requires Google-Mobile-Ads-SDK = 13.3.0) so the whole pod
+             graph converges on GMA 13.3.0, which AdMob's Meta adapter 6.21.1.1 requires
+             ("~> 13.3.0"). 13.7.0.0 would force GMA 13.7.0 and break that adapter. -->
         <iosPod name="AppLovinMediationGoogleAdapter" version="13.3.0.0" />
     </iosPods>
 </dependencies>

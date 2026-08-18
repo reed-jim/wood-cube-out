@@ -8,6 +8,11 @@
         <androidPackage spec="com.applovin.mediation:facebook-adapter:[6.22.0.0]" />
     </androidPackages>
     <iosPods>
+        <!-- Held at 6.21.1.0 (AppLovin-certified with FAN 6.21.1) to match AdMob's
+             GoogleMobileAdsMediationFacebook 6.21.1.1, which is Google's newest and also
+             targets FAN 6.21.1. Both adapters share one FBAudienceNetwork pod, so they
+             must agree on its version or CocoaPods fails. Raise this only when Google
+             ships a Meta adapter built against FAN 6.22.0. -->
         <iosPod name="AppLovinMediationFacebookAdapter" version="6.21.1.0" />
     </iosPods>
 </dependencies>

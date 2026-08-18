@@ -14,8 +14,6 @@
 
 #if UNITY_IOS
 
-using UnityEngine;
-
 using GoogleMobileAds.Mediation.Pangle.Common;
 
 namespace GoogleMobileAds.Mediation.Pangle.iOS
@@ -35,14 +33,12 @@ namespace GoogleMobileAds.Mediation.Pangle.iOS
 
         public void SetGDPRConsent(int gdpr)
         {
-            MonoBehaviour.print("[Pangle Plugin] 'SetGDPRConsent' is now deprecated and will be " +
-                    "removed in a future release. GDPR consent is now automatically read by the " +
-                    "Pangle SDK.");
+            Externs.GADUMPangleSetGDPRConsent(gdpr);
         }
 
-        public void SetPAConsent(int paConsent)
+        public void SetDoNotSell(int doNotSell)
         {
-            Externs.GADUMPangleSetPAConsent(paConsent);
+            Externs.GADUMPangleSetDoNotSell(doNotSell);
         }
     }
 }

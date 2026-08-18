@@ -16,7 +16,7 @@
 
 <dependencies>
   <androidPackages>
-    <androidPackage spec="com.google.ads.mediation:mintegral:17.1.61.0">
+    <androidPackage spec="com.google.ads.mediation:mintegral:17.1.61.1">
       <repositories>
         <repository>https://repo.maven.apache.org/maven2/</repository>
         <repository>https://dl.google.com/dl/android/maven2/</repository>
@@ -26,6 +26,8 @@
   </androidPackages>
 
   <iosPods>
-    <iosPod name="GoogleMobileAdsMediationMintegral" version="8.1.5"/>
+    <!-- Aligned with AppLovin MAX's AppLovinMediationMintegralAdapter 8.1.6.0.0:
+         both adapters must resolve to the same MintegralAdSDK (8.1.6) or CocoaPods fails. -->
+    <iosPod name="GoogleMobileAdsMediationMintegral" version="8.1.6.0"/>
   </iosPods>
 </dependencies>
