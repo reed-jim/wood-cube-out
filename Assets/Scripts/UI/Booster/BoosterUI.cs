@@ -98,8 +98,8 @@ public class BoosterUI : MonoBehaviour
         WashingMachineManager.finishUsingEnableAllAntBoxesBoosterEvent += ShowBooster;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
-        breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
-        clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
+        breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.EnableAllAntBoxes));
+        clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.Shuffle));
         clearOneColorButton.onClick.AddListener(() => UseBooster(BoosterType.ClearOneColor));
         // disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
@@ -223,11 +223,11 @@ public class BoosterUI : MonoBehaviour
             {
                 AddMoreScrewPort();
             }
-            else if (boosterType == BoosterType.BreakObject)
+            else if (boosterType == BoosterType.EnableAllAntBoxes)
             {
                 EnableAllAntBoxes();
             }
-            else if (boosterType == BoosterType.ClearScrewPorts)
+            else if (boosterType == BoosterType.Shuffle)
             {
                 Shuffle();
             }
@@ -242,11 +242,11 @@ public class BoosterUI : MonoBehaviour
     {
         int boosterIndex = 0;
 
-        if (boosterType == BoosterType.BreakObject)
+        if (boosterType == BoosterType.EnableAllAntBoxes)
         {
             boosterIndex = 1;
         }
-        else if (boosterType == BoosterType.ClearScrewPorts)
+        else if (boosterType == BoosterType.Shuffle)
         {
             boosterIndex = 2;
         }
@@ -352,7 +352,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 2))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.Shuffle);
 
             return;
         }
@@ -490,7 +490,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.EnableAllAntBoxes);
 
             return;
         }

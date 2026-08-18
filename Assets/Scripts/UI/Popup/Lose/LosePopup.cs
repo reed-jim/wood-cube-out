@@ -156,7 +156,7 @@ public class LosePopup : BasePopup
 
         if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: ActionInterAds.Lose.ToString(), actionIniterClose: OnInterstitialAdCompleted);
         }
         else
         {

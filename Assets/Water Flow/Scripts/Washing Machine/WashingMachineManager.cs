@@ -174,24 +174,20 @@ namespace AntsFlow
             this.levelItem = levelItem;
             isLevelContainingNewSpecialElements = IsLevelContainingNewSpecialElements();
 
-            //comment de test
-            //if (washingMachineSlots != null)
-            //{
-            //    for (int i = 0; i < washingMachineSlots.Count; i++)
-            //    {
-            //        if (i < 5)
-            //        {
-            //            washingMachineSlots[i].SetLocked(false);
-            //        }
+            if (washingMachineSlots != null &&
+                levelItem.specialElementConfig != null &&
+                levelItem.specialElementConfig.lockedSlotConfig != null &&
+                levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices != null)
+            {
+                List<int> lockedSlotIndices = levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices;
 
-            //        if (levelItem.specialElementConfig != null &&
-            //            levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices != null &&
-            //            levelItem.specialElementConfig.lockedSlotConfig.lockedSlotIndices.Contains(i))
-            //        {
-            //            washingMachineSlots[i].SetLocked(true, showUnlockButton: false);
-            //        }
-            //    }
-            //}
+                for (int i = 0; i < washingMachineSlots.Count; i++)
+                {
+                    bool shouldLock = lockedSlotIndices.Contains(i);
+
+                    washingMachineSlots[i].SetLocked(shouldLock, showUnlockButton: false);
+                }
+            }
 
 
             try
@@ -1219,6 +1215,13 @@ namespace AntsFlow
             if (spec.snakeConfig != null &&
                 spec.snakeConfig.spawnOrder != null &&
                 spec.snakeConfig.spawnOrder.Count > 0)
+            {
+                return true;
+            }
+
+            if (spec.lockedSlotConfig != null &&
+                spec.lockedSlotConfig.lockedSlotIndices != null &&
+                spec.lockedSlotConfig.lockedSlotIndices.Count > 0)
             {
                 return true;
             }

@@ -63,8 +63,8 @@ public class DebugPopup : BasePopup
         hideDebugButton.onClick.AddListener(HideDebug);
         hideUIButton.onClick.AddListener(HideUI);
 
-        if (applyCampTestButton != null)
-            applyCampTestButton.onClick.AddListener(ApplyTestCamp);
+        //if (applyCampTestButton != null)
+        //    applyCampTestButton.onClick.AddListener(ApplyTestCamp);
 
         gameSpeedText.text = $"Game Speed: x{(int)Time.timeScale}";
     }
@@ -192,24 +192,24 @@ public class DebugPopup : BasePopup
         }
     }
 
-    private void ApplyTestCamp()
-    {
-        if (campTestInput == null)
-        {
-            return;
-        }
+    //private void ApplyTestCamp()
+    //{
+    //    if (campTestInput == null)
+    //    {
+    //        return;
+    //    }
 
-        string campId = campTestInput.text;
-        if (string.IsNullOrEmpty(campId))
-        {
-            Debug.LogWarning("TEST_CAMP_ [DEBUG] Chưa nhập idCamp test.");
-            return;
-        }
+    //    string campId = campTestInput.text;
+    //    if (string.IsNullOrEmpty(campId))
+    //    {
+    //        Debug.LogWarning("TEST_CAMP_ [DEBUG] Chưa nhập idCamp test.");
+    //        return;
+    //    }
 
-        GameController.Instance.appsFlyerManager.ApplyTestCampById(campId);
+    //    GameController.Instance.appsFlyerManager.ApplyTestCampById(campId);
 
-        Hide();
-    }
+    //    Hide();
+    //}
 
     private void HideDebug()
     {

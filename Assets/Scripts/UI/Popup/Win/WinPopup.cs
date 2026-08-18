@@ -295,12 +295,12 @@ public class WinPopup : BasePopup
                 {
                     GameController.Instance.admobAds.ShowInterstitial
                    (
-                      actionIniterClose: OnInterstitialAdCompleted
+                      actionWatchLog: ActionInterAds.Win.ToString(), actionIniterClose: OnInterstitialAdCompleted
                    );
                 }
                 else
                 {
-                    GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+                    GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: ActionInterAds.Win.ToString(), actionIniterClose: OnInterstitialAdCompleted);
                 }
             }
             else

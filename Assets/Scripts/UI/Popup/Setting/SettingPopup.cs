@@ -231,7 +231,7 @@ public class SettingPopup : BasePopup
 
         if (isShowInterReplayLevel)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+            GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: ActionInterAds.Replay.ToString(), actionIniterClose: OnInterstitialAdToReplayCompleted);
         }
         else
         {

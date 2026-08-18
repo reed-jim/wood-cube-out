@@ -84,46 +84,47 @@ public class AppsFlyerManager : MonoBehaviour
     /// </summary>
     public void ApplyTestCampById(string campId)
     {
-        var adsSegmentUserConfig = GameController.Instance.segmentController.GetCurrentSegment().segmentUserData.config;
+        //khong dung nua
+        //var adsSegmentUserConfig = GameController.Instance.segmentController.GetCurrentSegment().segmentUserData.config;
 
-        if (adsSegmentUserConfig == null || adsSegmentUserConfig.dataSegment == null ||
-            adsSegmentUserConfig.dataSegment.Count == 0)
-        {
-            Debug.LogWarning("TEST_CAMP_ [DEBUG] dataSegment rỗng, không thể test camp.");
-            return;
-        }
+        //if (adsSegmentUserConfig == null || adsSegmentUserConfig.dataSegment == null ||
+        //    adsSegmentUserConfig.dataSegment.Count == 0)
+        //{
+        //    Debug.LogWarning("TEST_CAMP_ [DEBUG] dataSegment rỗng, không thể test camp.");
+        //    return;
+        //}
 
-        int matchedIndex = -1;
-        for (int i = 0; i < adsSegmentUserConfig.dataSegment.Count; i++)
-        {
-            if (campId == adsSegmentUserConfig.dataSegment[i].idCampSegemnt)
-            {
-                matchedIndex = i;
-                break;
-            }
-        }
+        //int matchedIndex = -1;
+        //for (int i = 0; i < adsSegmentUserConfig.dataSegment.Count; i++)
+        //{
+        //    if (campId == adsSegmentUserConfig.dataSegment[i].idCampSegemnt)
+        //    {
+        //        matchedIndex = i;
+        //        break;
+        //    }
+        //}
 
-        if (matchedIndex < 0)
-        {
-            Debug.LogWarning(
-                $"TEST_CAMP_ [DEBUG] Không tìm thấy idCamp '{campId}' trong dataSegment (Count = {adsSegmentUserConfig.dataSegment.Count}). Không áp dụng.");
-            return;
-        }
+        //if (matchedIndex < 0)
+        //{
+        //    Debug.LogWarning(
+        //        $"TEST_CAMP_ [DEBUG] Không tìm thấy idCamp '{campId}' trong dataSegment (Count = {adsSegmentUserConfig.dataSegment.Count}). Không áp dụng.");
+        //    return;
+        //}
 
-        var model = adsSegmentUserConfig.dataSegment[matchedIndex];
-        UseProfile.CurrentCampUser = matchedIndex;
-        Id_Segement_User = campId;
-        Debug.Log("TEST CAMP SUCCESS =" + campId);
+        //var model = adsSegmentUserConfig.dataSegment[matchedIndex];
+        //UseProfile.CurrentCampUser = matchedIndex;
+        //Id_Segement_User = campId;
+        //Debug.Log("TEST CAMP SUCCESS =" + campId);
 
-        GameController.Instance.segmentController.GetCurrentSegment().adsData.config = model.adsConfig;
-        //GameController.Instance.segmentController.GetCurrentSegment().saleData.config = model.saleConfig;
+        //GameController.Instance.segmentController.GetCurrentSegment().adsData.config = model.adsConfig;
+        ////GameController.Instance.segmentController.GetCurrentSegment().saleData.config = model.saleConfig;
 
-        Debug.Log(
-            $"TEST_CAMP_ [DEBUG] Match idCamp '{campId}' -> index {matchedIndex}. Đã ghi đè adsData/saleData.");
+        //Debug.Log(
+        //    $"TEST_CAMP_ [DEBUG] Match idCamp '{campId}' -> index {matchedIndex}. Đã ghi đè adsData/saleData.");
 
-        // Cập nhật cờ show (ChangeActiveVal đã subscribe CampChange) rồi reload lại toàn bộ ad.
-        CampChange?.Invoke();
-        GameController.Instance.admobAds.ReloadAllAdsForSegment();
+        //// Cập nhật cờ show (ChangeActiveVal đã subscribe CampChange) rồi reload lại toàn bộ ad.
+        //CampChange?.Invoke();
+        //GameController.Instance.admobAds.ReloadAllAdsForSegment();
     }
 
     private void EvaluateUserSegment()

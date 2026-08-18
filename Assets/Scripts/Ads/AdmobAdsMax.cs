@@ -242,10 +242,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-//#if APPSFLYER_BANNER
-//            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-//                value, "USD", dic);
-//#endif
+            //#if APPSFLYER_BANNER
+            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //                value, "USD", dic);
+            //#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -391,7 +391,7 @@ public class AdmobAdsMax
         Debug.Log("MREC=============MRec ad clicked");
     }
 
-#endregion
+    #endregion
     #region Admob Banner
     private BannerView _bannerView;
 #if UNITY_ANDROID || UNITY_EDITOR
@@ -530,10 +530,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-//#if APPSFLYER_BANNER
-//            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-//              value, "USD", dic);
-//#endif
+            //#if APPSFLYER_BANNER
+            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //              value, "USD", dic);
+            //#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -629,7 +629,7 @@ public class AdmobAdsMax
         ShowBanner();
         LoadBannerCollap();
     }
-#endregion
+    #endregion
 
     /*public void RefreshCollapseBanner()
     {
@@ -733,7 +733,7 @@ public class AdmobAdsMax
         }
     }
 
-#endregion
+    #endregion
 
 
     public void InitializeBannerMax()
@@ -1417,7 +1417,7 @@ public class AdmobAdsMax
             return;
         }
 
-        this.adWhere = adWhere;
+        this.adWhere = actionType.ToString();
 
         //#if UNITY_EDITOR
         //        actionReward?.Invoke();
@@ -1489,7 +1489,7 @@ onFailed: () => { _actionNotLoadedVideo?.Invoke(); }
                 this._actionClose = actionClose;
                 this._actionRewardVideo = actionReward;
 
-                ShowInterstitial(isShowImmediatly: true, actionType.ToString(), actionIniterClose: () => { });
+                ShowInterstitial(isShowImmediatly: true, ActionInterAds.RewardFail.ToString(), actionIniterClose: () => { });
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
                      GameController.Instance.useProfile.CurrentLevel.ToString());
                 Debug.Log("ShowInterstitial !!!");

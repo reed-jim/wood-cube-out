@@ -253,7 +253,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
         step = 0;
 
-        if (boosterType == BoosterType.BreakObject)
+        if (boosterType == BoosterType.EnableAllAntBoxes)
         {
             StartCoroutine(RunEnableAllAntBoxesBoosterTutorial());
         }
@@ -273,11 +273,11 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     {
         int boosterIndex = 0;
 
-        if (boosterType == BoosterType.BreakObject)
+        if (boosterType == BoosterType.EnableAllAntBoxes)
         {
             boosterIndex = 1;
         }
-        else if (boosterType == BoosterType.ClearScrewPorts)
+        else if (boosterType == BoosterType.Shuffle)
         {
             boosterIndex = 2;
         }
