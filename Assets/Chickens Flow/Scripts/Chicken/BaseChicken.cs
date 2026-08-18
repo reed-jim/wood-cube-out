@@ -467,7 +467,7 @@ public class BaseChicken : MonoBehaviour
             // main.startColor = faction;
             // fx.Play();
 
-            SoundManager.Instance.PlaySoundCubeLand();
+            SoundManager.Instance.PlaySoundChickenPeck();
         }
 
         float GetUpdatingProgressDuration(int numGrainToEat)

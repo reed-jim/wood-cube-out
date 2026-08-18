@@ -40,6 +40,10 @@ namespace AntsFlow
 
         public IntVariable currentLevel;
 
+        #region Optimize
+        private int[] rowPowerCache;
+        #endregion
+
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
         public static event Action ghostAntBoxesClearedEvent;
@@ -57,6 +61,8 @@ namespace AntsFlow
             LosePopup.replayLevelEvent += OnLevelReplayed;
             DebugPopup.switchLevelEvent += OnLevelReplayed;
             TileManager.winLevelEvent += OnLevelReplayed;
+
+            InitializeRowPowerCache(10);
         }
 
         void OnDestroy()
@@ -381,19 +387,9 @@ namespace AntsFlow
 
                     if (!isFound && !isAlreadySpawnNewBox)
                     {
-                        if (washingMachineStartSlot.row < 2)
-                        {
-                            SpawnNewWashingMachine();
-                        }
-                        else
-                        {
-                            if (!isAlreadySpawnNewBox)
-                            {
-                                SpawnNewWashingMachine();
+                        SpawnNewWashingMachine();
 
-                                isAlreadySpawnNewBox = true;
-                            }
-                        }
+                        isAlreadySpawnNewBox = true;
                     }
                 }
             }
@@ -979,7 +975,7 @@ namespace AntsFlow
 
             // foreach (var item in numSpawnPerFactionOrderByDifficulty)
             // {
-            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            //     DebugUtil.Log($"GetNextAntSpawnByDifficulty {item.Value}", item.Key);
             // }
 
             int maxValidIndex = 0;
@@ -1049,45 +1045,12 @@ namespace AntsFlow
             return result;
         }
 
-        public Dictionary<Color, int> GetMaxAntRequiredPerFaction(bool isIncludeStartSlot = true)
-        {
-            Dictionary<Color, int> result = GetRemaniningTilePerFaction();
-
-            for (int i = 0; i < washingMachineStartSlots.Count; i++)
-            {
-                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
-
-                if (washingMachineStartSlot.washingMachine != null)
-                {
-                    if (isIncludeStartSlot)
-                    {
-                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                    }
-                    else
-                    {
-                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
-
-                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
-                        {
-                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
-            {
-                GrainPile grainPile = GrainPool.Ins.grainPiles[i];
-
-                CommonUtil.SumValueOfDictionary(result, grainPile.faction, -grainPile.remainingNumber);
-            }
-
-            return result;
-        }
-
         public Dictionary<Color, int> GetNumNotBlockedTilePerFaction(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
+
+            float normalChickenDifficultyWeight = 1f;
+            float stuckChickenDifficultyWeight = 0.05f;
 
             for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
             {
@@ -1098,48 +1061,66 @@ namespace AntsFlow
                     continue;
                 }
 
-                bool isBlocked = chicken.isStuck;
+                int chickenPoint = 0;
+                int firstRow = chicken.GetFirstRow();
+                firstRow = Mathf.Min(firstRow, rowPowerCache.Length - 1);
 
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, isBlocked ? 0 : chicken.numGrainPileRequiredLeft);
-            }
-
-            for (int i = 0; i < washingMachineStartSlots.Count; i++)
-            {
-                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
-
-                if (washingMachineStartSlot.washingMachine != null)
+                if (chicken.isStuck)
                 {
-                    if (isIncludeStartSlot)
-                    {
-                        if (washingMachineStartSlot.washingMachine.number != 0)
-                        {
-                            CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                    }
-                    else
-                    {
-                        WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
-
-                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
-                        {
-                            if (washingMachineStartSlot.washingMachine.number != 0)
-                            {
-                                CommonUtil.SumValueOfDictionary(
-                                    sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                            }
-                        }
-                    }
+                    chickenPoint = (int)(stuckChickenDifficultyWeight * rowPowerCache[firstRow]);
                 }
+                else
+                {
+                    chickenPoint = (int)(normalChickenDifficultyWeight * rowPowerCache[firstRow]);
+                }
+
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, chickenPoint);
             }
 
-            for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
-            {
-                GrainPile grainPile = GrainPool.Ins.grainPiles[i];
+            // for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            // {
+            //     WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, grainPile.faction, -grainPile.remainingNumber);
-            }
+            //     if (washingMachineStartSlot.washingMachine != null)
+            //     {
+            //         if (isIncludeStartSlot)
+            //         {
+            //             if (washingMachineStartSlot.washingMachine.number != 0)
+            //             {
+            //                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+            //             }
+            //         }
+            //         else
+            //         {
+            //             WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+
+            //             if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+            //             {
+            //                 if (washingMachineStartSlot.washingMachine.number != 0)
+            //                 {
+            //                     CommonUtil.SumValueOfDictionary(
+            //                         sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+
+            // for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
+            // {
+            //     GrainPile grainPile = GrainPool.Ins.grainPiles[i];
+
+            //     CommonUtil.SumValueOfDictionary(sortedPoolFaction, grainPile.faction, -grainPile.remainingNumber);
+            // }
 
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            // Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty ================");
+
+            // foreach (var item in sortedPoolFaction)
+            // {
+            //     DebugUtil.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {item.Value}", item.Key);
+            // }
 
             return sortedPoolFaction;
         }
@@ -1214,6 +1195,20 @@ namespace AntsFlow
             // Debug.Log($"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {progress} {difficultyCurve.Evaluate(progress)}");
 
             return difficultyAtCurrentProgress;
+        }
+        #endregion
+
+        #region Util
+        void InitializeRowPowerCache(int maxRow)
+        {
+            rowPowerCache = new int[maxRow + 1];
+
+            for (int i = 0; i <= maxRow; i++)
+            {
+                int diff = maxRow - i;
+                diff = Mathf.Max(diff, 1);
+                rowPowerCache[i] = (int)Mathf.Pow(diff, 3f);
+            }
         }
         #endregion
     }
