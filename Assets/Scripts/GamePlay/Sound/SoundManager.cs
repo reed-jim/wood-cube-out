@@ -25,6 +25,7 @@ public class SoundManager : MonoBehaviour
     private Tween grainInTroughSoundTween;
     private float _lastChickenPeckSoundTime;
     public float chickenPeckSoundCooldown;
+    private float _lastChickenFlySoundTime;
     #endregion
 
     void Awake()
@@ -335,7 +336,21 @@ public class SoundManager : MonoBehaviour
 
     public void PlayChickenFly()
     {
-        PlaySound(GameConstants.chickenFlySound);
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        if (Time.time - _lastChickenFlySoundTime < chickenPeckSoundCooldown)
+        {
+            return;
+        }
+
+        _lastChickenFlySoundTime = Time.time;
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.chickenFlySound);
+
+        sound.Play();
     }
 
     public void PlayChickenComplete()
@@ -345,6 +360,8 @@ public class SoundManager : MonoBehaviour
 
     public void PlayGrainInTroughSound()
     {
+        return;
+
         if (!_isEnableGameSound)
         {
             return;
@@ -372,6 +389,8 @@ public class SoundManager : MonoBehaviour
 
     public void ResumeGrainInTroughSound()
     {
+        return;
+
         if (!_isEnableGameSound)
         {
             return;
@@ -392,6 +411,8 @@ public class SoundManager : MonoBehaviour
 
     public void StopGrainInTroughSound()
     {
+        return;
+
         if (grainInTroughSound == null)
         {
             return;

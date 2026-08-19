@@ -405,6 +405,8 @@ public class BoosterUI : MonoBehaviour
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
 
             _isInTransition = false;
+
+            ChickenManager.Ins.StartHighlightChickensSequentially();
         });
 
         GamePersistentVariable.isPreventSelectAntBox = true;

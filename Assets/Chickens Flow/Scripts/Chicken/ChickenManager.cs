@@ -47,6 +47,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     private GrainPile lastGrainPileToFeed;
     public int numGhostChicken;
+    public Coroutine highLightChickensCoroutine;
 
     public static event Action winLevelEvent;
 
@@ -1264,6 +1265,118 @@ public class ChickenManager : Singleton<ChickenManager>
         else
         {
             return null;
+        }
+    }
+
+    public void StartHighlightChickensSequentially()
+    {
+        highLightChickensCoroutine = StartCoroutine(HighlightChickensSequentially());
+    }
+
+    public void StopHighlightChickensSequentially()
+    {
+        if (highLightChickensCoroutine != null)
+        {
+            StopCoroutine(highLightChickensCoroutine);
+        }
+
+        for (int i = 0; i < chickens.Count; i++)
+        {
+            BaseChicken chicken = chickens[i];
+
+            if (chicken.isDone)
+            {
+                continue;
+            }
+
+            chicken.highlight = 0;
+
+            if (chicken.isStuck)
+            {
+                chickenRenderer.UpdateChickenRendering(chicken);
+            }
+            else
+            {
+                chicken.SetHighlight(0);
+            }
+        }
+    }
+
+    public IEnumerator HighlightChickensSequentially()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(3f);
+
+        Dictionary<Color, List<BaseChicken>> chickensByFaction = chickens
+            .Where(chicken => !chicken.isDone)
+            .GroupBy(chicken => chicken.faction)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        List<BaseChicken> highlightingChickens = new List<BaseChicken>();
+
+        while (true)
+        {
+            foreach (var faction in chickensByFaction.Keys)
+            {
+                for (int i = 0; i < highlightingChickens.Count; i++)
+                {
+                    BaseChicken chicken = highlightingChickens[i];
+
+                    if (chicken.isStuck)
+                    {
+                        Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
+                        {
+                            chicken.highlight = newVal;
+
+                            chickenRenderer.UpdateChickenRendering(chicken);
+                        }).OnComplete(() =>
+                        {
+                            chicken.highlight = 0;
+
+                            chickenRenderer.UpdateChickenRendering(chicken);
+                        });
+                    }
+                    else
+                    {
+                        Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
+                        {
+                            chicken.SetHighlight(newVal);
+                        }).OnComplete(() =>
+                        {
+                            chicken.SetHighlight(0);
+                        });
+                    }
+                }
+
+                highlightingChickens.Clear();
+
+                for (int i = 0; i < chickensByFaction[faction].Count; i++)
+                {
+                    BaseChicken chicken = chickensByFaction[faction][i];
+
+                    if (chicken.isStuck)
+                    {
+                        Tween.Custom(0.5f, 1f, duration: 0.3f, onValueChange: newVal =>
+                        {
+                            chicken.highlight = newVal;
+
+                            chickenRenderer.UpdateChickenRendering(chicken);
+                        });
+                    }
+                    else
+                    {
+                        Tween.Custom(0.5f, 1f, duration: 0.3f, onValueChange: newVal =>
+                        {
+                            chicken.highlight = newVal;
+
+                            chicken.SetHighlight(chicken.highlight);
+                        });
+                    }
+
+                    highlightingChickens.Add(chicken);
+                }
+
+                yield return waitForSeconds;
+            }
         }
     }
     #endregion

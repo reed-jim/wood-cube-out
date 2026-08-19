@@ -746,6 +746,8 @@ namespace AntsFlow
             MinusFactionGrainRequirement(selectedFaction, numGrainRequiredRemoved);
 
             AdjustAntBoxAfterClearingOneColor(chickensToClear);
+
+            ChickenManager.Ins.StopHighlightChickensSequentially();
         }
 
         private void AdjustAntBoxAfterClearingOneColor(List<BaseChicken> chickensToClear)

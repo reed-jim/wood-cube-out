@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
+using CandyCoded.HapticFeedback;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
@@ -37,6 +38,7 @@ public class BaseChicken : MonoBehaviour
     private static readonly int MaxYProperty = Shader.PropertyToID("_MaxY");
     private static readonly int HighlightColorProperty = Shader.PropertyToID("_HighlightColor");
     private static readonly int DissolveProgressProperty = Shader.PropertyToID("_DissolveProgress");
+    private static readonly int HighlightProperty = Shader.PropertyToID("_Highlight");
     #endregion
 
     public LazyHealthBar eatingProgress;
@@ -60,6 +62,7 @@ public class BaseChicken : MonoBehaviour
     public bool isStuck;
     public bool isForceFlyOut;
     public bool isGhost;
+    public float highlight;
     public string currentAnimation;
     public int currentIdleIndex;
 
@@ -112,6 +115,18 @@ public class BaseChicken : MonoBehaviour
         WinPopup.resetLevelEvent -= Reset;
     }
 
+    private void Start()
+    {
+        ActionLimitQueue.ActionLimit chickenPeck = new ActionLimitQueue.ActionLimit(() =>
+        {
+            HapticFeedback.MediumFeedback();
+
+            SoundManager.Instance.PlaySoundChickenPeck();
+        }, 0.15f);
+
+        GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.ChickenPeck, chickenPeck);
+    }
+
     // void Awake()
     // {
     //     Debug.Log($"Chicken Bones: {skeletonAnimation.Skeleton.Data.Bones.Count}");
@@ -152,6 +167,7 @@ public class BaseChicken : MonoBehaviour
         isForceFlyOut = false;
         isLastChickenForcedFlyOut = false;
         isGhost = false;
+        highlight = 0;
 
         prevEatingProgress = 0f;
         currentEatingProgress = 0f;
@@ -168,6 +184,7 @@ public class BaseChicken : MonoBehaviour
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.identity;
         UpdateEatingProgress(0);
+        SetHighlight(0);
 
         // Waiting slots
         waitingChickenSlots.Clear();
@@ -454,15 +471,7 @@ public class BaseChicken : MonoBehaviour
 
         void PlaySoundAndFx(Vector3 position)
         {
-            // ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-            // position.y -= 1;
-            // position.z -= 1;
-            // fx.transform.position = position;
-            // var main = fx.main;
-            // main.startColor = faction;
-            // fx.Play();
-
-            SoundManager.Instance.PlaySoundChickenPeck();
+            GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.ChickenPeck);
         }
 
         float GetUpdatingProgressDuration(int numGrainToEat)
@@ -592,6 +601,12 @@ public class BaseChicken : MonoBehaviour
         meshRenderer.GetPropertyBlock(propertyBlock);
         propertyBlock.SetColor(HighlightColorProperty, 1.3f * faction);
         propertyBlock.SetFloat(DissolveProgressProperty, Mathf.Clamp01(progress));
+        meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void SetHighlight(float value)
+    {
+        propertyBlock.SetFloat(HighlightProperty,value);
         meshRenderer.SetPropertyBlock(propertyBlock);
     }
     #endregion

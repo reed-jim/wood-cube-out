@@ -40,6 +40,7 @@ public class ChickenData
     public int factionIndex;
     public string anim;
     public float animStartFrame;
+    public float highlight;
 }
 
 public class ChickenRenderer : MonoBehaviour
@@ -66,6 +67,7 @@ public class ChickenRenderer : MonoBehaviour
     private readonly Vector4[] animData = new Vector4[BatchSize];
     private readonly float[] animStartFrame = new float[BatchSize];
     private readonly float[] spriteSizes = new float[BatchSize];
+    private readonly float[] isChickensHighlighting = new float[BatchSize];
 
     // Reuse collections across frames to achieve ZERO GC in Update/Render
     private readonly Dictionary<ChickenBatchKey, List<int>> batchBuffers = new();
@@ -76,6 +78,7 @@ public class ChickenRenderer : MonoBehaviour
     private static readonly int AnimDataID = Shader.PropertyToID("_AnimData");
     private static readonly int AnimStartFrame = Shader.PropertyToID("_AnimStartFrame");
     private static readonly int SpriteSize = Shader.PropertyToID("_SpriteSize");
+    private static readonly int Highlight = Shader.PropertyToID("_Highlight");
 
     private void Awake()
     {
@@ -109,6 +112,7 @@ public class ChickenRenderer : MonoBehaviour
         Array.Clear(animData, 0, animData.Length);
         Array.Clear(animStartFrame, 0, animStartFrame.Length);
         Array.Clear(spriteSizes, 0, spriteSizes.Length);
+        Array.Clear(isChickensHighlighting, 0, isChickensHighlighting.Length);
     }
 
     private void Render()
@@ -202,12 +206,14 @@ public class ChickenRenderer : MonoBehaviour
                 animData[i] = new Vector4(0, chicken.factionIndex, 0, 0);
                 animStartFrame[i] = chicken.animStartFrame;
                 spriteSizes[i] = chicken.scale * defaultSpriteSize;
+                isChickensHighlighting[i] = chicken.highlight;
             }
 
             propertyBlock.Clear();
             propertyBlock.SetVectorArray(AnimDataID, animData);
             propertyBlock.SetFloatArray(AnimStartFrame, animStartFrame);
             propertyBlock.SetFloatArray(SpriteSize, spriteSizes);
+            propertyBlock.SetFloatArray(Highlight, isChickensHighlighting);
 
             Graphics.DrawMeshInstanced(
                 chickenMesh,
@@ -242,7 +248,8 @@ public class ChickenRenderer : MonoBehaviour
                 scale = chicken.numColumnTaken,
                 factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction),
                 anim = chicken.currentAnimation,
-                animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame)
+                animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame),
+                highlight = chicken.highlight
             };
 
             chickenDataItems.Add(chickenData);
@@ -257,6 +264,7 @@ public class ChickenRenderer : MonoBehaviour
             chickenData.position = chicken.transform.position;
             chickenData.factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction);
             chickenData.anim = chicken.currentAnimation;
+            chickenData.highlight = chicken.highlight;
         }
     }
 

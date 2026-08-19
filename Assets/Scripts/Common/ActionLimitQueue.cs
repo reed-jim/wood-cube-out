@@ -8,7 +8,8 @@ public class ActionLimitQueue : MonoBehaviour
     public enum NameAction
     {
         None = 0,
-        FxAntComeToNest = 1
+        FxAntComeToNest = 1,
+        ChickenPeck 
     }    
 
     public class ActionLimit

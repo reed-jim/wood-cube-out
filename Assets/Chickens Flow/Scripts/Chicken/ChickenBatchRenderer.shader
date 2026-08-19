@@ -8,6 +8,10 @@ Shader "Instanced/ChickenSpriteAtlas"
         _FPS ("Animation FPS", Float) = 8
         _Frames ("Frame Count", Float) = 16
         _Size ("Default Sprite Size", Float) = 1
+
+        _HighlightColor ("Highlight Color", Color) = (1,1,1,1)
+        _HighlightDuration ("Highlight Duration", Float) = 0.15
+        _HighlightIntensity ("Highlight Intensity", Float) = 1
     }
 
     SubShader
@@ -41,16 +45,23 @@ Shader "Instanced/ChickenSpriteAtlas"
             float _Frames;
             float _Size;
 
+            float4 _HighlightColor;
+            float _HighlightDuration;
+            float _HighlightIntensity;
+
             UNITY_INSTANCING_BUFFER_START(Props)
 
-            // x = animation speed offset
-            // y = skin/frame start offset
-            UNITY_DEFINE_INSTANCED_PROP(float4,_AnimData)
+            // Animation data
+            UNITY_DEFINE_INSTANCED_PROP(float4, _AnimData)
 
-            // individual chicken size
-            UNITY_DEFINE_INSTANCED_PROP(float,_SpriteSize)
+            // Individual chicken size
+            UNITY_DEFINE_INSTANCED_PROP(float, _SpriteSize)
 
-            UNITY_DEFINE_INSTANCED_PROP(float,_AnimStartFrame)
+            // Animation start frame
+            UNITY_DEFINE_INSTANCED_PROP(float, _AnimStartFrame)
+
+            // 0 = off, 1 = on
+            UNITY_DEFINE_INSTANCED_PROP(float, _Highlight)
 
             UNITY_INSTANCING_BUFFER_END(Props)
 
@@ -79,6 +90,7 @@ Shader "Instanced/ChickenSpriteAtlas"
                 // Billboard position
                 float3 center =
                     unity_ObjectToWorld._m03_m13_m23;
+
                 float3 camRight =
                     UNITY_MATRIX_V[0].xyz;
 
@@ -92,32 +104,48 @@ Shader "Instanced/ChickenSpriteAtlas"
                         _SpriteSize
                     );
 
-                // fallback to material size
-                if(instanceSize <= 0)
+                // Fallback to material size
+                if (instanceSize <= 0)
                     instanceSize = _Size;
 
                 float3 worldPos =
                     center +
                     camRight * v.vertex.x * instanceSize +
-                    camUp    * v.vertex.y * instanceSize;
+                    camUp * v.vertex.y * instanceSize;
 
-                o.pos =UnityWorldToClipPos(worldPos);
+                o.pos = UnityWorldToClipPos(worldPos);
 
-                // Animation offset
+                // Animation
                 int animStartFrame =
                     UNITY_ACCESS_INSTANCED_PROP(
                         Props,
                         _AnimStartFrame
                     );
 
-                float frame = floor(frac(_Time.y * _FPS + animStartFrame / _Frames) * _Frames);
+                float frame =
+                    floor(
+                        frac(
+                            _Time.y * _FPS +
+                            animStartFrame / _Frames
+                        ) * _Frames
+                    );
 
-                float column = fmod(frame, _Columns);
-                float row = _Rows - 1 - floor(frame / _Columns);
+                float column =
+                    fmod(frame, _Columns);
+
+                float row =
+                    _Rows - 1 -
+                    floor(frame / _Columns);
 
                 o.uv = v.uv;
-                o.uv.x = (o.uv.x + column) / _Columns;
-                o.uv.y = (o.uv.y + row) / _Rows;
+
+                o.uv.x =
+                    (o.uv.x + column) /
+                    _Columns;
+
+                o.uv.y =
+                    (o.uv.y + row) /
+                    _Rows;
 
                 return o;
             }
@@ -130,9 +158,30 @@ Shader "Instanced/ChickenSpriteAtlas"
                         i.uv
                     );
 
-
                 clip(col.a - 0.8);
 
+                // Per-instance highlight toggle
+                float highlight =
+                    UNITY_ACCESS_INSTANCED_PROP(
+                        Props,
+                        _Highlight
+                    );
+                
+                if(highlight > 0.5) {
+                    float duration = _HighlightDuration;
+
+                    // Time elapsed since flash started
+                    float elapsed = _Time.y;
+
+                    // 0 -> 1 over the duration
+                    float pingPongTime = 0.5 * sin(3 * _Time.y) + 0.5;
+
+                    col.rgb = lerp(
+                    col.rgb,
+                    _HighlightColor.rgb,
+                    (highlight - 0.5f) * pingPongTime * 0.6
+                    );
+                }
 
                 return col;
             }
