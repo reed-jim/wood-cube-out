@@ -338,6 +338,8 @@ public class WashingMachineItem : MonoBehaviour
 
                             GamePersistentVariable.bucketOrder--;
                         });
+
+                        HapticFeedbackManager.Ins.MediumFeedback();
                     }
                 },
                 onCompleteAction: onComplete

@@ -119,7 +119,7 @@ public class BaseChicken : MonoBehaviour
     {
         ActionLimitQueue.ActionLimit chickenPeck = new ActionLimitQueue.ActionLimit(() =>
         {
-            HapticFeedback.MediumFeedback();
+            HapticFeedbackManager.Ins.MediumFeedback();
 
             SoundManager.Instance.PlaySoundChickenPeck();
         }, 0.15f);
@@ -551,8 +551,6 @@ public class BaseChicken : MonoBehaviour
     #region Progress
     public void UpdateEatingProgress(float progress, float duration = 0.3f)
     {
-        ShowProgressBar();
-
         if (updateProgressTween.isAlive)
         {
             updateProgressTween.Stop();
@@ -560,11 +558,9 @@ public class BaseChicken : MonoBehaviour
 
         progress = Mathf.Floor(progress / 0.2f) * 0.2f;
 
-        updateProgressTween = Tween.Custom(currentFillProgress, progress, duration, onValueChange: newVal =>
+        updateProgressTween = Tween.Custom(circleProgressFill.fillAmount, progress, duration, onValueChange: newVal =>
         {
             circleProgressFill.fillAmount = Mathf.Lerp(0.2f, 1f, newVal);
-
-            currentFillProgress = newVal;
         });
 
         TweenManager.Ins.AddTween(updateProgressTween);
