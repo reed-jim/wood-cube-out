@@ -997,6 +997,24 @@ public class GrainSimulation : Singleton<GrainSimulation>
         group.RemoveAt(group.Count - 1);
     }
 
+    public void InjectLiveGrain(Color faction, Vector2 position, Vector2 prevPosition, float mass)
+    {
+        FactionGroup group = GetFaction(faction);
+
+        GrainParticle p = new GrainParticle
+        {
+            position = new float3(position.x, position.y, LayerManager.GetGrainZ() - 0.00001f * UnityEngine.Random.Range(0, 10000)),
+            prevPosition = new float2(prevPosition.x, prevPosition.y),
+            mass = mass,
+            settled = false,
+            fallDelay = 0f,
+            isFake = false,
+            variant = 0
+        };
+
+        group.Add(p, Matrix4x4.identity);
+    }
+
     public Vector3 GetFirstGrainPosition(Color faction)
     {
         FactionGroup group = GetFaction(faction);
