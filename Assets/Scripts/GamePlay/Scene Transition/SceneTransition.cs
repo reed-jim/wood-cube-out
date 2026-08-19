@@ -267,7 +267,7 @@ public class SceneTransition : MonoBehaviour
             {
                 blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                GameController.Instance.admobAds.ShowInterstitial(
+                GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: ActionInterAds.Loading.ToString(),
                   actionIniterClose: () =>
                    {
                        blackBackgroundToPassPolicy.gameObject.SetActive(false);

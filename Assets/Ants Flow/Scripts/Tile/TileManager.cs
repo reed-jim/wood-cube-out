@@ -818,6 +818,7 @@ namespace AntsFlow
             parent[start] = null;
 
             List<Node> reachableBorderNodes = new List<Node>();
+            var result = new List<BaseTile>();
 
             while (edgeQueue.Count > 0 || normalQueue.Count > 0)
             {
@@ -892,10 +893,14 @@ namespace AntsFlow
 
                     // Giống GetFirstNMovableTiles: tile đang bị khóa (BossArea/HardPixel/FreezedTileRegion
                     // còn che) luôn là tường chặn dù đã isDone, tới khi vật che đó biến mất hẳn.
-                    if (neighbor.tile != null && neighbor.tile.isLocked)
+                    if(WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
                     {
-                        isBlocked = true;
+                        if (neighbor.tile != null && neighbor.tile.isLocked)
+                        {
+                            isBlocked = true;
+                        }
                     }
+                    
 
                     if (isBlocked)
                     {
@@ -915,39 +920,41 @@ namespace AntsFlow
                     }
                 }
             }
-
-            if (reachableBorderNodes.Count == 0)
+            if(WashingMachineManager.Ins.isLevelContainingNewSpecialElements)
             {
-                return new List<BaseTile>();
-            }
-
-            var result = new List<BaseTile>();
-
-            for (int i = 0; i < count; i++)
-            {
-                Node targetBorderNode = reachableBorderNodes[i % reachableBorderNodes.Count];
-                List<Node> borderPath = ReconstructPath(targetBorderNode, parent);
-
-                BaseTile antTargetTile;
-                if (targetBorderNode.tile != null)
+                if (reachableBorderNodes.Count == 0)
                 {
-                    antTargetTile = targetBorderNode.tile;
-                    antTargetTile.path = borderPath;
+                    return new List<BaseTile>();
                 }
-                else
+
+
+                for (int i = 0; i < count; i++)
                 {
-                    antTargetTile = new BaseTile()
+                    Node targetBorderNode = reachableBorderNodes[i % reachableBorderNodes.Count];
+                    List<Node> borderPath = ReconstructPath(targetBorderNode, parent);
+
+                    BaseTile antTargetTile;
+                    if (targetBorderNode.tile != null)
                     {
-                        tilemapPosition = CommonUtil.GetVector3Int(
-                            (targetBorderNode.initialPosition - (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1)) / GamePersistentVariable.tileMapScaleFactor),
-                        isDone = true,
-                        path = borderPath
-                    };
-                    targetBorderNode.tile = antTargetTile;
-                }
+                        antTargetTile = targetBorderNode.tile;
+                        antTargetTile.path = borderPath;
+                    }
+                    else
+                    {
+                        antTargetTile = new BaseTile()
+                        {
+                            tilemapPosition = CommonUtil.GetVector3Int(
+                                (targetBorderNode.initialPosition - (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1)) / GamePersistentVariable.tileMapScaleFactor),
+                            isDone = true,
+                            path = borderPath
+                        };
+                        targetBorderNode.tile = antTargetTile;
+                    }
 
-                result.Add(antTargetTile);
+                    result.Add(antTargetTile);
+                }
             }
+           
 
             return result;
         }

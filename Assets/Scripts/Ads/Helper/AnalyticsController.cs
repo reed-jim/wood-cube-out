@@ -644,10 +644,10 @@ public enum ActionClick
 public enum ActionWatchVideo
 {
     None = 0,
-    AddHole,
-    BreakObject,
-    ClearHoles,
-    UnlockScrewBox,
+    EnableAllAntBoxes,
+    Shuffle,
+    ClearOneColor,
+    Revive,
     SkipLevel,
     MultiplyCoinWinLevel,
     BoosterSuggestion,
@@ -656,9 +656,22 @@ public enum ActionWatchVideo
     StarChest,
     LevelChest,
     SpaceRace,
-    CoinChallenge
+    CoinChallenge,
+    GetBoosterByAds,
+    AddHole,
+
 }
 
+public enum ActionInterAds
+{
+    None = 0,
+    RewardFail,
+    Loading,
+    Lose,
+    Replay,
+    Win
+
+}
 public enum ActionShowInter
 {
     None = 0,

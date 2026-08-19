@@ -281,18 +281,32 @@ public class WinPopup : BasePopup
             continueButton.interactable = false;
             continueButtonSingle.interactable = false;
 
-            DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
+            // Kịch bản Inter Win (next level): chỉ hiện inter khi master interstitials.isActive
+            // bật VÀ toggle showBeforeLevel ("hiện inter khi next level") bật.
+            // Ngưỡng level (minimumLevel) và delay giữa 2 inter (minimumInterval) vẫn được
+            // ShowInterstitial gate bên trong.
+            var interConfig = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials;
 
-            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
+            if (interConfig.isActive && interConfig.showBeforeLevel)
             {
-                GameController.Instance.admobAds.ShowInterstitial
-               (
-                  actionIniterClose: OnInterstitialAdCompleted
-               );
+                DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
+
+                if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
+                {
+                    GameController.Instance.admobAds.ShowInterstitial
+                   (
+                      actionWatchLog: ActionInterAds.Win.ToString(), actionIniterClose: OnInterstitialAdCompleted
+                   );
+                }
+                else
+                {
+                    GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: ActionInterAds.Win.ToString(), actionIniterClose: OnInterstitialAdCompleted);
+                }
             }
             else
             {
-                GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+                // Toggle Inter Win tắt: bỏ qua inter, đi tiếp next level ngay.
+                OnInterstitialAdCompleted();
             }
         }
 

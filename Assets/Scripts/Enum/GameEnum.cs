@@ -119,8 +119,8 @@ public class GameEnum : MonoBehaviour
     public enum BoosterType
     {
         AddScrewPort,
-        BreakObject,
-        ClearScrewPorts,
+        EnableAllAntBoxes,
+        Shuffle,
         UnlockScrewBox,
         ClearOneColor
     }

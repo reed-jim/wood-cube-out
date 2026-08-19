@@ -26,7 +26,7 @@ public class PausePopup : BasePopup
     public static event Action replayLevelEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
 
-    
+
     // [SerializeField] private SwitchRouteChannelSO switchRouteChannel;
     protected override void MoreActionInAwake()
     {
@@ -55,7 +55,7 @@ public class PausePopup : BasePopup
 
     private void OnEnable()
     {
-        
+
     }
 
     #region Overrdide Methods
@@ -105,18 +105,18 @@ public class PausePopup : BasePopup
         DebugLogger.LogSimple();
         if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
-            DebugLogger.LogSimple(message:$"first");
+            DebugLogger.LogSimple(message: $"first");
             switchRouteEvent?.Invoke(ScreenRoute.Replay);
             // switchRouteChannel.Invoke(ScreenRoute.Replay, nameof(PausePopup));
         }
         else
         {
-            DebugLogger.LogSimple(message:$"second");
+            DebugLogger.LogSimple(message: $"second");
             bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
             if (isShowInterReplayLevel)
             {
-                 GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+                GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: ActionInterAds.Replay.ToString(), actionIniterClose: OnInterstitialAdToReplayCompleted);
             }
             else
             {

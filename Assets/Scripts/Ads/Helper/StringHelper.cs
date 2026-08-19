@@ -9,6 +9,7 @@ public static class StringHelper
     public const string ONOFF_VIBRATION = "ONOFF_VIBRATION";
     public const string ONOFF_NOTIFICATION = "ONOFF_NOTIFICATION";
     public const string FIRST_TIME_INSTALL = "FIRST_TIME_INSTALL";
+    public const string IS_RELOAD_FIREBASE_DONE = "IS_RELOAD_FIREBASE_DONE";
     public const string IS_REINSTALL_SYNC_DATA = "IS_REINSTALL_SYNC_DATA";
     public const string LastTimeSyncName = "lasttimesyncname";
 
@@ -258,6 +259,12 @@ public static class StringHelper
     public const string CURRENT_LEVEL_PASS_ME = "current_level_pass_me";
     public const string TIME_ME_FINISH_RACE_RACE_CHALLENGE = "time_me_finish_race_race_challenge";
     public const string LAST_TIME_MINIGAME_SHOW_HOME = "LAST_TIME_MINIGAME_SHOW_HOME";
+
+    //Segment User
+    public const string APPFLYER_IS_SEGMENTED = "appflyer_is_segmented";
+    public const string APPFLYER_ID_USER_SEGMENT = "appflyer_id_user_segment";
+
+    public const string CURRENT_CAMP = "current_camp";
 }
 
 public class PathPrefabs
@@ -547,6 +554,9 @@ public class FirebaseConfig
 
     public const string LEVEL_UNLOCK_BANNER = "level_unlock_banner";
     public const string LEVEL_UNLOCK_COLLAPSE_BANNER = "level_unlock_collapse_banner";
+
+    public const string USER_CAMP = "user_camp";
+    public const string TEST_CAMP_USER = "test_camp_user";
 }
 
 

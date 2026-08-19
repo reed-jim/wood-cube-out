@@ -36,7 +36,7 @@ public class ReplayPopup : BasePopup
         DebugLogger.LogSimple();
         if (GamePersistentVariable.livesData.CurrentLives <= 0)
         {
-            DebugLogger.LogSimple(message:$"first");
+            DebugLogger.LogSimple(message: $"first");
             GamePersistentVariable.isPendingReplay = true;
 
             SwitchRoute(ScreenRoute.LivesShop);
@@ -48,7 +48,7 @@ public class ReplayPopup : BasePopup
 
         if (isShowInterReplayLevel)
         {
-             GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: ActualReplay);
+            GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: ActionInterAds.Replay.ToString(), actionIniterClose: ActualReplay);
         }
         else
         {

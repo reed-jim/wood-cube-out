@@ -463,6 +463,9 @@ public class RemoteConfigController : MonoBehaviour
 
 
         GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
+        Debug.Log("[SetRemoteConfigRewardedAds] isEnableRewardedAds =" + GamePersistentVariable.isEnableRewardedAds);
+        UseProfile.IsReloadFirebaseDone = true;
+
         if (!GamePersistentVariable.isEnableRewardedAds)
         {
             GamePersistentVariable.doubleInterAdsConfig.isEnable = false;

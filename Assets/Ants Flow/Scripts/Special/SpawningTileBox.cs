@@ -158,8 +158,7 @@ namespace AntsFlow
             numberLeft = 0;
             UpdateNumberText();
 
-            // Huỷ mọi anim spawn-new-at đang bay trước khi box biến mất, nếu không tile đang bay sẽ được
-            // Show() lại sau khi booster đã clear -> kẹt lại trên map.
+
             CancelPendingSpawns();
 
             if (occupiedNodes != null)
@@ -172,8 +171,7 @@ namespace AntsFlow
             SaferioTween.ScaleDownWithPunch(transform);
         }
 
-        // Với mỗi tile đang bay: kill tween, trả fake tile về pool và KHÔNG gọi tile.Show(). Tile tương ứng
-        // đã được booster clear-one-color dọn (isDone=true + Hide); ta set lại cho chắc để không sót tile.
+
         private void CancelPendingSpawns()
         {
             for (int i = 0; i < pendingSpawns.Count; i++)

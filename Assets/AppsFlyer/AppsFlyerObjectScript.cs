@@ -18,11 +18,15 @@ public class AppsFlyerObjectScript : MonoBehaviour , IAppsFlyerConversionData
     public bool getConversionData;
     //******************************//
 
+    public static bool isGetConversionDataSuccess = false;
+    public static Dictionary<string, object> _conversionDataDictionary;
 
     void Start()
     {
         // These fields are set from the editor so do not modify!
         //******************************//
+        _conversionDataDictionary = new Dictionary<string, object>();
+
         AppsFlyer.setIsDebug(isDebug);
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
         AppsFlyer.initSDK(devKey, UWPAppID, getConversionData ? this : null);
@@ -32,7 +36,11 @@ public class AppsFlyerObjectScript : MonoBehaviour , IAppsFlyerConversionData
         AppsFlyer.initSDK(devKey, appID, getConversionData ? this : null);
 #endif
         //******************************/
- 
+#if UNITY_IOS && !UNITY_EDITOR
+AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(60);
+#endif
+        //AppsFlyer.setIsSandbox(false);
+        AppsFlyer.setUseReceiptValidationSandbox(false);
         AppsFlyer.startSDK();
     }
 
@@ -46,13 +54,25 @@ public class AppsFlyerObjectScript : MonoBehaviour , IAppsFlyerConversionData
     public void onConversionDataSuccess(string conversionData)
     {
         AppsFlyer.AFLog("didReceiveConversionData", conversionData);
-        Dictionary<string, object> conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
+        _conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
+        //check this
+
+        //_conversionDataDictionary.Add("campaign_id", "6a7e73dbb4fab82f0f36b2a9");
         // add deferred deeplink logic here
+        Debug.Log("====== GPLAY 2 =====: didReceiveConversionData");
+        foreach (var cv in _conversionDataDictionary)
+        {
+            Debug.Log("====== GPLAY 2 =====: conversionData AF Key: " + cv.Key.ToString() + " Value " + cv.Value.ToString());
+        }
+        isGetConversionDataSuccess = true;
+       // GameController.Instance.appsFlyerManager.Inits();
     }
 
     public void onConversionDataFail(string error)
     {
         AppsFlyer.AFLog("didReceiveConversionDataWithError", error);
+
+        Debug.Log("====== GPLAY 2 =====: conversionData AF Fail: ");
     }
 
     public void onAppOpenAttribution(string attributionData)

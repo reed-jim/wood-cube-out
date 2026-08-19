@@ -119,11 +119,11 @@ public class BuyBoosterPopup : BasePopup
     {
         int boosterIndex = 0;
 
-        if (boosterType == BoosterType.BreakObject)
+        if (boosterType == BoosterType.EnableAllAntBoxes)
         {
             boosterIndex = 1;
         }
-        else if (boosterType == BoosterType.ClearScrewPorts)
+        else if (boosterType == BoosterType.Shuffle)
         {
             boosterIndex = 2;
         }
@@ -143,7 +143,7 @@ public class BuyBoosterPopup : BasePopup
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
         {
-            if (_boosterType == BoosterType.BreakObject)
+            if (_boosterType == BoosterType.EnableAllAntBoxes)
             {
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 3);
 
@@ -223,9 +223,10 @@ public class BuyBoosterPopup : BasePopup
         switch (_boosterType)
         {
             case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
-            default: actionWatchVideo = ActionWatchVideo.AddHole; break;
+            case BoosterType.EnableAllAntBoxes: actionWatchVideo = ActionWatchVideo.EnableAllAntBoxes; break;
+            case BoosterType.Shuffle: actionWatchVideo = ActionWatchVideo.Shuffle; break;
+            case BoosterType.ClearOneColor: actionWatchVideo = ActionWatchVideo.ClearOneColor; break;
+            default: actionWatchVideo = ActionWatchVideo.GetBoosterByAds; break;
         }
 
         GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
@@ -254,7 +255,7 @@ public class BuyBoosterPopup : BasePopup
         isAbleToHideOnClickOutside = false;
 
         GameController.Instance.admobAds.ShowVideoReward(
-           OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
+           OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.Revive);
     }
 
     private void OnRewaredAdCompletedToUnlockBox()

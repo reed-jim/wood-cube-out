@@ -247,7 +247,7 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }
         }
-        else if (boosterType == BoosterType.ClearScrewPorts)
+        else if (boosterType == BoosterType.Shuffle)
         {
             ClearAllScrewPorts();
         }

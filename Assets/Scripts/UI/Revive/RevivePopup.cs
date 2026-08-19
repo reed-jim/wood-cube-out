@@ -160,7 +160,7 @@ public class RevivePopup : BasePopup
             userResourcesObserver.ChangeCoin(-boosterDataObserver.reviveCost);
             updateCoinTextEvent?.Invoke();
 
-            if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
+            if (_currentBoosterOnRevive == BoosterType.Shuffle)
             {
                 userResourcesObserver.ChangeBoosterQuantity(2, 1);
             }
@@ -193,14 +193,14 @@ public class RevivePopup : BasePopup
         }
 
         ActionWatchVideo actionWatchVideo;
-
         switch (_currentBoosterOnRevive)
         {
             case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
-            case BoosterType.UnlockScrewBox: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
-            default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
+            case BoosterType.EnableAllAntBoxes: actionWatchVideo = ActionWatchVideo.EnableAllAntBoxes; break;
+            case BoosterType.Shuffle: actionWatchVideo = ActionWatchVideo.Shuffle; break;
+            case BoosterType.UnlockScrewBox: actionWatchVideo = ActionWatchVideo.Revive; break;
+            case BoosterType.ClearOneColor: actionWatchVideo = ActionWatchVideo.ClearOneColor; break;
+            default: actionWatchVideo = ActionWatchVideo.Revive; break;
         }
 
         GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
