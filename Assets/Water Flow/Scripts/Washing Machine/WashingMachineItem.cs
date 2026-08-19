@@ -239,18 +239,8 @@ public class WashingMachineItem : MonoBehaviour
 
         PouringOut(maxAddNumber, isBucketMoveBack: !isPouringAll, onCompleteAction);
 
-        // WashingMachineManager.Ins.grainPool.AddGrain(maxAddNumber);
-
         isPouring = true;
     }
-
-    // private void OnBucketJump(TrackEntry trackEntry, Spine.Event e)
-    // {
-    //     if (e.Data.Name == "call")
-    //     {
-
-    //     }
-    // }
 
     public float GetEventTime(SkeletonAnimation skeletonAnimation, string animationName, string eventName)
     {
@@ -283,7 +273,6 @@ public class WashingMachineItem : MonoBehaviour
         bucketDestination.y = pourOffsetY;
         bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
 
-        // bucketTopSprite.transform.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
         bucketTop.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
         numberText.transform.SetZ(LayerManager.GetBucketTextZ(GamePersistentVariable.bucketOrder));
 
@@ -294,6 +283,10 @@ public class WashingMachineItem : MonoBehaviour
         pileCenter.z = -1;
 
         Vector3 initialScale = transform.localScale;
+
+        GrainPool.Ins.ChangePendingAmount(grainCount);
+
+        GrainPool.Ins.AddGrain(grainCount, durationUpdateGrainTroughProgress);
 
         TweenManager.Ins.AddTween(Tween.ScaleY(transform, 1.5f * initialScale.y, duration: 0.2f)
             .OnComplete(() =>
@@ -316,8 +309,8 @@ public class WashingMachineItem : MonoBehaviour
 
                     PourGrainPile(grainPile, onFirstGrainHitGround: () =>
                     {
-                        WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
-                        WashingMachineManager.Ins.grainPool.AddGrain(grainCount, durationUpdateGrainTroughProgress);
+                        GrainPool.Ins.AddGrainPile(grainPile);
+                        // GrainPool.Ins.AddGrain(grainCount, durationUpdateGrainTroughProgress);
                     });
                 });
         });
