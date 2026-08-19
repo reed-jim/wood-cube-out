@@ -183,8 +183,13 @@ public class BaseChicken : MonoBehaviour
         circleProgressCanvasGroup.alpha = 1;
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.identity;
-        UpdateEatingProgress(0);
+        if (updateProgressTween.isAlive)
+        {
+            updateProgressTween.Stop();
+        }
         SetHighlight(0);
+        circleProgressFill.fillAmount = 0;
+        circleProgress.gameObject.SetActive(false);
 
         // Waiting slots
         waitingChickenSlots.Clear();
@@ -606,7 +611,7 @@ public class BaseChicken : MonoBehaviour
 
     public void SetHighlight(float value)
     {
-        propertyBlock.SetFloat(HighlightProperty,value);
+        propertyBlock.SetFloat(HighlightProperty, value);
         meshRenderer.SetPropertyBlock(propertyBlock);
     }
     #endregion

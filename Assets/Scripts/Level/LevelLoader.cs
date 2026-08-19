@@ -452,6 +452,7 @@ namespace NamPhuThuy.GamePlay
             spawnedLevelItem.chickenAreaScaleX = antLevelData.levelItemData.chickenAreaScaleX;
             spawnedLevelItem.chickenAreaScaleY = antLevelData.levelItemData.chickenAreaScaleY;
             spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
+            spawnedLevelItem.isTutorialSpeedUpLevel = antLevelData.levelItemData.isTutorialSpeedUpLevel;
             spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
             spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
             spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;

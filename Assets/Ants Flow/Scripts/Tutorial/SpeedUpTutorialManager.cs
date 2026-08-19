@@ -105,24 +105,23 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
         {
             if (!isTutorialStarted)
             {
-                if (GamePersistentVariable.numActiveAnt > numAntToShow)
+                if (GamePersistentVariable.eatingChickens.Count > numAntToShow)
                 {
                     Show();
 
                     isTutorialStarted = true;
                 }
-            }
-            else
-            {
-                if (GamePersistentVariable.numActiveAnt <= 0 && isHolding)
-                {
-                    Hide();
 
-                    yield return new WaitForSeconds(intervalShowingTutorial);
-
-                    isTutorialStarted = false;
-                }
+                yield return new WaitForSeconds(4);
             }
+            // else
+            // {
+            //     Hide();
+
+            //     yield return new WaitForSeconds(intervalShowingTutorial);
+
+            //     isTutorialStarted = false;
+            // }
 
             yield return waitForSeconds;
         }

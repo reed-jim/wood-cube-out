@@ -9865,6 +9865,7 @@ Transform:
   - {fileID: 1637084031230060450}
   - {fileID: 1257002241101718844}
   - {fileID: 8627940084077650031}
+  - {fileID: 5604596946795118036}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -13437,6 +13438,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Color del tornillo de bloqueo
+    Object: {fileID: 0}
+--- !u!1 &7039414523010500072
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5604596946795118036}
+  - component: {fileID: 7178484961689794708}
+  m_Layer: 0
+  m_Name: Full
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5604596946795118036
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7039414523010500072}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7178484961689794708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7039414523010500072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Full!
+    Object: {fileID: 0}
+  - Language: French
+    Text: Complet!
+    Object: {fileID: 0}
+  - Language: German
+    Text: Voll!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pieno!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6E80\u676F\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC00\uB4DD\uD55C!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Completo!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043E\u043B\u043D\u044B\u0439!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Lleno!"
     Object: {fileID: 0}
 --- !u!1 &7080895767999602761
 GameObject:

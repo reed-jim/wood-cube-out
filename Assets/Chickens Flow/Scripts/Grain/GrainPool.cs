@@ -37,6 +37,7 @@ public class GrainPool : Singleton<GrainPool>
     [Header("Warning")]
     [SerializeField] private Material normalTextMaterial;
     [SerializeField] private Material warningTextMaterial;
+    [SerializeField] private TMP_Text fullWarningText;
 
     public List<GrainPile> grainPiles;
     public int maxGrainPoolSlots;
@@ -61,6 +62,8 @@ public class GrainPool : Singleton<GrainPool>
     #region Warning
     private Tween warningTween;
     private Tween warningColorTween;
+    private PrimeTween.Sequence warningTextAppearSequence;
+    private Tween warningTextTween;
     private bool isTurningOffWarning;
     #endregion
 
@@ -112,6 +115,14 @@ public class GrainPool : Singleton<GrainPool>
                 warningTween = Tween.Scale(percentText.transform, 1.2f, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
                 warningColorTween = Tween.Color(percentText, Color.red, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
             }
+
+            if (!fullWarningText.gameObject.activeSelf)
+            {
+                warningTextAppearSequence = SaferioTween.ScaleUpWithPunch(fullWarningText.transform, 1, onCompleteAction: () =>
+                {
+                    warningTextTween = Tween.Scale(fullWarningText.transform, 1.2f, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
+                });
+            }
         }
         else
         {
@@ -129,6 +140,16 @@ public class GrainPool : Singleton<GrainPool>
                 });
 
                 isTurningOffWarning = true;
+            }
+
+            if (warningTextTween.isAlive)
+            {
+                warningTextTween.Stop();
+            }
+
+            if (fullWarningText.gameObject.activeSelf && !warningTextAppearSequence.isAlive)
+            {
+                warningTextAppearSequence = SaferioTween.ScaleDownWithPunch(fullWarningText.transform);
             }
         }
     }
@@ -151,6 +172,8 @@ public class GrainPool : Singleton<GrainPool>
         percentText.fontMaterial = normalTextMaterial;
 
         grainPiles.Clear();
+
+        fullWarningText.gameObject.SetActive(false);
 
         SoundManager.Instance.StopGrainInTroughSound();
     }

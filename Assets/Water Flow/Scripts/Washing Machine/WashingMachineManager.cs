@@ -126,10 +126,10 @@ namespace AntsFlow
                 TutorialLevelOne.Ins.HideTutorial();
             }
 
-            // if (levelItem.isTutorialSpeedUpLevel)
-            // {
-            //     SpeedUpTutorialManager.Ins.StartTutorial();
-            // }
+            if (levelItem.isTutorialSpeedUpLevel)
+            {
+                SpeedUpTutorialManager.Ins.StartTutorial();
+            }
         }
 
         #region Chicken Feed    
@@ -607,7 +607,7 @@ namespace AntsFlow
             }
             else
             {
-                maxGrainPerFaction = GetNumAntSpawnPerFactionOrderByDifficulty();
+                maxGrainPerFaction = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot: false);
             }
 
             List<FactionGrainRequirement> bucketDataItems = SplitGrain(maxGrainPerFaction, slotOfShuffleBuckets.Count);

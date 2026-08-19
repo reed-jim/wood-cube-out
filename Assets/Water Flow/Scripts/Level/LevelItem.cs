@@ -124,6 +124,7 @@ namespace AntsFlow
         public List<BaseTile> tiles;
         public List<AntLevelDataItem> chickenLevelTiles;
         public bool isTutorialLevel;
+        public bool isTutorialSpeedUpLevel;
         public bool isUseManualFactionSetupForFirstAntBoxes;
         public LevelFactionConfig levelFactionConfig;
         public int difficulty;
@@ -209,6 +210,7 @@ namespace AntsFlow
                 chickenAreaScaleY = chickenAreaScaleY,
                 poolFactionIndexes = poolFactionIndexes,
                 isTutorialLevel = isTutorialLevel,
+                isTutorialSpeedUpLevel = isTutorialSpeedUpLevel,
                 isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
                 levelFactionConfig = levelFactionConfig,
                 difficulty = difficulty,
@@ -1591,6 +1593,7 @@ public class LevelItemData
     public float chickenAreaScaleY;
     public List<int> poolFactionIndexes;
     public bool isTutorialLevel;
+    public bool isTutorialSpeedUpLevel;
     public bool isUseManualFactionSetupForFirstAntBoxes;
     public LevelFactionConfig levelFactionConfig;
     public int difficulty;
