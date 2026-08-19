@@ -65,7 +65,7 @@ public class AppsFlyerManager : MonoBehaviour
     {
         float timer = 0;
         while ((!RemoteConfigController.isFetchDone || !AppsFlyerObjectScript.isGetConversionDataSuccess || !GameController.isInited) && timer < maxWaitTime)
-        {
+        { 
             timer += Time.deltaTime;
             yield return null;
         }
