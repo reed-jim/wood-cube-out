@@ -1036,25 +1036,6 @@ namespace AntsFlow
             return false;
         }
 
-        public Dictionary<Color, int> GetRemaniningTilePerFaction()
-        {
-            Dictionary<Color, int> result = new Dictionary<Color, int>();
-
-            for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
-            {
-                BaseChicken chicken = ChickenManager.Ins.chickens[i];
-
-                if (chicken.isDone)
-                {
-                    continue;
-                }
-
-                CommonUtil.SumValueOfDictionary(result, chicken.faction, chicken.numGrainPileRequiredLeft);
-            }
-
-            return result;
-        }
-
         public Dictionary<Color, int> GetNumNotBlockedTilePerFaction(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
@@ -1087,41 +1068,42 @@ namespace AntsFlow
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, chickenPoint);
             }
 
-            // for (int i = 0; i < washingMachineStartSlots.Count; i++)
-            // {
-            //     WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot bucketStartSlot = washingMachineStartSlots[i];
 
-            //     if (washingMachineStartSlot.washingMachine != null)
-            //     {
-            //         if (isIncludeStartSlot)
-            //         {
-            //             if (washingMachineStartSlot.washingMachine.number != 0)
-            //             {
-            //                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-            //             }
-            //         }
-            //         else
-            //         {
-            //             WashingMachineItem antBox = washingMachineStartSlot.washingMachine;
+                if (bucketStartSlot.washingMachine != null)
+                {
+                    if (isIncludeStartSlot)
+                    {
+                        if (bucketStartSlot.washingMachine.number != 0)
+                        {
+                            CommonUtil.SumValueOfDictionary(
+                                sortedPoolFaction, bucketStartSlot.washingMachine.faction, -bucketStartSlot.washingMachine.number * rowPowerCache[bucketStartSlot.row]);
+                        }
+                    }
+                    else
+                    {
+                        WashingMachineItem antBox = bucketStartSlot.washingMachine;
 
-            //             if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
-            //             {
-            //                 if (washingMachineStartSlot.washingMachine.number != 0)
-            //                 {
-            //                     CommonUtil.SumValueOfDictionary(
-            //                         sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
+                        if (antBox.isShuffled || antBox.isDouble || antBox is HiddenAntBox || antBox is FreezedAntBox)
+                        {
+                            if (bucketStartSlot.washingMachine.number != 0)
+                            {
+                                CommonUtil.SumValueOfDictionary(
+                                    sortedPoolFaction, bucketStartSlot.washingMachine.faction, -bucketStartSlot.washingMachine.number * rowPowerCache[bucketStartSlot.row]);
+                            }
+                        }
+                    }
+                }
+            }
 
-            // for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
-            // {
-            //     GrainPile grainPile = GrainPool.Ins.grainPiles[i];
+            for (int i = 0; i < GrainPool.Ins.grainPiles.Count; i++)
+            {
+                GrainPile grainPile = GrainPool.Ins.grainPiles[i];
 
-            //     CommonUtil.SumValueOfDictionary(sortedPoolFaction, grainPile.faction, -grainPile.remainingNumber);
-            // }
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, grainPile.faction, -grainPile.remainingNumber * rowPowerCache[0]);
+            }
 
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
