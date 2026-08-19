@@ -402,7 +402,7 @@ public class BaseChicken : MonoBehaviour
             }
             else
             {
-                PlayIdleAnim();
+                // PlayIdleAnim();
                 // PlayAnimWhenFinished(idleAnimations[UnityEngine.Random.Range(0, idleAnimations.Length)]);
 
                 waitingForGrainCount++;
@@ -423,6 +423,8 @@ public class BaseChicken : MonoBehaviour
 
                 if (notPlayingEatAnimCount > notPlayingEatAnimThreshold)
                 {
+                    PlayIdleAnim();
+
                     isNotPlayingEatAnim = true;
 
                     notPlayingEatAnimCount = 0;

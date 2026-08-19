@@ -149,6 +149,8 @@ public class GrainPool : Singleton<GrainPool>
         percentText.fontMaterial = normalTextMaterial;
 
         grainPiles.Clear();
+
+        SoundManager.Instance.StopGrainInTroughSound();
     }
 
     private void SetupGrainPool()
