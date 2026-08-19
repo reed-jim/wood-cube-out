@@ -24,6 +24,9 @@ namespace AntsFlow
         public SkeletonGraphic hardLevelSpine;
         public SkeletonGraphic superHardLevelSpine;
 
+        public ParticleSystem hardLevelFx;
+        public ParticleSystem superHardLevelFx;
+
         [SpineAnimation] public string appearAnimation;
         // [SpineAnimation] public string idleAnimation;
 
@@ -61,12 +64,20 @@ namespace AntsFlow
                     selectedHardModeSpine = hardLevelSpine;
 
                     superHardLevelSpine.gameObject.SetActive(false);
+                    superHardLevelFx.gameObject.SetActive(false);
+
+                    hardLevelFx.gameObject.SetActive(true);
+                    hardLevelFx.Play();
                 }
                 else
                 {
                     selectedHardModeSpine = superHardLevelSpine;
 
                     hardLevelSpine.gameObject.SetActive(false);
+                    hardLevelFx.gameObject.SetActive(false);
+
+                    superHardLevelFx.gameObject.SetActive(true);
+                    superHardLevelFx.Play();
                 }
 
                 selectedHardModeSpine.gameObject.SetActive(true);
@@ -96,8 +107,6 @@ namespace AntsFlow
             {
                 selectedHardModeSpine.AnimationState.Complete -= OnAnimationComplete;
 
-                // selectedHardModeSpine.AnimationState.SetAnimation(0, idleAnimation, true);
-
                 Tween.Alpha(selectedHardModeSpine, 0, duration: 0.3f)
                     .OnComplete(() =>
                     {
@@ -105,15 +114,14 @@ namespace AntsFlow
                     });
                 SaferioTween.AlphaHide(canvasGroup);
 
-                // Tween.Delay(2).OnComplete(() =>
-                // {
-                //     Tween.Alpha(selectedHardModeSpine, 0, duration: 0.3f)
-                //     .OnComplete(() =>
-                //     {
-                //         selectedHardModeSpine.gameObject.SetActive(false);
-                //     });
-                //     SaferioTween.AlphaHide(canvasGroup);
-                // });
+                if (isHardLevel)
+                {
+                    hardLevelFx.Stop();
+                }
+                else
+                {
+                    superHardLevelFx.Stop();
+                }
             }
         }
 
