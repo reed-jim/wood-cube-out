@@ -19,7 +19,7 @@ Shader "Spine/SpineWithHighlight" {
         _MinY ("Mesh Min Local Y", Float) = -1.0
         _MaxY ("Mesh Max Local Y", Float) = 1.0
         _DissolveProgress ("Dissolve Progress", Range(0, 1)) = 0.0
-        _DissolveEdgeWidth ("Edge Width / Softness", Range(0.001, 0.5)) = 0.05
+        _DissolveEdgeWidth ("Edge Width / Softness", Range(0, 0.5)) = 0.05
         [HDR] _DissolveEdgeColor ("Edge Color", Color) = (2, 0.5, 0, 1)
         [Toggle(_INVERT_DISSOLVE_DIRECTION)] _InvertDirection ("Dissolve Top to Bottom", Float) = 0
 

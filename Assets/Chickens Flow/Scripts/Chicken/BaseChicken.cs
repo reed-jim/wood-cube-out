@@ -30,9 +30,11 @@ public class BaseChicken : MonoBehaviour
     #region Fill Progress
     public MeshRenderer meshRenderer;
     private MaterialPropertyBlock propertyBlock;
+    private float currentFillProgress;
     // Property ID caches for performance (avoids string hash overhead)
     private static readonly int MinYProperty = Shader.PropertyToID("_MinY");
     private static readonly int MaxYProperty = Shader.PropertyToID("_MaxY");
+    private static readonly int HighlightColorProperty = Shader.PropertyToID("_HighlightColor");
     private static readonly int DissolveProgressProperty = Shader.PropertyToID("_DissolveProgress");
     #endregion
 
@@ -237,6 +239,8 @@ public class BaseChicken : MonoBehaviour
 
                 SaferioTween.ScaleDownWithPunch(circleProgress.transform);
 
+                UpdateEatingProgress(0, 0);
+
                 PlayFlyAnim(onComplete: () =>
                 {
                     PlayCompleteFx();
@@ -389,7 +393,7 @@ public class BaseChicken : MonoBehaviour
 
                 float currentPercent = (float)totalGrainEaten / (numGrainPileRequired * GameConstants.grainMultiplier);
 
-                UpdateEatingProgress(currentPercent, prevChickenEatingProgress, grainPile.delayPerGrain);
+                UpdateEatingProgress(currentPercent, prevChickenEatingProgress);
 
                 if (remaingEatingGrainCount % GameConstants.grainMultiplier == 0)
                 {
@@ -534,27 +538,30 @@ public class BaseChicken : MonoBehaviour
     }
 
     #region Progress
-    public void UpdateEatingProgress(float progress, float prevProgress, float duration = 1f)
+    public void UpdateEatingProgress(float progress, float prevProgress, float duration = 0.3f)
     {
-        if (!circleProgress.gameObject.activeSelf)
-        {
-            float targetLossyScale = Mathf.Min(numColumnTaken, 2);
-            float targetLocalScale = targetLossyScale / transform.localScale.x;
+        // if (!circleProgress.gameObject.activeSelf)
+        // {
+        //     float targetLossyScale = Mathf.Min(numColumnTaken, 2);
+        //     float targetLocalScale = targetLossyScale / transform.localScale.x;
 
-            SaferioTween.ShowWithPunch(circleProgress.transform, targetLocalScale, onCompleteAction: () =>
-            {
+        //     SaferioTween.ShowWithPunch(circleProgress.transform, targetLocalScale, onCompleteAction: () =>
+        //     {
 
-            });
-        }
+        //     });
+        // }
 
         if (updateProgressTween.isAlive)
         {
             updateProgressTween.Stop();
         }
 
-        updateProgressTween = Tween.Custom(circleProgressFill.fillAmount, progress, duration, onValueChange: newVal =>
+        updateProgressTween = Tween.Custom(currentFillProgress, progress, duration, onValueChange: newVal =>
         {
-            circleProgressFill.fillAmount = newVal;
+            // circleProgressFill.fillAmount = newVal;
+            SetDissolveProgress(newVal);
+
+            currentFillProgress = newVal;
         });
 
         TweenManager.Ins.AddTween(updateProgressTween);
@@ -578,6 +585,7 @@ public class BaseChicken : MonoBehaviour
     public void SetDissolveProgress(float progress)
     {
         meshRenderer.GetPropertyBlock(propertyBlock);
+        // propertyBlock.SetColor(HighlightColorProperty, faction);
         propertyBlock.SetFloat(DissolveProgressProperty, Mathf.Clamp01(progress));
         meshRenderer.SetPropertyBlock(propertyBlock);
     }

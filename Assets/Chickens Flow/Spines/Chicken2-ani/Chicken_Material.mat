@@ -8,10 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Chicken_Material
-  m_Shader: {fileID: 4800000, guid: 1e8a610c9e01c3648bac42585e5fc676, type: 3}
+  m_Shader: {fileID: 4800000, guid: af163379d0c2b2e4c87fed563f1c26a4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _INVERT_DISSOLVE_DIRECTION
   - _STRAIGHT_ALPHA_INPUT
   m_InvalidKeywords:
   - _USE8NEIGHBOURHOOD_ON
@@ -32,6 +33,14 @@ Material:
     m_Ints: []
     m_Floats:
     - _Cutoff: 0.1
+    - _DissolveEdgeWidth: 0
+    - _DissolveProgress: 0
+    - _FlashIntensity: 0.16
+    - _FlashSpeed: 5
+    - _HighlightAmount: 0.2
+    - _InvertDirection: 1
+    - _MaxY: 5
+    - _MinY: 0
     - _OutlineMipLevel: 0
     - _OutlineOpaqueAlpha: 1
     - _OutlineReferenceTexWidth: 1024
@@ -43,6 +52,8 @@ Material:
     - _ThresholdEnd: 0.25
     - _Use8Neighbourhood: 1
     m_Colors:
+    - _DissolveEdgeColor: {r: 2.670157, g: 2.670157, b: 2.670157, a: 1}
+    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
