@@ -23,6 +23,7 @@ public class BaseChicken : MonoBehaviour
     [SpineAnimation] public string[] idleAnimations;
 
     #region Circle Progress
+    public CanvasGroup circleProgressCanvasGroup;
     public Image circleProgress;
     public Image circleProgressFill;
     #endregion
@@ -78,7 +79,7 @@ public class BaseChicken : MonoBehaviour
     private string _pendingAnimation;
     private SkeletonAnimation smokeAnimation;
     private bool isLastChickenForcedFlyOut;
-    private float flyAnimDuration;
+    public float flyAnimDuration;
     private Tween updateProgressTween;
 
     public bool IsInSide(Vector2 position)
@@ -99,10 +100,6 @@ public class BaseChicken : MonoBehaviour
         WinPopup.resetLevelEvent += Reset;
 
         propertyBlock = new MaterialPropertyBlock();
-
-        SetDissolveProgress(0);
-
-        flyAnimDuration = skeletonAnimation.Skeleton.Data.FindAnimation(flyAnimations[0]).Duration;
 
         currentIdleIndex = UnityEngine.Random.Range(0, idleAnimations.Length);
     }
@@ -167,8 +164,10 @@ public class BaseChicken : MonoBehaviour
         eatingProgress.gameObject.SetActive(false);
         eatingProgressText.gameObject.SetActive(false);
         circleProgress.gameObject.SetActive(false);
+        circleProgressCanvasGroup.alpha = 1;
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.identity;
+        UpdateEatingProgress(0);
 
         // Waiting slots
         waitingChickenSlots.Clear();
@@ -237,9 +236,8 @@ public class BaseChicken : MonoBehaviour
                     transform.eulerAngles = Vector3.zero;
                 }
 
-                SaferioTween.ScaleDownWithPunch(circleProgress.transform);
-
-                UpdateEatingProgress(0, 0);
+                UpdateEatingProgress(1);
+                SaferioTween.AlphaHide(circleProgressCanvasGroup, duration: 0.6f);
 
                 PlayFlyAnim(onComplete: () =>
                 {
@@ -393,7 +391,7 @@ public class BaseChicken : MonoBehaviour
 
                 float currentPercent = (float)totalGrainEaten / (numGrainPileRequired * GameConstants.grainMultiplier);
 
-                UpdateEatingProgress(currentPercent, prevChickenEatingProgress);
+                UpdateEatingProgress(currentPercent);
 
                 if (remaingEatingGrainCount % GameConstants.grainMultiplier == 0)
                 {
@@ -495,8 +493,7 @@ public class BaseChicken : MonoBehaviour
             transform.eulerAngles = Vector3.zero;
         }
 
-        // SaferioTween.ScaleDownWithPunch(eatingProgressText.transform);
-        SaferioTween.ScaleDownWithPunch(circleProgress.transform);
+        SaferioTween.AlphaHide(circleProgressCanvasGroup);
 
         PlayFlyAnim(onComplete: () =>
         {
@@ -538,33 +535,41 @@ public class BaseChicken : MonoBehaviour
     }
 
     #region Progress
-    public void UpdateEatingProgress(float progress, float prevProgress, float duration = 0.3f)
+    public void UpdateEatingProgress(float progress, float duration = 0.3f)
     {
-        // if (!circleProgress.gameObject.activeSelf)
-        // {
-        //     float targetLossyScale = Mathf.Min(numColumnTaken, 2);
-        //     float targetLocalScale = targetLossyScale / transform.localScale.x;
-
-        //     SaferioTween.ShowWithPunch(circleProgress.transform, targetLocalScale, onCompleteAction: () =>
-        //     {
-
-        //     });
-        // }
+        ShowProgressBar();
 
         if (updateProgressTween.isAlive)
         {
             updateProgressTween.Stop();
         }
 
+        progress = Mathf.Floor(progress / 0.2f) * 0.2f;
+
         updateProgressTween = Tween.Custom(currentFillProgress, progress, duration, onValueChange: newVal =>
         {
-            // circleProgressFill.fillAmount = newVal;
-            SetDissolveProgress(newVal);
+            circleProgressFill.fillAmount = Mathf.Lerp(0.2f, 1f, newVal);
 
             currentFillProgress = newVal;
         });
 
         TweenManager.Ins.AddTween(updateProgressTween);
+    }
+
+    public void ShowProgressBar()
+    {
+        if (!circleProgress.gameObject.activeSelf)
+        {
+            float targetLossyScale = Mathf.Min(numColumnTaken, 2);
+            float targetLocalScale = targetLossyScale / transform.localScale.x;
+
+            circleProgress.gameObject.SetActive(true);
+            SaferioTween.AlphaShow(circleProgressCanvasGroup);
+            // SaferioTween.ShowWithPunch(circleProgress.transform, targetLocalScale, onCompleteAction: () =>
+            // {
+
+            // });
+        }
     }
 
     public void UpdateMeshBounds()
@@ -585,7 +590,7 @@ public class BaseChicken : MonoBehaviour
     public void SetDissolveProgress(float progress)
     {
         meshRenderer.GetPropertyBlock(propertyBlock);
-        // propertyBlock.SetColor(HighlightColorProperty, faction);
+        propertyBlock.SetColor(HighlightColorProperty, 1.3f * faction);
         propertyBlock.SetFloat(DissolveProgressProperty, Mathf.Clamp01(progress));
         meshRenderer.SetPropertyBlock(propertyBlock);
     }

@@ -404,7 +404,7 @@ namespace Saferio.Util.SaferioTween
 
         public static Sequence ScaleDownWithPunch(Transform target, float scaleUpVal = 1.1f, float startDelay = 0, Action onCompleteAction = null)
         {
-            float initialScale = target.localScale.x;
+            Vector3 initialScale = target.localScale;
 
             Sequence sequence = Sequence.Create()
                 .Chain(Tween.Scale(target, scaleUpVal * initialScale, duration: 0.1f, startDelay: startDelay, ease: Ease.InOutSine))
@@ -626,9 +626,9 @@ namespace Saferio.Util.SaferioTween
             });
         }
 
-        public static void AlphaHide(CanvasGroup canvasGroup, Action onCompleteAction = null)
+        public static void AlphaHide(CanvasGroup canvasGroup, float duration = 0.3f, Action onCompleteAction = null)
         {
-            Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+            Tween.Alpha(canvasGroup, 0, duration: duration)
             .OnComplete(() =>
             {
                 canvasGroup.gameObject.SetActive(false);

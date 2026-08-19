@@ -48,7 +48,9 @@ public class GrainPool : Singleton<GrainPool>
 
     public int initialMaxCapacity;
     public int maxCapacity;
+    public float additionalCapacityToAllowPour;
     public int currentAmount;
+    public int pendingAmount;
     public float currentPercent;
     public float displayedPercent;
 
@@ -239,6 +241,11 @@ public class GrainPool : Singleton<GrainPool>
     {
         currentAmount += number;
 
+        if (number < 0)
+        {
+            ChangePendingAmount(number);
+        }
+
         float percent = (float)currentAmount / maxCapacity;
 
         percent = Mathf.Max(percent, 0);
@@ -278,6 +285,11 @@ public class GrainPool : Singleton<GrainPool>
         }
     }
 
+    public void ChangePendingAmount(int amount)
+    {
+        pendingAmount += amount;
+    }
+
     public void IncreaseGrainCapacity(int amount)
     {
         maxCapacity += amount;
@@ -294,6 +306,11 @@ public class GrainPool : Singleton<GrainPool>
     {
         return currentAmount >= maxCapacity;
     }
+
+    // public bool IsMaxCapacity()
+    // {
+    //     return currentAmount >= maxCapacity || pendingAmount >= maxCapacity + additionalCapacityToAllowPour;
+    // }
 
     private void SetupLoopPathArrows()
     {

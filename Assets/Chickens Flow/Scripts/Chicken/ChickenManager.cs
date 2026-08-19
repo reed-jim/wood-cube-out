@@ -430,6 +430,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
                 chicken.SetActiveSpine(true);
                 chicken.ForcePlayRandomIdleAnim();
+                chicken.ShowProgressBar();
             }
             else
             {
@@ -1187,6 +1188,7 @@ public class ChickenManager : Singleton<ChickenManager>
                 {
                     chicken.SetActiveSpine(true);
                     chicken.ForcePlayIdleAnim();
+                    chicken.ShowProgressBar();
 
                     chickenRenderer.RemoveChickenRendering(chicken);
                 }
