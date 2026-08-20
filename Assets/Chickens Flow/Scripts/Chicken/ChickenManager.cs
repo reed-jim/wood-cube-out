@@ -30,6 +30,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     [Header("Customize")]
     public int giantChickenGrainMultiplier = 3;
+    public int durationSwitchNextFactionHighlightChicken = 2;
 
     [Header("Shape Definition")]
     [Tooltip("Vertices of any 2D closed polygon, ordered clockwise or counter-clockwise.")]
@@ -482,6 +483,7 @@ public class ChickenManager : Singleton<ChickenManager>
         }
 
         chickenRenderer.RenderChickens(chickens);
+        SoundManager.Instance.PlayChickenSound();
     }
 
     public static List<Vector2> ScalePolygonToScreen(List<Vector2> points)
@@ -1247,6 +1249,7 @@ public class ChickenManager : Singleton<ChickenManager>
         if (isWin)
         {
             UpSpeedAnt.Ins.ResetSpeedOnWinLevel();
+            SoundManager.Instance.StopChickenSound();
 
             winLevelEvent?.Invoke();
         }
@@ -1304,7 +1307,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public IEnumerator HighlightChickensSequentially()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(3f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(durationSwitchNextFactionHighlightChicken);
 
         Dictionary<Color, List<BaseChicken>> chickensByFaction = chickens
             .Where(chicken => !chicken.isDone)

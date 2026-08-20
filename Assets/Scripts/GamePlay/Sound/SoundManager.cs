@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
 
     [SerializeField] private AudioSource backgroundMusic;
+    [SerializeField] private AudioSource chickenSound;
     [SerializeField] private AudioSource grainInTroughSound;
 
     [SerializeField] private GameSetting gameSetting;
@@ -26,6 +27,7 @@ public class SoundManager : MonoBehaviour
     private float _lastChickenPeckSoundTime;
     public float chickenPeckSoundCooldown;
     private float _lastChickenFlySoundTime;
+    public bool isPlayingChickenSound;
     #endregion
 
     void Awake()
@@ -77,10 +79,20 @@ public class SoundManager : MonoBehaviour
         if (isEnable)
         {
             ResumeGrainInTroughSound();
+
+            if (isPlayingChickenSound)
+            {
+                PlayChickenSound();
+            }
         }
         else
         {
             StopGrainInTroughSound();
+
+            if (isPlayingChickenSound)
+            {
+                chickenSound.Stop();
+            }
         }
     }
 
@@ -443,6 +455,23 @@ public class SoundManager : MonoBehaviour
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.cubeLandSound);
 
         sound.Play();
+    }
+
+    public void PlayChickenSound()
+    {
+        if (_isEnableGameSound)
+        {
+            chickenSound.Play();
+
+            isPlayingChickenSound = true;
+        }
+    }
+
+    public void StopChickenSound()
+    {
+        chickenSound.Stop();
+
+        isPlayingChickenSound = false;
     }
     #endregion
 

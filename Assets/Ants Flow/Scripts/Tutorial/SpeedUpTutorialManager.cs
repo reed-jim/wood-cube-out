@@ -99,29 +99,16 @@ public class SpeedUpTutorialManager : Singleton<SpeedUpTutorialManager>
 
     public IEnumerator ProgressingTutorial()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
 
         while (!isLevelWon)
         {
-            if (!isTutorialStarted)
+            if (GamePersistentVariable.eatingChickens.Count > numAntToShow)
             {
-                if (GamePersistentVariable.eatingChickens.Count > numAntToShow)
-                {
-                    Show();
+                Show();
 
-                    isTutorialStarted = true;
-                }
-
-                yield return new WaitForSeconds(4);
+                break;
             }
-            // else
-            // {
-            //     Hide();
-
-            //     yield return new WaitForSeconds(intervalShowingTutorial);
-
-            //     isTutorialStarted = false;
-            // }
 
             yield return waitForSeconds;
         }

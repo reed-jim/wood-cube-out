@@ -311,6 +311,8 @@ public class WashingMachineItem : MonoBehaviour
                     {
                         GrainPool.Ins.AddGrainPile(grainPile);
                         // GrainPool.Ins.AddGrain(grainCount, durationUpdateGrainTroughProgress);
+
+                        SoundManager.Instance.PlaySoundGrainHit();
                     });
                 });
         });
