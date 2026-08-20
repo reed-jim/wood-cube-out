@@ -369,9 +369,12 @@ namespace AntsFlow
 
                                 if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
                                 {
-                                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+                                    if (washingMachineItem.number == 0)
+                                    {
+                                        washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
-                                    MinusFactionGrainRequirement(nextFaction, numAnt);
+                                        MinusFactionGrainRequirement(nextFaction, numAnt);
+                                    }
                                 }
                                 else
                                 {
@@ -735,13 +738,23 @@ namespace AntsFlow
 
         public void UseBoosterEnableAllAntBoxes()
         {
+            Color nextFaction;
+            int numAnt;
+
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
-                WashingMachineItem antBox = washingMachineStartSlots[i].washingMachine;
+                WashingMachineItem bucket = washingMachineStartSlots[i].washingMachine;
 
-                if (antBox != null)
+                if (bucket != null)
                 {
-                    antBox.TemporarilyEnable();
+                    bucket.TemporarilyEnable();
+
+                    if (bucket.number == 0 && GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                    {
+                        bucket.Init(bucket.washingMachineStartSlot, nextFaction, numAnt);
+
+                        MinusFactionGrainRequirement(nextFaction, numAnt);
+                    }
                 }
             }
 

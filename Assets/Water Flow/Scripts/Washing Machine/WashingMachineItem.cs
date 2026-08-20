@@ -297,7 +297,6 @@ public class WashingMachineItem : MonoBehaviour
             onFirstGrainInjected: () =>
             {
                 WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
-                WashingMachineManager.Ins.grainPool.AddGrain(grainCount, durationUpdateGrainTroughProgress);
             },
             onAllGrainsInjected: () =>
             {
