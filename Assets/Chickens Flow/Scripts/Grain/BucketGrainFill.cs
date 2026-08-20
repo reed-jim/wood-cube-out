@@ -146,9 +146,33 @@ public class BucketGrainFill : MonoBehaviour
     [Range(0.2f, 1f)] public float bottomWidthRatio = 0.7f;
     public float wallThickness = 0.07f;
 
+    [Header("Mouth (rim) — separate from collider, circle-based inside/outside check")]
+    public Vector2 mouthCenter = new Vector2(0f, 0.46f);
+    public float mouthRadius = 0.6f;
+
+    [Header("Pour exit — grains keep their in-bucket velocity when crossing the mouth")]
+    [Range(0f, 1f)] public float pourConvergence = 0.8f;
+    public float exitDelayJitter = 0.05f;
+
     [Header("Grain size (world-space — match GrainSimulation.grainSize)")]
     public float grainVisualSize = 0.3f;
-    public float grainCollisionSize = 0.2f;
+    public float grainCollisionSize = 0.14f;
+
+    [Header("Fill spacing — how tightly packed grains spawn (separate from physics collision size)")]
+    public float grainFillSpacing = 0.14f;
+
+    [Header("Fill shape — rectangle body + ellipse cap")]
+    public float pileCapHeight = 0.18f;
+
+    [Header("Fill size clamp — floor/ceiling for pile height & width, interpolated by fill percent")]
+    public float pileMinHeight = 0.15f;
+    public float pileMaxHeight = 0.8f;
+    [Range(0.3f, 1f)] public float pileMinWidthRatio = 0.5f;
+    [Range(0.3f, 1f)] public float pileMaxWidthRatio = 0.95f;
+
+    [Header("Fill percent thresholds — at/below min% uses min size, at/above max% uses max size")]
+    [Range(0f, 1f)] public float pileMinPercent = 0.1f;
+    [Range(0f, 1f)] public float pileMaxPercent = 0.3f;
 
     [Header("Z depth")]
     public float idleZOffset = -1f;
@@ -159,13 +183,13 @@ public class BucketGrainFill : MonoBehaviour
     public Material baseMaterial;
 
     [Header("Physics — falling / sliding")]
-    public float outsideGravity = 14f;
+    public float outsideGravity = 22f;
     public float outsideDamping = 0.999f;
-    public float maxStepPerFrame = 0.02f;
-    [Range(0f, 1f)] public float wallFriction = 0.05f;
+    public float maxStepPerFrame = 0.05f;
+    [Range(0f, 1f)] public float wallFriction = 0.02f;
 
     [Header("Collision")]
-    public int collisionIterations = 4;
+    public int collisionIterations = 6;
     [Range(0f, 1f)] public float outsideCollisionAbsorption = 0.85f;
     public float maxPbdCorrection = 0.02f;
 
@@ -179,6 +203,7 @@ public class BucketGrainFill : MonoBehaviour
     }
 
     private readonly List<LocalWall> wallsLocal = new List<LocalWall>();
+    private readonly List<Vector2> poissonSamples = new List<Vector2>();
     private readonly Dictionary<Color, Material> materialsByFaction = new Dictionary<Color, Material>();
 
     private NativeArray<BucketGrainParticle> particles;
@@ -263,24 +288,44 @@ public class BucketGrainFill : MonoBehaviour
         BuildWalls();
         EnsureCapacity(grainCount);
 
-        Vector2[] layout = GrainPile.SunflowerDistribution(grainCount, 1f);
-
         GetLocalContainerDims(anchor, out Vector2 center, out float hxTop, out float hxBottom, out float hy, out _);
         float margin = (grainVisualSize * 0.5f) / Mathf.Max(0.0001f, anchor.lossyScale.x);
+        float spacing = grainFillSpacing / Mathf.Max(0.0001f, anchor.lossyScale.x);
 
-        for (int i = 0; i < grainCount; i++)
+        float pileCapHeightLocal = pileCapHeight / Mathf.Max(0.0001f, anchor.lossyScale.y);
+        float minHeightLocal = pileMinHeight / Mathf.Max(0.0001f, anchor.lossyScale.y);
+        float maxHeightLocal = Mathf.Max(minHeightLocal, pileMaxHeight / Mathf.Max(0.0001f, anchor.lossyScale.y));
+
+        int fullCapacityGrains = GrainPool.Ins != null
+            ? GrainPool.Ins.initialMaxCapacity * GameConstants.grainMultiplier
+            : Mathf.Max(grainCount, 1);
+        float percent = fullCapacityGrains > 0 ? (float)grainCount / fullCapacityGrains : 0f;
+        float fillT = Mathf.InverseLerp(pileMinPercent, pileMaxPercent, percent);
+        float totalHeight = Mathf.Lerp(minHeightLocal, maxHeightLocal, fillT);
+        float pileHalfWidth = hxTop * Mathf.Lerp(pileMinWidthRatio, pileMaxWidthRatio, fillT);
+
+        float rectHeight = Mathf.Max(0f, totalHeight - pileCapHeightLocal);
+        float capBaseY = -hy + rectHeight;
+        float capBaseYCeiling = -hy + Mathf.Max(0f, maxHeightLocal - pileCapHeightLocal);
+
+        for (int growAttempt = 0; growAttempt < 6; growAttempt++)
         {
-            Vector2 local = layout[i];
-            local.x *= hxTop;
-            local.y *= hy;
-            local.y -= hy * 0.3f;
+            GeneratePoissonFill(spacing, margin, hy, hxTop, hxBottom, pileHalfWidth, capBaseY, pileCapHeightLocal, grainCount, poissonSamples);
+            if (poissonSamples.Count >= grainCount || capBaseY >= capBaseYCeiling) break;
+            capBaseY = Mathf.Min(capBaseYCeiling, capBaseY + spacing * 4f);
+        }
 
-            local.y = Mathf.Clamp(local.y, -hy + margin, hy - margin);
+        int count = Mathf.Min(grainCount, poissonSamples.Count);
 
-            float rowHalfWidth = Mathf.Lerp(hxBottom, hxTop, Mathf.InverseLerp(-hy, hy, local.y));
-            local.x = Mathf.Clamp(local.x, -rowHalfWidth + margin, rowHalfWidth - margin);
+        for (int i = 0; i < count; i++)
+        {
+            int swapIndex = Random.Range(i, poissonSamples.Count);
+            (poissonSamples[i], poissonSamples[swapIndex]) = (poissonSamples[swapIndex], poissonSamples[i]);
+        }
 
-            Vector3 worldPos = anchor.TransformPoint(local + center);
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 worldPos = anchor.TransformPoint(poissonSamples[i] + center);
 
             particles[activeCount++] = new BucketGrainParticle
             {
@@ -288,6 +333,92 @@ public class BucketGrainFill : MonoBehaviour
                 prevPosition = new float2(worldPos.x, worldPos.y),
                 mass = Random.Range(0.7f, 1.4f)
             };
+        }
+    }
+
+    void GeneratePoissonFill(float minDist, float margin, float hy, float hxTop, float hxBottom, float pileHalfWidth, float capBaseY, float pileCapHeight, int targetCount, List<Vector2> result)
+    {
+        result.Clear();
+
+        float cellSize = minDist / 1.41421356f;
+        var grid = new Dictionary<(int, int), int>();
+        var active = new List<int>();
+
+        (int, int) CellOf(Vector2 p) => (Mathf.FloorToInt(p.x / cellSize), Mathf.FloorToInt(p.y / cellSize));
+
+        bool DomainContains(Vector2 p)
+        {
+            float wallHalfWidth = Mathf.Lerp(hxBottom, hxTop, Mathf.InverseLerp(-hy, hy, p.y));
+
+            float pileWidthAtY;
+            if (p.y <= capBaseY)
+            {
+                pileWidthAtY = pileHalfWidth;
+            }
+            else
+            {
+                float dy = p.y - capBaseY;
+                if (dy > pileCapHeight) return false;
+                float t = dy / Mathf.Max(0.0001f, pileCapHeight);
+                pileWidthAtY = pileHalfWidth * Mathf.Sqrt(Mathf.Max(0f, 1f - t * t));
+            }
+
+            float halfWidth = Mathf.Min(wallHalfWidth, pileWidthAtY);
+
+            return p.x >= -halfWidth + margin && p.x <= halfWidth - margin
+                && p.y >= -hy + margin;
+        }
+
+        bool IsFarEnough(Vector2 p)
+        {
+            var (cx, cy) = CellOf(p);
+            for (int dx = -2; dx <= 2; dx++)
+            {
+                for (int dy = -2; dy <= 2; dy++)
+                {
+                    if (grid.TryGetValue((cx + dx, cy + dy), out int idx) &&
+                        (result[idx] - p).sqrMagnitude < minDist * minDist)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        Vector2 seed = new Vector2(0f, -hy + margin + 0.001f);
+        if (!DomainContains(seed)) return;
+
+        result.Add(seed);
+        grid[CellOf(seed)] = 0;
+        active.Add(0);
+
+        const int attemptsPerPoint = 24;
+        int safetyCap = Mathf.Max(targetCount * 6, 500);
+
+        while (active.Count > 0 && result.Count < safetyCap)
+        {
+            int activeSlot = Random.Range(0, active.Count);
+            int pointIndex = active[activeSlot];
+            Vector2 basePoint = result[pointIndex];
+            bool placed = false;
+
+            for (int attempt = 0; attempt < attemptsPerPoint; attempt++)
+            {
+                float angle = Random.Range(0f, Mathf.PI * 2f);
+                float dist = Random.Range(minDist, minDist * 2f);
+                Vector2 candidate = basePoint + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * dist;
+
+                if (!DomainContains(candidate) || !IsFarEnough(candidate)) continue;
+
+                result.Add(candidate);
+                grid[CellOf(candidate)] = result.Count - 1;
+                active.Add(result.Count - 1);
+                placed = true;
+                break;
+            }
+
+            if (!placed) active.RemoveAt(activeSlot);
         }
     }
 
@@ -509,18 +640,23 @@ public class BucketGrainFill : MonoBehaviour
     void HandleRimCrossings()
     {
         Matrix4x4 worldToAnchor = anchor.worldToLocalMatrix;
-        GetLocalContainerDims(anchor, out Vector2 c, out _, out _, out float hy, out _);
-        float rimLocalY = c.y + hy;
+        float radiusSqr = mouthRadius * mouthRadius;
+
+        Vector2 localDown = ((Vector2)anchor.InverseTransformDirection(Vector3.down)).normalized;
+        Vector2 spoutLocal = mouthCenter + localDown * mouthRadius;
 
         for (int i = activeCount - 1; i >= 0; i--)
         {
             BucketGrainParticle p = particles[i];
 
             Vector2 local = worldToAnchor.MultiplyPoint3x4(new Vector3(p.position.x, p.position.y, 0f));
-            if (local.y > rimLocalY)
+            if ((local - mouthCenter).sqrMagnitude > radiusSqr)
             {
+                Vector2 funnelLocal = Vector2.Lerp(local, spoutLocal, pourConvergence);
+                Vector3 funnelWorld = anchor.TransformPoint(new Vector3(funnelLocal.x, funnelLocal.y, 0f));
+
                 RemoveAt(i);
-                InjectGrain(p);
+                InjectGrain(p, new Vector2(funnelWorld.x, funnelWorld.y));
             }
         }
     }
@@ -534,13 +670,18 @@ public class BucketGrainFill : MonoBehaviour
         }
     }
 
-    void InjectGrain(BucketGrainParticle p)
+    void InjectGrain(BucketGrainParticle p, Vector2 exitPosition)
     {
+        Vector2 exitVelocity = p.position - p.prevPosition;
+        Vector2 exitPrevPosition = exitPosition - exitVelocity;
+        float fallDelay = Random.Range(0f, exitDelayJitter);
+
         GrainSimulation.Ins.InjectLiveGrain(
             faction,
-            new Vector2(p.position.x, p.position.y),
-            new Vector2(p.prevPosition.x, p.prevPosition.y),
-            p.mass);
+            exitPosition,
+            exitPrevPosition,
+            p.mass,
+            fallDelay);
 
         if (!hasInjectedAny)
         {
@@ -561,7 +702,7 @@ public class BucketGrainFill : MonoBehaviour
         {
             BucketGrainParticle p = particles[i];
             RemoveAt(i);
-            InjectGrain(p);
+            InjectGrain(p, new Vector2(p.position.x, p.position.y));
         }
     }
 
@@ -667,12 +808,47 @@ public class BucketGrainFill : MonoBehaviour
             DrawWallGizmo(wallsGizmo[i]);
         }
 
-        GetLocalContainerDims(gizmoAnchor, out Vector2 c, out float hxTop, out _, out float hy, out _);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(new Vector3(mouthCenter.x, mouthCenter.y, 0f), mouthRadius);
 
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(new Vector3(c.x - hxTop, c.y + hy, 0f), new Vector3(c.x + hxTop, c.y + hy, 0f));
+        GetLocalContainerDims(gizmoAnchor, out _, out float hxTop, out _, out float hy, out _);
+        float gizmoScaleY = Mathf.Max(0.0001f, gizmoAnchor.lossyScale.y);
+        DrawPileGizmo(hxTop, hy, gizmoScaleY);
 
         Gizmos.matrix = Matrix4x4.identity;
+    }
+
+    void DrawPileGizmo(float hxTop, float hy, float scaleY)
+    {
+        float capHeightLocal = pileCapHeight / scaleY;
+        DrawPileOutline(hxTop * pileMinWidthRatio, hy, pileMinHeight / scaleY, capHeightLocal, new Color(0.2f, 0.9f, 1f));
+        DrawPileOutline(hxTop * pileMaxWidthRatio, hy, pileMaxHeight / scaleY, capHeightLocal, new Color(1f, 0.55f, 0.1f));
+    }
+
+    void DrawPileOutline(float pileHalfWidth, float hy, float totalHeight, float pileCapHeight, Color color)
+    {
+        float rectHeight = Mathf.Max(0f, totalHeight - pileCapHeight);
+        float capBaseY = -hy + rectHeight;
+
+        Gizmos.color = color;
+
+        Gizmos.DrawLine(new Vector3(-pileHalfWidth, -hy, 0f), new Vector3(-pileHalfWidth, capBaseY, 0f));
+        Gizmos.DrawLine(new Vector3(pileHalfWidth, -hy, 0f), new Vector3(pileHalfWidth, capBaseY, 0f));
+        Gizmos.DrawLine(new Vector3(-pileHalfWidth, -hy, 0f), new Vector3(pileHalfWidth, -hy, 0f));
+
+        const int capSegments = 16;
+        Vector3 prevPoint = new Vector3(-pileHalfWidth, capBaseY, 0f);
+
+        for (int i = 1; i <= capSegments; i++)
+        {
+            float theta = Mathf.PI * (1f - (float)i / capSegments);
+            float x = pileHalfWidth * Mathf.Cos(theta);
+            float y = capBaseY + pileCapHeight * Mathf.Sin(theta);
+
+            Vector3 point = new Vector3(x, y, 0f);
+            Gizmos.DrawLine(prevPoint, point);
+            prevPoint = point;
+        }
     }
 
     void DrawWallGizmo(LocalWall wl)

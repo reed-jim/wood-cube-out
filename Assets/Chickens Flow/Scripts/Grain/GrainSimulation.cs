@@ -217,7 +217,8 @@ public struct ComputeGrainDeltaJob : IJobParallelFor
     [NativeDisableParallelForRestriction, ReadOnly] public NativeArray<GrainParticle> particles;
     [NativeDisableParallelForRestriction, ReadOnly] public NativeParallelMultiHashMap<int, int> hash;
     public float cellSize;
-    public float minDist;
+    public float settledRadius;
+    public float outsideRadius;
     public float maxCorrection;
     public NativeArray<float2> deltas;
 
@@ -231,6 +232,7 @@ public struct ComputeGrainDeltaJob : IJobParallelFor
 
         float2 pos = particles[i].position.xy;
         float mi = particles[i].mass;
+        float ri = particles[i].settled ? settledRadius : outsideRadius;
         int2 cell = (int2)math.floor(pos / cellSize);
         float2 accum = float2.zero;
 
@@ -243,11 +245,13 @@ public struct ComputeGrainDeltaJob : IJobParallelFor
                 do
                 {
                     if (j == i) continue;
+                    float rj = particles[j].settled ? settledRadius : outsideRadius;
+                    float pairMinDist = ri + rj;
                     float2 diff = pos - particles[j].position.xy;
                     float dist = math.length(diff);
-                    if (dist >= minDist || dist < 1e-5f) continue;
+                    if (dist >= pairMinDist || dist < 1e-5f) continue;
                     float2 normal = diff / dist;
-                    float overlap = minDist - dist;
+                    float overlap = pairMinDist - dist;
                     float mj = particles[j].mass;
                     float share = mj / (mi + mj);
                     accum += normal * (overlap * share);
@@ -379,6 +383,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
     public float outsideDamping = 0.999f;
     [Range(0f, 1f)] public float outsideCollisionAbsorption = 0.85f;
     [Range(0f, 1f)] public float outsideWallFriction = 0.05f;
+    public float outsideParticleRadius = 0.09f;
 
     [Header("Force Zones & Warehouse Walls")]
     public List<MyGame.Runtime.ForceZone> forceZones = new List<MyGame.Runtime.ForceZone>();
@@ -800,8 +805,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         pipelineHandle = integrateJob.Schedule(totalGrains, 64, pipelineHandle);
 
         // Step 3: PBD Iterations
-        float cellSize = particleRadius * 2f;
-        float minDist = particleRadius * 2f;
+        float cellSize = Mathf.Max(particleRadius, outsideParticleRadius) * 2f;
 
         globalHashMap.Clear();
         BuildGrainHashJob hashJob = new BuildGrainHashJob
@@ -819,7 +823,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 particles = activeGlobal,
                 hash = globalHashMap,
                 cellSize = cellSize,
-                minDist = minDist,
+                settledRadius = particleRadius,
+                outsideRadius = outsideParticleRadius,
                 maxCorrection = maxPbdCorrection,
                 deltas = activeDeltas
             };
@@ -936,7 +941,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
 
         for (int i = 0; i < totalSpawn; i++)
         {
-            group.Add(CreateGrain(i, grainPositions[i], totalSpawn, isFake: false, pourDirection), Matrix4x4.identity);
+            GrainParticle grain = CreateGrain(i, grainPositions[i], totalSpawn, isFake: false, pourDirection);
+            group.Add(grain, Matrix4x4.TRS(grain.position, Quaternion.identity, new Vector3(grainSize, grainSize, 1f)));
             spawnCallCount++;
         }
 
@@ -944,7 +950,8 @@ public class GrainSimulation : Singleton<GrainSimulation>
         {
             for (int f = 0; f < fakeGrainsPerRealGrain; f++)
             {
-                group.Add(CreateGrain(i, grainPositions[i], totalSpawn, isFake: true, pourDirection), Matrix4x4.identity);
+                GrainParticle fakeGrain = CreateGrain(i, grainPositions[i], totalSpawn, isFake: true, pourDirection);
+                group.Add(fakeGrain, Matrix4x4.TRS(fakeGrain.position, Quaternion.identity, new Vector3(grainSize, grainSize, 1f)));
             }
         }
 
@@ -997,7 +1004,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
         group.RemoveAt(group.Count - 1);
     }
 
-    public void InjectLiveGrain(Color faction, Vector2 position, Vector2 prevPosition, float mass)
+    public void InjectLiveGrain(Color faction, Vector2 position, Vector2 prevPosition, float mass, float fallDelay = 0f)
     {
         FactionGroup group = GetFaction(faction);
 
@@ -1007,12 +1014,13 @@ public class GrainSimulation : Singleton<GrainSimulation>
             prevPosition = new float2(prevPosition.x, prevPosition.y),
             mass = mass,
             settled = false,
-            fallDelay = 0f,
+            fallDelay = fallDelay,
             isFake = false,
             variant = 0
         };
 
-        group.Add(p, Matrix4x4.identity);
+        Matrix4x4 initialMatrix = Matrix4x4.TRS(p.position, Quaternion.identity, new Vector3(grainSize, grainSize, 1f));
+        group.Add(p, initialMatrix);
     }
 
     public Vector3 GetFirstGrainPosition(Color faction)

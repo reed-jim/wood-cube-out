@@ -45,6 +45,8 @@ public class WashingMachineItem : MonoBehaviour
     public Vector3 grainsOffsetWhenPouring;
     public float durationUpdateGrainTroughProgress = 0.3f;
     public float settleBufferBeforeFeed = 0.15f;
+    public float pourTiltAngle = -140f;
+    public float pourTiltDuration = 0.3f;
 
     public TMP_Text numberText;
 
@@ -337,7 +339,7 @@ public class WashingMachineItem : MonoBehaviour
 
                 grainFill.SetPhysicsPaused(false);
 
-                Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f);
+                Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, pourTiltAngle), duration: pourTiltDuration);
             });
 
             TweenManager.Ins.AddTween(secondHalfTween);
