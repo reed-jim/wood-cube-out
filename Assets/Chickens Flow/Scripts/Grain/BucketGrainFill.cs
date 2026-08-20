@@ -168,7 +168,7 @@ public class BucketGrainFill : MonoBehaviour
     public float pileMinHeight = 0.15f;
     public float pileMaxHeight = 0.8f;
     [Range(0.3f, 1f)] public float pileMinWidthRatio = 0.5f;
-    [Range(0.3f, 1f)] public float pileMaxWidthRatio = 0.95f;
+    [Range(0.3f, 2f)] public float pileMaxWidthRatio = 0.95f;
 
     [Header("Fill percent thresholds — at/below min% uses min size, at/above max% uses max size")]
     [Range(0f, 1f)] public float pileMinPercent = 0.1f;
@@ -288,7 +288,7 @@ public class BucketGrainFill : MonoBehaviour
         BuildWalls();
         EnsureCapacity(grainCount);
 
-        GetLocalContainerDims(anchor, out Vector2 center, out float hxTop, out float hxBottom, out float hy, out _);
+        GetLocalContainerDims(anchor, out Vector2 center, out float hxTop, out _, out float hy, out _);
         float margin = (grainVisualSize * 0.5f) / Mathf.Max(0.0001f, anchor.lossyScale.x);
         float spacing = grainFillSpacing / Mathf.Max(0.0001f, anchor.lossyScale.x);
 
@@ -310,7 +310,7 @@ public class BucketGrainFill : MonoBehaviour
 
         for (int growAttempt = 0; growAttempt < 6; growAttempt++)
         {
-            GeneratePoissonFill(spacing, margin, hy, hxTop, hxBottom, pileHalfWidth, capBaseY, pileCapHeightLocal, grainCount, poissonSamples);
+            GeneratePoissonFill(spacing, margin, hy, pileHalfWidth, capBaseY, pileCapHeightLocal, grainCount, poissonSamples);
             if (poissonSamples.Count >= grainCount || capBaseY >= capBaseYCeiling) break;
             capBaseY = Mathf.Min(capBaseYCeiling, capBaseY + spacing * 4f);
         }
@@ -336,7 +336,7 @@ public class BucketGrainFill : MonoBehaviour
         }
     }
 
-    void GeneratePoissonFill(float minDist, float margin, float hy, float hxTop, float hxBottom, float pileHalfWidth, float capBaseY, float pileCapHeight, int targetCount, List<Vector2> result)
+    void GeneratePoissonFill(float minDist, float margin, float hy, float pileHalfWidth, float capBaseY, float pileCapHeight, int targetCount, List<Vector2> result)
     {
         result.Clear();
 
@@ -348,24 +348,20 @@ public class BucketGrainFill : MonoBehaviour
 
         bool DomainContains(Vector2 p)
         {
-            float wallHalfWidth = Mathf.Lerp(hxBottom, hxTop, Mathf.InverseLerp(-hy, hy, p.y));
-
-            float pileWidthAtY;
+            float halfWidth;
             if (p.y <= capBaseY)
             {
-                pileWidthAtY = pileHalfWidth;
+                halfWidth = pileHalfWidth;
             }
             else
             {
                 float dy = p.y - capBaseY;
                 if (dy > pileCapHeight) return false;
                 float t = dy / Mathf.Max(0.0001f, pileCapHeight);
-                pileWidthAtY = pileHalfWidth * Mathf.Sqrt(Mathf.Max(0f, 1f - t * t));
+                halfWidth = pileHalfWidth * Mathf.Sqrt(Mathf.Max(0f, 1f - t * t));
             }
 
-            float halfWidth = Mathf.Min(wallHalfWidth, pileWidthAtY);
-
-            return p.x >= -halfWidth + margin && p.x <= halfWidth - margin
+            return p.x >= -halfWidth && p.x <= halfWidth
                 && p.y >= -hy + margin;
         }
 
