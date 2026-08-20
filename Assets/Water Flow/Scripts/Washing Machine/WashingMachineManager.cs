@@ -362,6 +362,27 @@ namespace AntsFlow
                                 (washingMachineItem as FreezedAntBox).AssignRequirementNumber();
                             }
 
+                            if (washingMachineStartSlot.row == 1)
+                            {
+                                Color nextFaction;
+                                int numAnt;
+
+                                if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                                {
+                                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                                    MinusFactionGrainRequirement(nextFaction, numAnt);
+                                }
+                                else
+                                {
+                                    washingMachineItem.Reset();
+
+                                    otherWashingMachineStartSlot.washingMachine = null;
+
+                                    continue;
+                                }
+                            }
+
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
                             Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
                             .OnComplete(() =>
@@ -436,6 +457,13 @@ namespace AntsFlow
                     Tween.LocalPositionY(washingMachineItem.transform, 0, duration: 0.3f);
 
                     washingMachineStartSlot.washingMachine = washingMachineItem;
+
+                    // don't set faction for bucket from row 2
+                    if (washingMachineStartSlot.row > 1)
+                    {
+                        nextFaction = FactionMapper.Ins.allFactions[0];
+                        numAnt = 0;
+                    }
 
                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
@@ -944,6 +972,8 @@ namespace AntsFlow
             GamePersistentVariable.isLevelLost = false;
 
             mainCamera.transform.position = Vector3.zero.ChangeZ(mainCamera.transform.position.z);
+
+            ChickenManager.Ins.StopHighlightChickensSequentially();
         }
 
         #region Util
@@ -1042,8 +1072,8 @@ namespace AntsFlow
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
 
-            float normalChickenDifficultyWeight = 1f;
-            float stuckChickenDifficultyWeight = 0.05f;
+            // float normalChickenDifficultyWeight = 0.01f;
+            // float stuckChickenDifficultyWeight = 0.0005f;
 
             for (int i = 0; i < ChickenManager.Ins.chickens.Count; i++)
             {
@@ -1058,14 +1088,16 @@ namespace AntsFlow
                 int firstRow = chicken.GetFirstRow();
                 firstRow = Mathf.Min(firstRow, rowPowerCache.Length - 1);
 
-                if (chicken.isStuck)
-                {
-                    chickenPoint = (int)(stuckChickenDifficultyWeight * rowPowerCache[firstRow]);
-                }
-                else
-                {
-                    chickenPoint = (int)(normalChickenDifficultyWeight * rowPowerCache[firstRow]);
-                }
+                // if (chicken.isStuck)
+                // {
+                //     chickenPoint = (int)(stuckChickenDifficultyWeight * rowPowerCache[firstRow]);
+                // }
+                // else
+                // {
+                //     chickenPoint = (int)(normalChickenDifficultyWeight * rowPowerCache[firstRow]);
+                // }
+
+                chickenPoint = chicken.numGrainPileRequiredLeft * rowPowerCache[firstRow];
 
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, chicken.faction, chickenPoint);
             }
@@ -1105,6 +1137,14 @@ namespace AntsFlow
                 GrainPile grainPile = GrainPool.Ins.grainPiles[i];
 
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, grainPile.faction, -grainPile.remainingNumber * rowPowerCache[0]);
+            }
+
+            if (GamePersistentVariable.pouringBucket != null)
+            {
+                CommonUtil.SumValueOfDictionary(
+                    sortedPoolFaction, GamePersistentVariable.pouringBucket.faction, -GamePersistentVariable.pouringBucket.remainingNumber * rowPowerCache[0]);
+
+                GamePersistentVariable.pouringBucket = null;
             }
 
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

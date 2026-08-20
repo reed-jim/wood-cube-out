@@ -1484,6 +1484,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5087665359884069504, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: m_text
+      value: "Entspannen Sie sich eine Weile vor der n\xE4chsten Schraubenherausforderung."
+      objectReference: {fileID: 0}
+    - target: {fileID: 5087665359884069504, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: m_fontSize
+      value: 46.15
+      objectReference: {fileID: 0}
     - target: {fileID: 6041947459616754546, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: gameLoading
       value: 
@@ -1804,25 +1812,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!224 &534387431085916739
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4581782040329926343}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8485297013821277113}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -447}
-  m_SizeDelta: {x: 932, y: 291.00003}
-  m_Pivot: {x: 0.47759458, y: -0.59580743}
 --- !u!224 &849231710072799504
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1979,14 +1968,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 668, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3835517190195041829
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4581782040329926343}
-  m_CullTransparentMesh: 1
 --- !u!222 &3858867804018486933
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2014,24 +1995,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -424.1}
   m_SizeDelta: {x: 900, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &4581782040329926343
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 534387431085916739}
-  - component: {fileID: 3835517190195041829}
-  - component: {fileID: 6779540044449249472}
-  m_Layer: 0
-  m_Name: SkeletonGraphic (Loading)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
 --- !u!114 &4966268569629004399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2242,63 +2205,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6779540044449249472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4581782040329926343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d85b887af7e6c3f45a2e2d2920d641bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: b66cf7a186d13054989b33a5c90044e4, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  skeletonDataAsset: {fileID: 11400000, guid: 539833793096c524e90a94dfd5df2a80, type: 2}
-  additiveMaterial: {fileID: 0}
-  multiplyMaterial: {fileID: 0}
-  screenMaterial: {fileID: 0}
-  initialSkinName: default
-  initialFlipX: 0
-  initialFlipY: 0
-  startingAnimation: Loading
-  startingLoop: 1
-  timeScale: 1
-  freeze: 0
-  layoutScaleMode: 0
-  referenceSize: {x: 932, y: 291.00003}
-  referenceScale: 1
-  rectTransformSize: {x: 932, y: 291.00003}
-  editReferenceRect: 0
-  updateWhenInvisible: 3
-  allowMultipleCanvasRenderers: 0
-  canvasRenderers: []
-  separatorSlotNames: []
-  enableSeparatorSlots: 0
-  separatorParts: []
-  updateSeparatorPartLocation: 1
-  updateSeparatorPartScale: 0
-  disableMeshAssignmentOnOverride: 1
-  meshGenerator:
-    settings:
-      useClipping: 1
-      zSpacing: 0
-      pmaVertexColors: 1
-      tintBlack: 0
-      canvasGroupTintBlack: 0
-      calculateTangents: 0
-      addNormals: 0
-      immutableTriangles: 0
-  updateTiming: 1
-  unscaledTime: 0
 --- !u!224 &6806690145510686607
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2532,7 +2438,7 @@ MonoBehaviour:
   splashScreen: {fileID: 218068565}
   splashScreenBackground: {fileID: 1284977395}
   loadingText: {fileID: 8001155116759165542}
-  loadingSpine: {fileID: 6779540044449249472}
+  loadingSpine: {fileID: 0}
   canvasGroup: {fileID: 9014613493215172645}
   downloadProgressText: {fileID: 167249085}
   noInternetContainer: {fileID: 1309970414}
@@ -2553,7 +2459,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 849231710072799504}
-  - {fileID: 534387431085916739}
   - {fileID: 3957622446781434609}
   m_Father: {fileID: 6806690145510686607}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

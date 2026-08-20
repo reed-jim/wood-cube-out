@@ -198,7 +198,7 @@ public class WashingMachineItem : MonoBehaviour
         numSlotRequired = 1;
     }
 
-    private void Reset()
+    public void Reset()
     {
         doubleAntBoxHole.gameObject.SetActive(false);
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
@@ -640,6 +640,8 @@ public class WashingMachineItem : MonoBehaviour
             {
                 washingMachineStartSlot.washingMachine = null;
             }
+
+            GamePersistentVariable.pouringBucket = this;
 
             WashingMachineManager.Ins.MoveAntBoxTop();
         }
