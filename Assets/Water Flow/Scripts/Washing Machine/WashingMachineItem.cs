@@ -23,6 +23,7 @@ public class WashingMachineItem : MonoBehaviour
     public Transform bucketTop;
     public SpriteRenderer grainSprite;
     public Transform[] grainSpriteRanges;
+    public BucketGrainFill grainFill;
 
     [SpineAnimation] public string jumpAnimation;
     #endregion
@@ -43,6 +44,9 @@ public class WashingMachineItem : MonoBehaviour
     public float pourOffsetY = 7;
     public Vector3 grainsOffsetWhenPouring;
     public float durationUpdateGrainTroughProgress = 0.3f;
+    public float settleBufferBeforeFeed = 0.15f;
+    public float pourTiltAngle = -140f;
+    public float pourTiltDuration = 0.3f;
 
     public TMP_Text numberText;
 
@@ -162,6 +166,8 @@ public class WashingMachineItem : MonoBehaviour
         {
             isAnimating = false;
 
+            grainFill?.Fill(faction, number * GameConstants.grainMultiplier, transform);
+
             onCompleteAction?.Invoke();
         });
 
@@ -172,16 +178,7 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
 
-        grainSprite.gameObject.SetActive(true);
-        grainSprite.color = Color.white;
-
-        // bucketSprite.sprite = FactionMapper.Ins.GetBucketSprite(faction);
-        // bucketTopSprite.sprite = FactionMapper.Ins.GetBucketTopSprite(faction);
-        grainSprite.sprite = FactionMapper.Ins.GetGrainSprite(faction);
-
-        float grainSpriteYRatio = number / 100f;
-        grainSpriteYRatio = Mathf.Min(grainSpriteYRatio, 1);
-        grainSprite.transform.localPosition = Vector3.Lerp(grainSpriteRanges[0].localPosition, grainSpriteRanges[1].localPosition, grainSpriteYRatio);
+        grainSprite.gameObject.SetActive(false);
 
         Setup(washingMachineStartSlot);
 
@@ -201,6 +198,7 @@ public class WashingMachineItem : MonoBehaviour
     public void Reset()
     {
         doubleAntBoxHole.gameObject.SetActive(false);
+        grainFill?.Clear();
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
 
         isMoving = false;
@@ -294,59 +292,56 @@ public class WashingMachineItem : MonoBehaviour
                 TweenManager.Ins.AddTween(Tween.Scale(transform, initialScale, duration: 0.2f));
             })
         );
-        Tween tween = Tween.Position(transform, bucketDestination, duration: 0.4f).OnComplete(() =>
-        {
-            grainPile.gameObject.SetActive(true);
 
-            grainPile.transform.position = bucketDestination + grainsOffsetWhenPouring;
-
-            grainPile.Setup(this, grainCount);
-
-            Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, -140), duration: 0.3f)
-                .OnComplete(() =>
+        grainFill.StartPouring(
+            onFirstGrainInjected: () =>
+            {
+                WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
+                WashingMachineManager.Ins.grainPool.AddGrain(grainCount, durationUpdateGrainTroughProgress);
+            },
+            onAllGrainsInjected: () =>
+            {
+                if (!isBucketMoveBack)
                 {
-                    Tween.Alpha(grainSprite, 0, 0.4f);
+                    float duration = 0.5f;
 
-                    PourGrainPile(grainPile, onFirstGrainHitGround: () =>
+                    Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.1f);
+                    DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.1f, onComplete: () =>
                     {
-                        GrainPool.Ins.AddGrainPile(grainPile);
-                        // GrainPool.Ins.AddGrain(grainCount, durationUpdateGrainTroughProgress);
+                        Reset();
 
-                        SoundManager.Instance.PlaySoundGrainHit();
+                        GamePersistentVariable.bucketOrder--;
                     });
-                });
+                }
+
+                TweenManager.Ins.AddTween(Tween.Delay(settleBufferBeforeFeed).OnComplete(() =>
+                {
+                    ChickenManager.Ins.FeedTheChicken(grainPile);
+                    WashingMachineManager.Ins.CheckLoseLevel();
+                }));
+            });
+
+        Tween firstHalfTween = Tween.Position(transform, bucketDestination, duration: 0.2f).OnComplete(() =>
+        {
+            Tween secondHalfTween = Tween.Position(transform, bucketDestination, duration: 0.2f).OnComplete(() =>
+            {
+                grainPile.gameObject.SetActive(true);
+
+                grainPile.transform.position = bucketDestination + grainsOffsetWhenPouring;
+
+                grainPile.Setup(this, grainCount);
+
+                grainFill.SetPhysicsPaused(false);
+
+                Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, pourTiltAngle), duration: pourTiltDuration);
+            });
+
+            TweenManager.Ins.AddTween(secondHalfTween);
         });
 
-        TweenManager.Ins.AddTween(tween);
+        TweenManager.Ins.AddTween(firstHalfTween);
 
         onCompleteAction?.Invoke();
-
-        void PourGrainPile(GrainPile grainPile, Action onFirstGrainHitGround = null, Action onComplete = null)
-        {
-            grainPile.Pour
-            (
-                transform.rotation,
-                onFirstGrainHitGround: onFirstGrainHitGround,
-                onAllGrainsPoured: () =>
-                {
-                    if (!isBucketMoveBack)
-                    {
-                        float duration = 0.5f;
-
-                        Tween.Rotation(transform, Quaternion.identity, duration: duration, startDelay: 0.1f);
-                        DOTweenUtil.MoveParabol(transform, destination: transform.position.ChangeX(-20), duration: duration, delay: 0.1f, onComplete: () =>
-                        {
-                            Reset();
-
-                            GamePersistentVariable.bucketOrder--;
-                        });
-
-                        HapticFeedbackManager.Ins.MediumFeedback();
-                    }
-                },
-                onCompleteAction: onComplete
-            );
-        }
     }
     #endregion
 

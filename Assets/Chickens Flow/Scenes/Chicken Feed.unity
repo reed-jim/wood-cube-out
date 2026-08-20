@@ -3517,8 +3517,8 @@ MonoBehaviour:
   grainPool: {fileID: 2687189045802850400}
   poolFaction: []
   difficultyLevel: 0
-  minAntNumberThreshold: 50
-  maxAntNumberThreshold: 150
+  minAntNumberThreshold: 150
+  maxAntNumberThreshold: 200
   difficultyCurve:
     serializedVersion: 2
     m_Curve:
@@ -4845,11 +4845,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.71574074
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.49010417
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMin.y
@@ -6357,7 +6357,7 @@ RectTransform:
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.24074075, y: 0.49010417}
+  m_AnchorMax: {x: 1.2092593, y: 0.18697916}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8649,7 +8649,7 @@ RectTransform:
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.24074075, y: 0.49010417}
+  m_AnchorMax: {x: 1.2092593, y: 0.18697916}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -13659,7 +13659,7 @@ RectTransform:
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.24074075, y: 0.49010417}
+  m_AnchorMax: {x: 1.2092593, y: 0.18697916}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -14314,6 +14314,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 742065749764928345, guid: 8bb8f8e478f0b644dabcb2caa24453e7, type: 3}
+      propertyPath: outsideParticleRadius
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 2813250161990254930, guid: 8bb8f8e478f0b644dabcb2caa24453e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -14972,11 +14976,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3421357019182349549, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.71574074
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3421357019182349549, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.49010417
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3421357019182349549, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_AnchorMin.y

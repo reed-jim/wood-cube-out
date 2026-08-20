@@ -92,52 +92,6 @@ public class GrainPile : MonoBehaviour
         this.faction = faction;
     }
 
-    public void Pour(Quaternion rotation, Action onFirstGrainHitGround = null, Action onAllGrainsPoured = null, Action onCompleteAction = null)
-    {
-        Vector3 position;
-
-        transform.rotation = rotation;
-
-        siblingIndex = transform.GetSiblingIndex();
-
-        List<Vector3> grainPositions = new List<Vector3>();
-
-        int totalGrain = totalNumber * GameConstants.grainMultiplier;
-
-        Vector2[] positionsInFilledCircle = SunflowerDistribution(totalGrain, radius);
-
-        for (int i = 0; i < totalGrain; i++)
-        {
-            float angle = i * Mathf.PI * 2f / totalGrain;
-
-            position = positionsInFilledCircle[i];
-            position.y -= 0.5f;
-            position.y *= 0.75f;
-            // position.z = -0.01f * (siblingIndex + 0.001f * (amount - i));
-            position.z = -0.01f;
-
-            grainPositions.Add(transform.TransformPoint(position));
-        }
-
-        grainPositions = grainPositions
-            .OrderBy(grain => grain.y)
-            .ThenBy(grain => grain.x)
-            .ToList();
-
-        Vector3 pourDirection3D = rotation * Vector3.down;
-        Vector2 pourDirection = new Vector2(pourDirection3D.x, pourDirection3D.y);
-
-        GrainSimulation.Ins.SpawnGrains(
-            grainPositions, faction, pourDirection, onFirstGrainHitGround: onFirstGrainHitGround, onAllGrainsPoured: onAllGrainsPoured, onComplete: () =>
-        {
-            ChickenManager.Ins.FeedTheChicken(this);
-
-            onCompleteAction?.Invoke();
-
-            WashingMachineManager.Ins.CheckLoseLevel();
-        });
-    }
-
     public void ShowProgressText()
     {
         SaferioTween.ShowWithPunch(progressText.transform, 1);

@@ -163,7 +163,7 @@ Transform:
   m_GameObject: {fileID: 695582296528464813}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: -0.007, y: 0.432, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -240,6 +240,7 @@ GameObject:
   - component: {fileID: 2681913022428287380}
   - component: {fileID: 5929929943237858396}
   - component: {fileID: 3794384376339802433}
+  - component: {fileID: 3511459115803277974}
   m_Layer: 0
   m_Name: Bucket
   m_TagString: Untagged
@@ -290,6 +291,7 @@ MonoBehaviour:
   grainSpriteRanges:
   - {fileID: 3609907653614064257}
   - {fileID: 6774825128535488404}
+  grainFill: {fileID: 3511459115803277974}
   jumpAnimation: jump2
   lid: {fileID: 3451961694251783844}
   shadow: {fileID: 379933700654909350}
@@ -304,6 +306,9 @@ MonoBehaviour:
   pourOffsetY: 3
   grainsOffsetWhenPouring: {x: 0.95, y: -0.6, z: 0}
   durationUpdateGrainTroughProgress: 1
+  settleBufferBeforeFeed: 0.15
+  pourTiltAngle: -140
+  pourTiltDuration: 0.3
   numberText: {fileID: 3297268075956498024}
   faction: {r: 0, g: 0, b: 0, a: 0}
   isDisable: 0
@@ -427,6 +432,48 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.5, y: 1.8}
   m_EdgeRadius: 0
+--- !u!114 &3511459115803277974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148281578818409660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1e075c5592466315db99653db48f6f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  containerCenter: {x: 0, y: -0.17}
+  containerSize: {x: 2.3, y: 1.56}
+  bottomWidthRatio: 0.905
+  wallThickness: 0.8
+  mouthCenter: {x: -0.31, y: 0.1}
+  mouthRadius: 1
+  pourConvergence: 0.25
+  exitDelayJitter: 0.05
+  grainVisualSize: 0.3
+  grainCollisionSize: 0.14
+  grainFillSpacing: 0.07
+  pileCapHeight: 0.84
+  pileMinHeight: 1.51
+  pileMaxHeight: 2.41
+  pileMinWidthRatio: 0.855
+  pileMaxWidthRatio: 1
+  pileMinPercent: 0.1
+  pileMaxPercent: 0.3
+  idleZOffset: -1
+  zOffset: 0
+  quadMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  baseMaterial: {fileID: 2100000, guid: 7c77a6acaed3b80468be047b34327873, type: 2}
+  outsideGravity: 50
+  outsideDamping: 0.999
+  maxStepPerFrame: 0.13
+  wallFriction: 0
+  collisionIterations: 4
+  outsideCollisionAbsorption: 1
+  maxPbdCorrection: 0.01
+  maxPourDuration: 4
 --- !u!1 &1776230750153924656
 GameObject:
   m_ObjectHideFlags: 0
