@@ -268,6 +268,11 @@ namespace AntsFlow
 
             LevelItem levelItem = (LevelItem)target;
 
+            if (GUILayout.Button("Update Manual Bucket Config"))
+            {
+                levelItem.levelFactionConfig.ShowDebug(levelItem, levelItem.chickenLevelTiles);
+            }
+
             if (GUILayout.Button("Generate Level From A Picture"))
             {
                 ReadLevel(levelItem);
@@ -1549,6 +1554,50 @@ namespace AntsFlow
 [Serializable]
 public class LevelFactionConfig
 {
+    public List<LevelFactionConfigByColumn> items;
+    public LevelFactionConfigDebug levelFactionConfigDebug;
+
+    public void ShowDebug(AntsFlow.LevelItem levelItem, List<AntLevelDataItem> antLevelDataItems)
+    {
+        Dictionary<Color, int> numberByFaction = new Dictionary<Color, int>();
+
+        foreach (var item in antLevelDataItems)
+        {
+            if(item.factionIndex >= 0)
+            {
+                CommonUtil.SumValueOfDictionary(numberByFaction, levelItem.factionMapper.allFactions[item.factionIndex], 10);
+            }
+        }
+
+        foreach (var column in items)
+        {
+            for (int i = 0; i < column.items.Count; i++)
+            {
+                LevelFactionItemConfig levelFactionItemConfig = column.items[i];
+
+                CommonUtil.SumValueOfDictionary(numberByFaction, levelFactionItemConfig.faction, -levelFactionItemConfig.number);
+            }
+        }
+
+        levelFactionConfigDebug = new LevelFactionConfigDebug();
+        levelFactionConfigDebug.items = new List<LevelFactionConfigDebugItem>();
+
+        foreach (var faction in numberByFaction.Keys)
+        {
+            LevelFactionConfigDebugItem item = new LevelFactionConfigDebugItem();
+
+            item.faction = faction;
+            item.remaning = numberByFaction[faction];
+
+            levelFactionConfigDebug.items.Add(item);
+        }
+    }
+}
+
+[Serializable]
+public class LevelFactionConfigByColumn
+{
+    public int column;
     public List<LevelFactionItemConfig> items;
 }
 
@@ -1556,13 +1605,26 @@ public class LevelFactionConfig
 public class LevelFactionItemConfig
 {
     public Color faction;
-    public int numAnt;
+    public int number;
 
-    public LevelFactionItemConfig(Color faction, int numAnt)
+    public LevelFactionItemConfig(Color faction, int number)
     {
         this.faction = faction;
-        this.numAnt = numAnt;
+        this.number = number;
     }
+}
+
+[Serializable]
+public class LevelFactionConfigDebug
+{
+    [ReadOnly] public List<LevelFactionConfigDebugItem> items;
+}
+
+[Serializable]
+public class LevelFactionConfigDebugItem
+{
+    public Color faction;
+    public int remaning;
 }
 
 [Serializable]

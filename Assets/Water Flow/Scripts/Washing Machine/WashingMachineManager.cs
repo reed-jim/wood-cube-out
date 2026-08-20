@@ -40,6 +40,9 @@ namespace AntsFlow
 
         public IntVariable currentLevel;
 
+        [Header("Manual Level Bucket Spawn")]
+        public LevelFactionConfig levelFactionConfig;
+
         #region Optimize
         private int[] rowPowerCache;
         #endregion
@@ -129,6 +132,11 @@ namespace AntsFlow
             if (levelItem.isTutorialSpeedUpLevel)
             {
                 SpeedUpTutorialManager.Ins.StartTutorial();
+            }
+
+            if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
+            {
+                levelFactionConfig = levelItem.levelFactionConfig;
             }
         }
 
@@ -268,8 +276,9 @@ namespace AntsFlow
 
             totalTile = poolFaction.Count;
 
-            Color nextFaction;
-            int numAnt;
+            Color nextFaction = Color.white;
+            int numAnt = 0;
+            bool isFound = false;
 
             List<WashingMachineItem> washingMachineItems = new List<WashingMachineItem>();
 
@@ -309,20 +318,46 @@ namespace AntsFlow
                     difficulty = levelItem.initialDifficulty;
                 }
 
-                GetNextAntSpawnByDifficulty(difficultyLevel: difficulty, out nextFaction, out numAnt);
+                isFound = false;
 
                 if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
                 {
-                    nextFaction = levelItem.levelFactionConfig.items[i].faction;
-                    numAnt = levelItem.levelFactionConfig.items[i].numAnt;
+                    foreach (var item in levelFactionConfig.items)
+                    {
+                        if (item.items.Count == 0)
+                        {
+                            continue;
+                        }
+
+                        if (item.column == washingMachineStartSlot.column)
+                        {
+                            nextFaction = item.items[0].faction;
+                            numAnt = item.items[0].number;
+
+                            item.items.RemoveAt(0);
+
+                            isFound = true;
+
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    GetNextAntSpawnByDifficulty(difficultyLevel: difficulty, out nextFaction, out numAnt);
+
+                    isFound = true;
                 }
 
-                washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt, onCompleteAction: () =>
+                if (isFound)
                 {
-                    SpecialElementManager.Ins.SpawnAntBoxLinkFirstAntBoxes(index);
-                });
+                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt, onCompleteAction: () =>
+                    {
+                        SpecialElementManager.Ins.SpawnAntBoxLinkFirstAntBoxes(index);
+                    });
 
-                MinusFactionGrainRequirement(nextFaction, numAnt);
+                    MinusFactionGrainRequirement(nextFaction, numAnt);
+                }
             }
 
             return washingMachineItems;
@@ -431,16 +466,24 @@ namespace AntsFlow
 
         public void SpawnNewWashingMachine()
         {
-            Color nextFaction;
-            int numAnt;
+            Color nextFaction = Color.white;
+            int numAnt = 0;
+            bool isFound = false;
 
-            if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+            if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
             {
 
             }
             else
             {
-                return;
+                if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                {
+                    isFound = true;
+                }
+                else
+                {
+                    return;
+                }
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
@@ -468,13 +511,39 @@ namespace AntsFlow
                         numAnt = 0;
                     }
 
-                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+                    if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
+                    {
+                        foreach (var item in levelFactionConfig.items)
+                        {
+                            if (item.items.Count == 0)
+                            {
+                                continue;
+                            }
 
-                    MinusFactionGrainRequirement(nextFaction, numAnt);
+                            if (item.column == washingMachineStartSlot.column)
+                            {
+                                nextFaction = item.items[0].faction;
+                                numAnt = item.items[0].number;
 
-                    SpecialElementManager.Ins.SpawnAntBoxLink();
+                                item.items.RemoveAt(0);
 
-                    break;
+                                isFound = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isFound)
+                    {
+                        washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                        MinusFactionGrainRequirement(nextFaction, numAnt);
+
+                        SpecialElementManager.Ins.SpawnAntBoxLink();
+
+                        break;
+                    }
                 }
             }
         }
