@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Config
 {
-    public static string settingProductName = "Ant Out: Pixel Block";
+    public static string settingProductName = "Chicken Jam: Color Puzzle";
 
     public const string settingKeyStore = "antout";
     public static string keyaliasPass = "12345678two";
@@ -13,12 +13,12 @@ public class Config
 
     public const string settingLogo = "GAME_ICON";
 
-    public static int versionCode = 2026061501;//sua
+    public static int versionCode = 2026082001;//sua
     public static string versionName = "1.0.0";//sua
-    public static int settingVersionCode = 2026061501;//sua
+    public static int settingVersionCode = 2026082001;//sua
     public static string settingVersionName = "1.0.0";//sua
 
-    public static string productNameBuild = "Ant Out: Pixel Block";
+    public static string productNameBuild = "Chicken Jam: Color Puzzle";
 
     public static int VersionCodeAll
     {
@@ -46,9 +46,9 @@ public class Config
     public static string inappAndroidKeyHash
         = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApwxZOgYqdcadqBJEbNm6muPQqqzcYk5L/GtdCijQ2zG3jitW2yyvaDC/DrRUD4Pykv7KLNHWKjww8flY957nXVRLTtKAk6d+qj2e6DvW1nKo3Yb1IX44DpBVono5RAaJ/m8Phkgtk2ibr+yybmBw3a6ayxJ6XOvTmGshP/3K4DkjEHar5BP95erdjnVFfqPrl9QlFdJJaUN5tvldpl1SX3u0mMDbmo1E8YOb1V8e4aH2+Jf89y+HZJni7vRI1Mspf2nNI4pvF5CZXwDJP+ZkOrbYYV52lhBDeq2BYwfOojLSjeSOpP3GCcfhqkqHzobgM61m2edOa0mTPIW6HsZHAQIDAQAB";
 #if UNITY_ANDROID
-    public const string package_name = "com.fc.p.gpl.ant.out.pixel.color";
+    public const string package_name = "com.fc.gpl.chicken.sort.flow.puzzle";
 #else
-    public const string package_name = "com.fc.p.gpl.ant.out.pixel.color";
+    public const string package_name = "com.fc.gpl.chicken.sort.flow.puzzle";
 #endif
 
 

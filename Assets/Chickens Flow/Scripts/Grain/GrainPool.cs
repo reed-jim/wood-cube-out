@@ -54,14 +54,16 @@ public class GrainPool : Singleton<GrainPool>
     public float additionalCapacityToAllowPour;
     public int currentAmount;
     public int pendingAmount;
-    public float currentPercent;
-    public float displayedPercent;
+    public int currentPercent;
+    public int displayedPercent;
 
     public bool isAnimating;
 
     private Tween percentTextTween;
+    private bool isPercentTextScaling;
 
     #region Warning
+    private PrimeTween.Sequence scaleProgressTextSequence;
     private Tween warningTween;
     private Tween warningColorTween;
     private PrimeTween.Sequence warningTextAppearSequence;
@@ -102,14 +104,19 @@ public class GrainPool : Singleton<GrainPool>
 
     void Update()
     {
-        displayedPercent = Mathf.Lerp(displayedPercent, currentPercent, updateProgressBarSpeedMultiplier * Time.deltaTime);
+        displayedPercent = (int)Mathf.Lerp(displayedPercent, currentPercent, updateProgressBarSpeedMultiplier * Time.deltaTime);
 
         UpdatePercent(displayedPercent);
 
-        lazyHealthBar.SetProgressImmediately(displayedPercent);
+        lazyHealthBar.SetProgressImmediately(displayedPercent / 100f);
 
-        if (displayedPercent > 1)
+        if (displayedPercent >= 100)
         {
+            if (scaleProgressTextSequence.isAlive)
+            {
+                scaleProgressTextSequence.Stop();
+            }
+
             if (!warningTween.isAlive)
             {
                 percentText.fontMaterial = warningTextMaterial;
@@ -192,8 +199,8 @@ public class GrainPool : Singleton<GrainPool>
         Vector2 sizeDelta = progressBarBackground.sizeDelta;
         sizeDelta.x = grainPoolSpriteRenderer.transform.localScale.x * grainPoolSpriteRenderer.size.x;
 
-        progressBarBackground.sizeDelta = sizeDelta;
-        progressBarFill.sizeDelta = sizeDelta;
+        progressBarBackground.sizeDelta = 0.9f * sizeDelta;
+        progressBarFill.sizeDelta = progressBarBackground.sizeDelta;
 
         GrainSimulation.Ins.ScaleScreenVariables(sizeX / GameConstants.standardScreenWorldSize.x);
     }
@@ -271,11 +278,26 @@ public class GrainPool : Singleton<GrainPool>
             ChangePendingAmount(number);
         }
 
-        float percent = (float)currentAmount / maxCapacity;
+        int percent = (int)(((float)currentAmount / maxCapacity) * 100);
 
         percent = Mathf.Max(percent, 0);
 
         currentPercent = percent;
+
+        if (number > 0)
+        {
+            displayedPercent = currentPercent;
+
+            if (!isPercentTextScaling && !warningTextTween.isAlive)
+            {
+                scaleProgressTextSequence = SaferioTween.Punch(percentText.transform, 1.3f, onCompleteAction: () =>
+                {
+                    isPercentTextScaling = false;
+                });
+
+                isPercentTextScaling = true;
+            }
+        }
 
         // if (percentTextTween.isAlive)
         // {
@@ -284,21 +306,21 @@ public class GrainPool : Singleton<GrainPool>
 
         // percentTextTween = Tween.Custom(currentPercent, percent, duration: durationUpdateProgress, onValueChange: newVal =>
         // {
-        //     UpdatePercent(newVal);
+        //     UpdatePercent((int)newVal);
 
-        //     currentPercent = newVal;
+        //     currentPercent = (int)newVal;
         // })
         // .OnComplete(() =>
         // {
 
         // });
 
-        // lazyHealthBar.SetProgress(percent, durationUpdateProgress);
+        lazyHealthBar.SetProgress(percent / 100f, durationUpdateProgress);
 
-        // if (number > 0)
-        // {
-        //     SoundManager.Instance.PlaySoundGrainHit();
-        // }
+        if (number > 0)
+        {
+            SoundManager.Instance.PlaySoundGrainHit();
+        }
 
         if (currentAmount > 0)
         {
@@ -322,16 +344,16 @@ public class GrainPool : Singleton<GrainPool>
         AddGrain(0);
     }
 
-    public void UpdatePercent(float percent)
+    public void UpdatePercent(int percent)
     {
-        if (percent < 1)
+        if (percent < 100)
         {
             if (percentTextLocalized.enabled)
             {
                 percentTextLocalized.enabled = false;
             }
 
-            percentText.text = $"{(int)(percent * 100)}%";
+            percentText.text = $"{(int)(percent)}%";
         }
         else
         {
@@ -345,13 +367,8 @@ public class GrainPool : Singleton<GrainPool>
 
     public bool IsMaxCapacity()
     {
-        return currentAmount >= maxCapacity || displayedPercent >= 1;
+        return currentAmount >= maxCapacity || displayedPercent >= 100;
     }
-
-    // public bool IsMaxCapacity()
-    // {
-    //     return currentAmount >= maxCapacity || pendingAmount >= maxCapacity + additionalCapacityToAllowPour;
-    // }
 
     private void SetupLoopPathArrows()
     {
