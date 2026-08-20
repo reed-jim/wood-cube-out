@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
 using Dreamteck.Splines;
+using Lean.Localization;
 using MyGame.Runtime;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -45,6 +46,7 @@ public class GrainPool : Singleton<GrainPool>
     public float distanceBetweenSlots;
 
     public TMP_Text percentText;
+    public LeanLocalizedTextMeshProUGUI percentTextLocalized;
     public LazyHealthBar lazyHealthBar;
 
     public int initialMaxCapacity;
@@ -100,7 +102,7 @@ public class GrainPool : Singleton<GrainPool>
 
     void Update()
     {
-        displayedPercent = Mathf.Lerp(displayedPercent, currentPercent, updateProgressBarSpeed);
+        displayedPercent = Mathf.Lerp(displayedPercent, currentPercent, updateProgressBarSpeedMultiplier * Time.deltaTime);
 
         UpdatePercent(displayedPercent);
 
@@ -116,13 +118,13 @@ public class GrainPool : Singleton<GrainPool>
                 warningColorTween = Tween.Color(percentText, Color.red, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
             }
 
-            if (!fullWarningText.gameObject.activeSelf)
-            {
-                warningTextAppearSequence = SaferioTween.ScaleUpWithPunch(fullWarningText.transform, 1, onCompleteAction: () =>
-                {
-                    warningTextTween = Tween.Scale(fullWarningText.transform, 1.2f, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
-                });
-            }
+            // if (!fullWarningText.gameObject.activeSelf)
+            // {
+            //     warningTextAppearSequence = SaferioTween.ScaleUpWithPunch(fullWarningText.transform, 1, onCompleteAction: () =>
+            //     {
+            //         warningTextTween = Tween.Scale(fullWarningText.transform, 1.2f, duration: 0.8f, cycles: -1, cycleMode: CycleMode.Yoyo);
+            //     });
+            // }
         }
         else
         {
@@ -147,10 +149,10 @@ public class GrainPool : Singleton<GrainPool>
                 warningTextTween.Stop();
             }
 
-            if (fullWarningText.gameObject.activeSelf && !warningTextAppearSequence.isAlive)
-            {
-                warningTextAppearSequence = SaferioTween.ScaleDownWithPunch(fullWarningText.transform);
-            }
+            // if (fullWarningText.gameObject.activeSelf && !warningTextAppearSequence.isAlive)
+            // {
+            //     warningTextAppearSequence = SaferioTween.ScaleDownWithPunch(fullWarningText.transform);
+            // }
         }
     }
 
@@ -293,10 +295,10 @@ public class GrainPool : Singleton<GrainPool>
 
         // lazyHealthBar.SetProgress(percent, durationUpdateProgress);
 
-        if (number > 0)
-        {
-            SoundManager.Instance.PlaySoundGrainHit();
-        }
+        // if (number > 0)
+        // {
+        //     SoundManager.Instance.PlaySoundGrainHit();
+        // }
 
         if (currentAmount > 0)
         {
@@ -322,12 +324,28 @@ public class GrainPool : Singleton<GrainPool>
 
     public void UpdatePercent(float percent)
     {
-        percentText.text = $"{(int)(percent * 100)}%";
+        if (percent < 1)
+        {
+            if (percentTextLocalized.enabled)
+            {
+                percentTextLocalized.enabled = false;
+            }
+
+            percentText.text = $"{(int)(percent * 100)}%";
+        }
+        else
+        {
+            if (!percentTextLocalized.enabled)
+            {
+                percentTextLocalized.enabled = true;
+                percentTextLocalized.TranslationName = "Full";
+            }
+        }
     }
 
     public bool IsMaxCapacity()
     {
-        return currentAmount >= maxCapacity;
+        return currentAmount >= maxCapacity || displayedPercent >= 1;
     }
 
     // public bool IsMaxCapacity()

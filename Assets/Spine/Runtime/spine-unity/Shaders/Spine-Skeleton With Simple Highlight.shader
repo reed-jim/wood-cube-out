@@ -90,7 +90,7 @@ Shader "Spine/Skeleton With Simple Highligh" {
                     float elapsed = _Time.y;
 
                     // 0 -> 1 over the duration
-                    float pingPongTime = 0.5 * sin(3 * _Time.y) + 0.5;
+                    float pingPongTime = 0.5 * sin(5 * _Time.y) + 0.5;
 
                     texColor.rgb = lerp(
 						texColor.rgb,

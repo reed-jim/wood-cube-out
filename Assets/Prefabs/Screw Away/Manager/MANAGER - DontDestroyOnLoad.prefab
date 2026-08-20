@@ -31,6 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3916716360612717478}
+  - {fileID: 5063771234227695381}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3540788489667485971
@@ -46,10 +47,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 8517707550276581621}
+  chickenSound: {fileID: 8148382208766905399}
   grainInTroughSound: {fileID: 0}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
   grainInTroughSoundVolume: 0.3
   chickenPeckSoundCooldown: 0.5
+  isPlayingChickenSound: 0
 --- !u!1 &91373835428622801
 GameObject:
   m_ObjectHideFlags: 0
@@ -12353,39 +12356,40 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: Use <color=#058700>Speed Up </color> to make ants go faster!
+    Text: Use <color=#058700>Speed Up </color> to make chickens peck faster!
     Object: {fileID: 0}
   - Language: French
-    Text: "Utilisez <color=#058700>Acc\xE9l\xE9ration</color> pour faire aller les
-      fourmis plus vite !"
+    Text: "Utilisez \\u003ccolor\\u003d#058700\\u003eAcc\xE9l\xE9ration \\u003c/color\\u003e
+      pour faire picorer les poules plus rapidement\_!"
     Object: {fileID: 0}
   - Language: German
-    Text: Verwende <color=#058700>Beschleunigen</color>, damit die Ameisen schneller
-      laufen!
+    Text: "Verwenden Sie \\u003ccolor\\u003d#058700\\u003eSpeed \\u200b\\u200bUp\\u003c/color\\u003e,
+      damit H\xFChner schneller picken!"
     Object: {fileID: 0}
   - Language: Italian
-    Text: "Usa <color=#058700>Accelera</color> per far andare le formiche pi\xF9
-      velocemente!"
+    Text: "Usa \\u003ccolor\\u003d#058700\\u003e Velocizza \\u003c/color\\u003e per
+      far beccare pi\xF9 velocemente le galline!"
     Object: {fileID: 0}
   - Language: Japanese
-    Text: "\u30A2\u30EA\u3092\u3082\u3063\u3068\u901F\u304F\u52D5\u304B\u3059\u306B\u306F\u3001<color=#058700>\u30B9\u30D4\u30FC\u30C9\u30A2\u30C3\u30D7</color>\u3092\u4F7F\u304A\u3046\uFF01"
+    Text: "\\u003ccolor\\u003d#058700\\u003e\u30B9\u30D4\u30FC\u30C9\u30A2\u30C3\u30D7
+      \\u003c/color\\u003e \u3092\u4F7F\u7528\u3057\u3066\u3001\u9D8F\u304C\u3088\u308A\u901F\u304F\u3064\u3064\u304F\u3088\u3046\u306B\u3057\u307E\u3057\u3087\u3046\uFF01"
     Object: {fileID: 0}
   - Language: Korean
-    Text: "\uAC1C\uBBF8\uB4E4\uC744 \uB354 \uBE60\uB974\uAC8C \uC6C0\uC9C1\uC774\uAC8C
-      \uD558\uB824\uBA74 <color=#058700>\uC18D\uB3C4 \uC99D\uAC00</color>\uB97C \uC0AC\uC6A9\uD558\uC138\uC694!"
+    Text: "\\u003ccolor\\u003d#058700\\u003e\uC18D\uB3C4 \uD5A5\uC0C1\\u003c/color\\u003e\uC744
+      \uC0AC\uC6A9\uD558\uC5EC \uB2ED\uC774 \uB354 \uBE68\uB9AC \uCABC\uAC8C \uB9CC\uB4DC\uC138\uC694!"
     Object: {fileID: 0}
   - Language: Portuguese
-    Text: "Use <color=#058700>Acelerar</color> para fazer as formigas andarem mais
-      r\xE1pido!"
+    Text: "Use \\u003ccolor\\u003d#058700\\u003eAcelerar\\u003c/color\\u003e para
+      fazer as galinhas bicarem mais r\xE1pido!"
     Object: {fileID: 0}
   - Language: Russian
-    Text: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 <color=#058700>\u0423\u0441\u043A\u043E\u0440\u0435\u043D\u0438\u0435</color>,
-      \u0447\u0442\u043E\u0431\u044B \u043C\u0443\u0440\u0430\u0432\u044C\u0438 \u0434\u0432\u0438\u0433\u0430\u043B\u0438\u0441\u044C
-      \u0431\u044B\u0441\u0442\u0440\u0435\u0435!"
+    Text: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \\u003ccolor\\u003d#058700\\u003e\u0423\u0441\u043A\u043E\u0440\u0435\u043D\u0438\u0435
+      \\u003c/color\\u003e, \u0447\u0442\u043E\u0431\u044B \u043A\u0443\u0440\u044B
+      \u043A\u043B\u0435\u0432\u0430\u043B\u0438 \u0431\u044B\u0441\u0442\u0440\u0435\u0435!"
     Object: {fileID: 0}
   - Language: Spanish
-    Text: "Usa <color=#058700>Acelerar</color> para que las hormigas vayan m\xE1s
-      r\xE1pido."
+    Text: "\xA1Usa \\u003ccolor\\u003d#058700\\u003eAcelerar\\u003c/color\\u003e
+      para hacer que las gallinas picoteen m\xE1s r\xE1pido!"
     Object: {fileID: 0}
 --- !u!1 &6562664309124118358
 GameObject:
@@ -15837,6 +15841,135 @@ MonoBehaviour:
   - Language: Spanish
     Text: Proceder de todos modos
     Object: {fileID: 0}
+--- !u!1 &8167541982882495619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5063771234227695381}
+  - component: {fileID: 8148382208766905399}
+  m_Layer: 0
+  m_Name: Chicken Sound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5063771234227695381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8167541982882495619}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 584785918878118629}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &8148382208766905399
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8167541982882495619}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: cdc540936e4edd14bb278e0fe9fe79ba, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.15
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8191151649437725433
 GameObject:
   m_ObjectHideFlags: 0
@@ -16173,7 +16306,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: fae261ff564b88d44a9167c664200d31, type: 3}
+  m_Resource: {fileID: 8300000, guid: 41e2de8a186349b4fbaec9a2bacff7e4, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.15
   m_Pitch: 1

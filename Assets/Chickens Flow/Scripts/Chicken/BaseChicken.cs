@@ -558,6 +558,8 @@ public class BaseChicken : MonoBehaviour
 
         progress = Mathf.Floor(progress / 0.2f) * 0.2f;
 
+        circleProgressFill.fillAmount = Mathf.Min(circleProgressFill.fillAmount, progress);
+
         updateProgressTween = Tween.Custom(circleProgressFill.fillAmount, progress, duration, onValueChange: newVal =>
         {
             circleProgressFill.fillAmount = Mathf.Lerp(0.2f, 1f, newVal);
