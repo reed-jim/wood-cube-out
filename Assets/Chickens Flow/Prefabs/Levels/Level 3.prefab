@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 3028384448401907426}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -44,533 +44,536 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49669fb285007b4fbe85fb3c73bd166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.LevelItem
-  picture: {fileID: 21300000, guid: 11ee0fae931888f41847d6d0bb41d156, type: 3}
+  picture: {fileID: 21300000, guid: e56961726363962428198895b4a949b4, type: 3}
   numColumn: 16
   numRow: 16
   boardShapePresetIndex: 2
   isLevelHavingTransparentPixels: 0
-  isOverrideLevelScale: 0
-  chickenAreaScaleX: 1
+  isOverrideLevelScale: 1
+  chickenAreaScaleX: 0.8
   chickenAreaScaleY: 0.9
   poolFaction: []
   tiles: []
   chickenLevelTiles:
   - position: {x: 0, y: 0, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 0, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 2, y: 0, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 3, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 4, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 5, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 6, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 7, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 8, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 9, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 10, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 11, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 12, y: 0, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 13, y: 0, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 14, y: 0, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 15, y: 0, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 0, y: 1, z: 0}
-    factionIndex: 15
+    factionIndex: 17
   - position: {x: 1, y: 1, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 2, y: 1, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 3, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 4, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 5, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 6, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 7, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 8, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 9, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 10, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 11, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 12, y: 1, z: 0}
-    factionIndex: 8
+    factionIndex: 7
   - position: {x: 13, y: 1, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 14, y: 1, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 15, y: 1, z: 0}
-    factionIndex: -1
+    factionIndex: 17
   - position: {x: 0, y: 2, z: 0}
-    factionIndex: 15
+    factionIndex: 17
   - position: {x: 1, y: 2, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 2, y: 2, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 3, y: 2, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 4, y: 2, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 5, y: 2, z: 0}
-    factionIndex: 6
+    factionIndex: 3
   - position: {x: 6, y: 2, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 7, y: 2, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 8, y: 2, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 9, y: 2, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 10, y: 2, z: 0}
-    factionIndex: 18
+    factionIndex: 17
   - position: {x: 11, y: 2, z: 0}
-    factionIndex: 18
+    factionIndex: 3
   - position: {x: 12, y: 2, z: 0}
-    factionIndex: 18
+    factionIndex: 12
   - position: {x: 13, y: 2, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 14, y: 2, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 15, y: 2, z: 0}
-    factionIndex: 11
+    factionIndex: 17
   - position: {x: 0, y: 3, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 3, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 2, y: 3, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 3, y: 3, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 4, y: 3, z: 0}
-    factionIndex: 6
+    factionIndex: 3
   - position: {x: 5, y: 3, z: 0}
-    factionIndex: 6
+    factionIndex: 17
   - position: {x: 6, y: 3, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 7, y: 3, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 8, y: 3, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 9, y: 3, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 10, y: 3, z: 0}
-    factionIndex: 18
+    factionIndex: 17
   - position: {x: 11, y: 3, z: 0}
-    factionIndex: 18
+    factionIndex: 3
   - position: {x: 12, y: 3, z: 0}
-    factionIndex: 18
+    factionIndex: 12
   - position: {x: 13, y: 3, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 14, y: 3, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 15, y: 3, z: 0}
-    factionIndex: -1
+    factionIndex: 7
   - position: {x: 0, y: 4, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 4, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 2, y: 4, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 3, y: 4, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 4, y: 4, z: 0}
-    factionIndex: 6
+    factionIndex: 3
   - position: {x: 5, y: 4, z: 0}
-    factionIndex: 6
+    factionIndex: 3
   - position: {x: 6, y: 4, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 7, y: 4, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 8, y: 4, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 9, y: 4, z: 0}
-    factionIndex: 8
+    factionIndex: 3
   - position: {x: 10, y: 4, z: 0}
-    factionIndex: 18
+    factionIndex: 3
   - position: {x: 11, y: 4, z: 0}
-    factionIndex: 18
+    factionIndex: 3
   - position: {x: 12, y: 4, z: 0}
-    factionIndex: 18
+    factionIndex: 3
   - position: {x: 13, y: 4, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 14, y: 4, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 4, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 0, y: 5, z: 0}
-    factionIndex: 15
+    factionIndex: 2
   - position: {x: 1, y: 5, z: 0}
-    factionIndex: 15
+    factionIndex: 2
   - position: {x: 2, y: 5, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 3, y: 5, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 4, y: 5, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 5, y: 5, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 6, y: 5, z: 0}
     factionIndex: 8
   - position: {x: 7, y: 5, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 8, y: 5, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 9, y: 5, z: 0}
     factionIndex: 8
   - position: {x: 10, y: 5, z: 0}
-    factionIndex: 18
+    factionIndex: 12
   - position: {x: 11, y: 5, z: 0}
-    factionIndex: 18
+    factionIndex: 12
   - position: {x: 12, y: 5, z: 0}
-    factionIndex: 18
+    factionIndex: 12
   - position: {x: 13, y: 5, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 14, y: 5, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 5, z: 0}
-    factionIndex: -1
+    factionIndex: 2
   - position: {x: 0, y: 6, z: 0}
-    factionIndex: 15
+    factionIndex: 2
   - position: {x: 1, y: 6, z: 0}
-    factionIndex: 15
+    factionIndex: 2
   - position: {x: 2, y: 6, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 3, y: 6, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 4, y: 6, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 5, y: 6, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 6, y: 6, z: 0}
     factionIndex: 8
   - position: {x: 7, y: 6, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 8, y: 6, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 9, y: 6, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 10, y: 6, z: 0}
-    factionIndex: 18
+    factionIndex: 8
   - position: {x: 11, y: 6, z: 0}
-    factionIndex: 18
+    factionIndex: 8
   - position: {x: 12, y: 6, z: 0}
-    factionIndex: 18
+    factionIndex: 8
   - position: {x: 13, y: 6, z: 0}
-    factionIndex: 11
+    factionIndex: 8
   - position: {x: 14, y: 6, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 6, z: 0}
-    factionIndex: 11
+    factionIndex: 2
   - position: {x: 0, y: 7, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 7, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 2, y: 7, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 3, y: 7, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 4, y: 7, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 5, y: 7, z: 0}
-    factionIndex: 6
+    factionIndex: 12
   - position: {x: 6, y: 7, z: 0}
     factionIndex: 8
   - position: {x: 7, y: 7, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 8, y: 7, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 9, y: 7, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 10, y: 7, z: 0}
-    factionIndex: 18
+    factionIndex: 2
   - position: {x: 11, y: 7, z: 0}
-    factionIndex: 18
+    factionIndex: 2
   - position: {x: 12, y: 7, z: 0}
-    factionIndex: 18
+    factionIndex: 2
   - position: {x: 13, y: 7, z: 0}
-    factionIndex: 11
+    factionIndex: 8
   - position: {x: 14, y: 7, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 7, z: 0}
-    factionIndex: -1
+    factionIndex: 7
   - position: {x: 0, y: 8, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 8, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 2, y: 8, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 3, y: 8, z: 0}
-    factionIndex: 6
+    factionIndex: 8
   - position: {x: 4, y: 8, z: 0}
-    factionIndex: 6
+    factionIndex: 8
   - position: {x: 5, y: 8, z: 0}
-    factionIndex: 6
+    factionIndex: 8
   - position: {x: 6, y: 8, z: 0}
     factionIndex: 8
   - position: {x: 7, y: 8, z: 0}
     factionIndex: 8
   - position: {x: 8, y: 8, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 9, y: 8, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 10, y: 8, z: 0}
-    factionIndex: 18
+    factionIndex: 8
   - position: {x: 11, y: 8, z: 0}
-    factionIndex: 18
+    factionIndex: 8
   - position: {x: 12, y: 8, z: 0}
-    factionIndex: 18
+    factionIndex: 2
   - position: {x: 13, y: 8, z: 0}
-    factionIndex: 11
+    factionIndex: 8
   - position: {x: 14, y: 8, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 8, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 0, y: 9, z: 0}
-    factionIndex: 15
+    factionIndex: 2
   - position: {x: 1, y: 9, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 2, y: 9, z: 0}
-    factionIndex: 15
+    factionIndex: 8
   - position: {x: 3, y: 9, z: 0}
-    factionIndex: 6
+    factionIndex: 2
   - position: {x: 4, y: 9, z: 0}
-    factionIndex: 6
+    factionIndex: 2
   - position: {x: 5, y: 9, z: 0}
-    factionIndex: 6
+    factionIndex: 2
   - position: {x: 6, y: 9, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 7, y: 9, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 8, y: 9, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 9, y: 9, z: 0}
     factionIndex: 8
   - position: {x: 10, y: 9, z: 0}
-    factionIndex: 18
+    factionIndex: 12
   - position: {x: 11, y: 9, z: 0}
-    factionIndex: 18
+    factionIndex: 8
   - position: {x: 12, y: 9, z: 0}
-    factionIndex: 18
+    factionIndex: 2
   - position: {x: 13, y: 9, z: 0}
-    factionIndex: 11
+    factionIndex: 8
   - position: {x: 14, y: 9, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 9, z: 0}
-    factionIndex: -1
+    factionIndex: 2
   - position: {x: 0, y: 10, z: 0}
-    factionIndex: 15
+    factionIndex: 2
   - position: {x: 1, y: 10, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 2, y: 10, z: 0}
-    factionIndex: 15
+    factionIndex: 8
   - position: {x: 3, y: 10, z: 0}
-    factionIndex: 6
+    factionIndex: 2
   - position: {x: 4, y: 10, z: 0}
-    factionIndex: 6
+    factionIndex: 2
   - position: {x: 5, y: 10, z: 0}
     factionIndex: 8
   - position: {x: 6, y: 10, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 7, y: 10, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 8, y: 10, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 9, y: 10, z: 0}
     factionIndex: 8
   - position: {x: 10, y: 10, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 11, y: 10, z: 0}
-    factionIndex: 18
+    factionIndex: 8
   - position: {x: 12, y: 10, z: 0}
-    factionIndex: 18
+    factionIndex: 2
   - position: {x: 13, y: 10, z: 0}
-    factionIndex: 11
+    factionIndex: 8
   - position: {x: 14, y: 10, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 10, z: 0}
-    factionIndex: 11
+    factionIndex: 2
   - position: {x: 0, y: 11, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 11, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 2, y: 11, z: 0}
-    factionIndex: 15
+    factionIndex: 8
   - position: {x: 3, y: 11, z: 0}
-    factionIndex: 6
+    factionIndex: 2
   - position: {x: 4, y: 11, z: 0}
     factionIndex: 8
   - position: {x: 5, y: 11, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 6, y: 11, z: 0}
     factionIndex: 8
   - position: {x: 7, y: 11, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 8, y: 11, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 9, y: 11, z: 0}
     factionIndex: 8
   - position: {x: 10, y: 11, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 11, y: 11, z: 0}
     factionIndex: 8
   - position: {x: 12, y: 11, z: 0}
-    factionIndex: 18
-  - position: {x: 13, y: 11, z: 0}
-    factionIndex: 11
-  - position: {x: 14, y: 11, z: 0}
-    factionIndex: 11
-  - position: {x: 15, y: 11, z: 0}
-    factionIndex: -1
-  - position: {x: 0, y: 12, z: 0}
-    factionIndex: 15
-  - position: {x: 1, y: 12, z: 0}
-    factionIndex: 15
-  - position: {x: 2, y: 12, z: 0}
-    factionIndex: 15
-  - position: {x: 3, y: 12, z: 0}
     factionIndex: 8
+  - position: {x: 13, y: 11, z: 0}
+    factionIndex: 12
+  - position: {x: 14, y: 11, z: 0}
+    factionIndex: 12
+  - position: {x: 15, y: 11, z: 0}
+    factionIndex: 7
+  - position: {x: 0, y: 12, z: 0}
+    factionIndex: 7
+  - position: {x: 1, y: 12, z: 0}
+    factionIndex: 12
+  - position: {x: 2, y: 12, z: 0}
+    factionIndex: 8
+  - position: {x: 3, y: 12, z: 0}
+    factionIndex: 2
   - position: {x: 4, y: 12, z: 0}
     factionIndex: 8
   - position: {x: 5, y: 12, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 6, y: 12, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 7, y: 12, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 8, y: 12, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 9, y: 12, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 10, y: 12, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 11, y: 12, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 12, y: 12, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 13, y: 12, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 14, y: 12, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 12, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 0, y: 13, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 13, z: 0}
-    factionIndex: 15
+    factionIndex: 12
   - position: {x: 2, y: 13, z: 0}
     factionIndex: 8
   - position: {x: 3, y: 13, z: 0}
     factionIndex: 8
   - position: {x: 4, y: 13, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 5, y: 13, z: 0}
-    factionIndex: 20
+    factionIndex: 12
   - position: {x: 6, y: 13, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 7, y: 13, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 8, y: 13, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 9, y: 13, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 10, y: 13, z: 0}
-    factionIndex: 20
+    factionIndex: 12
   - position: {x: 11, y: 13, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 12, y: 13, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 13, y: 13, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 14, y: 13, z: 0}
-    factionIndex: 11
+    factionIndex: 12
   - position: {x: 15, y: 13, z: 0}
-    factionIndex: -1
+    factionIndex: 7
   - position: {x: 0, y: 14, z: 0}
-    factionIndex: 15
+    factionIndex: 7
   - position: {x: 1, y: 14, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 2, y: 14, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 3, y: 14, z: 0}
-    factionIndex: 8
+    factionIndex: 17
   - position: {x: 4, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 12
   - position: {x: 5, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 12
   - position: {x: 6, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 7, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 8, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 9, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 10, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 12
   - position: {x: 11, y: 14, z: 0}
-    factionIndex: 20
+    factionIndex: 12
   - position: {x: 12, y: 14, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 13, y: 14, z: 0}
-    factionIndex: 8
+    factionIndex: 12
   - position: {x: 14, y: 14, z: 0}
-    factionIndex: 8
+    factionIndex: 2
   - position: {x: 15, y: 14, z: 0}
-    factionIndex: 11
+    factionIndex: 7
   - position: {x: 0, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 1, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 2, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 17
   - position: {x: 3, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 17
   - position: {x: 4, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 5, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 6, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 7, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 8, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 8
   - position: {x: 9, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 10, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 11, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 12, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 13, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   - position: {x: 14, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 2
   - position: {x: 15, y: 15, z: 0}
-    factionIndex: 20
+    factionIndex: 7
   isTutorialLevel: 0
+  isTutorialSpeedUpLevel: 0
   isUseManualFactionSetupForFirstAntBoxes: 0
   levelFactionConfig:
     items: []
+    levelFactionConfigDebug:
+      items: []
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0

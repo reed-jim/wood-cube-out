@@ -52,7 +52,20 @@ MonoBehaviour:
   isOverrideLevelScale: 0
   chickenAreaScaleX: 1
   chickenAreaScaleY: 1
-  poolFaction: []
+  poolFaction:
+  - {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+  - {r: 0.5176471, g: 0.16078432, b: 0.79607844, a: 1}
+  - {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+  - {r: 0.27058825, g: 0.70980394, b: 0.9490196, a: 1}
+  - {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+  - {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+  - {r: 0.99215686, g: 0.62352943, b: 0.06666667, a: 1}
+  - {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+  - {r: 1, g: 0.37254903, b: 0.14117648, a: 1}
+  - {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+  - {r: 1, g: 0.3882353, b: 0.61960787, a: 1}
+  - {r: 0.9137255, g: 0.9137255, b: 0.9137255, a: 1}
+  - {r: 0.99215686, g: 0.6039216, b: 0.827451, a: 1}
   tiles: []
   chickenLevelTiles:
   - position: {x: 0, y: 0, z: 0}
@@ -1738,9 +1751,12 @@ MonoBehaviour:
   - position: {x: 28, y: 28, z: 0}
     factionIndex: 5
   isTutorialLevel: 0
+  isTutorialSpeedUpLevel: 0
   isUseManualFactionSetupForFirstAntBoxes: 0
   levelFactionConfig:
     items: []
+    levelFactionConfigDebug:
+      items: []
   difficulty: 6
   initialDifficulty: 0
   overrideInitialDifficulty: 0
