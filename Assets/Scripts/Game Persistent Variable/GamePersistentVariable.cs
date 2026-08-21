@@ -25,6 +25,7 @@ public static class GamePersistentVariable
     public static string iapInitializeFailReason;
     public static Vector2 screenSizeWorld;
     public static bool isNearWinLevel;
+    public static int levelReviveTime;
 
     #region LEVEL OBSERVER
     public static int currentLevel;

@@ -128,9 +128,9 @@ namespace AntsFlow
         public bool isTutorialSpeedUpLevel;
         public bool isUseManualFactionSetupForFirstAntBoxes;
         public LevelFactionConfig levelFactionConfig;
-        public int difficulty;
-        public int initialDifficulty;
-        public bool overrideInitialDifficulty;
+        [HideInInspector] public int difficulty;
+        [HideInInspector] public int initialDifficulty;
+        [HideInInspector] public bool overrideInitialDifficulty;
         public int numStartAntBoxes = 6;
         public SpecialElementConfig specialElementConfig;
 
@@ -274,6 +274,38 @@ namespace AntsFlow
             DrawDefaultInspector();
 
             LevelItem levelItem = (LevelItem)target;
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Chicken Jam Level Tool", EditorStyles.boldLabel);
+
+            Rect rect = EditorGUILayout.GetControlRect();
+
+            // Label
+            rect = EditorGUI.PrefixLabel(rect, new GUIContent("Difficulty"));
+
+            // Reserve space for the number
+            float numberWidth = 30f;
+            Rect sliderRect = new Rect(
+                rect.x,
+                rect.y,
+                rect.width - numberWidth,
+                rect.height
+            );
+
+            Rect numberRect = new Rect(
+                rect.x + rect.width - numberWidth,
+                rect.y,
+                numberWidth,
+                rect.height
+            );
+
+            // Slider
+            levelItem.difficulty = EditorGUI.IntSlider(
+                sliderRect,
+                levelItem.difficulty,
+                0,
+                10
+            );
 
             if (GUILayout.Button("Update Manual Bucket Config"))
             {
@@ -425,6 +457,16 @@ namespace AntsFlow
         private void OnSceneGUI()
         {
             ConfiguringLevel();
+        }
+
+        private Color GetDifficultyColor(int difficulty)
+        {
+            difficulty = Mathf.Clamp(difficulty, 0, 10);
+
+            if (difficulty <= 5)
+                return Color.Lerp(Color.green, Color.yellow, difficulty / 5f);
+
+            return Color.Lerp(Color.yellow, Color.red, (difficulty - 5) / 5f);
         }
 
         private void ConfiguringLevel()
@@ -1899,7 +1941,9 @@ namespace AntsFlow
 public class LevelFactionConfig
 {
     public List<LevelFactionConfigByColumn> items;
+#if UNITY_EDITOR
     public LevelFactionConfigDebug levelFactionConfigDebug;
+#endif
 
     public void ShowDebug(AntsFlow.LevelItem levelItem, List<AntLevelDataItem> antLevelDataItems)
     {
@@ -1907,7 +1951,7 @@ public class LevelFactionConfig
 
         foreach (var item in antLevelDataItems)
         {
-            if(item.factionIndex >= 0)
+            if (item.factionIndex >= 0)
             {
                 CommonUtil.SumValueOfDictionary(numberByFaction, levelItem.factionMapper.allFactions[item.factionIndex], 10);
             }
@@ -1923,6 +1967,7 @@ public class LevelFactionConfig
             }
         }
 
+#if UNITY_EDITOR
         levelFactionConfigDebug = new LevelFactionConfigDebug();
         levelFactionConfigDebug.items = new List<LevelFactionConfigDebugItem>();
 
@@ -1935,6 +1980,7 @@ public class LevelFactionConfig
 
             levelFactionConfigDebug.items.Add(item);
         }
+#endif
     }
 }
 
@@ -1962,6 +2008,7 @@ public class LevelFactionItemConfig
     }
 }
 
+#if UNITY_EDITOR
 [Serializable]
 public class LevelFactionConfigDebug
 {
@@ -1974,6 +2021,7 @@ public class LevelFactionConfigDebugItem
     public Color faction;
     public int remaning;
 }
+#endif
 
 [Serializable]
 public class AntLevelData
