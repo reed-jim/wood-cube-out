@@ -696,7 +696,7 @@ MonoBehaviour:
   - position: {x: 19, y: 12, z: 0}
     factionIndex: 20
   - position: {x: 20, y: 12, z: 0}
-    factionIndex: 9
+    factionIndex: 0
   - position: {x: 21, y: 12, z: 0}
     factionIndex: 11
   - position: {x: 22, y: 12, z: 0}
@@ -1344,8 +1344,6 @@ MonoBehaviour:
         number: 40
       - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
         number: 30
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
       - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 40
       - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
@@ -1360,22 +1358,6 @@ MonoBehaviour:
         number: 40
       - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 20
-      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
-        number: 40
-      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
-        number: 40
-      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
-        number: 20
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 30
-      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
-        number: 30
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 40
-      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
-        number: 30
-      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
-        number: 25
       - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
         number: 30
       - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
@@ -1420,22 +1402,38 @@ MonoBehaviour:
         number: 30
       - faction: {r: 1, g: 0.3882353, b: 0.61960787, a: 1}
         number: 40
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
-        number: 0
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+        number: 20
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 30
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+        number: 30
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 30
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+        number: 20
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 30
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 40
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 30
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 25
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 30
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 30
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 40
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 35
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 40
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 30
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 40
     - column: 1
       items:
       - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
@@ -1444,6 +1442,70 @@ MonoBehaviour:
         number: 40
       - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 30
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352941, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352941, a: 1}
+        number: 0
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 0
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 0
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
+        number: 0
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
+        number: 0
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 0
+      - faction: {r: 0, g: 0, b: 0, a: 0}
+        number: 0
+      - faction: {r: 0, g: 0, b: 0, a: 0}
+        number: 0
+      - faction: {r: 0, g: 0, b: 0, a: 0}
+        number: 0
+      - faction: {r: 0, g: 0, b: 0, a: 0}
+        number: 0
+      - faction: {r: 0, g: 0, b: 0, a: 0}
+        number: 0
+      - faction: {r: 0, g: 0, b: 0, a: 0}
+        number: 0
+      - faction: {r: 0, g: 0, b: 0, a: 0}
+        number: 0
       - faction: {r: 0, g: 0, b: 0, a: 0}
         number: 0
       - faction: {r: 0, g: 0, b: 0, a: 0}
@@ -1506,57 +1568,57 @@ MonoBehaviour:
         number: 50
       - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 60
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352941, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352941, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
         number: 0
-      - faction: {r: 0, g: 0, b: 0, a: 0}
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
         number: 0
       - faction: {r: 0, g: 0, b: 0, a: 0}
         number: 0
