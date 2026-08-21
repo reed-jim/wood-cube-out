@@ -278,34 +278,41 @@ namespace AntsFlow
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Chicken Jam Level Tool", EditorStyles.boldLabel);
 
-            Rect rect = EditorGUILayout.GetControlRect();
+            #region Difficulty
+            Rect rect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight + 4);
+            int difficulty = levelItem.difficulty;
+            float t = difficulty / 10f;
 
-            // Label
-            rect = EditorGUI.PrefixLabel(rect, new GUIContent("Difficulty"));
+            Color difficultyColor = difficulty <= 2
+                ? Color.Lerp(new Color(.15f, .9f, .35f), new Color(.35f, 1f, .25f), difficulty / 2f)
+                : difficulty <= 5
+                    ? Color.Lerp(new Color(.95f, .85f, .1f), new Color(1f, .65f, .05f), (difficulty - 2) / 3f)
+                    : difficulty <= 7
+                        ? Color.Lerp(new Color(1f, .5f, .05f), new Color(1f, .3f, .05f), (difficulty - 5) / 2f)
+                        : Color.Lerp(new Color(1f, .25f, .1f), new Color(1f, .05f, .05f), (difficulty - 7) / 3f);
 
-            // Reserve space for the number
-            float numberWidth = 30f;
-            Rect sliderRect = new Rect(
-                rect.x,
-                rect.y,
-                rect.width - numberWidth,
-                rect.height
-            );
+            EditorGUI.DrawRect(rect, new Color(.06f, .07f, .09f));
+            EditorGUI.DrawRect(new Rect(rect.x + 2, rect.y + 2, (rect.width - 4) * t, rect.height - 4), new Color(difficultyColor.r, difficultyColor.g, difficultyColor.b, .65f));
 
-            Rect numberRect = new Rect(
-                rect.x + rect.width - numberWidth,
-                rect.y,
-                numberWidth,
-                rect.height
-            );
+            EditorGUI.BeginChangeCheck();
+            difficulty = EditorGUI.IntSlider(rect, difficulty, 0, 10);
 
-            // Slider
-            levelItem.difficulty = EditorGUI.IntSlider(
-                sliderRect,
-                levelItem.difficulty,
-                0,
-                10
-            );
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(target, "Change Level Difficulty");
+                levelItem.difficulty = difficulty;
+                EditorUtility.SetDirty(target);
+            }
+
+            string difficultyText = difficulty <= 2 ? "EASY" : difficulty <= 5 ? "NORMAL" : difficulty <= 7 ? "HARD" : "EXTREME";
+
+            GUIStyle labelStyle = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter, fontSize = 11 };
+            labelStyle.normal.textColor = Color.white;
+
+            Rect labelRect = new Rect(rect.center.x - 50, rect.y, 100, rect.height);
+            EditorGUI.DrawRect(labelRect, new Color(.02f, .02f, .025f, .75f));
+            GUI.Label(labelRect, $"{difficultyText} • {difficulty}/10", labelStyle);
+            #endregion
 
             if (GUILayout.Button("Update Manual Bucket Config"))
             {
