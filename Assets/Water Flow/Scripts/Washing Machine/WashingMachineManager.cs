@@ -1295,7 +1295,7 @@ namespace AntsFlow
 
         private float GetLevelProgress()
         {
-            return 0;
+            return ChickenManager.Ins.currentProgress;
 
             int numDoneTile = TileManager.Ins.tiles.Count(tile => tile.isDone);
 
