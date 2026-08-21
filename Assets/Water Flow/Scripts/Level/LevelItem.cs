@@ -262,6 +262,13 @@ namespace AntsFlow
 
         private ConfigTool configTool;
 
+        #region Faction Config Demo
+        private bool showFactionConfigMode;
+        private const int FactionConfigColumnCount = 3;
+        private int[] factionConfigColumnRows = new int[FactionConfigColumnCount] { 5, 5, 5 };
+        private int factionPaintNumber = 10;
+        #endregion
+
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
@@ -352,6 +359,24 @@ namespace AntsFlow
             if (GUILayout.Button("Clear All Special Elements"))
             {
                 levelItem.ClearAllSpecialElements();
+            }
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Faction Config Demo (3 Columns)", EditorStyles.boldLabel);
+
+            if (GUILayout.Button(showFactionConfigMode ? "Disable Faction Config Demo" : "Enable Faction Config Demo"))
+            {
+                showFactionConfigMode = !showFactionConfigMode;
+
+                if (showFactionConfigMode)
+                {
+                    InitFactionConfigRows(levelItem);
+                }
+            }
+
+            if (showFactionConfigMode)
+            {
+                DrawFactionConfigMode(levelItem);
             }
 
             GUILayout.Space(10);
@@ -1221,6 +1246,233 @@ namespace AntsFlow
                 "Select Faction"
             );
         }
+
+        #region Faction Config Demo
+        private void InitFactionConfigRows(LevelItem levelItem)
+        {
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                int existingCount = GetFactionColumn(levelItem, c)?.items?.Count ?? 0;
+
+                factionConfigColumnRows[c] = Mathf.Max(factionConfigColumnRows[c], existingCount, 1);
+            }
+        }
+
+        private void DrawFactionConfigMode(LevelItem levelItem)
+        {
+            // Faction selector (writes to selectedColor, shared with the Colors section)
+            DrawColorButton(levelItem, selectedColor);
+
+            factionPaintNumber = EditorGUILayout.IntField("Paint Number", factionPaintNumber);
+
+            EditorGUILayout.LabelField("Rows Per Column", EditorStyles.miniBoldLabel);
+
+            EditorGUILayout.BeginHorizontal();
+
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                factionConfigColumnRows[c] = Mathf.Max(0, EditorGUILayout.IntField($"Col {c}", factionConfigColumnRows[c]));
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.HelpBox(
+                "Select a faction, then click cells top-to-bottom (index 0 first, no gaps). "
+                + "Toggle 'isErase' above to remove the last filled cell of a column.",
+                MessageType.Info);
+
+            EditorGUILayout.Space(6);
+
+            const float cell = 42f;
+            const float rowGap = 6f;
+            const float colGap = 20f;
+            const float headerHeight = 18f;
+
+            int[] displayRows = new int[FactionConfigColumnCount];
+            int maxRows = 0;
+
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                int count = GetFactionColumn(levelItem, c)?.items?.Count ?? 0;
+
+                // Never hide existing data even if the row field is smaller.
+                displayRows[c] = Mathf.Max(factionConfigColumnRows[c], count);
+                maxRows = Mathf.Max(maxRows, displayRows[c]);
+            }
+
+            float gridWidth = FactionConfigColumnCount * cell + (FactionConfigColumnCount - 1) * colGap;
+            float gridHeight = headerHeight + maxRows * (cell + rowGap);
+
+            Rect area = GUILayoutUtility.GetRect(gridWidth, gridHeight);
+
+            GUIStyle numberStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 12
+            };
+
+            GUIStyle headerStyle = new GUIStyle(EditorStyles.miniBoldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter
+            };
+
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                float colX = area.x + c * (cell + colGap);
+
+                LevelFactionConfigByColumn column = GetFactionColumn(levelItem, c);
+                int count = column?.items?.Count ?? 0;
+
+                EditorGUI.LabelField(new Rect(colX, area.y, cell, headerHeight), $"Col {c}", headerStyle);
+
+                for (int r = 0; r < displayRows[c]; r++)
+                {
+                    float y = area.y + headerHeight + r * (cell + rowGap);
+                    Rect cellRect = new Rect(colX, y, cell, cell);
+
+                    bool filled = r < count;
+
+                    if (filled)
+                    {
+                        LevelFactionItemConfig item = column.items[r];
+
+                        EditorGUI.DrawRect(cellRect, item.faction);
+                        DrawRectBorder(cellRect, Color.black, 1f);
+                        numberStyle.normal.textColor = GetContrastingColor(item.faction);
+
+                        EditorGUI.LabelField(cellRect, item.number.ToString(), numberStyle);
+                    }
+                    else
+                    {
+                        bool isNextSlot = r == count;
+
+                        EditorGUI.DrawRect(cellRect, new Color(0.22f, 0.22f, 0.22f, 1f));
+                        DrawRectBorder(cellRect, isNextSlot ? new Color(0.9f, 0.9f, 0.3f, 1f) : new Color(0.4f, 0.4f, 0.4f, 1f), 1f);
+                    }
+
+                    if (GUI.Button(cellRect, GUIContent.none, GUIStyle.none))
+                    {
+                        OnFactionCellClicked(levelItem, c, r);
+                    }
+                }
+            }
+
+            if (GUILayout.Button("Clear Faction Config"))
+            {
+                if (levelItem.levelFactionConfig != null)
+                {
+                    Undo.RecordObject(levelItem, "Clear Faction Config");
+                    levelItem.levelFactionConfig.items = new List<LevelFactionConfigByColumn>();
+                    EditorUtility.SetDirty(levelItem);
+                }
+            }
+        }
+
+        private void OnFactionCellClicked(LevelItem levelItem, int column, int row)
+        {
+            Undo.RecordObject(levelItem, "Edit Faction Config");
+
+            if (isErase)
+            {
+                LevelFactionConfigByColumn config = GetFactionColumn(levelItem, column);
+                int count = config?.items?.Count ?? 0;
+
+                if (count == 0)
+                    return;
+
+                // Keep the column contiguous: only the last filled cell can be removed.
+                if (row == count - 1)
+                {
+                    config.items.RemoveAt(row);
+
+                    if (config.items.Count == 0)
+                    {
+                        levelItem.levelFactionConfig.items.Remove(config);
+                    }
+
+                    EditorUtility.SetDirty(levelItem);
+                }
+                else
+                {
+                    Debug.LogWarning("Chỉ được xoá ô cuối cùng của cột để giữ index liên tục.");
+                }
+
+                return;
+            }
+
+            LevelFactionConfigByColumn columnConfig = GetOrCreateFactionColumn(levelItem, column);
+            int currentCount = columnConfig.items.Count;
+
+            if (row < currentCount)
+            {
+                // Recolor an existing cell (keeps its number and the contiguous layout).
+                columnConfig.items[row].faction = selectedColor;
+            }
+            else if (row == currentCount)
+            {
+                // Append the next cell in the column.
+                columnConfig.items.Add(new LevelFactionItemConfig(selectedColor, factionPaintNumber));
+            }
+            else
+            {
+                Debug.LogWarning("Phải chấm tuần tự từ index 0, không được bỏ qua ô ở giữa.");
+                return;
+            }
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        private LevelFactionConfigByColumn GetFactionColumn(LevelItem levelItem, int column)
+        {
+            if (levelItem.levelFactionConfig?.items == null)
+                return null;
+
+            return levelItem.levelFactionConfig.items.Find(item => item.column == column);
+        }
+
+        private LevelFactionConfigByColumn GetOrCreateFactionColumn(LevelItem levelItem, int column)
+        {
+            if (levelItem.levelFactionConfig == null)
+                levelItem.levelFactionConfig = new LevelFactionConfig();
+
+            if (levelItem.levelFactionConfig.items == null)
+                levelItem.levelFactionConfig.items = new List<LevelFactionConfigByColumn>();
+
+            LevelFactionConfigByColumn config = levelItem.levelFactionConfig.items.Find(item => item.column == column);
+
+            if (config == null)
+            {
+                config = new LevelFactionConfigByColumn
+                {
+                    column = column,
+                    items = new List<LevelFactionItemConfig>()
+                };
+
+                levelItem.levelFactionConfig.items.Add(config);
+                levelItem.levelFactionConfig.items.Sort((a, b) => a.column.CompareTo(b.column));
+            }
+
+            if (config.items == null)
+                config.items = new List<LevelFactionItemConfig>();
+
+            return config;
+        }
+
+        private void DrawRectBorder(Rect rect, Color color, float thickness)
+        {
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, thickness), color);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), color);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, thickness, rect.height), color);
+            EditorGUI.DrawRect(new Rect(rect.xMax - thickness, rect.y, thickness, rect.height), color);
+        }
+
+        private Color GetContrastingColor(Color background)
+        {
+            float luminance = 0.299f * background.r + 0.587f * background.g + 0.114f * background.b;
+
+            return luminance > 0.5f ? Color.black : Color.white;
+        }
+        #endregion
         #endregion
 
         private void DrawArrow(Vector3 from, Vector3 to, float headLength, float headAngle)
