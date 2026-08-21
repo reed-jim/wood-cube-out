@@ -110,6 +110,11 @@ namespace AntsFlow
                 difficultyLevel = levelItem.difficulty;
             }
 
+            if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
+            {
+                levelFactionConfig = levelItem.levelFactionConfig;
+            }
+
             numAntBoxSpawned = 0;
 
             ChickenManager.Ins.SpawnFirstChickensUsingLevelConfig(levelItem);
@@ -132,11 +137,6 @@ namespace AntsFlow
             if (levelItem.isTutorialSpeedUpLevel)
             {
                 SpeedUpTutorialManager.Ins.StartTutorial();
-            }
-
-            if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
-            {
-                levelFactionConfig = levelItem.levelFactionConfig;
             }
         }
 
