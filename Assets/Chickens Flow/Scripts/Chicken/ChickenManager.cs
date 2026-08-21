@@ -37,6 +37,10 @@ public class ChickenManager : Singleton<ChickenManager>
     [SerializeField] private BoardShapePreset[] boardShapePresets;
     [SerializeField] private List<Vector2> customPolygonVertices;
 
+    [Header("Level Progress")]
+    public float currentProgress;
+    public float progressPerChicken;
+
     [Header("Gizmo Preview Settings")]
     [SerializeField] private bool showBoardShapeGizmos = true;
     [SerializeField] private int selectedBoardShapedIndex = 0;
@@ -484,6 +488,14 @@ public class ChickenManager : Singleton<ChickenManager>
 
         chickenRenderer.RenderChickens(chickens);
         SoundManager.Instance.PlayChickenSound();
+
+        currentProgress = 0;
+        progressPerChicken = 1f / chickens.Count;
+    }
+
+    public void UpdateLevelProgress()
+    {
+        currentProgress += progressPerChicken;
     }
 
     public static List<Vector2> ScalePolygonToScreen(List<Vector2> points)

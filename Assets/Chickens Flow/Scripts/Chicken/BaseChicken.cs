@@ -287,6 +287,8 @@ public class BaseChicken : MonoBehaviour
                 }
 
                 isDone = true;
+
+                ChickenManager.Ins.UpdateLevelProgress();
             }
             else
             {
@@ -534,6 +536,8 @@ public class BaseChicken : MonoBehaviour
         isForceFlyOut = true;
         isDone = true;
         isLastChickenForcedFlyOut = isLast;
+
+        ChickenManager.Ins.UpdateLevelProgress();
     }
 
     public void ForceStopEatingAndFlyOut(bool isLast)
