@@ -16,7 +16,8 @@ namespace AntsFlow
     {
         Normal,
         GiantChicken,
-        Wall
+        Wall,
+        FactionConfig
     }
 
 #if UNITY_EDITOR
@@ -263,7 +264,6 @@ namespace AntsFlow
         private ConfigTool configTool;
 
         #region Faction Config Demo
-        private bool showFactionConfigMode;
         private const int FactionConfigColumnCount = 3;
         private int[] factionConfigColumnRows = new int[FactionConfigColumnCount] { 5, 5, 5 };
         private int factionPaintNumber = 10;
@@ -364,19 +364,24 @@ namespace AntsFlow
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Faction Config Demo (3 Columns)", EditorStyles.boldLabel);
 
-            if (GUILayout.Button(showFactionConfigMode ? "Disable Faction Config Demo" : "Enable Faction Config Demo"))
+            if (GUILayout.Button(configTool == ConfigTool.FactionConfig ? "Disable Faction Config Demo" : "Enable Faction Config Demo (Scene View)"))
             {
-                showFactionConfigMode = !showFactionConfigMode;
-
-                if (showFactionConfigMode)
+                if (configTool == ConfigTool.FactionConfig)
                 {
+                    configTool = ConfigTool.Normal;
+                }
+                else
+                {
+                    configTool = ConfigTool.FactionConfig;
                     InitFactionConfigRows(levelItem);
                 }
+
+                SceneView.RepaintAll();
             }
 
-            if (showFactionConfigMode)
+            if (configTool == ConfigTool.FactionConfig)
             {
-                DrawFactionConfigMode(levelItem);
+                DrawFactionConfigControls(levelItem);
             }
 
             GUILayout.Space(10);
@@ -432,7 +437,11 @@ namespace AntsFlow
             if (level.factionMapper == null)
                 return;
 
-            if (configTool == ConfigTool.GiantChicken)
+            if (configTool == ConfigTool.FactionConfig)
+            {
+                ConfiguringFactionConfig(level);
+            }
+            else if (configTool == ConfigTool.GiantChicken)
             {
                 ConfigureGrid(level, PaintGiantChickenTile, EraseGiantChickenTile);
             }
@@ -1258,104 +1267,26 @@ namespace AntsFlow
             }
         }
 
-        private void DrawFactionConfigMode(LevelItem levelItem)
+        private void DrawFactionConfigControls(LevelItem levelItem)
         {
             // Faction selector (writes to selectedColor, shared with the Colors section)
             DrawColorButton(levelItem, selectedColor);
 
             factionPaintNumber = EditorGUILayout.IntField("Paint Number", factionPaintNumber);
 
+            isErase = EditorGUILayout.Toggle("isErase", isErase);
+
             EditorGUILayout.LabelField("Rows Per Column", EditorStyles.miniBoldLabel);
 
-            EditorGUILayout.BeginHorizontal();
-
             for (int c = 0; c < FactionConfigColumnCount; c++)
             {
-                factionConfigColumnRows[c] = Mathf.Max(0, EditorGUILayout.IntField($"Col {c}", factionConfigColumnRows[c]));
+                factionConfigColumnRows[c] = Mathf.Max(1, EditorGUILayout.IntField($"Col {c}", factionConfigColumnRows[c]));
             }
-
-            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.HelpBox(
-                "Select a faction, then click cells top-to-bottom (index 0 first, no gaps). "
-                + "Toggle 'isErase' above to remove the last filled cell of a column.",
+                "Chọn faction, rồi click vào các ô vuông trong Scene view, từ trên xuống (index 0 trước, không bỏ qua ô). "
+                + "Bật 'isErase' để xoá ô cuối cùng của cột. Mode giữ nguyên khi chọn liên tục.",
                 MessageType.Info);
-
-            EditorGUILayout.Space(6);
-
-            const float cell = 42f;
-            const float rowGap = 6f;
-            const float colGap = 20f;
-            const float headerHeight = 18f;
-
-            int[] displayRows = new int[FactionConfigColumnCount];
-            int maxRows = 0;
-
-            for (int c = 0; c < FactionConfigColumnCount; c++)
-            {
-                int count = GetFactionColumn(levelItem, c)?.items?.Count ?? 0;
-
-                // Never hide existing data even if the row field is smaller.
-                displayRows[c] = Mathf.Max(factionConfigColumnRows[c], count);
-                maxRows = Mathf.Max(maxRows, displayRows[c]);
-            }
-
-            float gridWidth = FactionConfigColumnCount * cell + (FactionConfigColumnCount - 1) * colGap;
-            float gridHeight = headerHeight + maxRows * (cell + rowGap);
-
-            Rect area = GUILayoutUtility.GetRect(gridWidth, gridHeight);
-
-            GUIStyle numberStyle = new GUIStyle(EditorStyles.boldLabel)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 12
-            };
-
-            GUIStyle headerStyle = new GUIStyle(EditorStyles.miniBoldLabel)
-            {
-                alignment = TextAnchor.MiddleCenter
-            };
-
-            for (int c = 0; c < FactionConfigColumnCount; c++)
-            {
-                float colX = area.x + c * (cell + colGap);
-
-                LevelFactionConfigByColumn column = GetFactionColumn(levelItem, c);
-                int count = column?.items?.Count ?? 0;
-
-                EditorGUI.LabelField(new Rect(colX, area.y, cell, headerHeight), $"Col {c}", headerStyle);
-
-                for (int r = 0; r < displayRows[c]; r++)
-                {
-                    float y = area.y + headerHeight + r * (cell + rowGap);
-                    Rect cellRect = new Rect(colX, y, cell, cell);
-
-                    bool filled = r < count;
-
-                    if (filled)
-                    {
-                        LevelFactionItemConfig item = column.items[r];
-
-                        EditorGUI.DrawRect(cellRect, item.faction);
-                        DrawRectBorder(cellRect, Color.black, 1f);
-                        numberStyle.normal.textColor = GetContrastingColor(item.faction);
-
-                        EditorGUI.LabelField(cellRect, item.number.ToString(), numberStyle);
-                    }
-                    else
-                    {
-                        bool isNextSlot = r == count;
-
-                        EditorGUI.DrawRect(cellRect, new Color(0.22f, 0.22f, 0.22f, 1f));
-                        DrawRectBorder(cellRect, isNextSlot ? new Color(0.9f, 0.9f, 0.3f, 1f) : new Color(0.4f, 0.4f, 0.4f, 1f), 1f);
-                    }
-
-                    if (GUI.Button(cellRect, GUIContent.none, GUIStyle.none))
-                    {
-                        OnFactionCellClicked(levelItem, c, r);
-                    }
-                }
-            }
 
             if (GUILayout.Button("Clear Faction Config"))
             {
@@ -1364,8 +1295,123 @@ namespace AntsFlow
                     Undo.RecordObject(levelItem, "Clear Faction Config");
                     levelItem.levelFactionConfig.items = new List<LevelFactionConfigByColumn>();
                     EditorUtility.SetDirty(levelItem);
+
+                    SceneView.RepaintAll();
                 }
             }
+        }
+
+        private void ConfiguringFactionConfig(LevelItem level)
+        {
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+
+            Event e = Event.current;
+
+            // Capture the whole scene view so clicking empty space does NOT deselect the
+            // object (which would destroy this editor and drop out of the mode).
+            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+
+            // Background
+            float backgroundWidth = 10f;
+
+            Vector3[] background =
+            {
+                new Vector3(-backgroundWidth, -backgroundWidth, 1),
+                new Vector3(-backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, -backgroundWidth, 1),
+            };
+
+            Handles.DrawSolidRectangleWithOutline(background, new Color(0, 0, 0, 0.85f), Color.white);
+
+            const float colSpacing = 0.28f;
+            const float rowSpacing = 0.24f;
+            const float squareHalf = 0.09f;
+
+            GUIStyle numberStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 14
+            };
+
+            GUIStyle headerStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 14,
+                normal = { textColor = Color.white }
+            };
+
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                // Center the 3 columns around x = 0.
+                float x = (c - (FactionConfigColumnCount - 1) * 0.5f) * colSpacing;
+
+                LevelFactionConfigByColumn column = GetFactionColumn(level, c);
+                int count = column?.items?.Count ?? 0;
+
+                int displayRows = Mathf.Max(factionConfigColumnRows[c], count);
+
+                // Header above the top-most cell (index 0).
+                Handles.Label(new Vector3(x, rowSpacing, 0), $"Col {c}", headerStyle);
+
+                for (int r = 0; r < displayRows; r++)
+                {
+                    // Index 0 at the top; rows go downward.
+                    Vector3 pos = new Vector3(x, -r * rowSpacing, 0);
+
+                    bool filled = r < count;
+
+                    Color fill;
+                    Color outline;
+
+                    if (filled)
+                    {
+                        fill = column.items[r].faction;
+                        outline = Color.black;
+                    }
+                    else
+                    {
+                        fill = new Color(0.22f, 0.22f, 0.22f, 1f);
+                        outline = r == count
+                            ? new Color(0.95f, 0.85f, 0.2f, 1f)
+                            : new Color(0.45f, 0.45f, 0.45f, 1f);
+                    }
+
+                    DrawSceneSquare(pos, squareHalf, fill, outline);
+
+                    if (filled)
+                    {
+                        numberStyle.normal.textColor = GetContrastingColor(fill);
+                        Handles.Label(pos + new Vector3(-squareHalf * 0.6f, squareHalf * 0.7f, 0), column.items[r].number.ToString(), numberStyle);
+                    }
+
+                    // Click handling (keeps working continuously while this mode is active).
+                    if (e.type == EventType.MouseDown && e.button == 0 && HandleUtility.DistanceToCircle(pos, squareHalf) == 0f)
+                    {
+                        OnFactionCellClicked(level, c, r);
+
+                        e.Use();
+
+                        SceneView.RepaintAll();
+                    }
+                }
+            }
+
+            if (GUI.changed)
+                SceneView.RepaintAll();
+        }
+
+        private void DrawSceneSquare(Vector3 center, float half, Color fill, Color outline)
+        {
+            Vector3[] verts =
+            {
+                center + new Vector3(-half, -half, 0),
+                center + new Vector3(-half, +half, 0),
+                center + new Vector3(+half, +half, 0),
+                center + new Vector3(+half, -half, 0),
+            };
+
+            Handles.DrawSolidRectangleWithOutline(verts, fill, outline);
         }
 
         private void OnFactionCellClicked(LevelItem levelItem, int column, int row)
@@ -1456,14 +1502,6 @@ namespace AntsFlow
                 config.items = new List<LevelFactionItemConfig>();
 
             return config;
-        }
-
-        private void DrawRectBorder(Rect rect, Color color, float thickness)
-        {
-            EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, thickness), color);
-            EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), color);
-            EditorGUI.DrawRect(new Rect(rect.x, rect.y, thickness, rect.height), color);
-            EditorGUI.DrawRect(new Rect(rect.xMax - thickness, rect.y, thickness, rect.height), color);
         }
 
         private Color GetContrastingColor(Color background)
