@@ -16,7 +16,8 @@ namespace AntsFlow
     {
         Normal,
         GiantChicken,
-        Wall
+        Wall,
+        FactionConfig
     }
 
 #if UNITY_EDITOR
@@ -262,6 +263,12 @@ namespace AntsFlow
 
         private ConfigTool configTool;
 
+        #region Faction Config Demo
+        private const int FactionConfigColumnCount = 3;
+        private int[] factionConfigColumnRows = new int[FactionConfigColumnCount] { 5, 5, 5 };
+        private int factionPaintNumber = 10;
+        #endregion
+
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
@@ -354,6 +361,29 @@ namespace AntsFlow
                 levelItem.ClearAllSpecialElements();
             }
 
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Faction Config Demo (3 Columns)", EditorStyles.boldLabel);
+
+            if (GUILayout.Button(configTool == ConfigTool.FactionConfig ? "Disable Faction Config Demo" : "Enable Faction Config Demo (Scene View)"))
+            {
+                if (configTool == ConfigTool.FactionConfig)
+                {
+                    configTool = ConfigTool.Normal;
+                }
+                else
+                {
+                    configTool = ConfigTool.FactionConfig;
+                    InitFactionConfigRows(levelItem);
+                }
+
+                SceneView.RepaintAll();
+            }
+
+            if (configTool == ConfigTool.FactionConfig)
+            {
+                DrawFactionConfigControls(levelItem);
+            }
+
             GUILayout.Space(10);
             GUILayout.Label("Scene Config", EditorStyles.boldLabel);
 
@@ -407,7 +437,11 @@ namespace AntsFlow
             if (level.factionMapper == null)
                 return;
 
-            if (configTool == ConfigTool.GiantChicken)
+            if (configTool == ConfigTool.FactionConfig)
+            {
+                ConfiguringFactionConfig(level);
+            }
+            else if (configTool == ConfigTool.GiantChicken)
             {
                 ConfigureGrid(level, PaintGiantChickenTile, EraseGiantChickenTile);
             }
@@ -1221,6 +1255,262 @@ namespace AntsFlow
                 "Select Faction"
             );
         }
+
+        #region Faction Config Demo
+        private void InitFactionConfigRows(LevelItem levelItem)
+        {
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                int existingCount = GetFactionColumn(levelItem, c)?.items?.Count ?? 0;
+
+                factionConfigColumnRows[c] = Mathf.Max(factionConfigColumnRows[c], existingCount, 1);
+            }
+        }
+
+        private void DrawFactionConfigControls(LevelItem levelItem)
+        {
+            // Faction selector (writes to selectedColor, shared with the Colors section)
+            DrawColorButton(levelItem, selectedColor);
+
+            factionPaintNumber = EditorGUILayout.IntField("Paint Number", factionPaintNumber);
+
+            isErase = EditorGUILayout.Toggle("isErase", isErase);
+
+            EditorGUILayout.LabelField("Rows Per Column", EditorStyles.miniBoldLabel);
+
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                factionConfigColumnRows[c] = Mathf.Max(1, EditorGUILayout.IntField($"Col {c}", factionConfigColumnRows[c]));
+            }
+
+            EditorGUILayout.HelpBox(
+                "Chọn faction, rồi click vào các ô vuông trong Scene view, từ trên xuống (index 0 trước, không bỏ qua ô). "
+                + "Bật 'isErase' để xoá ô cuối cùng của cột. Mode giữ nguyên khi chọn liên tục.",
+                MessageType.Info);
+
+            if (GUILayout.Button("Clear Faction Config"))
+            {
+                if (levelItem.levelFactionConfig != null)
+                {
+                    Undo.RecordObject(levelItem, "Clear Faction Config");
+                    levelItem.levelFactionConfig.items = new List<LevelFactionConfigByColumn>();
+                    EditorUtility.SetDirty(levelItem);
+
+                    SceneView.RepaintAll();
+                }
+            }
+        }
+
+        private void ConfiguringFactionConfig(LevelItem level)
+        {
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+
+            Event e = Event.current;
+
+            // Capture the whole scene view so clicking empty space does NOT deselect the
+            // object (which would destroy this editor and drop out of the mode).
+            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+
+            // Background
+            float backgroundWidth = 10f;
+
+            Vector3[] background =
+            {
+                new Vector3(-backgroundWidth, -backgroundWidth, 1),
+                new Vector3(-backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, +backgroundWidth, 1),
+                new Vector3(+backgroundWidth, -backgroundWidth, 1),
+            };
+
+            Handles.DrawSolidRectangleWithOutline(background, new Color(0, 0, 0, 0.85f), Color.white);
+
+            const float colSpacing = 0.28f;
+            const float rowSpacing = 0.24f;
+            const float squareHalf = 0.09f;
+
+            GUIStyle numberStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 14
+            };
+
+            GUIStyle headerStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 14,
+                normal = { textColor = Color.white }
+            };
+
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                // Center the 3 columns around x = 0.
+                float x = (c - (FactionConfigColumnCount - 1) * 0.5f) * colSpacing;
+
+                LevelFactionConfigByColumn column = GetFactionColumn(level, c);
+                int count = column?.items?.Count ?? 0;
+
+                int displayRows = Mathf.Max(factionConfigColumnRows[c], count);
+
+                // Header above the top-most cell (index 0).
+                Handles.Label(new Vector3(x, rowSpacing, 0), $"Col {c}", headerStyle);
+
+                for (int r = 0; r < displayRows; r++)
+                {
+                    // Index 0 at the top; rows go downward.
+                    Vector3 pos = new Vector3(x, -r * rowSpacing, 0);
+
+                    bool filled = r < count;
+
+                    Color fill;
+                    Color outline;
+
+                    if (filled)
+                    {
+                        fill = column.items[r].faction;
+                        outline = Color.black;
+                    }
+                    else
+                    {
+                        fill = new Color(0.22f, 0.22f, 0.22f, 1f);
+                        outline = r == count
+                            ? new Color(0.95f, 0.85f, 0.2f, 1f)
+                            : new Color(0.45f, 0.45f, 0.45f, 1f);
+                    }
+
+                    DrawSceneSquare(pos, squareHalf, fill, outline);
+
+                    if (filled)
+                    {
+                        numberStyle.normal.textColor = GetContrastingColor(fill);
+                        Handles.Label(pos + new Vector3(-squareHalf * 0.6f, squareHalf * 0.7f, 0), column.items[r].number.ToString(), numberStyle);
+                    }
+
+                    // Click handling (keeps working continuously while this mode is active).
+                    if (e.type == EventType.MouseDown && e.button == 0 && HandleUtility.DistanceToCircle(pos, squareHalf) == 0f)
+                    {
+                        OnFactionCellClicked(level, c, r);
+
+                        e.Use();
+
+                        SceneView.RepaintAll();
+                    }
+                }
+            }
+
+            if (GUI.changed)
+                SceneView.RepaintAll();
+        }
+
+        private void DrawSceneSquare(Vector3 center, float half, Color fill, Color outline)
+        {
+            Vector3[] verts =
+            {
+                center + new Vector3(-half, -half, 0),
+                center + new Vector3(-half, +half, 0),
+                center + new Vector3(+half, +half, 0),
+                center + new Vector3(+half, -half, 0),
+            };
+
+            Handles.DrawSolidRectangleWithOutline(verts, fill, outline);
+        }
+
+        private void OnFactionCellClicked(LevelItem levelItem, int column, int row)
+        {
+            Undo.RecordObject(levelItem, "Edit Faction Config");
+
+            if (isErase)
+            {
+                LevelFactionConfigByColumn config = GetFactionColumn(levelItem, column);
+                int count = config?.items?.Count ?? 0;
+
+                if (count == 0)
+                    return;
+
+                // Keep the column contiguous: only the last filled cell can be removed.
+                if (row == count - 1)
+                {
+                    config.items.RemoveAt(row);
+
+                    if (config.items.Count == 0)
+                    {
+                        levelItem.levelFactionConfig.items.Remove(config);
+                    }
+
+                    EditorUtility.SetDirty(levelItem);
+                }
+                else
+                {
+                    Debug.LogWarning("Chỉ được xoá ô cuối cùng của cột để giữ index liên tục.");
+                }
+
+                return;
+            }
+
+            LevelFactionConfigByColumn columnConfig = GetOrCreateFactionColumn(levelItem, column);
+            int currentCount = columnConfig.items.Count;
+
+            if (row < currentCount)
+            {
+                // Recolor an existing cell (keeps its number and the contiguous layout).
+                columnConfig.items[row].faction = selectedColor;
+            }
+            else if (row == currentCount)
+            {
+                // Append the next cell in the column.
+                columnConfig.items.Add(new LevelFactionItemConfig(selectedColor, factionPaintNumber));
+            }
+            else
+            {
+                Debug.LogWarning("Phải chấm tuần tự từ index 0, không được bỏ qua ô ở giữa.");
+                return;
+            }
+
+            EditorUtility.SetDirty(levelItem);
+        }
+
+        private LevelFactionConfigByColumn GetFactionColumn(LevelItem levelItem, int column)
+        {
+            if (levelItem.levelFactionConfig?.items == null)
+                return null;
+
+            return levelItem.levelFactionConfig.items.Find(item => item.column == column);
+        }
+
+        private LevelFactionConfigByColumn GetOrCreateFactionColumn(LevelItem levelItem, int column)
+        {
+            if (levelItem.levelFactionConfig == null)
+                levelItem.levelFactionConfig = new LevelFactionConfig();
+
+            if (levelItem.levelFactionConfig.items == null)
+                levelItem.levelFactionConfig.items = new List<LevelFactionConfigByColumn>();
+
+            LevelFactionConfigByColumn config = levelItem.levelFactionConfig.items.Find(item => item.column == column);
+
+            if (config == null)
+            {
+                config = new LevelFactionConfigByColumn
+                {
+                    column = column,
+                    items = new List<LevelFactionItemConfig>()
+                };
+
+                levelItem.levelFactionConfig.items.Add(config);
+                levelItem.levelFactionConfig.items.Sort((a, b) => a.column.CompareTo(b.column));
+            }
+
+            if (config.items == null)
+                config.items = new List<LevelFactionItemConfig>();
+
+            return config;
+        }
+
+        private Color GetContrastingColor(Color background)
+        {
+            float luminance = 0.299f * background.r + 0.587f * background.g + 0.114f * background.b;
+
+            return luminance > 0.5f ? Color.black : Color.white;
+        }
+        #endregion
         #endregion
 
         private void DrawArrow(Vector3 from, Vector3 to, float headLength, float headAngle)
