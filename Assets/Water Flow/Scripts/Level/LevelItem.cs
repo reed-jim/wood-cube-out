@@ -1288,6 +1288,8 @@ namespace AntsFlow
                 + "Bật 'isErase' để xoá ô cuối cùng của cột. Mode giữ nguyên khi chọn liên tục.",
                 MessageType.Info);
 
+            DrawFactionConfigElements(levelItem);
+
             if (GUILayout.Button("Clear Faction Config"))
             {
                 if (levelItem.levelFactionConfig != null)
@@ -1298,6 +1300,57 @@ namespace AntsFlow
 
                     SceneView.RepaintAll();
                 }
+            }
+        }
+
+        private void DrawFactionConfigElements(LevelItem levelItem)
+        {
+            EditorGUILayout.Space(4);
+            EditorGUILayout.LabelField("Elements (edit number)", EditorStyles.miniBoldLabel);
+
+            bool anyElement = false;
+
+            for (int c = 0; c < FactionConfigColumnCount; c++)
+            {
+                LevelFactionConfigByColumn column = GetFactionColumn(levelItem, c);
+
+                if (column == null || column.items == null || column.items.Count == 0)
+                    continue;
+
+                anyElement = true;
+
+                EditorGUILayout.LabelField($"Col {c}", EditorStyles.boldLabel);
+
+                for (int r = 0; r < column.items.Count; r++)
+                {
+                    LevelFactionItemConfig item = column.items[r];
+
+                    EditorGUILayout.BeginHorizontal();
+
+                    EditorGUILayout.LabelField($"#{r}", GUILayout.Width(30));
+
+                    Rect swatch = GUILayoutUtility.GetRect(18, 18, GUILayout.Width(18), GUILayout.ExpandWidth(false));
+                    EditorGUI.DrawRect(swatch, item.faction);
+
+                    EditorGUI.BeginChangeCheck();
+
+                    int newNumber = EditorGUILayout.IntField(item.number);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Undo.RecordObject(levelItem, "Edit Faction Number");
+                        item.number = newNumber;
+                        EditorUtility.SetDirty(levelItem);
+                        SceneView.RepaintAll();
+                    }
+
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+
+            if (!anyElement)
+            {
+                EditorGUILayout.LabelField("(chưa có element nào)", EditorStyles.miniLabel);
             }
         }
 
@@ -1451,8 +1504,9 @@ namespace AntsFlow
 
             if (row < currentCount)
             {
-                // Recolor an existing cell (keeps its number and the contiguous layout).
+                // Update both faction and number for an existing cell.
                 columnConfig.items[row].faction = selectedColor;
+                columnConfig.items[row].number = factionPaintNumber;
             }
             else if (row == currentCount)
             {
@@ -1896,6 +1950,10 @@ public class LevelFactionItemConfig
 {
     public Color faction;
     public int number;
+
+    public LevelFactionItemConfig()
+    {
+    }
 
     public LevelFactionItemConfig(Color faction, int number)
     {
