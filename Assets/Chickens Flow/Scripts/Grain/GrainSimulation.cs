@@ -1138,5 +1138,7 @@ public class GrainSimulation : Singleton<GrainSimulation>
                 forceZones[i] = zone;
             }
         }
+
+        center.x *= scaleRatio;
     }
 }
