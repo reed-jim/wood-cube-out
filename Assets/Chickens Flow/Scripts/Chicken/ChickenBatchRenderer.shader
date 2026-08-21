@@ -63,6 +63,8 @@ Shader "Instanced/ChickenSpriteAtlas"
             // 0 = off, 1 = on
             UNITY_DEFINE_INSTANCED_PROP(float, _Highlight)
 
+            UNITY_DEFINE_INSTANCED_PROP(float, _Frame)
+
             UNITY_INSTANCING_BUFFER_END(Props)
 
             struct appdata
@@ -116,36 +118,19 @@ Shader "Instanced/ChickenSpriteAtlas"
                 o.pos = UnityWorldToClipPos(worldPos);
 
                 // Animation
-                int animStartFrame =
-                    UNITY_ACCESS_INSTANCED_PROP(
-                        Props,
-                        _AnimStartFrame
-                    );
-
-                float frame =
-                    floor(
-                        frac(
-                            _Time.y * _FPS +
-                            animStartFrame / _Frames
-                        ) * _Frames
-                    );
-
-                float column =
-                    fmod(frame, _Columns);
-
-                float row =
-                    _Rows - 1 -
-                    floor(frame / _Columns);
-
+                // Code Mới - Cố định lỗi precision trên Mobile
+                int animStartFrame = UNITY_ACCESS_INSTANCED_PROP(Props, _AnimStartFrame);
+                // 1. Ép kiểu về số nguyên để tính currentFrame, loại bỏ hoàn toàn sai số của frac()
+                int currentFrame = (int)(_Time.y * _FPS) + animStartFrame;
+                // 2. Dùng toán tử % (Modulo) trên số nguyên để đảm bảo luôn loop an toàn từ 0 đến _Frames - 1
+                int frame = currentFrame % (int)_Frames;
+                // 3. Tính toán Row & Column hoàn toàn bằng số nguyên
+                int column = frame % (int)_Columns;
+                int row = (int)_Rows - 1 - (frame / (int)_Columns);
+                // 4. Ép kiểu ngược lại ra float để Shader có thể cộng trừ UV
                 o.uv = v.uv;
-
-                o.uv.x =
-                    (o.uv.x + column) /
-                    _Columns;
-
-                o.uv.y =
-                    (o.uv.y + row) /
-                    _Rows;
+                o.uv.x = (o.uv.x + (float)column) / _Columns;
+                o.uv.y = (o.uv.y + (float)row) / _Rows;
 
                 return o;
             }
