@@ -16,7 +16,7 @@ namespace AntsFlow
     {
         [Header("Bucket")]
         public List<FactionGrainRequirement> factionGrainRequirements;
-        public float[] pourXPositions;
+        public Vector2[] pourPositions;
         public int pourPositionIndex;
 
         public LevelItem levelItem;
@@ -187,40 +187,45 @@ namespace AntsFlow
         {
             Vector2 grainPoolWorldSize = GrainPool.Ins.grainPoolSpriteRenderer.bounds.size;
 
-            float totalWidth = 0.7f * grainPoolWorldSize.x;
-            int numSlot = 8;
-            float distance = totalWidth / numSlot;
-            float start = -0.5f * totalWidth;
+            float totalWidth = 0.8f * grainPoolWorldSize.x;
+            int numColumn = 5;
+            int numRow = 2;
+            int numSlot = numColumn * numRow;
+            Vector2 distance = new Vector2(totalWidth / numColumn, 4.5f);
+            Vector2 start = new Vector2(-0.5f * totalWidth, 0);
 
-            pourXPositions = new float[numSlot];
+            pourPositions = new Vector2[numSlot];
 
-            for (int i = 0; i < numSlot; i++)
+            for (int i = 0; i < numRow; i++)
             {
-                pourXPositions[i] = start + i * distance;
+                for (int j = 0; j < numColumn; j++)
+                {
+                    pourPositions[j + numColumn * i] = start + new Vector2(j * distance.x, i * distance.y);
+                }
             }
 
-            pourXPositions.Shuffle();
+            pourPositions.Shuffle();
         }
 
-        public float GetPourPositionX()
+        public Vector2 GetPourPosition()
         {
-            if (pourXPositions == null || pourXPositions.Length == 0)
+            if (pourPositions == null || pourPositions.Length == 0)
             {
                 SetupPourPositions();
             }
 
-            if (pourPositionIndex >= pourXPositions.Length - 1)
+            if (pourPositionIndex >= pourPositions.Length - 1)
             {
                 pourPositionIndex = 0;
 
-                pourXPositions.Shuffle();
+                // pourPositions.Shuffle();
             }
             else
             {
                 pourPositionIndex++;
             }
 
-            return pourXPositions[pourPositionIndex];
+            return pourPositions[pourPositionIndex];
         }
         #endregion
 
@@ -404,19 +409,17 @@ namespace AntsFlow
                                 (washingMachineItem as FreezedAntBox).AssignRequirementNumber();
                             }
 
-                            if (washingMachineStartSlot.row == 1)
+                            // try set faction for bucket
+                            if (washingMachineItem.number == 0)
                             {
                                 Color nextFaction;
                                 int numAnt;
 
                                 if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
                                 {
-                                    if (washingMachineItem.number == 0)
-                                    {
-                                        washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+                                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
-                                        MinusFactionGrainRequirement(nextFaction, numAnt);
-                                    }
+                                    MinusFactionGrainRequirement(nextFaction, numAnt);
                                 }
                                 else
                                 {
@@ -829,7 +832,7 @@ namespace AntsFlow
                 {
                     bucket.TemporarilyEnable();
 
-                    if (bucket.number == 0 && GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                    if (bucket.number == 0 && GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt))
                     {
                         bucket.Init(bucket.washingMachineStartSlot, nextFaction, numAnt);
 
@@ -839,6 +842,27 @@ namespace AntsFlow
             }
 
             Tween.PositionY(mainCamera.transform, -2, duration: 0.3f);
+        }
+
+        public void SetBucketsFaction()
+        {
+            Color nextFaction;
+            int numAnt;
+
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineItem bucket = washingMachineStartSlots[i].washingMachine;
+
+                if (bucket != null)
+                {
+                    if (bucket.number == 0 && GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt))
+                    {
+                        bucket.Init(bucket.washingMachineStartSlot, nextFaction, numAnt);
+
+                        MinusFactionGrainRequirement(nextFaction, numAnt);
+                    }
+                }
+            }
         }
 
         public void UseBoosterClearOneColor(Color selectedFaction)

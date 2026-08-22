@@ -267,8 +267,10 @@ public class WashingMachineItem : MonoBehaviour
 
         Vector3 bucketDestination;
 
-        bucketDestination.x = WashingMachineManager.Ins.GetPourPositionX();
-        bucketDestination.y = pourOffsetY;
+        Vector2 pourPosition = WashingMachineManager.Ins.GetPourPosition();
+
+        bucketDestination.x = pourPosition.x;
+        bucketDestination.y = pourPosition.y + pourOffsetY;
         bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
 
         bucketTop.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
