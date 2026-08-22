@@ -267,6 +267,7 @@ public static class GameConstants
     public static int grainMultiplier = 6;
     public static string wall = "wall";
     public static Vector2 standardScreenWorldSize = new Vector2(24.75f, 44f); // 1080x1920
+    public static Vector2 standardGrainPoolSize = new Vector2(10.76087f, 44f); // 1080x1920
     public static float delayActualLoseLevel = 2;
     #endregion
 
