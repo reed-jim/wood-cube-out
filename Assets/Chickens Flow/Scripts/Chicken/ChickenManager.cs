@@ -53,6 +53,7 @@ public class ChickenManager : Singleton<ChickenManager>
     private GrainPile lastGrainPileToFeed;
     public int numGhostChicken;
     public Coroutine highLightChickensCoroutine;
+    public List<Tween> highLightChickensTweens;
 
     public static event Action winLevelEvent;
 
@@ -64,6 +65,8 @@ public class ChickenManager : Singleton<ChickenManager>
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
         WinPopup.resetLevelEvent += Reset;
+
+        highLightChickensTweens = new List<Tween>();
 
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
     }
@@ -84,6 +87,8 @@ public class ChickenManager : Singleton<ChickenManager>
         waitingChickenSlots.Clear();
         chickenByColumn.Clear();
         slotByColumn.Clear();
+
+        CommonUtil.StopAllTweens(highLightChickensTweens);
 
         numGhostChicken = 0;
 
@@ -1295,6 +1300,8 @@ public class ChickenManager : Singleton<ChickenManager>
             StopCoroutine(highLightChickensCoroutine);
         }
 
+        CommonUtil.StopAllTweens(highLightChickensTweens);
+
         for (int i = 0; i < chickens.Count; i++)
         {
             BaseChicken chicken = chickens[i];
@@ -1338,7 +1345,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
                     if (chicken.isStuck)
                     {
-                        Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
+                        highLightChickensTweens.Add(Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
                         {
                             chicken.highlight = newVal;
 
@@ -1348,17 +1355,17 @@ public class ChickenManager : Singleton<ChickenManager>
                             chicken.highlight = 0;
 
                             chickenRenderer.UpdateChickenRendering(chicken);
-                        });
+                        }));
                     }
                     else
                     {
-                        Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
+                        highLightChickensTweens.Add(Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
                         {
                             chicken.SetHighlight(newVal);
                         }).OnComplete(() =>
                         {
                             chicken.SetHighlight(0);
-                        });
+                        }));
                     }
                 }
 
