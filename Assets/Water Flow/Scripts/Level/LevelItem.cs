@@ -128,9 +128,9 @@ namespace AntsFlow
         public bool isTutorialSpeedUpLevel;
         public bool isUseManualFactionSetupForFirstAntBoxes;
         public LevelFactionConfig levelFactionConfig;
-        public int difficulty;
-        public int initialDifficulty;
-        public bool overrideInitialDifficulty;
+        [HideInInspector] public int difficulty;
+        [HideInInspector] public int initialDifficulty;
+        [HideInInspector] public bool overrideInitialDifficulty;
         public int numStartAntBoxes = 6;
         public SpecialElementConfig specialElementConfig;
 
@@ -274,6 +274,45 @@ namespace AntsFlow
             DrawDefaultInspector();
 
             LevelItem levelItem = (LevelItem)target;
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Chicken Jam Level Tool", EditorStyles.boldLabel);
+
+            #region Difficulty
+            Rect rect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight + 4);
+            int difficulty = levelItem.difficulty;
+            float t = difficulty / 10f;
+
+            Color difficultyColor = difficulty <= 2
+                ? Color.Lerp(new Color(.15f, .9f, .35f), new Color(.35f, 1f, .25f), difficulty / 2f)
+                : difficulty <= 5
+                    ? Color.Lerp(new Color(.95f, .85f, .1f), new Color(1f, .65f, .05f), (difficulty - 2) / 3f)
+                    : difficulty <= 7
+                        ? Color.Lerp(new Color(1f, .5f, .05f), new Color(1f, .3f, .05f), (difficulty - 5) / 2f)
+                        : Color.Lerp(new Color(1f, .25f, .1f), new Color(1f, .05f, .05f), (difficulty - 7) / 3f);
+
+            EditorGUI.DrawRect(rect, new Color(.06f, .07f, .09f));
+            EditorGUI.DrawRect(new Rect(rect.x + 2, rect.y + 2, (rect.width - 4) * t, rect.height - 4), new Color(difficultyColor.r, difficultyColor.g, difficultyColor.b, .65f));
+
+            EditorGUI.BeginChangeCheck();
+            difficulty = EditorGUI.IntSlider(rect, difficulty, 0, 10);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(target, "Change Level Difficulty");
+                levelItem.difficulty = difficulty;
+                EditorUtility.SetDirty(target);
+            }
+
+            string difficultyText = difficulty <= 2 ? "EASY" : difficulty <= 5 ? "NORMAL" : difficulty <= 7 ? "HARD" : "EXTREME";
+
+            GUIStyle labelStyle = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter, fontSize = 11 };
+            labelStyle.normal.textColor = Color.white;
+
+            Rect labelRect = new Rect(rect.center.x - 50, rect.y, 100, rect.height);
+            EditorGUI.DrawRect(labelRect, new Color(.02f, .02f, .025f, .75f));
+            GUI.Label(labelRect, $"{difficultyText} • {difficulty}/10", labelStyle);
+            #endregion
 
             if (GUILayout.Button("Update Manual Bucket Config"))
             {
@@ -425,6 +464,16 @@ namespace AntsFlow
         private void OnSceneGUI()
         {
             ConfiguringLevel();
+        }
+
+        private Color GetDifficultyColor(int difficulty)
+        {
+            difficulty = Mathf.Clamp(difficulty, 0, 10);
+
+            if (difficulty <= 5)
+                return Color.Lerp(Color.green, Color.yellow, difficulty / 5f);
+
+            return Color.Lerp(Color.yellow, Color.red, (difficulty - 5) / 5f);
         }
 
         private void ConfiguringLevel()
@@ -1899,7 +1948,9 @@ namespace AntsFlow
 public class LevelFactionConfig
 {
     public List<LevelFactionConfigByColumn> items;
+#if UNITY_EDITOR
     public LevelFactionConfigDebug levelFactionConfigDebug;
+#endif
 
     public void ShowDebug(AntsFlow.LevelItem levelItem, List<AntLevelDataItem> antLevelDataItems)
     {
@@ -1907,7 +1958,7 @@ public class LevelFactionConfig
 
         foreach (var item in antLevelDataItems)
         {
-            if(item.factionIndex >= 0)
+            if (item.factionIndex >= 0)
             {
                 CommonUtil.SumValueOfDictionary(numberByFaction, levelItem.factionMapper.allFactions[item.factionIndex], 10);
             }
@@ -1923,6 +1974,7 @@ public class LevelFactionConfig
             }
         }
 
+#if UNITY_EDITOR
         levelFactionConfigDebug = new LevelFactionConfigDebug();
         levelFactionConfigDebug.items = new List<LevelFactionConfigDebugItem>();
 
@@ -1935,6 +1987,7 @@ public class LevelFactionConfig
 
             levelFactionConfigDebug.items.Add(item);
         }
+#endif
     }
 }
 
@@ -1962,6 +2015,7 @@ public class LevelFactionItemConfig
     }
 }
 
+#if UNITY_EDITOR
 [Serializable]
 public class LevelFactionConfigDebug
 {
@@ -1974,6 +2028,7 @@ public class LevelFactionConfigDebugItem
     public Color faction;
     public int remaning;
 }
+#endif
 
 [Serializable]
 public class AntLevelData

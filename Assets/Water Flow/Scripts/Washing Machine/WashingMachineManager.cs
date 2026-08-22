@@ -28,17 +28,20 @@ namespace AntsFlow
 
         public List<Color> poolFaction;
 
-        public int difficultyLevel;
-        public int minAntNumberThreshold;
-        public int maxAntNumberThreshold;
-        public AnimationCurve difficultyCurve;
-
         private int totalTile;
         public int numAntBoxSpawned;
         public List<WashingMachineItem> ghostAntBoxes;
         public Coroutine pendingLoseLevelCoroutine;
 
         public IntVariable currentLevel;
+
+        [Header("Difficulty")]
+        public int difficultyLevel;
+        public int minAntNumberThreshold;
+        public int maxAntNumberThreshold;
+        public AnimationCurve difficultyCurve;
+        public int totalFaction;
+        public LevelDifficultyReduceOnRevive levelDifficultyReduceOnRevive;
 
         [Header("Manual Level Bucket Spawn")]
         public LevelFactionConfig levelFactionConfig;
@@ -110,6 +113,8 @@ namespace AntsFlow
                 difficultyLevel = levelItem.difficulty;
             }
 
+            // temp
+            levelItem.isUseManualFactionSetupForFirstAntBoxes = false;
             if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
             {
                 levelFactionConfig = levelItem.levelFactionConfig;
@@ -164,6 +169,8 @@ namespace AntsFlow
                     factionGrainRequirements.Add(factionGrainRequirement);
                 }
             }
+
+            totalFaction = factionGrainRequirements.Count;
         }
 
         public void MinusFactionGrainRequirement(Color faction, int number)
@@ -470,11 +477,7 @@ namespace AntsFlow
             int numAnt = 0;
             bool isFound = false;
 
-            if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
-            {
-
-            }
-            else
+            if (!levelItem.isUseManualFactionSetupForFirstAntBoxes)
             {
                 if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
                 {
@@ -530,6 +533,14 @@ namespace AntsFlow
                                 isFound = true;
 
                                 break;
+                            }
+                        }
+
+                        if (!isFound && washingMachineStartSlot.row <= 1)
+                        {
+                            if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                            {
+                                isFound = true;
                             }
                         }
                     }
@@ -1022,6 +1033,7 @@ namespace AntsFlow
             grainPool.CheckFeedGhostChickens();
 
             GamePersistentVariable.isLevelLost = false;
+            GamePersistentVariable.levelReviveTime++;
         }
         #endregion
 
@@ -1306,7 +1318,24 @@ namespace AntsFlow
         {
             float progress = GetLevelProgress();
 
-            int difficultyAtCurrentProgress = (int)(difficultyLevel * difficultyCurve.Evaluate(progress));
+            int factionDifficultyLevel = (int)((difficultyLevel / 10f) * totalFaction);
+
+            int difficultyAtCurrentProgress = (int)(factionDifficultyLevel * difficultyCurve.Evaluate(progress));
+
+            for (int i = levelDifficultyReduceOnRevive.items.Count - 1; i >= 0; i--)
+            {
+                LevelDifficultyReduceOnReviveItem item = levelDifficultyReduceOnRevive.items[i];
+
+                if (difficultyLevel >= item.minDifficulty)
+                {
+                    if (GamePersistentVariable.levelReviveTime >= item.minReviveTime)
+                    {
+                        difficultyAtCurrentProgress = 0;
+                    }
+
+                    break;
+                }
+            }
 
             // Debug.Log($"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {progress} {difficultyCurve.Evaluate(progress)}");
 
@@ -1335,4 +1364,17 @@ public class FactionGrainRequirement
 {
     public Color faction;
     public int totalGrain;
+}
+
+[Serializable]
+public class LevelDifficultyReduceOnRevive
+{
+    public List<LevelDifficultyReduceOnReviveItem> items;
+}
+
+[Serializable]
+public class LevelDifficultyReduceOnReviveItem
+{
+    public int minDifficulty;
+    public int minReviveTime;
 }

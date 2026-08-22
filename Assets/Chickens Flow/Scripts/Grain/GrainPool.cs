@@ -202,7 +202,7 @@ public class GrainPool : Singleton<GrainPool>
         progressBarBackground.sizeDelta = 0.9f * sizeDelta;
         progressBarFill.sizeDelta = progressBarBackground.sizeDelta;
 
-        GrainSimulation.Ins.ScaleScreenVariables(sizeX / GameConstants.standardScreenWorldSize.x);
+        GrainSimulation.Ins.ScaleScreenVariables(0.965f * sizeX / GameConstants.standardScreenWorldSize.x);
     }
 
     public void AddGrainPile(GrainPile grainPile)
