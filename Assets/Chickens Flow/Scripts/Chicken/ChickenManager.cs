@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -53,6 +54,7 @@ public class ChickenManager : Singleton<ChickenManager>
     private GrainPile lastGrainPileToFeed;
     public int numGhostChicken;
     public Coroutine highLightChickensCoroutine;
+    public List<Tween> highLightChickensTweens;
 
     public static event Action winLevelEvent;
 
@@ -64,6 +66,8 @@ public class ChickenManager : Singleton<ChickenManager>
         LosePopup.replayLevelEvent += Reset;
         DebugPopup.switchLevelEvent += Reset;
         WinPopup.resetLevelEvent += Reset;
+
+        highLightChickensTweens = new List<Tween>();
 
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
     }
@@ -85,11 +89,15 @@ public class ChickenManager : Singleton<ChickenManager>
         chickenByColumn.Clear();
         slotByColumn.Clear();
 
+        CommonUtil.StopAllTweens(highLightChickensTweens);
+
         numGhostChicken = 0;
 
         GamePersistentVariable.numEatingChicken = 0;
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
         GamePersistentVariable.numMovingChicken = 0;
+        GamePersistentVariable.levelBoosterUseTime = 0;
+        GamePersistentVariable.numConsecutiveStuckBucket = 0;
     }
 
     private void GizmosBoardShape()
@@ -551,6 +559,11 @@ public class ChickenManager : Singleton<ChickenManager>
         // Amount to shift odd rows (in grid units relative to column spacing)
         float rowOffset = (y % 2 == 1) ? 0.5f : 0.0f;
 
+        if (WashingMachineManager.Ins.levelItem.isNotArrangeChickensZigzag)
+        {
+            rowOffset = 0;
+        }
+
         // 1. Incorporate offset into normalized 'u' coordinate (0.0 to 1.0)
         // Adjust denominator so the last column shifted doesn't spill completely out
         float u = numColumn <= 1 ? 0.5f : (x + rowOffset) / (numColumn - 1);
@@ -744,7 +757,7 @@ public class ChickenManager : Singleton<ChickenManager>
         chicken.transform.position = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
     }
 
-    public void FeedTheChicken(GrainPile grainPile)
+    public bool FeedTheChicken(GrainPile grainPile)
     {
         List<BaseChicken> chickensToFeed = chickens
             .Where(chicken => !chicken.isDone &&
@@ -752,15 +765,15 @@ public class ChickenManager : Singleton<ChickenManager>
                             chicken.faction == grainPile.faction)
             .ToList();
 
-        FeedTheChicken(chickensToFeed, grainPile);
+        return FeedTheChicken(chickensToFeed, grainPile);
     }
 
-    public void FeedTheChicken(List<BaseChicken> chickensToFeed, GrainPile grainPile)
+    public bool FeedTheChicken(List<BaseChicken> chickensToFeed, GrainPile grainPile)
     {
         Dictionary<BaseChicken, ChickenFeedData> chickenFeedDataItems = new Dictionary<BaseChicken, ChickenFeedData>();
 
         if (grainPile.remainingNumber <= 0 || chickensToFeed.Count == 0)
-            return;
+            return false;
 
         int grainPerChicken = grainPile.remainingNumber / chickensToFeed.Count;
         int remainder = grainPile.remainingNumber % chickensToFeed.Count;
@@ -840,6 +853,8 @@ public class ChickenManager : Singleton<ChickenManager>
         {
             GrainPool.Ins.RemoveGrainPile(grainPile);
         }
+
+        return true;
 
         void AddChickenFeedData(BaseChicken chicken, int amount)
         {
@@ -1295,6 +1310,8 @@ public class ChickenManager : Singleton<ChickenManager>
             StopCoroutine(highLightChickensCoroutine);
         }
 
+        CommonUtil.StopAllTweens(highLightChickensTweens);
+
         for (int i = 0; i < chickens.Count; i++)
         {
             BaseChicken chicken = chickens[i];
@@ -1338,7 +1355,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
                     if (chicken.isStuck)
                     {
-                        Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
+                        highLightChickensTweens.Add(Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
                         {
                             chicken.highlight = newVal;
 
@@ -1348,17 +1365,17 @@ public class ChickenManager : Singleton<ChickenManager>
                             chicken.highlight = 0;
 
                             chickenRenderer.UpdateChickenRendering(chicken);
-                        });
+                        }));
                     }
                     else
                     {
-                        Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
+                        highLightChickensTweens.Add(Tween.Custom(1, 0.5f, duration: 0.3f, onValueChange: newVal =>
                         {
                             chicken.SetHighlight(newVal);
                         }).OnComplete(() =>
                         {
                             chicken.SetHighlight(0);
-                        });
+                        }));
                     }
                 }
 

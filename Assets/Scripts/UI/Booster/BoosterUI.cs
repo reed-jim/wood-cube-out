@@ -398,6 +398,8 @@ public class BoosterUI : MonoBehaviour
         breakModeContainerCanvasGroup.alpha = 1;
         localizedDescription.TranslationName = clearOneColorTranslationName;
 
+        WashingMachineManager.Ins.SetBucketsFaction();
+
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
         Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y, duration: transitionTime)
         .OnComplete(() =>
@@ -491,7 +493,6 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 1);
 
-        // HideBooster();
         breakModeContainer.gameObject.SetActive(true);
         breakModeContainerCanvasGroup.alpha = 1;
         localizedDescription.TranslationName = enableAllAntBoxesTranslationName;
@@ -506,7 +507,6 @@ public class BoosterUI : MonoBehaviour
         });
 
         WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
-        // WashingMachineManager.Ins.UseMagicBooster();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
 

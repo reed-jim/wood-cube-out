@@ -117,6 +117,7 @@ namespace AntsFlow
         public int numColumn;
         public int numRow;
         public int boardShapePresetIndex;
+        public bool isNotArrangeChickensZigzag;
         public bool isLevelHavingTransparentPixels;
         public bool isOverrideLevelScale;
         public float chickenAreaScaleX;
@@ -204,6 +205,7 @@ namespace AntsFlow
                 numColumn = numColumn,
                 numRow = numRow,
                 boardShapePresetIndex = boardShapePresetIndex,
+                isNotArrangeChickensZigzag = isNotArrangeChickensZigzag,
                 chickenLevelTiles = chickenLevelTiles,
                 isLevelHavingTransparentPixels = isLevelHavingTransparentPixels,
                 isOverrideLevelScale = isOverrideLevelScale,
@@ -2051,6 +2053,7 @@ public class LevelItemData
     public int numColumn;
     public int numRow;
     public int boardShapePresetIndex;
+    public bool isNotArrangeChickensZigzag;
     public List<AntLevelDataItem> chickenLevelTiles;
     public bool isLevelHavingTransparentPixels;
     public bool isOverrideLevelScale;

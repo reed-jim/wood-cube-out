@@ -267,8 +267,10 @@ public class WashingMachineItem : MonoBehaviour
 
         Vector3 bucketDestination;
 
-        bucketDestination.x = WashingMachineManager.Ins.GetPourPositionX();
-        bucketDestination.y = pourOffsetY;
+        Vector2 pourPosition = WashingMachineManager.Ins.GetPourPosition();
+
+        bucketDestination.x = pourPosition.x;
+        bucketDestination.y = pourPosition.y + pourOffsetY;
         bucketDestination.z = LayerManager.GetBucketZ(GamePersistentVariable.bucketOrder);
 
         bucketTop.SetZ(LayerManager.GetBucketTopZ(GamePersistentVariable.bucketOrder));
@@ -297,6 +299,8 @@ public class WashingMachineItem : MonoBehaviour
             onFirstGrainInjected: () =>
             {
                 WashingMachineManager.Ins.grainPool.AddGrainPile(grainPile);
+
+                SoundManager.Instance.PlaySoundGrainHit();
             },
             onAllGrainsInjected: () =>
             {
@@ -315,8 +319,17 @@ public class WashingMachineItem : MonoBehaviour
 
                 TweenManager.Ins.AddTween(Tween.Delay(settleBufferBeforeFeed).OnComplete(() =>
                 {
-                    ChickenManager.Ins.FeedTheChicken(grainPile);
+                    bool isAnyChickenToFeed = ChickenManager.Ins.FeedTheChicken(grainPile);
                     WashingMachineManager.Ins.CheckLoseLevel();
+
+                    if (isAnyChickenToFeed)
+                    {
+                        GamePersistentVariable.numConsecutiveStuckBucket = 0;
+                    }
+                    else
+                    {
+                        GamePersistentVariable.numConsecutiveStuckBucket++;
+                    }
                 }));
             });
 

@@ -33,6 +33,8 @@ public class GamePersistentVariableWindow : EditorWindow
             EditorGUILayout.IntField("Bucket Order", GamePersistentVariable.bucketOrder);
             EditorGUILayout.IntField("Eating Chicken", GamePersistentVariable.eatingChickens.Count);
             EditorGUILayout.IntField("Moving Chicken", GamePersistentVariable.numMovingChicken);
+            EditorGUILayout.IntField("numConsecutiveStuckBucket", GamePersistentVariable.numConsecutiveStuckBucket);
+            EditorGUILayout.IntField("levelBoosterUseTime", GamePersistentVariable.levelBoosterUseTime);
         }
 
         EditorGUILayout.Space();

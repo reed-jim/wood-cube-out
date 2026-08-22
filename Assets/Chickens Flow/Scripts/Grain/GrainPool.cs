@@ -202,7 +202,14 @@ public class GrainPool : Singleton<GrainPool>
         progressBarBackground.sizeDelta = 0.9f * sizeDelta;
         progressBarFill.sizeDelta = progressBarBackground.sizeDelta;
 
-        GrainSimulation.Ins.ScaleScreenVariables(0.965f * sizeX / GameConstants.standardScreenWorldSize.x);
+        float grainSimulationScaleFactor = grainPoolSpriteRenderer.size.x / GameConstants.standardGrainPoolSize.x;
+
+        if (grainSimulationScaleFactor < 1)
+        {
+            grainSimulationScaleFactor *= 0.965f;
+        }
+
+        GrainSimulation.Ins.ScaleScreenVariables(grainSimulationScaleFactor);
     }
 
     public void AddGrainPile(GrainPile grainPile)
@@ -316,11 +323,6 @@ public class GrainPool : Singleton<GrainPool>
         // });
 
         lazyHealthBar.SetProgress(percent / 100f, durationUpdateProgress);
-
-        if (number > 0)
-        {
-            SoundManager.Instance.PlaySoundGrainHit();
-        }
 
         if (currentAmount > 0)
         {
