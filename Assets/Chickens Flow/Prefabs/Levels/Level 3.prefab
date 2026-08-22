@@ -48,6 +48,7 @@ MonoBehaviour:
   numColumn: 16
   numRow: 16
   boardShapePresetIndex: 2
+  isNotArrangeChickensZigzag: 0
   isLevelHavingTransparentPixels: 0
   isOverrideLevelScale: 1
   chickenAreaScaleX: 0.8
@@ -569,11 +570,49 @@ MonoBehaviour:
     factionIndex: 7
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
-    items: []
+    items:
+    - column: 0
+      items:
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 40
+      - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+        number: 30
+      - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+        number: 20
+    - column: 1
+      items:
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 40
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 20
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 25
+    - column: 2
+      items:
+      - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+        number: 30
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        number: 30
+      - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+        number: 30
     levelFactionConfigDebug:
-      items: []
+      items:
+      - faction: {r: 0.5176471, g: 0.16078432, b: 0.79607844, a: 1}
+        remaning: 480
+      - faction: {r: 0.5568628, g: 0.2627451, b: 0.14509805, a: 1}
+        remaning: 90
+      - faction: {r: 0.99215686, g: 0.62352943, b: 0.06666667, a: 1}
+        remaning: 270
+      - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+        remaning: 650
+      - faction: {r: 0.49803922, g: 0.90588236, b: 0.22745098, a: 1}
+        remaning: 510
+      - faction: {r: 0.03137255, g: 0.47058824, b: 0.22352941, a: 1}
+        remaning: 450
+      - faction: {r: 0.6901961, g: 0.2901961, b: 0.99215686, a: 1}
+        remaning: -155
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0

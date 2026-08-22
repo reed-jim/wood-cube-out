@@ -48,6 +48,7 @@ MonoBehaviour:
   numColumn: 14
   numRow: 14
   boardShapePresetIndex: 2
+  isNotArrangeChickensZigzag: 0
   isLevelHavingTransparentPixels: 0
   isOverrideLevelScale: 1
   chickenAreaScaleX: 0.7
@@ -453,35 +454,41 @@ MonoBehaviour:
     factionIndex: 12
   isTutorialLevel: 0
   isTutorialSpeedUpLevel: 0
-  isUseManualFactionSetupForFirstAntBoxes: 0
+  isUseManualFactionSetupForFirstAntBoxes: 1
   levelFactionConfig:
     items:
     - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
-    - column: 0
-      items: []
+      items:
+      - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+        number: 30
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+        number: 30
+    - column: 1
+      items:
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+        number: 20
+      - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+        number: 40
+    - column: 2
+      items:
+      - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+        number: 40
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+        number: 20
     levelFactionConfigDebug:
-      items: []
+      items:
+      - faction: {r: 0.7176471, g: 0.57254905, b: 0.98039216, a: 1}
+        remaning: 550
+      - faction: {r: 0.22352941, g: 0.22352941, b: 0.22352941, a: 1}
+        remaning: 440
+      - faction: {r: 0.99215686, g: 0.62352943, b: 0.06666667, a: 1}
+        remaning: 90
+      - faction: {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
+        remaning: 510
+      - faction: {r: 0.99215686, g: 0.6039216, b: 0.827451, a: 1}
+        remaning: 40
+      - faction: {r: 0.16470589, g: 0.8117647, b: 0.85882354, a: 1}
+        remaning: 150
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0
