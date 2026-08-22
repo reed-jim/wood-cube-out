@@ -45,9 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.LevelItem
   picture: {fileID: 21300000, guid: 11ee0fae931888f41847d6d0bb41d156, type: 3}
-  numColumn: 14
+  numColumn: 11
   numRow: 12
   boardShapePresetIndex: 2
+  isNotArrangeChickensZigzag: 0
   isLevelHavingTransparentPixels: 0
   isOverrideLevelScale: 1
   chickenAreaScaleX: 0.8
@@ -81,12 +82,6 @@ MonoBehaviour:
     factionIndex: 15
   - position: {x: 10, y: 0, z: 0}
     factionIndex: 15
-  - position: {x: 11, y: 0, z: 0}
-    factionIndex: 15
-  - position: {x: 12, y: 0, z: 0}
-    factionIndex: 15
-  - position: {x: 13, y: 0, z: 0}
-    factionIndex: 15
   - position: {x: 0, y: 1, z: 0}
     factionIndex: 15
   - position: {x: 1, y: 1, z: 0}
@@ -108,12 +103,6 @@ MonoBehaviour:
   - position: {x: 9, y: 1, z: 0}
     factionIndex: 15
   - position: {x: 10, y: 1, z: 0}
-    factionIndex: 15
-  - position: {x: 11, y: 1, z: 0}
-    factionIndex: 15
-  - position: {x: 12, y: 1, z: 0}
-    factionIndex: 15
-  - position: {x: 13, y: 1, z: 0}
     factionIndex: -1
   - position: {x: 0, y: 2, z: 0}
     factionIndex: 4
@@ -137,12 +126,6 @@ MonoBehaviour:
     factionIndex: 4
   - position: {x: 10, y: 2, z: 0}
     factionIndex: 4
-  - position: {x: 11, y: 2, z: 0}
-    factionIndex: 4
-  - position: {x: 12, y: 2, z: 0}
-    factionIndex: 4
-  - position: {x: 13, y: 2, z: 0}
-    factionIndex: 4
   - position: {x: 0, y: 3, z: 0}
     factionIndex: 4
   - position: {x: 1, y: 3, z: 0}
@@ -164,12 +147,6 @@ MonoBehaviour:
   - position: {x: 9, y: 3, z: 0}
     factionIndex: 4
   - position: {x: 10, y: 3, z: 0}
-    factionIndex: 4
-  - position: {x: 11, y: 3, z: 0}
-    factionIndex: 4
-  - position: {x: 12, y: 3, z: 0}
-    factionIndex: 4
-  - position: {x: 13, y: 3, z: 0}
     factionIndex: -1
   - position: {x: 0, y: 4, z: 0}
     factionIndex: 6
@@ -193,12 +170,6 @@ MonoBehaviour:
     factionIndex: 6
   - position: {x: 10, y: 4, z: 0}
     factionIndex: 6
-  - position: {x: 11, y: 4, z: 0}
-    factionIndex: 6
-  - position: {x: 12, y: 4, z: 0}
-    factionIndex: 6
-  - position: {x: 13, y: 4, z: 0}
-    factionIndex: 6
   - position: {x: 0, y: 5, z: 0}
     factionIndex: 6
   - position: {x: 1, y: 5, z: 0}
@@ -220,12 +191,6 @@ MonoBehaviour:
   - position: {x: 9, y: 5, z: 0}
     factionIndex: 6
   - position: {x: 10, y: 5, z: 0}
-    factionIndex: 6
-  - position: {x: 11, y: 5, z: 0}
-    factionIndex: 6
-  - position: {x: 12, y: 5, z: 0}
-    factionIndex: 6
-  - position: {x: 13, y: 5, z: 0}
     factionIndex: -1
   - position: {x: 0, y: 6, z: 0}
     factionIndex: 15
@@ -249,12 +214,6 @@ MonoBehaviour:
     factionIndex: 15
   - position: {x: 10, y: 6, z: 0}
     factionIndex: 15
-  - position: {x: 11, y: 6, z: 0}
-    factionIndex: 15
-  - position: {x: 12, y: 6, z: 0}
-    factionIndex: 15
-  - position: {x: 13, y: 6, z: 0}
-    factionIndex: 15
   - position: {x: 0, y: 7, z: 0}
     factionIndex: 15
   - position: {x: 1, y: 7, z: 0}
@@ -276,12 +235,6 @@ MonoBehaviour:
   - position: {x: 9, y: 7, z: 0}
     factionIndex: 15
   - position: {x: 10, y: 7, z: 0}
-    factionIndex: 15
-  - position: {x: 11, y: 7, z: 0}
-    factionIndex: 15
-  - position: {x: 12, y: 7, z: 0}
-    factionIndex: 15
-  - position: {x: 13, y: 7, z: 0}
     factionIndex: -1
   - position: {x: 0, y: 8, z: 0}
     factionIndex: 4
@@ -305,12 +258,6 @@ MonoBehaviour:
     factionIndex: 4
   - position: {x: 10, y: 8, z: 0}
     factionIndex: 4
-  - position: {x: 11, y: 8, z: 0}
-    factionIndex: 4
-  - position: {x: 12, y: 8, z: 0}
-    factionIndex: 4
-  - position: {x: 13, y: 8, z: 0}
-    factionIndex: 4
   - position: {x: 0, y: 9, z: 0}
     factionIndex: 4
   - position: {x: 1, y: 9, z: 0}
@@ -332,12 +279,6 @@ MonoBehaviour:
   - position: {x: 9, y: 9, z: 0}
     factionIndex: 4
   - position: {x: 10, y: 9, z: 0}
-    factionIndex: 4
-  - position: {x: 11, y: 9, z: 0}
-    factionIndex: 4
-  - position: {x: 12, y: 9, z: 0}
-    factionIndex: 4
-  - position: {x: 13, y: 9, z: 0}
     factionIndex: -1
   - position: {x: 0, y: 10, z: 0}
     factionIndex: 6
@@ -361,12 +302,6 @@ MonoBehaviour:
     factionIndex: 6
   - position: {x: 10, y: 10, z: 0}
     factionIndex: 6
-  - position: {x: 11, y: 10, z: 0}
-    factionIndex: 6
-  - position: {x: 12, y: 10, z: 0}
-    factionIndex: 6
-  - position: {x: 13, y: 10, z: 0}
-    factionIndex: 6
   - position: {x: 0, y: 11, z: 0}
     factionIndex: 6
   - position: {x: 1, y: 11, z: 0}
@@ -388,12 +323,6 @@ MonoBehaviour:
   - position: {x: 9, y: 11, z: 0}
     factionIndex: 6
   - position: {x: 10, y: 11, z: 0}
-    factionIndex: 6
-  - position: {x: 11, y: 11, z: 0}
-    factionIndex: 6
-  - position: {x: 12, y: 11, z: 0}
-    factionIndex: 6
-  - position: {x: 13, y: 11, z: 0}
     factionIndex: -1
   isTutorialLevel: 1
   isTutorialSpeedUpLevel: 0
@@ -403,51 +332,47 @@ MonoBehaviour:
     - column: 0
       items:
       - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 70
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 50
+        number: 110
       - faction: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
+        number: 70
+      - faction: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
+        number: 30
+      - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
         number: 40
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 40
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 40
-    - column: 0
-      items: []
-    - column: 0
-      items: []
+      - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+        number: 60
     - column: 1
       items:
       - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 50
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 40
+        number: 100
       - faction: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
-        number: 40
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+        number: 60
+      - faction: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
+        number: 20
+      - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
         number: 30
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 40
+      - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+        number: 70
     - column: 2
       items:
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 60
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 40
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        number: 40
+      - faction: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
+        number: 50
       - faction: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
         number: 40
-      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+      - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
         number: 40
+      - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
+        number: 50
+      - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
+        number: 50
     levelFactionConfigDebug:
       items:
       - faction: {r: 0.9882353, g: 0.2, b: 0.22352941, a: 1}
-        remaning: 0
+        remaning: 160
       - faction: {r: 0.08235294, g: 0.85882354, b: 0.12941177, a: 1}
-        remaning: 420
+        remaning: 150
       - faction: {r: 0.1254902, g: 0.44313726, b: 0.98039216, a: 1}
-        remaning: 540
+        remaning: 130
   difficulty: 0
   initialDifficulty: 0
   overrideInitialDifficulty: 0
