@@ -42,6 +42,7 @@ namespace AntsFlow
         public AnimationCurve difficultyCurve;
         public int totalFaction;
         public LevelDifficultyReduceOnRevive levelDifficultyReduceOnRevive;
+        public LevelDifficultyReduceOnConsecutiveStuck levelDifficultyReduceOnConsecutiveStuck;
 
         [Header("Manual Level Bucket Spawn")]
         public LevelFactionConfig levelFactionConfig;
@@ -893,6 +894,8 @@ namespace AntsFlow
             AdjustAntBoxAfterClearingOneColor(chickensToClear);
 
             ChickenManager.Ins.StopHighlightChickensSequentially();
+
+            GamePersistentVariable.levelBoosterUseTime++;
         }
 
         private void AdjustAntBoxAfterClearingOneColor(List<BaseChicken> chickensToClear)
@@ -1356,6 +1359,27 @@ namespace AntsFlow
                     {
                         difficultyAtCurrentProgress = 0;
                     }
+                    else if (GamePersistentVariable.levelBoosterUseTime >= item.minReviveTime)
+                    {
+                        difficultyAtCurrentProgress = 0;
+                    }
+
+                    break;
+                }
+            }
+
+            for (int i = levelDifficultyReduceOnConsecutiveStuck.items.Count - 1; i >= 0; i--)
+            {
+                LevelDifficultyReduceOnReviveItem item = levelDifficultyReduceOnConsecutiveStuck.items[i];
+
+                if (difficultyLevel >= item.minDifficulty)
+                {
+                    if (GamePersistentVariable.numConsecutiveStuckBucket >= item.minReviveTime)
+                    {
+                        difficultyAtCurrentProgress = 0;
+
+                        GamePersistentVariable.numConsecutiveStuckBucket = 0;
+                    }
 
                     break;
                 }
@@ -1392,6 +1416,12 @@ public class FactionGrainRequirement
 
 [Serializable]
 public class LevelDifficultyReduceOnRevive
+{
+    public List<LevelDifficultyReduceOnReviveItem> items;
+}
+
+[Serializable]
+public class LevelDifficultyReduceOnConsecutiveStuck
 {
     public List<LevelDifficultyReduceOnReviveItem> items;
 }

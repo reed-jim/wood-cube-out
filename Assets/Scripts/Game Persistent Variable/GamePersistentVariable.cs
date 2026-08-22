@@ -26,6 +26,8 @@ public static class GamePersistentVariable
     public static Vector2 screenSizeWorld;
     public static bool isNearWinLevel;
     public static int levelReviveTime;
+    public static int levelBoosterUseTime;
+    public static int numConsecutiveStuckBucket;
 
     #region LEVEL OBSERVER
     public static int currentLevel;

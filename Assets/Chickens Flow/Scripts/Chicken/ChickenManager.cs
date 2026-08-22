@@ -95,6 +95,8 @@ public class ChickenManager : Singleton<ChickenManager>
         GamePersistentVariable.numEatingChicken = 0;
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
         GamePersistentVariable.numMovingChicken = 0;
+        GamePersistentVariable.levelBoosterUseTime = 0;
+        GamePersistentVariable.numConsecutiveStuckBucket = 0;
     }
 
     private void GizmosBoardShape()
@@ -749,7 +751,7 @@ public class ChickenManager : Singleton<ChickenManager>
         chicken.transform.position = GetAveragePositionOfSlots(chicken.waitingChickenSlots);
     }
 
-    public void FeedTheChicken(GrainPile grainPile)
+    public bool FeedTheChicken(GrainPile grainPile)
     {
         List<BaseChicken> chickensToFeed = chickens
             .Where(chicken => !chicken.isDone &&
@@ -757,15 +759,15 @@ public class ChickenManager : Singleton<ChickenManager>
                             chicken.faction == grainPile.faction)
             .ToList();
 
-        FeedTheChicken(chickensToFeed, grainPile);
+        return FeedTheChicken(chickensToFeed, grainPile);
     }
 
-    public void FeedTheChicken(List<BaseChicken> chickensToFeed, GrainPile grainPile)
+    public bool FeedTheChicken(List<BaseChicken> chickensToFeed, GrainPile grainPile)
     {
         Dictionary<BaseChicken, ChickenFeedData> chickenFeedDataItems = new Dictionary<BaseChicken, ChickenFeedData>();
 
         if (grainPile.remainingNumber <= 0 || chickensToFeed.Count == 0)
-            return;
+            return false;
 
         int grainPerChicken = grainPile.remainingNumber / chickensToFeed.Count;
         int remainder = grainPile.remainingNumber % chickensToFeed.Count;
@@ -845,6 +847,8 @@ public class ChickenManager : Singleton<ChickenManager>
         {
             GrainPool.Ins.RemoveGrainPile(grainPile);
         }
+
+        return true;
 
         void AddChickenFeedData(BaseChicken chicken, int amount)
         {

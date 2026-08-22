@@ -324,11 +324,6 @@ public class GrainPool : Singleton<GrainPool>
 
         lazyHealthBar.SetProgress(percent / 100f, durationUpdateProgress);
 
-        if (number > 0)
-        {
-            SoundManager.Instance.PlaySoundGrainHit();
-        }
-
         if (currentAmount > 0)
         {
             SoundManager.Instance.PlayGrainInTroughSound();
