@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -557,6 +558,11 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         // Amount to shift odd rows (in grid units relative to column spacing)
         float rowOffset = (y % 2 == 1) ? 0.5f : 0.0f;
+
+        if (WashingMachineManager.Ins.levelItem.isNotArrangeChickensZigzag)
+        {
+            rowOffset = 0;
+        }
 
         // 1. Incorporate offset into normalized 'u' coordinate (0.0 to 1.0)
         // Adjust denominator so the last column shifted doesn't spill completely out
