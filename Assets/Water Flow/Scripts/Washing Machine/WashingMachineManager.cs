@@ -113,8 +113,6 @@ namespace AntsFlow
                 difficultyLevel = levelItem.difficulty;
             }
 
-            // temp
-            levelItem.isUseManualFactionSetupForFirstAntBoxes = false;
             if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
             {
                 levelFactionConfig = levelItem.levelFactionConfig;
@@ -498,25 +496,6 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine == null)
                 {
-                    numAntBoxSpawned++;
-
-                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column);
-
-                    washingMachineItem.gameObject.SetActive(true);
-                    washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
-
-                    washingMachineItem.transform.localPosition = new Vector3(0, -5, 0);
-                    Tween.LocalPositionY(washingMachineItem.transform, 0, duration: 0.3f);
-
-                    washingMachineStartSlot.washingMachine = washingMachineItem;
-
-                    // don't set faction for bucket from row 2
-                    if (washingMachineStartSlot.row > 1)
-                    {
-                        nextFaction = FactionMapper.Ins.allFactions[0];
-                        numAnt = 0;
-                    }
-
                     if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
                     {
                         foreach (var item in levelFactionConfig.items)
@@ -548,16 +527,37 @@ namespace AntsFlow
                         }
                     }
 
-                    if (isFound)
+                    if (!isFound)
                     {
-                        washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
-
-                        MinusFactionGrainRequirement(nextFaction, numAnt);
-
-                        SpecialElementManager.Ins.SpawnAntBoxLink();
-
-                        break;
+                        continue;
                     }
+
+                    numAntBoxSpawned++;
+
+                    WashingMachineItem washingMachineItem = GetAntBoxFromPool(washingMachineStartSlot.row, washingMachineStartSlot.column);
+
+                    washingMachineItem.gameObject.SetActive(true);
+                    washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
+
+                    washingMachineItem.transform.localPosition = new Vector3(0, -5, 0);
+                    Tween.LocalPositionY(washingMachineItem.transform, 0, duration: 0.3f);
+
+                    washingMachineStartSlot.washingMachine = washingMachineItem;
+
+                    // don't set faction for bucket from row 2
+                    if (washingMachineStartSlot.row > 1)
+                    {
+                        nextFaction = FactionMapper.Ins.allFactions[0];
+                        numAnt = 0;
+                    }
+
+                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                    MinusFactionGrainRequirement(nextFaction, numAnt);
+
+                    SpecialElementManager.Ins.SpawnAntBoxLink();
+
+                    break;
                 }
             }
         }
