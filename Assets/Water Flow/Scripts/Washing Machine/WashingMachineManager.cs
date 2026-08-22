@@ -508,14 +508,27 @@ namespace AntsFlow
 
                             if (item.column == washingMachineStartSlot.column)
                             {
-                                nextFaction = item.items[0].faction;
-                                numAnt = item.items[0].number;
+                                try
+                                {
+                                    nextFaction = item.items[0].faction;
+                                    numAnt = item.items[0].number;
 
-                                item.items.RemoveAt(0);
+                                    FactionGrainRequirement factionGrainRequirement =
+                                        factionGrainRequirements.First(requirement => requirement.faction == nextFaction);
 
-                                isFound = true;
+                                    if (factionGrainRequirement.totalGrain >= numAnt)
+                                    {
+                                        item.items.RemoveAt(0);
 
-                                break;
+                                        isFound = true;
+
+                                        break;
+                                    }
+                                }
+                                catch (System.Exception)
+                                {
+
+                                }
                             }
                         }
 
