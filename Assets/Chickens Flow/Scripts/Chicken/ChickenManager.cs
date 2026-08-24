@@ -945,6 +945,8 @@ public class ChickenManager : Singleton<ChickenManager>
                         if (grainPile == lastGrainPileToFeed && chicken == lastFedChicken)
                         {
                             MoveChickensDown();
+
+                            WashingMachineManager.Ins.UseBoosterShuffle();
                         }
 
                         numGhostChicken--;
