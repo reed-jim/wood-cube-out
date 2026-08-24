@@ -43,6 +43,7 @@ public class LevelOverviewWindow : EditorWindow
 
     private List<LevelData> levels = new List<LevelData>();
     private Dictionary<string, int> difficultyCounts = new Dictionary<string, int>();
+    private HashSet<LevelData> modifiedLevels = new HashSet<LevelData>();
 
     private GUIStyle titleStyle, subtitleStyle, cardTitleStyle, cardNumberStyle, tableHeaderStyle, tableRowStyle;
     private ThemePalette palette;
@@ -51,7 +52,7 @@ public class LevelOverviewWindow : EditorWindow
     public static void ShowWindow()
     {
         var window = GetWindow<LevelOverviewWindow>("Level Overview");
-        window.minSize = new Vector2(820, 520);
+        window.minSize = new Vector2(860, 520);
         window.Show();
     }
 
@@ -211,6 +212,26 @@ public class LevelOverviewWindow : EditorWindow
 
         GUILayout.Space(8);
 
+        // Convert to JSON button for modified levels
+        int modifiedCount = modifiedLevels.Count;
+        bool hasModified = modifiedCount > 0;
+        Color originalBg = GUI.backgroundColor;
+        if (hasModified)
+        {
+            GUI.backgroundColor = palette.accentPrimary;
+        }
+
+        GUI.enabled = hasModified;
+        string convertBtnText = hasModified ? $"Convert JSON ({modifiedCount})" : "Convert JSON";
+        if (GUILayout.Button(convertBtnText, GUILayout.Width(140), GUILayout.Height(28)))
+        {
+            ConvertModifiedLevelsToJson();
+        }
+        GUI.enabled = true;
+        GUI.backgroundColor = originalBg;
+
+        GUILayout.Space(6);
+
         if (GUILayout.Button("Export CSV", GUILayout.Width(100), GUILayout.Height(28)))
             ExportToCSV();
 
@@ -333,6 +354,18 @@ public class LevelOverviewWindow : EditorWindow
         GUILayout.Space(20);
         GUILayout.Label("LEVELS", cardTitleStyle);
         GUILayout.FlexibleSpace();
+
+        if (modifiedLevels.Count > 0)
+        {
+            GUIStyle modCountStyle = new GUIStyle(subtitleStyle)
+            {
+                normal = { textColor = palette.accentPrimary },
+                fontStyle = FontStyle.Bold
+            };
+            GUILayout.Label($"{modifiedLevels.Count} modified (unsaved to JSON)", modCountStyle);
+            GUILayout.Space(14);
+        }
+
         GUILayout.Label($"{GetFilteredLevels().Count} shown", subtitleStyle);
         GUILayout.Space(20);
         EditorGUILayout.EndHorizontal();
@@ -341,9 +374,10 @@ public class LevelOverviewWindow : EditorWindow
         Rect headerRect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(28));
         EditorGUI.DrawRect(headerRect, palette.bgHeader);
 
-        GUI.Label(new Rect(headerRect.x + 20, headerRect.y, 60, 28), "#", tableHeaderStyle);
-        GUI.Label(new Rect(headerRect.x + 60, headerRect.y, 400, 28), "LEVEL", tableHeaderStyle);
-        GUI.Label(new Rect(headerRect.x + position.width - 170, headerRect.y, 130, 28), "DIFFICULTY", tableHeaderStyle);
+        GUI.Label(new Rect(headerRect.x + 20, headerRect.y, 40, 28), "#", tableHeaderStyle);
+        GUI.Label(new Rect(headerRect.x + 60, headerRect.y, 250, 28), "LEVEL", tableHeaderStyle);
+        GUI.Label(new Rect(headerRect.x + headerRect.width - 320, headerRect.y, 220, 28), "DIFFICULTY (0 - 10)", tableHeaderStyle);
+        GUI.Label(new Rect(headerRect.x + headerRect.width - 90, headerRect.y, 70, 28), "ACTION", tableHeaderStyle);
 
         scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.ExpandHeight(true));
         List<LevelData> filtered = GetFilteredLevels();
@@ -361,27 +395,138 @@ public class LevelOverviewWindow : EditorWindow
         if (index % 2 == 0)
             EditorGUI.DrawRect(rowRect, palette.bgRowAlt);
 
+        if (level.isModified)
+        {
+            EditorGUI.DrawRect(new Rect(rowRect.x, rowRect.y, 4, rowRect.height), palette.accentPrimary);
+        }
+
+        // Index
         GUI.Label(new Rect(rowRect.x + 20, rowRect.y, 40, rowRect.height), (index + 1).ToString(), subtitleStyle);
 
-        if (GUI.Button(new Rect(rowRect.x + 60, rowRect.y, rowRect.width - 250, rowRect.height), level.name, tableRowStyle))
+        // Name Button
+        float nameWidth = Mathf.Max(120, rowRect.width - 400);
+        string displayName = level.isModified ? $"{level.name} *" : level.name;
+        if (GUI.Button(new Rect(rowRect.x + 60, rowRect.y, nameWidth, rowRect.height), displayName, tableRowStyle))
         {
             Selection.activeObject = level.asset;
             EditorGUIUtility.PingObject(level.asset);
         }
 
-        Color color = GetDifficultyColor(level.difficulty);
-        Rect pill = new Rect(rowRect.x + rowRect.width - 170, rowRect.y + 5, 130, 22);
+        // Difficulty Slider & Input (0 - 10)
+        int currentDiff = GetDifficultyValue(level.difficulty);
+        Rect diffRect = new Rect(rowRect.x + rowRect.width - 320, rowRect.y + 5, 210, 22);
 
-        EditorGUI.DrawRect(pill, new Color(color.r, color.g, color.b, 0.20f));
-
-        GUIStyle pillStyle = new GUIStyle(EditorStyles.label)
+        EditorGUI.BeginChangeCheck();
+        int newDiff = EditorGUI.IntSlider(diffRect, currentDiff, 0, 10);
+        if (EditorGUI.EndChangeCheck() && newDiff != currentDiff)
         {
-            alignment = TextAnchor.MiddleCenter,
-            normal = { textColor = color },
-            fontStyle = FontStyle.Bold
-        };
+            UpdateLevelDifficulty(level, newDiff);
+        }
 
-        GUI.Label(pill, $"{level.difficulty}", pillStyle);
+        // Action button: Convert single JSON
+        Rect actionRect = new Rect(rowRect.x + rowRect.width - 90, rowRect.y + 5, 70, 22);
+        if (GUI.Button(actionRect, "JSON", EditorStyles.miniButton))
+        {
+            ConvertSingleLevelToJson(level);
+        }
+    }
+
+    private void UpdateLevelDifficulty(LevelData level, int newDifficulty)
+    {
+        if (level.asset == null) return;
+        GameObject prefab = level.asset as GameObject;
+        if (prefab == null) return;
+
+        AntsFlow.LevelItem levelItem = prefab.GetComponent<AntsFlow.LevelItem>();
+        if (levelItem == null) return;
+
+        Undo.RecordObject(levelItem, "Change Level Difficulty");
+        levelItem.difficulty = newDifficulty;
+        EditorUtility.SetDirty(levelItem);
+        EditorUtility.SetDirty(prefab);
+        PrefabUtility.SavePrefabAsset(prefab);
+
+        level.difficulty = newDifficulty.ToString();
+        level.isModified = true;
+        modifiedLevels.Add(level);
+
+        RecalculateDifficultyCounts();
+    }
+
+    private void RecalculateDifficultyCounts()
+    {
+        difficultyCounts.Clear();
+        foreach (var lvl in levels)
+        {
+            if (!difficultyCounts.ContainsKey(lvl.difficulty))
+                difficultyCounts[lvl.difficulty] = 0;
+
+            difficultyCounts[lvl.difficulty]++;
+        }
+    }
+
+    private void ConvertSingleLevelToJson(LevelData level)
+    {
+        if (level.asset == null) return;
+        GameObject prefab = level.asset as GameObject;
+        if (prefab == null) return;
+
+        AntsFlow.LevelItem levelItem = prefab.GetComponent<AntsFlow.LevelItem>();
+        if (levelItem == null) return;
+
+        if (levelItem.factionMapper == null)
+        {
+            levelItem.factionMapper = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+        }
+
+        levelItem.ConvertToJson();
+        level.isModified = false;
+        modifiedLevels.Remove(level);
+
+        EditorUtility.DisplayDialog("Convert To JSON", $"Level '{level.name}' converted to JSON successfully!", "OK");
+        Repaint();
+    }
+
+    private void ConvertModifiedLevelsToJson()
+    {
+        if (modifiedLevels.Count == 0)
+        {
+            EditorUtility.DisplayDialog("Convert To JSON", "No modified levels to convert.", "OK");
+            return;
+        }
+
+        int count = 0;
+        AssetDatabase.StartAssetEditing();
+        try
+        {
+            foreach (LevelData level in modifiedLevels.ToList())
+            {
+                if (level.asset == null) continue;
+                GameObject prefab = level.asset as GameObject;
+                if (prefab == null) continue;
+
+                AntsFlow.LevelItem levelItem = prefab.GetComponent<AntsFlow.LevelItem>();
+                if (levelItem == null) continue;
+
+                if (levelItem.factionMapper == null)
+                {
+                    levelItem.factionMapper = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+                }
+
+                levelItem.ConvertToJson();
+                level.isModified = false;
+                count++;
+            }
+        }
+        finally
+        {
+            AssetDatabase.StopAssetEditing();
+            AssetDatabase.Refresh();
+        }
+
+        modifiedLevels.Clear();
+        EditorUtility.DisplayDialog("Convert To JSON", $"Successfully converted {count} modified level(s) to JSON!", "OK");
+        Repaint();
     }
 
     private void ExportToCSV()
@@ -443,6 +588,7 @@ public class LevelOverviewWindow : EditorWindow
     {
         levels.Clear();
         difficultyCounts.Clear();
+        modifiedLevels.Clear();
 
         if (levelsFolder == null) return;
         string folderPath = AssetDatabase.GetAssetPath(levelsFolder);
@@ -464,7 +610,7 @@ public class LevelOverviewWindow : EditorWindow
             if (difficulty == null) continue;
 
             string difficultyName = $"{levelItem.difficulty}";
-            levels.Add(new LevelData { name = prefab.name, asset = prefab, difficulty = difficultyName });
+            levels.Add(new LevelData { name = prefab.name, asset = prefab, difficulty = difficultyName, isModified = false });
 
             if (!difficultyCounts.ContainsKey(difficultyName))
                 difficultyCounts[difficultyName] = 0;
@@ -512,6 +658,7 @@ public class LevelOverviewWindow : EditorWindow
         public string name;
         public string difficulty;
         public UnityEngine.Object asset;
+        public bool isModified;
     }
 }
 
