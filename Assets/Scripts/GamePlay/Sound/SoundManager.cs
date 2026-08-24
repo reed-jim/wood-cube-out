@@ -26,6 +26,7 @@ public class SoundManager : MonoBehaviour
     private Tween grainInTroughSoundTween;
     private float _lastChickenPeckSoundTime;
     public float chickenPeckSoundCooldown;
+    public float chickenFlySoundCooldown;
     private float _lastChickenFlySoundTime;
     public bool isPlayingChickenSound;
     #endregion
@@ -353,7 +354,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        if (Time.time - _lastChickenFlySoundTime < chickenPeckSoundCooldown)
+        if (Time.time - _lastChickenFlySoundTime < chickenFlySoundCooldown)
         {
             return;
         }
