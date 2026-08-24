@@ -99,7 +99,11 @@ Shader "Spine/Skeleton With Simple Highligh" {
                     );
                 }
 
-				return (texColor * i.vertexColor);
+				float4 finalColor = texColor * i.vertexColor;
+
+				clip(finalColor.a - 0.5);
+
+				return finalColor;
 			}
 			ENDCG
 		}
