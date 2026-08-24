@@ -28,6 +28,7 @@ public class SoundManager : MonoBehaviour
     public float chickenPeckSoundCooldown;
     public float chickenFlySoundCooldown;
     private float _lastChickenFlySoundTime;
+    private float _lastChickenCompleteSoundTime;
     public bool isPlayingChickenSound;
     #endregion
 
@@ -349,26 +350,12 @@ public class SoundManager : MonoBehaviour
 
     public void PlayChickenFly()
     {
-        if (!_isEnableGameSound)
-        {
-            return;
-        }
-
-        if (Time.time - _lastChickenFlySoundTime < chickenFlySoundCooldown)
-        {
-            return;
-        }
-
-        _lastChickenFlySoundTime = Time.time;
-
-        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.chickenFlySound);
-
-        sound.Play();
+        PlaySoundWithCooldown(GameConstants.chickenFlySound, ref _lastChickenFlySoundTime, chickenFlySoundCooldown);
     }
 
     public void PlayChickenComplete()
     {
-        PlaySound(GameConstants.chickenCompleteSound);
+        PlaySoundWithCooldown(GameConstants.chickenCompleteSound, ref _lastChickenCompleteSoundTime, chickenFlySoundCooldown);
     }
 
     public void PlayGrainInTroughSound()
@@ -441,21 +428,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySoundChickenPeck()
     {
-        if (!_isEnableGameSound)
-        {
-            return;
-        }
-
-        if (Time.time - _lastChickenPeckSoundTime < chickenPeckSoundCooldown)
-        {
-            return;
-        }
-
-        _lastChickenPeckSoundTime = Time.time;
-
-        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.cubeLandSound);
-
-        sound.Play();
+        PlaySoundWithCooldown(GameConstants.cubeLandSound, ref _lastChickenPeckSoundTime, chickenPeckSoundCooldown);
     }
 
     public void PlayChickenSound()
@@ -473,6 +446,16 @@ public class SoundManager : MonoBehaviour
         chickenSound.Stop();
 
         isPlayingChickenSound = false;
+    }
+
+    void DisableSoundObjectAfterFinishPlaying(AudioSource audioSource)
+    {
+        Tween.StopAll(audioSource);
+
+        TweenManager.Ins.AddTween(Tween.Delay(audioSource.clip.length).OnComplete(() =>
+        {
+            audioSource.gameObject.SetActive(false);
+        }));
     }
     #endregion
 
@@ -537,16 +520,39 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
-    public void PlaySound(string soundKey)
+    public AudioSource PlaySound(string soundKey)
+    {
+        if (!_isEnableGameSound)
+        {
+            return null;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(soundKey);
+
+        sound.Play();
+
+        return sound;
+    }
+
+    public void PlaySoundWithCooldown(string soundKey, ref float lastPlaySoundTime, float cooldown)
     {
         if (!_isEnableGameSound)
         {
             return;
         }
 
+        if (Time.time - lastPlaySoundTime < cooldown)
+        {
+            return;
+        }
+
+        lastPlaySoundTime = Time.time;
+
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(soundKey);
 
         sound.Play();
+
+        DisableSoundObjectAfterFinishPlaying(sound);
     }
     #endregion
 
