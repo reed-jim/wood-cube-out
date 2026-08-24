@@ -1387,21 +1387,21 @@ public class ChickenManager : Singleton<ChickenManager>
 
                     if (chicken.isStuck)
                     {
-                        Tween.Custom(0.5f, 1f, duration: 0.3f, onValueChange: newVal =>
+                        highLightChickensTweens.Add(Tween.Custom(0.5f, 1f, duration: 0.3f, onValueChange: newVal =>
                         {
                             chicken.highlight = newVal;
 
                             chickenRenderer.UpdateChickenRendering(chicken);
-                        });
+                        }));
                     }
                     else
                     {
-                        Tween.Custom(0.5f, 1f, duration: 0.3f, onValueChange: newVal =>
+                        highLightChickensTweens.Add(Tween.Custom(0.5f, 1f, duration: 0.3f, onValueChange: newVal =>
                         {
                             chicken.highlight = newVal;
 
                             chicken.SetHighlight(chicken.highlight);
-                        });
+                        }));
                     }
 
                     highlightingChickens.Add(chicken);
