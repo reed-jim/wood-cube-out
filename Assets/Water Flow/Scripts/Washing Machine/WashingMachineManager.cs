@@ -1127,6 +1127,7 @@ namespace AntsFlow
             ghostAntBoxes.Clear();
 
             GamePersistentVariable.isLevelLost = false;
+            GamePersistentVariable.numEasyBucketSpawned = 0;
 
             mainCamera.transform.position = Vector3.zero.ChangeZ(mainCamera.transform.position.z);
 
@@ -1406,22 +1407,27 @@ namespace AntsFlow
 
             for (int i = levelDifficultyReduceOnConsecutiveStuck.items.Count - 1; i >= 0; i--)
             {
-                LevelDifficultyReduceOnReviveItem item = levelDifficultyReduceOnConsecutiveStuck.items[i];
+                LevelDifficultyReduceOnConsecutiveStuckItem item = levelDifficultyReduceOnConsecutiveStuck.items[i];
 
                 if (difficultyLevel >= item.minDifficulty)
                 {
-                    if (GamePersistentVariable.numConsecutiveStuckBucket >= item.minReviveTime)
+                    if (GamePersistentVariable.numEasyBucketSpawned < 1 && GrainPool.Ins.GetCurrentPercent() >= item.minGrainTroughPercent)
                     {
                         difficultyAtCurrentProgress = 0;
 
                         GamePersistentVariable.numConsecutiveStuckBucket = 0;
+                        GamePersistentVariable.numEasyBucketSpawned++;
+
+                        Debug.Log(
+                            $"numEasyBucketSpawned");
                     }
 
                     break;
                 }
             }
 
-            // Debug.Log($"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {progress} {difficultyCurve.Evaluate(progress)}");
+            Debug.Log(
+                $"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {(int)(progress * 100)}% {GrainPool.Ins.GetCurrentPercent()}");
 
             return difficultyAtCurrentProgress;
         }
@@ -1459,7 +1465,7 @@ public class LevelDifficultyReduceOnRevive
 [Serializable]
 public class LevelDifficultyReduceOnConsecutiveStuck
 {
-    public List<LevelDifficultyReduceOnReviveItem> items;
+    public List<LevelDifficultyReduceOnConsecutiveStuckItem> items;
 }
 
 [Serializable]
@@ -1467,4 +1473,11 @@ public class LevelDifficultyReduceOnReviveItem
 {
     public int minDifficulty;
     public int minReviveTime;
+}
+
+[Serializable]
+public class LevelDifficultyReduceOnConsecutiveStuckItem
+{
+    public int minDifficulty;
+    public int minGrainTroughPercent;
 }

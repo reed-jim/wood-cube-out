@@ -21,6 +21,7 @@ public class ChickenManager : Singleton<ChickenManager>
     public ChickenRenderer chickenRenderer;
 
     public List<BaseChicken> chickens;
+    public List<BaseChicken> firstRowChickens;
     public List<WaitingChickenSlot> debugWaitingChickenSlots;
     public Dictionary<Vector2Int, WaitingChickenSlot> waitingChickenSlots;
     public Dictionary<int, List<BaseChicken>> chickenByColumn;
@@ -69,6 +70,8 @@ public class ChickenManager : Singleton<ChickenManager>
 
         highLightChickensTweens = new List<Tween>();
 
+        firstRowChickens = new List<BaseChicken>();
+
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
     }
 
@@ -92,6 +95,8 @@ public class ChickenManager : Singleton<ChickenManager>
         CommonUtil.StopAllTweens(highLightChickensTweens);
 
         numGhostChicken = 0;
+
+        firstRowChickens.Clear();
 
         GamePersistentVariable.numEatingChicken = 0;
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
@@ -445,6 +450,8 @@ public class ChickenManager : Singleton<ChickenManager>
                 chicken.SetActiveSpine(true);
                 chicken.ForcePlayRandomIdleAnim();
                 chicken.ShowProgressBar();
+
+                firstRowChickens.Add(chicken);
             }
             else
             {
@@ -1096,6 +1103,8 @@ public class ChickenManager : Singleton<ChickenManager>
         if (minRow == 0)
         {
             chicken.isStuck = false;
+
+            firstRowChickens.Add(chicken);
         }
     }
 

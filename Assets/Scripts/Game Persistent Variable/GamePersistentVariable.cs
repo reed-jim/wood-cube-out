@@ -28,6 +28,7 @@ public static class GamePersistentVariable
     public static int levelReviveTime;
     public static int levelBoosterUseTime;
     public static int numConsecutiveStuckBucket;
+    public static int numEasyBucketSpawned;
 
     #region LEVEL OBSERVER
     public static int currentLevel;

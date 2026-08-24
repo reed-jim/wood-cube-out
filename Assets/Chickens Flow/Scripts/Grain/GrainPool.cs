@@ -372,6 +372,11 @@ public class GrainPool : Singleton<GrainPool>
         return currentAmount >= maxCapacity || displayedPercent >= 100;
     }
 
+    public int GetCurrentPercent()
+    {
+        return (int)((float)currentAmount / maxCapacity * 100);
+    }
+
     private void SetupLoopPathArrows()
     {
         loopPathArrows = new List<LoopPathArrow>();
