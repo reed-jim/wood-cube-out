@@ -182,22 +182,35 @@ namespace AntsFlow
         public void ConvertToJson()
         {
 #if UNITY_EDITOR
+            if (factionMapper == null)
+            {
+                factionMapper = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Chickens Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+            }
+
             AntLevelData antLevelData = new AntLevelData();
 
             antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
 
-            for (int i = 0; i < tiles.Count; i++)
+            if (tiles != null)
             {
-                BaseTile tile = tiles[i];
+                for (int i = 0; i < tiles.Count; i++)
+                {
+                    BaseTile tile = tiles[i];
+                    if (tile == null) continue;
 
-                AntLevelDataItem dataItem = new AntLevelDataItem();
-                dataItem.position = tile.position;
-                dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
+                    AntLevelDataItem dataItem = new AntLevelDataItem();
+                    dataItem.position = tile.position;
+                    dataItem.factionIndex = (factionMapper != null && factionMapper.mapper != null)
+                        ? factionMapper.mapper.FindIndex(item => item.color == tile.Faction)
+                        : 0;
 
-                antLevelData.antLevelDataItems.Add(dataItem);
+                    antLevelData.antLevelDataItems.Add(dataItem);
+                }
             }
 
-            List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction);
+            List<int> poolFactionIndexes = factionMapper != null
+                ? factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction)
+                : new List<int>();
 
             antLevelData.levelItemData = new LevelItemData()
             {
@@ -224,7 +237,12 @@ namespace AntsFlow
             };
 
             // Use level name as file name
-            string filePath = Path.Combine("Assets/Chickens Flow/JSON/Levels", $"{name}.json");
+            string folderPath = "Assets/Chickens Flow/JSON/Levels";
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            string filePath = Path.Combine(folderPath, $"{name}.json");
 
             // Serialize and save
             string json = JsonUtility.ToJson(antLevelData, false);
