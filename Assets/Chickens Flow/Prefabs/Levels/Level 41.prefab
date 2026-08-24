@@ -48,6 +48,7 @@ MonoBehaviour:
   numColumn: 30
   numRow: 30
   boardShapePresetIndex: 2
+  isNotArrangeChickensZigzag: 0
   isLevelHavingTransparentPixels: 0
   isOverrideLevelScale: 0
   chickenAreaScaleX: 1
@@ -1856,10 +1857,13 @@ MonoBehaviour:
   - position: {x: 29, y: 29, z: 0}
     factionIndex: 11
   isTutorialLevel: 0
+  isTutorialSpeedUpLevel: 0
   isUseManualFactionSetupForFirstAntBoxes: 0
   levelFactionConfig:
     items: []
-  difficulty: 1
+    levelFactionConfigDebug:
+      items: []
+  difficulty: 2
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
