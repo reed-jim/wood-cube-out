@@ -374,13 +374,17 @@ namespace AntsFlow
             return washingMachineItems;
         }
 
-        public void MoveAntBoxTop()
+        public void MoveAntBoxTop(Action onCompleteAction = null)
         {
             bool isAlreadySpawnNewBox = false;
 
+            int lastSlotHavingActionIndex = 0;
+
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
-                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+                int index = i;
+
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[index];
 
                 if (washingMachineStartSlot.washingMachine == null)
                 {
@@ -430,6 +434,8 @@ namespace AntsFlow
                                 }
                             }
 
+                            lastSlotHavingActionIndex = i;
+
                             washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
                             Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
                             .OnComplete(() =>
@@ -437,6 +443,8 @@ namespace AntsFlow
                                 washingMachineItem.Setup(washingMachineStartSlot);
 
                                 washingMachineItem.isMoving = false;
+
+                                TryInvokeOnCompleteAction(index);
                             });
 
                             washingMachineItem.washingMachineStartSlot = washingMachineStartSlot;
@@ -457,13 +465,13 @@ namespace AntsFlow
                     {
                         if (washingMachineStartSlot.row < 2)
                         {
-                            SpawnNewWashingMachine();
+                            SpawnNewWashingMachine(onCompleteAction: () => TryInvokeOnCompleteAction(index));
                         }
                         else
                         {
                             if (!isAlreadySpawnNewBox)
                             {
-                                SpawnNewWashingMachine();
+                                SpawnNewWashingMachine(onCompleteAction: () => TryInvokeOnCompleteAction(index));
 
                                 isAlreadySpawnNewBox = true;
                             }
@@ -471,9 +479,17 @@ namespace AntsFlow
                     }
                 }
             }
+
+            void TryInvokeOnCompleteAction(int index)
+            {
+                if (index == lastSlotHavingActionIndex)
+                {
+                    onCompleteAction?.Invoke();
+                }
+            }
         }
 
-        public void SpawnNewWashingMachine()
+        public void SpawnNewWashingMachine(Action onCompleteAction = null)
         {
             Color nextFaction = Color.white;
             int numAnt = 0;
@@ -565,7 +581,7 @@ namespace AntsFlow
                         numAnt = 0;
                     }
 
-                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt, onCompleteAction);
 
                     MinusFactionGrainRequirement(nextFaction, numAnt);
 
@@ -742,11 +758,16 @@ namespace AntsFlow
 
             int index = 0;
 
+            GamePersistentVariable.isPreventSelectAntBox = true;
+
             foreach (var bucket in slotOfShuffleBuckets.Keys)
             {
                 FactionGrainRequirement bucketData = bucketDataItems[index];
 
-                bucket.Init(slotOfShuffleBuckets[bucket], bucketData.faction, bucketData.totalGrain);
+                bucket.Init(slotOfShuffleBuckets[bucket], bucketData.faction, bucketData.totalGrain, onCompleteAction: () =>
+                {
+                    GamePersistentVariable.isPreventSelectAntBox = false;
+                });
 
                 MinusFactionGrainRequirement(bucketData.faction, bucketData.totalGrain);
 
@@ -947,6 +968,8 @@ namespace AntsFlow
             for (int i = 0; i < antBoxes.Count; i++)
             {
                 WashingMachineItem antBox = antBoxes[i];
+
+                bool isLast = i == antBoxes.Count;
 
                 if (antBox.faction == factionToClear)
                 {
