@@ -1,9 +1,4 @@
-﻿//using MoreMountains.NiceVibrations;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
+﻿using UnityEngine;
 
 #if UNITY_IOS
 using Unity.Advertisement.IosSupport;
@@ -12,43 +7,38 @@ using Unity.Advertisement.IosSupport;
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
-    // public UseProfile useProfile;
     public SegmentController segmentController;
     public ActionLimitQueue ActionLimitQueue;
     public UseProfile useProfile;
     public IapController iapController;
     public DataContain dataContain;
     public MoneyEffectController moneyEffectController;
-    public GameLoading gameLoading;
     [HideInInspector] public SceneType currentScene;
 
     [HideInInspector] public bool openFeatureBox = false;
     public static bool isFirstLoadLevel = false;
-    protected void Start()
+
+    void Awake()
     {
         Instance = this;
         DontDestroyOnLoad(this);
         Init();
     }
+
     public void Init()
     {
         Application.targetFrameRate = 60;
-         // GameController.Instance.useProfile.CurrentLevel =  GameController.Instance.useProfile;
-
-       
-       // iapController.Init();
-        //MMVibrationManager.SetHapticsActive(useProfile.OnVibration);
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         ResetDay();
         UseProfile.NumPlayedInDay++;
+
+        InitLoadScene();
     }
-   
 
     public void InitLoadScene()
     {
         segmentController.Init();
         ActionLimitQueue.Init();
-        gameLoading.Init();
     }
 
     public static void SetUserProperties()
@@ -85,8 +75,6 @@ public class GameController : MonoBehaviour
 
             UseProfile.NumberLoseLevelInDay = 0;
 
-
-
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.SuggetItem_BirdSort, 0);
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.ReturnItem_BirdSort, 0);
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.ShuffleItem_BirdSort, 0);
@@ -96,19 +84,13 @@ public class GameController : MonoBehaviour
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.BlockBrand_BirdSort, 0);
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddBrandItem_BirdSort, 0);
 
-           
             UseProfile.NumPlayedInDay = 0;
 
             UseProfile.ResetDayMiniGame();
-
         }
     }
-
-    private void OnApplicationQuit()
-    {
-        //AnalyticsController.SessionLog(Time.time);
-    }
 }
+
 public enum SceneType
 {
     StartLoading = 0,
