@@ -129,7 +129,6 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<SkeletonAnimation>(GameConstants.smokeFx, smokeAnim, 25);
 
         RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);
-        RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);
         RegisterPool<FakeScrew>(GameConstants.FAKE_SCREW, fakeScrewPrefab, 3);
         RegisterPool<BoosterHammer>(GameConstants.HAMMER, hammerPrefab, 3);
 

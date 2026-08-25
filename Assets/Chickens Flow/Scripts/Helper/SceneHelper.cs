@@ -8,8 +8,8 @@ public class SceneHelper : MonoBehaviour
 {
     public GameObject[] uiElementsToHide;
     public GameObject bar;
-    [ReadOnly] public bool isHidingUI;
-    [ReadOnly] public bool isHidingBar;
+    public bool isHidingUI;
+    public bool isHidingBar;
 }
 #endif
 

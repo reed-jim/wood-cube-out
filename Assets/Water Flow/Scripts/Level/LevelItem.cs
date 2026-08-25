@@ -2039,7 +2039,7 @@ public class LevelFactionItemConfig
 [Serializable]
 public class LevelFactionConfigDebug
 {
-    [ReadOnly] public List<LevelFactionConfigDebugItem> items;
+    public List<LevelFactionConfigDebugItem> items;
 }
 
 [Serializable]
