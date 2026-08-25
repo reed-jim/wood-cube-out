@@ -48,7 +48,7 @@ public class ReplayPopup : BasePopup
 
         if (isShowInterReplayLevel)
         {
-             GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: ActualReplay);
+            
         }
         else
         {

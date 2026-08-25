@@ -42,8 +42,7 @@ public class LivesShopPopup : BasePopup
 
     private void RefillByAds()
     {
-         GameController.Instance.admobAds.ShowVideoReward(
-            OnRewaredAdCompletedToRefillLives, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
+
     }
 
     private void OnRewaredAdCompletedToRefillLives()

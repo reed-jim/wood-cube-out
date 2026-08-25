@@ -158,15 +158,12 @@ public class ClaimRewardPopup : BasePopup
 
     private void ClaimMultiplier()
     {
-       GameController.Instance.admobAds.ShowVideoReward(
-                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: GamePersistentVariable.currentReasonRewardedAd);
+        OnRewaredAdCompleted();
     }
 
     private void OnRewaredAdCompleted()
     {
         Claim(multiplier: 2);
-
-        SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"{GamePersistentVariable.currentReasonRewardedAd}");
     }
 
     private void ShowAdsNotLoadedPopup()

@@ -57,16 +57,7 @@ public class MoneyEffect : MonoBehaviour
 
     public void SetSpriteIcon(GiftType itemType)
     {
-        if (GameController.Instance.dataContain.giftDatabase.GetGift(itemType, out Gift gift))
-        {
-            iconItem.sprite = gift.getGiftSprite;
-            iconItem.gameObject.SetActive(true);
-        }
-        else
-        {
-            iconItem.sprite = null;
-            iconItem.gameObject.SetActive(false);
-        }
+
     }
     public void SetMoveFlyUp(GiftType itemType, int value, Color colorText, bool isFollowObject = false, GameObject objectFollow = null, bool isUnlimitedItem = false)
     {

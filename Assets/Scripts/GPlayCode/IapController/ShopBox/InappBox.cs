@@ -19,8 +19,6 @@ public class InappBox : BaseBox
         return instance;
     }
 
-    [SerializeField] private List<IAPItem> lsPackItem;
-
     protected override void OnStart()
     {
         base.OnStart();
@@ -31,16 +29,10 @@ public class InappBox : BaseBox
     public override void Show()
     {
         base.Show();
-        GameController.Instance.admobAds.DestroyBanner();
-        OnCloseBox = () => { GameController.Instance.admobAds.ShowBanner(); OnCloseBox = null; };
     }
 
     private void InitData()
     {
-        for (int i = 0; i < lsPackItem.Count; i++)
-        {
-            lsPackItem[i].Init();
-        }
-    }
 
+    }
 }

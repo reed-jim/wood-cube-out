@@ -273,7 +273,6 @@ public class CoinChallengePopup : BasePopup
 
         if (isClaimable)
         {
-            GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.CoinChallenge;
             GamePersistentVariable.currentChestReason = "Coin Challenge";
 
             showClaimRewardPopupEvent?.Invoke(totalReward);

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using AntsFlow;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Lean.Localization;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
@@ -545,8 +543,6 @@ public class BoosterUI : MonoBehaviour
         SaferioTracking.TrackResourceSink(
             currentLevel.Value, boosterType.ToString(),
             1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], $"Consume_Booster_{boosterType}");
-
-        new FResourceLog(FlowType.Sink, boosterType.ToString(), boosterType.ToString(), $"Consume_Booster_{boosterType}", 1, currentLevel.Value);
     }
 
     private void UseBreakObjectBooster()

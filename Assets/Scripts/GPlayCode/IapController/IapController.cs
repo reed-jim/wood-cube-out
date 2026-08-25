@@ -15,9 +15,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 #if RECEIPT_VALIDATION
 using UnityEngine.Purchasing.Security;
-using Falcon;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
-using Falcon.Mediation.Runtime;
 #endif
 
 public enum InAppStatus
@@ -451,28 +448,6 @@ public class IapController : MonoBehaviour, IStoreListener
         //Context.Waiting.
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            //ConfirmBox.Setup().AddMessageYes("Notification", "No Internet access!", () => {
-
-            //    if (actBuyFault != null)
-            //    {
-            //        actBuyFault();
-            //    }
-            //});
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-                     (
-                     //new Vector3(540f, 840, 0),
-                     //Camera.main.ScreenToWorldPoint(new Vector2(350, 420)),
-                     btnBuy != null ? btnBuy.transform.position : Vector3.zero,
-                     "No Internet!",
-                     Color.white,
-                     isSpawnItemPlayer: false
-                     );
-
-            if (actBuyFault != null)
-            {
-                actBuyFault();
-            }
-
             return;
         }
 
@@ -572,7 +547,6 @@ public class IapController : MonoBehaviour, IStoreListener
 
             if (myCoin >= item.price)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -item.price);
                 item.Claim();
                 this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, typePack);
 
@@ -590,23 +564,7 @@ public class IapController : MonoBehaviour, IStoreListener
         }
         else if (item.typeBuy == TypeBuy.Video)
         {
-            GameController.Instance.admobAds.ShowVideoReward(actionReward: () =>
-            {
-                item.Claim();
-                this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, typePack);
-                //RewardIAPBox rwBox = RewardIAPBox.Setup();
-                //rwBox.Show(item);
-            },
-            actionNotLoadedVideo: () =>
-            {
-                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-                (
-               Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                "No video at the moment!",
-                Color.white,
-                isSpawnItemPlayer: true
-                );
-            }, () => { });
+
         }
         else
         {
@@ -637,10 +595,6 @@ public class IapController : MonoBehaviour, IStoreListener
                     pack.Claim(isInited);
                     
                     this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, pack.type);
-                    AnalyticsController.LogBuyInapp(pack.ProductID, product.transactionID);
-
-                    try { LogService.Instance.PurchaseSuccess(pack.price); }
-                    catch { }
 
                     break;
                 }
@@ -648,15 +602,6 @@ public class IapController : MonoBehaviour, IStoreListener
         }
 
         GameUtils.RaiseMessage(new GameEvent.OnIAPSucsses());
-        AnalyticsController.AppsFlyerPurchaseEvent(product);
-        try
-        {
-            new FInAppLog(product.definition.id, product.metadata.localizedPrice, product.metadata.isoCurrencyCode, "shop", product.transactionID, "");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e.Message);
-        }
     }
 
     // foreach (var item in inappDatabase.dictPackItem)

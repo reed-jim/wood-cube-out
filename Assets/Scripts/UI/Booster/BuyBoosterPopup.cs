@@ -1,6 +1,4 @@
 using System;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Lean.Localization;
 using PrimeTween;
 using TMPro;
@@ -148,8 +146,6 @@ public class BuyBoosterPopup : BasePopup
 
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 3, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
-
-                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value);
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
             {
@@ -184,8 +180,6 @@ public class BuyBoosterPopup : BasePopup
 
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
-
-                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value);
             }
 
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
@@ -199,8 +193,6 @@ public class BuyBoosterPopup : BasePopup
 
                 // useBoosterEvent?.Invoke(_boosterType);
             });
-
-            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Buy_Booster_{_boosterType}", boosterDataObserver.BoosterCosts[boosterIndex], currentLevel.Value);
         }
         else
         {
@@ -213,17 +205,7 @@ public class BuyBoosterPopup : BasePopup
 
     private void GetWithAds()
     {
-        ActionWatchVideo actionWatchVideo;
 
-        switch (_boosterType)
-        {
-            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
-            default: actionWatchVideo = ActionWatchVideo.AddHole; break;
-        }
-
-        GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()
@@ -247,9 +229,6 @@ public class BuyBoosterPopup : BasePopup
     private void UnlockScrewBoxWithAds()
     {
         isAbleToHideOnClickOutside = false;
-
-        GameController.Instance.admobAds.ShowVideoReward(
-           OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
     }
 
     private void OnRewaredAdCompletedToUnlockBox()

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.Purchasing;
@@ -252,7 +251,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                 removeAdPurchasedCompletedEvent?.Invoke();
 
                 UserData.IsRemoveAds = true;
-                GameController.Instance.useProfile.IsRemoveAds = true;
             }
             else
             {
@@ -282,11 +280,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         if (productData.IsRemoveAd)
                         {
-                            //GameController.Instance.admobAds.Hi();
-                            GameController.Instance.admobAds.DestroyBanner();
 
-                            UserData.IsRemoveAds = true;
-                            GameController.Instance.useProfile.IsRemoveAds = true;
                         }
 
                         if (productData.IsUnlockAllScrewBoxes)
@@ -310,16 +304,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
-                        AnalyticsController.AppsFlyerPurchaseEvent(e.purchasedProduct);
-
-                        try
-                        {
-                            new FInAppLog(e.purchasedProduct.definition.id, e.purchasedProduct.metadata.localizedPrice, e.purchasedProduct.metadata.isoCurrencyCode, "shop", e.purchasedProduct.transactionID, "");
-                        }
-                        catch (Exception f)
-                        {
-                            Debug.LogError(f.Message);
-                        }
 
                         break;
                     }

@@ -113,7 +113,6 @@ public class ChestLevelPopup : BasePopup
 
         DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
 
-        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.LevelChest;
         GamePersistentVariable.currentChestReason = "Chest Level";
 
         showClaimRewardPopupEvent?.Invoke(rewardData, numChest);

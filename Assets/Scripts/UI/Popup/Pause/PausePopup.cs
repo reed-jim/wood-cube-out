@@ -116,7 +116,7 @@ public class PausePopup : BasePopup
 
             if (isShowInterReplayLevel)
             {
-                 GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+                
             }
             else
             {
