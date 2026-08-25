@@ -1269,7 +1269,7 @@ public class AdmobAdsMax
     {
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Show();
-        _bannerViewCollap.Hide();
+        _bannerViewCollap?.Hide();
     }
 
     public void ShowBannerMax()
@@ -1277,7 +1277,7 @@ public class AdmobAdsMax
         MaxSdk.ShowBanner(BanerAdUnitId);
         // RequestBanner();
         _bannerView?.Hide();
-        _bannerViewCollap.Hide();
+        _bannerViewCollap?.Hide();
     }
 
     public void DestroyBanner()
@@ -1285,7 +1285,7 @@ public class AdmobAdsMax
         Debug.Log("destroy banner");
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Hide();
-        _bannerViewCollap.Hide();
+        _bannerViewCollap?.Hide();
     }
 
     #endregion
