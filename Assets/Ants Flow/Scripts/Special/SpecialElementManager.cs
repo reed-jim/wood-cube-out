@@ -30,6 +30,8 @@ namespace AntsFlow
         public BossArea bossArea;
         public Snake snake;
 
+        public SpawningChickensBox spawningChickensBox;
+
         public Sprite hiddenTileSprite;
         public Sprite wallTileSprite;
 

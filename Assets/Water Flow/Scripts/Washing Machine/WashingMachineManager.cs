@@ -173,6 +173,16 @@ namespace AntsFlow
             totalFaction = factionGrainRequirements.Count;
         }
 
+        public void AddFactionGrainRequirement(Color faction, int number)
+        {
+            if (factionGrainRequirements.Any(item => item.faction == faction))
+            {
+                FactionGrainRequirement factionGrainRequirement = factionGrainRequirements.First(item => item.faction == faction);
+
+                factionGrainRequirement.totalGrain += number;
+            }
+        }
+
         public void MinusFactionGrainRequirement(Color faction, int number)
         {
             if (factionGrainRequirements.Any(item => item.faction == faction))

@@ -507,6 +507,11 @@ public class ChickenManager : Singleton<ChickenManager>
         progressPerChicken = 1f / chickens.Count;
     }
 
+    public void AddChicken(BaseChicken chicken)
+    {
+        chickens.Add(chicken);
+    }
+
     public void UpdateLevelProgress()
     {
         currentProgress += progressPerChicken;
@@ -765,7 +770,7 @@ public class ChickenManager : Singleton<ChickenManager>
 
     public bool FeedTheChicken(GrainPile grainPile)
     {
-        List<BaseChicken> chickensToFeed = chickens
+        List<BaseChicken> chickensToFeed = firstRowChickens
             .Where(chicken => !chicken.isDone &&
                             !chicken.isStuck &&
                             chicken.faction == grainPile.faction)
