@@ -43,6 +43,7 @@ namespace AntsFlow
         public int totalFaction;
         public LevelDifficultyReduceOnRevive levelDifficultyReduceOnRevive;
         public LevelDifficultyReduceOnConsecutiveStuck levelDifficultyReduceOnConsecutiveStuck;
+        public LevelDifficultyReduceOnReplay levelDifficultyReduceOnReplay;
 
         [Header("Manual Level Bucket Spawn")]
         public LevelFactionConfig levelFactionConfig;
@@ -1376,12 +1377,38 @@ namespace AntsFlow
 
         private int GetCurrentLevelDifficulty()
         {
+            int maxDifficulty = 10;
+
             float progress = GetLevelProgress();
 
-            int factionDifficultyLevel = (int)((difficultyLevel / 10f) * totalFaction);
+            int factionDifficultyLevel = (int)((float)difficultyLevel / maxDifficulty * totalFaction);
 
             int difficultyAtCurrentProgress = (int)(factionDifficultyLevel * difficultyCurve.Evaluate(progress));
 
+            // reduce difficulty on replay
+            if (GamePersistentVariable.levelRetryTime > 0)
+            {
+                for (int i = 0; i < levelDifficultyReduceOnReplay.items.Count; i++)
+                {
+                    LevelDifficultyReduceOnReplayItem item = levelDifficultyReduceOnReplay.items[i];
+
+                    if (difficultyLevel == item.difficulty)
+                    {
+                        if (item.difficultyAtReplayTime.Any(item => item.key == difficultyLevel))
+                        {
+                            difficultyAtCurrentProgress = item.difficultyAtReplayTime[GamePersistentVariable.levelRetryTime].value;
+                        }
+                        else
+                        {
+                            difficultyAtCurrentProgress = item.difficultyAtReplayTime.Last().value;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            // reduce difficulty on revive and use booster
             for (int i = levelDifficultyReduceOnRevive.items.Count - 1; i >= 0; i--)
             {
                 LevelDifficultyReduceOnReviveItem item = levelDifficultyReduceOnRevive.items[i];
@@ -1401,6 +1428,7 @@ namespace AntsFlow
                 }
             }
 
+            // reduce difficulty on consecutive stuck
             if (difficultyAtCurrentProgress > 0)
             {
                 List<Color> firstRowChickensFaction = ChickenManager.Ins.firstRowChickens.Select(item => item.faction).ToList();
@@ -1487,6 +1515,12 @@ public class LevelDifficultyReduceOnConsecutiveStuck
 }
 
 [Serializable]
+public class LevelDifficultyReduceOnReplay
+{
+    public List<LevelDifficultyReduceOnReplayItem> items;
+}
+
+[Serializable]
 public class LevelDifficultyReduceOnReviveItem
 {
     public int minDifficulty;
@@ -1498,4 +1532,18 @@ public class LevelDifficultyReduceOnConsecutiveStuckItem
 {
     public int minDifficulty;
     public int minGrainTroughPercent;
+}
+
+[Serializable]
+public class LevelDifficultyReduceOnReplayItem
+{
+    public int difficulty;
+    public List<IntKeyValuePair> difficultyAtReplayTime;
+}
+
+[Serializable]
+public class IntKeyValuePair
+{
+    public int key;
+    public int value;
 }
