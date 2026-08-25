@@ -87,6 +87,7 @@ public class ChickenManager : Singleton<ChickenManager>
     {
         // Runtime collections
         chickens.Clear();
+        firstRowChickens.Clear();
 
         waitingChickenSlots.Clear();
         chickenByColumn.Clear();
@@ -95,8 +96,6 @@ public class ChickenManager : Singleton<ChickenManager>
         CommonUtil.StopAllTweens(highLightChickensTweens);
 
         numGhostChicken = 0;
-
-        firstRowChickens.Clear();
 
         GamePersistentVariable.numEatingChicken = 0;
         GamePersistentVariable.eatingChickens = new List<BaseChicken>();
