@@ -1405,29 +1405,51 @@ namespace AntsFlow
                 }
             }
 
-            for (int i = levelDifficultyReduceOnConsecutiveStuck.items.Count - 1; i >= 0; i--)
+            if (difficultyAtCurrentProgress > 0)
             {
-                LevelDifficultyReduceOnConsecutiveStuckItem item = levelDifficultyReduceOnConsecutiveStuck.items[i];
+                List<Color> firstRowChickensFaction = ChickenManager.Ins.firstRowChickens.Select(item => item.faction).ToList();
 
-                if (difficultyLevel >= item.minDifficulty)
+                bool isAnyMatchFaction = false;
+
+                for (int i = 0; i < washingMachineStartSlots.Count; i++)
                 {
-                    if (GamePersistentVariable.numEasyBucketSpawned < 1 && GrainPool.Ins.GetCurrentPercent() >= item.minGrainTroughPercent)
+                    WashingMachineItem bucket = washingMachineStartSlots[i].washingMachine;
+
+                    if (bucket != null)
                     {
-                        difficultyAtCurrentProgress = 0;
+                        if (firstRowChickensFaction.Contains(bucket.faction))
+                        {
+                            isAnyMatchFaction = true;
 
-                        GamePersistentVariable.numConsecutiveStuckBucket = 0;
-                        GamePersistentVariable.numEasyBucketSpawned++;
-
-                        Debug.Log(
-                            $"numEasyBucketSpawned");
+                            break;
+                        }
                     }
+                }
 
-                    break;
+                if (!isAnyMatchFaction)
+                {
+                    for (int i = levelDifficultyReduceOnConsecutiveStuck.items.Count - 1; i >= 0; i--)
+                    {
+                        LevelDifficultyReduceOnConsecutiveStuckItem item = levelDifficultyReduceOnConsecutiveStuck.items[i];
+
+                        if (difficultyLevel >= item.minDifficulty)
+                        {
+                            if (GamePersistentVariable.numEasyBucketSpawned < 1 && GrainPool.Ins.GetCurrentPercent() >= item.minGrainTroughPercent)
+                            {
+                                difficultyAtCurrentProgress = 0;
+
+                                GamePersistentVariable.numConsecutiveStuckBucket = 0;
+                                GamePersistentVariable.numEasyBucketSpawned++;
+                            }
+
+                            break;
+                        }
+                    }
                 }
             }
 
-            Debug.Log(
-                $"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {(int)(progress * 100)}% {GrainPool.Ins.GetCurrentPercent()}");
+            // Debug.Log(
+            //     $"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {(int)(progress * 100)}% {GrainPool.Ins.GetCurrentPercent()}");
 
             return difficultyAtCurrentProgress;
         }
