@@ -690,11 +690,21 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayIdleSequence()
     {
-        Spine.AnimationState state = skeletonAnimation.AnimationState;
-
         string nextIdleAnim = idleAnimations[currentIdleIndex];
 
-        playIdleSequentiallyTrackEntry = state.SetAnimation(0, nextIdleAnim, false);
+        if (skeletonAnimation.gameObject.activeSelf)
+        {
+            Spine.AnimationState state = skeletonAnimation.AnimationState;
+
+            playIdleSequentiallyTrackEntry = state.SetAnimation(0, nextIdleAnim, false);
+
+            if (playIdleSequentiallyTrackEntry != null)
+            {
+                playIdleSequentiallyTrackEntry.Complete -= OnIdleComplete;
+            }
+
+            playIdleSequentiallyTrackEntry.Complete += OnIdleComplete;
+        }
 
         currentIdleIndex++;
 
@@ -702,13 +712,6 @@ public class BaseChicken : MonoBehaviour
         {
             currentIdleIndex = 0;
         }
-
-        if (playIdleSequentiallyTrackEntry != null)
-        {
-            playIdleSequentiallyTrackEntry.Complete -= OnIdleComplete;
-        }
-
-        playIdleSequentiallyTrackEntry.Complete += OnIdleComplete;
 
         currentAnimation = nextIdleAnim;
     }
@@ -812,7 +815,9 @@ public class BaseChicken : MonoBehaviour
 
     public void PlayMoveAnim()
     {
-        PlayAnim(moveAnimation);
+        // PlayAnim(moveAnimation);
+
+        currentAnimation = moveAnimation;
     }
 
     public void PlayEatAnim()
