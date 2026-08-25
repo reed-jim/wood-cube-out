@@ -156,7 +156,7 @@ public class ChickenRenderer : MonoBehaviour
             if (index >= maxShadows) break;
 
             BaseChicken chicken = chickens[i];
-            if (chicken.isDone || chicken.isStuck) continue;
+            if (chicken.isDone || !chicken.isStuck) continue;
 
             shadowScale = chicken.numColumnTaken;
 
