@@ -418,7 +418,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 380}
+  m_AnchoredPosition: {x: 0, y: 360}
   m_SizeDelta: {x: 1080, y: 376}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2791864079379551472
@@ -1317,7 +1317,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5632855477226629754}
-  - component: {fileID: 3763047493038317749}
   - component: {fileID: 9097711329966665084}
   m_Layer: 5
   m_Name: Container
@@ -1347,23 +1346,10 @@ RectTransform:
   m_Father: {fileID: 171278687283116050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9605263}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3763047493038317749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9096125529075923959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e09569afa75b9549bcbd03536337c4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SafeArea
-  canvas: {fileID: 2852948011274283354}
 --- !u!225 &9097711329966665084
 CanvasGroup:
   m_ObjectHideFlags: 0
