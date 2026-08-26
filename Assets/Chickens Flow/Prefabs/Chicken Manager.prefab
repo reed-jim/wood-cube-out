@@ -146,6 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChickenManager
   chickenRenderer: {fileID: 4567720786436796544}
   chickens: []
+  firstRowChickens: []
   debugWaitingChickenSlots: []
   numColumn: 0
   numRow: 0
@@ -178,6 +179,8 @@ MonoBehaviour:
   - {x: 11.8, y: 18.3}
   - {x: -11.8, y: 18.3}
   - {x: -11.8, y: 9.7}
+  currentProgress: 0
+  progressPerChicken: 0
   showBoardShapeGizmos: 1
   selectedBoardShapedIndex: 2
   boundaryColor: {r: 0, g: 1, b: 0, a: 1}
@@ -342,7 +345,7 @@ MonoBehaviour:
     - {fileID: 2100000, guid: dc49ac157eabe8e4ba0b0e83b60a6db2, type: 2}
     - {fileID: 2100000, guid: 0bc2f977cccfa4041b90b36df723a301, type: 2}
     - {fileID: 2100000, guid: 2fe3b664fb52ff7459822663a83a7ce2, type: 2}
-    defaultSpriteSize: 2.4
+    defaultSpriteSize: 2.2
   - animation: idle2
     materials:
     - {fileID: 2100000, guid: 9f817bfe062e3114295dd6660974272d, type: 2}
