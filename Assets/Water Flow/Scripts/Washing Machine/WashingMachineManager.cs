@@ -890,7 +890,7 @@ namespace AntsFlow
                 }
             }
 
-            Tween.PositionY(mainCamera.transform, -2, duration: 0.3f);
+            Tween.PositionY(mainCamera.transform, -4, duration: 0.3f);
         }
 
         public void SetBucketsFaction()

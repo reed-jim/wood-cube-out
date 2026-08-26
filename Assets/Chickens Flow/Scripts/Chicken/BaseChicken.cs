@@ -159,6 +159,17 @@ public class BaseChicken : MonoBehaviour
             smokeAnimForceFlyOutEntry = null;
         }
 
+        // Animation
+        if (!isStuck || isDone)
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+            skeletonAnimation.Skeleton.SetToSetupPose();
+            skeletonAnimation.AnimationState.ClearTracks();
+
+            skeletonAnimation.Update(0);
+            skeletonAnimation.LateUpdate();
+        }
+
         // State
         isMoving = false;
         isEating = false;
@@ -191,7 +202,7 @@ public class BaseChicken : MonoBehaviour
         circleProgressFill.fillAmount = 0;
         circleProgress.gameObject.SetActive(false);
 
-        // Waiting slots
+        // Waiting Slots
         waitingChickenSlots.Clear();
 
         ObjectPoolingEverything.ReturnToPool(GameConstants.chicken, gameObject);
@@ -631,7 +642,7 @@ public class BaseChicken : MonoBehaviour
         }
 
         skeletonAnimation.gameObject.SetActive(isActive);
-        skeletonAnimation.enabled = true;
+        skeletonAnimation.enabled = isActive;
 
         if (isActive)
         {
