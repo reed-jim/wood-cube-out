@@ -35,6 +35,7 @@ public class GamePersistentVariableWindow : EditorWindow
             EditorGUILayout.IntField("Moving Chicken", GamePersistentVariable.numMovingChicken);
             EditorGUILayout.IntField("numConsecutiveStuckBucket", GamePersistentVariable.numConsecutiveStuckBucket);
             EditorGUILayout.IntField("levelBoosterUseTime", GamePersistentVariable.levelBoosterUseTime);
+            EditorGUILayout.IntField("levelRetryTime", GamePersistentVariable.levelRetryTime);
         }
 
         EditorGUILayout.Space();

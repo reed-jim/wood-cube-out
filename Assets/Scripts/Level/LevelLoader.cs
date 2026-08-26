@@ -290,7 +290,6 @@ namespace NamPhuThuy.GamePlay
                 });
 
                 GamePersistentVariable.startLevelTime = Time.time;
-                GamePersistentVariable.levelRetryTime++;
                 GamePersistentVariable.levelReviveTime = 0;
             }
 

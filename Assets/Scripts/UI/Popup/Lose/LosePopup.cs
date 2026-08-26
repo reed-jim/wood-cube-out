@@ -159,6 +159,8 @@ public class LosePopup : BasePopup
 
             Hide();
         }
+
+        GamePersistentVariable.levelRetryTime++;
     }
 
     private void OnInterstitialAdCompleted()

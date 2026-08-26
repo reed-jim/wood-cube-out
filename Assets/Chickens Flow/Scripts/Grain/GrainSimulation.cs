@@ -506,12 +506,19 @@ public class GrainSimulation : Singleton<GrainSimulation>
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
-        LevelLoader.startLevelEvent += Reset;
+
+        SettingPopup.replayLevelEvent += Reset;
+        LosePopup.replayLevelEvent += Reset;
+        DebugPopup.switchLevelEvent += Reset;
+        WinPopup.resetLevelEvent += Reset;
     }
 
     void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= Reset;
+        SettingPopup.replayLevelEvent -= Reset;
+        LosePopup.replayLevelEvent -= Reset;
+        DebugPopup.switchLevelEvent -= Reset;
+        WinPopup.resetLevelEvent -= Reset;
 
         DisposeGlobalBuffers();
 

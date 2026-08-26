@@ -44,6 +44,9 @@ namespace AntsFlow
         public LevelDifficultyReduceOnRevive levelDifficultyReduceOnRevive;
         public LevelDifficultyReduceOnConsecutiveStuck levelDifficultyReduceOnConsecutiveStuck;
         public LevelDifficultyReduceOnReplay levelDifficultyReduceOnReplay;
+#if UNITY_EDITOR
+        [ReadOnly] public int currentDifficultyLevel;
+#endif
 
         [Header("Manual Level Bucket Spawn")]
         public LevelFactionConfig levelFactionConfig;
@@ -1404,13 +1407,14 @@ namespace AntsFlow
 
                     if (difficultyLevel == item.difficulty)
                     {
-                        if (item.difficultyAtReplayTime.Any(item => item.key == difficultyLevel))
+                        if (item.difficultyAtReplayTime.Any(item => item.key == GamePersistentVariable.levelRetryTime))
                         {
-                            difficultyAtCurrentProgress = item.difficultyAtReplayTime[GamePersistentVariable.levelRetryTime].value;
+                            difficultyAtCurrentProgress =
+                                Mathf.Min(difficultyAtCurrentProgress, item.difficultyAtReplayTime[GamePersistentVariable.levelRetryTime].value);
                         }
                         else
                         {
-                            difficultyAtCurrentProgress = item.difficultyAtReplayTime.Last().value;
+                            difficultyAtCurrentProgress = Mathf.Min(difficultyAtCurrentProgress, item.difficultyAtReplayTime.Last().value);
                         }
 
                         break;
@@ -1484,6 +1488,10 @@ namespace AntsFlow
 
             // Debug.Log(
             //     $"GetCurrentLevelDifficulty {difficultyAtCurrentProgress} {difficultyLevel} {(int)(progress * 100)}% {GrainPool.Ins.GetCurrentPercent()}");
+
+#if UNITY_EDITOR
+            currentDifficultyLevel = difficultyAtCurrentProgress;
+#endif
 
             return difficultyAtCurrentProgress;
         }

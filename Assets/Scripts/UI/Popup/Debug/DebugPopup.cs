@@ -92,6 +92,8 @@ public class DebugPopup : BasePopup
         switchLevelEvent?.Invoke();
 
         Hide();
+
+        GamePersistentVariable.levelRetryTime = 0;
     }
 
     private void NextLevel()
@@ -100,6 +102,8 @@ public class DebugPopup : BasePopup
         switchLevelEvent?.Invoke();
 
         Hide();
+
+        GamePersistentVariable.levelRetryTime = 0;
     }
 
     private void PrevLevel()
@@ -108,6 +112,8 @@ public class DebugPopup : BasePopup
         switchLevelEvent?.Invoke();
 
         Hide();
+
+        GamePersistentVariable.levelRetryTime = 0;
     }
 
     private async void DebugWinLevel()
