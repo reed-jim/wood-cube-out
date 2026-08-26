@@ -510,6 +510,7 @@ public class ChickenManager : Singleton<ChickenManager>
     public void AddChicken(BaseChicken chicken)
     {
         chickens.Add(chicken);
+        CommonUtil.AddValueOfDictionary(chickenByColumn, chicken.column, chicken);
     }
 
     public void UpdateLevelProgress()
