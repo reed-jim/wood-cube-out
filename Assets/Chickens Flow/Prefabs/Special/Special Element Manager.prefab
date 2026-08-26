@@ -33,7 +33,6 @@ Transform:
   - {fileID: 1927169389884327298}
   - {fileID: 3843976818536334521}
   - {fileID: 2359805783883219197}
-  - {fileID: 2557218936794296320}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2026557133817340510
@@ -80,7 +79,7 @@ MonoBehaviour:
   spawningTileBox: {fileID: 1891681445664235050}
   bossArea: {fileID: 1907655263081970037}
   snake: {fileID: 2229504517313746030}
-  spawningChickensBox: {fileID: 6336375817312579661}
+  spawningChickensBox: {fileID: 0}
   hiddenTileSprite: {fileID: 21300000, guid: a83721868d9594b4a9c9b7e3a0d52692, type: 3}
   wallTileSprite: {fileID: 21300000, guid: c58282e3c91f2524e94c5b5260a7661a, type: 3}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
@@ -271,79 +270,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 757617558201522317, guid: 1e9ff8142a9b0b344b057f923861f280, type: 3}
   m_PrefabInstance: {fileID: 4601295270108634164}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &5793851749822476412
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 9027744674931160164}
-    m_Modifications:
-    - target: {fileID: 1148281578818409660, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_Name
-      value: Spawning Tile Box (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
---- !u!4 &2557218936794296320 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8294210404724703356, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-  m_PrefabInstance: {fileID: 5793851749822476412}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6336375817312579661 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 542878660164255793, guid: a03cf372ae84e8941bd62e356bd355fb, type: 3}
-  m_PrefabInstance: {fileID: 5793851749822476412}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57070cde7927b11489d03b910412de92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawningChickensBox
 --- !u!1001 &7612308442500875774
 PrefabInstance:
   m_ObjectHideFlags: 0
