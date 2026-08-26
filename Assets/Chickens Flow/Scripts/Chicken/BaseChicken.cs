@@ -191,6 +191,13 @@ public class BaseChicken : MonoBehaviour
         circleProgressFill.fillAmount = 0;
         circleProgress.gameObject.SetActive(false);
 
+        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+        skeletonAnimation.Skeleton.SetToSetupPose();
+        skeletonAnimation.AnimationState.ClearTracks();
+
+        skeletonAnimation.Update(0);
+        skeletonAnimation.LateUpdate();
+
         // Waiting slots
         waitingChickenSlots.Clear();
 
@@ -631,7 +638,7 @@ public class BaseChicken : MonoBehaviour
         }
 
         skeletonAnimation.gameObject.SetActive(isActive);
-        skeletonAnimation.enabled = true;
+        skeletonAnimation.enabled = isActive;
 
         if (isActive)
         {
