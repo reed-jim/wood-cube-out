@@ -160,7 +160,7 @@ public class BaseChicken : MonoBehaviour
         }
 
         // Animation
-        if (!isStuck || isDone)
+        if (skeletonAnimation.gameObject.activeSelf || isDone)
         {
             skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
             skeletonAnimation.Skeleton.SetToSetupPose();
@@ -725,6 +725,16 @@ public class BaseChicken : MonoBehaviour
         }
 
         currentAnimation = nextIdleAnim;
+    }
+
+    public void CancelPlayingIdleSequence()
+    {
+        if (playIdleSequentiallyTrackEntry != null)
+        {
+            playIdleSequentiallyTrackEntry.Complete -= OnIdleComplete;
+
+            playIdleSequentiallyTrackEntry = null;
+        }
     }
 
     private void OnIdleComplete(TrackEntry entry)

@@ -266,21 +266,6 @@ public class ChickenRenderer : MonoBehaviour
             chickenData.anim = chicken.currentAnimation;
             chickenData.highlight = chicken.highlight;
         }
-        else
-        {
-            ChickenData addedChickenData = new ChickenData
-            {
-                position = chicken.transform.position,
-                scale = chicken.numColumnTaken,
-                factionIndex = FactionMapper.Ins.GetFactionIndex(chicken.faction),
-                anim = chicken.currentAnimation,
-                animStartFrame = UnityEngine.Random.Range(0, maxAnimationFrame),
-                highlight = chicken.highlight
-            };
-
-            chickenDataItems.Add(addedChickenData);
-            dataOfChicken.Add(chicken, addedChickenData);
-        }
     }
 
     public void RemoveChickenRendering(BaseChicken chicken)

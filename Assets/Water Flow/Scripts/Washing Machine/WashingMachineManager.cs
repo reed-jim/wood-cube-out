@@ -928,8 +928,9 @@ namespace AntsFlow
                 BaseChicken chicken = chickensToClear[i];
 
                 isLast = i == chickensToClear.Count - 1;
-
+                
                 chicken.SetActiveSpine(true);
+                chicken.CancelPlayingIdleSequence();
                 chicken.ForceStopEatingAndFlyOut(isLast);
 
                 ChickenManager.Ins.chickenRenderer.RemoveChickenRendering(chicken);
