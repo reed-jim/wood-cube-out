@@ -366,6 +366,14 @@ namespace AntsFlow
                             break;
                         }
                     }
+
+                    if (!isFound)
+                    {
+                        if (GetNextAntSpawnByDifficulty(difficultyLevel: difficulty, out nextFaction, out numAnt))
+                        {
+                            isFound = true;
+                        }
+                    }
                 }
                 else
                 {
@@ -928,7 +936,7 @@ namespace AntsFlow
                 BaseChicken chicken = chickensToClear[i];
 
                 isLast = i == chickensToClear.Count - 1;
-                
+
                 chicken.SetActiveSpine(true);
                 chicken.CancelPlayingIdleSequence();
                 chicken.ForceStopEatingAndFlyOut(isLast);
@@ -1473,7 +1481,7 @@ namespace AntsFlow
 
                         if (difficultyLevel >= item.minDifficulty)
                         {
-                            if (GamePersistentVariable.numEasyBucketSpawned < 1 && GrainPool.Ins.GetCurrentPercent() >= item.minGrainTroughPercent)
+                            if (GamePersistentVariable.numEasyBucketSpawned < item.maxTimeReduce && GrainPool.Ins.GetCurrentPercent() >= item.minGrainTroughPercent)
                             {
                                 difficultyAtCurrentProgress = 0;
 
@@ -1551,6 +1559,7 @@ public class LevelDifficultyReduceOnConsecutiveStuckItem
 {
     public int minDifficulty;
     public int minGrainTroughPercent;
+    public int maxTimeReduce;
 }
 
 [Serializable]
