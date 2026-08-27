@@ -13,10 +13,10 @@ public class Config
 
     public const string settingLogo = "GAME_ICON";
 
-    public static int versionCode = 2026082001;//sua
-    public static string versionName = "1.0.0";//sua
-    public static int settingVersionCode = 2026082001;//sua
-    public static string settingVersionName = "1.0.0";//sua
+    public static int versionCode = 2026082701;//sua
+    public static string versionName = "1.0.1";//sua
+    public static int settingVersionCode = 2026082701;//sua
+    public static string settingVersionName = "1.0.1";//sua
 
     public static string productNameBuild = "Chicken Jam: Color Puzzle";
 

@@ -1411,7 +1411,7 @@ namespace AntsFlow
             int difficultyAtCurrentProgress = (int)(factionDifficultyLevel * difficultyCurve.Evaluate(progress));
 
             // reduce difficulty on replay
-            if (GamePersistentVariable.levelRetryTime > 0)
+            if (GamePersistentVariable.levelRetryTime > 0 && currentLevel.Value <= levelDifficultyReduceOnReplay.maxLevel)
             {
                 for (int i = 0; i < levelDifficultyReduceOnReplay.items.Count; i++)
                 {
@@ -1575,6 +1575,7 @@ public class LevelDifficultyReduceOnConsecutiveStuck
 public class LevelDifficultyReduceOnReplay
 {
     public List<LevelDifficultyReduceOnReplayItem> items;
+    public int maxLevel;
 }
 
 [Serializable]
