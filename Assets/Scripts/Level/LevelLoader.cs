@@ -249,9 +249,7 @@ namespace NamPhuThuy.GamePlay
                     ActualLoadLevel(op.Result);
                 }
             };
-
             startLevelEvent?.Invoke();
-
             showSceneTransitionEvent?.Invoke();
 
             void ActualLoadLevel(TextAsset resultLoad)
@@ -270,6 +268,27 @@ namespace NamPhuThuy.GamePlay
 
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
+
+                // Bus Flow: map/tiles dùng lại đúng LevelItem/JSON pipeline của Ants Flow ở trên
+                // (JsonToLevelItem), nhưng KHÔNG qua CalculateLevelScale/FillTileMap/WashingMachineManager
+                // vì đó là scale + Tilemap 2D riêng của Ants Flow, Bus Flow không dùng Tilemap.
+                // Nhánh riêng, return sớm - không đụng gì code Ants Flow/Screw bên dưới.
+                if (GamePersistentVariable.currentLevelMode == LevelMode.BusFlow)
+                {
+                    BusFlow.BusFlowGameManager.Ins.StartLevel(levelItem);
+
+                    Tween.Delay(1).OnComplete(() =>
+                    {
+                        setIsLevelLoadedEvent?.Invoke();
+                    });
+
+                    GamePersistentVariable.startLevelTime = Time.time;
+                    GamePersistentVariable.levelRetryTime++;
+
+                    SaferioTracking.TrackLevelStart(currentLevel.Value, (int)userResourcesObserver.UserResources.CoinQuantity);
+
+                    return;
+                }
 
                 if (levelItem.isOverrideLevelScale)
                 {
@@ -465,6 +484,24 @@ namespace NamPhuThuy.GamePlay
             spawnedLevelItem.easySpawnOrder = antLevelData.levelItemData.easySpawnOrder;
             spawnedLevelItem.specialElementConfig = antLevelData.levelItemData.specialElementConfig;
 
+            // Bus Flow: busGarageQueue/numStartBuses/... phải gán ở đây thì BusGarageManager mới có
+            // data để sinh xe - thiếu bước này khiến busGarageQueue null, không sinh được xe nào.
+            spawnedLevelItem.busGarageNumColumns = antLevelData.levelItemData.busGarageNumColumns;
+            spawnedLevelItem.busGarageNumRows = antLevelData.levelItemData.busGarageNumRows;
+            spawnedLevelItem.numStartBuses = antLevelData.levelItemData.numStartBuses;
+            spawnedLevelItem.busGarageQueue = antLevelData.levelItemData.busGarageQueue;
+            spawnedLevelItem.extraPassengerRounds = antLevelData.levelItemData.extraPassengerRounds;
+
+            // Spacing dùng chung spline<->khách. Fallback 1.6 nếu JSON cũ chưa có (tránh spacing = 0).
+            spawnedLevelItem.busTileSpacing = antLevelData.levelItemData.busTileSpacing.sqrMagnitude > 0.0001f
+                ? antLevelData.levelItemData.busTileSpacing
+                : new Vector2(1.6f, 1.6f);
+
+            // LevelItem runtime dựng từ JSON không có SplineComputer sống (busPaths chỉ có ở prefab
+            // lúc edit-time) - gán điểm đã bake để BusFlowGameManager dựng lại spline bằng
+            // RuntimeSplinePath thay vì đọc busPaths.
+            spawnedLevelItem.runtimeBusPathConfig = antLevelData.levelItemData.busPathConfig;
+
             List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
 
             for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
@@ -570,6 +607,11 @@ namespace NamPhuThuy.GamePlay
 
             AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
             AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
+
+            // Ants Flow chỉ đọc TileManager.Ins.tiles (gán ở trên) nên trước giờ không ai gán lại
+            // spawnedLevelItem.tiles, để null - không lỗi vì Ants Flow không đọc field này. Bus Flow
+            // (PassengerBoardManager.StartLevel) đọc thẳng levelItem.tiles nên cần gán nốt ở đây.
+            spawnedLevelItem.tiles = tiles;
 
             return spawnedLevelItem;
 

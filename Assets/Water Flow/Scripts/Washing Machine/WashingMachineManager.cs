@@ -238,8 +238,9 @@ namespace AntsFlow
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
 
             if (levelItem.isTutorialLevel)
-            {
-                TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
+            {//comment de test
+
+                //TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
             }
             else
             {
@@ -248,7 +249,7 @@ namespace AntsFlow
 
             if (levelItem.isTutorialSpeedUpLevel)
             {
-                SpeedUpTutorialManager.Ins.StartTutorial();
+                //SpeedUpTutorialManager.Ins.StartTutorial();
             }
             if (isLevelContainingNewSpecialElements)
             {

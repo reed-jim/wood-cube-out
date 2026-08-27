@@ -69,6 +69,16 @@ public class WashingMachineItem : MonoBehaviour
     public List<AntsFlow.BaseTile> tilesToMove;
     private int walkableMask;
 
+    // ---- Bus Flow: xe bus chạy vòng trên spline thay cho kiến đi lên map ----
+    // Chỉ bật khi có BusFlowGameManager trong scene (Ants Flow không có -> giữ nguyên logic kiến).
+    private bool isLoopBus;
+    private BusFlow.RuntimeSplinePath loopPath;
+    private float loopDistance;
+    private float loopSpeed;
+    private float loopPickupTimer;
+
+    private bool IsBusFlow => BusFlow.BusFlowGameManager.Ins != null;
+
     protected virtual void Awake()
     {
         selectWashingMachineEvent += OnAntBoxSelected;
@@ -94,7 +104,65 @@ public class WashingMachineItem : MonoBehaviour
         walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
     }
 
+    protected virtual void Update()
+    {
+        if (!isLoopBus || loopPath == null)
+        {
+            return;
+        }
 
+        // Chạy vòng loop vô hạn ở tốc độ cố định (NormalizeDistance tự vòng lại đầu khi hết 1 vòng).
+        loopDistance = loopPath.NormalizeDistance(loopDistance + loopSpeed * Time.deltaTime);
+        transform.position = loopPath.GetPositionAtDistance(loopDistance);
+
+        // Đón khách cùng màu theo chu kỳ (không collider - tra list bên PassengerBoardManager).
+        loopPickupTimer += Time.deltaTime;
+
+        if (loopPickupTimer >= 0.1f)
+        {
+            loopPickupTimer = 0f;
+
+            if (remainingNumber > 0 &&
+                BusFlow.PassengerBoardManager.Ins != null &&
+                BusFlow.PassengerBoardManager.Ins.TryPickReachablePassenger(faction, out _))
+            {
+                remainingNumber--;
+                number--;
+                numberText.text = $"{number}";
+            }
+        }
+    }
+
+    // Bus Flow: box rời bãi đỗ, "nhập làn" tại điểm gần nhất trên spline loop đã vẽ trước rồi chạy vòng.
+    private void LaunchOntoLoop()
+    {
+        loopPath = BusFlow.BusFlowGameManager.Ins.GetLoopPath();
+
+        if (loopPath == null)
+        {
+            Debug.LogError("WashingMachineItem.LaunchOntoLoop: chưa có loop path (role 0).");
+            return;
+        }
+
+        isInSlot = true;
+        isLoopBus = true;
+        isMoving = false;
+        loopSpeed = BusFlow.BusFlowGameManager.Ins.busSpeed;
+
+        // Bỏ parent khỏi start slot để vị trí world không bị offset theo slot; nhập làn tại điểm gần nhất.
+        transform.SetParent(BusFlow.BusFlowGameManager.Ins.transform, worldPositionStays: true);
+        loopDistance = loopPath.GetNearestDistanceToWorldPoint(transform.position);
+
+        // Nhả ô bãi đỗ + đẩy hàng sau lên (giống pick bên Ants Flow).
+        if (washingMachineStartSlot != null)
+        {
+            washingMachineStartSlot.washingMachine = null;
+        }
+
+        BusFlow.BusFlowGameManager.Ins.RegisterLoopBus();
+
+        WashingMachineManager.Ins.MoveAntBoxTop();
+    }
 
     protected virtual void OnDestroy()
     {
@@ -515,6 +583,13 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect()
     {
+        // Bus Flow: không có WashingMachineSlot, hợp lệ khi còn chỗ trên loop (max xe chưa đầy).
+        if (IsBusFlow)
+        {
+            return !isInSlot && !isDisable && !isMoving &&
+                BusFlow.BusFlowGameManager.Ins.CanActivateMoreBuses();
+        }
+
         bool isValid = !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
@@ -535,6 +610,13 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
+        // Bus Flow: không có WashingMachineSlot, hợp lệ khi còn chỗ trên loop (max xe chưa đầy).
+        if (IsBusFlow)
+        {
+            return !isInSlot && !isDisable && !isMoving &&
+                BusFlow.BusFlowGameManager.Ins.CanActivateMoreBuses();
+        }
+
         bool isValid = !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= currentNumSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
@@ -575,6 +657,12 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual void CheckAntsPath(bool isAlsoCheckLose = true)
     {
+        // Bus Flow: box đón khách bằng cách chạy loop (xem Update), không tìm đường cho kiến.
+        if (IsBusFlow)
+        {
+            return;
+        }
+
         if (remainingNumber <= 0)
         {
             // Chỉ áp dụng cho level có special element mới; IsActuallyStuck (nhánh mới) đã bỏ qua
@@ -939,6 +1027,18 @@ public class WashingMachineItem : MonoBehaviour
     private void OnSelectTrueCompleted()
     {
         SwitchShadow();
+
+        // Bus Flow: thay vì bay tới WashingMachineSlot rồi nhả kiến, box lên spline loop chạy vòng.
+        if (IsBusFlow)
+        {
+            LaunchOntoLoop();
+
+            SoundManager.Instance.PlaySoundBoxTap();
+
+            selectWashingMachineEvent?.Invoke(this);
+
+            return;
+        }
 
         WashingMachineSlot washingMachineSlot = null;
         if (isMagnet && magnetPartner != null && !magnetPartner.isInSlot)

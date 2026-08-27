@@ -203,70 +203,71 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
     private void OnLevelStarted()
     {
-        bool isTutorial = false;
+        //comment de test
+        //bool isTutorial = false;
 
-        foreach (var boosterType in allboosterTypes)
-        {
-            int boosterIndex = GetBoosterIndex(boosterType);
+        //foreach (var boosterType in allboosterTypes)
+        //{
+        //    int boosterIndex = GetBoosterIndex(boosterType);
 
-            if (currentLevel.Value == boosterTutorialLevels[boosterIndex])
-            {
-                this.boosterType = boosterType;
+        //    if (currentLevel.Value == boosterTutorialLevels[boosterIndex])
+        //    {
+        //        this.boosterType = boosterType;
 
-                Transform boosterButton = useBoosterButtons[boosterIndex].transform;
+        //        Transform boosterButton = useBoosterButtons[boosterIndex].transform;
 
-                tutorialHand.transform.SetParent(boosterButton);
-                tutorialHand.transform.localPosition = Vector3.zero.AddY(60);
+        //        tutorialHand.transform.SetParent(boosterButton);
+        //        tutorialHand.transform.localPosition = Vector3.zero.AddY(60);
 
-                isTutorial = true;
+        //        isTutorial = true;
 
-                break;
-            }
-        }
+        //        break;
+        //    }
+        //}
 
-        if (isTutorial)
-        {
-            if (DataUtility.Load($"is tutorial {boosterType} done", false))
-            {
-                isTutorial = false;
-            }
-            else
-            {
-                DataUtility.Save($"is tutorial {boosterType} done", true);
-            }
-        }
+        //if (isTutorial)
+        //{
+        //    if (DataUtility.Load($"is tutorial {boosterType} done", false))
+        //    {
+        //        isTutorial = false;
+        //    }
+        //    else
+        //    {
+        //        DataUtility.Save($"is tutorial {boosterType} done", true);
+        //    }
+        //}
 
-        if (!isTutorial)
-        {
-            EndTutorial();
+        //if (!isTutorial)
+        //{
+        //    EndTutorial();
 
-            return;
-        }
+        //    return;
+        //}
 
-        canvasGroup.gameObject.SetActive(true);
-        canvasGroup.alpha = 1;
-        worldTutorialHand.gameObject.SetActive(false);
+        //canvasGroup.gameObject.SetActive(true);
+        //canvasGroup.alpha = 1;
+        //worldTutorialHand.gameObject.SetActive(false);
 
-        tutorialHand.color = Color.white;
+        //tutorialHand.color = Color.white;
 
-        localizedDescription.TranslationName = "Press the booster button!";
+        //localizedDescription.TranslationName = "Press the booster button!";
 
-        step = 0;
+        //step = 0;
 
-        if (boosterType == BoosterType.BreakObject)
-        {
-            StartCoroutine(RunEnableAllAntBoxesBoosterTutorial());
-        }
-        else if (boosterType == BoosterType.ClearOneColor)
-        {
-            StartCoroutine(RunClearOneColorBoosterTutorial());
-        }
-        else
-        {
-            localizedDescription.TranslationName = "Use the booster to shuffle all ant boxes";
+        //if (boosterType == BoosterType.BreakObject)
+        //{
+        //    StartCoroutine(RunEnableAllAntBoxesBoosterTutorial());
+        //}
+        //else if (boosterType == BoosterType.ClearOneColor)
+        //{
+        //    StartCoroutine(RunClearOneColorBoosterTutorial());
+        //}
+        //else
+        //{
+        //    localizedDescription.TranslationName = "Use the booster to shuffle all ant boxes";
 
-            StartCoroutine(RunTutorial());
-        }
+        //    StartCoroutine(RunTutorial());
+        //}
     }
 
     private int GetBoosterIndex(BoosterType boosterType)

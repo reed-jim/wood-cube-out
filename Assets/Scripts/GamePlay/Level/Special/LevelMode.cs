@@ -8,6 +8,7 @@ namespace NamPhuThuy.GamePlay
         BombObjectPart = 3,
         MultipleLayers = 4,
         LockScrewRusty = 5,
-        ProtectedObjectPart = 6
+        ProtectedObjectPart = 6,
+        BusFlow = 7
     }
 }

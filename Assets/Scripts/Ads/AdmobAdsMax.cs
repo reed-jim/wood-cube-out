@@ -27,7 +27,7 @@ public class AdmobAdsMax
     private const string MaxSdkKey =
         "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
 
-    private const string InterstitialAdUnitId = "040ac39c872e76f3"; // check this 040ac39c872e76f3
+    private const string InterstitialAdUnitId = "040ac39c872e76f3"; // check this
     private const string RewardedAdUnitId = "1cf078100bda612e"; // check this
     private const string BanerAdUnitId = "b15d9760f47aa099"; // check this
 #elif UNITY_IOS
@@ -242,10 +242,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-//#if APPSFLYER_BANNER
-//            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-//                value, "USD", dic);
-//#endif
+            //#if APPSFLYER_BANNER
+            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //                value, "USD", dic);
+            //#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -391,7 +391,7 @@ public class AdmobAdsMax
         Debug.Log("MREC=============MRec ad clicked");
     }
 
-#endregion
+    #endregion
     #region Admob Banner
     private BannerView _bannerView;
 #if UNITY_ANDROID || UNITY_EDITOR
@@ -530,10 +530,10 @@ public class AdmobAdsMax
     {
         { "ad_format", "collapsible_banner" }
     };
-//#if APPSFLYER_BANNER
-//            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-//              value, "USD", dic);
-//#endif
+            //#if APPSFLYER_BANNER
+            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //              value, "USD", dic);
+            //#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -629,7 +629,7 @@ public class AdmobAdsMax
         ShowBanner();
         LoadBannerCollap();
     }
-#endregion
+    #endregion
 
     /*public void RefreshCollapseBanner()
     {
@@ -733,7 +733,7 @@ public class AdmobAdsMax
         }
     }
 
-#endregion
+    #endregion
 
 
     public void InitializeBannerMax()

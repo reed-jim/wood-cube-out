@@ -158,17 +158,20 @@ public class FactionMapper : Singleton<FactionMapper>
 
     private SpriteContainer GetSpriteContainer(Color faction)
     {
-        int level = 0;
+        if (GameController.Instance != null && GameController.Instance.useProfile != null)
+        {
+            int level = GameController.Instance.useProfile.CurrentLevel;
+            if (level >= 200 || level == 7)
+            {
+                return ResolveContainer(faction);
+            }
+            else if (spriteContainersOfColors != null && spriteContainersOfColors.TryGetValue(faction, out SpriteContainer container))
+            {
+                return container;
+            }
+        }
 
-        level = GameController.Instance.useProfile.CurrentLevel;
-        if (level >= 200 || level == 7)
-        {
-            return ResolveContainer(faction);
-        }
-        else
-        {
-            return spriteContainersOfColors[faction];
-        }
+        return ResolveContainer(faction);
     }
 
     public Sprite GetAntBoxSprite(Color faction)
@@ -214,6 +217,50 @@ public class FactionMapper : Singleton<FactionMapper>
     public Color GetFaction(Sprite tileSprite)
     {
         return mapper.First(item => item.spriteContainer.tileSprite == tileSprite).color;
+    }
+
+    // Asset 3D (Bus Flow) tách riêng khỏi SpriteContainer (2D) để không đụng tới data/behavior
+    // Ants Flow đang chạy. Dùng chung mapper/index màu faction sẵn có.
+    private BusFactionAssets ResolveBusFactionAssets(Color faction)
+    {
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            if (mapper[i].color == faction)
+            {
+                return mapper[i].busFactionAssets;
+            }
+        }
+
+        int nearestIndex = -1;
+        float bestDistance = float.MaxValue;
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            Color color = mapper[i].color;
+
+            float distance =
+                (color.r - faction.r) * (color.r - faction.r) +
+                (color.g - faction.g) * (color.g - faction.g) +
+                (color.b - faction.b) * (color.b - faction.b);
+
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                nearestIndex = i;
+            }
+        }
+
+        return nearestIndex >= 0 ? mapper[nearestIndex].busFactionAssets : null;
+    }
+
+    public Material GetBusMaterial(Color faction)
+    {
+        return ResolveBusFactionAssets(faction)?.busMaterial;
+    }
+
+    public Material GetPassengerMaterial(Color faction)
+    {
+        return ResolveBusFactionAssets(faction)?.passengerMaterial;
     }
 
 #if UNITY_EDITOR
@@ -292,6 +339,14 @@ public class ColorSpriteContainerPair
 {
     public Color color = Color.white;
     public SpriteContainer spriteContainer;
+    public BusFactionAssets busFactionAssets;
+}
+
+[Serializable]
+public class BusFactionAssets
+{
+    public Material busMaterial;
+    public Material passengerMaterial;
 }
 
 [Serializable]
