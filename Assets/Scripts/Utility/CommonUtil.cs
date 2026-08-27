@@ -12,6 +12,32 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    public static Color GetMostCommonColor(List<Color> colors, out int count)
+    {
+        count = 0;
+
+        if (colors == null || colors.Count == 0)
+            return default;
+
+        Dictionary<Color, int> counts = new();
+        Color mostCommon = colors[0];
+
+        foreach (Color color in colors)
+        {
+            counts.TryGetValue(color, out int currentCount);
+            currentCount++;
+            counts[color] = currentCount;
+
+            if (currentCount > count)
+            {
+                count = currentCount;
+                mostCommon = color;
+            }
+        }
+
+        return mostCommon;
+    }
+
     public static Vector3 RectTransformToWorldPosition(
     RectTransform rectTransform,
     Camera worldCamera,
