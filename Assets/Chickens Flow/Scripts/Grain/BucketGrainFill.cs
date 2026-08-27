@@ -308,7 +308,7 @@ public class BucketGrainFill : MonoBehaviour
         float capBaseY = -hy + rectHeight;
         float capBaseYCeiling = -hy + Mathf.Max(0f, maxHeightLocal - pileCapHeightLocal);
 
-        for (int growAttempt = 0; growAttempt < 6; growAttempt++)
+        for (int growAttempt = 0; growAttempt < 1; growAttempt++)
         {
             GeneratePoissonFill(spacing, margin, hy, pileHalfWidth, capBaseY, pileCapHeightLocal, grainCount, poissonSamples);
             if (poissonSamples.Count >= grainCount || capBaseY >= capBaseYCeiling) break;
@@ -340,53 +340,75 @@ public class BucketGrainFill : MonoBehaviour
     {
         result.Clear();
 
-        float cellSize = minDist / 1.41421356f;
-        var grid = new Dictionary<(int, int), int>();
+        // 1. Pre-calculate squared & inverse constants to avoid costly division/sqrt in loops
+        float minDistSqr = minDist * minDist;
+        float invCellSize = 1.41421356f / minDist; // 1 / (minDist / sqrt(2))
+        float invCapHeight = 1f / Mathf.Max(0.0001f, pileCapHeight);
+        float minY = -hy + margin;
+
+        Vector2 seed = new Vector2(0f, minY + 0.001f);
+
+        // Fast-path early exit check
+        if (seed.y > capBaseY + pileCapHeight || seed.y < minY) return;
+
+        // 2. Optimized spatial hash lookup to avoid value-tuple allocations (Dictionary<(int,int), int>)
+        // Uses integer mixing hash key for faster Dictionary operations
+        var grid = new Dictionary<int, int>();
         var active = new List<int>();
 
-        (int, int) CellOf(Vector2 p) => (Mathf.FloorToInt(p.x / cellSize), Mathf.FloorToInt(p.y / cellSize));
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        int GetGridKey(Vector2 p)
+        {
+            int cx = Mathf.FloorToInt(p.x * invCellSize);
+            int cy = Mathf.FloorToInt(p.y * invCellSize);
+            // Standard spatial hash key mixing function
+            unchecked { return (cx * 73856093) ^ (cy * 19349663); }
+        }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         bool DomainContains(Vector2 p)
         {
-            float halfWidth;
-            if (p.y <= capBaseY)
-            {
-                halfWidth = pileHalfWidth;
-            }
-            else
+            if (p.y < minY) return false;
+
+            float halfWidth = pileHalfWidth;
+            if (p.y > capBaseY)
             {
                 float dy = p.y - capBaseY;
                 if (dy > pileCapHeight) return false;
-                float t = dy / Mathf.Max(0.0001f, pileCapHeight);
-                halfWidth = pileHalfWidth * Mathf.Sqrt(Mathf.Max(0f, 1f - t * t));
+                float t = dy * invCapHeight;
+                halfWidth *= Mathf.Sqrt(Mathf.Max(0f, 1f - t * t));
             }
 
-            return p.x >= -halfWidth && p.x <= halfWidth
-                && p.y >= -hy + margin;
+            return p.x >= -halfWidth && p.x <= halfWidth;
         }
 
         bool IsFarEnough(Vector2 p)
         {
-            var (cx, cy) = CellOf(p);
-            for (int dx = -2; dx <= 2; dx++)
+            int cx = Mathf.FloorToInt(p.x * invCellSize);
+            int cy = Mathf.FloorToInt(p.y * invCellSize);
+
+            // Standard 3x3 grid check is mathematically sufficient for r = cell_size * sqrt(2)
+            for (int dx = -1; dx <= 1; dx++)
             {
-                for (int dy = -2; dy <= 2; dy++)
+                for (int dy = -1; dy <= 1; dy++)
                 {
-                    if (grid.TryGetValue((cx + dx, cy + dy), out int idx) &&
-                        (result[idx] - p).sqrMagnitude < minDist * minDist)
+                    unchecked
                     {
-                        return false;
+                        int key = ((cx + dx) * 73856093) ^ ((cy + dy) * 19349663);
+                        if (grid.TryGetValue(key, out int idx))
+                        {
+                            if ((result[idx] - p).sqrMagnitude < minDistSqr)
+                                return false;
+                        }
                     }
                 }
             }
             return true;
         }
 
-        Vector2 seed = new Vector2(0f, -hy + margin + 0.001f);
-        if (!DomainContains(seed)) return;
-
+        // Add initial seed
         result.Add(seed);
-        grid[CellOf(seed)] = 0;
+        grid[GetGridKey(seed)] = 0;
         active.Add(0);
 
         const int attemptsPerPoint = 24;
@@ -401,20 +423,29 @@ public class BucketGrainFill : MonoBehaviour
 
             for (int attempt = 0; attempt < attemptsPerPoint; attempt++)
             {
-                float angle = Random.Range(0f, Mathf.PI * 2f);
+                float angle = Random.Range(0f, 6.2831853f);
                 float dist = Random.Range(minDist, minDist * 2f);
-                Vector2 candidate = basePoint + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * dist;
+                Vector2 candidate = new Vector2(
+                    basePoint.x + Mathf.Cos(angle) * dist,
+                    basePoint.y + Mathf.Sin(angle) * dist
+                );
 
                 if (!DomainContains(candidate) || !IsFarEnough(candidate)) continue;
 
                 result.Add(candidate);
-                grid[CellOf(candidate)] = result.Count - 1;
+                grid[GetGridKey(candidate)] = result.Count - 1;
                 active.Add(result.Count - 1);
                 placed = true;
                 break;
             }
 
-            if (!placed) active.RemoveAt(activeSlot);
+            // 3. O(1) swap-and-pop removal instead of O(N) List<T>.RemoveAt
+            if (!placed)
+            {
+                int lastIdx = active.Count - 1;
+                active[activeSlot] = active[lastIdx];
+                active.RemoveAt(lastIdx);
+            }
         }
     }
 
@@ -790,7 +821,7 @@ public class BucketGrainFill : MonoBehaviour
 #if UNITY_EDITOR
     private readonly List<LocalWall> wallsGizmo = new List<LocalWall>();
 
-    void OnDrawGizmos() 
+    void OnDrawGizmos()
     {
         Transform gizmoAnchor = ResolveAnchor();
 

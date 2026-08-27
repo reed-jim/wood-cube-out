@@ -235,7 +235,7 @@ public class GrainPool : Singleton<GrainPool>
     [ContextMenu("CheckFeedChickens")]
     public void CheckFeedChickens()
     {
-        List<BaseChicken> validChickensToFeed = ChickenManager.Ins.chickens
+        List<BaseChicken> validChickensToFeed = ChickenManager.Ins.firstRowChickens
             .Where(chicken => !chicken.isDone && !chicken.isStuck && !chicken.isMoving)
             .ToList();
 
