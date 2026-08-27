@@ -1,67 +1,67 @@
-using System.Collections;
-using Unity.Notifications.Android;
-using UnityEngine;
+// using System.Collections;
+// using Unity.Notifications.Android;
+// using UnityEngine;
 
-public class GameNotificationManager : MonoBehaviour
-{
-    public static GameNotificationManager Instance;
+// public class GameNotificationManager : MonoBehaviour
+// {
+//     public static GameNotificationManager Instance;
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
+//     private void Awake()
+//     {
+//         if (Instance != null && Instance != this)
+//         {
+//             Destroy(gameObject);
 
-            return;
-        }
-        else
-        {
-            Instance = this;
+//             return;
+//         }
+//         else
+//         {
+//             Instance = this;
 
-            DontDestroyOnLoad(gameObject);
-        }
+//             DontDestroyOnLoad(gameObject);
+//         }
 
-        StartCoroutine(DelayInit());
-    }
+//         StartCoroutine(DelayInit());
+//     }
 
-    private IEnumerator DelayInit()
-    {
-        yield return new WaitForSeconds(7);
+//     private IEnumerator DelayInit()
+//     {
+//         yield return new WaitForSeconds(7);
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            AndroidNotificationCenter.Initialize();
-        }
+//         if (Application.platform == RuntimePlatform.Android)
+//         {
+//             AndroidNotificationCenter.Initialize();
+//         }
 
-#if UNITY_ANDROID
-        SendNotification();
-#endif
-    }
+// #if UNITY_ANDROID
+//         SendNotification();
+// #endif
+//     }
 
-    private void Register()
-    {
-        var channel = new AndroidNotificationChannel()
-        {
-            Id = "channel_id",
-            Name = "Default Channel",
-            Importance = Importance.Default,
-            Description = "Generic notifications",
-        };
+//     private void Register()
+//     {
+//         var channel = new AndroidNotificationChannel()
+//         {
+//             Id = "channel_id",
+//             Name = "Default Channel",
+//             Importance = Importance.Default,
+//             Description = "Generic notifications",
+//         };
 
-        AndroidNotificationCenter.Initialize();
+//         AndroidNotificationCenter.Initialize();
 
-        AndroidNotificationCenter.RegisterNotificationChannel(channel);
-    }
+//         AndroidNotificationCenter.RegisterNotificationChannel(channel);
+//     }
 
-    private void SendNotification()
-    {
-        Register();
+//     private void SendNotification()
+//     {
+//         Register();
 
-        var notification = new AndroidNotification();
-        notification.Title = "Time for a Challenge!";
-        notification.Text = "Can you solve the toughest screw puzzle yet? Find out now!";
-        notification.FireTime = System.DateTime.Now.AddDays(1);
+//         var notification = new AndroidNotification();
+//         notification.Title = "Time for a Challenge!";
+//         notification.Text = "Can you solve the toughest screw puzzle yet? Find out now!";
+//         notification.FireTime = System.DateTime.Now.AddDays(1);
 
-        AndroidNotificationCenter.SendNotification(notification, "channel_id");
-    }
-}
+//         AndroidNotificationCenter.SendNotification(notification, "channel_id");
+//     }
+// }
