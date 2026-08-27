@@ -36,6 +36,9 @@ public class GamePersistentVariableWindow : EditorWindow
             EditorGUILayout.IntField("numConsecutiveStuckBucket", GamePersistentVariable.numConsecutiveStuckBucket);
             EditorGUILayout.IntField("levelBoosterUseTime", GamePersistentVariable.levelBoosterUseTime);
             EditorGUILayout.IntField("levelRetryTime", GamePersistentVariable.levelRetryTime);
+            EditorGUILayout.IntField("numEasyBucketSpawned", GamePersistentVariable.numEasyBucketSpawned);
+            EditorGUILayout.ColorField("mostStuckFaction", GamePersistentVariable.mostStuckFaction);
+            EditorGUILayout.IntField("numConsecutiveStuckFaction", GamePersistentVariable.numConsecutiveStuckFaction);
         }
 
         EditorGUILayout.Space();

@@ -366,6 +366,14 @@ namespace AntsFlow
                             break;
                         }
                     }
+
+                    if (!isFound)
+                    {
+                        if (GetNextAntSpawnByDifficulty(difficultyLevel: difficulty, out nextFaction, out numAnt))
+                        {
+                            isFound = true;
+                        }
+                    }
                 }
                 else
                 {
@@ -432,7 +440,7 @@ namespace AntsFlow
                                 Color nextFaction;
                                 int numAnt;
 
-                                if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                                if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(isSpawnNewBucket: false), out nextFaction, out numAnt))
                                 {
                                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
@@ -509,9 +517,11 @@ namespace AntsFlow
             int numAnt = 0;
             bool isFound = false;
 
+            int currentDifficultyLevel = GetCurrentLevelDifficulty();
+
             if (!levelItem.isUseManualFactionSetupForFirstAntBoxes)
             {
-                if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                if (GetNextAntSpawnByDifficulty(difficultyLevel: currentDifficultyLevel, out nextFaction, out numAnt))
                 {
                     isFound = true;
                 }
@@ -564,7 +574,7 @@ namespace AntsFlow
 
                         if (!isFound && washingMachineStartSlot.row <= 1)
                         {
-                            if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
+                            if (GetNextAntSpawnByDifficulty(difficultyLevel: currentDifficultyLevel, out nextFaction, out numAnt))
                             {
                                 isFound = true;
                             }
@@ -928,7 +938,7 @@ namespace AntsFlow
                 BaseChicken chicken = chickensToClear[i];
 
                 isLast = i == chickensToClear.Count - 1;
-                
+
                 chicken.SetActiveSpine(true);
                 chicken.CancelPlayingIdleSequence();
                 chicken.ForceStopEatingAndFlyOut(isLast);
@@ -1143,6 +1153,7 @@ namespace AntsFlow
 
             GamePersistentVariable.isLevelLost = false;
             GamePersistentVariable.numEasyBucketSpawned = 0;
+            GamePersistentVariable.numConsecutiveStuckFaction = 0;
 
             mainCamera.transform.position = Vector3.zero.ChangeZ(mainCamera.transform.position.z);
 
@@ -1389,7 +1400,7 @@ namespace AntsFlow
             return ChickenManager.Ins.currentProgress;
         }
 
-        private int GetCurrentLevelDifficulty()
+        private int GetCurrentLevelDifficulty(bool isSpawnNewBucket = true)
         {
             int maxDifficulty = 10;
 
@@ -1444,45 +1455,71 @@ namespace AntsFlow
             }
 
             // reduce difficulty on consecutive stuck
-            if (difficultyAtCurrentProgress > 0)
+            if (!isSpawnNewBucket && difficultyAtCurrentProgress > 0)
             {
                 List<Color> firstRowChickensFaction = ChickenManager.Ins.firstRowChickens.Select(item => item.faction).ToList();
 
-                bool isAnyMatchFaction = false;
+                int mostCommonFactionCount;
+                Color mostCommonFaction = CommonUtil.GetMostCommonColor(firstRowChickensFaction, out mostCommonFactionCount);
+                bool isAnyBucketMatchMostCommonFaction = false;
 
-                for (int i = 0; i < washingMachineStartSlots.Count; i++)
+                if (mostCommonFactionCount > 5)
                 {
-                    WashingMachineItem bucket = washingMachineStartSlots[i].washingMachine;
-
-                    if (bucket != null)
+                    for (int i = 0; i < washingMachineStartSlots.Count; i++)
                     {
-                        if (firstRowChickensFaction.Contains(bucket.faction))
-                        {
-                            isAnyMatchFaction = true;
+                        WashingMachineItem bucket = washingMachineStartSlots[i].washingMachine;
 
-                            break;
+                        if (bucket != null)
+                        {
+                            if (bucket.faction == mostCommonFaction)
+                            {
+                                isAnyBucketMatchMostCommonFaction = true;
+
+                                break;
+                            }
                         }
                     }
                 }
 
-                if (!isAnyMatchFaction)
+                if (!isAnyBucketMatchMostCommonFaction)
                 {
-                    for (int i = levelDifficultyReduceOnConsecutiveStuck.items.Count - 1; i >= 0; i--)
+                    if (mostCommonFaction == GamePersistentVariable.mostStuckFaction)
                     {
-                        LevelDifficultyReduceOnConsecutiveStuckItem item = levelDifficultyReduceOnConsecutiveStuck.items[i];
+                        GamePersistentVariable.numConsecutiveStuckFaction++;
+                    }
+                    else
+                    {
+                        GamePersistentVariable.numConsecutiveStuckFaction = 1;
+                    }
+                }
+                else
+                {
+                    GamePersistentVariable.numConsecutiveStuckFaction = 0;
+                }
 
-                        if (difficultyLevel >= item.minDifficulty)
+                GamePersistentVariable.mostStuckFaction = mostCommonFaction;
+
+                for (int i = levelDifficultyReduceOnConsecutiveStuck.items.Count - 1; i >= 0; i--)
+                {
+                    LevelDifficultyReduceOnConsecutiveStuckItem item = levelDifficultyReduceOnConsecutiveStuck.items[i];
+
+                    if (difficultyLevel >= item.minDifficulty)
+                    {
+                        if (GamePersistentVariable.numEasyBucketSpawned > item.maxTimeReduce)
                         {
-                            if (GamePersistentVariable.numEasyBucketSpawned < 1 && GrainPool.Ins.GetCurrentPercent() >= item.minGrainTroughPercent)
-                            {
-                                difficultyAtCurrentProgress = 0;
-
-                                GamePersistentVariable.numConsecutiveStuckBucket = 0;
-                                GamePersistentVariable.numEasyBucketSpawned++;
-                            }
-
                             break;
                         }
+
+                        if (GamePersistentVariable.numConsecutiveStuckFaction >= levelDifficultyReduceOnConsecutiveStuck.stuckThreshold ||
+                            GrainPool.Ins.GetCurrentPercent() >= item.minGrainTroughPercent)
+                        {
+                            difficultyAtCurrentProgress = 0;
+
+                            GamePersistentVariable.numConsecutiveStuckBucket = 0;
+                            GamePersistentVariable.numEasyBucketSpawned++;
+                        }
+
+                        break;
                     }
                 }
             }
@@ -1531,6 +1568,7 @@ public class LevelDifficultyReduceOnRevive
 public class LevelDifficultyReduceOnConsecutiveStuck
 {
     public List<LevelDifficultyReduceOnConsecutiveStuckItem> items;
+    public int stuckThreshold;
 }
 
 [Serializable]
@@ -1551,6 +1589,7 @@ public class LevelDifficultyReduceOnConsecutiveStuckItem
 {
     public int minDifficulty;
     public int minGrainTroughPercent;
+    public int maxTimeReduce;
 }
 
 [Serializable]
