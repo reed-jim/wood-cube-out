@@ -63,7 +63,7 @@ public class ChickenRenderer : MonoBehaviour
     private readonly Dictionary<BaseChicken, ChickenData> dataOfChicken = new(128);
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[BatchSize];
-    private readonly Matrix4x4[] shadowMatrices = new Matrix4x4[40];
+    private readonly Matrix4x4[] shadowMatrices = new Matrix4x4[300];
     private readonly Vector4[] animData = new Vector4[BatchSize];
     private readonly float[] animStartFrame = new float[BatchSize];
     private readonly float[] spriteSizes = new float[BatchSize];
