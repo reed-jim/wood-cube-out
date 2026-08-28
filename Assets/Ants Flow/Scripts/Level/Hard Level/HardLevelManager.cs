@@ -146,5 +146,13 @@ namespace AntsFlow
                 Setup(GamePersistentVariable.levelItem);
             }
         }
+
+        public bool IsHardLevel()
+        {
+            bool isHardLevel = hardLevels.Contains(currentLevel.Value);
+            bool isSuperHardLevel = superHardLevels.Contains(currentLevel.Value);
+
+            return isHardLevel || isSuperHardLevel;
+        }
     }
 }

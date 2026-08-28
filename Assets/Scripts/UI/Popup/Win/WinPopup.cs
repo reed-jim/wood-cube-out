@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntsFlow;
 using Falcon.FalconAnalytics.Scripts.Enum;
 using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.RemoteConfig;
@@ -21,7 +22,8 @@ public class WinPopup : BasePopup
     [SerializeField] private Button continueButton;
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Button x5CoinButton;
-    [SerializeField] private RectTransform coinContainer;
+    [SerializeField] private TMP_Text normalCoinRewardText;
+    [SerializeField] private TMP_Text rewardedCoinRewardText;
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private TMP_Text starText;
     [SerializeField] private TMP_Text goldPassKeyText;
@@ -45,6 +47,8 @@ public class WinPopup : BasePopup
     [Header("CUSTOMIZE")]
     [SerializeField] private int numCoinNormal;
     [SerializeField] private int numCoinRewardedAd;
+    [SerializeField] private int numCoinNormalHardLevel;
+    [SerializeField] private int numCoinRewardedAdHardLevel;
     [SerializeField] private float timeCollectCoin;
     [SerializeField] private float timeDelayShowContinueButton;
 
@@ -87,6 +91,17 @@ public class WinPopup : BasePopup
         coinText.text = $"{0}";
         starText.text = $"{0}";
         goldPassKeyText.text = $"{0}";
+
+        if (HardLevelManager.Ins.IsHardLevel())
+        {
+            normalCoinRewardText.text = $"{numCoinNormalHardLevel}";
+            rewardedCoinRewardText.text = $"{numCoinRewardedAdHardLevel}";
+        }
+        else
+        {
+            normalCoinRewardText.text = $"{numCoinNormal}";
+            rewardedCoinRewardText.text = $"{numCoinRewardedAd}";
+        }
 
         continueButton.interactable = true;
         returnHomeButton.interactable = true;
@@ -232,7 +247,7 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
-        CollectCoin(numCoinNormal);
+        CollectCoin(HardLevelManager.Ins.IsHardLevel() ? numCoinNormalHardLevel : numCoinNormal);
 
         GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinContinueButton.position);
 
@@ -320,7 +335,7 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
-        CollectCoin(numCoinRewardedAd);
+        CollectCoin(HardLevelManager.Ins.IsHardLevel() ? numCoinRewardedAdHardLevel : numCoinRewardedAd);
 
         GamePersistentVariable.spawnFlyingCoinPosition = container.InverseTransformPoint(coinX2Button.position);
 
