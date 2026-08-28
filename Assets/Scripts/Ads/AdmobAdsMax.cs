@@ -26,15 +26,15 @@ public class AdmobAdsMax
     private const string MaxSdkKey =
         "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
 
-    private const string InterstitialAdUnitId = "a933518fdd8bfbf1"; // check this
-    private const string RewardedAdUnitId = "01260b2789919d47"; // check this
-    private const string BanerAdUnitId = "f937a88261531269"; // check this
+    private const string InterstitialAdUnitId = "a933518fdd8bfbf1";
+    private const string RewardedAdUnitId = "01260b2789919d47";
+    private const string BanerAdUnitId = "f937a88261531269";
 #elif UNITY_IOS
     private const string MaxSdkKey =
 "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
-    private const string InterstitialAdUnitId = "c8d31e48f08ed31e";
-    private const string RewardedAdUnitId = "02932bb866cbb369";
-    private const string BanerAdUnitId = "ff665c0a75cadcc4";
+    private const string InterstitialAdUnitId = "7623121a3c3d4b5f"; // check this
+    private const string RewardedAdUnitId = "ac295ea444d42c3c"; // check this
+    private const string BanerAdUnitId = "86f07378116caebb"; // check this
 #endif
 
     public float countdownAds;
@@ -93,23 +93,23 @@ public class AdmobAdsMax
 
         _isInited = true;
 
-        #if !UNITY_EDITOR
-        Debug.Log("===== Init Admob ====");
-        MobileAds.Initialize((initStatus) =>
-        {
-            Debug.Log("===== Init Admob Done ====");
-            AppOpenAdManager.Instance.LoadAd(() =>
-            {
-                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-            });
-            InitBannerAdmob();
-            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-            LoadInterstitialAd();
-            isAdmobInitDone = true;
-            //nativeAdsManager.Instance.OnInitAdmobDone();
-            //LoadRewardedInterstitialAd();
-        });
-        #endif
+        // #if !UNITY_EDITOR
+        // Debug.Log("===== Init Admob ====");
+        // MobileAds.Initialize((initStatus) =>
+        // {
+        //     Debug.Log("===== Init Admob Done ====");
+        //     AppOpenAdManager.Instance.LoadAd(() =>
+        //     {
+        //         //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+        //     });
+        //     InitBannerAdmob();
+        //     AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+        //     LoadInterstitialAd();
+        //     isAdmobInitDone = true;
+        //     //nativeAdsManager.Instance.OnInitAdmobDone();
+        //     //LoadRewardedInterstitialAd();
+        // });
+        // #endif
     }
 
     //public IEnumerator ShowAppOpenAds()
@@ -226,9 +226,9 @@ public class AdmobAdsMax
 #if TESTER
     private const string MRecAdUnitId = "6fb959c7b9a69602";
 #elif UNITY_ANDROID
-    private const string MRecAdUnitId = "6c3a8347f87e5df6"; // check this
+    private const string MRecAdUnitId = "6c3a8347f87e5df6";
 #elif UNITY_IOS
-    private const string MRecAdUnitId = "6fb959c7b9a69602";
+    private const string MRecAdUnitId = "97edbf34d4fffddf"; // check this
 #endif
 
     bool isLoadedMrec;
@@ -329,23 +329,23 @@ public class AdmobAdsMax
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/5351059246"; // check this
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/5351059246";
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2850008661"; // check this
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2850008661";
 #endif
 #elif UNITY_IOS
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/6063245506";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/6063245506"; // check this
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9507666490";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9507666490"; // check this
 #endif
 #endif
     private bool _isShowAdmobBanner;
