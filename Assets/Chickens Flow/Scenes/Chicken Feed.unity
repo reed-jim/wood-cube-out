@@ -3268,8 +3268,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.39526975
-      value: 0.57395554
+      time: 0.40973508
+      value: 0.50252914
       inSlope: -0.11155135
       outSlope: -0.11155135
       tangentMode: 0
@@ -3277,8 +3277,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.47158438
-      value: 0.32034248
+      time: 0.4973107
+      value: 0.26559395
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -3286,8 +3286,17 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.94021577
-      value: 0.7257103
+      time: 0.74923974
+      value: 0.40483293
+      inSlope: 1.5579469
+      outSlope: 1.5579469
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.94503754
+      value: 0.7066673
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3319,13 +3328,14 @@ MonoBehaviour:
     items:
     - minDifficulty: 1
       minGrainTroughPercent: 65
-      maxTimeReduce: 3
+      maxTimeReduce: 5
     - minDifficulty: 4
       minGrainTroughPercent: 70
-      maxTimeReduce: 2
+      maxTimeReduce: 4
     - minDifficulty: 7
       minGrainTroughPercent: 80
-      maxTimeReduce: 1
+      maxTimeReduce: 3
+    stuckThreshold: 8
   levelDifficultyReduceOnReplay:
     items:
     - difficulty: 1
@@ -3426,6 +3436,7 @@ MonoBehaviour:
         value: 3
       - key: 8
         value: 3
+    maxLevel: 15
   currentDifficultyLevel: 0
   levelFactionConfig:
     items: []
