@@ -149,7 +149,7 @@ public class BuyBoosterPopup : BasePopup
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 3, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
 
-                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value);
+                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value).Send();
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
             {
@@ -185,7 +185,7 @@ public class BuyBoosterPopup : BasePopup
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
 
-                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value);
+                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value).Send();
             }
 
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
@@ -200,7 +200,7 @@ public class BuyBoosterPopup : BasePopup
                 // useBoosterEvent?.Invoke(_boosterType);
             });
 
-            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Buy_Booster_{_boosterType}", boosterDataObserver.BoosterCosts[boosterIndex], currentLevel.Value);
+            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Buy_Booster_{_boosterType}", boosterDataObserver.BoosterCosts[boosterIndex], currentLevel.Value).Send();
         }
         else
         {

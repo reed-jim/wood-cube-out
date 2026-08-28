@@ -253,7 +253,7 @@ public class WinPopup : BasePopup
 
         collectCoinEvent?.Invoke(_currentCollectedCoin);
 
-        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
+        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value).Send();
 
         Tween.Delay(3f).OnComplete(() =>
         {
@@ -341,7 +341,7 @@ public class WinPopup : BasePopup
 
         collectCoinEvent?.Invoke(_currentCollectedCoin);
 
-        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
+        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value).Send();
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
 
         Tween.Delay(3f).OnComplete(() =>
