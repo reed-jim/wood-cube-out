@@ -166,12 +166,14 @@ public class RevivePopup : BasePopup
         }
         else
         {
-            Hide(onCompletedAction: () =>
-            {
-                openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
+            ShowNotification(GameConstants.WARNING, "Not enough coin");
 
-                reviveByDiamondButton.interactable = true;
-            });
+            // Hide(onCompletedAction: () =>
+            // {
+            //     openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
+
+            //     reviveByDiamondButton.interactable = true;
+            // });
         }
     }
 
