@@ -24,7 +24,7 @@ public class UserResourcesObserver : ScriptableObject
     {
         UserResources defaultUserResources = new UserResources();
 
-        defaultUserResources.CoinQuantity = 500;
+        defaultUserResources.CoinQuantity = 1000;
         defaultUserResources.BoosterQuantities = new int[4];
 
         for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
