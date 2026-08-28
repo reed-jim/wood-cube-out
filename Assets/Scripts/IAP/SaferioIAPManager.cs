@@ -53,6 +53,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         PackageIAPUnderPopupSwiper.requestFetchIAPPrice += FetchLocalizedPrice;
+        SettingPopup.restorePurchasesEvent += RestorePurchases;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
@@ -96,6 +97,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         PackageIAPUnderPopupSwiper.requestFetchIAPPrice -= FetchLocalizedPrice;
+        SettingPopup.restorePurchasesEvent -= RestorePurchases;
     }
 
     private IEnumerator DelayInit()
@@ -178,20 +180,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         this.extensions = extensions;
 
         m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
-
-        // Restore transactions
-        m_AppleExtensions.RestoreTransactions((result, error) =>
-        {
-            if (result)
-            {
-                // This does not mean anything was restored,
-                // merely that the restoration process succeeded.
-            }
-            else
-            {
-                // Restoration failed. `error` contains the failure reason.
-            }
-        });
 
         foreach (var item in controller.products.all)
         {
@@ -350,6 +338,23 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
 
+    }
+
+    public void RestorePurchases()
+    {
+        var apple = m_AppleExtensions;
+
+        apple.RestoreTransactions((result, message) =>
+        {
+            if (!result)
+            {
+                showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, "Restore purchases successfully");
+            }
+            else
+            {
+                showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, message);
+            }
+        });
     }
 
     private void FetchLocalizedPrice()

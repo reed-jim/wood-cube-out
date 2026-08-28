@@ -17,6 +17,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private SettingItemUI turnSoundToggle;
     [SerializeField] private SettingItemUI vibrationToggle;
     [SerializeField] private Button replayButton;
+    [SerializeField] private Button restorePurchasesButton;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
@@ -41,6 +42,7 @@ public class SettingPopup : BasePopup
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action replayLevelEvent;
     public static event Action<bool> pauseNavmeshEvent;
+    public static event Action restorePurchasesEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -60,6 +62,7 @@ public class SettingPopup : BasePopup
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
 
         replayButton.onClick.AddListener(Replay);
+        restorePurchasesButton.onClick.AddListener(RestorePurchases);
         // rateButton.onClick.AddListener(Rate);
         // openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         // openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
@@ -207,6 +210,13 @@ public class SettingPopup : BasePopup
     {
         switchRouteEvent?.Invoke(ScreenRoute.Compensate);
         // switchRouteChannel.Invoke(ScreenRoute.Compensate, nameof(SettingPopup));
+    }
+    #endregion
+
+    #region Restore Purchases 
+    private void RestorePurchases()
+    {
+        restorePurchasesEvent?.Invoke();
     }
     #endregion
 

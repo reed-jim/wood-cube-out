@@ -195,6 +195,7 @@ public static class GameConstants
     public static string NO_INTERNET = "No internet";
     public static string PLEASE_CHECK_YOUR_INTERNET_CONNECTION = "Please check your internet connection";
     public static string PLEASE_TRY_AGAIN = "Please try again";
+    public static string NOTIFICATION = "Notification";
     #endregion
 
     #region SWIPE
