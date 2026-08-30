@@ -6,8 +6,6 @@ using UnityEngine.UI;
 using static GameEnum;
 using DG.Tweening;
 using Spine.Unity;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
-using Falcon.FalconAnalytics.Scripts.Enum;
 
 public class RevivePopup : BasePopup
 {
@@ -159,10 +157,6 @@ public class RevivePopup : BasePopup
             SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
                     200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
-
-            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Revive", 200, currentLevel.Value).Send();
-
-            // userResourcesObserver.Save();
         }
         else
         {
@@ -193,7 +187,7 @@ public class RevivePopup : BasePopup
             default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
         }
 
-        GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
+        // GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()

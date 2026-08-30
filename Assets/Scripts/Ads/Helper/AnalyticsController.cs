@@ -1,6 +1,4 @@
 using AppsFlyerSDK;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.Analytics;
 using System;
 using System.Collections.Generic;
@@ -215,7 +213,7 @@ public class AnalyticsController : MonoBehaviour
                     hardType = "super_hard";
                     break;
             }
-            new FLevelLog(level, hardType, LevelStatus.Pass, TimeSpan.FromSeconds(timePlayLevel), 0).Send();
+            // new FLevelLog(level, hardType, LevelStatus.Pass, TimeSpan.FromSeconds(timePlayLevel), 0).Send();
             Debug.Log(level + "_" + TimeSpan.FromSeconds(timePlayLevel));
         }
         catch

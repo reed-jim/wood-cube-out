@@ -214,7 +214,7 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        GameController.Instance.admobAds.ShowMRec();
+        // GameController.Instance.admobAds.ShowMRec();
 
         float minWaitTime = 2;
 
@@ -231,19 +231,19 @@ public class SceneTransition : MonoBehaviour
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
-            GameController.Instance.admobAds.HideMRec();
+            // GameController.Instance.admobAds.HideMRec();
 
             // double inter
             if (!_isFirstTimeEnterScene)
             {
                 blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                GameController.Instance.admobAds.ShowInterstitial(
-                  actionIniterClose: () =>
-                   {
-                       blackBackgroundToPassPolicy.gameObject.SetActive(false);
-                   }
-               );
+            //     GameController.Instance.admobAds.ShowInterstitial(
+            //       actionIniterClose: () =>
+            //        {
+            //            blackBackgroundToPassPolicy.gameObject.SetActive(false);
+            //        }
+            //    );
             }
             else
             {

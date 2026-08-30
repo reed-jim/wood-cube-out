@@ -590,23 +590,23 @@ public class IapController : MonoBehaviour, IStoreListener
         }
         else if (item.typeBuy == TypeBuy.Video)
         {
-            GameController.Instance.admobAds.ShowVideoReward(actionReward: () =>
-            {
-                item.Claim();
-                this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, typePack);
-                //RewardIAPBox rwBox = RewardIAPBox.Setup();
-                //rwBox.Show(item);
-            },
-            actionNotLoadedVideo: () =>
-            {
-                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-                (
-               Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                "No video at the moment!",
-                Color.white,
-                isSpawnItemPlayer: true
-                );
-            }, () => { });
+            // GameController.Instance.admobAds.ShowVideoReward(actionReward: () =>
+            // {
+            //     item.Claim();
+            //     this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, typePack);
+            //     //RewardIAPBox rwBox = RewardIAPBox.Setup();
+            //     //rwBox.Show(item);
+            // },
+            // actionNotLoadedVideo: () =>
+            // {
+            //     GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            //     (
+            //    Camera.main.ScreenToWorldPoint(Input.mousePosition),
+            //     "No video at the moment!",
+            //     Color.white,
+            //     isSpawnItemPlayer: true
+            //     );
+            // }, () => { });
         }
         else
         {
@@ -629,29 +629,29 @@ public class IapController : MonoBehaviour, IStoreListener
             var pack = inappDatabase.lstPacksInapp[i];
             //purchasedPacks.Add(pack.type);
             //GameController.Instance.useProfile.PurchasedPack = JsonConvert.SerializeObject(purchasedPacks);
-            if (pack != null)
-            {
-                if (pack.ProductID.CompareTo(product.definition.id) == 0 || (pack.isSale && (string.Format("{0}.{1}.{2}", pack.ProductID, StringHelper.SALE_IAP, pack.idSale).CompareTo(product.definition.id) == 0)))
-                {
-                    pack.ActClaimDone = actBuySuccess;
-                    pack.Claim(isInited);
+            // if (pack != null)
+            // {
+            //     if (pack.ProductID.CompareTo(product.definition.id) == 0 || (pack.isSale && (string.Format("{0}.{1}.{2}", pack.ProductID, StringHelper.SALE_IAP, pack.idSale).CompareTo(product.definition.id) == 0)))
+            //     {
+            //         pack.ActClaimDone = actBuySuccess;
+            //         pack.Claim(isInited);
                     
-                    this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, pack.type);
-                    AnalyticsController.LogBuyInapp(pack.ProductID, product.transactionID);
+            //         this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, pack.type);
+            //         AnalyticsController.LogBuyInapp(pack.ProductID, product.transactionID);
 
-                    try { LogService.Instance.PurchaseSuccess(pack.price); }
-                    catch { }
+            //         try { LogService.Instance.PurchaseSuccess(pack.price); }
+            //         catch { }
 
-                    break;
-                }
-            }
+            //         break;
+            //     }
+            // }
         }
 
         GameUtils.RaiseMessage(new GameEvent.OnIAPSucsses());
         AnalyticsController.AppsFlyerPurchaseEvent(product);
         try
         {
-            new FInAppLog(product.definition.id, product.metadata.localizedPrice, product.metadata.isoCurrencyCode, "shop", product.transactionID, "");
+            // new FInAppLog(product.definition.id, product.metadata.localizedPrice, product.metadata.isoCurrencyCode, "shop", product.transactionID, "");
         }
         catch (Exception e)
         {

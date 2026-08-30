@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using AppsFlyerSDK;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.Analytics;
 using UnityEngine;
 using static GameEnum;

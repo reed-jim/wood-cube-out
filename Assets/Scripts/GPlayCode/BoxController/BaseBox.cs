@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;

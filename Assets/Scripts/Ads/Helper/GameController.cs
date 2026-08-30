@@ -2,12 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Falcon.FalconCore.Scripts;
 using GPlay.GplayGoogleUMP;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using UnityEngine.SceneManagement;
-using Falcon.FalconCore.Scripts.Logs;
-
 
 #if UNITY_IOS
 using Unity.Advertisement.IosSupport;
@@ -17,7 +13,7 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance;
     // public UseProfile useProfile;
-    public AdmobAdsMax admobAds;
+    // public AdmobAdsMax admobAds;
     public AnalyticsController AnalyticsController;
     public SegmentController segmentController;
     public ActionLimitQueue ActionLimitQueue;
@@ -59,14 +55,14 @@ public class GameController : MonoBehaviour
             InitLoadScene();
         });
        
-        FalconMain.Init();
+        // FalconMain.Init();
     }
    
 
     public void InitLoadScene()
     {
         segmentController.Init();
-        admobAds.Init();
+        // admobAds.Init();
         ActionLimitQueue.Init();
         gameLoading.Init();
     }

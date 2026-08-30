@@ -158,8 +158,8 @@ public class ClaimRewardPopup : BasePopup
 
     private void ClaimMultiplier()
     {
-       GameController.Instance.admobAds.ShowVideoReward(
-                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: GamePersistentVariable.currentReasonRewardedAd);
+    //    GameController.Instance.admobAds.ShowVideoReward(
+    //             OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: GamePersistentVariable.currentReasonRewardedAd);
     }
 
     private void OnRewaredAdCompleted()

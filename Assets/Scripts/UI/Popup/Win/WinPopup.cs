@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntsFlow;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.RemoteConfig;
 using Lean.Localization;
 using NamPhuThuy.GamePlay;
@@ -86,7 +84,7 @@ public class WinPopup : BasePopup
 
     private async void OnLevelWinAsync()
     {
-        GameController.Instance.admobAds.ShowBannerCollap();
+        // GameController.Instance.admobAds.ShowBannerCollap();
 
         coinText.text = $"{0}";
         starText.text = $"{0}";
@@ -253,8 +251,6 @@ public class WinPopup : BasePopup
 
         collectCoinEvent?.Invoke(_currentCollectedCoin);
 
-        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value).Send();
-
         Tween.Delay(3f).OnComplete(() =>
         {
             NextLevel();
@@ -282,14 +278,14 @@ public class WinPopup : BasePopup
 
             if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
             {
-                GameController.Instance.admobAds.ShowInterstitial
-               (
-                  actionIniterClose: OnInterstitialAdCompleted
-               );
+                // GameController.Instance.admobAds.ShowInterstitial
+                // (
+                //     actionIniterClose: OnInterstitialAdCompleted
+                // );
             }
             else
             {
-                GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+                // GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
             }
         }
 
@@ -324,8 +320,8 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
-        GameController.Instance.admobAds.ShowVideoReward(
-           OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        // GameController.Instance.admobAds.ShowVideoReward(
+        //    OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
 
         resetLevelEvent?.Invoke();
     }
@@ -341,7 +337,6 @@ public class WinPopup : BasePopup
 
         collectCoinEvent?.Invoke(_currentCollectedCoin);
 
-        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value).Send();
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
 
         Tween.Delay(3f).OnComplete(() =>
@@ -399,7 +394,6 @@ public class WinPopup : BasePopup
         SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
-        new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime).Send();
         SaferioTracking.LogLevelComplete(currentLevel.Value);
 
         GamePersistentVariable.levelRetryTime = 0;
