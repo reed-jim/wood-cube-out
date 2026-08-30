@@ -378,11 +378,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   enemyCount: 1000
   enemySpeed: 2
-  spawnArea: {x: 100, y: 100}
   basePosition: {x: 0, y: 0, z: 0}
   enemyMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   enemyMaterial: {fileID: 2100000, guid: 674d9c46c6df0fa4f8720b7790fea895, type: 2}
   enemySize: 0.5
+  quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  healthBarMaterial: {fileID: 2100000, guid: c2205f85d9fa90243ab401f3d38a75bc, type: 2}
+  barOffset: {x: 0, y: 0.4, z: 0}
+  barScale: {x: 0.6, y: 0.08}
+  catchUpSpeed: 5
 --- !u!4 &1223648363
 Transform:
   m_ObjectHideFlags: 0
