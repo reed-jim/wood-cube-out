@@ -3,6 +3,10 @@ using static GameEnum;
 
 public static class GameConstants
 {
+    #region Shooting Idle
+    public static string projectile = "projectile";
+    #endregion
+
     public static string LOADING_SCENE = "Loading";
     public static string MENU_SCENE = "Menu";
     public static string GAMEPLAY_SCENE = "Gameplay";

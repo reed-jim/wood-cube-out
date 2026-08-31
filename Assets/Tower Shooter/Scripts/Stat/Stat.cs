@@ -8,12 +8,12 @@ public class Stat
     [SerializeField] private StatType statType;
     [SerializeField] private float baseValue;
 
-    private readonly List<StatModifier> modifiers = new List<StatModifier>();
+    private List<StatModifier> modifiers = new List<StatModifier>();
     private float cachedValue;
     private bool isDirty = true;
 
     public StatType Type => statType;
-    
+
     public float BaseValue
     {
         get => baseValue;
@@ -29,8 +29,14 @@ public class Stat
                 cachedValue = CalculateValue();
                 isDirty = false;
             }
+
             return cachedValue;
         }
+    }
+
+    public void SetDirty()
+    {
+        isDirty = true;
     }
 
     public event Action OnStatChanged;
@@ -85,6 +91,11 @@ public class Stat
         float sumPercentAdd = 0f;
 
         // Order of calculation: Flat -> Percent Additive -> Percent Multiplicative
+        if (modifiers == null)
+        {
+            modifiers = new List<StatModifier>();
+        }
+
         for (int i = 0; i < modifiers.Count; i++)
         {
             StatModifier mod = modifiers[i];

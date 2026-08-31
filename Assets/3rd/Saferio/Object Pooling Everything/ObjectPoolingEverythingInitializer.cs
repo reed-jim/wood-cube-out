@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class ObjectPoolingEverythingInitializer : MonoBehaviour
 {
+    [Header("Shooting Idle")]
+    [SerializeField] private GameObject projectile;
+
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
     [SerializeField] private GameObject grainPile;
@@ -122,11 +125,15 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void InitPool()
     {
-        RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);
-        RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 500);
-        RegisterPool<Wall>(GameConstants.wall, wall, 50);
-        RegisterPool<BaseFX>(GameConstants.chickenCompleteFx, chickenCompleteFx, 25);
-        RegisterPool<SkeletonAnimation>(GameConstants.smokeFx, smokeAnim, 25);
+        #region Shooting Idle
+        RegisterPool<Projectile>(GameConstants.projectile, projectile, 100);
+        #endregion
+
+        // RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);
+        // RegisterPool<GrainPile>(GameConstants.grainPile, grainPile, 500);
+        // RegisterPool<Wall>(GameConstants.wall, wall, 50);
+        // RegisterPool<BaseFX>(GameConstants.chickenCompleteFx, chickenCompleteFx, 25);
+        // RegisterPool<SkeletonAnimation>(GameConstants.smokeFx, smokeAnim, 25);
 
         RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);
         RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);

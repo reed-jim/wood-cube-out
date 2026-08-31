@@ -11,8 +11,15 @@ public class CharacterStats : MonoBehaviour
 
     private void Awake()
     {
+        InitializeStats();
+    }
+
+    private void InitializeStats()
+    {
         foreach (var stat in initialStats)
         {
+            stat.SetDirty();
+
             statDict[stat.Type] = stat;
             stat.OnStatChanged += () => OnStatModified?.Invoke(stat.Type, stat.Value);
         }
@@ -24,7 +31,7 @@ public class CharacterStats : MonoBehaviour
         {
             return stat;
         }
-        
+
         // Auto-create missing stats dynamically
         var newStat = new Stat(type, 0);
         statDict[type] = newStat;
