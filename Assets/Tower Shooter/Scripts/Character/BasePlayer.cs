@@ -30,7 +30,7 @@ public class BasePlayer : BaseCharacter
 
         float lifesteal = stats.GetValue(StatType.AbilityHaste);
 
-        projectile.Launch(damagePayload, lifesteal, transform.position, Vector2.right, projectileSpeed);
+        projectile.Launch(damagePayload, lifesteal, transform.position, Vector2.up, projectileSpeed);
     }
 
     private IEnumerator Shooting()

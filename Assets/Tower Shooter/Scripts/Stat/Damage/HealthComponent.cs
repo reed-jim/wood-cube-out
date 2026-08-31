@@ -1,10 +1,14 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterStats))]
 public class HealthComponent : MonoBehaviour, IDamageable
 {
     public float CurrentHealth { get; private set; }
+
+    public TMP_Text healthText;
+    public LazyHealthBar lazyHealthBar;
 
     public event Action<DamageResult> OnDamageTaken;
     public event Action OnDeath;
@@ -30,6 +34,8 @@ public class HealthComponent : MonoBehaviour, IDamageable
     {
         // Set health to MaxHealth on start
         CurrentHealth = stats.GetValue(StatType.MaxHealth);
+
+        SetHealthText();
 
         // Keep current health capped if Max Health decreases at runtime
         stats.GetStat(StatType.MaxHealth).OnStatChanged += HandleMaxHealthChanged;
@@ -57,7 +63,8 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
         CurrentHealth = Mathf.Clamp(CurrentHealth - finalDamage, 0, stats.GetValue(StatType.MaxHealth));
 
-        characterServiceLocator.lazyHealthBar.SetProgress(HealthPercent);
+        lazyHealthBar.SetProgress(HealthPercent);
+        SetHealthText();
 
         // Notify UI, Damage Numbers, or Life Steal listeners
         OnDamageTaken?.Invoke(new DamageResult
@@ -79,5 +86,10 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
         float maxHp = stats.GetValue(StatType.MaxHealth);
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, maxHp);
+    }
+
+    public void SetHealthText()
+    {
+        healthText.text = $"{CurrentHealth}/{stats.GetValue(StatType.MaxHealth)}";
     }
 }
