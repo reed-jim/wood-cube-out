@@ -1,4 +1,5 @@
 using System;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 
@@ -63,8 +64,8 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
         CurrentHealth = Mathf.Clamp(CurrentHealth - finalDamage, 0, stats.GetValue(StatType.MaxHealth));
 
-        lazyHealthBar.SetProgress(HealthPercent);
         SetHealthText();
+        ShowDamageText(finalDamage, transform.position);
 
         // Notify UI, Damage Numbers, or Life Steal listeners
         OnDamageTaken?.Invoke(new DamageResult
@@ -91,5 +92,12 @@ public class HealthComponent : MonoBehaviour, IDamageable
     public void SetHealthText()
     {
         healthText.text = $"{CurrentHealth}/{stats.GetValue(StatType.MaxHealth)}";
+    }
+
+    public void ShowDamageText(float damage, Vector3 position)
+    {
+        DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+
+        damageText.ShowDamage((int)damage, position.MinusZALittle());
     }
 }
