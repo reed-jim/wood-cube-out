@@ -1,29 +1,37 @@
-using UnityEngine;
+using System;
+
+public enum StatType
+{
+    Health,
+    MaxHealth,
+    Damage,         // Primary offense stat
+    AttackSpeed,    // Attacks per second
+    Armor,          // Damage mitigation
+    MoveSpeed,      // Base movement speed
+    AbilityHaste,   // Cooldown reduction calculation
+    CritChance      // 0.0 to 1.0 (0% to 100%)
+}
 
 public enum ModifierType
 {
-    Flat,
-    PercentAdd,
-    PercentMultiply
+    Flat = 100,
+    PercentAdd = 200,   // Added together: (Base * (1 + SumOfPercentAdd))
+    PercentMult = 300   // Applied sequentially: Value * Mult1 * Mult2
 }
 
-public enum ModifierSource
-{
-    Character,
-    Item,
-    Augment,
-    Buff,
-    Debuff,
-    Skill,
-    Aura
-}
-
+[Serializable]
 public class StatModifier
 {
-    public StatType Stat;
-    public ModifierType Type;
-    public float Value;
+    public readonly StatType Type;
+    public readonly ModifierType ModType;
+    public readonly float Value;
+    public readonly object Source; // Identifies origin (e.g., AugmentSO, ItemInstance)
 
-    public ModifierSource Source;
-    public object SourceObject;
+    public StatModifier(StatType type, ModifierType modType, float value, object source = null)
+    {
+        Type = type;
+        ModType = modType;
+        Value = value;
+        Source = source;
+    }
 }

@@ -1,38 +1,47 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-    private readonly Dictionary<StatType, Stat> stats = new();
+    [SerializeField] private List<Stat> initialStats = new List<Stat>();
+    private readonly Dictionary<StatType, Stat> statDict = new Dictionary<StatType, Stat>();
 
-    private readonly List<IDynamicStatModifier> dynamicModifiers = new();
+    public event Action<StatType, float> OnStatModified;
 
-    public GameObject CurrentTarget { get; private set; }
-
-    public void SetTarget(GameObject target)
+    private void Awake()
     {
-        CurrentTarget = target;
-    }
-
-    public float Get(StatType type)
-    {
-        List<StatModifier> dynamicMods = new();
-
-        foreach (var provider in dynamicModifiers)
+        foreach (var stat in initialStats)
         {
-            provider.CollectModifiers(this, type, dynamicMods);
+            statDict[stat.Type] = stat;
+            stat.OnStatChanged += () => OnStatModified?.Invoke(stat.Type, stat.Value);
         }
-
-        return stats[type].Calculate(dynamicMods);
     }
 
-    public void AddDynamicModifier(IDynamicStatModifier modifier)
+    public Stat GetStat(StatType type)
     {
-        dynamicModifiers.Add(modifier);
+        if (statDict.TryGetValue(type, out Stat stat))
+        {
+            return stat;
+        }
+        
+        // Auto-create missing stats dynamically
+        var newStat = new Stat(type, 0);
+        statDict[type] = newStat;
+        return newStat;
     }
 
-    public void RemoveDynamicModifier(IDynamicStatModifier modifier)
+    public float GetValue(StatType type) => GetStat(type).Value;
+
+    public void AddModifier(StatModifier mod) => GetStat(mod.Type).AddModifier(mod);
+
+    public void RemoveModifier(StatModifier mod) => GetStat(mod.Type).RemoveModifier(mod);
+
+    public void RemoveSource(object source)
     {
-        dynamicModifiers.Remove(modifier);
+        foreach (var stat in statDict.Values)
+        {
+            stat.RemoveAllModifiersFromSource(source);
+        }
     }
 }

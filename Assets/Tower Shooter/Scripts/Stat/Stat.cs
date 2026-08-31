@@ -2,97 +2,113 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StatType
-{
-    Health,
-    Damage,
-    AttackSpeed,
-    Armor,
-    MagicResist,
-    MoveSpeed,
-    CritChance,
-    CritDamage,
-    AbilityHaste
-}
-
+[Serializable]
 public class Stat
 {
-    public float BaseValue { get; private set; }
+    [SerializeField] private StatType statType;
+    [SerializeField] private float baseValue;
 
-    private readonly List<StatModifier> modifiers = new();
+    private readonly List<StatModifier> modifiers = new List<StatModifier>();
+    private float cachedValue;
+    private bool isDirty = true;
 
-    public Stat(float baseValue)
+    public StatType Type => statType;
+    
+    public float BaseValue
     {
-        BaseValue = baseValue;
+        get => baseValue;
+        set { baseValue = value; isDirty = true; OnStatChanged?.Invoke(); }
     }
 
-    public void AddModifier(StatModifier modifier)
+    public float Value
     {
-        modifiers.Add(modifier);
-    }
-
-    public void RemoveModifier(StatModifier modifier)
-    {
-        modifiers.Remove(modifier);
-    }
-
-    public float Calculate(List<StatModifier> dynamicModifiers)
-    {
-        float flat = 0f;
-        float percentAdd = 0f;
-        float multiplier = 1f;
-
-        foreach (var modifier in modifiers)
+        get
         {
-            ApplyModifier(
-                modifier,
-                ref flat,
-                ref percentAdd,
-                ref multiplier
-            );
-        }
-
-        foreach (var modifier in dynamicModifiers)
-        {
-            ApplyModifier(
-                modifier,
-                ref flat,
-                ref percentAdd,
-                ref multiplier
-            );
-        }
-
-        return (BaseValue + flat)
-             * (1f + percentAdd)
-             * multiplier;
-    }
-
-    private void ApplyModifier(
-        StatModifier modifier,
-        ref float flat,
-        ref float percentAdd,
-        ref float multiplier)
-    {
-        switch (modifier.Type)
-        {
-            case ModifierType.Flat:
-                flat += modifier.Value;
-                break;
-
-            case ModifierType.PercentAdd:
-                percentAdd += modifier.Value;
-                break;
-
-            case ModifierType.PercentMultiply:
-                multiplier *= modifier.Value;
-                break;
+            if (isDirty)
+            {
+                cachedValue = CalculateValue();
+                isDirty = false;
+            }
+            return cachedValue;
         }
     }
-}
 
-[Serializable]
-public struct StatValue
-{
-    public StatType type;
-    public float value;
+    public event Action OnStatChanged;
+
+    public Stat(StatType type, float baseVal)
+    {
+        statType = type;
+        baseValue = baseVal;
+    }
+
+    public void AddModifier(StatModifier mod)
+    {
+        modifiers.Add(mod);
+        isDirty = true;
+        OnStatChanged?.Invoke();
+    }
+
+    public bool RemoveModifier(StatModifier mod)
+    {
+        if (modifiers.Remove(mod))
+        {
+            isDirty = true;
+            OnStatChanged?.Invoke();
+            return true;
+        }
+        return false;
+    }
+
+    public bool RemoveAllModifiersFromSource(object source)
+    {
+        bool removed = false;
+        for (int i = modifiers.Count - 1; i >= 0; i--)
+        {
+            if (modifiers[i].Source == source)
+            {
+                modifiers.RemoveAt(i);
+                removed = true;
+            }
+        }
+
+        if (removed)
+        {
+            isDirty = true;
+            OnStatChanged?.Invoke();
+        }
+        return removed;
+    }
+
+    private float CalculateValue()
+    {
+        float finalValue = baseValue;
+        float sumPercentAdd = 0f;
+
+        // Order of calculation: Flat -> Percent Additive -> Percent Multiplicative
+        for (int i = 0; i < modifiers.Count; i++)
+        {
+            StatModifier mod = modifiers[i];
+            if (mod.ModType == ModifierType.Flat)
+            {
+                finalValue += mod.Value;
+            }
+            else if (mod.ModType == ModifierType.PercentAdd)
+            {
+                sumPercentAdd += mod.Value;
+            }
+        }
+
+        finalValue *= (1f + sumPercentAdd);
+
+        for (int i = 0; i < modifiers.Count; i++)
+        {
+            StatModifier mod = modifiers[i];
+            if (mod.ModType == ModifierType.PercentMult)
+            {
+                finalValue *= (1f + mod.Value);
+            }
+        }
+
+        return Mathf.Max(0, finalValue); // Clamp non-negative
+    }
 }
