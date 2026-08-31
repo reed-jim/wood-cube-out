@@ -21,7 +21,7 @@ public class AugmentSelectionPopup : BasePopup
             AugmentItemUI augmentItemUI = augmentItemUIs[i];
             Augment augment = augments[i];
 
-            augmentItemUI.Init(augment);
+            augmentItemUI.Init(augment, closePopupEvent: Hide);
         }
     }
 }

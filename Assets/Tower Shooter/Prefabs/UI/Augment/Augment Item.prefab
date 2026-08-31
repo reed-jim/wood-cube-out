@@ -337,6 +337,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AugmentItemUI
   title: {fileID: 260706401905738733}
   description: {fileID: 8100118905830223688}
+  applyAugmentButtonText: {fileID: 6080820748640636469}
+  applyAugmentButton: {fileID: 5600560400125515344}
   colorConfig: {fileID: 11400000, guid: 0c6ac4bfe7dc28147a782fd773a38a63, type: 2}
   augment: {fileID: 0}
 --- !u!114 &748983572473828504
@@ -515,7 +517,6 @@ GameObject:
   - component: {fileID: 9204589595331563772}
   - component: {fileID: 3035304883859001880}
   - component: {fileID: 6080820748640636469}
-  - component: {fileID: 415611275888395719}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -642,17 +643,3 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &415611275888395719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7933190996488925363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  translationName: Ok
-  FallbackText: Continue
