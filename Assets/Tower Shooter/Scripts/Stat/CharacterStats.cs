@@ -18,7 +18,7 @@ public class CharacterStats : MonoBehaviour
     {
         foreach (var stat in initialStats)
         {
-            stat.SetDirty();
+            stat.Init();
 
             statDict[stat.Type] = stat;
             stat.OnStatChanged += () => OnStatModified?.Invoke(stat.Type, stat.Value);

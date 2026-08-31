@@ -16,7 +16,7 @@ public class DamageText : MonoBehaviour
 
         damageText.DOKill();
 
-        damageText.text = $"-{damage}";
+        damageText.text = $"{damage}";
         transform.position = spawnPosition;
 
         // Reset

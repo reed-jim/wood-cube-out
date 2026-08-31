@@ -5,19 +5,16 @@ public class HealthToDamageEffect : AugmentEffect
 {
     public float damagePerHundredHealth = 1f;
 
-    public override void ApplyEffect(GameObject target, object source)
+    public override void ApplyEffect(CharacterStats characterStats, object source)
     {
-        var stats = target.GetComponent<CharacterStats>();
-        if (stats == null) return;
-
         // Custom component to monitor updates continuously
-        var runtimeEffect = target.AddComponent<HealthToDamageRuntime>();
-        runtimeEffect.Initialize(stats, source, damagePerHundredHealth);
+        var runtimeEffect = characterStats.gameObject.AddComponent<HealthToDamageRuntime>();
+        runtimeEffect.Initialize(characterStats, source, damagePerHundredHealth);
     }
 
-    public override void RemoveEffect(GameObject target, object source)
+    public override void RemoveEffect(CharacterStats characterStats, object source)
     {
-        var runtime = target.GetComponent<HealthToDamageRuntime>();
+        var runtime = characterStats.gameObject.GetComponent<HealthToDamageRuntime>();
         if (runtime != null)
         {
             Destroy(runtime);

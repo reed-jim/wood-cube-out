@@ -13,32 +13,26 @@ public class Augment : ScriptableObject
     // Complex / Dynamic Effects
     public List<AugmentEffect> dynamicEffects = new List<AugmentEffect>();
 
-    public virtual void Apply(GameObject target)
+    public virtual void Apply(CharacterStats characterStats)
     {
-        var stats = target.GetComponent<CharacterStats>();
-        if (stats == null) return;
-
         foreach (var modData in statModifiers)
         {
-            stats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, this));
+            characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, this));
         }
 
         foreach (var effect in dynamicEffects)
         {
-            effect.ApplyEffect(target, this);
+            effect.ApplyEffect(characterStats, this);
         }
     }
 
-    public virtual void Remove(GameObject target)
+    public virtual void Remove(CharacterStats characterStats)
     {
-        var stats = target.GetComponent<CharacterStats>();
-        if (stats == null) return;
-
-        stats.RemoveSource(this);
+        characterStats.RemoveSource(this);
 
         foreach (var effect in dynamicEffects)
         {
-            effect.RemoveEffect(target, this);
+            effect.RemoveEffect(characterStats, this);
         }
     }
 }

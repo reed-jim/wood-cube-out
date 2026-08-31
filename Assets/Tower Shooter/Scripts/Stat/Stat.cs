@@ -34,6 +34,13 @@ public class Stat
         }
     }
 
+    public void Init()
+    {
+        modifiers = new List<StatModifier>();
+
+        SetDirty();
+    }
+
     public void SetDirty()
     {
         isDirty = true;
