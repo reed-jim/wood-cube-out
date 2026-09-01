@@ -3,60 +3,49 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AugmentItemUI : MonoBehaviour
+public class AugmentItemUIs : PageViewItem
 {
     public TMP_Text title;
-    public TMP_Text description;
-    public TMP_Text applyAugmentButtonText;
-    public Button applyAugmentButton;
+    public Button showAugmentDetailButton;
 
-    [SerializeField] private StatColorConfigSO colorConfig;
+    public AugmentContainer augmentContainer;
 
-    public Augment augment;
+    private Augment augment;
 
-    private Action closePopupEvent;
+    public static event Action<Augment> showAugmentDetailEvent;
 
-    public void Init(Augment augment, Action closePopupEvent)
+    public override void Setup(int index)
     {
-        this.augment = augment;
+        base.Setup(index);
 
-        title.text = augment.augmentName;
-        description.text = augment.BuildFullDescription(colorConfig);
-
-        SetupApplyAugmentButton();
-
-        this.closePopupEvent = closePopupEvent;
-    }
-
-    public void SetupApplyAugmentButton()
-    {
-        applyAugmentButton.onClick.RemoveAllListeners();
-
-        if (AugmentManager.Ins.IsAugmentEquipped(augment))
+        if (index < augmentContainer.augments.Count)
         {
-            applyAugmentButtonText.text = "Remove";
-            applyAugmentButton.onClick.AddListener(RemoveAugment);
+            gameObject.SetActive(true);
+
+            augment = augmentContainer.augments[index];
+
+            SetupAugment(augment);
         }
         else
         {
-            applyAugmentButtonText.text = "Apply";
-            applyAugmentButton.onClick.AddListener(ApplyAugment);
+            gameObject.SetActive(false);
         }
     }
 
-    public void ApplyAugment()
+    protected override void MoreActionOnAwake()
     {
-        AugmentManager.Ins.AddAugment(augment);
+        base.MoreActionOnAwake();
 
-        SetupApplyAugmentButton();
-
-        closePopupEvent?.Invoke();
+        showAugmentDetailButton.onClick.AddListener(ShowAugmentDetail);
     }
 
-    public void RemoveAugment()
+    private void SetupAugment(Augment augment)
     {
-        AugmentManager.Ins.RemoveAugment(augment);
+        title.text = augment.augmentName;
+    }
 
-        closePopupEvent?.Invoke();
+    private void ShowAugmentDetail()
+    {
+        showAugmentDetailEvent?.Invoke(augment);
     }
 }

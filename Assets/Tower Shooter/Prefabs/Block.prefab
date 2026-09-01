@@ -343,6 +343,7 @@ GameObject:
   - component: {fileID: 2007550609271294779}
   - component: {fileID: 3351373236948464301}
   - component: {fileID: 1995331218865091253}
+  - component: {fileID: 2880954537343903601}
   - component: {fileID: 4669615784105429374}
   m_Layer: 0
   m_Name: Block
@@ -380,6 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3234393c056fb8546a0088978ee00dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  characterServiceLocator: {fileID: 0}
   initialStats:
   - statType: 1
     baseValue: 1000
@@ -398,6 +400,7 @@ MonoBehaviour:
   character: {fileID: 0}
   stats: {fileID: 2007550609271294779}
   healthComponent: {fileID: 1995331218865091253}
+  damageOverTimeReceiver: {fileID: 2880954537343903601}
   lazyHealthBar: {fileID: 6459013657691360207}
 --- !u!114 &1995331218865091253
 MonoBehaviour:
@@ -414,6 +417,18 @@ MonoBehaviour:
   healthText: {fileID: 4429657836124005529}
   lazyHealthBar: {fileID: 6459013657691360207}
   characterServiceLocator: {fileID: 3351373236948464301}
+--- !u!114 &2880954537343903601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031130730062162721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab3800db3ceed44990e8d86f410cacf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageOverTimeReceiver
 --- !u!61 &4669615784105429374
 BoxCollider2D:
   m_ObjectHideFlags: 0

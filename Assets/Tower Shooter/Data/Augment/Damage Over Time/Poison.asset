@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c3430baf320cd4ea050f0ef23f0767, type: 3}
+  m_Name: Poison
+  m_EditorClassIdentifier: Assembly-CSharp::DamageOverTimeEffect
+  descriptionTemplate: 
+  damageOverTimeType: 2
+  totalDuration: 3
+  tickInterval: 0.5
+  tickDamage: 10
+  maxStacks: 3
+  refreshDurationOnReapply: 1
