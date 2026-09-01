@@ -8,6 +8,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 {
     [Header("Shooting Idle")]
     [SerializeField] private GameObject projectile;
+    [SerializeField] private GameObject stackingItemUI;
 
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
@@ -127,6 +128,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     {
         #region Shooting Idle
         RegisterPool<Projectile>(GameConstants.projectile, projectile, 100);
+        RegisterPool<StackingItemUI>(GameConstants.stackingItemUI, stackingItemUI, 20);
         #endregion
 
         // RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);

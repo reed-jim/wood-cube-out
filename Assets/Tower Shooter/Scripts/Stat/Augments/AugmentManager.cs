@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class AugmentManager : Singleton<AugmentManager>
 {
-    public CharacterStats playerCharacterStats;
-
-    public List<Augment> augments;
+    public BaseCharacter player;
 
     void Start()
     {
@@ -14,34 +12,35 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public void Init()
     {
-        augments = new List<Augment>();
+        player.ownedAugments = new List<Augment>();
     }
 
     public void ApplyAugments()
     {
-        for (int i = 0; i < augments.Count; i++)
+        for (int i = 0; i < player.ownedAugments.Count; i++)
         {
-            Augment augment = augments[i];
+            Augment augment = player.ownedAugments[i];
 
-            augment.Apply(playerCharacterStats);
+            augment.Apply(player.stats);
         }
     }
 
     public void AddAugment(Augment augment)
     {
-        augments.Add(augment);
-
         ApplyAugments();
+
+        player.ownedAugments.Add(augment);
     }
 
     public void RemoveAugment(Augment augment)
     {
-        augment.Remove(playerCharacterStats);
-        augments.Remove(augment);
+        augment.Remove(player.stats);
+
+        player.ownedAugments.Remove(augment);
     }
 
     public bool IsAugmentEquipped(Augment augment)
     {
-        return augments.Contains(augment);
+        return player.ownedAugments.Contains(augment);
     }
 }

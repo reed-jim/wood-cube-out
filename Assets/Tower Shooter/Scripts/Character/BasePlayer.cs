@@ -15,22 +15,7 @@ public class BasePlayer : BaseCharacter
     {
         Projectile projectile = ObjectPoolingEverything.GetFromPool<Projectile>(GameConstants.projectile);
 
-        // 1. Calculate Base Damage
-        float baseDamage = stats.GetValue(StatType.Damage);
-
-        // 2. Roll for Critical Strike (e.g. CritChance = 0.25 -> 25%)
-        float critChance = stats.GetValue(StatType.CritChance);
-        bool isCrit = Random.value < critChance;
-
-        // 3. Apply Crit Multiplier (Default: 175% in LoL)
-        float finalRawDamage = isCrit ? baseDamage * 1.75f : baseDamage;
-
-        // 4. Construct Damage Data Payload
-        DamageData damagePayload = new DamageData(finalRawDamage, isCrit, gameObject, null);
-
-        float lifesteal = stats.GetValue(StatType.AbilityHaste);
-
-        projectile.Launch(damagePayload, lifesteal, transform.position, Vector2.up, projectileSpeed);
+        projectile.Launch(this, transform.position, Vector2.up, projectileSpeed);
     }
 
     private IEnumerator Shooting()

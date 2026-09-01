@@ -5,6 +5,7 @@ public static class GameConstants
 {
     #region Shooting Idle
     public static string projectile = "projectile";
+    public static string stackingItemUI = "stackingItemUI";
     #endregion
 
     public static string LOADING_SCENE = "Loading";

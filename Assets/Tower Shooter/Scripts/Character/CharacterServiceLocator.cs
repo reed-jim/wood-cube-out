@@ -7,4 +7,5 @@ public class CharacterServiceLocator : MonoBehaviour
     public HealthComponent healthComponent;
     public DamageOverTimeReceiver damageOverTimeReceiver;
     public LazyHealthBar lazyHealthBar;
+    public StackingUI stackingUI;
 }

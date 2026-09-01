@@ -1,16 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DamageOverTimeReceiver : MonoBehaviour
 {
-    private HealthComponent healthComponent;
+    public CharacterServiceLocator characterServiceLocator;
 
     private readonly Dictionary<DamageOverTimeType, DamageOverTimeItem> activeDots = new Dictionary<DamageOverTimeType, DamageOverTimeItem>();
 
     public void ApplyDamageOverTime(DamageOverTimeEffect damageOverTimeEffect, GameObject attacker)
     {
         DamageOverTimeType damageOverTimeType = damageOverTimeEffect.damageOverTimeType;
+
+        DamageOverTimeItem newDamageOverTimeItem;
 
         if (activeDots.ContainsKey(damageOverTimeType))
         {
@@ -21,18 +24,20 @@ public class DamageOverTimeReceiver : MonoBehaviour
                 StopCoroutine(existingDamageOverTimeItem.processDamageOverTimeCoroutine);
             }
 
-            DamageOverTimeItem newDamageOverTimeItem = DamageOverTimeItem.StackDamageOverTime(existingDamageOverTimeItem);
+            newDamageOverTimeItem = DamageOverTimeItem.StackDamageOverTime(existingDamageOverTimeItem);
 
             newDamageOverTimeItem.processDamageOverTimeCoroutine = StartCoroutine(TickingDamageOverTime(newDamageOverTimeItem));
         }
         else
         {
-            DamageOverTimeItem newDamageOverTimeItem = new DamageOverTimeItem(damageOverTimeEffect, attacker);
+            newDamageOverTimeItem = new DamageOverTimeItem(damageOverTimeEffect, attacker);
 
             activeDots.Add(damageOverTimeType, newDamageOverTimeItem);
 
             newDamageOverTimeItem.processDamageOverTimeCoroutine = StartCoroutine(TickingDamageOverTime(newDamageOverTimeItem));
         }
+
+        characterServiceLocator.stackingUI.UpdateUI(newDamageOverTimeItem);
     }
 
     private IEnumerator TickingDamageOverTime(DamageOverTimeItem damageOverTimeItem)
@@ -50,7 +55,7 @@ public class DamageOverTimeReceiver : MonoBehaviour
                 target: gameObject
             );
 
-            healthComponent.TakeDamage(damagePayload);
+            characterServiceLocator.healthComponent.TakeDamage(damagePayload);
 
             damageOverTimeItem.remaniningTime -= tickInterval;
 
@@ -87,6 +92,7 @@ public class DamageOverTimeReceiver : MonoBehaviour
     }
 }
 
+[Serializable]
 public class DamageOverTimeItem
 {
     public DamageOverTimeEffect damageOverTimeEffect;
@@ -97,6 +103,8 @@ public class DamageOverTimeItem
     public GameObject attacker;
 
     public Coroutine processDamageOverTimeCoroutine;
+
+    public DamageOverTimeType DamageOverTimeType => damageOverTimeEffect.damageOverTimeType;
 
     public DamageOverTimeItem()
     {
@@ -109,21 +117,15 @@ public class DamageOverTimeItem
         this.attacker = attacker;
 
         remaniningTime = damageOverTimeEffect.totalDuration;
-        currentStack = 0;
+        currentStack = 1;
         timer = 0;
     }
 
     public static DamageOverTimeItem StackDamageOverTime(DamageOverTimeItem existingDamageOverTimeItem)
     {
-        DamageOverTimeItem damageOverTimeItem = new DamageOverTimeItem();
+        existingDamageOverTimeItem.currentStack++;
+        existingDamageOverTimeItem.timer = 0;
 
-        damageOverTimeItem.damageOverTimeEffect = existingDamageOverTimeItem.damageOverTimeEffect;
-        damageOverTimeItem.remaniningTime += existingDamageOverTimeItem.remaniningTime;
-        damageOverTimeItem.currentStack++;
-        damageOverTimeItem.timer = 0;
-
-        damageOverTimeItem.attacker = existingDamageOverTimeItem.attacker;
-
-        return damageOverTimeItem;
+        return existingDamageOverTimeItem;
     }
 }

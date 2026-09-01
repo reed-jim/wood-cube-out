@@ -25,11 +25,11 @@ public class DamageOverTimeEffect : AugmentEffect
 
     public override void ApplyEffect(CharacterStats target, object source)
     {
-        target.characterServiceLocator.damageOverTimeReceiver.ApplyDamageOverTime(this, (GameObject)source);
+        // target.characterServiceLocator.damageOverTimeReceiver.ApplyDamageOverTime(this, (GameObject)source);
     }
 
     public override void RemoveEffect(CharacterStats target, object source)
     {
-        target.characterServiceLocator.damageOverTimeReceiver.ClearDamageOverTime(this);
+        // target.characterServiceLocator.damageOverTimeReceiver.ClearDamageOverTime(this);
     }
 }
