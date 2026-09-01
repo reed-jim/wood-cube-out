@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
+    public CharacterServiceLocator characterServiceLocator;
+
     [SerializeField] private List<Stat> initialStats = new List<Stat>();
     private readonly Dictionary<StatType, Stat> statDict = new Dictionary<StatType, Stat>();
 
