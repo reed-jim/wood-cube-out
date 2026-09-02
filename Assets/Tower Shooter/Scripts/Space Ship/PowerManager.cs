@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class PowerManager : Singleton<PowerManager>
 {
-    public int totalPower;
+    public float totalPower;
 
     [Header("UI")]
     public TMP_Text totalPowerText;
 
-    public void AddPower(int power)
+    public void AddPower(float power)
     {
         totalPower += power;
 
@@ -17,6 +17,6 @@ public class PowerManager : Singleton<PowerManager>
 
     public void UpdateUI()
     {
-        totalPowerText.text = $"{totalPower}";
+        totalPowerText.text = $"{totalPower:F2}";
     }
 }

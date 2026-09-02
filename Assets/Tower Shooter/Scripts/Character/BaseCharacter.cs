@@ -31,12 +31,12 @@ public class BaseCharacter : MonoBehaviour
 
         while (true)
         {
-            int power = (int)stats.GetStat(StatType.Damage).Value;
+            float power = stats.GetStat(StatType.Damage).Value;
             float speed = stats.GetStat(StatType.AttackSpeed).Value;
 
             float interval = 1f / speed;
 
-            powerText.text = $"{power}";
+            powerText.text = $"{power:F2}";
 
             Tween.Custom(0, 1, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
             {

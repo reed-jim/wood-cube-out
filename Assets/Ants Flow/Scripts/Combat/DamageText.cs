@@ -10,13 +10,13 @@ public class DamageText : MonoBehaviour
     [SerializeField] private float lifetime = 0.7f;
     [SerializeField] private float floatDistance = 1f;
 
-    public void ShowDamage(int damage, Vector3 spawnPosition)
+    public void ShowDamage(float damage, Vector3 spawnPosition)
     {
         transform.DOKill();
 
         damageText.DOKill();
 
-        damageText.text = $"{damage}";
+        damageText.text = $"{damage:F2}";
         transform.position = spawnPosition;
 
         // Reset

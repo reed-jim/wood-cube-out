@@ -20,14 +20,14 @@ public class UpgradeItemUI : MonoBehaviour
     {
         title.text = statType.ToString();
 
-        UpdateText(UpgradeManager.Ins.GetStatUpgradeData(statType));
+        // UpdateText(UpgradeManager.Ins.GetStatUpgradeData(statType));
     }
 
     public void Upgrade()
     {
-        UpgradeManager.Ins.Upgrade(statType);
+        // UpgradeManager.Ins.Upgrade(statType);
 
-        UpdateText(UpgradeManager.Ins.GetStatUpgradeData(statType));
+        // UpdateText(UpgradeManager.Ins.GetStatUpgradeData(statType));
     }
 
     public void UpdateText(StatUpgradeData statUpgradeData)
