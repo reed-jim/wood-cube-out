@@ -216,6 +216,7 @@ RectTransform:
   - {fileID: 643191234}
   - {fileID: 1650790014}
   - {fileID: 1150759947}
+  - {fileID: 1742353711}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -544,7 +545,6 @@ RectTransform:
   - {fileID: 1925581584}
   - {fileID: 449747904}
   - {fileID: 1365935443}
-  - {fileID: 1742353711}
   m_Father: {fileID: 183248}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -995,6 +995,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Upgrade Popup
       objectReference: {fileID: 0}
+    - target: {fileID: 3113824652823305248, guid: 61f720ec5df70344099d4060cc8ce805, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8684835883523114881, guid: 61f720ec5df70344099d4060cc8ce805, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1250,7 +1254,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 643191234}
+  m_Father: {fileID: 183248}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}

@@ -19,7 +19,7 @@ public class Augment : ScriptableObject
     {
         foreach (var modData in statModifiers)
         {
-            characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, this));
+            characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, 0, this));
         }
 
         foreach (var effect in dynamicEffects)

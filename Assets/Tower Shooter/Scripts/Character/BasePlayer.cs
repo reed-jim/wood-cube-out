@@ -5,6 +5,7 @@ using UnityEngine;
 public class BasePlayer : BaseCharacter
 {
     public float projectileSpeed = 5;
+    public float delayPerShot;
 
     void Start()
     {
@@ -24,11 +25,17 @@ public class BasePlayer : BaseCharacter
 
         yield return waitForSeconds;
 
+        float shootSpeed = stats.GetStat(StatType.AttackSpeed).Value;
+        delayPerShot = 1 / shootSpeed;
+
         while (true)
         {
             Shoot();
 
-            yield return waitForSeconds;
+            shootSpeed = stats.GetStat(StatType.AttackSpeed).Value;
+            delayPerShot = 1 / shootSpeed;
+
+            yield return new WaitForSeconds(delayPerShot);
         }
     }
 }

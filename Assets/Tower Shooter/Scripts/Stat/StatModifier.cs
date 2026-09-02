@@ -25,13 +25,15 @@ public class StatModifier
     public readonly StatType Type;
     public readonly ModifierType ModType;
     public readonly float Value;
+    public readonly int UpgradeTime;
     public readonly object Source; // Identifies origin (e.g., AugmentSO, ItemInstance)
 
-    public StatModifier(StatType type, ModifierType modType, float value, object source = null)
+    public StatModifier(StatType type, ModifierType modType, float value, int upgradeTime = 0, object source = null)
     {
         Type = type;
         ModType = modType;
         Value = value;
+        UpgradeTime = upgradeTime;
         Source = source;
     }
 }

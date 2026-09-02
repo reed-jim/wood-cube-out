@@ -106,9 +106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea3ebe63fe527c4bb9a80ca1d2849bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePlayer
+  serviceLocator: {fileID: 0}
   stats: {fileID: 5494247800452031751}
-  lazyHealthBar: {fileID: 0}
+  upgrades: []
+  ownedAugments: []
   projectileSpeed: 5
+  delayPerShot: 0
 --- !u!114 &4930846624195892287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,7 +127,9 @@ MonoBehaviour:
   character: {fileID: 801718722136014286}
   stats: {fileID: 5494247800452031751}
   healthComponent: {fileID: 0}
+  damageOverTimeReceiver: {fileID: 0}
   lazyHealthBar: {fileID: 0}
+  stackingUI: {fileID: 0}
 --- !u!114 &5494247800452031751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,6 +142,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3234393c056fb8546a0088978ee00dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  characterServiceLocator: {fileID: 0}
   initialStats:
   - statType: 2
     baseValue: 10
+  - statType: 3
+    baseValue: 1
