@@ -4,6 +4,7 @@ public class CharacterServiceLocator : MonoBehaviour
 {
     public BaseCharacter character;
     public CharacterStats stats;
+    public NodeUI nodeUI;
     public HealthComponent healthComponent;
     public DamageOverTimeReceiver damageOverTimeReceiver;
     public LazyHealthBar lazyHealthBar;

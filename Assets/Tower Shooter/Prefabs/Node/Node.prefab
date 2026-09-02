@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3208492008162000004}
   - component: {fileID: 4352077174035553837}
   - component: {fileID: 3690379368736153157}
+  - component: {fileID: 614897221625565131}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -75,6 +76,50 @@ MonoBehaviour:
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &614897221625565131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367677238481536831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 3690379368736153157}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6663510762302426158
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,7 +130,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1962266565462913285}
   - component: {fileID: 7295418308930232057}
-  - component: {fileID: 6208220886525823257}
+  - component: {fileID: 6964090814289660887}
+  - component: {fileID: 614917598609676925}
+  - component: {fileID: 898206287609554678}
+  - component: {fileID: 3217980460636716129}
   m_Layer: 5
   m_Name: Node
   m_TagString: Untagged
@@ -124,7 +172,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6663510762302426158}
   m_CullTransparentMesh: 1
---- !u!114 &6208220886525823257
+--- !u!114 &6964090814289660887
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,11 +181,62 @@ MonoBehaviour:
   m_GameObject: {fileID: 6663510762302426158}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7db232390ad7a468b0b91453d74faf, type: 3}
+  m_Script: {fileID: 11500000, guid: cad96742537050d46811aaad2ddf65fd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseNode
-  power: 1
-  speed: 1
+  m_EditorClassIdentifier: Assembly-CSharp::BaseCharacter
+  serviceLocator: {fileID: 614917598609676925}
+  stats: {fileID: 898206287609554678}
+  upgrades: []
+  ownedAugments: []
+--- !u!114 &614917598609676925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6663510762302426158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39eb434658a667e4296d6e83fdaa0b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterServiceLocator
+  character: {fileID: 6964090814289660887}
+  stats: {fileID: 898206287609554678}
+  nodeUI: {fileID: 3217980460636716129}
+  healthComponent: {fileID: 0}
+  damageOverTimeReceiver: {fileID: 0}
+  lazyHealthBar: {fileID: 0}
+  stackingUI: {fileID: 0}
+--- !u!114 &898206287609554678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6663510762302426158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3234393c056fb8546a0088978ee00dc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  characterServiceLocator: {fileID: 614917598609676925}
+  initialStats:
+  - statType: 2
+    baseValue: 1
+  - statType: 3
+    baseValue: 0.2
+--- !u!114 &3217980460636716129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6663510762302426158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c8a861f6efec2488cf99698da4ca4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NodeUI
   container: {fileID: 1962266565462913285}
   circleProgress: {fileID: 3060727477517715892}
   powerText: {fileID: 8729087875368286869}
@@ -200,7 +299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -275,7 +374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.3137255, g: 1, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
