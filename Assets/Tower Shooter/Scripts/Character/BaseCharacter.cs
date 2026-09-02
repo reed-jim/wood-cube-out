@@ -10,6 +10,8 @@ public class BaseCharacter : MonoBehaviour
     public CharacterServiceLocator serviceLocator;
     public CharacterStats stats;
 
+    public float speedToSpaceShip;
+
     public List<StatModifier> upgrades;
     public List<Augment> ownedAugments;
 
@@ -29,10 +31,17 @@ public class BaseCharacter : MonoBehaviour
         TMP_Text powerText = serviceLocator.nodeUI.powerText;
         Image circleProgress = serviceLocator.nodeUI.circleProgress;
 
+        if (!NodeManager.Ins.nodes.Contains(this))
+        {
+            NodeManager.Ins.nodes.Add(this);
+        }
+
         while (true)
         {
             float power = stats.GetStat(StatType.Damage).Value;
             float speed = stats.GetStat(StatType.AttackSpeed).Value;
+
+            speedToSpaceShip = power * speed;
 
             float interval = 1f / speed;
 
