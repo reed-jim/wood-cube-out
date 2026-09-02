@@ -25,20 +25,20 @@ public class UpgradeItemUI : MonoBehaviour
 
     public void Upgrade()
     {
-        int nextCoinRequired;
+        float nextCoinRequired;
 
         UpgradeManager.Ins.Upgrade(statType, out nextCoinRequired);
 
         UpdateText(nextCoinRequired);
     }
 
-    public void UpdateText(int nextCoinRequired)
+    public void UpdateText(float nextCoinRequired)
     {
         float currentValue = UpgradeManager.Ins.player.stats.GetStat(statType).Value;
         float nextValue = currentValue + 1;
 
-        upgradeText.text = $"{currentValue} --> <color=#008502>{nextValue}";
+        upgradeText.text = $"{currentValue:F1} --> <color=#008502>{nextValue:F1}</color>";
 
-        coinText.text = $"{nextCoinRequired}";
+        coinText.text = $"{(int)nextCoinRequired}";
     }
 }

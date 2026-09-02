@@ -91,7 +91,7 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
     public void SetHealthText()
     {
-        healthText.text = $"{CurrentHealth}/{stats.GetValue(StatType.MaxHealth)}";
+        healthText.text = $"{CurrentHealth:F1}/{stats.GetValue(StatType.MaxHealth)}";
     }
 
     public void ShowDamageText(float damage, Vector3 position)

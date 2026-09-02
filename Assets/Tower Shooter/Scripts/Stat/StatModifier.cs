@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public enum StatType
 {
@@ -35,5 +36,15 @@ public class StatModifier
         Value = value;
         UpgradeTime = upgradeTime;
         Source = source;
+    }
+
+    public static float GetUpgradedValue(int upgradeTime)
+    {
+        return 0.1f * (1 + Mathf.Log(upgradeTime));
+    }
+
+    public static float GetCoinRequired(int upgradeTime)
+    {
+        return 1 + Mathf.Pow(upgradeTime, 2);
     }
 }
