@@ -74,7 +74,8 @@ public class GameEnum : MonoBehaviour
         SpeedUpTutorial,
         None,
         SpecialElementIntroduction,
-        AugmentSelection
+        AugmentSelection,
+        Upgrade
     }
 
     public enum GameFaction
