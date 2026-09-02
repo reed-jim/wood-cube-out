@@ -1,5 +1,6 @@
 using System.Collections;
 using PrimeTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public class BaseNode : MonoBehaviour
     [Header("UI")]
     public RectTransform container;
     public Image circleProgress;
+    public TMP_Text powerText;
 
     void Start()
     {
@@ -22,6 +24,8 @@ public class BaseNode : MonoBehaviour
         while (true)
         {
             float interval = 1f / speed;
+
+            powerText.text = $"{power}";
 
             Tween.Custom(0, 1, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
             {
