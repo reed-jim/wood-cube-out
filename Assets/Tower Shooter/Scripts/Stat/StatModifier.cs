@@ -38,13 +38,13 @@ public class StatModifier
         Source = source;
     }
 
-    public static float GetUpgradedValue(int upgradeTime)
+    public static float GetPercentAdd(int upgradeTime)
     {
-        return 0.1f * (1 + Mathf.Log(upgradeTime));
+        return 0.1f * Mathf.Log(1 + upgradeTime);
     }
 
     public static float GetCoinRequired(int upgradeTime)
     {
-        return 1 + Mathf.Pow(upgradeTime, 2);
+        return Mathf.Pow(upgradeTime, 2);
     }
 }
