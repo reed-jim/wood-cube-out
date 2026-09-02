@@ -1,38 +1,38 @@
+using PrimeTween;
+using TMPro;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D projectileRigidbody;
+    [SerializeField] private TMP_Text damageText;
 
     private BaseCharacter attacker;
     private float lifestealPercent;
 
-    public void Launch(BaseCharacter attacker, Vector2 origin, Vector2 direction, float force)
+    public void Launch(BaseCharacter attacker, BaseCharacter target, Vector2 origin, float flySpeed)
     {
         this.attacker = attacker;
 
-        // Instant 2D physics impulse launch
-        projectileRigidbody.AddForce(direction.normalized * force, ForceMode2D.Impulse);
-
-        // Orient projectile along movement direction
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.position = origin;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        float duration = 1f / flySpeed;
+
+        Tween.Position(transform, target.transform.position, duration: duration, ease: Ease.Linear)
+        .OnComplete(() =>
+        {
+            OnShipArrived(target);
+        });
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnShipArrived(BaseCharacter destination)
     {
-        // Ignore self-collision
-        if (other.gameObject == attacker) return;
-
         #region Direct Damage
-        if (other.TryGetComponent<IDamageable>(out var damageable))
+        if (destination.TryGetComponent<IDamageable>(out var damageable))
         {
-
             DamageData damageData = GetDamageData();
 
             // Cache target reference
-            damageData.Target = other.gameObject;
+            damageData.Target = destination.gameObject;
 
             // Deal damage
             damageable.TakeDamage(damageData);
@@ -52,7 +52,7 @@ public class Projectile : MonoBehaviour
         #endregion
 
         #region Damage Over Time
-        BaseCharacter character = other.GetComponent<BaseCharacter>();
+        BaseCharacter character = destination.GetComponent<BaseCharacter>();
 
         if (character != null)
         {

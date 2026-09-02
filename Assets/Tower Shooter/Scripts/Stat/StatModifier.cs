@@ -7,6 +7,7 @@ public enum StatType
     MaxHealth,
     Damage,         // Primary offense stat
     AttackSpeed,    // Attacks per second
+    FlySpeed,
     Armor,          // Damage mitigation
     MoveSpeed,      // Base movement speed
     AbilityHaste,   // Cooldown reduction calculation

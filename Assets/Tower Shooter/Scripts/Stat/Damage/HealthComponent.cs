@@ -2,6 +2,7 @@ using System;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterStats))]
 public class HealthComponent : MonoBehaviour, IDamageable
@@ -9,6 +10,7 @@ public class HealthComponent : MonoBehaviour, IDamageable
     public float CurrentHealth { get; private set; }
 
     public TMP_Text healthText;
+    public Image circleProgress;
     public LazyHealthBar lazyHealthBar;
 
     public event Action<DamageResult> OnDamageTaken;
@@ -91,7 +93,12 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
     public void SetHealthText()
     {
-        healthText.text = $"{CurrentHealth:F1}/{stats.GetValue(StatType.MaxHealth)}";
+        float maxHealth = stats.GetValue(StatType.MaxHealth);
+        float remaningHealth = maxHealth - CurrentHealth;
+
+        healthText.text = $"{remaningHealth:F1}/{maxHealth}";
+
+        circleProgress.fillAmount = remaningHealth / maxHealth;
     }
 
     public void ShowDamageText(float damage, Vector3 position)

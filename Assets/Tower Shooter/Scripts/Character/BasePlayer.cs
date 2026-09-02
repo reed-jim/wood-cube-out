@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BasePlayer : BaseCharacter
 {
-    public float projectileSpeed = 5;
     public float delayPerShot;
 
     void Start()
@@ -16,7 +15,9 @@ public class BasePlayer : BaseCharacter
     {
         Projectile projectile = ObjectPoolingEverything.GetFromPool<Projectile>(GameConstants.projectile);
 
-        projectile.Launch(this, transform.position, Vector2.up, projectileSpeed);
+        float flySpeed = stats.GetStat(StatType.FlySpeed).Value;
+
+        projectile.Launch(this, StarManager.Ins.Mars, transform.position, flySpeed);
     }
 
     private IEnumerator Shooting()
