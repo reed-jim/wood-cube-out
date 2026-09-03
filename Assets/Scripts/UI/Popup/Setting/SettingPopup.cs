@@ -22,6 +22,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
     [SerializeField] private Button openFacebookGroupButton;
+    [SerializeField] private Button reviewIAPButton;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -68,6 +69,7 @@ public class SettingPopup : BasePopup
         // openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
         // adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
+        reviewIAPButton.onClick.AddListener(OpenReviewIAP);
         // openFacebookGroupButton.onClick.AddListener(OpenFacebookGroup);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
@@ -88,6 +90,10 @@ public class SettingPopup : BasePopup
         pauseNavmeshEvent?.Invoke(true);
 
         GamePersistentVariable.isPauseGame = true;
+
+        bool isEnableReviewIAP = RemoteConfigController.GetBoolConfig(GameConstants.isEnableReviewIAP, true);
+
+        reviewIAPButton.gameObject.SetActive(isEnableReviewIAP);
 
         base.Show(onCompletedAction);
     }
@@ -219,6 +225,11 @@ public class SettingPopup : BasePopup
         restorePurchasesEvent?.Invoke();
     }
     #endregion
+
+    private void OpenReviewIAP()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.ReviewIAP);
+    }
 
     private void Replay()
     {

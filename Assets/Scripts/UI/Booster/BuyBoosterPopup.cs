@@ -204,12 +204,10 @@ public class BuyBoosterPopup : BasePopup
         }
         else
         {
-            ShowNotification(GameConstants.WARNING, "Not enough coin");
-
-            // Hide(onCompletedAction: () =>
-            // {
-            //     openIAPShopPopupEvent?.Invoke(ScreenRoute.Booster);
-            // });
+            Hide(onCompletedAction: () =>
+            {
+                openIAPShopPopupEvent?.Invoke(ScreenRoute.Booster);
+            });
         }
     }
 

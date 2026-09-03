@@ -70,7 +70,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
         upSpeedButton.onClick.AddListener(X2Speed);
 
-        // openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
+        openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
 
         increaseGameSpeedButton.onClick.AddListener(IncreaseGameSpeed);
