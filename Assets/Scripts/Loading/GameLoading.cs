@@ -51,7 +51,10 @@ public class GameLoading : MonoBehaviour
 
     #region MonoBehaviour Callbacks
 
-   
+    void Awake()
+    {
+        Init();
+    }
 
     public void Init()
     {
@@ -66,7 +69,7 @@ public class GameLoading : MonoBehaviour
         SceneManager.LoadScene(2);
 
         return;
-        
+
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
             DebugLogger.LogSimple();
