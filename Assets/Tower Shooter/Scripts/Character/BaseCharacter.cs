@@ -10,6 +10,10 @@ public class BaseCharacter : MonoBehaviour
     public CharacterServiceLocator serviceLocator;
     public CharacterStats stats;
 
+    [Header("State")]
+    public bool isUnlocked;
+
+
     public float speedToSpaceShip;
 
     public List<StatModifier> upgrades;
@@ -20,9 +24,16 @@ public class BaseCharacter : MonoBehaviour
         upgrades = new List<StatModifier>();
     }
 
-    void Start()
+    public void Init(NodeData nodeData)
     {
-        StartCoroutine(Generating());
+        if (nodeData.isUnlocked)
+        {
+            StartCoroutine(Generating());
+        }
+        else
+        {
+            serviceLocator.nodeUI.powerText.text = "Locked";
+        }
     }
 
     private IEnumerator Generating()
