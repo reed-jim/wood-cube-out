@@ -252,7 +252,7 @@ public class BaseChicken : MonoBehaviour
         {
             if (numGrainPileRequiredLeft == 0)
             {
-                transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
+                // transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
 
                 Vector3 outPosition = transform.position;
 
@@ -505,7 +505,7 @@ public class BaseChicken : MonoBehaviour
 
     public void ForceFlyOut(bool isLast)
     {
-        transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
+        // transform.SetZ(-10f - 0.001f * transform.GetSiblingIndex());
 
         Vector3 outPosition = transform.position;
 
