@@ -39,29 +39,32 @@ public class GameController : MonoBehaviour
     public void Init()
     {
         Application.targetFrameRate = 60;
-         // GameController.Instance.useProfile.CurrentLevel =  GameController.Instance.useProfile;
+        // GameController.Instance.useProfile.CurrentLevel =  GameController.Instance.useProfile;
 
-       
-       // iapController.Init();
+
+        // iapController.Init();
         //MMVibrationManager.SetHapticsActive(useProfile.OnVibration);
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         ResetDay();
         UseProfile.NumPlayedInDay++;
-        GplayUMP.ShowConsentForm((consert) =>
-        {
-            UseProfile.GDPRContentValue = consert;
-#if UNITY_IOS
-            if (ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
-            {
-                ATTrackingStatusBinding.RequestAuthorizationTracking();
-            }
-#endif
-            InitLoadScene();
-        });
-       
+
+        //         GplayUMP.ShowConsentForm((consert) =>
+        //         {
+        //             UseProfile.GDPRContentValue = consert;
+        // #if UNITY_IOS
+        //             if (ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
+        //             {
+        //                 ATTrackingStatusBinding.RequestAuthorizationTracking();
+        //             }
+        // #endif
+        //             InitLoadScene();
+        //         });
+
+        InitLoadScene();
+
         FalconMain.Init();
     }
-   
+
 
     public void InitLoadScene()
     {
@@ -120,7 +123,7 @@ public class GameController : MonoBehaviour
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.BlockBrand_BirdSort, 0);
             UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddBrandItem_BirdSort, 0);
 
-           
+
             UseProfile.NumPlayedInDay = 0;
 
             UseProfile.ResetDayMiniGame();
