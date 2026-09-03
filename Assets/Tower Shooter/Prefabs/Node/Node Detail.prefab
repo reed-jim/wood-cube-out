@@ -471,7 +471,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 880, y: 640}
+  m_SizeDelta: {x: 880, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3360500484771838152
 CanvasRenderer:
@@ -496,22 +496,17 @@ MonoBehaviour:
   container: {fileID: 173449601479797626}
   closeButton: {fileID: 3331178845383168072}
   UIElementsOfStats:
-    entries:
-    - key: 2
-      value:
-        statText: {fileID: 6164932877790661692}
-        costText: {fileID: 4553975901925848831}
-        upgradeButton: {fileID: 8587711169112282227}
-    - key: 3
-      value:
-        statText: {fileID: 2770657578801727898}
-        costText: {fileID: 4081934090732015933}
-        upgradeButton: {fileID: 2268364447480718617}
-    - key: 9
-      value:
-        statText: {fileID: 2910446186661224394}
-        costText: {fileID: 3887158790448764012}
-        upgradeButton: {fileID: 389410826200047596}
+    keys: 020000000300000009000000
+    values:
+    - statText: {fileID: 6164932877790661692}
+      costText: {fileID: 4553975901925848831}
+      upgradeButton: {fileID: 8587711169112282227}
+    - statText: {fileID: 2770657578801727898}
+      costText: {fileID: 4081934090732015933}
+      upgradeButton: {fileID: 2268364447480718617}
+    - statText: {fileID: 2910446186661224394}
+      costText: {fileID: 3887158790448764012}
+      upgradeButton: {fileID: 389410826200047596}
   unlockButton: {fileID: 0}
   node: {fileID: 0}
 --- !u!114 &7624243265551694099

@@ -186,6 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BaseCharacter
   serviceLocator: {fileID: 614917598609676925}
   stats: {fileID: 898206287609554678}
+  speedToSpaceShip: 0
   upgrades: []
   ownedAugments: []
 --- !u!114 &614917598609676925
@@ -225,6 +226,8 @@ MonoBehaviour:
     baseValue: 1
   - statType: 3
     baseValue: 0.2
+  - statType: 9
+    baseValue: 0.3
 --- !u!114 &3217980460636716129
 MonoBehaviour:
   m_ObjectHideFlags: 0

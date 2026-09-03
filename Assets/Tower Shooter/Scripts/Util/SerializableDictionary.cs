@@ -4,63 +4,38 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver, IEnumerable<KeyValuePair<TKey, TValue>>
+public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
 {
-    [Serializable]
-    private struct Entry
-    {
-        public TKey key;
-        public TValue value;
+    [SerializeField] private List<TKey> keys = new List<TKey>();
+    [SerializeField] private List<TValue> values = new List<TValue>();
 
-        public Entry(TKey key, TValue value)
+    // Save dictionary state to lists before Unity serializes
+    public void OnBeforeSerialize()
+    {
+        keys.Clear();
+        values.Clear();
+
+        foreach (KeyValuePair<TKey, TValue> pair in this)
         {
-            this.key = key;
-            this.value = value;
+            keys.Add(pair.Key);
+            values.Add(pair.Value);
         }
     }
 
-    [SerializeField]
-    private List<Entry> entries = new();
-
-    private Dictionary<TKey, TValue> dictionary = new();
-
-    public TValue this[TKey key]
-    {
-        get => dictionary[key];
-        set => dictionary[key] = value;
-    }
-
-    public int Count => dictionary.Count;
-
-    public IEnumerable<TKey> Keys => dictionary.Keys;
-    public IEnumerable<TValue> Values => dictionary.Values;
-
-    public bool TryGetValue(TKey key, out TValue value)
-        => dictionary.TryGetValue(key, out value);
-
-    public bool ContainsKey(TKey key)
-        => dictionary.ContainsKey(key);
-
-    public bool Remove(TKey key)
-        => dictionary.Remove(key);
-
-    public void OnBeforeSerialize()
-    {
-
-    }
-
+    // Load dictionary state from lists after Unity deserializes
     public void OnAfterDeserialize()
     {
+        this.Clear();
 
-    }
+        if (keys.Count != values.Count)
+        {
+            Debug.LogError($"Key count ({keys.Count}) does not match Value count ({values.Count}). Serialization failed.");
+            return;
+        }
 
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-    {
-        return dictionary.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
+        for (int i = 0; i < keys.Count; i++)
+        {
+            this[keys[i]] = values[i];
+        }
     }
 }

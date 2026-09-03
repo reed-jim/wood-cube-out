@@ -26,7 +26,7 @@ public class NodeDetailUI : MonoBehaviour
         this.node = node;
 
         container.SetParent(node.transform);
-        container.localPosition = new Vector3(0, -container.sizeDelta.y);
+        container.localPosition = new Vector3(0, -0.6f * (container.sizeDelta.y + node.serviceLocator.nodeUI.container.sizeDelta.y));
 
         SaferioTween.ShowWithPunch(container, 1);
 
@@ -56,7 +56,6 @@ public class NodeDetailUI : MonoBehaviour
         StatUpgradeData upgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
 
         UIElementsOfStats[statType].statText.text = $"{upgradeData.currentValue:F2} --> <color=#008502>{upgradeData.nextValue:F2}</color>";
-
         UIElementsOfStats[statType].costText.text = $"{(int)upgradeData.coinRequired}";
     }
 
