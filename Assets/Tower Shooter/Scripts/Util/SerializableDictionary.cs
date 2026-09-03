@@ -1,9 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver
+public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver, IEnumerable<KeyValuePair<TKey, TValue>>
 {
     [Serializable]
     private struct Entry
@@ -31,6 +32,9 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
 
     public int Count => dictionary.Count;
 
+    public IEnumerable<TKey> Keys => dictionary.Keys;
+    public IEnumerable<TValue> Values => dictionary.Values;
+
     public bool TryGetValue(TKey key, out TValue value)
         => dictionary.TryGetValue(key, out value);
 
@@ -42,11 +46,21 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
 
     public void OnBeforeSerialize()
     {
-        
+
     }
 
     public void OnAfterDeserialize()
     {
-        
+
+    }
+
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    {
+        return dictionary.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

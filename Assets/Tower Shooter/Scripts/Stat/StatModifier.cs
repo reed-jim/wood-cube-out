@@ -11,7 +11,9 @@ public enum StatType
     Armor,          // Damage mitigation
     MoveSpeed,      // Base movement speed
     AbilityHaste,   // Cooldown reduction calculation
-    CritChance      // 0.0 to 1.0 (0% to 100%)
+    CritChance,
+    Efficiency,
+    CoinEfficiency
 }
 
 public enum ModifierType

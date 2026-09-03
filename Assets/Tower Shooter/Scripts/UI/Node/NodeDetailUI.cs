@@ -1,3 +1,4 @@
+using System;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -6,13 +7,10 @@ using UnityEngine.UI;
 public class NodeDetailUI : MonoBehaviour
 {
     public RectTransform container;
-    public TMP_Text powerText;
-    public TMP_Text speedText;
-    public Button powerUpgradeButton;
-    public Button speedUpgradeButton;
+
     public Button closeButton;
-    public TMP_Text powerUpgradeCostText;
-    public TMP_Text speedUpgradeCostText;
+
+    public SerializableDictionary<StatType, UIElementsOfStat> UIElementsOfStats;
 
     public Button unlockButton;
 
@@ -32,44 +30,34 @@ public class NodeDetailUI : MonoBehaviour
 
         SaferioTween.ShowWithPunch(container, 1);
 
-        UpdateText(node);
+        foreach (var statType in UIElementsOfStats.Keys)
+        {
+            UpdateStatText(node, statType);
 
-        powerUpgradeButton.onClick.RemoveAllListeners();
-        speedUpgradeButton.onClick.RemoveAllListeners();
-
-        powerUpgradeButton.onClick.AddListener(UpgradeDamage);
-        speedUpgradeButton.onClick.AddListener(UpgradeSpeed);
+            UIElementsOfStats[statType].upgradeButton.onClick.RemoveAllListeners();
+            UIElementsOfStats[statType].upgradeButton.onClick.AddListener(() => UpgradeStat(statType));
+        }
     }
 
-    public void UpgradeDamage()
+    public void UpgradeStat(StatType statType)
     {
-        UpgradeManager.Ins.Upgrade(node, StatType.Damage);
+        UpgradeManager.Ins.Upgrade(node, statType);
 
-        node.serviceLocator.nodeUI.UpdatePower();
+        if (statType == StatType.Damage)
+        {
+            node.serviceLocator.nodeUI.UpdatePower();
+        }
 
-        UpdateText(node);
+        UpdateStatText(node, statType);
     }
 
-    public void UpgradeSpeed()
+    public void UpdateStatText(BaseCharacter node, StatType statType)
     {
-        UpgradeManager.Ins.Upgrade(node, StatType.AttackSpeed);
+        StatUpgradeData upgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
 
-        UpdateText(node);
-    }
+        UIElementsOfStats[statType].statText.text = $"{upgradeData.currentValue:F2} --> <color=#008502>{upgradeData.nextValue:F2}</color>";
 
-    public void UpdateText(BaseCharacter node)
-    {
-        StatUpgradeData damageUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, StatType.Damage);
-
-        powerText.text = $"{damageUpgradeData.currentValue:F2} --> <color=#008502>{damageUpgradeData.nextValue:F2}</color>";
-
-        powerUpgradeCostText.text = $"{(int)damageUpgradeData.coinRequired}";
-
-        StatUpgradeData speedUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, StatType.AttackSpeed);
-
-        speedText.text = $"{speedUpgradeData.currentValue:F2} --> <color=#008502>{speedUpgradeData.nextValue:F2}</color>";
-
-        speedUpgradeCostText.text = $"{(int)speedUpgradeData.coinRequired}";
+        UIElementsOfStats[statType].costText.text = $"{(int)upgradeData.coinRequired}";
     }
 
     public void Unlock()
@@ -81,4 +69,12 @@ public class NodeDetailUI : MonoBehaviour
     {
         SaferioTween.ScaleDownWithPunch(container, 1);
     }
+}
+
+[Serializable]
+public class UIElementsOfStat
+{
+    public TMP_Text statText;
+    public TMP_Text costText;
+    public Button upgradeButton;
 }

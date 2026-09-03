@@ -40,8 +40,9 @@ public class BaseCharacter : MonoBehaviour
         {
             float power = stats.GetStat(StatType.Damage).Value;
             float speed = stats.GetStat(StatType.AttackSpeed).Value;
+            float efficiency = stats.GetStat(StatType.Efficiency).Value;
 
-            speedToSpaceShip = power * speed;
+            speedToSpaceShip = efficiency * (power * speed);
 
             float interval = 1f / speed;
 
