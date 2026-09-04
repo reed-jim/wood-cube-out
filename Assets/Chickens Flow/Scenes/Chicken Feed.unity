@@ -4749,11 +4749,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.2888889
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.49010417
+      value: 0.9542763
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMin.y
@@ -6107,6 +6107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1577199172}
+  test1: {fileID: 0}
+  test2: {fileID: 0}
 --- !u!1 &1056316544
 GameObject:
   m_ObjectHideFlags: 0
@@ -8353,6 +8355,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1577199172}
+  test1: {fileID: 0}
+  test2: {fileID: 0}
 --- !u!225 &1392353495
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -14228,9 +14232,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1701801351422248248}
-  - component: {fileID: 6753653685991203322}
   - component: {fileID: 4720967595556912062}
   - component: {fileID: 6753653685991203321}
+  - component: {fileID: 6753653685991203322}
   m_Layer: 5
   m_Name: Booster
   m_TagString: Untagged
@@ -14263,6 +14267,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SafeArea
   canvas: {fileID: 1577199172}
+  test1: {fileID: 8115178828289095554}
+  test2: {fileID: 5186422115559815168}
 --- !u!1 &6951525900284349300
 GameObject:
   m_ObjectHideFlags: 0
@@ -14293,11 +14299,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3421357019182349549, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.2888889
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3421357019182349549, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.49010417
+      value: 0.9542763
       objectReference: {fileID: 0}
     - target: {fileID: 3421357019182349549, guid: ab2c9cc52fea25140b712ee118c29330, type: 3}
       propertyPath: m_AnchorMin.y
@@ -15463,6 +15469,30 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: referenceBoosterButtons.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: 'referenceBoosterButtons.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7442890567569691235}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: 'referenceBoosterButtons.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5186422115559815169}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: 'referenceBoosterButtons.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8453057760159424224}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: 'referenceBoosterButtons.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1638706963}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: 'referenceBoosterButtons.Array.data[4]'
+      value: 
+      objectReference: {fileID: 5186422115559815169}
     - target: {fileID: 6297379854574794480, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
       propertyPath: m_Mesh
       value: 
