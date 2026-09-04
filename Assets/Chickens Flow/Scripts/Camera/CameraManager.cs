@@ -24,6 +24,18 @@ public class CameraManager : MonoBehaviour
         {
             mainCamera.orthographicSize += orthographicSizeToAdd;
         }
+        else
+        {
+            Rect safeArea = Screen.safeArea;
+
+            // Bottom safe area inset exists
+            bool hasBottomSafeArea = safeArea.yMin > 0f;
+
+            if (hasBottomSafeArea)
+            {
+                mainCamera.orthographicSize += orthographicSizeToAdd;
+            }
+        }
     }
 
     private void OnRectTransformDimensionsChange()
