@@ -2,26 +2,33 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private float extraOrthographicSize = 1f;
+    private const float ReferenceWidth = 1080f;
+    private const float ReferenceHeight = 1920f;
 
-    private float originalSize;
+    [SerializeField] private Camera mainCamera;
+
+    // Set this to whatever orthographic size you use at 1080x1920.
+    [SerializeField] private float orthographicSizeToAdd = 2f;
 
     private void Awake()
     {
-        if (mainCamera == null)
-            mainCamera = Camera.main;
+        AdjustCamera();
+    }
 
-        originalSize = mainCamera.orthographicSize;
+    private void AdjustCamera()
+    {
+        float referenceAspect = ReferenceHeight / ReferenceWidth;
+        float currentAspect = (float)Screen.height / Screen.width;
 
-        Rect safeArea = Screen.safeArea;
-
-        // Bottom safe area inset exists
-        bool hasBottomSafeArea = safeArea.yMin > 0f;
-
-        if (hasBottomSafeArea)
+        if (currentAspect < referenceAspect)
         {
-            mainCamera.orthographicSize = originalSize + extraOrthographicSize;
+            mainCamera.orthographicSize += orthographicSizeToAdd;
         }
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        if (mainCamera != null)
+            AdjustCamera();
     }
 }
