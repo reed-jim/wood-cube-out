@@ -69,8 +69,6 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
         boosterSkeletonGraphic[boosterIndex].color = Color.white;
 
-        Debug.Log($"Safearea {useBoosterButtons[boosterIndex].transform.position} {referenceBoosterButtons[boosterIndex].transform.position}");
-
         useBoosterButtons[boosterIndex].transform.position = referenceBoosterButtons[boosterIndex].transform.position;
 
         while (step < maxStep)
@@ -148,8 +146,6 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
         boosterSkeletonGraphic[boosterIndex].color = Color.white;
-
-        Debug.Log($"Safearea {useBoosterButtons[boosterIndex].transform.position} {referenceBoosterButtons[boosterIndex].transform.position}");
 
         useBoosterButtons[boosterIndex].transform.position = referenceBoosterButtons[boosterIndex].transform.position;
 

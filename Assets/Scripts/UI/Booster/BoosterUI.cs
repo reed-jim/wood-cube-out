@@ -24,9 +24,6 @@ public class BoosterUI : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private RectTransform boosterContainer;
-    [SerializeField] private RectTransform addMoreScrewPortButtonRT;
-    [SerializeField] private RectTransform breakModeButtonRT;
-    [SerializeField] private RectTransform clearAllScrewPortsButtonRT;
     [SerializeField] private RectTransform breakModeContainer;
     [SerializeField] private CanvasGroup breakModeContainerCanvasGroup;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
@@ -78,9 +75,6 @@ public class BoosterUI : MonoBehaviour
     private bool _isPreventShowWarningPopup;
 
     private Vector2 _initialBoosterContainerPosition;
-    private Vector2 _initialAddMoreScrewPortButtonPosition;
-    private Vector2 _initialbreakObjectButtonPosition;
-    private Vector2 _initialClearAllScrewPortsButtonPosition;
 
     private void Awake()
     {
@@ -112,9 +106,6 @@ public class BoosterUI : MonoBehaviour
     private void Start()
     {
         _initialBoosterContainerPosition = boosterContainer.localPosition;
-        _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
-        _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
-        _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
 
         blackOverlay.gameObject.SetActive(false);
         skeletonGraphic.gameObject.SetActive(false);
@@ -141,9 +132,6 @@ public class BoosterUI : MonoBehaviour
     private void Reset()
     {
         Tween.LocalPosition(boosterContainer, _initialBoosterContainerPosition, duration: transitionTime);
-        Tween.LocalPosition(addMoreScrewPortButtonRT, _initialAddMoreScrewPortButtonPosition, duration: transitionTime);
-        Tween.LocalPosition(breakModeButtonRT, _initialbreakObjectButtonPosition, duration: transitionTime);
-        Tween.LocalPosition(clearAllScrewPortsButtonRT, _initialClearAllScrewPortsButtonPosition, duration: transitionTime);
 
         breakModeContainer.gameObject.SetActive(false);
 
