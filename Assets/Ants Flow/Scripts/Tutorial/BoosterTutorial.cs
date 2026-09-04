@@ -20,6 +20,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     [SerializeField] private SkeletonGraphic tutorialHand;
     [SerializeField] private SkeletonAnimation worldTutorialHand;
     [SerializeField] private Button[] useBoosterButtons;
+    [SerializeField] private Button[] referenceBoosterButtons;
     [SerializeField] private SkeletonGraphic[] boosterSkeletonGraphic;
 
     public int[] boosterTutorialLevels;
@@ -68,6 +69,10 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
         boosterSkeletonGraphic[boosterIndex].color = Color.white;
 
+        Debug.Log($"Safearea {useBoosterButtons[boosterIndex].transform.position} {referenceBoosterButtons[boosterIndex].transform.position}");
+
+        useBoosterButtons[boosterIndex].transform.position = referenceBoosterButtons[boosterIndex].transform.position;
+
         while (step < maxStep)
         {
             yield return waitForSeconds;
@@ -92,6 +97,8 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
         boosterSkeletonGraphic[boosterIndex].color = Color.white;
+
+        useBoosterButtons[boosterIndex].transform.position = referenceBoosterButtons[boosterIndex].transform.position;
 
         while (step < maxStep)
         {
@@ -141,6 +148,10 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
 
         useBoosterButtons[boosterIndex].gameObject.SetActive(true);
         boosterSkeletonGraphic[boosterIndex].color = Color.white;
+
+        Debug.Log($"Safearea {useBoosterButtons[boosterIndex].transform.position} {referenceBoosterButtons[boosterIndex].transform.position}");
+
+        useBoosterButtons[boosterIndex].transform.position = referenceBoosterButtons[boosterIndex].transform.position;
 
         while (step < maxStep)
         {
