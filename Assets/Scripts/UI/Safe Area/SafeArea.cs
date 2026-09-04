@@ -1,70 +1,72 @@
 using UnityEngine;
 
-[RequireComponent(typeof(RectTransform))]
 public class SafeArea : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
 
-    private RectTransform rectTransform;
-
-    private void Awake()
-    {
-        rectTransform = GetComponent<RectTransform>();
-        if (canvas == null)
-        {
-            canvas = GetComponentInParent<Canvas>();
-        }
-    }
-
+    /*SendMessage cannot be called during Awake, CheckConsistency, or OnValidate */
     private void Start()
     {
-        ApplySafeArea();
-    }
-
-    public void ApplySafeArea()
-    {
-        if (rectTransform == null) rectTransform = GetComponent<RectTransform>();
-
-        if (canvas == null)
-        {
-            canvas = GetComponentInParent<Canvas>();
-            if (canvas == null) return;
-        }
-
-        Rect safeArea = Screen.safeArea;
-        Rect canvasRect = canvas.rootCanvas.pixelRect;
-
-        if (canvasRect.width <= 0 || canvasRect.height <= 0) return;
-
-        // Calculate normalized anchors
-        Vector2 anchorMin = safeArea.position;
-        Vector2 anchorMax = safeArea.position + safeArea.size;
-
-        anchorMin.x /= canvasRect.width;
-        anchorMin.y /= canvasRect.height;
-        anchorMax.x /= canvasRect.width;
-        anchorMax.y /= canvasRect.height;
-
-        rectTransform.anchorMin = anchorMin;
-        rectTransform.anchorMax = anchorMax;
-
-        rectTransform.offsetMin = Vector2.zero;
-        rectTransform.offsetMax = Vector2.zero;
-    }
-
-#if UNITY_EDITOR
-    // Allows safe area to update instantly when swapping devices in Unity Game View Simulator
-    private void OnRectTransformDimensionsChange()
-    {
-        ApplySafeArea();
+        AdjustToSafeArea();
     }
 
     private void OnValidate()
     {
-        UnityEditor.EditorApplication.delayCall += () =>
-        {
-            if (this != null) ApplySafeArea();
-        };
+        AdjustToSafeArea();
     }
-#endif
+
+    private void AdjustToSafeArea()
+    {
+        RectTransform uiElement = GetComponent<RectTransform>();
+
+        Rect safeArea = Screen.safeArea;
+
+        if (canvas == null)
+        {
+            canvas = uiElement.GetComponentInParent<Canvas>();
+        }
+
+        if (canvas == null)
+        {
+            return;
+        }
+
+        Vector2 safeAreaMin = safeArea.position;
+        Vector2 safeAreaMax = safeArea.position + safeArea.size;
+
+        Vector2 minAnchor = new Vector2(safeAreaMin.x / canvas.pixelRect.width, safeAreaMin.y / canvas.pixelRect.height);
+        Vector2 maxAnchor = new Vector2(safeAreaMax.x / canvas.pixelRect.width, safeAreaMax.y / canvas.pixelRect.height);
+
+        uiElement.anchorMin = minAnchor;
+        uiElement.anchorMax = maxAnchor;
+
+        uiElement.offsetMin = Vector2.zero;
+        uiElement.offsetMax = Vector2.zero;
+    }
+
+    // void AdjustToSafeArea()
+    // {
+    //     RectTransform uiElement = GetComponent<RectTransform>();
+
+    //     Rect safeArea = Screen.safeArea;
+    //     Canvas canvas = uiElement.GetComponentInParent<Canvas>();
+
+    //     Vector2 safeAreaMin = safeArea.position;
+    //     Vector2 safeAreaMax = safeArea.position + safeArea.size;
+
+    //     Vector2 safeAreaSize = safeArea.size / canvas.transform.localScale.x;
+
+    //     Vector2 screenSize = canvas.GetComponent<RectTransform>().sizeDelta;
+
+    //     Vector2 localPosition = new Vector2(
+    //         (safeAreaMin.x + safeAreaMax.x) * 0.5f - screenSize.x * 0.5f,
+    //         (safeAreaMin.y + safeAreaMax.y) * 0.5f - screenSize.y * 0.5f
+    //     );
+
+    //     Debug.Log(safeArea.center + "/" + safeArea.position + "/" + safeArea.y);
+
+    //     uiElement.localPosition = localPosition;
+
+    //     uiElement.sizeDelta = safeAreaSize;
+    // }
 }
