@@ -21,6 +21,7 @@ public class NotificationPopup : BasePopup
         IAPCoinItemUI.showNotificationEvent += ShowNotification;
         RemoveAdPopup.showNotificationEvent += ShowNotification;
         SaferioIAPManager.showNotificationEvent += ShowNotification;
+        SaferioIAPManager.showNotificationNoLocalizedEvent += ShowNotificationNoLocalized;
         IAPReviewPopup.showNotificationEvent += ShowNotification;
         CompensatePopup.showNotificationEvent += ShowNotification;
         BackupPopup.showNotificationEvent += ShowNotification;
@@ -41,6 +42,7 @@ public class NotificationPopup : BasePopup
         IAPCoinItemUI.showNotificationEvent -= ShowNotification;
         RemoveAdPopup.showNotificationEvent -= ShowNotification;
         SaferioIAPManager.showNotificationEvent -= ShowNotification;
+        SaferioIAPManager.showNotificationNoLocalizedEvent -= ShowNotificationNoLocalized;
         IAPReviewPopup.showNotificationEvent -= ShowNotification;
         CompensatePopup.showNotificationEvent -= ShowNotification;
         BackupPopup.showNotificationEvent -= ShowNotification;
@@ -48,7 +50,7 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationWithParamEvent -= ShowNotification;
         BoosterUI.showNotificationWithParamEvent -= ShowNotification;
         WaterFlowGameInput.showNotificationEvent -= ShowNotification;
-        
+
         showNotificationEvent -= ShowNotification;
     }
 
@@ -92,6 +94,8 @@ public class NotificationPopup : BasePopup
 
     private void ShowNotification(string titleTranslation, string descriptionTranslation)
     {
+        localizedDescription.enabled = true;
+
         localizedTitle.TranslationName = titleTranslation;
         localizedDescription.TranslationName = descriptionTranslation;
 
@@ -100,6 +104,8 @@ public class NotificationPopup : BasePopup
 
     private void ShowNotification(string titleTranslation, string descriptionTranslation, string parameter, string value)
     {
+        localizedDescription.enabled = true;
+
         localizedTitle.TranslationName = titleTranslation;
         localizedDescription.TranslationName = descriptionTranslation;
 
@@ -111,9 +117,11 @@ public class NotificationPopup : BasePopup
         Show();
     }
 
-    private void ShowNotification(string description)
+    private void ShowNotificationNoLocalized(string titleTranslation, string description)
     {
         localizedDescription.enabled = false;
+
+        localizedTitle.TranslationName = titleTranslation;
         descriptionText.text = description;
 
         Show();

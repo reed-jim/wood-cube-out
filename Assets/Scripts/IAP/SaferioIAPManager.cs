@@ -32,6 +32,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action<string> buyIAPPackageEvent;
     public static event Action removeAdsEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<string, string> showNotificationNoLocalizedEvent;
     #endregion
 
     private void Awake()
@@ -344,6 +345,13 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         var apple = m_AppleExtensions;
 
+        if (apple == null)
+        {
+            showNotificationEvent?.Invoke(GameConstants.ERROR, GameConstants.PLEASE_TRY_AGAIN);
+
+            return;
+        }
+
         apple.RestoreTransactions((result, message) =>
         {
             if (!result)
@@ -352,7 +360,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             }
             else
             {
-                showNotificationEvent?.Invoke(GameConstants.NOTIFICATION, message);
+                showNotificationNoLocalizedEvent?.Invoke(GameConstants.NOTIFICATION, message);
             }
         });
     }
