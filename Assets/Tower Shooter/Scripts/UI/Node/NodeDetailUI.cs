@@ -62,11 +62,9 @@ public class NodeDetailUI : MonoBehaviour
 
     public void Unlock()
     {
-        UserResourcesObserver userResourcesObserver = ResourceManager.Ins.userResourcesObserver;
-
-        if (userResourcesObserver.UserResources.UpgradePoint > 0)
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.UpgradePoint) > 0)
         {
-            userResourcesObserver.ChangeUpgradePoint(-1);
+            ResourceManager.Ins.ChangeResource(ResourceType.UpgradePoint, -1);
 
             node.isUnlocked = false;
 
