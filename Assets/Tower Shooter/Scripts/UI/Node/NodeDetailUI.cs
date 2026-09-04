@@ -19,6 +19,7 @@ public class NodeDetailUI : MonoBehaviour
     void Awake()
     {
         closeButton.onClick.AddListener(Close);
+        unlockButton.onClick.AddListener(Unlock);
     }
 
     public void Init(BaseCharacter node)
@@ -61,7 +62,20 @@ public class NodeDetailUI : MonoBehaviour
 
     public void Unlock()
     {
+        UserResourcesObserver userResourcesObserver = ResourceManager.Ins.userResourcesObserver;
 
+        if (userResourcesObserver.UserResources.UpgradePoint > 0)
+        {
+            userResourcesObserver.ChangeUpgradePoint(-1);
+
+            node.isUnlocked = false;
+
+            node.Init();
+        }
+        else
+        {
+
+        }
     }
 
     public void Close()

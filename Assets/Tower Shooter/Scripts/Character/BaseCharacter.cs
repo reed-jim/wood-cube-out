@@ -13,8 +13,9 @@ public class BaseCharacter : MonoBehaviour
     [Header("State")]
     public bool isUnlocked;
 
-
     public float speedToSpaceShip;
+
+    public NodeData nodeData;
 
     public List<StatModifier> upgrades;
     public List<Augment> ownedAugments;
@@ -25,6 +26,13 @@ public class BaseCharacter : MonoBehaviour
     }
 
     public void Init(NodeData nodeData)
+    {
+        this.nodeData = nodeData;
+
+        Init();
+    }
+
+    public void Init()
     {
         if (nodeData.isUnlocked)
         {

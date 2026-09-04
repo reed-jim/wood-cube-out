@@ -73,6 +73,16 @@ public class UserResourcesObserver : ScriptableObject
             Save();
         }
     }
+
+    public void ChangeUpgradePoint(int value)
+    {
+        Load();
+
+        userResources.UpgradePoint += value;
+        userResources.UpgradePoint = Mathf.Max(userResources.UpgradePoint, 0);
+
+        Save();
+    }
 }
 
 [Serializable]
@@ -80,6 +90,7 @@ public class UserResources
 {
     [SerializeField] private float coinQuantity;
     [SerializeField] private int[] boosterQuantities;
+    [SerializeField] private int upgradePoint;
 
     public float CoinQuantity
     {
@@ -96,6 +107,15 @@ public class UserResources
         set
         {
             boosterQuantities = value;
+        }
+    }
+
+    public int UpgradePoint
+    {
+        get => upgradePoint;
+        set
+        {
+            upgradePoint = value;
         }
     }
 

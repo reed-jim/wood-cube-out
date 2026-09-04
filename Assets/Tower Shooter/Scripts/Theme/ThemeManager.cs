@@ -195,20 +195,6 @@ public class ThemeManager : MonoBehaviour
             _                    => Common
         };
     }
-
-    public static Color GetResourceColor(ResourceType resource)
-    {
-        return resource switch
-        {
-            ResourceType.Credits    => Credits,
-            ResourceType.Energy     => Energy,
-            ResourceType.Minerals   => Minerals,
-            ResourceType.Research   => Research,
-            ResourceType.DarkMatter => DarkMatter,
-            ResourceType.Fuel       => Fuel,
-            _                       => PrimaryText
-        };
-    }
 }
 
 
@@ -224,14 +210,4 @@ public enum ShipRarity
     Epic,
     Legendary,
     Mythic
-}
-
-public enum ResourceType
-{
-    Credits,
-    Energy,
-    Minerals,
-    Research,
-    DarkMatter,
-    Fuel
 }

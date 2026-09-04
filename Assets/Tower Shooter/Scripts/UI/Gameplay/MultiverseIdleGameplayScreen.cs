@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -7,6 +8,9 @@ public class MultiverseIdleGameplayScreen : MonoBehaviour
 {
     public Button openAugmentSelectionButton;
     public Button openUpgradeButton;
+
+    [Header("Resource")]
+    public TMP_Text upgradePointText;
 
     public static event Action<ScreenRoute> switchRouteEvent;
 
@@ -24,5 +28,10 @@ public class MultiverseIdleGameplayScreen : MonoBehaviour
     private void OpenUpgrade()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Upgrade);
+    }
+
+    public void UpdateUpgradePointText(int upgradePoint)
+    {
+        upgradePointText.text = $"{upgradePoint}";
     }
 }
