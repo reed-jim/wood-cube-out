@@ -10,9 +10,6 @@ public class BaseCharacter : MonoBehaviour
     public CharacterServiceLocator serviceLocator;
     public CharacterStats stats;
 
-    [Header("State")]
-    public bool isUnlocked;
-
     public float speedToSpaceShip;
 
     public NodeData nodeData;

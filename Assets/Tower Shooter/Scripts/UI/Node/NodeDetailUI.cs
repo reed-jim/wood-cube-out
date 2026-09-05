@@ -66,9 +66,11 @@ public class NodeDetailUI : MonoBehaviour
         {
             ResourceManager.Ins.ChangeResource(ResourceType.UpgradePoint, -1);
 
-            node.isUnlocked = false;
+            node.nodeData.isUnlocked = true;
 
             node.Init();
+
+            Close();
         }
         else
         {
