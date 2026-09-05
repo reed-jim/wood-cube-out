@@ -38,6 +38,22 @@ public static class CommonUtil
         return mostCommon;
     }
 
+    public static List<T> GetRandomItems<T>(List<T> list, int count)
+    {
+        count = Mathf.Min(count, list.Count);
+
+        List<T> shuffled = new List<T>(list);
+
+        // Fisher-Yates shuffle
+        for (int i = shuffled.Count - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            (shuffled[i], shuffled[j]) = (shuffled[j], shuffled[i]);
+        }
+
+        return shuffled.GetRange(0, count);
+    }
+
     public static Vector3 RectTransformToWorldPosition(
     RectTransform rectTransform,
     Camera worldCamera,

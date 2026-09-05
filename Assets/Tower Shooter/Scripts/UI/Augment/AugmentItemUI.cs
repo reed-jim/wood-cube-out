@@ -24,20 +24,13 @@ public class AugmentItemUIs : MonoBehaviour
         showAugmentDetailButton.onClick.AddListener(ApplyAugment);
     }
 
-    public void Init(int index, Action onAugmentSelected)
+    public void Init(Augment augment, Action onAugmentSelected)
     {
-        if (index < augmentContainer.augments.Count)
-        {
-            gameObject.SetActive(true);
+        gameObject.SetActive(true);
 
-            augment = augmentContainer.augments[index];
+        this.augment = augment;
 
-            SetupAugment(augment);
-        }
-        else
-        {
-            gameObject.SetActive(false);
-        }
+        SetupAugment(augment);
 
         this.onAugmentSelected = onAugmentSelected;
     }
