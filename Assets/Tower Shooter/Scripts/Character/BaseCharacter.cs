@@ -80,10 +80,13 @@ public class BaseCharacter : MonoBehaviour
                 power = stats.GetStat(StatType.Damage).Value;
                 float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCircleCompletion).Value;
                 float powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
+                bool isCritical = false;
 
                 if (Random.value < chanceForMorePowerOnCircleCompletion)
                 {
                     power *= powerOnCircleCompletionMultiplier;
+
+                    isCritical = true;
                 }
 
                 PowerManager.Ins.AddPower(power);
@@ -92,7 +95,7 @@ public class BaseCharacter : MonoBehaviour
 
                 damageText.transform.SetParent(container.parent);
 
-                damageText.ShowDamage(power, container.position);
+                damageText.ShowDamage(power, container.position, isCritical, target: transform);
             });
 
             yield return new WaitForSeconds(interval);

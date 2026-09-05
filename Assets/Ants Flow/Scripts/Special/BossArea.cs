@@ -75,7 +75,7 @@ namespace AntsFlow
 
             DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
 
-            damageText.ShowDamage(1, transform.position.MinusZALittle());
+            // damageText.ShowDamage(1, transform.position.MinusZALittle());
             lazyHealthBar.SetProgress((float)currentHealth / maxHealth);
 
             if (currentHealth <= 0)

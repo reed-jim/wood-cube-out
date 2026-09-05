@@ -105,6 +105,6 @@ public class HealthComponent : MonoBehaviour, IDamageable
     {
         DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
 
-        damageText.ShowDamage((int)damage, position.MinusZALittle());
+        // damageText.ShowDamage((int)damage, position.MinusZALittle());
     }
 }

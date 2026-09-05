@@ -1,54 +1,121 @@
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class DamageText : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageText;
 
-    [Header("Animation")]
-    [SerializeField] private float lifetime = 0.7f;
-    [SerializeField] private float floatDistance = 1f;
+    [Header("Animation Settings")]
+    [SerializeField] private float lifetime = 0.85f;
+    [SerializeField] private float floatDistance = 1.2f;
 
-    public void ShowDamage(float damage, Vector3 spawnPosition)
+    [Header("Juice")]
+    [SerializeField] private Color normalColor = Color.white;
+    [SerializeField] private Color critColor = new Color(1f, 0.85f, 0.2f); // Punchy yellow-gold
+
+    // Aggregation tracking
+    public Transform CurrentTarget { get; private set; }
+    public float CurrentDamage { get; private set; }
+    public bool IsActive { get; private set; }
+
+    private Sequence currentSequence;
+    private Action<DamageText> onCompleteCallback;
+
+    public void ShowDamage(float damage, Vector3 spawnPosition, bool isCritical, Transform target, Action<DamageText> onComplete = null)
     {
-        transform.DOKill();
+        IsActive = true;
+        CurrentTarget = target;
+        CurrentDamage = damage;
+        onCompleteCallback = onComplete;
 
-        damageText.DOKill();
-
-        damageText.text = $"{damage:F2}";
-        transform.position = spawnPosition;
-
-        // Reset
-        transform.localScale = Vector3.one * 0.85f;
+        // Reset transforms & kill existing tweens
+        KillTweens();
+        
+        damageText.text = $"{CurrentDamage:F0}";
+        damageText.color = isCritical ? critColor : normalColor;
         damageText.alpha = 1f;
 
-        Sequence sequence = DOTween.Sequence();
+        transform.position = spawnPosition;
 
-        Vector3 targetPos = spawnPosition +
-                    Vector3.up * floatDistance +
-                    Vector3.right * Random.Range(-0.3f, 0.3f);
+        // Random directional trajectory (-1 or +1)
+        float horizontalDir = UnityEngine.Random.value < 0.5f ? -1f : 1f;
+        float xOffset = UnityEngine.Random.Range(0.4f, 0.7f) * horizontalDir;
+        Vector3 targetPos = spawnPosition + new Vector3(xOffset, floatDistance, 0f);
 
-        sequence.Join(
-            transform.DOMove(targetPos, lifetime)
-                .SetEase(Ease.OutQuad)
+        // Subtle random rotation (-8 to 8 deg)
+        transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-8f, 8f));
+
+        float targetScale = isCritical ? 1.4f : 1.0f;
+        transform.localScale = Vector3.zero;
+
+        currentSequence = DOTween.Sequence();
+
+        // 1. Initial Explosive Pop (OutBack)
+        currentSequence.Join(
+            transform.DOScale(targetScale, 0.12f).SetEase(Ease.OutBack, 3.5f)
         );
 
-        sequence.Append(
-            transform.DOScale(1.1f, 0.08f)
-                .SetEase(Ease.OutQuad)
+        // 2. Smooth Physics Arc Trajectory
+        currentSequence.Join(
+            transform.DOMoveY(targetPos.y, lifetime).SetEase(Ease.OutQuad)
+        );
+        currentSequence.Join(
+            transform.DOMoveX(targetPos.x, lifetime).SetEase(Ease.OutCubic)
         );
 
-        sequence.Append(
-            transform.DOScale(1f, 0.06f)
-                .SetEase(Ease.OutQuad)
+        // 3. Smooth Critical Hit Impact (Punch Scale instead of position shake)
+        if (isCritical)
+        {
+            currentSequence.Insert(
+                0.08f,
+                transform.DOPunchScale(Vector3.one * 0.4f, 0.25f, vibrato: 5, elasticity: 0.5f)
+            );
+        }
+
+        // 4. Fade Out
+        currentSequence.Insert(
+            lifetime * 0.5f,
+            damageText.DOFade(0f, lifetime * 0.5f).SetEase(Ease.InQuad)
         );
 
-        sequence.Insert(
-            lifetime * 0.35f,
-            damageText.DOFade(0f, lifetime * 0.65f)
-        );
+        currentSequence.OnComplete(FinishAndReturn);
+    }
 
-        sequence.OnComplete(() => ObjectPoolingEverything.ReturnToPool(GameConstants.damageText, gameObject));
+    // Call this to add damage to an existing floating number
+    public void AddDamage(float additionalDamage, bool isCritical)
+    {
+        CurrentDamage += additionalDamage;
+        damageText.text = $"{CurrentDamage:F0}";
+
+        if (isCritical) damageText.color = critColor;
+
+        // Punch/Pop animation when aggregated to show the number grew
+        transform.DOKill(complete: false); // Kill active scale tweens, keep position sequence
+        
+        float punchMagnitude = isCritical ? 0.5f : 0.3f;
+        transform.DOPunchScale(Vector3.one * punchMagnitude, 0.18f, vibrato: 6, elasticity: 0.4f);
+
+        // Restart fade-out delay on hit refresh
+        currentSequence?.Insert(
+            lifetime * 0.5f,
+            damageText.DOFade(0f, lifetime * 0.5f).SetEase(Ease.InQuad)
+        );
+    }
+
+    private void KillTweens()
+    {
+        currentSequence?.Kill();
+        transform.DOKill();
+        damageText.DOKill();
+    }
+
+    private void FinishAndReturn()
+    {
+        IsActive = false;
+        CurrentTarget = null;
+        onCompleteCallback?.Invoke(this);
+        ObjectPoolingEverything.ReturnToPool(GameConstants.damageText, gameObject);
     }
 }

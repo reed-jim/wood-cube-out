@@ -39,7 +39,7 @@ public class BaseNode : MonoBehaviour
 
                 damageText.transform.SetParent(container);
 
-                damageText.ShowDamage(power, container.position);
+                // damageText.ShowDamage(power, container.position);
             });
 
             yield return new WaitForSeconds(interval);
