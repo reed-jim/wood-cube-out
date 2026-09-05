@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public enum ResourceType
@@ -11,6 +12,7 @@ public enum ResourceType
 public class ResourceManager : Singleton<ResourceManager>
 {
     public SerializableDictionary<ResourceType, ResourceDataItem> resources;
+    public SerializableDictionary<ResourceType, TMP_Text> resourceTexts;
     public ResourceData resourceData;
 
     protected override void MoreActionOnAwake()
@@ -30,6 +32,8 @@ public class ResourceManager : Singleton<ResourceManager>
         {
             resources.Add(resourceType, new ResourceDataItem(resourceType, value));
         }
+
+        resourceTexts[resourceType].text = $"{resources[resourceType].value}";
     }
 
     public ResourceData GetDefaultResourceData()

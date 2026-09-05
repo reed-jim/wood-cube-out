@@ -17,12 +17,14 @@ public class AugmentItemUIs : MonoBehaviour
 
     public static event Action<Augment> showAugmentDetailEvent;
 
+    private Action onAugmentSelected;
+
     void Awake()
     {
         showAugmentDetailButton.onClick.AddListener(ApplyAugment);
     }
 
-    public void Init(int index)
+    public void Init(int index, Action onAugmentSelected)
     {
         if (index < augmentContainer.augments.Count)
         {
@@ -36,6 +38,8 @@ public class AugmentItemUIs : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+
+        this.onAugmentSelected = onAugmentSelected;
     }
 
     private void SetupAugment(Augment augment)
@@ -51,6 +55,8 @@ public class AugmentItemUIs : MonoBehaviour
 
     public void ApplyAugment()
     {
-        AugmentManager.Ins.AddAugment(augment);
+        AugmentManager.Ins.ApplyAugment(augment);
+
+        onAugmentSelected?.Invoke();
     }
 }

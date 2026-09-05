@@ -5,30 +5,21 @@ public class AugmentManager : Singleton<AugmentManager>
 {
     public BaseCharacter player;
 
-    void Start()
-    {
-        Init();
-    }
 
-    public void Init()
+    public void ApplyAugment(Augment augment)
     {
-        player.ownedAugments = new List<Augment>();
-    }
-
-    public void ApplyAugments()
-    {
-        for (int i = 0; i < player.ownedAugments.Count; i++)
+        if (augment.isNeedCharacterToApply)
         {
-            Augment augment = player.ownedAugments[i];
 
-            augment.Apply(player.stats);
+        }
+        else
+        {
+            augment.Apply(null);
         }
     }
 
     public void AddAugment(Augment augment)
     {
-        ApplyAugments();
-
         player.ownedAugments.Add(augment);
     }
 

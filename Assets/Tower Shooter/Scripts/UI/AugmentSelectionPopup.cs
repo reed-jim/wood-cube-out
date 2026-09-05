@@ -19,7 +19,7 @@ public class AugmentSelectionPopup : BasePopup
     {
         for (int i = 0; i < augmentItems.Count; i++)
         {
-            augmentItems[i].Init(i);
+            augmentItems[i].Init(i, onAugmentSelected: Hide);
         }
     }
 }

@@ -15,8 +15,15 @@ public class Augment : ScriptableObject
     // Complex / Dynamic Effects
     public List<AugmentEffect> dynamicEffects = new List<AugmentEffect>();
 
+    public bool isNeedCharacterToApply;
+
     public virtual void Apply(CharacterStats characterStats)
     {
+        if (isNeedCharacterToApply && !IsCharacterSuitable(characterStats.characterServiceLocator.character))
+        {
+            return;
+        }
+
         foreach (var modData in statModifiers)
         {
             characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, 0, this));
@@ -36,6 +43,11 @@ public class Augment : ScriptableObject
         {
             effect.RemoveEffect(characterStats, this);
         }
+    }
+
+    public virtual bool IsCharacterSuitable(BaseCharacter character)
+    {
+        return true;
     }
 
     public string BuildFullDescription(StatColorConfigSO config)
