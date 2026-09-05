@@ -15,7 +15,7 @@ public class Augment : ScriptableObject
     // Complex / Dynamic Effects
     public List<AugmentEffect> dynamicEffects = new List<AugmentEffect>();
 
-    public bool isNeedCharacterToApply;
+    public bool isNeedCharacterToApply = true;
 
     public virtual void Apply(CharacterStats characterStats)
     {
