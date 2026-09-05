@@ -35,11 +35,21 @@ public class SaferioTweenBehaviour : MonoBehaviour
 
     protected void AddTween(Tween tween)
     {
+        if (_tweens == null)
+        {
+            _tweens = new List<Tween>();
+        }
+
         _tweens.Add(tween);
     }
 
     protected void AddSequence(Sequence sequence)
     {
+        if (_sequences == null)
+        {
+            _sequences = new List<Sequence>();
+        }
+
         _sequences.Add(sequence);
     }
 

@@ -30,4 +30,17 @@ public class NodeUI : MonoBehaviour
 
         SaferioTween.Punch(powerText.transform);
     }
+
+    public void Lock()
+    {
+        circleProgress.fillAmount = 0;
+        powerText.text = "Locked";
+
+        powerText.color = ThemeManager.DisabledText;
+    }
+
+    public void Unlock()
+    {
+        powerText.color = ThemeManager.ActiveText;
+    }
 }

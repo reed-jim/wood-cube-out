@@ -33,12 +33,19 @@ public class BaseCharacter : MonoBehaviour
     {
         if (nodeData.isUnlocked)
         {
+            serviceLocator.nodeUI.Unlock();
+
             StartCoroutine(Generating());
         }
         else
         {
-            serviceLocator.nodeUI.powerText.text = "Locked";
+            serviceLocator.nodeUI.Lock();
         }
+    }
+
+    public void Reset()
+    {
+
     }
 
     private IEnumerator Generating()
@@ -71,12 +78,12 @@ public class BaseCharacter : MonoBehaviour
             .OnComplete(() =>
             {
                 power = stats.GetStat(StatType.Damage).Value;
-                
+
                 PowerManager.Ins.AddPower(power);
 
                 DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
 
-                damageText.transform.SetParent(container);
+                damageText.transform.SetParent(container.parent);
 
                 damageText.ShowDamage(power, container.position);
             });

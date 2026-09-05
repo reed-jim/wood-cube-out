@@ -21,6 +21,7 @@ public class ThemeManager : MonoBehaviour
     public static readonly Color PrimaryText   = Hex("#E8F1FF");
     public static readonly Color SecondaryText = Hex("#91A4C4");
     public static readonly Color DisabledText  = Hex("#53627A");
+    public static readonly Color ActiveText  = Hex("#50FF00");
 
     // =========================================================
     // MAIN ACCENTS

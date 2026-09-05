@@ -16,6 +16,9 @@ public class NodeDetailUI : MonoBehaviour
 
     public BaseCharacter node;
 
+    [Header("Animation")]
+    public ScaleTransition scaleTransition;
+
     void Awake()
     {
         closeButton.onClick.AddListener(Close);
@@ -28,7 +31,7 @@ public class NodeDetailUI : MonoBehaviour
 
         container.position = node.serviceLocator.nodeUI.container.transform.position;
 
-        SaferioTween.ShowWithPunch(container, 1);
+        Show();
 
         foreach (var statType in UIElementsOfStats.Keys)
         {
@@ -53,10 +56,28 @@ public class NodeDetailUI : MonoBehaviour
 
     public void UpdateStatText(BaseCharacter node, StatType statType)
     {
-        StatUpgradeData upgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
+        // StatUpgradeData upgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
 
-        UIElementsOfStats[statType].statText.text = $"{upgradeData.currentValue:F2} --> <color=#008502>{upgradeData.nextValue:F2}</color>";
-        UIElementsOfStats[statType].costText.text = $"{(int)upgradeData.coinRequired}";
+        // UIElementsOfStats[statType].statText.text = $"{upgradeData.currentValue:F2} --> <color=#008502>{upgradeData.nextValue:F2}</color>";
+        // UIElementsOfStats[statType].costText.text = $"{(int)upgradeData.coinRequired}";
+
+        Stat stat = node.serviceLocator.stats.GetStat(statType);
+
+        float baseValue = stat.BaseValue;
+        float currentValue = stat.Value;
+
+        Color color = ThemeManager.PrimaryText;
+
+        if (currentValue > baseValue)
+        {
+            color = Color.green;
+        }
+        else if (currentValue < baseValue)
+        {
+            color = Color.red;
+        }
+
+        UIElementsOfStats[statType].statText.text = $"{statType}: <color={ColorUtil.ColorToHex(color)}>{node.serviceLocator.stats.GetStat(statType).Value}";
     }
 
     public void Unlock()
@@ -77,9 +98,17 @@ public class NodeDetailUI : MonoBehaviour
         }
     }
 
+    public void Show()
+    {
+        scaleTransition.Show(onCompletedAction: () =>
+        {
+
+        });
+    }
+
     public void Close()
     {
-        SaferioTween.ScaleDownWithPunch(container, 1);
+        scaleTransition.Hide();
     }
 }
 
