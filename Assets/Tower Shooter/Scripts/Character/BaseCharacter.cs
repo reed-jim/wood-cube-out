@@ -78,6 +78,13 @@ public class BaseCharacter : MonoBehaviour
             .OnComplete(() =>
             {
                 power = stats.GetStat(StatType.Damage).Value;
+                float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCircleCompletion).Value;
+                float powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
+
+                if (Random.value < chanceForMorePowerOnCircleCompletion)
+                {
+                    power *= powerOnCircleCompletionMultiplier;
+                }
 
                 PowerManager.Ins.AddPower(power);
 

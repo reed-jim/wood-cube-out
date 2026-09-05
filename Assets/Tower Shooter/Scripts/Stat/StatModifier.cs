@@ -13,7 +13,10 @@ public enum StatType
     AbilityHaste,   // Cooldown reduction calculation
     CritChance,
     Efficiency,
-    CoinEfficiency
+    CoinEfficiency,
+
+    ChanceForMorePowerOnCircleCompletion,
+    PowerOnCircleCompletionMultiplier
 }
 
 public enum ModifierType
