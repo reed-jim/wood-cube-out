@@ -3,21 +3,27 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AugmentItemUIs : PageViewItem
+public class AugmentItemUIs : MonoBehaviour
 {
     public TMP_Text title;
+    public TMP_Text description;
     public Button showAugmentDetailButton;
 
     public AugmentContainer augmentContainer;
 
     private Augment augment;
 
+    [SerializeField] private StatColorConfigSO colorConfig;
+
     public static event Action<Augment> showAugmentDetailEvent;
 
-    public override void Setup(int index)
+    void Awake()
     {
-        base.Setup(index);
+        showAugmentDetailButton.onClick.AddListener(ApplyAugment);
+    }
 
+    public void Init(int index)
+    {
         if (index < augmentContainer.augments.Count)
         {
             gameObject.SetActive(true);
@@ -32,20 +38,19 @@ public class AugmentItemUIs : PageViewItem
         }
     }
 
-    protected override void MoreActionOnAwake()
-    {
-        base.MoreActionOnAwake();
-
-        showAugmentDetailButton.onClick.AddListener(ShowAugmentDetail);
-    }
-
     private void SetupAugment(Augment augment)
     {
         title.text = augment.augmentName;
+        description.text = augment.BuildFullDescription(colorConfig);
     }
 
     private void ShowAugmentDetail()
     {
         showAugmentDetailEvent?.Invoke(augment);
+    }
+
+    public void ApplyAugment()
+    {
+        AugmentManager.Ins.AddAugment(augment);
     }
 }
