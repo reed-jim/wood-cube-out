@@ -386,7 +386,7 @@ namespace Saferio.Util.SaferioTween
             return sequence;
         }
 
-        public static Sequence Punch(Transform target, float effectScale, float initScale = 1f, float duration = 0.2f, float delay = 0,
+        public static Sequence Punch(Transform target, float effectScale = 1.1f, float initScale = 1f, float duration = 0.2f, float delay = 0,
             Action onCompleteAction = null)
         {
             target.gameObject.SetActive(true);

@@ -5,12 +5,18 @@ public class AugmentManager : Singleton<AugmentManager>
 {
     public BaseCharacter player;
 
-
     public void ApplyAugment(Augment augment)
     {
         if (augment.isNeedCharacterToApply)
         {
+            List<BaseCharacter> validNodes = NodeManager.Ins.nodes;
 
+            for (int i = 0; i < validNodes.Count; i++)
+            {
+                BaseCharacter node = validNodes[i];
+
+                augment.Apply(node.serviceLocator.stats);
+            }
         }
         else
         {

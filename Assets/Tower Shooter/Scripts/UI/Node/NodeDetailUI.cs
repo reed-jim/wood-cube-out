@@ -26,8 +26,7 @@ public class NodeDetailUI : MonoBehaviour
     {
         this.node = node;
 
-        container.SetParent(node.transform);
-        container.localPosition = new Vector3(0, -0.6f * (container.sizeDelta.y + node.serviceLocator.nodeUI.container.sizeDelta.y));
+        container.position = node.serviceLocator.nodeUI.container.transform.position;
 
         SaferioTween.ShowWithPunch(container, 1);
 

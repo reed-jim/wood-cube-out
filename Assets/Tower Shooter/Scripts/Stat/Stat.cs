@@ -92,7 +92,7 @@ public class Stat
         return removed;
     }
 
-    private float CalculateValue()
+    public float CalculateValue()
     {
         float finalValue = baseValue;
         float sumPercentAdd = 0f;

@@ -19,7 +19,7 @@ public class Augment : ScriptableObject
 
     public virtual void Apply(CharacterStats characterStats)
     {
-        if (isNeedCharacterToApply && !IsCharacterSuitable(characterStats.characterServiceLocator.character))
+        if (isNeedCharacterToApply && !IsCharacterSuitable(characterStats.serviceLocator.character))
         {
             return;
         }

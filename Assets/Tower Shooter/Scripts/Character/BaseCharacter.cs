@@ -70,6 +70,8 @@ public class BaseCharacter : MonoBehaviour
             })
             .OnComplete(() =>
             {
+                power = stats.GetStat(StatType.Damage).Value;
+                
                 PowerManager.Ins.AddPower(power);
 
                 DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);

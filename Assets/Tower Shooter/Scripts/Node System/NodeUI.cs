@@ -1,3 +1,4 @@
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,8 @@ public class NodeUI : MonoBehaviour
 
     public void UpdatePower()
     {
-        powerText.text = $"{(int)serviceLocator.stats.GetStat(StatType.Damage).Value:F2}";
+        powerText.text = $"{serviceLocator.stats.GetStat(StatType.Damage).Value:F2}";
+
+        SaferioTween.Punch(powerText.transform);
     }
 }
