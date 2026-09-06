@@ -21,7 +21,7 @@ public class AugmentItemUIs : MonoBehaviour
 
     void Awake()
     {
-        showAugmentDetailButton.onClick.AddListener(ApplyAugment);
+        showAugmentDetailButton.onClick.AddListener(PickAugment);
     }
 
     public void Init(Augment augment, Action onAugmentSelected)
@@ -46,9 +46,9 @@ public class AugmentItemUIs : MonoBehaviour
         showAugmentDetailEvent?.Invoke(augment);
     }
 
-    public void ApplyAugment()
+    public void PickAugment()
     {
-        AugmentManager.Ins.ApplyAugment(augment);
+        AugmentManager.Ins.PickAugment(augment);
 
         onAugmentSelected?.Invoke();
     }

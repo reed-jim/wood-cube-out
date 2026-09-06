@@ -15,7 +15,14 @@ public class Augment : ScriptableObject
     // Complex / Dynamic Effects
     public List<AugmentEffect> dynamicEffects = new List<AugmentEffect>();
 
+    [Header("Customize")]
     public bool isNeedCharacterToApply = true;
+    public bool isApplyImmediatelyAfterPick = true;
+
+    public virtual void Pick()
+    {
+
+    }
 
     public virtual void Apply(CharacterStats characterStats)
     {

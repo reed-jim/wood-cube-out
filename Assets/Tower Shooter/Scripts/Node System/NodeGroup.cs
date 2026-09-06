@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NodeGroup : MonoBehaviour
@@ -6,6 +7,8 @@ public class NodeGroup : MonoBehaviour
 
     public int row;
     public int column;
+
+    public List<BaseCharacter> nodes;
 
     public void Init(NodeGroupData nodeGroupData, RectTransform parent)
     {
@@ -17,6 +20,8 @@ public class NodeGroup : MonoBehaviour
         container.SetParent(parent);
         container.localPosition = Vector3.zero;
         container.localScale = Vector3.one;
+
+        nodes = new List<BaseCharacter>();
 
         for (int i = 0; i < nodeGroupData.nodeDataItems.Count; i++)
         {
@@ -41,6 +46,8 @@ public class NodeGroup : MonoBehaviour
             nodeContainer.localScale = Vector3.one;
 
             node.Init(nodeData);
+
+            nodes.Add(node);
         }
     }
 

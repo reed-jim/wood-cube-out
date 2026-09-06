@@ -5,6 +5,18 @@ public class AugmentManager : Singleton<AugmentManager>
 {
     public BaseCharacter player;
 
+    public List<Augment> pendingAugments = new List<Augment>();
+
+    public void PickAugment(Augment augment)
+    {
+        augment.Pick();
+
+        if (augment.isApplyImmediatelyAfterPick)
+        {
+            ApplyAugment(augment);
+        }
+    }
+
     public void ApplyAugment(Augment augment)
     {
         if (augment.isNeedCharacterToApply)
@@ -39,5 +51,10 @@ public class AugmentManager : Singleton<AugmentManager>
     public bool IsAugmentEquipped(Augment augment)
     {
         return player.ownedAugments.Contains(augment);
+    }
+
+    public void AddPendingAugment(Augment augment)
+    {
+        pendingAugments.Add(augment);
     }
 }

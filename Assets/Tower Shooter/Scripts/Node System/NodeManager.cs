@@ -73,4 +73,30 @@ public class NodeManager : Singleton<NodeManager>
 
         return defaultGameData;
     }
+
+    public List<BaseCharacter> GetNeighborNodes(BaseCharacter node)
+    {
+        List<BaseCharacter> neighborNodes = new List<BaseCharacter>();
+
+        for (int i = 0; i < nodeGroups.Count; i++)
+        {
+            NodeGroup nodeGroup = nodeGroups[i];
+
+            for (int j = 0; j < nodeGroup.nodes.Count; j++)
+            {
+                BaseCharacter otherNode = nodeGroup.nodes[j];
+
+                if (otherNode == node)
+                {
+
+                }
+                else
+                {
+                    neighborNodes.Add(otherNode);
+                }
+            }
+        }
+
+        return neighborNodes;
+    }
 }
