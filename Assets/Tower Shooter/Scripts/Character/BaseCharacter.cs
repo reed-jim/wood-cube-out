@@ -78,8 +78,9 @@ public class BaseCharacter : MonoBehaviour
             .OnComplete(() =>
             {
                 power = stats.GetStat(StatType.Damage).Value;
-                float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCircleCompletion).Value;
+                float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
                 float powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
+                float chanceToRepeatLastCyclePower = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
                 bool isCritical = false;
 
                 if (Random.value < chanceForMorePowerOnCircleCompletion)
@@ -91,14 +92,30 @@ public class BaseCharacter : MonoBehaviour
 
                 PowerManager.Ins.AddPower(power);
 
-                DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+                ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
 
-                damageText.transform.SetParent(container.parent);
+                // chance for repeat last cycle
+                if (Random.value < chanceToRepeatLastCyclePower)
+                {
+                    TweenManager.Ins.AddTween(Tween.Delay(0.3f).OnComplete(() =>
+                    {
+                        PowerManager.Ins.AddPower(power);
 
-                damageText.ShowDamage(power, container.position, isCritical, target: transform);
+                        ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
+                    }));
+                }
             });
 
             yield return new WaitForSeconds(interval);
         }
+    }
+
+    private void ShowGeneratedPowerText(float power, bool isCritical, Vector3 position, Transform parent)
+    {
+        DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+
+        damageText.transform.SetParent(parent);
+
+        damageText.ShowDamage(power, position, isCritical, target: transform);
     }
 }

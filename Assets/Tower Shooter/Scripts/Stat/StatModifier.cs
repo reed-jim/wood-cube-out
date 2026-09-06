@@ -15,8 +15,9 @@ public enum StatType
     Efficiency,
     CoinEfficiency,
 
-    ChanceForMorePowerOnCircleCompletion,
-    PowerOnCircleCompletionMultiplier
+    ChanceForMorePowerOnCycleCompletion,
+    PowerOnCircleCompletionMultiplier,
+    ChanceToRepeatLastCyclePower
 }
 
 public enum ModifierType
