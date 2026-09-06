@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -33,6 +34,8 @@ public class ResourceManager : Singleton<ResourceManager>
             resources.Add(resourceType, new ResourceDataItem(resourceType, value));
         }
 
+        resourceData.UpdateValue(resourceType, resources[resourceType].value);
+
         resourceTexts[resourceType].text = $"{resources[resourceType].value}";
 
         SaveResourceData();
@@ -52,6 +55,13 @@ public class ResourceManager : Singleton<ResourceManager>
     public void LoadResourceData()
     {
         resourceData = DataUtility.Load($"ResouceData {SaveSlotManager.Ins.currentSaveSlotData.slotName}", GetDefaultResourceData());
+
+        for (int i = 0; i < resourceData.resourceDataItems.Count; i++)
+        {
+            ResourceDataItem resourceDataItem = resourceData.resourceDataItems[i];
+
+            resources.Add(resourceDataItem.resourceType, new ResourceDataItem(resourceDataItem.resourceType, resourceDataItem.value));
+        }
     }
 
     public void SaveResourceData()
@@ -69,6 +79,24 @@ public class ResourceManager : Singleton<ResourceManager>
 public class ResourceData
 {
     public List<ResourceDataItem> resourceDataItems;
+
+    public void UpdateValue(ResourceType resourceType, float value)
+    {
+        ResourceDataItem resourceDataItem;
+
+        if (resourceDataItems.Any(item => item.resourceType == resourceType))
+        {
+            resourceDataItem = resourceDataItems.First(item => item.resourceType == resourceType);
+
+            resourceDataItem.value = value;
+        }
+        else
+        {
+            resourceDataItem = new ResourceDataItem(resourceType, value);
+
+            resourceDataItems.Add(resourceDataItem);
+        }
+    }
 }
 
 [Serializable]

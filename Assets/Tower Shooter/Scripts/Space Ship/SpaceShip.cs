@@ -43,8 +43,8 @@ public class SpaceShip : MonoBehaviour
 
         float speed = PowerManager.Ins.GetSpaceShipSpeed();
 
-        speedText.text = $"{speed:F2} km/h";
-        remaningKmText.text = $"{(int)remaningKm} km";
+        speedText.text = TextUtil.FormatSpeed(speed);
+        remaningKmText.text = TextUtil.FormatDistance(remaningKm);
 
         Vector3 deltaPosition = kmPerUnit * speed * Vector3.right;
 
