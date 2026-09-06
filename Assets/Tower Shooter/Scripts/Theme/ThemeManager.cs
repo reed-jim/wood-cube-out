@@ -183,16 +183,16 @@ public class ThemeManager : MonoBehaviour
     // PUBLIC HELPERS
     // =========================================================
 
-    public static Color GetRarityColor(ShipRarity rarity)
+    public static Color GetRarityColor(AugmentQuality rarity)
     {
         return rarity switch
         {
-            ShipRarity.Common    => Common,
-            ShipRarity.Uncommon  => Uncommon,
-            ShipRarity.Rare      => Rare,
-            ShipRarity.Epic      => Epic,
-            ShipRarity.Legendary => Legendary,
-            ShipRarity.Mythic    => Mythic,
+            AugmentQuality.Common    => Common,
+            AugmentQuality.Uncommon  => Uncommon,
+            AugmentQuality.Rare      => Rare,
+            AugmentQuality.Epic      => Epic,
+            AugmentQuality.Legendary => Legendary,
+            AugmentQuality.Mythic    => Mythic,
             _                    => Common
         };
     }

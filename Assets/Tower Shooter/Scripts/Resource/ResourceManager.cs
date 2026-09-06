@@ -22,7 +22,7 @@ public class ResourceManager : Singleton<ResourceManager>
         LoadResourceData();
     }
 
-    public void ChangeResource(ResourceType resourceType, int value)
+    public float ChangeResource(ResourceType resourceType, float value)
     {
         if (resources.ContainsKey(resourceType))
         {
@@ -34,6 +34,10 @@ public class ResourceManager : Singleton<ResourceManager>
         }
 
         resourceTexts[resourceType].text = $"{resources[resourceType].value}";
+
+        SaveResourceData();
+
+        return resources[resourceType].value;
     }
 
     public ResourceData GetDefaultResourceData()
@@ -45,14 +49,17 @@ public class ResourceManager : Singleton<ResourceManager>
         return resourceData;
     }
 
-    public ResourceData LoadResourceData()
+    public void LoadResourceData()
     {
-        ResourceData resourceData = DataUtility.Load($"ResouceData {SaveSlotManager.Ins.currentSaveSlotData.slotName}", GetDefaultResourceData());
-
-        return resourceData;
+        resourceData = DataUtility.Load($"ResouceData {SaveSlotManager.Ins.currentSaveSlotData.slotName}", GetDefaultResourceData());
     }
 
-    public int GetResourceValue(ResourceType resourceType)
+    public void SaveResourceData()
+    {
+        DataUtility.Save($"ResouceData {SaveSlotManager.Ins.currentSaveSlotData.slotName}", resourceData);
+    }
+
+    public float GetResourceValue(ResourceType resourceType)
     {
         return resources[resourceType].value;
     }
@@ -68,9 +75,9 @@ public class ResourceData
 public class ResourceDataItem
 {
     public ResourceType resourceType;
-    public int value;
+    public float value;
 
-    public ResourceDataItem(ResourceType resourceType, int value)
+    public ResourceDataItem(ResourceType resourceType, float value)
     {
         this.resourceType = resourceType;
         this.value = value;

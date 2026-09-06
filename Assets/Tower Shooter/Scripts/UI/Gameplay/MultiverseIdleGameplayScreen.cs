@@ -11,6 +11,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
     [Header("Augment")]
     public TMP_Text buyAugmentCostText;
+    public NotificationDot buyAugmentNotification;
 
     [Header("Resource")]
     public TMP_Text upgradePointText;
@@ -30,6 +31,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= AugmentManager.Ins.currentBuyAugmentCost)
         {
             switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
+
+            HideBuyAugmentNotification();
         }
         else
         {
@@ -47,8 +50,27 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         upgradePointText.text = $"{upgradePoint}";
     }
 
-    public void UpdateBuyAugmentCostText(int cost)
+    public void UpdateBuyAugmentCostText(float cost)
     {
-        buyAugmentCostText.text = $"{cost}";
+        buyAugmentCostText.text = $"{cost:F2}";
+
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= cost)
+        {
+            NotifyBuyAugment();
+        }
+        else
+        {
+            HideBuyAugmentNotification();
+        }
+    }
+
+    public void NotifyBuyAugment()
+    {
+        buyAugmentNotification.Notify();
+    }
+
+    public void HideBuyAugmentNotification()
+    {
+        buyAugmentNotification.Hide();
     }
 }

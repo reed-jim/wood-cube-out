@@ -2,6 +2,15 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
+public enum AugmentQuality {
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary,
+    Mythic
+}
+
 [CreateAssetMenu(fileName = "New Augment", menuName = "Stats/Augment")]
 public class Augment : ScriptableObject
 {
@@ -16,6 +25,7 @@ public class Augment : ScriptableObject
     public List<AugmentEffect> dynamicEffects = new List<AugmentEffect>();
 
     [Header("Customize")]
+    public AugmentQuality augmentQuality;
     public bool isNeedCharacterToApply = true;
     public bool isApplyImmediatelyAfterPick = true;
 

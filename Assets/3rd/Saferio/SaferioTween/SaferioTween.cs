@@ -436,7 +436,7 @@ namespace Saferio.Util.SaferioTween
             return sequence;
         }*/
 
-        public static Sequence ShowWithPunch(Transform target, float targetScale, float delay = 0, Action onCompleteAction = null)
+        public static Sequence ShowWithPunch(Transform target, float targetScale = 1, float delay = 0, Action onCompleteAction = null)
         {
             target.gameObject.SetActive(true);
 

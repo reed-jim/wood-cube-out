@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class PowerManager : Singleton<PowerManager>
 {
-    public float totalPower;
-
     [Header("Customize")]
     public float spaceShipSpeedMultiplier;
 
@@ -13,14 +11,19 @@ public class PowerManager : Singleton<PowerManager>
 
     public void AddPower(float power)
     {
-        totalPower += power;
+        float coin = ResourceManager.Ins.ChangeResource(ResourceType.Coin, power);
+
+        if (coin >= AugmentManager.Ins.currentBuyAugmentCost)
+        {
+            MultiverseIdleGameplayScreen.Ins.NotifyBuyAugment();
+        }
 
         UpdateUI();
     }
 
     public void UpdateUI()
     {
-        totalPowerText.text = $"{totalPower:F2}";
+        totalPowerText.text = $"{ResourceManager.Ins.GetResourceValue(ResourceType.Coin):F2}";
     }
 
     public float GetSpaceShipSpeed()

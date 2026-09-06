@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class AugmentItemUIs : MonoBehaviour
 {
     public TMP_Text title;
+    public TMP_Text qualityText;
     public TMP_Text description;
+    public Image qualityBorder;
     public Button showAugmentDetailButton;
 
     public AugmentContainer augmentContainer;
@@ -39,6 +41,13 @@ public class AugmentItemUIs : MonoBehaviour
     {
         title.text = augment.augmentName;
         description.text = augment.BuildFullDescription(colorConfig);
+
+        qualityText.text = $"{augment.augmentQuality}";
+
+        Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
+
+        qualityText.color = qualityColor;
+        qualityBorder.color = qualityColor;
     }
 
     private void ShowAugmentDetail()
