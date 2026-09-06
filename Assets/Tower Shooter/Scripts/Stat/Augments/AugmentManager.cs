@@ -57,4 +57,9 @@ public class AugmentManager : Singleton<AugmentManager>
     {
         pendingAugments.Add(augment);
     }
+
+    public void RemovePendingAugment(Augment augment)
+    {
+        pendingAugments.Remove(augment);
+    }
 }

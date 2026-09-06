@@ -7,7 +7,6 @@ public class NodeManager : Singleton<NodeManager>
     public NodeDetailUI nodeDetailUI;
 
     public List<BaseCharacter> nodes;
-
     public List<NodeGroup> nodeGroups;
 
     protected override void MoreActionOnAwake()
@@ -15,6 +14,7 @@ public class NodeManager : Singleton<NodeManager>
         base.MoreActionOnAwake();
 
         nodes = new List<BaseCharacter>();
+        nodeGroups = new List<NodeGroup>();
     }
 
     void Start()
@@ -33,6 +33,8 @@ public class NodeManager : Singleton<NodeManager>
             NodeGroup nodeGroup = ObjectPoolingEverything.GetFromPool<NodeGroup>(GameConstants.nodeGroup);
 
             nodeGroup.Init(nodeGroupData, nodeGroupContainer);
+
+            nodeGroups.Add(nodeGroup);
         }
 
         DataUtility.Save(GameConstants.gameData, gameData);
