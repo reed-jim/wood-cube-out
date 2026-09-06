@@ -36,6 +36,11 @@ public class SpaceShip : MonoBehaviour
 
     private void FlyToEnd()
     {
+        if (remaningKm <= 0)
+        {
+            return;
+        }
+
         float speed = PowerManager.Ins.GetSpaceShipSpeed();
 
         speedText.text = $"{speed:F2} km/h";
