@@ -4,25 +4,37 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
 
-public class MultiverseIdleGameplayScreen : MonoBehaviour
+public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScreen>
 {
     public Button openAugmentSelectionButton;
     public Button openUpgradeButton;
+
+    [Header("Augment")]
+    public TMP_Text buyAugmentCostText;
 
     [Header("Resource")]
     public TMP_Text upgradePointText;
 
     public static event Action<ScreenRoute> switchRouteEvent;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         openUpgradeButton.onClick.AddListener(OpenUpgrade);
     }
 
     private void OpenAugmentSelection()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= AugmentManager.Ins.currentBuyAugmentCost)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
+        }
+        else
+        {
+
+        }
     }
 
     private void OpenUpgrade()
@@ -33,5 +45,10 @@ public class MultiverseIdleGameplayScreen : MonoBehaviour
     public void UpdateUpgradePointText(int upgradePoint)
     {
         upgradePointText.text = $"{upgradePoint}";
+    }
+
+    public void UpdateBuyAugmentCostText(int cost)
+    {
+        buyAugmentCostText.text = $"{cost}";
     }
 }

@@ -7,6 +7,14 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public List<Augment> pendingAugments = new List<Augment>();
 
+    public AugmentHistory augmentHistory;
+    public int currentBuyAugmentCost;
+
+    void Start()
+    {
+        UpdateBuyAugmentCost();
+    }
+
     public void PickAugment(Augment augment)
     {
         augment.Pick();
@@ -62,4 +70,20 @@ public class AugmentManager : Singleton<AugmentManager>
     {
         pendingAugments.Remove(augment);
     }
+
+    public void UpdateBuyAugmentCost()
+    {
+        AugmentHistory augmentHistory = DataUtility.Load($"{SaveSlotManager.Ins.currentSaveSlotData}_augmentHistory", new AugmentHistory());
+
+        int cost = 1 + augmentHistory.numAugmentBought;
+
+        currentBuyAugmentCost = cost;
+
+        MultiverseIdleGameplayScreen.Ins.UpdateBuyAugmentCostText(cost);
+    }
+}
+
+public class AugmentHistory
+{
+    public int numAugmentBought;
 }
