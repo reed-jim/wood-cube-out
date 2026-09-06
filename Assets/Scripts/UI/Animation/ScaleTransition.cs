@@ -16,6 +16,7 @@ public class ScaleTransition : SaferioTweenBehaviour, ISaferioUIAnimation
 
     #region PRIVATE FIELD
     private bool _isInTransition;
+    private Vector3 initialScale;
     #endregion
 
     public void Show()
@@ -71,12 +72,14 @@ public class ScaleTransition : SaferioTweenBehaviour, ISaferioUIAnimation
 
         target.gameObject.SetActive(true);
 
+        initialScale = target.localScale;
+
         target.localScale = Vector3.zero;
 
         canvasGroup.interactable = false;
 
-        AddSequence(Tween.Scale(target, 1.1f, duration: 0.5f * duration)
-            .Chain(Tween.Scale(target, 1f, duration: 0.5f * duration).OnComplete(() =>
+        AddSequence(Tween.Scale(target, 1.1f * initialScale, duration: 0.5f * duration)
+            .Chain(Tween.Scale(target, 1f * initialScale, duration: 0.5f * duration).OnComplete(() =>
             {
                 _isInTransition = false;
 
@@ -111,11 +114,15 @@ public class ScaleTransition : SaferioTweenBehaviour, ISaferioUIAnimation
 
         canvasGroup.interactable = false;
 
-        AddTween(Tween.Scale(target, 1.1f, duration: 0.5f * duration).OnComplete(() =>
+        initialScale = target.localScale;
+
+        AddTween(Tween.Scale(target, 1.1f * initialScale, duration: 0.5f * duration).OnComplete(() =>
         {
-            AddTween(Tween.Scale(target, 0.5f, duration: 0.5f * duration).OnComplete(() =>
+            AddTween(Tween.Scale(target, 0.5f * initialScale, duration: 0.5f * duration).OnComplete(() =>
             {
                 target.gameObject.SetActive(false);
+
+                target.localScale = initialScale;
 
                 _isInTransition = false;
 
