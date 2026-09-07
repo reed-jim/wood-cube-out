@@ -5,6 +5,12 @@ public static class TextUtil
     private const double KmPerLightYear = 9_460_730_472_580.8;
     private const double LightSpeedKmPerSecond = 299_792.458;
 
+    public static string FormatFloat(float value)
+    {
+        // Adjust the number of '#' characters to set your maximum decimal limit
+        return value.ToString("0.#####", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
     public static string FormatDistance(double km)
     {
         if (km < KmPerLightYear)

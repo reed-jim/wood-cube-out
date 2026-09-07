@@ -73,17 +73,21 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
             upgradeTime = oldStatModifier.UpgradeTime + 1;
             currentValue = currentStatValue;
-            percentAdd = CurveManager.Ins.GetStatPercentAdd(upgradeTime);
+            // percentAdd = CurveManager.Ins.GetStatPercentAdd(upgradeTime);
+            percentAdd = oldStatModifier.Value + percentAddPerUpgrade;
             newValue = stat.PreviewValue(new StatModifier(statType, ModifierType.PercentAdd, percentAdd - oldStatModifier.Value));
-            nextCoinRequired = StatModifier.GetCoinRequired(upgradeTime);
+            newValue = CommonUtil.RoundToDecimalPlaces(newValue, 3);
+            nextCoinRequired = CurveManager.Ins.GetUpgradeNodeCost(upgradeTime);
         }
         else
         {
             upgradeTime = 1;
             currentValue = baseStatValue;
-            percentAdd = CurveManager.Ins.GetStatPercentAdd(upgradeTime);
+            // percentAdd = CurveManager.Ins.GetStatPercentAdd(upgradeTime);
+            percentAdd = percentAddPerUpgrade;
             newValue = stat.PreviewValue(new StatModifier(statType, ModifierType.PercentAdd, percentAdd));
-            nextCoinRequired = StatModifier.GetCoinRequired(upgradeTime);
+            newValue = CommonUtil.RoundToDecimalPlaces(newValue, 3);
+            nextCoinRequired = CurveManager.Ins.GetUpgradeNodeCost(upgradeTime);
         }
 
         StatUpgradeData statUpgradeData = new StatUpgradeData

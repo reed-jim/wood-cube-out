@@ -23,7 +23,7 @@ public class DamageText : MonoBehaviour
     private Sequence currentSequence;
     private Action<DamageText> onCompleteCallback;
 
-    public void ShowDamage(float damage, Vector3 spawnPosition, bool isCritical, Transform target, string prefix = "", Action<DamageText> onComplete = null)
+    public void ShowDamage(float damage, Vector3 spawnPosition, bool isCritical, Transform target, string prefix = "", string suffix = "", Action<DamageText> onComplete = null)
     {
         IsActive = true;
         CurrentTarget = target;
@@ -33,7 +33,7 @@ public class DamageText : MonoBehaviour
         // Reset transforms & kill existing tweens
         KillTweens();
 
-        damageText.text = $"{prefix}{CurrentDamage:F3}";
+        damageText.text = $"{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
         damageText.color = isCritical ? critColor : normalColor;
         damageText.alpha = 1f;
 

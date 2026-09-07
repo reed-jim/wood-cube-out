@@ -12,6 +12,13 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    #region Round
+    public static float RoundToDecimalPlaces(float value, int decimalPlaces)
+    {
+        return (float)Math.Round(value, decimalPlaces, System.MidpointRounding.AwayFromZero);
+    }
+    #endregion
+
     public static Color GetMostCommonColor(List<Color> colors, out int count)
     {
         count = 0;
