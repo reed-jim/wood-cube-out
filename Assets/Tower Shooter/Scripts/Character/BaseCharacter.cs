@@ -83,10 +83,19 @@ public class BaseCharacter : MonoBehaviour
             .OnComplete(() =>
             {
                 power = stats.GetStat(StatType.Damage).Value;
+                float criticalChance = stats.GetStat(StatType.CritChance).Value;
+                float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
                 float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
                 float powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
                 float chanceToRepeatLastCyclePower = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
                 bool isCritical = false;
+
+                if (Random.value < criticalChance)
+                {
+                    power *= criticalMultiplier;
+
+                    isCritical = true;
+                }
 
                 if (Random.value < chanceForMorePowerOnCircleCompletion)
                 {

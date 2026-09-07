@@ -17,7 +17,8 @@ public enum StatType
 
     ChanceForMorePowerOnCycleCompletion,
     PowerOnCircleCompletionMultiplier,
-    ChanceToRepeatLastCyclePower
+    ChanceToRepeatLastCyclePower,
+    CritMultiplier
 }
 
 public enum ModifierType
