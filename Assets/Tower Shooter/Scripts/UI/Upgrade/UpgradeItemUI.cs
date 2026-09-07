@@ -42,6 +42,8 @@ public class UpgradeItemUI : MonoBehaviour
         {
             UpgradeManager.Ins.Upgrade(node, statType);
 
+            ShowAddedStatValueText(statUpgradeData.nextValue - statUpgradeData.currentValue, transform.position, transform);
+
             ResourceManager.Ins.ChangeResource(ResourceType.Coin, -statUpgradeData.coinRequired);
 
             UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
@@ -67,5 +69,14 @@ public class UpgradeItemUI : MonoBehaviour
     private void OnAugmentApplied()
     {
         UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+    }
+
+    private void ShowAddedStatValueText(float addedStatValue, Vector3 position, Transform parent)
+    {
+        DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+
+        damageText.transform.SetParent(parent);
+
+        damageText.ShowDamage(addedStatValue, position, isCritical: false, target: transform, prefix: "+");
     }
 }

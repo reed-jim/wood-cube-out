@@ -23,7 +23,7 @@ public class DamageText : MonoBehaviour
     private Sequence currentSequence;
     private Action<DamageText> onCompleteCallback;
 
-    public void ShowDamage(float damage, Vector3 spawnPosition, bool isCritical, Transform target, Action<DamageText> onComplete = null)
+    public void ShowDamage(float damage, Vector3 spawnPosition, bool isCritical, Transform target, string prefix = "", Action<DamageText> onComplete = null)
     {
         IsActive = true;
         CurrentTarget = target;
@@ -32,8 +32,8 @@ public class DamageText : MonoBehaviour
 
         // Reset transforms & kill existing tweens
         KillTweens();
-        
-        damageText.text = $"{CurrentDamage:F0}";
+
+        damageText.text = $"{prefix}{CurrentDamage:F3}";
         damageText.color = isCritical ? critColor : normalColor;
         damageText.alpha = 1f;
 
@@ -93,7 +93,7 @@ public class DamageText : MonoBehaviour
 
         // Punch/Pop animation when aggregated to show the number grew
         transform.DOKill(complete: false); // Kill active scale tweens, keep position sequence
-        
+
         float punchMagnitude = isCritical ? 0.5f : 0.3f;
         transform.DOPunchScale(Vector3.one * punchMagnitude, 0.18f, vibrato: 6, elasticity: 0.4f);
 

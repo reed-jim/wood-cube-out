@@ -129,4 +129,46 @@ public class Stat
 
         return Mathf.Max(0, finalValue); // Clamp non-negative
     }
+
+    public float PreviewValue(StatModifier additionalStatModifier)
+    {
+        float finalValue = baseValue;
+        float sumPercentAdd = 0f;
+
+        // Order of calculation: Flat -> Percent Additive -> Percent Multiplicative
+        List<StatModifier> previewStatModifiers = new List<StatModifier>();
+
+        previewStatModifiers.Add(additionalStatModifier);
+
+        for (int i = 0; i < modifiers.Count; i++)
+        {
+            previewStatModifiers.Add(modifiers[i]);
+        }
+
+        for (int i = 0; i < previewStatModifiers.Count; i++)
+        {
+            StatModifier mod = previewStatModifiers[i];
+            if (mod.ModType == ModifierType.Flat)
+            {
+                finalValue += mod.Value;
+            }
+            else if (mod.ModType == ModifierType.PercentAdd)
+            {
+                sumPercentAdd += mod.Value;
+            }
+        }
+
+        finalValue *= (1f + sumPercentAdd);
+
+        for (int i = 0; i < previewStatModifiers.Count; i++)
+        {
+            StatModifier mod = previewStatModifiers[i];
+            if (mod.ModType == ModifierType.PercentMult)
+            {
+                finalValue *= (1f + mod.Value);
+            }
+        }
+
+        return Mathf.Max(0, finalValue); // Clamp non-negative
+    }
 }

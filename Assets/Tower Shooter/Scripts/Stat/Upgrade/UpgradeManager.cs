@@ -5,6 +5,9 @@ public class UpgradeManager : Singleton<UpgradeManager>
 {
     public BaseCharacter player;
 
+    [Header("Customize")]
+    public float percentAddPerUpgrade;
+
     public StatUpgradeData Upgrade(BaseCharacter node, StatType statType)
     {
         int upgradeTime = 0;
@@ -59,8 +62,10 @@ public class UpgradeManager : Singleton<UpgradeManager>
         float newValue = 0;
         float nextCoinRequired = 0;
 
-        float baseStatValue = node.stats.GetStat(statType).BaseValue;
-        float currentStatValue = node.stats.GetStat(statType).Value;
+        Stat stat = node.stats.GetStat(statType);
+
+        float baseStatValue = stat.BaseValue;
+        float currentStatValue = stat.Value;
 
         if (node.upgrades.Any(item => item.Type == statType))
         {
@@ -69,7 +74,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
             upgradeTime = oldStatModifier.UpgradeTime + 1;
             currentValue = currentStatValue;
             percentAdd = CurveManager.Ins.GetStatPercentAdd(upgradeTime);
-            newValue = baseStatValue * (1 + percentAdd);
+            newValue = stat.PreviewValue(new StatModifier(statType, ModifierType.PercentAdd, percentAdd - oldStatModifier.Value));
             nextCoinRequired = StatModifier.GetCoinRequired(upgradeTime);
         }
         else
@@ -77,7 +82,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
             upgradeTime = 1;
             currentValue = baseStatValue;
             percentAdd = CurveManager.Ins.GetStatPercentAdd(upgradeTime);
-            newValue = baseStatValue * (1 + percentAdd);
+            newValue = stat.PreviewValue(new StatModifier(statType, ModifierType.PercentAdd, percentAdd));
             nextCoinRequired = StatModifier.GetCoinRequired(upgradeTime);
         }
 
