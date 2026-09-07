@@ -453,6 +453,28 @@ namespace Saferio.Util.SaferioTween
             return sequence;
         }
 
+        #region Punch + Color
+        public static Sequence PunchAndChangeColor(TMP_Text target, float effectScale = 1.1f, float initScale = 1f, float duration = 0.2f, float delay = 0,
+            Action onCompleteAction = null)
+        {
+            target.gameObject.SetActive(true);
+
+            Color initialColor = target.color;
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target.transform, initScale * effectScale, duration: duration, startDelay: delay, ease: Ease.InOutSine))
+                .Group(Tween.Color(target, Color.red, duration: duration))
+                .Chain(Tween.Scale(target.transform, initScale, duration: duration, ease: Ease.InOutSine))
+                .Group(Tween.Color(target, initialColor, duration: duration))
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
+        }
+        #endregion
+
         #region SCALE - ASYNC
         public static async void ScaleAsync
         (

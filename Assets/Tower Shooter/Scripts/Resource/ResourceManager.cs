@@ -71,6 +71,11 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public float GetResourceValue(ResourceType resourceType)
     {
+        if (!resources.ContainsKey(resourceType))
+        {
+            resources.Add(resourceType, new ResourceDataItem(resourceType, 0));
+        }
+
         return resources[resourceType].value;
     }
 }

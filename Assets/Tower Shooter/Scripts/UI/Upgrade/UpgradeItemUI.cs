@@ -1,3 +1,5 @@
+using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +13,18 @@ public class UpgradeItemUI : MonoBehaviour
     public StatType statType;
     public BaseCharacter node;
 
+    private Sequence shakeCoinTextSequence;
+
     void Awake()
     {
+        AugmentManager.applyAugmentEvent += OnAugmentApplied;
+
         upgradeButton.onClick.AddListener(Upgrade);
+    }
+
+    void OnDestroy()
+    {
+        AugmentManager.applyAugmentEvent -= OnAugmentApplied;
     }
 
     public void Init(BaseCharacter node)
@@ -25,9 +36,25 @@ public class UpgradeItemUI : MonoBehaviour
 
     public void Upgrade()
     {
-        UpgradeManager.Ins.Upgrade(node, statType);
+        StatUpgradeData statUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
 
-        UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= statUpgradeData.coinRequired)
+        {
+            UpgradeManager.Ins.Upgrade(node, statType);
+
+            ResourceManager.Ins.ChangeResource(ResourceType.Coin, -statUpgradeData.coinRequired);
+
+            UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+        }
+        else
+        {
+            if (!shakeCoinTextSequence.isAlive)
+            {
+                Color initialColor = coinText.color;
+
+                shakeCoinTextSequence = SaferioTween.PunchAndChangeColor(coinText, effectScale: 1.3f);
+            }
+        }
     }
 
     public void UpdateText(StatUpgradeData statUpgradeData)
@@ -35,5 +62,10 @@ public class UpgradeItemUI : MonoBehaviour
         upgradeText.text = $"{statType} {statUpgradeData.currentValue:F2} <color=#008502>({statUpgradeData.nextValue:F2})</color>";
 
         coinText.text = $"{(int)statUpgradeData.coinRequired}";
+    }
+
+    private void OnAugmentApplied()
+    {
+        UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
     }
 }

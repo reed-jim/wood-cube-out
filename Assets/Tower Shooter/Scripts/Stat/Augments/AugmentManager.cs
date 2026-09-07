@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public AugmentHistory augmentHistory;
     public float currentBuyAugmentCost;
+
+    public static event Action applyAugmentEvent;
 
     void Start()
     {
@@ -50,6 +53,8 @@ public class AugmentManager : Singleton<AugmentManager>
         ResourceManager.Ins.ChangeResource(ResourceType.Coin, -currentBuyAugmentCost);
 
         UpdateBuyAugmentCost();
+
+        applyAugmentEvent?.Invoke();
     }
 
     public void AddAugment(Augment augment)
