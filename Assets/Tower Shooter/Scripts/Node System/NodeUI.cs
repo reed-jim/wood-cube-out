@@ -22,6 +22,8 @@ public class NodeUI : MonoBehaviour
     public void OpenNodeButton()
     {
         NodeManager.Ins.nodeDetailUI.Init(serviceLocator.character);
+
+        UpgradeNodeUI.Ins.SelectNode(serviceLocator.character);
     }
 
     public void UpdatePower()

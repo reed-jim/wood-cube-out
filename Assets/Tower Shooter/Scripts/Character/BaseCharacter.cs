@@ -57,6 +57,11 @@ public class BaseCharacter : MonoBehaviour
         if (!NodeManager.Ins.nodes.Contains(this))
         {
             NodeManager.Ins.nodes.Add(this);
+
+            if (UpgradeNodeUI.Ins.selectedNode == null)
+            {
+                UpgradeNodeUI.Ins.SelectNode(this);
+            }
         }
 
         while (true)
