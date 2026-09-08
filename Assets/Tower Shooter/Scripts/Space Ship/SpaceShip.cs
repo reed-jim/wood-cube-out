@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -21,12 +23,13 @@ public class SpaceShip : MonoBehaviour
     public TMP_Text speedText;
     public TMP_Text remaningKmText;
 
+    public VoyageData voyageData;
+
     void Start()
     {
-        float distance = end.position.x - start.position.x;
+        LoadCurrentVoyage();
 
-        remaningKm = totalKm;
-        kmPerUnit = distance / totalKm;
+        StartCoroutine(PeriodicallySaveVoyageData());
     }
 
     void Update()
@@ -57,4 +60,43 @@ public class SpaceShip : MonoBehaviour
 
         remaningKm -= speed;
     }
+
+    public void LoadCurrentVoyage()
+    {
+        voyageData = DataUtility.Load($"{SaveSlotManager.Ins.currentSaveSlotData}_voyageData", StarManager.Ins.GetFirstVoyage());
+
+        float distance = end.position.x - start.position.x;
+
+        totalKm = StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).distance;
+        kmPerUnit = distance / totalKm;
+        remaningKm = voyageData.remaningKm;
+
+        locationContainer.position.ChangeX(Mathf.Lerp(start.position.x, end.position.x, 1 - remaningKm / totalKm));
+    }
+
+    public void SaveCurrentVoyage()
+    {
+        voyageData.remaningKm = remaningKm;
+
+        DataUtility.Save($"{SaveSlotManager.Ins.currentSaveSlotData}_voyageData", voyageData);
+    }
+
+    public IEnumerator PeriodicallySaveVoyageData()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(3);
+
+        while (true)
+        {
+            yield return waitForSeconds;
+
+            SaveCurrentVoyage();
+        }
+    }
+}
+
+[Serializable]
+public class VoyageData
+{
+    public int starPathConfigIndex;
+    public float remaningKm;
 }

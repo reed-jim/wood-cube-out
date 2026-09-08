@@ -786,6 +786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarManager
   Mars: {fileID: 0}
+  starVoyageContainer: {fileID: 11400000, guid: fb79bb1f2cf929a4799c9c20d385f523, type: 2}
 --- !u!1 &232924776
 GameObject:
   m_ObjectHideFlags: 0
@@ -13318,6 +13319,9 @@ MonoBehaviour:
   kmPerUnit: 0
   speedText: {fileID: 1244407183542591526}
   remaningKmText: {fileID: 390004176}
+  voyageData:
+    starPathConfig: {fileID: 0}
+    remaningKm: 0
 --- !u!1 &1630827086
 GameObject:
   m_ObjectHideFlags: 0
