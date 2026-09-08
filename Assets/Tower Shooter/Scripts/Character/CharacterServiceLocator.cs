@@ -9,4 +9,9 @@ public class CharacterServiceLocator : MonoBehaviour
     public DamageOverTimeReceiver damageOverTimeReceiver;
     public LazyHealthBar lazyHealthBar;
     public StackingUI stackingUI;
+
+    #region Augment Runtime
+    [Header("Augment Runtime")]
+    public PowerIncreaseOnSpeedAugmentEffectRuntime powerIncreaseOnSpeedAugmentEffectRuntime;
+    #endregion
 }
