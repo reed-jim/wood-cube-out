@@ -9,8 +9,13 @@ public class AlternativeEffect : AugmentEffect
     private StatModifier powerIncrease;
     private StatModifier speedIncrease;
 
-    // even cycle increase power, odd cycle increase speed
     public override void ApplyEffect(CharacterStats target, object source)
+    {
+
+    }
+
+    // even cycle increase power, odd cycle increase speed
+    public override void ApplyEffectOnCycleCompleted(CharacterStats target)
     {
         BaseCharacter node = target.serviceLocator.character;
 

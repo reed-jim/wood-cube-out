@@ -150,7 +150,7 @@ public class BaseCharacter : MonoBehaviour
             {
                 AugmentEffect augmentEffect = augment.dynamicEffects[j];
 
-                augmentEffect.ApplyEffect(serviceLocator.stats, gameObject);
+                augmentEffect.ApplyEffectOnCycleCompleted(serviceLocator.stats);
             }
         }
     }

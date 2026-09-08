@@ -7,17 +7,27 @@ public class PowerIncreaseOnSpeedAugmentEffect : AugmentEffect
 
     public override void ApplyEffect(CharacterStats stats, object source)
     {
+        Convert(stats);
+    }
+
+    public override void ApplyEffectOnStatChanged(CharacterStats stats)
+    {
+        Convert(stats);
+    }
+
+    public override void RemoveEffect(CharacterStats target, object source)
+    {
+
+    }
+
+    private void Convert(CharacterStats stats)
+    {
         if (stats.serviceLocator.powerIncreaseOnSpeedAugmentEffectRuntime == null)
         {
             stats.serviceLocator.powerIncreaseOnSpeedAugmentEffectRuntime = stats.gameObject.AddComponent<PowerIncreaseOnSpeedAugmentEffectRuntime>();
         }
 
         stats.serviceLocator.powerIncreaseOnSpeedAugmentEffectRuntime.Apply(stats, powerPerSpeed);
-    }
-
-    public override void RemoveEffect(CharacterStats target, object source)
-    {
-
     }
 }
 
@@ -38,7 +48,7 @@ public class PowerIncreaseOnSpeedAugmentEffectRuntime : MonoBehaviour
             stats.RemoveModifier(lastStatModifier);
         }
 
-        stats.AddModifier(statModifier);
+        stats.AddModifier(statModifier, isApplyAugmentEffect: false);
 
         lastStatModifier = statModifier;
     }

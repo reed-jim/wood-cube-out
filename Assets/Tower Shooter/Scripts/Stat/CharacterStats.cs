@@ -42,9 +42,24 @@ public class CharacterStats : MonoBehaviour
 
     public float GetValue(StatType type) => GetStat(type).Value;
 
-    public void AddModifier(StatModifier mod)
+    public void AddModifier(StatModifier mod, bool isApplyAugmentEffect = true)
     {
         GetStat(mod.Type).AddModifier(mod);
+
+        if (isApplyAugmentEffect)
+        {
+            for (int i = 0; i < serviceLocator.character.ownedAugments.Count; i++)
+            {
+                Augment augment = serviceLocator.character.ownedAugments[i];
+
+                for (int j = 0; j < augment.dynamicEffects.Count; j++)
+                {
+                    AugmentEffect augmentEffect = augment.dynamicEffects[j];
+
+                    augmentEffect.ApplyEffectOnStatChanged(this);
+                }
+            }
+        }
 
         serviceLocator.nodeUI.UpdatePower();
     }

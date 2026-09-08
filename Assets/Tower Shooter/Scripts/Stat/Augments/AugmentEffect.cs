@@ -10,6 +10,16 @@ public abstract class AugmentEffect : ScriptableObject
     public abstract void ApplyEffect(CharacterStats target, object source);
     public abstract void RemoveEffect(CharacterStats target, object source);
 
+    public virtual void ApplyEffectOnStatChanged(CharacterStats target)
+    {
+
+    }
+
+    public virtual void ApplyEffectOnCycleCompleted(CharacterStats target)
+    {
+
+    }
+
     /// <summary>
     /// Evaluates the template string. Override GetDescriptionTokens to inject custom parameters.
     /// </summary>
