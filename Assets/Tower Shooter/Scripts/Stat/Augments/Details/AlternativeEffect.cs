@@ -14,8 +14,6 @@ public class AlternativeEffect : AugmentEffect
     {
         BaseCharacter node = target.serviceLocator.character;
 
-        Debug.Log($"Alternative {powerIncrease == null}");
-
         if (powerIncrease == null || powerIncrease.Value == 0)
         {
             powerIncrease = new StatModifier(powerIncreaseData.statType, powerIncreaseData.modType, powerIncreaseData.value);
@@ -25,8 +23,6 @@ public class AlternativeEffect : AugmentEffect
         {
             speedIncrease = new StatModifier(speedIncreaseData.statType, speedIncreaseData.modType, speedIncreaseData.value);
         }
-
-        Debug.Log($"Alternative {node.currentCycle} {powerIncrease.ModType} {powerIncrease.Value} {powerIncreaseData.value}");
 
         if (node.currentCycle % 2 == 0)
         {

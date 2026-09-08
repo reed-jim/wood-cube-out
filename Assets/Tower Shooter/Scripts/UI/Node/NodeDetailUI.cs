@@ -17,6 +17,10 @@ public class NodeDetailUI : MonoBehaviour
 
     public BaseCharacter node;
 
+    [Header("Current Augments")]
+    public RectTransform currentAugmentContainer;
+    public List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
+
     [Header("Pending Augments")]
     public RectTransform pendingAugmentContainer;
     public List<PendingAugmentItemUI> pendingAugmentItemUIs = new List<PendingAugmentItemUI>();
@@ -46,6 +50,7 @@ public class NodeDetailUI : MonoBehaviour
             UIElementsOfStats[statType].upgradeButton.onClick.AddListener(() => UpgradeStat(statType));
         }
 
+        InitCurrentAugments();
         InitPendingAugments();
     }
 
@@ -117,6 +122,43 @@ public class NodeDetailUI : MonoBehaviour
     {
         scaleTransition.Hide();
     }
+
+    #region Current Augments
+    public void InitCurrentAugments()
+    {
+        if (node.ownedAugments.Count == 0)
+        {
+            currentAugmentContainer.gameObject.SetActive(false);
+
+            return;
+        }
+        else
+        {
+            currentAugmentContainer.gameObject.SetActive(true);
+        }
+
+        for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
+        {
+            NodeDetailAugmentItemUI nodeDetailAugmentItemUI = nodeDetailAugmentItemUIs[i];
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUI.gameObject);
+        }
+
+        nodeDetailAugmentItemUIs.Clear();
+
+        for (int i = 0; i < node.ownedAugments.Count; i++)
+        {
+            NodeDetailAugmentItemUI nodeDetailAugmentItemUI = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
+
+            nodeDetailAugmentItemUI.transform.SetParent(currentAugmentContainer);
+            nodeDetailAugmentItemUI.transform.localScale = Vector3.one;
+
+            nodeDetailAugmentItemUI.Init(node.ownedAugments[i]);
+
+            nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
+        }
+    }
+    #endregion
 
     #region Pending Augments
     public void InitPendingAugments()

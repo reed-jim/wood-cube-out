@@ -9,6 +9,7 @@ public static class GameConstants
     public static string nodeGroup = "nodeGroup";
     public static string node = "node";
     public static string pendingAugmentItemUI = "pendingAugmentItemUI";
+    public static string nodeDetailAugmentItemUI = "nodeDetailAugmentItemUI";
 
     public static string gameData = "gameData";
     #endregion
