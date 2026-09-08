@@ -17,6 +17,9 @@ public class BaseCharacter : MonoBehaviour
     public List<StatModifier> upgrades;
     public List<Augment> ownedAugments;
 
+    [Header("State")]
+    public int currentCycle;
+
     void Awake()
     {
         upgrades = new List<StatModifier>();
@@ -118,6 +121,10 @@ public class BaseCharacter : MonoBehaviour
                         ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
                     }));
                 }
+
+                ApplyAugmentEffectsOnCycleCompletion();
+
+                currentCycle++;
             });
 
             yield return new WaitForSeconds(interval);
@@ -131,5 +138,20 @@ public class BaseCharacter : MonoBehaviour
         damageText.transform.SetParent(parent);
 
         damageText.ShowDamage(power, position, isCritical, target: transform);
+    }
+
+    private void ApplyAugmentEffectsOnCycleCompletion()
+    {
+        for (int i = 0; i < ownedAugments.Count; i++)
+        {
+            Augment augment = ownedAugments[i];
+
+            for (int j = 0; j < augment.dynamicEffects.Count; j++)
+            {
+                AugmentEffect augmentEffect = augment.dynamicEffects[j];
+
+                augmentEffect.ApplyEffect(serviceLocator.stats, gameObject);
+            }
+        }
     }
 }
