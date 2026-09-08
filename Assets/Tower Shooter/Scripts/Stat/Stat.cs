@@ -63,6 +63,11 @@ public class Stat
 
     public bool RemoveModifier(StatModifier mod)
     {
+        if (!modifiers.Contains(mod))
+        {
+            return false;
+        }
+
         if (modifiers.Remove(mod))
         {
             isDirty = true;
