@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public enum AugmentQuality {
+public enum AugmentQuality
+{
     Common,
     Uncommon,
     Rare,
@@ -49,6 +50,11 @@ public class Augment : ScriptableObject
         foreach (var effect in dynamicEffects)
         {
             effect.ApplyEffect(characterStats, this);
+        }
+
+        if (!characterStats.serviceLocator.character.ownedAugments.Contains(this))
+        {
+            characterStats.serviceLocator.character.ownedAugments.Add(this);
         }
     }
 
