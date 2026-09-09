@@ -3,6 +3,7 @@ using System.Collections;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using static GameEnum;
 
 public class SpaceShip : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class SpaceShip : MonoBehaviour
 
     public float[] parallaxBackgroundSpeedMultipliers;
 
+    [Header("State")]
+    public bool isFlying;
+
     [Header("Voyage")]
     public float totalKm;
     public float remaningKm;
@@ -24,6 +28,18 @@ public class SpaceShip : MonoBehaviour
     public TMP_Text remaningKmText;
 
     public VoyageData voyageData;
+
+    public static event Action<VoyageData> reachStarEvent;
+
+    void Awake()
+    {
+        ReachStarPopup.goNextStarEvent += StarNewVoyage;
+    }
+
+    void OnDestroy()
+    {
+        ReachStarPopup.goNextStarEvent -= StarNewVoyage;
+    }
 
     void Start()
     {
@@ -39,8 +55,17 @@ public class SpaceShip : MonoBehaviour
 
     private void FlyToEnd()
     {
+        if (!isFlying)
+        {
+            return;
+        }
+
         if (remaningKm <= 0)
         {
+            remaningKmText.text = $"You're at {StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).starName}";
+
+            reachStarEvent?.Invoke(voyageData);
+
             return;
         }
 
@@ -59,6 +84,11 @@ public class SpaceShip : MonoBehaviour
         }
 
         remaningKm -= speed;
+    }
+
+    public void StarNewVoyage()
+    {
+        LoadCurrentVoyage();
     }
 
     public void LoadCurrentVoyage()

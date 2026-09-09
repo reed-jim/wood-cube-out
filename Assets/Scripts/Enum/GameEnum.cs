@@ -75,7 +75,8 @@ public class GameEnum : MonoBehaviour
         None,
         SpecialElementIntroduction,
         AugmentSelection,
-        Upgrade
+        Upgrade,
+        ReachStar
     }
 
     public enum GameFaction
