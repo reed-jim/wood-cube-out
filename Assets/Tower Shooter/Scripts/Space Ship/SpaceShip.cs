@@ -66,6 +66,8 @@ public class SpaceShip : MonoBehaviour
 
             reachStarEvent?.Invoke(voyageData);
 
+            isFlying = false;
+
             return;
         }
 
@@ -102,6 +104,8 @@ public class SpaceShip : MonoBehaviour
         remaningKm = voyageData.remaningKm;
 
         locationContainer.position.ChangeX(Mathf.Lerp(start.position.x, end.position.x, 1 - remaningKm / totalKm));
+
+        isFlying = true;
     }
 
     public void SaveCurrentVoyage()

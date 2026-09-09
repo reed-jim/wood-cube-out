@@ -18,9 +18,9 @@ public class GameController : MonoBehaviour
     public SegmentController segmentController;
     public ActionLimitQueue ActionLimitQueue;
     public UseProfile useProfile;
-    public IapController iapController;
+    // public IapController iapController;
     public DataContain dataContain;
-    public MoneyEffectController moneyEffectController;
+    // public MoneyEffectController moneyEffectController;
     public GameLoading gameLoading;
     [HideInInspector] public SceneType currentScene;
 

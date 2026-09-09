@@ -294,14 +294,14 @@ public class RewardRandom
         this.weight = weight;
     }
 
-    public GiftRewardShow GetReward()
-    {
-        GiftRewardShow rew = new GiftRewardShow();
-        rew.type = typeItem;
-        rew.amount = amount;
+    // public GiftRewardShow GetReward()
+    // {
+    //     GiftRewardShow rew = new GiftRewardShow();
+    //     rew.type = typeItem;
+    //     rew.amount = amount;
 
-        return rew;
-    }
+    //     return rew;
+    // }
 }
 
 [System.Serializable]
@@ -310,7 +310,7 @@ public class EndlessReward
     public int requireToken;
     public List<RewardRandom> rewardData;
     public bool isIAPSale;
-    [ShowIf("isIAPSale", true)] public TypePackIAP iapPackName = TypePackIAP.None;
+    // [ShowIf("isIAPSale", true)] public TypePackIAP iapPackName = TypePackIAP.None;
 }
 
 [Serializable]
