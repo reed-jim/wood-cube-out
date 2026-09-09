@@ -247,13 +247,25 @@ public class ThemeableUI : MonoBehaviour
     private void ApplyImageColor(Color color)
     {
         if (cachedImage != null)
+        {
             cachedImage.color = color;
+        }
+        else if (cachedText != null)
+        {
+            cachedText.color = color;
+        }
     }
 
     private void ApplyTextColor(Color color)
     {
         if (cachedText != null)
+        {
             cachedText.color = color;
+        }
+        else if (cachedImage != null)
+        {
+            cachedImage.color = color;
+        }
     }
 
     // =============================================================
