@@ -68,6 +68,14 @@ public class ThemeableUI : MonoBehaviour
         DynamicThemeManager.OnThemeChanged -= ApplyTheme;
     }
 
+    void OnEnable()
+    {
+        if (DynamicThemeManager.Ins != null && DynamicThemeManager.Ins.CurrentTheme != null)
+        {
+            ApplyTheme(DynamicThemeManager.Ins.CurrentTheme);
+        }
+    }
+
     public void ApplyTheme(ThemeConfig theme)
     {
         if (theme == null)

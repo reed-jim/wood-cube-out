@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1016554278277595098}
   - component: {fileID: 8270218997288638172}
   - component: {fileID: 2229255094011217626}
+  - component: {fileID: 2625232772537340792}
   - component: {fileID: 3971212622160282015}
   m_Layer: 5
   m_Name: Notification Dot
@@ -58,6 +59,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d5e7eeabbd0ff4a9c23995656c3ed1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotificationDot
+--- !u!114 &2625232772537340792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528592071248857104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 12
 --- !u!114 &3971212622160282015
 MonoBehaviour:
   m_ObjectHideFlags: 0
