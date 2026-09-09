@@ -10,16 +10,18 @@ public class StatColorConfigSO : ScriptableObject
     {
         public StatType statType;
         public Color color;
+        public Sprite icon;
 
         public StatColorMapping(StatType type, string hex)
         {
             statType = type;
             ColorUtility.TryParseHtmlString(hex, out color);
+            icon = null;
         }
     }
 
     [Header("Stat Colors (Inspector Overrides)")]
-    [SerializeField] 
+    [SerializeField]
     private List<StatColorMapping> statColors = new List<StatColorMapping>();
 
     [Header("Global Formatting Colors")]
@@ -27,6 +29,7 @@ public class StatColorConfigSO : ScriptableObject
     [SerializeField] private Color fallbackColor = HexToColor("#ECF0F1");     // Off-white
 
     private Dictionary<StatType, string> hexCache;
+    private Dictionary<StatType, Sprite> iconCache;
     private string valueHexCache;
 
     private void OnEnable()
@@ -60,6 +63,13 @@ public class StatColorConfigSO : ScriptableObject
         return ColorUtility.ToHtmlStringRGB(fallbackColor);
     }
 
+    public Sprite GetIcon(StatType type)
+    {
+        BuildCache();
+        if (iconCache.TryGetValue(type, out Sprite icon)) return icon;
+        return null;
+    }
+
     public string GetValueHex()
     {
         BuildCache();
@@ -76,6 +86,12 @@ public class StatColorConfigSO : ScriptableObject
             hexCache[mapping.statType] = ColorUtility.ToHtmlStringRGB(mapping.color);
         }
 
+        iconCache = new Dictionary<StatType, Sprite>();
+        foreach (var mapping in statColors)
+        {
+            iconCache[mapping.statType] = mapping.icon;
+        }
+
         valueHexCache = ColorUtility.ToHtmlStringRGB(numericValueColor);
     }
 
@@ -83,6 +99,7 @@ public class StatColorConfigSO : ScriptableObject
     private void OnValidate()
     {
         hexCache = null;
+        iconCache = null;
     }
 
     private static Color HexToColor(string hex)

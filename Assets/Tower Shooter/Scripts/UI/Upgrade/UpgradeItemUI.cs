@@ -8,10 +8,13 @@ public class UpgradeItemUI : MonoBehaviour
 {
     public TMP_Text upgradeText;
     public TMP_Text coinText;
+    public Image statIcon;
     public Button upgradeButton;
 
     public StatType statType;
     public BaseCharacter node;
+
+    public StatColorConfigSO statColorConfigSO;
 
     private Sequence shakeCoinTextSequence;
 
@@ -61,8 +64,9 @@ public class UpgradeItemUI : MonoBehaviour
 
     public void UpdateText(StatUpgradeData statUpgradeData)
     {
+        statIcon.sprite = statColorConfigSO.GetIcon(statType);
         upgradeText.text =
-            $"{statType} {TextUtil.FormatFloat(statUpgradeData.currentValue)} <color=#1EFF1E>({TextUtil.FormatFloat(statUpgradeData.nextValue)})</color>";
+            $"{TextUtil.FormatFloat(statUpgradeData.currentValue)} <color=#1EFF1E>({TextUtil.FormatFloat(statUpgradeData.nextValue)})</color>";
         coinText.text = $"{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
     }
 
