@@ -82,24 +82,38 @@ public class Augment : ScriptableObject
         {
             string hex = config.GetHex(mod.statType);
             string valHex = config.GetValueHex();
+            // string valHex;
 
-            string sign = mod.value >= 0 ? "+" : "";
+            bool isPositive = mod.value >= 0;
+
+            string sign = isPositive ? "+" : "";
+
+            // if (isPositive)
+            // {
+            //     valHex = ColorUtil.ColorToHex(DynamicThemeManager.Ins.CurrentTheme.success);
+            // }
+            // else
+            // {
+            //     valHex = ColorUtil.ColorToHex(DynamicThemeManager.Ins.CurrentTheme.error);
+            // }
+
             string valStr = mod.modType == ModifierType.Flat
                 ? $"{sign}{mod.value}"
                 : $"{sign}{mod.value * 100f}%";
 
-            sb.AppendLine($"<color=#{valHex}>{valStr}</color> <color=#{hex}>{mod.statType}</color>");
+            // sb.AppendLine($"<color=#{valHex}>{valStr}</color> <color=#{hex}>{mod.statType}</color>");
+            sb.AppendLine($"<color=#{hex}>{valStr} {mod.statType}</color>");
         }
 
         // 2. Process dynamic effects descriptions
-        // foreach (var effect in dynamicEffects)
-        // {
-        //     string effectDesc = effect.GetFormattedDescription(config);
-        //     if (!string.IsNullOrEmpty(effectDesc))
-        //     {
-        //         sb.AppendLine(effectDesc);
-        //     }
-        // }
+        foreach (var effect in dynamicEffects)
+        {
+            string effectDesc = effect.GetFormattedDescription(config);
+            if (!string.IsNullOrEmpty(effectDesc))
+            {
+                sb.AppendLine(effectDesc);
+            }
+        }
 
         // 3. Process optional extra flavor text
         if (!string.IsNullOrEmpty(customNotesTemplate))

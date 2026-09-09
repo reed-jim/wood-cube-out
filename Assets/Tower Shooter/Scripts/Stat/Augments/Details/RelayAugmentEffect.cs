@@ -25,4 +25,17 @@ public class RelayAugmentEffect : AugmentEffect
     {
 
     }
+
+    protected override (string Key, object Value)[] GetDescriptionTokens()
+    {
+        var tokens = new (string Key, object Value)[statModifiers.Count];
+
+        for (int i = 0; i < statModifiers.Count; i++)
+        {
+            float value = statModifiers[i].value;
+            tokens[i] = ($"value{i}", value);
+        }
+
+        return tokens;
+    }
 }
