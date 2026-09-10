@@ -45,4 +45,14 @@ public class AlternativeEffect : AugmentEffect
     {
 
     }
+
+    protected override (string Key, object Value)[] GetDescriptionTokens()
+    {
+        var tokens = new (string Key, object Value)[2];
+
+        tokens[0] = ($"value0", powerIncreaseData.value);
+        tokens[1] = ($"value1", speedIncreaseData.value);
+
+        return tokens;
+    }
 }

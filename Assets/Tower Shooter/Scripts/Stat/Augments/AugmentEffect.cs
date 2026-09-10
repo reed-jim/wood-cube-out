@@ -2,6 +2,9 @@ using UnityEngine;
 
 public abstract class AugmentEffect : ScriptableObject
 {
+    public string effectName;
+    public Color effectColor;
+
     [Header("UI Description")]
     [TextArea(2, 4)]
     [SerializeField] protected string descriptionTemplate;
@@ -28,7 +31,14 @@ public abstract class AugmentEffect : ScriptableObject
         if (string.IsNullOrEmpty(descriptionTemplate)) return string.Empty;
 
         var tokens = GetDescriptionTokens();
-        return StatTextParser.ParseTemplate(descriptionTemplate, config, tokens);
+
+        string effectDescription = StatTextParser.ParseTemplate(descriptionTemplate, config, tokens);
+
+        string effectColorHex = ColorUtil.ColorToHex(effectColor);
+
+        string finalDescription = $"<color={effectColorHex}>{effectName}:</color> {effectDescription}";
+
+        return finalDescription;
     }
 
     /// <summary>

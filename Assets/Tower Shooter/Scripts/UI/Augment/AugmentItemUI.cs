@@ -41,7 +41,6 @@ public class AugmentItemUIs : MonoBehaviour
     {
         title.text = augment.augmentName;
         description.text = augment.BuildFullDescription(colorConfig);
-
         qualityText.text = $"{augment.augmentQuality}";
 
         Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);

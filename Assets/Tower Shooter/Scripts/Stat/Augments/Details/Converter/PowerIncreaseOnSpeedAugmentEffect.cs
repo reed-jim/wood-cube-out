@@ -20,6 +20,15 @@ public class PowerIncreaseOnSpeedAugmentEffect : AugmentEffect
 
     }
 
+    protected override (string Key, object Value)[] GetDescriptionTokens()
+    {
+        var tokens = new (string Key, object Value)[1];
+
+        tokens[0] = ($"value0", powerPerSpeed);
+
+        return tokens;
+    }
+
     private void Convert(CharacterStats stats)
     {
         if (stats.serviceLocator.powerIncreaseOnSpeedAugmentEffectRuntime == null)
