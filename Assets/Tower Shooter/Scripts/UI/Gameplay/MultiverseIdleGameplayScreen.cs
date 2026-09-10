@@ -8,6 +8,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 {
     public Button openAugmentSelectionButton;
     public Button openUpgradeButton;
+    public Button augmentOverviewButton;
 
     [Header("Augment")]
     public TMP_Text buyAugmentCostText;
@@ -24,6 +25,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         openUpgradeButton.onClick.AddListener(OpenUpgrade);
+        augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
     }
 
     private void OpenAugmentSelection()
@@ -43,6 +45,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     private void OpenUpgrade()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Upgrade);
+    }
+
+    private void OpenAugmentOverview()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.AugmentOverview);
     }
 
     public void UpdateUpgradePointText(int upgradePoint)

@@ -8,18 +8,14 @@ public class AugmentSetItemUI : MonoBehaviour
 
     public SpaceObjectType spaceObjectType;
 
-    public AugmentSetContainer augmentSetContainer;
-
-    public void Init(Augment augment)
+    public void Init(SpaceObjectType spaceObjectType)
     {
-        spaceObjectType = augment.spaceObjectType;
-
-        int totalSetItem = augmentSetContainer.items[spaceObjectType].Count;
+        int totalSetItem = AugmentManager.Ins.numAugmentOfSpaceObjectType[spaceObjectType];
         int augmentActive = AugmentManager.Ins.augmentOfSameSpaceObjectType[spaceObjectType].Count;
 
-        setNameText.text = $"{augment.spaceObjectType}";
+        setNameText.text = $"{spaceObjectType}";
         setCountText.text = $"{augmentActive}/{totalSetItem}";
 
-        spaceObjectType = augment.spaceObjectType;
+        this.spaceObjectType = spaceObjectType;
     }
 }

@@ -9,15 +9,40 @@ public class AugmentManager : Singleton<AugmentManager>
     public List<Augment> selectedAugments = new List<Augment>();
     public List<Augment> pendingAugments = new List<Augment>();
     public SerializableDictionary<SpaceObjectType, List<Augment>> augmentOfSameSpaceObjectType;
+    public SerializableDictionary<SpaceObjectType, int> numAugmentOfSpaceObjectType;
 
     public AugmentHistory augmentHistory;
     public float currentBuyAugmentCost;
+
+    public AugmentContainer augmentContainer;
 
     public static event Action applyAugmentEvent;
 
     void Start()
     {
+        Init();
+        
         UpdateBuyAugmentCost();
+    }
+
+    public void Init()
+    {
+        numAugmentOfSpaceObjectType = new SerializableDictionary<SpaceObjectType, int>();
+
+        for (int i = 0; i < augmentContainer.augments.Count; i++)
+        {
+            Augment augment = augmentContainer.augments[i];
+            SpaceObjectType spaceObjectType = augment.spaceObjectType;
+
+            if (numAugmentOfSpaceObjectType.ContainsKey(spaceObjectType))
+            {
+                numAugmentOfSpaceObjectType[spaceObjectType]++;
+            }
+            else
+            {
+                numAugmentOfSpaceObjectType.Add(spaceObjectType, 1);
+            }
+        }
     }
 
     public void PickAugment(Augment augment)
