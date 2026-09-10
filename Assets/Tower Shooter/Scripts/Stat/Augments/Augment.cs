@@ -27,6 +27,7 @@ public class Augment : ScriptableObject
 
     [Header("Customize")]
     public AugmentQuality augmentQuality;
+    public SpaceObjectType spaceObjectType;
     public bool isNeedCharacterToApply = true;
     public bool isApplyImmediatelyAfterPick = true;
 

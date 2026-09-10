@@ -10,6 +10,7 @@ public static class GameConstants
     public static string node = "node";
     public static string pendingAugmentItemUI = "pendingAugmentItemUI";
     public static string nodeDetailAugmentItemUI = "nodeDetailAugmentItemUI";
+    public static string augmentSetItemUI = "augmentSetItemUI";
     public static string statItemUI = "statItemUI";
 
     public static string gameData = "gameData";

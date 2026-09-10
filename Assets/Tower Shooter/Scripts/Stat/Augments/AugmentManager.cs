@@ -6,7 +6,9 @@ public class AugmentManager : Singleton<AugmentManager>
 {
     public BaseCharacter player;
 
+    public List<Augment> selectedAugments = new List<Augment>();
     public List<Augment> pendingAugments = new List<Augment>();
+    public SerializableDictionary<SpaceObjectType, List<Augment>> augmentOfSameSpaceObjectType;
 
     public AugmentHistory augmentHistory;
     public float currentBuyAugmentCost;
@@ -25,6 +27,17 @@ public class AugmentManager : Singleton<AugmentManager>
         if (augment.isApplyImmediatelyAfterPick)
         {
             ApplyAugment(augment);
+        }
+
+        selectedAugments.Add(augment);
+
+        if (augmentOfSameSpaceObjectType.ContainsKey(augment.spaceObjectType))
+        {
+            augmentOfSameSpaceObjectType[augment.spaceObjectType].Add(augment);
+        }
+        else
+        {
+            augmentOfSameSpaceObjectType.Add(augment.spaceObjectType, new List<Augment>() { augment });
         }
     }
 

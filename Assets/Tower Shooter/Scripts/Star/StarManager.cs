@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum SpaceObjectType
+{
+    Earth,
+    Mars,
+    ProximaCentauri
+}
+
 public class StarManager : Singleton<StarManager>
 {
     public BaseCharacter Mars;
