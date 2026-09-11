@@ -94,20 +94,26 @@ public class NodeDetailUI : MonoBehaviour
 
     public void Unlock()
     {
-        if (ResourceManager.Ins.GetResourceValue(ResourceType.UpgradePoint) > 0)
-        {
-            ResourceManager.Ins.ChangeResource(ResourceType.UpgradePoint, -1);
+        ResourceManager.Ins.ChangeResource(ResourceType.UpgradePoint, -1);
 
-            node.nodeData.isUnlocked = true;
+        node.Unlock();
 
-            node.Init();
+        Close();
 
-            Close();
-        }
-        else
-        {
+        // if (ResourceManager.Ins.GetResourceValue(ResourceType.UpgradePoint) > 0)
+        // {
+        //     ResourceManager.Ins.ChangeResource(ResourceType.UpgradePoint, -1);
 
-        }
+        //     node.nodeData.isUnlocked = true;
+
+        //     node.Init();
+
+        //     Close();
+        // }
+        // else
+        // {
+
+        // }
     }
 
     public void Show()

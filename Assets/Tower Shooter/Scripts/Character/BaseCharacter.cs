@@ -51,6 +51,13 @@ public class BaseCharacter : MonoBehaviour
 
     }
 
+    public void Unlock()
+    {
+        nodeData.isUnlocked = true;
+
+        Init();
+    }
+
     private IEnumerator Generating()
     {
         RectTransform container = serviceLocator.nodeUI.container;
@@ -129,6 +136,18 @@ public class BaseCharacter : MonoBehaviour
 
             yield return new WaitForSeconds(interval);
         }
+    }
+
+    public void GenerateInstantPower(float power, float delay = 0.3f)
+    {
+        Tween.Delay(delay).OnComplete(() =>
+        {
+            RectTransform container = serviceLocator.nodeUI.container;
+
+            PowerManager.Ins.AddPower(power);
+
+            ShowGeneratedPowerText(power, isCritical: false, container.position, container.parent);
+        });
     }
 
     private void ShowGeneratedPowerText(float power, bool isCritical, Vector3 position, Transform parent)
