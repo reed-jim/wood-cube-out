@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fca4a827ac3ff24b8637bf64d1efbdc, type: 3}
   m_Name: Alternative Effect
   m_EditorClassIdentifier: Assembly-CSharp::AlternativeEffect
-  descriptionTemplate: 
+  effectName: Alternating Protocol
+  effectColor: {r: 0.78431374, g: 0.3529412, b: 1, a: 1}
+  descriptionTemplate: On even cycles, gain {value0:percent:Damage} {Damage}. On
+    odd cycles, gain {value1:percent:AttackSpeed} {AttackSpeed}.
   powerIncreaseData:
     statType: 2
     modType: 200
