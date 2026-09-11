@@ -38,7 +38,7 @@ public class AugmentOverviewUI : BasePopup
             nodeDetailAugmentItemUI.transform.SetParent(augmentContainer);
             nodeDetailAugmentItemUI.transform.localScale = Vector3.one;
 
-            nodeDetailAugmentItemUI.Init(augment);
+            nodeDetailAugmentItemUI.Init(augment, 760);
 
             nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
         }
