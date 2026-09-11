@@ -7,7 +7,8 @@ public class AugmentOverviewUI : BasePopup
     public RectTransform augmentContainer;
     public RectTransform augmentSetContainer;
 
-    public List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
+    private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
+    private List<AugmentSetItemUI> augmentSetItemUIs = new List<AugmentSetItemUI>();
 
     protected override void Show(Action onCompletedAction = null)
     {
@@ -21,6 +22,11 @@ public class AugmentOverviewUI : BasePopup
         for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
         {
             ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUIs[i].gameObject);
+        }
+
+        for (int i = 0; i < augmentSetItemUIs.Count; i++)
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.augmentSetItemUI, augmentSetItemUIs[i].gameObject);
         }
 
         for (int i = 0; i < AugmentManager.Ins.selectedAugments.Count; i++)
@@ -45,6 +51,8 @@ public class AugmentOverviewUI : BasePopup
             augmentSetItemUI.transform.localScale = Vector3.one;
 
             augmentSetItemUI.Init(spaceObjectType);
+
+            augmentSetItemUIs.Add(augmentSetItemUI);
         }
     }
 }
