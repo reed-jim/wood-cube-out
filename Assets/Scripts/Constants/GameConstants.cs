@@ -12,6 +12,7 @@ public static class GameConstants
     public static string nodeDetailAugmentItemUI = "nodeDetailAugmentItemUI";
     public static string augmentSetItemUI = "augmentSetItemUI";
     public static string augmentSetBuffItemUI = "augmentSetBuffItemUI";
+    public static string storedPowerCapsuleUI = "storedPowerCapsuleUI";
     public static string statItemUI = "statItemUI";
 
     public static string gameData = "gameData";

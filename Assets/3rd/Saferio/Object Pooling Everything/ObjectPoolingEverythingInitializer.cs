@@ -16,6 +16,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject statItemUI;
     [SerializeField] private GameObject augmentSetItemUI;
     [SerializeField] private GameObject augmentSetBuffItemUI;
+    [SerializeField] private GameObject storedPowerCapsuleUI;
 
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
@@ -142,6 +143,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUI, 10);
         RegisterPool<AugmentSetItemUI>(GameConstants.augmentSetItemUI, augmentSetItemUI, 10);
         RegisterPool<AugmentSetBuffItemUI>(GameConstants.augmentSetBuffItemUI, augmentSetBuffItemUI, 30);
+        RegisterPool<StoredPowerCapsuleUI>(GameConstants.storedPowerCapsuleUI, storedPowerCapsuleUI, 10);
         // RegisterPool<StatItemUI>(GameConstants.stackingItemUI, stackingItemUI, 20);
         #endregion
 

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1a1815e52339f7499d6ace5f3d424b7, type: 3}
+  m_Name: TimeCapsuleAugmentEffect
+  m_EditorClassIdentifier: Assembly-CSharp::TimeCapsuleAugmentEffect
+  effectName: Power Capsule
+  effectColor: {r: 0.78431374, g: 0.3529412, b: 1, a: 1}
+  descriptionTemplate: Store all power generated in a capsule of max {value0:flat:Damage}
+    {Damage} capacity. When full, generate a burst of power equal to {value1:percent:Damage}
+    {Damage} of capacity.
+  capsuleCapacity: 10
+  burstPowerMultiplier: 10

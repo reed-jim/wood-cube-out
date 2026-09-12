@@ -13,5 +13,6 @@ public class CharacterServiceLocator : MonoBehaviour
     #region Augment Runtime
     [Header("Augment Runtime")]
     public PowerIncreaseOnSpeedAugmentEffectRuntime powerIncreaseOnSpeedAugmentEffectRuntime;
+    public TimeCapsuleAugmentEffectRuntime timeCapsuleAugmentEffectRuntime;
     #endregion
 }

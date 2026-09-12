@@ -19,6 +19,7 @@ public class BaseCharacter : MonoBehaviour
 
     [Header("State")]
     public int currentCycle;
+    public float lastPowerGenerated;
 
     void Awake()
     {
@@ -128,6 +129,8 @@ public class BaseCharacter : MonoBehaviour
                         ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
                     }));
                 }
+
+                lastPowerGenerated = power;
 
                 ApplyAugmentEffectsOnCycleCompletion();
 
