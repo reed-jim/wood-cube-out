@@ -14,6 +14,8 @@ public class StoredPowerCapsuleUI : MonoBehaviour
         container.SetParent(node.serviceLocator.nodeUI.container);
         container.transform.localScale = Vector3.one;
         container.localPosition = new Vector3(0, -40);
+
+        capsule.fillAmount = 0;
     }
 
     public void UpdateProgress(float progress)

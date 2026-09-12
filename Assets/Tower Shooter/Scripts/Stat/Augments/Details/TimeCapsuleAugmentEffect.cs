@@ -10,8 +10,7 @@ public class TimeCapsuleAugmentEffect : AugmentEffect
 
     public override void ApplyEffect(CharacterStats target, object source)
     {
-
-
+        InitRuntime(target);
     }
 
     public override void RemoveEffect(CharacterStats target, object source)
@@ -34,6 +33,16 @@ public class TimeCapsuleAugmentEffect : AugmentEffect
         return tokens;
     }
 
+    private void InitRuntime(CharacterStats stats)
+    {
+        if (stats.serviceLocator.timeCapsuleAugmentEffectRuntime == null)
+        {
+            stats.serviceLocator.timeCapsuleAugmentEffectRuntime = stats.gameObject.AddComponent<TimeCapsuleAugmentEffectRuntime>();
+        }
+
+        stats.serviceLocator.timeCapsuleAugmentEffectRuntime.Init(stats, capsuleCapacity, burstPowerMultiplier);
+    }
+
     private void StorePower(CharacterStats stats)
     {
         if (stats.serviceLocator.timeCapsuleAugmentEffectRuntime == null)
@@ -41,7 +50,7 @@ public class TimeCapsuleAugmentEffect : AugmentEffect
             stats.serviceLocator.timeCapsuleAugmentEffectRuntime = stats.gameObject.AddComponent<TimeCapsuleAugmentEffectRuntime>();
         }
 
-        stats.serviceLocator.timeCapsuleAugmentEffectRuntime.Apply(stats, capsuleCapacity, burstPowerMultiplier);
+        stats.serviceLocator.timeCapsuleAugmentEffectRuntime.Apply(stats);
     }
 }
 
@@ -53,7 +62,7 @@ public class TimeCapsuleAugmentEffectRuntime : MonoBehaviour
 
     private StoredPowerCapsuleUI storedPowerCapsuleUI;
 
-    public void Apply(CharacterStats stats, float capsuleCapacity, float burstPowerMultiplier)
+    public void Init(CharacterStats stats, float capsuleCapacity, float burstPowerMultiplier)
     {
         this.capsuleCapacity = capsuleCapacity;
         this.burstPowerMultiplier = burstPowerMultiplier;
@@ -66,6 +75,11 @@ public class TimeCapsuleAugmentEffectRuntime : MonoBehaviour
 
             storedPowerCapsuleUI.Init(node);
         }
+    }
+
+    public void Apply(CharacterStats stats)
+    {
+        BaseCharacter node = stats.serviceLocator.character;
 
         storedPower += node.lastPowerGenerated;
 
