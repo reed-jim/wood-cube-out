@@ -20,6 +20,8 @@ public class BaseCharacter : MonoBehaviour
     [Header("State")]
     public int currentCycle;
     public float lastPowerGenerated;
+    public bool isJustCrit;
+    public bool isGuaranteedCrit;
 
     void Awake()
     {
@@ -101,11 +103,14 @@ public class BaseCharacter : MonoBehaviour
                 float chanceToRepeatLastCyclePower = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
                 bool isCritical = false;
 
-                if (Random.value < criticalChance)
+                // Crit
+                if (Random.value < criticalChance || isGuaranteedCrit)
                 {
                     power *= criticalMultiplier;
 
                     isCritical = true;
+
+                    isGuaranteedCrit = false;
                 }
 
                 if (Random.value < chanceForMorePowerOnCircleCompletion)
@@ -131,6 +136,7 @@ public class BaseCharacter : MonoBehaviour
                 }
 
                 lastPowerGenerated = power;
+                isJustCrit = isCritical;
 
                 ApplyAugmentEffectsOnCycleCompletion();
 

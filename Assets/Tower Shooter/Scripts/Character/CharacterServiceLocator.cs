@@ -15,5 +15,6 @@ public class CharacterServiceLocator : MonoBehaviour
     public PowerIncreaseOnSpeedAugmentEffectRuntime powerIncreaseOnSpeedAugmentEffectRuntime;
     public TimeCapsuleAugmentEffectRuntime timeCapsuleAugmentEffectRuntime;
     public OverheatAugmentEffectRuntime overheatAugmentEffectRuntime;
+    public ChainCriticalAugmentEffectRuntime chainCriticalAugmentEffectRuntime;
     #endregion
 }
