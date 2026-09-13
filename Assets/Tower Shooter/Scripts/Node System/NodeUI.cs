@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -37,6 +38,24 @@ public class NodeUI : MonoBehaviour
 
         energyPath.sizeDelta = new Vector2(energyPath.sizeDelta.x, pathLength);
         energyPath.localPosition = new Vector3(0, 0.5f * pathLength);
+
+        serviceLocator.character.energyPoints = new List<Vector2>();
+
+        serviceLocator.character.energyPoints.Add(transform.position);
+        serviceLocator.character.energyPoints.Add(new Vector2(transform.position.x, EnergyPathManager.Ins.CenterBottomPoint.y));
+
+        if (transform.position.x > 0)
+        {
+            serviceLocator.character.energyPoints.Add(EnergyPathManager.Ins.RightBottomPoint);
+            serviceLocator.character.energyPoints.Add(EnergyPathManager.Ins.RightTopPoint);
+        }
+        else
+        {
+            serviceLocator.character.energyPoints.Add(EnergyPathManager.Ins.LeftBottomPoint);
+            serviceLocator.character.energyPoints.Add(EnergyPathManager.Ins.LeftTopPoint);
+        }
+
+        serviceLocator.character.energyPoints.Add(EnergyPathManager.Ins.CenterTopPoint);
     }
     #endregion
 

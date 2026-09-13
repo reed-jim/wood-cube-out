@@ -23,6 +23,9 @@ public class BaseCharacter : MonoBehaviour
     public bool isJustCrit;
     public bool isGuaranteedCrit;
 
+    [Header("Energy Path")]
+    public List<Vector2> energyPoints;
+
     void Awake()
     {
         upgrades = new List<StatModifier>();
@@ -143,6 +146,14 @@ public class BaseCharacter : MonoBehaviour
                 ApplyAugmentEffectsOnCycleCompletion();
 
                 currentCycle++;
+
+                #region Energy Cube
+                EnergyCube energyCube = ObjectPoolingEverything.GetFromPool<EnergyCube>(GameConstants.energyCube);
+
+                energyCube.transform.SetParent(transform);
+                energyCube.transform.localPosition = Vector3.zero;
+                energyCube.Move(energyPoints);
+                #endregion
             });
 
             yield return new WaitForSeconds(interval);

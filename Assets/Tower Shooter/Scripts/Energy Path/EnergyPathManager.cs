@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EnergyPathManager : Singleton<EnergyPathManager>
 {
+    public RectTransform container;
+
     public Transform centerBottomPoint;
     public Transform leftBottomPoint;
     public Transform rightBottomPoint;
