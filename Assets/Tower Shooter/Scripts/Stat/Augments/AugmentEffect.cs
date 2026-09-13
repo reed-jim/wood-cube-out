@@ -28,10 +28,17 @@ public abstract class AugmentEffect : ScriptableObject
 
     }
 
+    #region Node Group
+    public virtual void ApplyEffect(NodeGroup nodeGroup)
+    {
+
+    }
+
     public virtual void ApplyEffectOnNodeStatModified(NodeGroup nodeGroup)
     {
 
     }
+    #endregion
 
     /// <summary>
     /// Evaluates the template string. Override GetDescriptionTokens to inject custom parameters.

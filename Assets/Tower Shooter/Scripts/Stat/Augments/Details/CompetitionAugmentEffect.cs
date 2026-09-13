@@ -18,6 +18,11 @@ public class CompetitionAugmentEffect : AugmentEffect
 
     }
 
+    public override void ApplyEffect(NodeGroup nodeGroup)
+    {
+        BuffTheMostPowerNode(nodeGroup);
+    }
+
     public override void ApplyEffectOnNodeStatModified(NodeGroup nodeGroup)
     {
         BuffTheMostPowerNode(nodeGroup);
@@ -32,7 +37,7 @@ public class CompetitionAugmentEffect : AugmentEffect
         return tokens;
     }
 
-    private void BuffTheMostPowerNode(NodeGroup nodeGroup)
+    private void BuffTheMostPowerNode(NodeGroup nodeGroup, bool isApplyAugmentEffect = false)
     {
         if (nodeGroup.serviceLocator.competitionAugmentEffectRuntime == null)
         {
@@ -77,7 +82,7 @@ public class CompetitionAugmentEffectRuntime : MonoBehaviour
             prevStrongestNode.serviceLocator.stats.RemoveModifier(statModifier);
         }
 
-        strongestNode.serviceLocator.stats.AddModifier(statModifier);
+        strongestNode.serviceLocator.stats.AddModifier(statModifier, isInvokeStatModifiedEvent: false);
 
         prevStrongestNode = strongestNode;
     }

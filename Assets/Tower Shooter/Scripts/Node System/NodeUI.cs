@@ -36,6 +36,8 @@ public class NodeUI : MonoBehaviour
         else
         {
             SelectNodeToApplyAugment();
+
+            IdleGameInputManager.inputMode = IdleGameInputMode.Normal;
         }
     }
 

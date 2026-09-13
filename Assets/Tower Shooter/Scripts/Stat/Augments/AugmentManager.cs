@@ -64,6 +64,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
         selectAugment = augment;
     }
+    
     public void PickAugment(BaseCharacter nodeToApply = null)
     {
         PickAugment(selectAugment, nodeToApply);

@@ -106,6 +106,13 @@ public class NodeGroup : MonoBehaviour
 
     public void ApplyAugment(Augment augment)
     {
+        for (int i = 0; i < augment.dynamicEffects.Count; i++)
+        {
+            AugmentEffect augmentEffect = augment.dynamicEffects[i];
+
+            augmentEffect.ApplyEffect(this);
+        }
+
         ownedAugments.Add(augment);
     }
 
@@ -116,6 +123,8 @@ public class NodeGroup : MonoBehaviour
             AugmentManager.Ins.ApplyAugmentForNodeGroup(this);
 
             MultiverseIdleGameplayScreen.Ins.HideSelectAugmentUI();
+
+            IdleGameInputManager.inputMode = IdleGameInputMode.Normal;
         }
     }
 
