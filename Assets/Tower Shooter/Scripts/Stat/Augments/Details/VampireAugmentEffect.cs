@@ -10,7 +10,6 @@ public class VampireAugmentEffect : AugmentEffect
     public override void ApplyEffect(CharacterStats target, object source)
     {
 
-
     }
 
     public override void RemoveEffect(CharacterStats target, object source)

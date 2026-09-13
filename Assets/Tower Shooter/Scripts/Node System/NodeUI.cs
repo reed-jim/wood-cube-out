@@ -72,6 +72,8 @@ public class NodeUI : MonoBehaviour
             SelectNodeToApplyAugment();
 
             IdleGameInputManager.inputMode = IdleGameInputMode.Normal;
+
+            EndHighlight();
         }
     }
 
