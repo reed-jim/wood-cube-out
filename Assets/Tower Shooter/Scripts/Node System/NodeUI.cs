@@ -20,12 +20,25 @@ public class NodeUI : MonoBehaviour
     private Sequence highlightSequence;
     private Tween highlightTween;
 
+    [Header("Energy Path")]
+    public RectTransform energyPath;
+
     public static event Action<string, string> showNotificationEvent;
 
     void Awake()
     {
         selectButton.onClick.AddListener(Select);
     }
+
+    #region Energy Path
+    public void InitEnergyPath()
+    {
+        float pathLength = EnergyPathManager.Ins.CenterBottomPoint.y - transform.position.y;
+
+        energyPath.sizeDelta = new Vector2(energyPath.sizeDelta.x, pathLength);
+        energyPath.localPosition = new Vector3(0, 0.5f * pathLength);
+    }
+    #endregion
 
     private void Select()
     {

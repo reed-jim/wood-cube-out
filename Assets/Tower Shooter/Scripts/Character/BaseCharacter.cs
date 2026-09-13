@@ -47,6 +47,8 @@ public class BaseCharacter : MonoBehaviour
         {
             serviceLocator.nodeUI.Lock();
         }
+
+        serviceLocator.nodeUI.InitEnergyPath();
     }
 
     public void Reset()
