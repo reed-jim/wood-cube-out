@@ -41,6 +41,9 @@ public class NodeGroup : MonoBehaviour
 
         bool isOddRow;
 
+        float maxX = 0;
+        float maxY = 0;
+
         for (int i = 0; i < nodeGroupData.nodeDataItems.Count; i++)
         {
             NodeData nodeData = nodeGroupData.nodeDataItems[i];
@@ -55,7 +58,8 @@ public class NodeGroup : MonoBehaviour
                 distance = 1.3f * size;
             }
 
-            isOddRow = (nodeData.coordinate.y + 1) % 2 == 1;
+            // isOddRow = (nodeData.coordinate.y + 1) % 2 == 1;
+            isOddRow = false;
 
             position.x = distance * nodeData.coordinate.x + (isOddRow ? 0.5f * distance : 0);
             position.y = distance * nodeData.coordinate.y;
@@ -67,41 +71,25 @@ public class NodeGroup : MonoBehaviour
 
             node.Init(nodeData);
 
+            if (position.x + 0.5f * nodeContainer.sizeDelta.x > maxX)
+            {
+                maxX = position.x + 0.5f * nodeContainer.sizeDelta.x;
+            }
+
+            if (position.y + 0.5f * nodeContainer.sizeDelta.y > maxY)
+            {
+                maxY = position.y + 0.5f * nodeContainer.sizeDelta.y;
+            }
+
             nodes.Add(node);
             NodeManager.Ins.nodes.Add(node);
         }
-    }
 
-    public void Init()
-    {
-        Vector3 position = Vector3.zero;
+        float padding = 40;
+        float sizeX = maxX * 2 + padding;
+        float sizeY = maxY * 2 + padding;
 
-        float size;
-        float distance = -1;
-
-        for (int i = 0; i < row; i++)
-        {
-            for (int j = 0; j < column; j++)
-            {
-                BaseCharacter node = ObjectPoolingEverything.GetFromPool<BaseCharacter>(GameConstants.node);
-
-                RectTransform nodeContainer = node.serviceLocator.nodeUI.container;
-
-                if (distance == -1)
-                {
-                    size = node.serviceLocator.nodeUI.container.sizeDelta.x;
-                    distance = 1.1f * size;
-                }
-
-                position.x = -((column - 1) / 2f + j) * distance;
-                position.y = ((row - 1) / 2f - i) * distance;
-
-                nodeContainer.SetParent(container);
-
-                nodeContainer.localPosition = position;
-                nodeContainer.localScale = Vector3.one;
-            }
-        }
+        container.sizeDelta = new Vector2(sizeX, sizeY);
     }
 
     public void ApplyAugment(Augment augment)
