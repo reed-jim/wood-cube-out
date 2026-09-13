@@ -1,3 +1,4 @@
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -11,8 +12,12 @@ public class NodeUI : MonoBehaviour
     public RectTransform container;
     public Image circleProgress;
     public TMP_Text powerText;
-
     public Button openNodeDetailButton;
+
+    [Header("Highlight")]
+    public Image highlight;
+    private Sequence highlightSequence;
+    private Tween highlightTween;
 
     void Awake()
     {
@@ -44,5 +49,35 @@ public class NodeUI : MonoBehaviour
     public void Unlock()
     {
         powerText.color = ThemeManager.ActiveText;
+    }
+
+    public void Highlight()
+    {
+        if (highlightSequence.isAlive)
+        {
+            highlightSequence.Stop();
+        }
+
+        if (highlightTween.isAlive)
+        {
+            highlightTween.Stop();
+        }
+
+        highlight.gameObject.SetActive(true);
+
+        highlightSequence = SaferioTween.ShowWithPunch(highlight.rectTransform, onCompleteAction: () =>
+        {
+            highlightTween = Tween.LocalPositionY(highlight.rectTransform, 40, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
+        });
+    }
+
+    public void EndHighlight()
+    {
+        if (highlightTween.isAlive)
+        {
+            highlightTween.Stop();
+
+            SaferioTween.ScaleDownWithPunch(highlight.rectTransform);
+        }
     }
 }

@@ -10,12 +10,20 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public Button openUpgradeButton;
     public Button augmentOverviewButton;
 
+    [Header("Node")]
+    public RectTransform nodeContainer;
+
     [Header("Augment")]
     public TMP_Text buyAugmentCostText;
     public NotificationDot buyAugmentNotification;
 
     [Header("Resource")]
     public TMP_Text upgradePointText;
+
+    [Header("Select Augment UI")]
+    public SelectAugmentUI selectAugmentUI;
+    private int selectAugmentUISiblingIndex;
+    private int nodeContainerSiblingIndex;
 
     public static event Action<ScreenRoute> switchRouteEvent;
 
@@ -80,4 +88,17 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     {
         buyAugmentNotification.Hide();
     }
+
+    #region SelectAugmentUI
+    public void ShowSelectAugmentUI()
+    {
+        selectAugmentUISiblingIndex = selectAugmentUI.transform.GetSiblingIndex();
+        nodeContainerSiblingIndex = nodeContainer.transform.GetSiblingIndex();
+
+        selectAugmentUI.transform.SetAsLastSibling();
+        nodeContainer.transform.SetAsLastSibling();
+
+        selectAugmentUI.Show();
+    }
+    #endregion
 }

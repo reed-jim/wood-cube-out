@@ -21,7 +21,7 @@ public class AugmentManager : Singleton<AugmentManager>
     void Start()
     {
         Init();
-        
+
         UpdateBuyAugmentCost();
     }
 
@@ -47,6 +47,12 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public void PickAugment(Augment augment)
     {
+        MultiverseIdleGameplayScreen.Ins.ShowSelectAugmentUI();
+
+        NodeManager.Ins.HighlightLockedNodes();
+
+        return;
+
         augment.Pick();
 
         if (augment.isApplyImmediatelyAfterPick)
