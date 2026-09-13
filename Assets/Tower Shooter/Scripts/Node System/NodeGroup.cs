@@ -39,9 +39,9 @@ public class NodeGroup : MonoBehaviour
                 distance = 1.3f * size;
             }
 
-            isOddRow = nodeData.coordinate.y % 2 == 1;
+            isOddRow = (nodeData.coordinate.y + 1) % 2 == 1;
 
-            position.x = distance * nodeData.coordinate.x + (isOddRow ? distance : 0);
+            position.x = distance * nodeData.coordinate.x + (isOddRow ? 0.5f * distance : 0);
             position.y = distance * nodeData.coordinate.y;
 
             nodeContainer.SetParent(container);

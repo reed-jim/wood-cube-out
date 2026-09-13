@@ -102,6 +102,19 @@ public class NodeManager : Singleton<NodeManager>
         return neighborNodes;
     }
 
+    public void HighlightUnlockedNodes()
+    {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            BaseCharacter node = nodes[i];
+
+            if (node.nodeData.isUnlocked)
+            {
+                node.serviceLocator.nodeUI.Highlight();
+            }
+        }
+    }
+
     public void HighlightLockedNodes()
     {
         for (int i = 0; i < nodes.Count; i++)

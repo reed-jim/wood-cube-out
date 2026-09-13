@@ -28,6 +28,7 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationWithParamEvent += ShowNotification;
         BoosterUI.showNotificationWithParamEvent += ShowNotification;
         WaterFlowGameInput.showNotificationEvent += ShowNotification;
+        NodeUI.showNotificationEvent += ShowNotification;
 
         showNotificationEvent += ShowNotification;
 
@@ -48,7 +49,8 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationWithParamEvent -= ShowNotification;
         BoosterUI.showNotificationWithParamEvent -= ShowNotification;
         WaterFlowGameInput.showNotificationEvent -= ShowNotification;
-        
+        NodeUI.showNotificationEvent -= ShowNotification;
+
         showNotificationEvent -= ShowNotification;
     }
 
@@ -93,7 +95,10 @@ public class NotificationPopup : BasePopup
     private void ShowNotification(string titleTranslation, string descriptionTranslation)
     {
         localizedTitle.TranslationName = titleTranslation;
-        localizedDescription.TranslationName = descriptionTranslation;
+        descriptionText.text = descriptionTranslation;
+
+        // localizedTitle.TranslationName = titleTranslation;
+        // localizedDescription.TranslationName = descriptionTranslation;
 
         Show();
     }

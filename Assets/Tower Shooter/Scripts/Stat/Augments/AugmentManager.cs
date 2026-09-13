@@ -51,7 +51,7 @@ public class AugmentManager : Singleton<AugmentManager>
     {
         MultiverseIdleGameplayScreen.Ins.ShowSelectAugmentUI();
 
-        NodeManager.Ins.HighlightLockedNodes();
+        NodeManager.Ins.HighlightUnlockedNodes();
 
         IdleGameInputManager.inputMode = IdleGameInputMode.SelectNode;
 

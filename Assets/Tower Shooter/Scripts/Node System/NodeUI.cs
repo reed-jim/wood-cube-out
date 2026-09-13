@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -18,6 +19,8 @@ public class NodeUI : MonoBehaviour
     public Image highlight;
     private Sequence highlightSequence;
     private Tween highlightTween;
+
+    public static event Action<string, string> showNotificationEvent;
 
     void Awake()
     {
@@ -45,9 +48,16 @@ public class NodeUI : MonoBehaviour
 
     public void SelectNodeToApplyAugment()
     {
-        AugmentManager.Ins.PickAugment(serviceLocator.character);
+        if (serviceLocator.character.nodeData.isUnlocked)
+        {
+            AugmentManager.Ins.PickAugment(serviceLocator.character);
 
-        MultiverseIdleGameplayScreen.Ins.selectAugmentUI.Hide();
+            MultiverseIdleGameplayScreen.Ins.selectAugmentUI.Hide();
+        }
+        else
+        {
+            IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Node is locked, please select another node!", transform.position, 0.5f);
+        }
     }
 
     public void UpdatePower()
