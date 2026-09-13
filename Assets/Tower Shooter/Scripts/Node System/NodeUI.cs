@@ -38,6 +38,8 @@ public class NodeUI : MonoBehaviour
 
         energyPath.sizeDelta = new Vector2(energyPath.sizeDelta.x, pathLength);
         energyPath.localPosition = new Vector3(0, 0.5f * pathLength);
+        energyPath.transform.SetParent(EnergyPathManager.Ins.container);
+        energyPath.transform.localScale = Vector3.one;
 
         serviceLocator.character.energyPoints = new List<Vector2>();
 
