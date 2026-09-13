@@ -16,6 +16,8 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public AugmentContainer augmentContainer;
 
+    private Augment selectAugment;
+
     public static event Action applyAugmentEvent;
 
     void Start()
@@ -45,19 +47,28 @@ public class AugmentManager : Singleton<AugmentManager>
         }
     }
 
-    public void PickAugment(Augment augment)
+    public void PickNodeForAugment(Augment augment)
     {
         MultiverseIdleGameplayScreen.Ins.ShowSelectAugmentUI();
 
         NodeManager.Ins.HighlightLockedNodes();
 
-        return;
+        IdleGameInputManager.inputMode = IdleGameInputMode.SelectNode;
 
+        selectAugment = augment;
+    }
+    public void PickAugment(BaseCharacter nodeToApply = null)
+    {
+        PickAugment(selectAugment, nodeToApply);
+    }
+
+    public void PickAugment(Augment augment, BaseCharacter nodeToApply = null)
+    {
         augment.Pick();
 
         if (augment.isApplyImmediatelyAfterPick)
         {
-            ApplyAugment(augment);
+            ApplyAugment(augment, nodeToApply);
         }
 
         selectedAugments.Add(augment);
@@ -72,17 +83,24 @@ public class AugmentManager : Singleton<AugmentManager>
         }
     }
 
-    public void ApplyAugment(Augment augment)
+    public void ApplyAugment(Augment augment, BaseCharacter nodeToApply = null)
     {
         if (augment.isNeedCharacterToApply)
         {
-            List<BaseCharacter> validNodes = NodeManager.Ins.nodes;
-
-            for (int i = 0; i < validNodes.Count; i++)
+            if (nodeToApply == null)
             {
-                BaseCharacter node = validNodes[i];
+                List<BaseCharacter> validNodes = NodeManager.Ins.nodes;
 
-                augment.Apply(node.serviceLocator.stats);
+                for (int i = 0; i < validNodes.Count; i++)
+                {
+                    BaseCharacter node = validNodes[i];
+
+                    augment.Apply(node.serviceLocator.stats);
+                }
+            }
+            else
+            {
+                augment.Apply(nodeToApply.serviceLocator.stats);
             }
         }
         else

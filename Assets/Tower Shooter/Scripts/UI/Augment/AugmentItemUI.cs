@@ -56,7 +56,7 @@ public class AugmentItemUIs : MonoBehaviour
 
     public void PickAugment()
     {
-        AugmentManager.Ins.PickAugment(augment);
+        AugmentManager.Ins.PickNodeForAugment(augment);
 
         onAugmentSelected?.Invoke();
     }

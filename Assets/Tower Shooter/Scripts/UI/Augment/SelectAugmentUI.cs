@@ -7,6 +7,8 @@ public class SelectAugmentUI : MonoBehaviour
 
     public void Show()
     {
+        canvasGroup.gameObject.SetActive(true);
+
         Tween.Alpha(canvasGroup, 1, duration: 0.3f);
     }
 

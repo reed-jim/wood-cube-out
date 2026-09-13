@@ -12,7 +12,7 @@ public class NodeUI : MonoBehaviour
     public RectTransform container;
     public Image circleProgress;
     public TMP_Text powerText;
-    public Button openNodeDetailButton;
+    public Button selectButton;
 
     [Header("Highlight")]
     public Image highlight;
@@ -21,14 +21,33 @@ public class NodeUI : MonoBehaviour
 
     void Awake()
     {
-        openNodeDetailButton.onClick.AddListener(OpenNodeButton);
+        selectButton.onClick.AddListener(Select);
     }
 
-    public void OpenNodeButton()
+    private void Select()
+    {
+        if (IdleGameInputManager.inputMode == IdleGameInputMode.Normal)
+        {
+            OpenNodeDetail();
+        }
+        else
+        {
+            SelectNodeToApplyAugment();
+        }
+    }
+
+    public void OpenNodeDetail()
     {
         NodeManager.Ins.nodeDetailUI.Init(serviceLocator.character);
 
         UpgradeNodeUI.Ins.SelectNode(serviceLocator.character);
+    }
+
+    public void SelectNodeToApplyAugment()
+    {
+        AugmentManager.Ins.PickAugment(serviceLocator.character);
+
+        MultiverseIdleGameplayScreen.Ins.selectAugmentUI.Hide();
     }
 
     public void UpdatePower()
@@ -67,7 +86,7 @@ public class NodeUI : MonoBehaviour
 
         highlightSequence = SaferioTween.ShowWithPunch(highlight.rectTransform, onCompleteAction: () =>
         {
-            highlightTween = Tween.LocalPositionY(highlight.rectTransform, 40, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
+            highlightTween = Tween.Alpha(highlight, 0, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
         });
     }
 

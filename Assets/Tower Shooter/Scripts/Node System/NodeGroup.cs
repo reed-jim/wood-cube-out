@@ -23,6 +23,8 @@ public class NodeGroup : MonoBehaviour
 
         nodes = new List<BaseCharacter>();
 
+        bool isOddRow;
+
         for (int i = 0; i < nodeGroupData.nodeDataItems.Count; i++)
         {
             NodeData nodeData = nodeGroupData.nodeDataItems[i];
@@ -34,10 +36,12 @@ public class NodeGroup : MonoBehaviour
             if (distance == -1)
             {
                 size = node.serviceLocator.nodeUI.container.sizeDelta.x;
-                distance = 1.1f * size;
+                distance = 1.3f * size;
             }
 
-            position.x = distance * nodeData.coordinate.x;
+            isOddRow = nodeData.coordinate.y % 2 == 1;
+
+            position.x = distance * nodeData.coordinate.x + (isOddRow ? distance : 0);
             position.y = distance * nodeData.coordinate.y;
 
             nodeContainer.SetParent(container);
@@ -48,6 +52,7 @@ public class NodeGroup : MonoBehaviour
             node.Init(nodeData);
 
             nodes.Add(node);
+            NodeManager.Ins.nodes.Add(node);
         }
     }
 
