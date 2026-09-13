@@ -1,14 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NodeGroup : MonoBehaviour
 {
+    public NodeGroupServiceLocator serviceLocator;
     public RectTransform container;
+    public Button selectButton;
 
     public int row;
     public int column;
 
     public List<BaseCharacter> nodes;
+    public List<Augment> ownedAugments = new List<Augment>();
+
+    void Awake()
+    {
+        CharacterStats.nodeStatModifiedEvent += OnNodeStatModified;
+
+        selectButton.onClick.AddListener(Select);
+    }
+
+    void OnDestroy()
+    {
+        CharacterStats.nodeStatModifiedEvent -= OnNodeStatModified;
+    }
 
     public void Init(NodeGroupData nodeGroupData, RectTransform parent)
     {
@@ -84,6 +100,36 @@ public class NodeGroup : MonoBehaviour
 
                 nodeContainer.localPosition = position;
                 nodeContainer.localScale = Vector3.one;
+            }
+        }
+    }
+
+    public void ApplyAugment(Augment augment)
+    {
+        ownedAugments.Add(augment);
+    }
+
+    public void Select()
+    {
+        if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNodeGroup)
+        {
+            AugmentManager.Ins.ApplyAugmentForNodeGroup(this);
+
+            MultiverseIdleGameplayScreen.Ins.HideSelectAugmentUI();
+        }
+    }
+
+    private void OnNodeStatModified()
+    {
+        for (int i = 0; i < ownedAugments.Count; i++)
+        {
+            Augment augment = ownedAugments[i];
+
+            for (int j = 0; j < augment.dynamicEffects.Count; j++)
+            {
+                AugmentEffect augmentEffect = augment.dynamicEffects[j];
+
+                augmentEffect.ApplyEffectOnNodeStatModified(this);
             }
         }
     }

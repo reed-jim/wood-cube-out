@@ -100,5 +100,13 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
         selectAugmentUI.Show();
     }
+
+    public void HideSelectAugmentUI()
+    {
+        selectAugmentUI.transform.SetSiblingIndex(selectAugmentUISiblingIndex);
+        nodeContainer.transform.SetSiblingIndex(nodeContainerSiblingIndex);
+
+        selectAugmentUI.Hide();
+    }
     #endregion
 }

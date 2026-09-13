@@ -3,7 +3,8 @@ using UnityEngine;
 public enum IdleGameInputMode
 {
     Normal,
-    SelectNode
+    SelectNode,
+    SelectNodeGroup
 }
 
 public class IdleGameInputManager : Singleton<IdleGameInputManager>

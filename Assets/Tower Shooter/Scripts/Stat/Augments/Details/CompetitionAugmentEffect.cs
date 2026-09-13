@@ -3,12 +3,10 @@ using Dreamteck.Utilities;
 using EventDispatcher;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ChainCriticalAugmentEffect", menuName = "Stats/Effects/ChainCriticalAugmentEffect")]
+[CreateAssetMenu(fileName = "CompetitionAugmentEffect", menuName = "Stats/Effects/CompetitionAugmentEffect")]
 public class CompetitionAugmentEffect : AugmentEffect
 {
     public StatModifierData damageModifier;
-
-    private StatModifier statModifier;
 
     public override void ApplyEffect(CharacterStats target, object source)
     {
@@ -20,14 +18,43 @@ public class CompetitionAugmentEffect : AugmentEffect
 
     }
 
-    private void BuffTheMostPowerNode()
+    public override void ApplyEffectOnNodeStatModified(NodeGroup nodeGroup)
     {
-        float maxPower = 0;
-        BaseCharacter strongestNode = null;
+        BuffTheMostPowerNode(nodeGroup);
+    }
 
-        for (int i = 0; i < NodeManager.Ins.nodes.Count; i++)
+    protected override (string Key, object Value)[] GetDescriptionTokens()
+    {
+        var tokens = new (string Key, object Value)[1];
+
+        tokens[0] = ($"value0", damageModifier.value);
+
+        return tokens;
+    }
+
+    private void BuffTheMostPowerNode(NodeGroup nodeGroup)
+    {
+        if (nodeGroup.serviceLocator.competitionAugmentEffectRuntime == null)
         {
-            BaseCharacter node = NodeManager.Ins.nodes[i];
+            nodeGroup.serviceLocator.competitionAugmentEffectRuntime = nodeGroup.gameObject.AddComponent<CompetitionAugmentEffectRuntime>();
+        }
+
+        nodeGroup.serviceLocator.competitionAugmentEffectRuntime.BuffTheMostPowerNode(nodeGroup, damageModifier);
+    }
+}
+
+public class CompetitionAugmentEffectRuntime : MonoBehaviour
+{
+    float maxPower = 0;
+    private StatModifier statModifier;
+    BaseCharacter prevStrongestNode = null;
+    BaseCharacter strongestNode = null;
+
+    public void BuffTheMostPowerNode(NodeGroup nodeGroup, StatModifierData damageModifier)
+    {
+        for (int i = 0; i < nodeGroup.nodes.Count; i++)
+        {
+            BaseCharacter node = nodeGroup.nodes[i];
 
             if (node.nodeData.isUnlocked)
             {
@@ -45,40 +72,13 @@ public class CompetitionAugmentEffect : AugmentEffect
             statModifier = new StatModifier(StatType.Damage, damageModifier.modType, damageModifier.value);
         }
 
-        strongestNode.serviceLocator.stats.RemoveModifier(statModifier);
-        strongestNode.serviceLocator.stats.AddModifier(statModifier);
-    }
-}
-
-public class CompetitionAugmentEffectRuntime : MonoBehaviour
-{
-    public void Apply(CharacterStats stats)
-    {
-        BaseCharacter node = stats.serviceLocator.character;
-
-        if (node.isJustCrit)
+        if (prevStrongestNode != null)
         {
-            List<BaseCharacter> adjacentNodes = NodeManager.Ins.GetNeighborNodes(node);
-
-            bool isNoAdjacentNode = true;
-
-            for (int i = 0; i < adjacentNodes.Count; i++)
-            {
-                BaseCharacter otherNode = adjacentNodes[i];
-
-                if (otherNode.nodeData.isUnlocked)
-                {
-                    otherNode.isGuaranteedCrit = true;
-
-                    isNoAdjacentNode = false;
-                }
-            }
-
-            if (isNoAdjacentNode)
-            {
-                adjacentNodes.Shuffle();
-                adjacentNodes[0].Unlock();
-            }
+            prevStrongestNode.serviceLocator.stats.RemoveModifier(statModifier);
         }
+
+        strongestNode.serviceLocator.stats.AddModifier(statModifier);
+
+        prevStrongestNode = strongestNode;
     }
 }

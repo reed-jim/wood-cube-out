@@ -30,6 +30,7 @@ public class Augment : ScriptableObject
     public SpaceObjectType spaceObjectType;
     public bool isNeedCharacterToApply = true;
     public bool isApplyImmediatelyAfterPick = true;
+    public bool isForNodeGroup;
 
     public virtual void Pick()
     {

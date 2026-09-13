@@ -9,7 +9,8 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private List<Stat> initialStats = new List<Stat>();
     private readonly Dictionary<StatType, Stat> statDict = new Dictionary<StatType, Stat>();
 
-    public event Action<StatType, float> OnStatModified;
+    public static event Action nodeStatModifiedEvent;
+    public static event Action<StatType, float> OnStatModified;
 
     private void Awake()
     {
@@ -62,6 +63,8 @@ public class CharacterStats : MonoBehaviour
         }
 
         serviceLocator.nodeUI.UpdatePower();
+
+        nodeStatModifiedEvent?.Invoke();
     }
 
     public void RemoveModifier(StatModifier mod) => GetStat(mod.Type).RemoveModifier(mod);

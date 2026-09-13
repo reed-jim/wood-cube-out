@@ -51,9 +51,16 @@ public class AugmentManager : Singleton<AugmentManager>
     {
         MultiverseIdleGameplayScreen.Ins.ShowSelectAugmentUI();
 
-        NodeManager.Ins.HighlightUnlockedNodes();
+        if (augment.isForNodeGroup)
+        {
+            IdleGameInputManager.inputMode = IdleGameInputMode.SelectNodeGroup;
+        }
+        else
+        {
+            NodeManager.Ins.HighlightUnlockedNodes();
 
-        IdleGameInputManager.inputMode = IdleGameInputMode.SelectNode;
+            IdleGameInputManager.inputMode = IdleGameInputMode.SelectNode;
+        }
 
         selectAugment = augment;
     }
@@ -117,6 +124,24 @@ public class AugmentManager : Singleton<AugmentManager>
         UpdateBuyAugmentCost();
 
         applyAugmentEvent?.Invoke();
+    }
+
+    public void ApplyAugmentForNodeGroup(NodeGroup nodeGroup)
+    {
+        selectAugment.Pick();
+
+        nodeGroup.ApplyAugment(selectAugment);
+
+        selectedAugments.Add(selectAugment);
+
+        if (augmentOfSameSpaceObjectType.ContainsKey(selectAugment.spaceObjectType))
+        {
+            augmentOfSameSpaceObjectType[selectAugment.spaceObjectType].Add(selectAugment);
+        }
+        else
+        {
+            augmentOfSameSpaceObjectType.Add(selectAugment.spaceObjectType, new List<Augment>() { selectAugment });
+        }
     }
 
     public void AddAugment(Augment augment)

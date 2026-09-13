@@ -23,6 +23,16 @@ public abstract class AugmentEffect : ScriptableObject
 
     }
 
+    public virtual void ApplyEffectOnNodeStatModified(CharacterStats target)
+    {
+
+    }
+
+    public virtual void ApplyEffectOnNodeStatModified(NodeGroup nodeGroup)
+    {
+
+    }
+
     /// <summary>
     /// Evaluates the template string. Override GetDescriptionTokens to inject custom parameters.
     /// </summary>

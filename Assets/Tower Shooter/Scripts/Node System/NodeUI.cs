@@ -52,7 +52,7 @@ public class NodeUI : MonoBehaviour
         {
             AugmentManager.Ins.PickAugment(serviceLocator.character);
 
-            MultiverseIdleGameplayScreen.Ins.selectAugmentUI.Hide();
+            MultiverseIdleGameplayScreen.Ins.HideSelectAugmentUI();
         }
         else
         {
