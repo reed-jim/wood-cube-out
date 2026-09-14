@@ -15,7 +15,7 @@ public class AugmentSetBuffItemUI : MonoBehaviour
 
         bool isActive = numAugmentActive >= numAugmentRequired;
 
-        numAugmentRequiredText.color = isActive ? DynamicThemeManager.Ins.CurrentTheme.success : DynamicThemeManager.Ins.CurrentTheme.disabledText;
-        buffText.color = isActive ? DynamicThemeManager.Ins.CurrentTheme.success : DynamicThemeManager.Ins.CurrentTheme.disabledText;
+        numAugmentRequiredText.color = isActive ? DynamicThemeManager.Ins.CurrentTheme.onPrimaryContainer : DynamicThemeManager.Ins.CurrentTheme.onSecondaryContainer;
+        buffText.color = isActive ? DynamicThemeManager.Ins.CurrentTheme.onPrimaryContainer : DynamicThemeManager.Ins.CurrentTheme.onSecondaryContainer;
     }
 }

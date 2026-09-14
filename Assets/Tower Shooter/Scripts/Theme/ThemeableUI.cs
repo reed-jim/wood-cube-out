@@ -1,44 +1,84 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
 
 public class ThemeableUI : MonoBehaviour
 {
     public enum ElementRole
     {
-        // Surfaces
-        Background,
-        Surface,
-        SurfaceVariant,
-        SurfaceHighlight,
+        // =========================================================
+        // PRIMARY
+        // =========================================================
+        Primary,
+        OnPrimary,
+        PrimaryContainer,
+        OnPrimaryContainer,
 
-        // Buttons
-        PrimaryButton,
-        SecondaryButton,
-        DisabledButton,
+        // =========================================================
+        // SECONDARY
+        // =========================================================
+        Secondary,
+        OnSecondary,
+        SecondaryContainer,
+        OnSecondaryContainer,
 
-        // Typography
-        PrimaryText,
-        SecondaryText,
-        DisabledText,
-        AccentText,
+        // =========================================================
+        // TERTIARY
+        // =========================================================
+        Tertiary,
+        OnTertiary,
+        TertiaryContainer,
+        OnTertiaryContainer,
 
-        // Semantic
-        Success,
-        Warning,
+        // =========================================================
+        // ERROR
+        // =========================================================
         Error,
-        Info,
+        OnError,
+        ErrorContainer,
+        OnErrorContainer,
 
-        // Augment
-        AugmentDescription,
-        AugmentValue,
-        Locked,
+        // =========================================================
+        // SURFACE
+        // =========================================================
+        SurfaceDim,
+        Surface,
+        SurfaceBright,
 
-        // Borders
-        Divider,
-        Border,
+        SurfaceContainerLowest,
+        SurfaceContainerLow,
+        SurfaceContainer,
+        SurfaceContainerHigh,
+        SurfaceContainerHighest,
 
-        // Augment Quality
+        // =========================================================
+        // SURFACE CONTENT
+        // =========================================================
+        OnSurface,
+        OnSurfaceVariant,
+
+        // =========================================================
+        // INVERSE
+        // =========================================================
+        InverseSurface,
+        InverseOnSurface,
+        InversePrimary,
+
+        // =========================================================
+        // OUTLINE
+        // =========================================================
+        Outline,
+        OutlineVariant,
+
+        // =========================================================
+        // EFFECTS
+        // =========================================================
+        Scrim,
+        Shadow,
+
+        // =========================================================
+        // AUGMENT QUALITY
+        // =========================================================
         Common,
         Uncommon,
         Rare,
@@ -51,13 +91,11 @@ public class ThemeableUI : MonoBehaviour
     private ElementRole role;
 
     private Image cachedImage;
-    private Button cachedButton;
     private TMP_Text cachedText;
 
     private void Awake()
     {
         cachedImage = GetComponent<Image>();
-        cachedButton = GetComponent<Button>();
         cachedText = GetComponent<TMP_Text>();
 
         DynamicThemeManager.OnThemeChanged += ApplyTheme;
@@ -68,9 +106,10 @@ public class ThemeableUI : MonoBehaviour
         DynamicThemeManager.OnThemeChanged -= ApplyTheme;
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
-        if (DynamicThemeManager.Ins != null && DynamicThemeManager.Ins.CurrentTheme != null)
+        if (DynamicThemeManager.Ins != null &&
+            DynamicThemeManager.Ins.CurrentTheme != null)
         {
             ApplyTheme(DynamicThemeManager.Ins.CurrentTheme);
         }
@@ -83,127 +122,186 @@ public class ThemeableUI : MonoBehaviour
 
         switch (role)
         {
-            // =========================================================
-            // SURFACES
-            // =========================================================
+            // =====================================================
+            // PRIMARY
+            // =====================================================
 
-            case ElementRole.Background:
-                ApplyImageColor(theme.background);
+            case ElementRole.Primary:
+                ApplyImageColor(theme.primary);
+                break;
+
+            case ElementRole.OnPrimary:
+                ApplyTextColor(theme.onPrimary);
+                break;
+
+            case ElementRole.PrimaryContainer:
+                ApplyImageColor(theme.primaryContainer);
+                break;
+
+            case ElementRole.OnPrimaryContainer:
+                ApplyTextColor(theme.onPrimaryContainer);
+                break;
+
+
+            // =====================================================
+            // SECONDARY
+            // =====================================================
+
+            case ElementRole.Secondary:
+                ApplyImageColor(theme.secondary);
+                break;
+
+            case ElementRole.OnSecondary:
+                ApplyTextColor(theme.onSecondary);
+                break;
+
+            case ElementRole.SecondaryContainer:
+                ApplyImageColor(theme.secondaryContainer);
+                break;
+
+            case ElementRole.OnSecondaryContainer:
+                ApplyTextColor(theme.onSecondaryContainer);
+                break;
+
+
+            // =====================================================
+            // TERTIARY
+            // =====================================================
+
+            case ElementRole.Tertiary:
+                ApplyImageColor(theme.tertiary);
+                break;
+
+            case ElementRole.OnTertiary:
+                ApplyTextColor(theme.onTertiary);
+                break;
+
+            case ElementRole.TertiaryContainer:
+                ApplyImageColor(theme.tertiaryContainer);
+                break;
+
+            case ElementRole.OnTertiaryContainer:
+                ApplyTextColor(theme.onTertiaryContainer);
+                break;
+
+
+            // =====================================================
+            // ERROR
+            // =====================================================
+
+            case ElementRole.Error:
+                ApplyImageColor(theme.error);
+                break;
+
+            case ElementRole.OnError:
+                ApplyTextColor(theme.onError);
+                break;
+
+            case ElementRole.ErrorContainer:
+                ApplyImageColor(theme.errorContainer);
+                break;
+
+            case ElementRole.OnErrorContainer:
+                ApplyTextColor(theme.onErrorContainer);
+                break;
+
+
+            // =====================================================
+            // SURFACE
+            // =====================================================
+
+            case ElementRole.SurfaceDim:
+                ApplyImageColor(theme.surfaceDim);
                 break;
 
             case ElementRole.Surface:
                 ApplyImageColor(theme.surface);
                 break;
 
-            case ElementRole.SurfaceVariant:
-                ApplyImageColor(theme.surfaceVariant);
+            case ElementRole.SurfaceBright:
+                ApplyImageColor(theme.surfaceBright);
                 break;
 
-            case ElementRole.SurfaceHighlight:
-                ApplyImageColor(theme.surfaceHighlight);
+            case ElementRole.SurfaceContainerLowest:
+                ApplyImageColor(theme.surfaceContainerLowest);
                 break;
 
-
-            // =========================================================
-            // BUTTONS
-            // =========================================================
-
-            case ElementRole.PrimaryButton:
-                ApplyButtonStyle(
-                    theme.primaryButton,
-                    theme.primary,
-                    theme.disabledButton
-                );
+            case ElementRole.SurfaceContainerLow:
+                ApplyImageColor(theme.surfaceContainerLow);
                 break;
 
-            case ElementRole.SecondaryButton:
-                ApplyButtonStyle(
-                    theme.secondaryButton,
-                    theme.primaryText,
-                    theme.disabledButton
-                );
+            case ElementRole.SurfaceContainer:
+                ApplyImageColor(theme.surfaceContainer);
                 break;
 
-            case ElementRole.DisabledButton:
-                ApplyImageColor(theme.disabledButton);
+            case ElementRole.SurfaceContainerHigh:
+                ApplyImageColor(theme.surfaceContainerHigh);
+                break;
+
+            case ElementRole.SurfaceContainerHighest:
+                ApplyImageColor(theme.surfaceContainerHighest);
                 break;
 
 
-            // =========================================================
-            // TYPOGRAPHY
-            // =========================================================
+            // =====================================================
+            // SURFACE CONTENT
+            // =====================================================
 
-            case ElementRole.PrimaryText:
-                ApplyTextColor(theme.primaryText);
+            case ElementRole.OnSurface:
+                ApplyTextColor(theme.onSurface);
                 break;
 
-            case ElementRole.SecondaryText:
-                ApplyTextColor(theme.secondaryText);
-                break;
-
-            case ElementRole.DisabledText:
-                ApplyTextColor(theme.disabledText);
-                break;
-
-            case ElementRole.AccentText:
-                ApplyTextColor(theme.accentText);
+            case ElementRole.OnSurfaceVariant:
+                ApplyTextColor(theme.onSurfaceVariant);
                 break;
 
 
-            // =========================================================
-            // SEMANTIC
-            // =========================================================
+            // =====================================================
+            // INVERSE
+            // =====================================================
 
-            case ElementRole.Success:
-                ApplyColor(theme.success);
+            case ElementRole.InverseSurface:
+                ApplyImageColor(theme.inverseSurface);
                 break;
 
-            case ElementRole.Warning:
-                ApplyColor(theme.warning);
+            case ElementRole.InverseOnSurface:
+                ApplyTextColor(theme.inverseOnSurface);
                 break;
 
-            case ElementRole.Error:
-                ApplyColor(theme.error);
-                break;
-
-            case ElementRole.Info:
-                ApplyColor(theme.info);
+            case ElementRole.InversePrimary:
+                ApplyColor(theme.inversePrimary);
                 break;
 
 
-            // =========================================================
-            // AUGMENT
-            // =========================================================
+            // =====================================================
+            // OUTLINE
+            // =====================================================
 
-            case ElementRole.AugmentDescription:
-                ApplyTextColor(theme.augmentDescription);
+            case ElementRole.Outline:
+                ApplyImageColor(theme.outline);
                 break;
 
-            case ElementRole.AugmentValue:
-                ApplyTextColor(theme.augmentValue);
-                break;
-
-            case ElementRole.Locked:
-                ApplyColor(theme.locked);
+            case ElementRole.OutlineVariant:
+                ApplyImageColor(theme.outlineVariant);
                 break;
 
 
-            // =========================================================
-            // BORDERS
-            // =========================================================
+            // =====================================================
+            // EFFECTS
+            // =====================================================
 
-            case ElementRole.Divider:
-                ApplyImageColor(theme.divider);
+            case ElementRole.Scrim:
+                ApplyColor(theme.scrim);
                 break;
 
-            case ElementRole.Border:
-                ApplyImageColor(theme.border);
+            case ElementRole.Shadow:
+                ApplyColor(theme.shadow);
                 break;
 
 
-            // =========================================================
+            // =====================================================
             // AUGMENT QUALITY
-            // =========================================================
+            // =====================================================
 
             case ElementRole.Common:
                 ApplyQualityColor(theme.common);
@@ -231,8 +329,9 @@ public class ThemeableUI : MonoBehaviour
         }
     }
 
+
     // =============================================================
-    // BASIC COLOR APPLICATION
+    // COLOR APPLICATION
     // =============================================================
 
     private void ApplyColor(Color color)
@@ -247,77 +346,20 @@ public class ThemeableUI : MonoBehaviour
     private void ApplyImageColor(Color color)
     {
         if (cachedImage != null)
-        {
             cachedImage.color = color;
-        }
-        else if (cachedText != null)
-        {
-            cachedText.color = color;
-        }
     }
 
     private void ApplyTextColor(Color color)
     {
         if (cachedText != null)
-        {
             cachedText.color = color;
-        }
-        else if (cachedImage != null)
-        {
-            cachedImage.color = color;
-        }
     }
-
-    // =============================================================
-    // BUTTON
-    // =============================================================
-
-    private void ApplyButtonStyle(
-        Color buttonColor,
-        Color textColor,
-        Color disabledColor)
-    {
-        if (cachedImage != null)
-            cachedImage.color = buttonColor;
-
-        if (cachedButton != null)
-        {
-            ColorBlock colors = cachedButton.colors;
-
-            colors.normalColor = buttonColor;
-
-            // Slightly brighter when hovering.
-            colors.highlightedColor = Color.Lerp(
-                buttonColor,
-                Color.white,
-                0.08f
-            );
-
-            // Slightly darker when pressed.
-            colors.pressedColor = Color.Lerp(
-                buttonColor,
-                Color.black,
-                0.12f
-            );
-
-            colors.selectedColor = buttonColor;
-            colors.disabledColor = disabledColor;
-
-            cachedButton.colors = colors;
-        }
-    }
-
-    // =============================================================
-    // QUALITY
-    // =============================================================
 
     private void ApplyQualityColor(Color color)
     {
-        // If this object is an Image, color it.
         if (cachedImage != null)
             cachedImage.color = color;
 
-        // If this object is text, color it.
         if (cachedText != null)
             cachedText.color = color;
     }
