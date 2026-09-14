@@ -57,7 +57,7 @@ public class BaseCharacter : MonoBehaviour
 
         serviceLocator.nodeUI.InitEnergyPath();
 
-        if (nodeData != null)
+        if (nodeGroup != null)
         {
             this.nodeGroup = nodeGroup;
         }

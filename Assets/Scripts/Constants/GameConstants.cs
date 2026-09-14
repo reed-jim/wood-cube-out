@@ -15,6 +15,7 @@ public static class GameConstants
     public static string storedPowerCapsuleUI = "storedPowerCapsuleUI";
     public static string notificationBadge = "notificationBadge";
     public static string energyCube = "energyCube";
+    public static string applyAugmentToNodeEffect = "applyAugmentToNodeEffect";
     public static string statItemUI = "statItemUI";
 
     public static string gameData = "gameData";

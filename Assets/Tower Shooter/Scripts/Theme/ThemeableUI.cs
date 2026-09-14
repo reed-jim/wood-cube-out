@@ -131,7 +131,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.OnPrimary:
-                ApplyTextColor(theme.onPrimary);
+                ApplyColor(theme.onPrimary);
                 break;
 
             case ElementRole.PrimaryContainer:

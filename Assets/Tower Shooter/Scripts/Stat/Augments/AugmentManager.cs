@@ -12,6 +12,9 @@ public class AugmentManager : Singleton<AugmentManager>
     public SerializableDictionary<SpaceObjectType, int> numAugmentOfSpaceObjectType;
     public SerializableDictionary<Augment, AugmentUsageTracker> augmentUsageTrackers;
 
+    [Header("Augment Apply Effect")]
+    public RectTransform augmentApplyEffectContainer;
+
     public AugmentHistory augmentHistory;
     public float currentBuyAugmentCost;
 
@@ -51,6 +54,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public void PickNodeForAugment(Augment augment)
     {
+        Debug.Log($"SAFERIO PickNodeForAugment {augment}");
         MultiverseIdleGameplayScreen.Ins.ShowSelectAugmentUI(!augment.isForNodeGroup);
 
         if (augment.isForNodeGroup)
@@ -92,6 +96,15 @@ public class AugmentManager : Singleton<AugmentManager>
         else
         {
             augmentOfSameSpaceObjectType.Add(augment.spaceObjectType, new List<Augment>() { augment });
+        }
+
+        // Effect
+        if (nodeToApply != null)
+        {
+            ApplyAugmentToNodeEffect applyAugmentToNodeEffect =
+                ObjectPoolingEverything.GetFromPool<ApplyAugmentToNodeEffect>(GameConstants.applyAugmentToNodeEffect);
+
+            applyAugmentToNodeEffect.PlayEffect(nodeToApply, augment, augmentApplyEffectContainer);
         }
     }
 
@@ -195,6 +208,11 @@ public class AugmentManager : Singleton<AugmentManager>
     #region Augment Usage Tracker
     public void UpdatePowerGeneratedByAugment(Augment augment, float power)
     {
+        if (augment == null)
+        {
+            return;
+        }
+
         if (augmentUsageTrackers.ContainsKey(augment))
         {
             augmentUsageTrackers[augment].totalPowerGenerated += power;
