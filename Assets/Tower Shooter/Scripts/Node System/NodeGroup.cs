@@ -69,7 +69,7 @@ public class NodeGroup : MonoBehaviour
             nodeContainer.localPosition = position;
             nodeContainer.localScale = Vector3.one;
 
-            node.Init(nodeData, this);
+            node.Init(nodeData, nodeGroup: this);
 
             if (position.x + 0.5f * nodeContainer.sizeDelta.x > maxX)
             {
