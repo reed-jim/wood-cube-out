@@ -218,6 +218,8 @@ public class BasePopup : MonoBehaviour
     {
         gameObject.SetActive(true);
 
+        transform.SetAsLastSibling();
+
         _transitionAnimation.Show(OnTransitionCompleted);
 
         popupShowEvent?.Invoke();
