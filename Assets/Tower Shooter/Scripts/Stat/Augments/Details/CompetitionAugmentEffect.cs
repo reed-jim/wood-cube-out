@@ -33,6 +33,16 @@ public class CompetitionAugmentEffect : AugmentEffect
         nodeGroup.serviceLocator.competitionAugmentEffectRuntime.TrackAugmentUtility(node);
     }
 
+    public override void SetAugment(NodeGroup nodeGroup, Augment augment)
+    {
+        if (nodeGroup.serviceLocator.competitionAugmentEffectRuntime == null)
+        {
+            nodeGroup.serviceLocator.competitionAugmentEffectRuntime = nodeGroup.gameObject.AddComponent<CompetitionAugmentEffectRuntime>();
+        }
+
+        nodeGroup.serviceLocator.competitionAugmentEffectRuntime.augment = augment;
+    }
+
     protected override (string Key, object Value)[] GetDescriptionTokens()
     {
         var tokens = new (string Key, object Value)[1];

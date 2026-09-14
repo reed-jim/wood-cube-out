@@ -205,6 +205,11 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public string GetAugmentUtilityText(Augment augment)
     {
+        if (!augmentUsageTrackers.ContainsKey(augment))
+        {
+            return "";
+        }
+
         string result = "";
 
         AugmentUsageTracker augmentUsageTracker = augmentUsageTrackers[augment];

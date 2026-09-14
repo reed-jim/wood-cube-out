@@ -48,6 +48,11 @@ public abstract class AugmentEffect : ScriptableObject
     {
 
     }
+
+    public virtual void SetAugment(NodeGroup nodeGroup, Augment augment)
+    {
+        
+    }
     #endregion
 
     /// <summary>

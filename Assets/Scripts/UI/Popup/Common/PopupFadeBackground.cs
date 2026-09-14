@@ -46,15 +46,15 @@ public class PopupFadeBackground : MonoBehaviour
 
         int numActivePopup = 0;
 
-        for (int i = 1; i < popupContainer.childCount; i++)
+        for (int i = 0; i < popupContainer.childCount; i++)
         {
-            if (popupContainer.GetChild(i).gameObject.activeSelf)
+            if (popupContainer.GetChild(i).gameObject != gameObject && popupContainer.GetChild(i).gameObject.activeSelf)
             {
                 numActivePopup++;
             }
         }
 
-        if (numActivePopup > 1)
+        if (numActivePopup > 0)
         {
             return;
         }

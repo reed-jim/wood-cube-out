@@ -99,6 +99,7 @@ public class NodeGroup : MonoBehaviour
             AugmentEffect augmentEffect = augment.dynamicEffects[i];
 
             augmentEffect.ApplyEffect(this);
+            augmentEffect.SetAugment(this, augment);
         }
 
         activeAugments.Add(augment);

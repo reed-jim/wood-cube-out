@@ -283,8 +283,6 @@ public class BasePopup : MonoBehaviour
     {
         _transitionAnimation.Hide(OnTransitionCompleted);
 
-        popupHideEvent?.Invoke();
-
         _isShown = false;
         _isInTransition = true;
 
@@ -301,6 +299,8 @@ public class BasePopup : MonoBehaviour
             onCompletedAction?.Invoke();
 
             gameObject.SetActive(false);
+
+            popupHideEvent?.Invoke();
         }
     }
 
