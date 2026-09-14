@@ -55,6 +55,8 @@ public class AugmentManager : Singleton<AugmentManager>
 
         if (augment.isForNodeGroup)
         {
+            NodeManager.Ins.HighlightUnlockedNodeGroups();
+
             IdleGameInputManager.inputMode = IdleGameInputMode.SelectNodeGroup;
         }
         else

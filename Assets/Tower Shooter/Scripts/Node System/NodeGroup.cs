@@ -6,7 +6,6 @@ public class NodeGroup : MonoBehaviour
 {
     public NodeGroupServiceLocator serviceLocator;
     public RectTransform container;
-    public Button selectButton;
 
     public int row;
     public int column;
@@ -17,8 +16,6 @@ public class NodeGroup : MonoBehaviour
     void Awake()
     {
         CharacterStats.nodeStatModifiedEvent += OnNodeStatModified;
-
-        selectButton.onClick.AddListener(Select);
     }
 
     void OnDestroy()
@@ -103,18 +100,6 @@ public class NodeGroup : MonoBehaviour
         }
 
         activeAugments.Add(augment);
-    }
-
-    public void Select()
-    {
-        if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNodeGroup)
-        {
-            AugmentManager.Ins.ApplyAugmentForNodeGroup(this);
-
-            MultiverseIdleGameplayScreen.Ins.HideSelectAugmentUI();
-
-            IdleGameInputManager.inputMode = IdleGameInputMode.Normal;
-        }
     }
 
     private void OnNodeStatModified()

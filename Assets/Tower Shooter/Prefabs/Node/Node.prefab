@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3208492008162000004}
   - component: {fileID: 4352077174035553837}
+  - component: {fileID: 6189734662269286524}
   - component: {fileID: 3690379368736153157}
   - component: {fileID: 614897221625565131}
   m_Layer: 5
@@ -121,6 +122,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 367677238481536831}
   m_CullTransparentMesh: 1
+--- !u!114 &6189734662269286524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367677238481536831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 0
 --- !u!114 &3690379368736153157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,6 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8487678098941213317}
   - component: {fileID: 3778034641291573250}
+  - component: {fileID: 8336851726879204262}
   - component: {fileID: 6985701993419798714}
   m_Layer: 5
   m_Name: Path
@@ -240,6 +255,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5680083448502691978}
   m_CullTransparentMesh: 1
+--- !u!114 &8336851726879204262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5680083448502691978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 0
 --- !u!114 &6985701993419798714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,6 +373,7 @@ MonoBehaviour:
   lastPowerGenerated: 0
   isJustCrit: 0
   isGuaranteedCrit: 0
+  nodeGroup: {fileID: 0}
   energyPoints: []
 --- !u!114 &614917598609676925
 MonoBehaviour:
@@ -370,6 +399,7 @@ MonoBehaviour:
   overheatAugmentEffectRuntime: {fileID: 0}
   chainCriticalAugmentEffectRuntime: {fileID: 0}
   predictionAugmentEffectRuntime: {fileID: 0}
+  alternativeAugmentEffectRuntime: {fileID: 0}
 --- !u!114 &898206287609554678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,6 +454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4544081486623345013}
   - component: {fileID: 2039689787293081888}
+  - component: {fileID: 7351646485771829912}
   - component: {fileID: 5063915429938912092}
   m_Layer: 5
   m_Name: Foreground
@@ -459,6 +490,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6900476230869989543}
   m_CullTransparentMesh: 1
+--- !u!114 &7351646485771829912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6900476230869989543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 26
 --- !u!114 &5063915429938912092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,6 +618,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1540614059512894007}
   - component: {fileID: 2216907075894622316}
+  - component: {fileID: 6159701077087772149}
   - component: {fileID: 8729087875368286869}
   m_Layer: 5
   m_Name: Power Text
@@ -609,6 +654,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7389349582792974760}
   m_CullTransparentMesh: 1
+--- !u!114 &6159701077087772149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389349582792974760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 27
 --- !u!114 &8729087875368286869
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -134,7 +134,7 @@ public class NodeManager : Singleton<NodeManager>
         {
             NodeGroup nodeGroup = nodeGroups[i];
 
-            
+            nodeGroup.serviceLocator.nodeGroupUI.Highlight();
         }
     }
 }
