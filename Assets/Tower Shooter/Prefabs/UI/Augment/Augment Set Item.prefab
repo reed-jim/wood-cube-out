@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 1
+  role: 6
 --- !u!114 &957767251629981305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,8 +241,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8321296141941195373}
   - component: {fileID: 3753137594239556860}
-  - component: {fileID: 331243863001089140}
   - component: {fileID: 5713218404880513646}
+  - component: {fileID: 331243863001089140}
   m_Layer: 5
   m_Name: Name Text
   m_TagString: Untagged
@@ -277,6 +277,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5254301383539329845}
   m_CullTransparentMesh: 1
+--- !u!114 &5713218404880513646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5254301383539329845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 7
 --- !u!114 &331243863001089140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,19 +382,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5713218404880513646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5254301383539329845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 7
 --- !u!1 &9200481273943983139
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,8 +392,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7597429351477825899}
   - component: {fileID: 1060021988974675976}
-  - component: {fileID: 7521108570111947019}
   - component: {fileID: 1923609541624304665}
+  - component: {fileID: 7521108570111947019}
   m_Layer: 5
   m_Name: Set Count Text
   m_TagString: Untagged
@@ -428,6 +428,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9200481273943983139}
   m_CullTransparentMesh: 1
+--- !u!114 &1923609541624304665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9200481273943983139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 7
 --- !u!114 &7521108570111947019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,16 +533,3 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1923609541624304665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9200481273943983139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 7

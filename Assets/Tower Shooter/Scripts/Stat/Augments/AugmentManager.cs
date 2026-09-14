@@ -202,6 +202,24 @@ public class AugmentManager : Singleton<AugmentManager>
             augmentUsageTrackers.Add(augment, new AugmentUsageTracker(power));
         }
     }
+
+    public string GetAugmentUtilityText(Augment augment)
+    {
+        string result = "";
+
+        AugmentUsageTracker augmentUsageTracker = augmentUsageTrackers[augment];
+
+        if (augmentUsageTracker.totalPowerGenerated > 0)
+        {
+            result = $"Total Power Generated: {augmentUsageTracker.totalPowerGenerated}";
+        }
+        else if (augmentUsageTracker.totalSpeedBuffDuration > 0)
+        {
+            result = $"Total Power Generated: {augmentUsageTracker.totalSpeedBuffDuration}";
+        }
+
+        return result;
+    }
     #endregion
 }
 

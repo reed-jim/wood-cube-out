@@ -5,7 +5,10 @@ using UnityEngine.UI;
 public class AugmentDetailPopup : BasePopup
 {
     public TMP_Text title;
+    public TMP_Text qualityText;
     public TMP_Text description;
+    public TMP_Text utilityText;
+    public Image qualityBorder;
     public TMP_Text applyAugmentButtonText;
     public Button applyAugmentButton;
 
@@ -18,6 +21,7 @@ public class AugmentDetailPopup : BasePopup
         base.RegisterMoreEvent();
 
         AugmentItemUIs.showAugmentDetailEvent += Init;
+        NodeDetailAugmentItemUI.showAugmentDetailEvent += Init;
     }
 
     protected override void UnregisterMoreEvent()
@@ -25,6 +29,7 @@ public class AugmentDetailPopup : BasePopup
         base.UnregisterMoreEvent();
 
         AugmentItemUIs.showAugmentDetailEvent -= Init;
+        NodeDetailAugmentItemUI.showAugmentDetailEvent -= Init;
     }
 
     public void Init(Augment augment)
@@ -33,8 +38,15 @@ public class AugmentDetailPopup : BasePopup
 
         title.text = augment.augmentName;
         description.text = augment.BuildFullDescription(colorConfig);
+        qualityText.text = $"{augment.augmentQuality}";
+        utilityText.text = AugmentManager.Ins.GetAugmentUtilityText(augment);
 
-        SetupApplyAugmentButton();
+        Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
+
+        qualityText.color = qualityColor;
+        qualityBorder.color = qualityColor;
+
+        // SetupApplyAugmentButton();
 
         Show();
     }

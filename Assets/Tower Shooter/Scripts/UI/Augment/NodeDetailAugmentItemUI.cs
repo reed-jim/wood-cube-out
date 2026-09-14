@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,14 +7,21 @@ public class NodeDetailAugmentItemUI : MonoBehaviour
 {
     public Image container;
     public TMP_Text nameText;
+    public Button selectButton;
 
     private Vector2 containerSize;
     private Vector2 nameTextSize;
+
+    private Augment augment;
+
+    public static event Action<Augment> showAugmentDetailEvent;
 
     void Awake()
     {
         containerSize = container.rectTransform.sizeDelta;
         nameTextSize = nameText.rectTransform.sizeDelta;
+
+        selectButton.onClick.AddListener(Select);
     }
 
     public void Init(Augment augment, float expectedWidth = 0)
@@ -36,5 +44,12 @@ public class NodeDetailAugmentItemUI : MonoBehaviour
             container.rectTransform.sizeDelta = containerSize;
             nameText.rectTransform.sizeDelta = nameTextSize;
         }
+
+        this.augment = augment;
+    }
+
+    public void Select()
+    {
+        showAugmentDetailEvent?.Invoke(augment);
     }
 }
