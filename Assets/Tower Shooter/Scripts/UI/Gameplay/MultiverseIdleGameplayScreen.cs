@@ -25,6 +25,10 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     private int selectAugmentUISiblingIndex;
     private int nodeContainerSiblingIndex;
 
+    [Header("Filter")]
+    public Button normalFilterButton;
+    public Button enableAugmentFilterButton;
+
     public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionOnAwake()
@@ -34,6 +38,9 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         openUpgradeButton.onClick.AddListener(OpenUpgrade);
         augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
+
+        normalFilterButton.onClick.AddListener(EnableNormalFilter);
+        enableAugmentFilterButton.onClick.AddListener(EnableAugmentFilter);
     }
 
     private void OpenAugmentSelection()
@@ -107,6 +114,25 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         nodeContainer.transform.SetSiblingIndex(nodeContainerSiblingIndex);
 
         selectAugmentUI.Hide();
+    }
+    #endregion
+
+    #region Filter
+    public void EnableAugmentFilter()
+    {
+        FilterManager.Ins.EnableAugmentFilter();
+
+        FilterManager.filterMode = GameFilterMode.Augment;
+    }
+
+    public void EnableNormalFilter()
+    {
+        if (FilterManager.filterMode == GameFilterMode.Augment)
+        {
+            FilterManager.Ins.DisableAugmentFilter();
+
+            FilterManager.filterMode = GameFilterMode.Normal;
+        }
     }
     #endregion
 }

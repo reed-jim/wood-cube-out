@@ -24,6 +24,10 @@ public class NodeUI : MonoBehaviour
     [Header("Energy Path")]
     public RectTransform energyPath;
 
+    [Header("Filter")]
+    public float filterAugmentItemScale;
+    private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
+
     public static event Action<string, string> showNotificationEvent;
 
     void Awake()
@@ -147,4 +151,32 @@ public class NodeUI : MonoBehaviour
             SaferioTween.ScaleDownWithPunch(highlight.rectTransform);
         }
     }
+
+    #region Filter
+    public void EnableAugmentFilter()
+    {
+        for (int i = 0; i < serviceLocator.character.ownedAugments.Count; i++)
+        {
+            Augment augment = serviceLocator.character.ownedAugments[i];
+
+            NodeDetailAugmentItemUI nodeDetailAugmentItemUI = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
+
+            nodeDetailAugmentItemUI.transform.SetParent(transform);
+            nodeDetailAugmentItemUI.transform.localScale = filterAugmentItemScale * Vector3.one;
+            nodeDetailAugmentItemUI.transform.localPosition = Vector3.zero;
+
+            nodeDetailAugmentItemUI.Init(augment);
+        }
+    }
+
+    public void DisableAugmentFilter()
+    {
+        for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
+        {
+            NodeDetailAugmentItemUI nodeDetailAugmentItemUI = nodeDetailAugmentItemUIs[i];
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUI.gameObject);
+        }
+    }
+    #endregion
 }

@@ -59,8 +59,11 @@ public class ResourceManager : Singleton<ResourceManager>
         for (int i = 0; i < resourceData.resourceDataItems.Count; i++)
         {
             ResourceDataItem resourceDataItem = resourceData.resourceDataItems[i];
+            ResourceType resourceType = resourceDataItem.resourceType;
 
-            resources.Add(resourceDataItem.resourceType, new ResourceDataItem(resourceDataItem.resourceType, resourceDataItem.value));
+            resources.Add(resourceType, new ResourceDataItem(resourceType, resourceDataItem.value));
+
+            resourceTexts[resourceType].text = $"{resources[resourceType].value}";
         }
     }
 
