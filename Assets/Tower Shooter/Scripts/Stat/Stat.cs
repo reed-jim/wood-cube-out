@@ -54,11 +54,16 @@ public class Stat
         baseValue = baseVal;
     }
 
-    public void AddModifier(StatModifier mod)
+    public float AddModifier(StatModifier mod)
     {
+        // modifiers.Add(mod);
+        // isDirty = true;
+        // OnStatChanged?.Invoke();
+
         modifiers.Add(mod);
         isDirty = true;
-        OnStatChanged?.Invoke();
+
+        return Value;
     }
 
     public bool RemoveModifier(StatModifier mod)

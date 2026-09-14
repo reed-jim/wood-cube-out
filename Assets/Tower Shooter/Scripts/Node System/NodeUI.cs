@@ -166,6 +166,8 @@ public class NodeUI : MonoBehaviour
             nodeDetailAugmentItemUI.transform.localPosition = Vector3.zero;
 
             nodeDetailAugmentItemUI.Init(augment);
+
+            nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
         }
     }
 

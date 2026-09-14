@@ -52,6 +52,7 @@ public class Augment : ScriptableObject
         foreach (var effect in dynamicEffects)
         {
             effect.ApplyEffect(characterStats, this);
+            effect.SetAugment(characterStats, this);
         }
 
         if (!characterStats.serviceLocator.character.ownedAugments.Contains(this))

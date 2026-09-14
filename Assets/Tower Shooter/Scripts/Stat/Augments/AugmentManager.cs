@@ -10,6 +10,7 @@ public class AugmentManager : Singleton<AugmentManager>
     public List<Augment> pendingAugments = new List<Augment>();
     public SerializableDictionary<SpaceObjectType, List<Augment>> augmentOfSameSpaceObjectType;
     public SerializableDictionary<SpaceObjectType, int> numAugmentOfSpaceObjectType;
+    public SerializableDictionary<Augment, AugmentUsageTracker> augmentUsageTrackers;
 
     public AugmentHistory augmentHistory;
     public float currentBuyAugmentCost;
@@ -30,6 +31,7 @@ public class AugmentManager : Singleton<AugmentManager>
     public void Init()
     {
         numAugmentOfSpaceObjectType = new SerializableDictionary<SpaceObjectType, int>();
+        augmentUsageTrackers = new SerializableDictionary<Augment, AugmentUsageTracker>();
 
         for (int i = 0; i < augmentContainer.augments.Count; i++)
         {
@@ -64,7 +66,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
         selectAugment = augment;
     }
-    
+
     public void PickAugment(BaseCharacter nodeToApply = null)
     {
         PickAugment(selectAugment, nodeToApply);
@@ -187,6 +189,20 @@ public class AugmentManager : Singleton<AugmentManager>
     {
         DataUtility.Save($"{SaveSlotManager.Ins.currentSaveSlotData}_augmentHistory", augmentHistory);
     }
+
+    #region Augment Usage Tracker
+    public void UpdatePowerGeneratedByAugment(Augment augment, float power)
+    {
+        if (augmentUsageTrackers.ContainsKey(augment))
+        {
+            augmentUsageTrackers[augment].totalPowerGenerated += power;
+        }
+        else
+        {
+            augmentUsageTrackers.Add(augment, new AugmentUsageTracker(power));
+        }
+    }
+    #endregion
 }
 
 public class AugmentHistory

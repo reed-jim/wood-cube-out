@@ -28,6 +28,11 @@ public abstract class AugmentEffect : ScriptableObject
 
     }
 
+    public virtual void SetAugment(CharacterStats target, Augment augment)
+    {
+        
+    }
+
     #region Node Group
     public virtual void ApplyEffect(NodeGroup nodeGroup)
     {

@@ -74,7 +74,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
     public void UpdateBuyAugmentCostText(float cost)
     {
-        buyAugmentCostText.text = $"{cost:F2}";
+        buyAugmentCostText.text = $"Augment ({cost:F2})";
 
         if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= cost)
         {
