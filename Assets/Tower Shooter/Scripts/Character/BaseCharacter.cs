@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using PrimeTween;
@@ -22,23 +23,26 @@ public class BaseCharacter : MonoBehaviour
     public float lastPowerGenerated;
     public bool isJustCrit;
     public bool isGuaranteedCrit;
+    public NodeGroup nodeGroup;
 
     [Header("Energy Path")]
     public List<Vector2> energyPoints;
+
+    public static event Action<BaseCharacter> cycleCompleteEvent;
 
     void Awake()
     {
         upgrades = new List<StatModifier>();
     }
 
-    public void Init(NodeData nodeData)
+    public void Init(NodeData nodeData, NodeGroup nodeGroup)
     {
         this.nodeData = nodeData;
 
-        Init();
+        Init(nodeGroup);
     }
 
-    public void Init()
+    public void Init(NodeGroup nodeGroup = null)
     {
         if (nodeData.isUnlocked)
         {
@@ -52,6 +56,11 @@ public class BaseCharacter : MonoBehaviour
         }
 
         serviceLocator.nodeUI.InitEnergyPath();
+
+        if (nodeData != null)
+        {
+            this.nodeGroup = nodeGroup;
+        }
     }
 
     public void Reset()
@@ -109,7 +118,7 @@ public class BaseCharacter : MonoBehaviour
                 bool isCritical = false;
 
                 // Crit
-                if (Random.value < criticalChance || isGuaranteedCrit)
+                if (UnityEngine.Random.value < criticalChance || isGuaranteedCrit)
                 {
                     power *= criticalMultiplier;
 
@@ -118,7 +127,7 @@ public class BaseCharacter : MonoBehaviour
                     isGuaranteedCrit = false;
                 }
 
-                if (Random.value < chanceForMorePowerOnCircleCompletion)
+                if (UnityEngine.Random.value < chanceForMorePowerOnCircleCompletion)
                 {
                     power *= powerOnCircleCompletionMultiplier;
 
@@ -130,7 +139,7 @@ public class BaseCharacter : MonoBehaviour
                 ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
 
                 // chance for repeat last cycle
-                if (Random.value < chanceToRepeatLastCyclePower)
+                if (UnityEngine.Random.value < chanceToRepeatLastCyclePower)
                 {
                     TweenManager.Ins.AddTween(Tween.Delay(0.3f).OnComplete(() =>
                     {
@@ -144,6 +153,7 @@ public class BaseCharacter : MonoBehaviour
                 isJustCrit = isCritical;
 
                 ApplyAugmentEffectsOnCycleCompletion();
+                nodeGroup.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this);
 
                 currentCycle++;
 
@@ -154,6 +164,8 @@ public class BaseCharacter : MonoBehaviour
                 energyCube.transform.localPosition = Vector3.zero;
                 energyCube.Move(energyPoints);
                 #endregion
+
+                cycleCompleteEvent?.Invoke(this);
             });
 
             yield return new WaitForSeconds(interval);

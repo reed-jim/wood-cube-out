@@ -6,7 +6,7 @@ public class AugmentManager : Singleton<AugmentManager>
 {
     public BaseCharacter player;
 
-    public List<Augment> selectedAugments = new List<Augment>();
+    public List<Augment> activeAugments = new List<Augment>();
     public List<Augment> pendingAugments = new List<Augment>();
     public SerializableDictionary<SpaceObjectType, List<Augment>> augmentOfSameSpaceObjectType;
     public SerializableDictionary<SpaceObjectType, int> numAugmentOfSpaceObjectType;
@@ -81,7 +81,7 @@ public class AugmentManager : Singleton<AugmentManager>
             ApplyAugment(augment, nodeToApply);
         }
 
-        selectedAugments.Add(augment);
+        activeAugments.Add(augment);
 
         if (augmentOfSameSpaceObjectType.ContainsKey(augment.spaceObjectType))
         {
@@ -135,7 +135,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
         nodeGroup.ApplyAugment(selectAugment);
 
-        selectedAugments.Add(selectAugment);
+        activeAugments.Add(selectAugment);
 
         if (augmentOfSameSpaceObjectType.ContainsKey(selectAugment.spaceObjectType))
         {

@@ -12,7 +12,7 @@ public class NodeGroup : MonoBehaviour
     public int column;
 
     public List<BaseCharacter> nodes;
-    public List<Augment> ownedAugments = new List<Augment>();
+    public List<Augment> activeAugments = new List<Augment>();
 
     void Awake()
     {
@@ -69,7 +69,7 @@ public class NodeGroup : MonoBehaviour
             nodeContainer.localPosition = position;
             nodeContainer.localScale = Vector3.one;
 
-            node.Init(nodeData);
+            node.Init(nodeData, this);
 
             if (position.x + 0.5f * nodeContainer.sizeDelta.x > maxX)
             {
@@ -101,7 +101,7 @@ public class NodeGroup : MonoBehaviour
             augmentEffect.ApplyEffect(this);
         }
 
-        ownedAugments.Add(augment);
+        activeAugments.Add(augment);
     }
 
     public void Select()
@@ -118,15 +118,30 @@ public class NodeGroup : MonoBehaviour
 
     private void OnNodeStatModified()
     {
-        for (int i = 0; i < ownedAugments.Count; i++)
+        for (int i = 0; i < activeAugments.Count; i++)
         {
-            Augment augment = ownedAugments[i];
+            Augment augment = activeAugments[i];
 
             for (int j = 0; j < augment.dynamicEffects.Count; j++)
             {
                 AugmentEffect augmentEffect = augment.dynamicEffects[j];
 
                 augmentEffect.ApplyEffectOnNodeStatModified(this);
+            }
+        }
+    }
+
+    public void ApplyEffectWhenAnyNodeInGroupCompletesCycle(BaseCharacter node)
+    {
+        for (int i = 0; i < activeAugments.Count; i++)
+        {
+            Augment augment = activeAugments[i];
+
+            for (int j = 0; j < augment.dynamicEffects.Count; j++)
+            {
+                AugmentEffect augmentEffect = augment.dynamicEffects[j];
+
+                augmentEffect.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this, node);
             }
         }
     }

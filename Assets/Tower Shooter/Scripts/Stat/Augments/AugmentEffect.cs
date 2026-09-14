@@ -43,6 +43,11 @@ public abstract class AugmentEffect : ScriptableObject
     {
 
     }
+
+    public virtual void ApplyEffectWhenAnyNodeInGroupCompletesCycle(NodeGroup nodeGroup, BaseCharacter node)
+    {
+
+    }
     #endregion
 
     /// <summary>

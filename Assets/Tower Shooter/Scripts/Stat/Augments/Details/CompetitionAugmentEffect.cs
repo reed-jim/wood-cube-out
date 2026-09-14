@@ -28,6 +28,11 @@ public class CompetitionAugmentEffect : AugmentEffect
         BuffTheMostPowerNode(nodeGroup);
     }
 
+    public override void ApplyEffectWhenAnyNodeInGroupCompletesCycle(NodeGroup nodeGroup, BaseCharacter node)
+    {
+        nodeGroup.serviceLocator.competitionAugmentEffectRuntime.TrackAugmentUtility(node);
+    }
+
     protected override (string Key, object Value)[] GetDescriptionTokens()
     {
         var tokens = new (string Key, object Value)[1];
@@ -37,7 +42,7 @@ public class CompetitionAugmentEffect : AugmentEffect
         return tokens;
     }
 
-    private void BuffTheMostPowerNode(NodeGroup nodeGroup, bool isApplyAugmentEffect = false)
+    private void BuffTheMostPowerNode(NodeGroup nodeGroup)
     {
         if (nodeGroup.serviceLocator.competitionAugmentEffectRuntime == null)
         {
@@ -48,12 +53,13 @@ public class CompetitionAugmentEffect : AugmentEffect
     }
 }
 
-public class CompetitionAugmentEffectRuntime : MonoBehaviour
+public class CompetitionAugmentEffectRuntime : BaseAugmentEffectRuntime
 {
     float maxPower = 0;
     private StatModifier statModifier;
-    BaseCharacter prevStrongestNode = null;
-    BaseCharacter strongestNode = null;
+    private BaseCharacter prevStrongestNode = null;
+    private BaseCharacter strongestNode = null;
+    private float bonusPower = 0;
 
     public void BuffTheMostPowerNode(NodeGroup nodeGroup, StatModifierData damageModifier)
     {
@@ -82,8 +88,20 @@ public class CompetitionAugmentEffectRuntime : MonoBehaviour
             prevStrongestNode.serviceLocator.stats.RemoveModifier(statModifier);
         }
 
-        strongestNode.serviceLocator.stats.AddModifier(statModifier, isInvokeStatModifiedEvent: false);
+        float oldPowerValue = strongestNode.serviceLocator.stats.GetStat(StatType.Damage).Value;
+
+        float newPowerValue = strongestNode.serviceLocator.stats.AddModifier(statModifier, isInvokeStatModifiedEvent: false);
+
+        bonusPower = newPowerValue - oldPowerValue;
 
         prevStrongestNode = strongestNode;
+    }
+
+    public void TrackAugmentUtility(BaseCharacter node)
+    {
+        if (prevStrongestNode == node)
+        {
+            AugmentManager.Ins.UpdatePowerGeneratedByAugment(augment, bonusPower);
+        }
     }
 }

@@ -31,7 +31,7 @@ public class ChainCriticalAugmentEffect : AugmentEffect
     }
 }
 
-public class ChainCriticalAugmentEffectRuntime : MonoBehaviour
+public class ChainCriticalAugmentEffectRuntime : BaseAugmentEffectRuntime
 {
     public void Apply(CharacterStats stats)
     {
@@ -43,15 +43,20 @@ public class ChainCriticalAugmentEffectRuntime : MonoBehaviour
 
             bool isNoAdjacentNode = true;
 
+            float totalBonusPower = 0;
+
             for (int i = 0; i < adjacentNodes.Count; i++)
             {
                 BaseCharacter otherNode = adjacentNodes[i];
+                CharacterStats otherNodeStats = otherNode.serviceLocator.stats;
 
                 if (otherNode.nodeData.isUnlocked)
                 {
                     otherNode.isGuaranteedCrit = true;
 
                     isNoAdjacentNode = false;
+
+                    totalBonusPower += otherNodeStats.GetStat(StatType.Damage).Value * otherNodeStats.GetStat(StatType.CritMultiplier).Value;
                 }
             }
 
@@ -59,6 +64,10 @@ public class ChainCriticalAugmentEffectRuntime : MonoBehaviour
             {
                 adjacentNodes.Shuffle();
                 adjacentNodes[0].Unlock();
+            }
+            else
+            {
+                AugmentManager.Ins.UpdatePowerGeneratedByAugment(augment, totalBonusPower);
             }
         }
     }
