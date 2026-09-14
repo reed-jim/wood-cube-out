@@ -127,4 +127,14 @@ public class NodeManager : Singleton<NodeManager>
             }
         }
     }
+
+    public void HighlightUnlockedNodeGroups()
+    {
+        for (int i = 0; i < nodeGroups.Count; i++)
+        {
+            NodeGroup nodeGroup = nodeGroups[i];
+
+            
+        }
+    }
 }

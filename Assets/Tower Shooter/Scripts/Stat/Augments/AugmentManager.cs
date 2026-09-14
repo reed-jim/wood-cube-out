@@ -51,7 +51,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public void PickNodeForAugment(Augment augment)
     {
-        MultiverseIdleGameplayScreen.Ins.ShowSelectAugmentUI();
+        MultiverseIdleGameplayScreen.Ins.ShowSelectAugmentUI(!augment.isForNodeGroup);
 
         if (augment.isForNodeGroup)
         {

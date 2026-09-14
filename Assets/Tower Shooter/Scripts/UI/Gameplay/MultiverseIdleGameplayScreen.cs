@@ -97,7 +97,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     }
 
     #region SelectAugmentUI
-    public void ShowSelectAugmentUI()
+    public void ShowSelectAugmentUI(bool isSelectNode)
     {
         selectAugmentUISiblingIndex = selectAugmentUI.transform.GetSiblingIndex();
         nodeContainerSiblingIndex = nodeContainer.transform.GetSiblingIndex();
@@ -105,7 +105,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         selectAugmentUI.transform.SetAsLastSibling();
         nodeContainer.transform.SetAsLastSibling();
 
-        selectAugmentUI.Show();
+        selectAugmentUI.Show(isSelectNode);
     }
 
     public void HideSelectAugmentUI()
