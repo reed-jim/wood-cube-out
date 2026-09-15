@@ -127,7 +127,7 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.Primary:
-                ApplyImageColor(theme.primary);
+                ApplyColor(theme.primary);
                 break;
 
             case ElementRole.OnPrimary:
@@ -135,7 +135,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.PrimaryContainer:
-                ApplyImageColor(theme.primaryContainer);
+                ApplyColor(theme.primaryContainer);
                 break;
 
             case ElementRole.OnPrimaryContainer:
@@ -148,7 +148,7 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.Secondary:
-                ApplyImageColor(theme.secondary);
+                ApplyColor(theme.secondary);
                 break;
 
             case ElementRole.OnSecondary:
@@ -156,7 +156,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.SecondaryContainer:
-                ApplyImageColor(theme.secondaryContainer);
+                ApplyColor(theme.secondaryContainer);
                 break;
 
             case ElementRole.OnSecondaryContainer:
@@ -169,7 +169,7 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.Tertiary:
-                ApplyImageColor(theme.tertiary);
+                ApplyColor(theme.tertiary);
                 break;
 
             case ElementRole.OnTertiary:
@@ -177,7 +177,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.TertiaryContainer:
-                ApplyImageColor(theme.tertiaryContainer);
+                ApplyColor(theme.tertiaryContainer);
                 break;
 
             case ElementRole.OnTertiaryContainer:
@@ -190,7 +190,7 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.Error:
-                ApplyImageColor(theme.error);
+                ApplyColor(theme.error);
                 break;
 
             case ElementRole.OnError:
@@ -198,7 +198,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.ErrorContainer:
-                ApplyImageColor(theme.errorContainer);
+                ApplyColor(theme.errorContainer);
                 break;
 
             case ElementRole.OnErrorContainer:
@@ -211,35 +211,35 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.SurfaceDim:
-                ApplyImageColor(theme.surfaceDim);
+                ApplyColor(theme.surfaceDim);
                 break;
 
             case ElementRole.Surface:
-                ApplyImageColor(theme.surface);
+                ApplyColor(theme.surface);
                 break;
 
             case ElementRole.SurfaceBright:
-                ApplyImageColor(theme.surfaceBright);
+                ApplyColor(theme.surfaceBright);
                 break;
 
             case ElementRole.SurfaceContainerLowest:
-                ApplyImageColor(theme.surfaceContainerLowest);
+                ApplyColor(theme.surfaceContainerLowest);
                 break;
 
             case ElementRole.SurfaceContainerLow:
-                ApplyImageColor(theme.surfaceContainerLow);
+                ApplyColor(theme.surfaceContainerLow);
                 break;
 
             case ElementRole.SurfaceContainer:
-                ApplyImageColor(theme.surfaceContainer);
+                ApplyColor(theme.surfaceContainer);
                 break;
 
             case ElementRole.SurfaceContainerHigh:
-                ApplyImageColor(theme.surfaceContainerHigh);
+                ApplyColor(theme.surfaceContainerHigh);
                 break;
 
             case ElementRole.SurfaceContainerHighest:
-                ApplyImageColor(theme.surfaceContainerHighest);
+                ApplyColor(theme.surfaceContainerHighest);
                 break;
 
 
@@ -261,7 +261,7 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.InverseSurface:
-                ApplyImageColor(theme.inverseSurface);
+                ApplyColor(theme.inverseSurface);
                 break;
 
             case ElementRole.InverseOnSurface:
@@ -278,11 +278,11 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.Outline:
-                ApplyImageColor(theme.outline);
+                ApplyColor(theme.outline);
                 break;
 
             case ElementRole.OutlineVariant:
-                ApplyImageColor(theme.outlineVariant);
+                ApplyColor(theme.outlineVariant);
                 break;
 
 

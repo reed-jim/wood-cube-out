@@ -14,6 +14,5 @@ public class VoyageMilestone
     public float percent;
 
     [Header("Reward")]
-    public float coinReward;
-    public float augmentPoint;
+    public List<ResourceDataItem> rewards;
 }

@@ -7,7 +7,8 @@ using UnityEngine;
 public enum ResourceType
 {
     Coin,
-    UpgradePoint
+    UpgradePoint,
+    AugmentPoint
 }
 
 public class ResourceManager : Singleton<ResourceManager>
@@ -36,7 +37,10 @@ public class ResourceManager : Singleton<ResourceManager>
 
         resourceData.UpdateValue(resourceType, resources[resourceType].value);
 
-        resourceTexts[resourceType].text = $"{resources[resourceType].value}";
+        if (resourceTexts.ContainsKey(resourceType))
+        {
+            resourceTexts[resourceType].text = $"{resources[resourceType].value}";
+        }
 
         SaveResourceData();
 
