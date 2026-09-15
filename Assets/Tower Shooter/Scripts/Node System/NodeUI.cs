@@ -72,7 +72,11 @@ public class NodeUI : MonoBehaviour
         //     OpenNodeDetail();
         // }
 
-        if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNode)
+        if (IdleGameInputManager.inputMode == IdleGameInputMode.Normal)
+        {
+            UpgradeNodeUI.Ins.SelectNode(serviceLocator.character);
+        }
+        else if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNode)
         {
             SelectNodeToApplyAugment();
 

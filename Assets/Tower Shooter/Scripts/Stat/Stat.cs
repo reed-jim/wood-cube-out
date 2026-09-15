@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 [Serializable]
@@ -8,7 +9,7 @@ public class Stat
     [SerializeField] private StatType statType;
     [SerializeField] private float baseValue;
 
-    private List<StatModifier> modifiers = new List<StatModifier>();
+    public List<StatModifier> modifiers = new List<StatModifier>();
     private float cachedValue;
     private bool isDirty = true;
 

@@ -9,13 +9,10 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private List<Stat> initialStats = new List<Stat>();
     private readonly Dictionary<StatType, Stat> statDict = new Dictionary<StatType, Stat>();
 
+    private CharacterStatsData characterStatsData;
+
     public static event Action nodeStatModifiedEvent;
     public static event Action<StatType, float> OnStatModified;
-
-    private void Awake()
-    {
-        LoadStats();
-    }
 
     private void InitializeStats()
     {
@@ -87,23 +84,23 @@ public class CharacterStats : MonoBehaviour
     #region Save/Load
     public void SaveStats()
     {
-        List<Stat> currentStats = new List<Stat>();
+        characterStatsData.stats = new List<Stat>();
 
         foreach (var statType in statDict.Keys)
         {
-            currentStats.Add(statDict[statType]);
+            characterStatsData.stats.Add(statDict[statType]);
         }
 
-        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("Stats"), currentStats);
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey($"Node{serviceLocator.character.id}_Stats"), characterStatsData);
     }
 
     public void LoadStats()
     {
-        CharacterStatsData loadedStatsData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("Stats"), GetDefaultCharacterStatsData());
+        characterStatsData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey($"Node{serviceLocator.character.id}_Stats"), GetDefaultCharacterStatsData());
 
-        foreach (var stat in loadedStatsData.stats)
+        foreach (var stat in characterStatsData.stats)
         {
-            if (loadedStatsData.isExist)
+            if (characterStatsData.isExist)
             {
                 stat.CalculateValue();
             }
@@ -113,6 +110,13 @@ public class CharacterStats : MonoBehaviour
             }
 
             statDict[stat.Type] = stat;
+        }
+
+        if (!characterStatsData.isExist)
+        {
+            characterStatsData.isExist = true;
+
+            SaveStats();
         }
     }
 

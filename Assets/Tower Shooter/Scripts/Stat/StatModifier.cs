@@ -31,10 +31,10 @@ public enum ModifierType
 [Serializable]
 public class StatModifier
 {
-    public readonly StatType Type;
-    public readonly ModifierType ModType;
-    public readonly float Value;
-    public readonly int UpgradeTime;
+    public StatType Type;
+    public ModifierType ModType;
+    public float Value;
+    public int UpgradeTime;
     public readonly object Source; // Identifies origin (e.g., AugmentSO, ItemInstance)
 
     public StatModifier(StatType type, ModifierType modType, float value, int upgradeTime = 0, object source = null)

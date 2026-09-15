@@ -9,7 +9,7 @@ public class NodeManager : Singleton<NodeManager>
     public List<BaseCharacter> nodes;
     public List<NodeGroup> nodeGroups;
 
-    private GameData gameData;
+    public int currentNodeIdToAllocate;
 
     protected override void MoreActionOnAwake()
     {
@@ -100,5 +100,12 @@ public class NodeManager : Singleton<NodeManager>
 
             nodeGroup.serviceLocator.nodeGroupUI.Highlight();
         }
+    }
+
+    public void AllocateIdForNode(BaseCharacter node)
+    {
+        node.id = currentNodeIdToAllocate;
+
+        currentNodeIdToAllocate++;
     }
 }

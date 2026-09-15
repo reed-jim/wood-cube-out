@@ -141,7 +141,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<Projectile>(GameConstants.projectile, projectile, 100);
         RegisterPool<StackingItemUI>(GameConstants.stackingItemUI, stackingItemUI, 20);
         RegisterPool<NodeGroup>(GameConstants.nodeGroup, nodeGroup, 20);
-        RegisterPool<BaseCharacter>(GameConstants.node, node, 200);
+        RegisterPool<BaseCharacter>(GameConstants.node, node, 50);
         RegisterPool<PendingAugmentItemUI>(GameConstants.pendingAugmentItemUI, pendingAugmentItemUI, 10);
         RegisterPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUI, 10);
         RegisterPool<AugmentSetItemUI>(GameConstants.augmentSetItemUI, augmentSetItemUI, 10);

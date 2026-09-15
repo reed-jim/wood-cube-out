@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public class BaseCharacter : MonoBehaviour
 {
+    [Header("Identifier")]
+    public int id = -1;
+
     public CharacterServiceLocator serviceLocator;
     public CharacterStats stats;
 
@@ -44,19 +47,6 @@ public class BaseCharacter : MonoBehaviour
 
     public void Init(NodeGroup nodeGroup = null)
     {
-        if (nodeData.isUnlocked)
-        {
-            serviceLocator.nodeUI.Unlock();
-
-            StartCoroutine(Generating());
-        }
-        else
-        {
-            serviceLocator.nodeUI.Lock();
-        }
-
-        serviceLocator.nodeUI.InitEnergyPath();
-
         if (nodeGroup != null)
         {
             this.nodeGroup = nodeGroup;
@@ -77,6 +67,26 @@ public class BaseCharacter : MonoBehaviour
                 }
             }
         }
+
+        if (id == -1)
+        {
+            NodeManager.Ins.AllocateIdForNode(this);
+
+            serviceLocator.stats.LoadStats();
+        }
+
+        if (nodeData.isUnlocked)
+        {
+            serviceLocator.nodeUI.Unlock();
+
+            StartCoroutine(Generating());
+        }
+        else
+        {
+            serviceLocator.nodeUI.Lock();
+        }
+
+        serviceLocator.nodeUI.InitEnergyPath();
     }
 
     public void Reset()
