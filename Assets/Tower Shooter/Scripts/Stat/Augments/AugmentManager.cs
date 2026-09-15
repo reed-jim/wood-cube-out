@@ -136,6 +136,7 @@ public class AugmentManager : Singleton<AugmentManager>
         augmentHistory.numAugmentBought++;
 
         SaveAugmentHistory();
+        DataManager.Ins.SaveNodeData(nodeToApply);
 
         ResourceManager.Ins.ChangeResource(ResourceType.Coin, -currentBuyAugmentCost);
 

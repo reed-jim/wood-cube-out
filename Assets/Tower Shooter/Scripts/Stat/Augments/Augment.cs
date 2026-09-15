@@ -15,6 +15,7 @@ public enum AugmentQuality
 [CreateAssetMenu(fileName = "New Augment", menuName = "Stats/Augment")]
 public class Augment : ScriptableObject
 {
+    public int id;
     public string augmentName;
     [TextArea(2, 4)]
     [SerializeField] private string customNotesTemplate; // Optional extra flavor/lore text

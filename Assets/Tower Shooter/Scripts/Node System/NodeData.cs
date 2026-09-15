@@ -7,6 +7,7 @@ public class NodeData
     public bool isUnlocked;
 
     public List<StatModifier> upgrades;
+    public List<int> activeAugmentsIds;
 }
 
 public class NodeGroupData

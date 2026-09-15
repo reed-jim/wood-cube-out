@@ -9,6 +9,8 @@ public class NodeManager : Singleton<NodeManager>
     public List<BaseCharacter> nodes;
     public List<NodeGroup> nodeGroups;
 
+    private GameData gameData;
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -19,12 +21,12 @@ public class NodeManager : Singleton<NodeManager>
 
     void Start()
     {
-        LoadData();
+        Init();
     }
 
-    public void LoadData()
+    private void Init()
     {
-        GameData gameData = DataUtility.Load(GameConstants.gameData, GetDefaultGameData());
+        GameData gameData = DataManager.Ins.LoadData();
 
         for (int i = 0; i < gameData.nodeGroupDataItems.Count; i++)
         {
@@ -36,44 +38,6 @@ public class NodeManager : Singleton<NodeManager>
 
             nodeGroups.Add(nodeGroup);
         }
-
-        DataUtility.Save(GameConstants.gameData, gameData);
-    }
-
-    public GameData GetDefaultGameData()
-    {
-        GameData defaultGameData = new GameData();
-
-        defaultGameData.nodeGroupDataItems = new List<NodeGroupData>();
-
-        NodeGroupData defaultNodeGroup = new NodeGroupData();
-
-        defaultNodeGroup.nodeDataItems = new List<NodeData>();
-
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                NodeData nodeData = new NodeData();
-
-                if (i == 0 && j == 0)
-                {
-                    nodeData.isUnlocked = true;
-                }
-                else
-                {
-                    nodeData.isUnlocked = false;
-                }
-
-                nodeData.coordinate = new Vector2Int(j, i);
-
-                defaultNodeGroup.nodeDataItems.Add(nodeData);
-            }
-        }
-
-        defaultGameData.nodeGroupDataItems.Add(defaultNodeGroup);
-
-        return defaultGameData;
     }
 
     public List<BaseCharacter> GetNeighborNodes(BaseCharacter node)
