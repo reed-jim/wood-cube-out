@@ -61,6 +61,17 @@ public class BaseCharacter : MonoBehaviour
         {
             this.nodeGroup = nodeGroup;
         }
+
+        // load augments
+        for (int i = 0; i < AugmentManager.Ins.augmentContainer.augments.Count; i++)
+        {
+            Augment augment = AugmentManager.Ins.augmentContainer.augments[i];
+
+            if (nodeData.activeAugmentsIds.Contains(augment.id))
+            {
+                ownedAugments.Add(augment);
+            }
+        }
     }
 
     public void Reset()
