@@ -28,10 +28,9 @@ public class ApplyAugmentToNodeEffect : MonoBehaviour
 
         Sequence sequence = Sequence.Create(Tween.Scale(transform, 2f, duration: 0.4f));
         // sequence.Group(Tween.LocalPositionY(description.rectTransform, 100, duration: 0.3f));
-        sequence.Chain(Tween.Scale(transform, 1f, duration: 0.3f));
-        sequence.Group(Tween.Alpha(circle, 0.5f, duration: 0.3f));
+        sequence.Chain(Tween.Alpha(canvasGroup, 0, duration: 0.6f));
+        sequence.Group(Tween.Scale(transform, 1f, duration: 0.3f));
         // sequence.Group(Tween.LocalPositionY(description.rectTransform, 0, duration: 0.3f));
-        sequence.Chain(Tween.Alpha(canvasGroup, 0, duration: 0.3f));
 
         sequence.OnComplete(() =>
         {

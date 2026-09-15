@@ -67,7 +67,10 @@ public class ResourceManager : Singleton<ResourceManager>
 
             resources.Add(resourceType, new ResourceDataItem(resourceType, resourceDataItem.value));
 
-            resourceTexts[resourceType].text = $"{resources[resourceType].value}";
+            if (resourceTexts.ContainsKey(resourceType))
+            {
+                resourceTexts[resourceType].text = $"{resources[resourceType].value}";
+            }
         }
     }
 

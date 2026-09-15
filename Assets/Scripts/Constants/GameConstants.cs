@@ -17,6 +17,7 @@ public static class GameConstants
     public static string energyCube = "energyCube";
     public static string applyAugmentToNodeEffect = "applyAugmentToNodeEffect";
     public static string voyageMilestoneItemUI = "voyageMilestoneItemUI";
+    public static string collectResourceItemUI = "collectResourceItemUI";
     public static string statItemUI = "statItemUI";
 
     public static string gameData = "gameData";

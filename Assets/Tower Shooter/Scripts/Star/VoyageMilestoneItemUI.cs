@@ -80,6 +80,8 @@ public class VoyageMilestoneItemUI : MonoBehaviour
             ResourceDataItem resourceDataItem = voyageMilestone.rewards[i];
 
             ResourceManager.Ins.ChangeResource(resourceDataItem.resourceType, resourceDataItem.value);
+
+            CollectResourceManager.Ins.Collect(resourceDataItem.resourceType, value: resourceDataItem.value, transform.position);
         }
 
         rewardButton.interactable = false;
