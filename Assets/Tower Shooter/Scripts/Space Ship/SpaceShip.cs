@@ -23,6 +23,7 @@ public class SpaceShip : MonoBehaviour
     public float totalKm;
     public float remaningKm;
     public float kmPerUnit;
+    public float progress;
 
     public TMP_Text speedText;
     public TMP_Text remaningKmText;
@@ -86,6 +87,9 @@ public class SpaceShip : MonoBehaviour
         }
 
         remaningKm -= speed;
+        progress = 1 - remaningKm / totalKm;
+
+        VoyageMilestoneUI.Ins.SetVoyageProgress(progress);
     }
 
     public void StarNewVoyage()
@@ -104,6 +108,8 @@ public class SpaceShip : MonoBehaviour
         remaningKm = voyageData.remaningKm;
 
         locationContainer.position.ChangeX(Mathf.Lerp(start.position.x, end.position.x, 1 - remaningKm / totalKm));
+
+        VoyageMilestoneUI.Ins.InitVoyageMilestones();
 
         isFlying = true;
     }

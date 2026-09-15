@@ -1,16 +1,25 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class VoyageMilestoneUI : MonoBehaviour
+public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public RectTransform container;
+    public Image progressFill;
+
+    public void InitVoyageMilestones()
     {
-        
+        for (int i = 0; i < StarManager.Ins.currentStarPathConfig.voyageMilestoneConfig.voyageMilestones.Count; i++)
+        {
+            VoyageMilestone voyageMilestone = StarManager.Ins.currentStarPathConfig.voyageMilestoneConfig.voyageMilestones[i];
+
+            VoyageMilestoneItemUI voyageMilestoneItemUI = ObjectPoolingEverything.GetFromPool<VoyageMilestoneItemUI>(GameConstants.voyageMilestoneItemUI);
+
+            voyageMilestoneItemUI.Init(voyageMilestone, container);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetVoyageProgress(float progress)
     {
-        
+        progressFill.fillAmount = progress;
     }
 }

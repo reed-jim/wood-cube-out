@@ -13,6 +13,8 @@ public class StarManager : Singleton<StarManager>
 
     public StarVoyageContainer starVoyageContainer;
 
+    public StarPathConfig currentStarPathConfig;
+
     public VoyageData GetFirstVoyage()
     {
         VoyageData voyageData = new VoyageData();
@@ -26,6 +28,8 @@ public class StarManager : Singleton<StarManager>
 
     public StarPathConfig GetVoyageConfig(int index)
     {
-        return starVoyageContainer.starPathConfigs[index];
+        currentStarPathConfig = starVoyageContainer.starPathConfigs[index];
+
+        return currentStarPathConfig;
     }
 }
