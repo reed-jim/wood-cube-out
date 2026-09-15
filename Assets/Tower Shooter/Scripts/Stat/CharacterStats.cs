@@ -14,7 +14,7 @@ public class CharacterStats : MonoBehaviour
 
     private void Awake()
     {
-        InitializeStats();
+        LoadStats();
     }
 
     private void InitializeStats()
@@ -69,6 +69,8 @@ public class CharacterStats : MonoBehaviour
             nodeStatModifiedEvent?.Invoke();
         }
 
+        SaveStats();
+
         return newValue;
     }
 
@@ -81,4 +83,47 @@ public class CharacterStats : MonoBehaviour
             stat.RemoveAllModifiersFromSource(source);
         }
     }
+
+    #region Save/Load
+    public void SaveStats()
+    {
+        List<Stat> currentStats = new List<Stat>();
+
+        foreach (var statType in statDict.Keys)
+        {
+            currentStats.Add(statDict[statType]);
+        }
+
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("Stats"), currentStats);
+    }
+
+    public void LoadStats()
+    {
+        CharacterStatsData loadedStatsData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("Stats"), GetDefaultCharacterStatsData());
+
+        foreach (var stat in loadedStatsData.stats)
+        {
+            if (loadedStatsData.isExist)
+            {
+                stat.CalculateValue();
+            }
+            else
+            {
+                stat.Init();
+            }
+
+            statDict[stat.Type] = stat;
+        }
+    }
+
+    private CharacterStatsData GetDefaultCharacterStatsData()
+    {
+        CharacterStatsData characterStatsData = new CharacterStatsData();
+
+        characterStatsData.isExist = false;
+        characterStatsData.stats = initialStats;
+
+        return characterStatsData;
+    }
+    #endregion
 }

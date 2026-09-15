@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -71,4 +72,11 @@ public class DataManager : Singleton<DataManager>
 
         SaveData();
     }
+}
+
+[Serializable]
+public class CharacterStatsData
+{
+    public bool isExist;
+    public List<Stat> stats;
 }

@@ -63,13 +63,18 @@ public class BaseCharacter : MonoBehaviour
         }
 
         // load augments
-        for (int i = 0; i < AugmentManager.Ins.augmentContainer.augments.Count; i++)
+        if (nodeData.activeAugmentsIds != null)
         {
-            Augment augment = AugmentManager.Ins.augmentContainer.augments[i];
-
-            if (nodeData.activeAugmentsIds.Contains(augment.id))
+            for (int i = 0; i < AugmentManager.Ins.augmentContainer.augments.Count; i++)
             {
-                ownedAugments.Add(augment);
+                Augment augment = AugmentManager.Ins.augmentContainer.augments[i];
+
+                if (nodeData.activeAugmentsIds.Contains(augment.id))
+                {
+                    ownedAugments.Add(augment);
+
+                    augment.Apply(serviceLocator.stats);
+                }
             }
         }
     }
@@ -84,6 +89,8 @@ public class BaseCharacter : MonoBehaviour
         nodeData.isUnlocked = true;
 
         Init();
+
+        DataManager.Ins.SaveData();
     }
 
     private IEnumerator Generating()
