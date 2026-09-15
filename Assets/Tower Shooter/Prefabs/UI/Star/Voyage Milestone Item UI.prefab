@@ -158,7 +158,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1771489812018053210}
   - component: {fileID: 7894418112442720986}
-  - component: {fileID: 5794988689359956037}
   - component: {fileID: 2015543809734287357}
   - component: {fileID: 570803275926393078}
   - component: {fileID: 8984093212971998642}
@@ -185,8 +184,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 20}
+  m_AnchoredPosition: {x: 0, y: 28}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7894418112442720986
 CanvasRenderer:
@@ -196,19 +195,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5283147474941402468}
   m_CullTransparentMesh: 1
---- !u!114 &5794988689359956037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5283147474941402468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
 --- !u!114 &2015543809734287357
 MonoBehaviour:
   m_ObjectHideFlags: 0
