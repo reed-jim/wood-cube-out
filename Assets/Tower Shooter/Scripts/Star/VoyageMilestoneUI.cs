@@ -1,19 +1,24 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
 {
     public RectTransform container;
+    public TMP_Text startLocationNameText;
+    public TMP_Text endLocationNameText;
     public Image progressFill;
 
     private List<VoyageMilestoneItemUI> milestones = new List<VoyageMilestoneItemUI>();
 
     public void InitVoyageMilestones()
     {
-        for (int i = 0; i < StarManager.Ins.currentStarPathConfig.voyageMilestoneConfig.voyageMilestones.Count; i++)
+        VoyageMilestoneConfig voyageMilestoneConfig = StarManager.Ins.currentStarPathConfig.voyageMilestoneConfig;
+
+        for (int i = 0; i < voyageMilestoneConfig.voyageMilestones.Count; i++)
         {
-            VoyageMilestone voyageMilestone = StarManager.Ins.currentStarPathConfig.voyageMilestoneConfig.voyageMilestones[i];
+            VoyageMilestone voyageMilestone = voyageMilestoneConfig.voyageMilestones[i];
 
             VoyageMilestoneItemUI voyageMilestoneItemUI = ObjectPoolingEverything.GetFromPool<VoyageMilestoneItemUI>(GameConstants.voyageMilestoneItemUI);
 
@@ -21,6 +26,9 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
 
             milestones.Add(voyageMilestoneItemUI);
         }
+
+        startLocationNameText.text = voyageMilestoneConfig.startLocation;
+        endLocationNameText.text = voyageMilestoneConfig.endLocation;
     }
 
     public void SetVoyageProgress(float progress)

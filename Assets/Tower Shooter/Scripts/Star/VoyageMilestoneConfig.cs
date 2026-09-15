@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "VoyageMilestoneConfig", menuName = "Star/VoyageMilestoneConfig")]
 public class VoyageMilestoneConfig : ScriptableObject
 {
+    public string startLocation;
+    public string endLocation;
     public List<VoyageMilestone> voyageMilestones;
 }
 
@@ -12,6 +14,8 @@ public class VoyageMilestoneConfig : ScriptableObject
 public class VoyageMilestone
 {
     public float percent;
+    public bool isStart;
+    public bool isEnd;
 
     [Header("Reward")]
     public List<ResourceDataItem> rewards;

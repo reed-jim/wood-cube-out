@@ -1,3 +1,4 @@
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class VoyageMilestoneItemUI : MonoBehaviour
 
     private VoyageMilestone voyageMilestone;
 
+    private Tween loopScaleRewardTween;
+
     void Awake()
     {
         rewardButton.onClick.AddListener(EarnReward);
@@ -26,6 +29,13 @@ public class VoyageMilestoneItemUI : MonoBehaviour
 
         container.SetParent(voyageUIContainer);
         container.localScale = Vector3.one;
+
+        if (voyageMilestone.isStart || voyageMilestone.isEnd)
+        {
+            container.sizeDelta = 36 * Vector3.one;
+            fill.rectTransform.sizeDelta = 36 * Vector3.one;
+        }
+
         position.x = Mathf.Lerp(-0.5f * voyageUIContainer.sizeDelta.x, 0.5f * voyageUIContainer.sizeDelta.x, voyageMilestone.percent);
 
         container.localPosition = position;
@@ -47,7 +57,7 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         {
             fill.fillAmount = Mathf.Lerp(0, 1, Mathf.InverseLerp(startProgressValue, endProgressValue, voyageProgress));
         }
-        else
+        else if (!voyageMilestone.isStart && !voyageMilestone.isEnd)
         {
             if (!reward.gameObject.activeSelf && !tick.gameObject.activeSelf)
             {
@@ -56,6 +66,8 @@ public class VoyageMilestoneItemUI : MonoBehaviour
                 SaferioTween.ShowWithPunch(reward.transform, onCompleteAction: () =>
                 {
                     rewardButton.interactable = true;
+
+                    loopScaleRewardTween = Tween.Scale(reward.transform, 1.1f, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
                 });
             }
         }
@@ -71,6 +83,11 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         }
 
         rewardButton.interactable = false;
+
+        if (loopScaleRewardTween.isAlive)
+        {
+            loopScaleRewardTween.Stop();
+        }
 
         SaferioTween.ScaleDownWithPunch(reward.transform);
 
