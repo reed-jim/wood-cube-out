@@ -268,7 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962266565462913285}
   - component: {fileID: 7295418308930232057}
-  - component: {fileID: 3910437910108145031}
+  - component: {fileID: 7957373106607238286}
   - component: {fileID: 2510839562364428557}
   m_Layer: 5
   m_Name: Apply Augment To Node Group Effect
@@ -305,7 +305,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6663510762302426158}
   m_CullTransparentMesh: 1
---- !u!114 &3910437910108145031
+--- !u!114 &7957373106607238286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -314,11 +314,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6663510762302426158}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c857bc9d133d64a41b174301967bd9c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 05ddfd339a4ab5e468a10d2171bd57cc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ApplyAugmentToNodeEffect
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyAugmentToNodeGroupEffect
   canvasGroup: {fileID: 2510839562364428557}
-  circle: {fileID: 3690379368736153157}
+  highlight: {fileID: 3690379368736153157}
   description: {fileID: 1176821668244344011}
 --- !u!225 &2510839562364428557
 CanvasGroup:
