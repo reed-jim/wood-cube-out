@@ -209,6 +209,68 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &2280416519153596023
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8689732169628076374}
+  - component: {fileID: 663714521878025480}
+  m_Layer: 5
+  m_Name: Augment Filter Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8689732169628076374
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2280416519153596023}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1962266565462913285}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &663714521878025480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2280416519153596023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 20
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &5680083448502691978
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,6 +399,7 @@ RectTransform:
   - {fileID: 3605114976897972000}
   - {fileID: 4544081486623345013}
   - {fileID: 1540614059512894007}
+  - {fileID: 8689732169628076374}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -364,6 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad96742537050d46811aaad2ddf65fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseCharacter
+  id: -1
   serviceLocator: {fileID: 614917598609676925}
   stats: {fileID: 898206287609554678}
   speedToSpaceShip: 0
@@ -416,14 +480,19 @@ MonoBehaviour:
   initialStats:
   - statType: 2
     baseValue: 1
+    modifiers: []
   - statType: 3
     baseValue: 0.2
+    modifiers: []
   - statType: 9
     baseValue: 0.3
+    modifiers: []
   - statType: 8
     baseValue: 0
+    modifiers: []
   - statType: 14
     baseValue: 1.75
+    modifiers: []
 --- !u!114 &3217980460636716129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,6 +512,7 @@ MonoBehaviour:
   selectButton: {fileID: 614897221625565131}
   highlight: {fileID: 3433343903205745889}
   energyPath: {fileID: 8487678098941213317}
+  augmentFilterContainer: {fileID: 8689732169628076374}
   filterAugmentItemScale: 0.3
 --- !u!1 &6900476230869989543
 GameObject:

@@ -253,3 +253,13 @@ public class AugmentHistory
 {
     public int numAugmentBought;
 }
+
+public class AugmentData
+{
+    public int level;
+
+    public AugmentData()
+    {
+        level = 1;
+    }
+}

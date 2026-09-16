@@ -25,6 +25,7 @@ public class NodeUI : MonoBehaviour
     public RectTransform energyPath;
 
     [Header("Filter")]
+    public RectTransform augmentFilterContainer;
     public float filterAugmentItemScale;
     private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
 
@@ -166,9 +167,9 @@ public class NodeUI : MonoBehaviour
 
             NodeDetailAugmentItemUI nodeDetailAugmentItemUI = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
 
-            nodeDetailAugmentItemUI.transform.SetParent(transform);
+            nodeDetailAugmentItemUI.transform.SetParent(augmentFilterContainer);
             nodeDetailAugmentItemUI.transform.localScale = filterAugmentItemScale * Vector3.one;
-            nodeDetailAugmentItemUI.transform.localPosition = Vector3.zero;
+            // nodeDetailAugmentItemUI.transform.localPosition = Vector3.zero;
 
             nodeDetailAugmentItemUI.Init(augment);
 

@@ -10,6 +10,7 @@ public class NodeDetailAugmentItemUI : MonoBehaviour
     public Image background;
     public TMP_Text nameText;
     public TMP_Text rarityText;
+    public TMP_Text levelText;
     public Button selectButton;
 
     private Vector2 containerSize;
@@ -29,6 +30,7 @@ public class NodeDetailAugmentItemUI : MonoBehaviour
 
     public void Init(Augment augment, float expectedWidth = 0)
     {
+        AugmentData augmentData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey($"AugmentData_{augment.id}"), new AugmentData());
         Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
 
         border.color = qualityColor;
@@ -37,6 +39,7 @@ public class NodeDetailAugmentItemUI : MonoBehaviour
 
         nameText.text = augment.augmentName;
         rarityText.text = $"{augment.augmentQuality}";
+        levelText.text = $"Lv{augmentData.level}";
 
         if (expectedWidth > 0)
         {
