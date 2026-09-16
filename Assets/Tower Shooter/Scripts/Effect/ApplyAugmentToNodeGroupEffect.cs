@@ -24,7 +24,7 @@ public class ApplyAugmentToNodeGroupEffect : MonoBehaviour
 
         description.text = $"{augment.augmentName}";
 
-        Sequence sequence = Sequence.Create(Tween.Scale(transform, 2f, duration: 0.4f));
+        Sequence sequence = Sequence.Create(Tween.Scale(transform, 1.5f, duration: 0.4f));
         sequence.Chain(Tween.Alpha(canvasGroup, 0, duration: 0.6f));
         sequence.Group(Tween.Scale(transform, 1f, duration: 0.3f));
 
