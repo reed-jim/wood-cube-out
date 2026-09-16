@@ -61,10 +61,10 @@ public static class ColorUtil
     public static string ColorToHex(Color color)
     {
         string hex = "#" + ColorUtility.ToHtmlStringRGB(color);
-        
+
         return hex;
     }
-    
+
     public static Color GetColorFromHex(string hex)
     {
         string validatedHex = hex.Replace("#", "");
@@ -133,6 +133,96 @@ public static class ColorUtil
         finalColor.a = color.a;
 
         return finalColor;
+    }
+    #endregion
+
+    #region Text
+    /// <summary>
+    /// Returns a text color that preserves the background's hue/theme
+    /// while meeting the requested WCAG contrast ratio.
+    /// </summary>
+    public static Color GetTextColor(
+        Color background,
+        float minContrast = 4.5f)
+    {
+        // Unity Color is normally expected to be in linear space when
+        // doing luminance calculations.
+        Color.RGBToHSV(background, out float h, out float s, out float v);
+
+        float bgLuminance = GetRelativeLuminance(background);
+
+        // Determine which direction gives us the shortest path to contrast.
+        bool useLighter = bgLuminance < 0.5f;
+
+        // Search for the closest matching themed color.
+        float bestV = useLighter ? 1f : 0f;
+        float bestDistance = float.MaxValue;
+
+        const int steps = 100;
+
+        for (int i = 0; i <= steps; i++)
+        {
+            float candidateV = i / (float)steps;
+
+            // Keep the background's hue/saturation.
+            Color candidate = Color.HSVToRGB(h, s, candidateV);
+
+            float contrast = GetContrastRatio(
+                candidate,
+                background
+            );
+
+            if (contrast < minContrast)
+                continue;
+
+            // Prefer colors in the correct direction.
+            bool validDirection = useLighter
+                ? candidateV >= v
+                : candidateV <= v;
+
+            if (!validDirection)
+                continue;
+
+            float distance = Mathf.Abs(candidateV - v);
+
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                bestV = candidateV;
+            }
+        }
+
+        return Color.HSVToRGB(h, s, bestV);
+    }
+
+    public static float GetContrastRatio(Color a, Color b)
+    {
+        float l1 = GetRelativeLuminance(a);
+        float l2 = GetRelativeLuminance(b);
+
+        float brighter = Mathf.Max(l1, l2);
+        float darker = Mathf.Min(l1, l2);
+
+        return (brighter + 0.05f) / (darker + 0.05f);
+    }
+
+    private static float GetRelativeLuminance(Color color)
+    {
+        float r = ToLinear(color.r);
+        float g = ToLinear(color.g);
+        float b = ToLinear(color.b);
+
+        return
+            0.2126f * r +
+            0.7152f * g +
+            0.0722f * b;
+    }
+
+    private static float ToLinear(float value)
+    {
+        return value <= 0.04045f
+            ? value / 12.92f
+            : Mathf.Pow((value + 0.055f) / 1.055f, 2.4f);
     }
     #endregion
 }

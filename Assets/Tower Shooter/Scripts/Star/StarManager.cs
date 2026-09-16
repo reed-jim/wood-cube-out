@@ -32,4 +32,9 @@ public class StarManager : Singleton<StarManager>
 
         return currentStarPathConfig;
     }
+
+    public bool IsLastVoyage(int index)
+    {
+        return index == starVoyageContainer.starPathConfigs.Count - 1;
+    }
 }

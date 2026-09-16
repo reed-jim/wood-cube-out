@@ -38,7 +38,7 @@ public class ReachStarPopup : BasePopup
         starPathConfig = StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex);
 
         starName.text = $"You've reached {starPathConfig.starName}";
-        coinRewardText.text = $"{starPathConfig.coinReward}";
+        // coinRewardText.text = $"{starPathConfig.coinReward}";
 
         for (int i = 0; i < starPathConfig.unlockedAugments.Count; i++)
         {
@@ -55,7 +55,12 @@ public class ReachStarPopup : BasePopup
 
     private void GoNextStar()
     {
-        ResourceManager.Ins.ChangeResource(ResourceType.Coin, starPathConfig.coinReward);
+        for (int i = 0; i < starPathConfig.rewards.Count; i++)
+        {
+            ResourceDataItem resourceDataItem = starPathConfig.rewards[i];
+
+            ResourceManager.Ins.ChangeResource(resourceDataItem.resourceType, resourceDataItem.value);
+        }
 
         goNextStarEvent?.Invoke();
 

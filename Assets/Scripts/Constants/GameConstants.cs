@@ -21,6 +21,8 @@ public static class GameConstants
     public static string statItemUI = "statItemUI";
 
     public static string gameData = "gameData";
+
+    public static double KmPerLightYear = 9_460_730_472_580.8;
     #endregion
 
     public static string LOADING_SCENE = "Loading";

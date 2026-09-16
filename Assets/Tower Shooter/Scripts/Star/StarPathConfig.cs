@@ -5,12 +5,12 @@ using UnityEngine;
 public class StarPathConfig : ScriptableObject
 {
     public string starName;
-    public float distance;
+    public double distance;
 
     [Header("Milstone")]
     public VoyageMilestoneConfig voyageMilestoneConfig;
 
     [Header("Reward")]
-    public float coinReward;
+    public List<ResourceDataItem> rewards;
     public List<Augment> unlockedAugments;
 }

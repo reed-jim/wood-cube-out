@@ -20,9 +20,9 @@ public class SpaceShip : MonoBehaviour
     public bool isFlying;
 
     [Header("Voyage")]
-    public float totalKm;
-    public float remaningKm;
-    public float kmPerUnit;
+    public double totalKm;
+    public double remaningKm;
+    public double kmPerUnit;
     public float progress;
 
     public TMP_Text speedText;
@@ -34,12 +34,12 @@ public class SpaceShip : MonoBehaviour
 
     void Awake()
     {
-        ReachStarPopup.goNextStarEvent += StarNewVoyage;
+        ReachStarPopup.goNextStarEvent += StartNewVoyage;
     }
 
     void OnDestroy()
     {
-        ReachStarPopup.goNextStarEvent -= StarNewVoyage;
+        ReachStarPopup.goNextStarEvent -= StartNewVoyage;
     }
 
     void Start()
@@ -61,6 +61,13 @@ public class SpaceShip : MonoBehaviour
             return;
         }
 
+        if (voyageData.isReachedLastStar)
+        {
+            remaningKmText.text = $"You're {voyageData.lightyearFromEarth} ly away from The Earth";
+
+            return;
+        }
+
         if (remaningKm <= 0)
         {
             remaningKmText.text = $"You're at {StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).starName}";
@@ -77,24 +84,39 @@ public class SpaceShip : MonoBehaviour
         speedText.text = TextUtil.FormatSpeed(speed);
         remaningKmText.text = TextUtil.FormatDistance(remaningKm);
 
-        Vector3 deltaPosition = kmPerUnit * speed * Vector3.right;
+        // Vector3 deltaPosition = kmPerUnit * speed * Vector3.right;
 
-        locationContainer.position -= deltaPosition;
+        // locationContainer.position -= deltaPosition;
 
-        for (int i = 0; i < parallaxBackgrounds.Length; i++)
-        {
-            parallaxBackgrounds[i].transform.position -= parallaxBackgroundSpeedMultipliers[i] * deltaPosition;
-        }
+        // for (int i = 0; i < parallaxBackgrounds.Length; i++)
+        // {
+        //     parallaxBackgrounds[i].transform.position -= parallaxBackgroundSpeedMultipliers[i] * deltaPosition;
+        // }
 
         remaningKm -= speed;
-        progress = 1 - remaningKm / totalKm;
+        progress = (float)(1 - remaningKm / totalKm);
 
         VoyageMilestoneUI.Ins.SetVoyageProgress(progress);
     }
 
-    public void StarNewVoyage()
+    public void StartNewVoyage()
     {
-        LoadCurrentVoyage();
+        voyageData.lightyearFromEarth += totalKm / GameConstants.KmPerLightYear;
+
+        if (StarManager.Ins.IsLastVoyage(voyageData.starPathConfigIndex))
+        {
+            voyageData.isReachedLastStar = true;
+
+            SaveCurrentVoyage();
+        }
+        else
+        {
+            voyageData.starPathConfigIndex++;
+
+            LoadCurrentVoyage();
+        }
+
+        isFlying = true;
     }
 
     public void LoadCurrentVoyage()
@@ -107,7 +129,7 @@ public class SpaceShip : MonoBehaviour
         kmPerUnit = distance / totalKm;
         remaningKm = voyageData.remaningKm;
 
-        locationContainer.position.ChangeX(Mathf.Lerp(start.position.x, end.position.x, 1 - remaningKm / totalKm));
+        // locationContainer.position.ChangeX(Mathf.Lerp(start.position.x, end.position.x, 1 - remaningKm / totalKm));
 
         VoyageMilestoneUI.Ins.InitVoyageMilestones();
 
@@ -138,5 +160,7 @@ public class SpaceShip : MonoBehaviour
 public class VoyageData
 {
     public int starPathConfigIndex;
-    public float remaningKm;
+    public double remaningKm;
+    public bool isReachedLastStar;
+    public double lightyearFromEarth;
 }
