@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4898485947763335757
 MonoBehaviour:
@@ -51,7 +51,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageText
   damageText: {fileID: 3487229856350012539}
   lifetime: 0.7
-  floatDistance: 120
+  floatDistance: 80
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  critColor: {r: 1, g: 0.85, b: 0.2, a: 1}
 --- !u!1 &5236357193936377023
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +89,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1722405846339575506
 CanvasRenderer:
@@ -144,7 +146,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 82.6
+  m_fontSize: 49.55
   m_fontSizeBase: 0.3
   m_fontWeight: 400
   m_enableAutoSizing: 1
