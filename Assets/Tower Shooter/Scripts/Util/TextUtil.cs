@@ -30,7 +30,7 @@ public static class TextUtil
 
         // return $"{kmPerSecond * InversedLightSpeedKmPerSecond:0.#####}c";
 
-        return $"{kmPerSecond * InversedLightSpeedKmPerSecond:0.#####}";
+        return $"{kmPerSecond * InversedLightSpeedKmPerSecond:0.####}";
     }
 
     public static string GetDurationString(double kmPerFrame, double totalKm, float fps = 60f)
