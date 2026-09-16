@@ -8,6 +8,7 @@ public class NodeGroupUI : MonoBehaviour
     public NodeGroupServiceLocator serviceLocator;
 
     [Header("UI")]
+    public RectTransform container;
     public Button selectButton;
 
     [Header("Highlight")]

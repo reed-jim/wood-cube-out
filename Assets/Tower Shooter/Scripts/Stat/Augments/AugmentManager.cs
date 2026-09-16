@@ -161,6 +161,12 @@ public class AugmentManager : Singleton<AugmentManager>
         {
             augmentOfSameSpaceObjectType.Add(selectAugment.spaceObjectType, new List<Augment>() { selectAugment });
         }
+
+        // Effect
+        ApplyAugmentToNodeGroupEffect applyAugmentToNodeGroupEffect =
+                ObjectPoolingEverything.GetFromPool<ApplyAugmentToNodeGroupEffect>(GameConstants.applyAugmentToNodeGroupEffect);
+
+        applyAugmentToNodeGroupEffect.PlayEffect(nodeGroup, selectAugment, augmentApplyEffectContainer);
     }
 
     public void AddAugment(Augment augment)

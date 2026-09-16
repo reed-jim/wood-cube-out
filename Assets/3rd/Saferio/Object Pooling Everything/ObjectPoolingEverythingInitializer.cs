@@ -20,6 +20,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject notificationBadge;
     [SerializeField] private GameObject energyCube;
     [SerializeField] private GameObject applyAugmentToNodeEffect;
+    [SerializeField] private GameObject applyAugmentToNodeGroupEffect;
     [SerializeField] private GameObject voyageMilestoneItemUI;
     [SerializeField] private GameObject collectResourceItemUI;
 
@@ -152,6 +153,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<NotificationBadge>(GameConstants.notificationBadge, notificationBadge, 10);
         RegisterPool<EnergyCube>(GameConstants.energyCube, energyCube, 100);
         RegisterPool<ApplyAugmentToNodeEffect>(GameConstants.applyAugmentToNodeEffect, applyAugmentToNodeEffect, 5);
+        RegisterPool<ApplyAugmentToNodeGroupEffect>(GameConstants.applyAugmentToNodeGroupEffect, applyAugmentToNodeGroupEffect, 5);
         RegisterPool<VoyageMilestoneItemUI>(GameConstants.voyageMilestoneItemUI, voyageMilestoneItemUI, 10);
         RegisterPool<CollectResourceItemUI>(GameConstants.collectResourceItemUI, collectResourceItemUI, 10);
         // RegisterPool<StatItemUI>(GameConstants.stackingItemUI, stackingItemUI, 20);
