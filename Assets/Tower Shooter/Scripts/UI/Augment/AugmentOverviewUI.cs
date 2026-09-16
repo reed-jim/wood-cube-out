@@ -29,6 +29,9 @@ public class AugmentOverviewUI : BasePopup
             ObjectPoolingEverything.ReturnToPool(GameConstants.augmentSetItemUI, augmentSetItemUIs[i].gameObject);
         }
 
+        nodeDetailAugmentItemUIs.Clear();
+        augmentSetItemUIs.Clear();
+
         for (int i = 0; i < AugmentManager.Ins.activeAugments.Count; i++)
         {
             Augment augment = AugmentManager.Ins.activeAugments[i];

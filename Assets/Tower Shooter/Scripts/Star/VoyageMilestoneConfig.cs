@@ -17,6 +17,8 @@ public class VoyageMilestone
     public bool isStart;
     public bool isEnd;
 
+    public StarPathConfig starPathConfig;
+
     [Header("Reward")]
     public List<ResourceDataItem> rewards;
 }

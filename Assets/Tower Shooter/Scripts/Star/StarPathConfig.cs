@@ -6,6 +6,7 @@ public class StarPathConfig : ScriptableObject
 {
     public string starName;
     public double distanceInLightyear;
+    public SpaceObjectType spaceObjectType;
 
     [Header("Milstone")]
     public VoyageMilestoneConfig voyageMilestoneConfig;

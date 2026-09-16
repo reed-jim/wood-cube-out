@@ -281,6 +281,8 @@ GameObject:
   - component: {fileID: 5548572190874905699}
   - component: {fileID: 101379265666230923}
   - component: {fileID: 9002140727176394139}
+  - component: {fileID: 5883359840172608527}
+  - component: {fileID: 2982050578092002247}
   m_Layer: 5
   m_Name: Voyage Milestone Item UI
   m_TagString: Untagged
@@ -333,8 +335,9 @@ MonoBehaviour:
   container: {fileID: 872821861347466891}
   fill: {fileID: 992016072085748997}
   reward: {fileID: 3654234493078334757}
-  rewardButton: {fileID: 509965430680647496}
   tick: {fileID: 2015543809734287357}
+  rewardButton: {fileID: 509965430680647496}
+  openStarDetailButton: {fileID: 5883359840172608527}
 --- !u!114 &101379265666230923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,6 +381,63 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5883359840172608527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6166894108183127018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 9002140727176394139}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &2982050578092002247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6166894108183127018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
+  isPlaySound: 1
 --- !u!1 &8510165119071596426
 GameObject:
   m_ObjectHideFlags: 0

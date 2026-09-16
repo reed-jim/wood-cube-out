@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -8,8 +9,9 @@ public class VoyageMilestoneItemUI : MonoBehaviour
     public RectTransform container;
     public Image fill;
     public Image reward;
-    public Button rewardButton;
     public Image tick;
+    public Button rewardButton;
+    public Button openStarDetailButton;
 
     private float startProgressValue;
     private float endProgressValue;
@@ -18,9 +20,12 @@ public class VoyageMilestoneItemUI : MonoBehaviour
 
     private Tween loopScaleRewardTween;
 
+    public static event Action<StarPathConfig> openStarDetailEvent;
+
     void Awake()
     {
         rewardButton.onClick.AddListener(EarnReward);
+        openStarDetailButton.onClick.AddListener(OpenStarDetail);
     }
 
     public void Init(VoyageMilestone voyageMilestone, RectTransform voyageUIContainer)
@@ -34,6 +39,12 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         {
             container.sizeDelta = 36 * Vector3.one;
             fill.rectTransform.sizeDelta = 36 * Vector3.one;
+
+            openStarDetailButton.interactable = true;
+        }
+        else
+        {
+            openStarDetailButton.interactable = false;
         }
 
         position.x = Mathf.Lerp(-0.5f * voyageUIContainer.sizeDelta.x, 0.5f * voyageUIContainer.sizeDelta.x, voyageMilestone.percent);
@@ -94,5 +105,10 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         SaferioTween.ScaleDownWithPunch(reward.transform);
 
         SaferioTween.ShowWithPunch(tick.transform);
+    }
+
+    private void OpenStarDetail()
+    {
+        openStarDetailEvent?.Invoke(voyageMilestone.starPathConfig);
     }
 }
