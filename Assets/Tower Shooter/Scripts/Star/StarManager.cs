@@ -21,7 +21,7 @@ public class StarManager : Singleton<StarManager>
 
         voyageData.starPathConfigIndex = 0;
 
-        voyageData.remaningKm = GetVoyageConfig(voyageData.starPathConfigIndex).distance;
+        voyageData.remaningKm = GameConstants.KmPerLightYear * GetVoyageConfig(voyageData.starPathConfigIndex).distanceInLightyear;
 
         return voyageData;
     }

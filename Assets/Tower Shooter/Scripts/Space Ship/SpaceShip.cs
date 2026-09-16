@@ -125,7 +125,7 @@ public class SpaceShip : MonoBehaviour
 
         float distance = end.position.x - start.position.x;
 
-        totalKm = StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).distance;
+        totalKm = GameConstants.KmPerLightYear * StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).distanceInLightyear;
         kmPerUnit = distance / totalKm;
         remaningKm = voyageData.remaningKm;
 

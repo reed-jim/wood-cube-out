@@ -5,7 +5,7 @@ using UnityEngine;
 public class StarPathConfig : ScriptableObject
 {
     public string starName;
-    public double distance;
+    public double distanceInLightyear;
 
     [Header("Milstone")]
     public VoyageMilestoneConfig voyageMilestoneConfig;

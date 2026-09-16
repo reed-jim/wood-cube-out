@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class NodeDetailAugmentItemUI : MonoBehaviour
 {
     public Image container;
+    public Image border;
     public Image background;
     public TMP_Text nameText;
+    public TMP_Text rarityText;
     public Button selectButton;
 
     private Vector2 containerSize;
@@ -29,10 +31,12 @@ public class NodeDetailAugmentItemUI : MonoBehaviour
     {
         Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
 
-        background.color = qualityColor;
-        nameText.color = ColorUtil.GetTextColor(qualityColor);
+        border.color = qualityColor;
+        // nameText.color = qualityColor;
+        rarityText.color = qualityColor;
 
         nameText.text = augment.augmentName;
+        rarityText.text = $"{augment.augmentQuality}";
 
         if (expectedWidth > 0)
         {
