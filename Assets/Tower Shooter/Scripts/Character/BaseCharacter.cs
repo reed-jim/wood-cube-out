@@ -73,6 +73,8 @@ public class BaseCharacter : MonoBehaviour
             NodeManager.Ins.AllocateIdForNode(this);
 
             serviceLocator.stats.LoadStats();
+
+            serviceLocator.nodeUI.InitEnergyPath();
         }
 
         if (nodeData.isUnlocked)
@@ -85,8 +87,6 @@ public class BaseCharacter : MonoBehaviour
         {
             serviceLocator.nodeUI.Lock();
         }
-
-        serviceLocator.nodeUI.InitEnergyPath();
     }
 
     public void Reset()

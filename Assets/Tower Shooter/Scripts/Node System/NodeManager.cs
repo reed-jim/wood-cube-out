@@ -122,4 +122,21 @@ public class NodeManager : Singleton<NodeManager>
     {
         showNodeDetailEvent?.Invoke(UpgradeNodeUI.Ins.selectedNode);
     }
+
+    public int GetNumUnlockedNode()
+    {
+        int count = 0;
+
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            BaseCharacter node = nodes[i];
+
+            if (node.nodeData.isUnlocked)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
 }
