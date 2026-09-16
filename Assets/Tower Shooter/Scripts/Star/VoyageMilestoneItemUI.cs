@@ -54,6 +54,11 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         reward.gameObject.SetActive(false);
         tick.gameObject.SetActive(false);
 
+        if (loopScaleRewardTween.isAlive)
+        {
+            loopScaleRewardTween.Stop();
+        }
+
         float progressPerOneUnit = 1 / voyageUIContainer.sizeDelta.x;
 
         startProgressValue = voyageMilestone.percent - progressPerOneUnit * (0.5f * container.sizeDelta.x);
@@ -113,8 +118,7 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         }
 
         SaferioTween.ScaleDownWithPunch(reward.transform);
-
-        SaferioTween.ShowWithPunch(tick.transform);
+        SaferioTween.ScaleUpWithPunch(tick.transform, 1);
     }
 
     private void OpenStarDetail()

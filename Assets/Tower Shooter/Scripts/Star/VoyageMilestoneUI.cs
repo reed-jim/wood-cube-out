@@ -14,6 +14,15 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
 
     public void InitVoyageMilestones()
     {
+        for (int i = 0; i < milestones.Count; i++)
+        {
+            VoyageMilestoneItemUI voyageMilestoneItemUI = milestones[i];
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.voyageMilestoneItemUI, voyageMilestoneItemUI.gameObject);
+        }
+
+        milestones.Clear();
+
         VoyageMilestoneConfig voyageMilestoneConfig = StarManager.Ins.currentStarPathConfig.voyageMilestoneConfig;
 
         for (int i = 0; i < voyageMilestoneConfig.voyageMilestones.Count; i++)

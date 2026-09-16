@@ -4,6 +4,8 @@ public enum SpaceObjectType
 {
     Earth,
     Mars,
+    Neptune,
+    InnerOortGate,
     ProximaCentauri
 }
 

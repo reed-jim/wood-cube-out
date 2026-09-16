@@ -30,11 +30,18 @@ public class SpaceShip : MonoBehaviour
 
     public VoyageData voyageData;
 
+    private const double LightSpeedKmPerSecond = 299_792.458;
+    private double InversedLightSpeedKmPerSecond;
+    private const float FramePerSecond = 60;
+    private int updateSpeedTick;
+
     public static event Action<VoyageData> reachStarEvent;
 
     void Awake()
     {
         ReachStarPopup.goNextStarEvent += StartNewVoyage;
+
+        InversedLightSpeedKmPerSecond = 1 / LightSpeedKmPerSecond;
     }
 
     void OnDestroy()
@@ -79,12 +86,27 @@ public class SpaceShip : MonoBehaviour
             return;
         }
 
-        float speed = PowerManager.Ins.GetSpaceShipSpeed();
+        double kmPerFrame = PowerManager.Ins.GetSpaceShipSpeed();
 
-        speedText.text = TextUtil.FormatSpeed(speed);
+        if (updateSpeedTick % FramePerSecond == 0)
+        {
+            // to make speed look more active
+            float randomValue = UnityEngine.Random.RandomRange(0, 1);
+
+            // speedText.text = TextUtil.FormatSpeed(kmPerFrame * FramePerSecond + randomValue, InversedLightSpeedKmPerSecond);
+            speedText.text =
+                $"{TextUtil.FormatSpeed(kmPerFrame * FramePerSecond + randomValue, InversedLightSpeedKmPerSecond)} ({TextUtil.GetDurationString(kmPerFrame, remaningKm)})";
+
+            updateSpeedTick = 0;
+        }
+        else
+        {
+            updateSpeedTick++;
+        }
+
         remaningKmText.text = TextUtil.FormatDistance(remaningKm);
 
-        // Vector3 deltaPosition = kmPerUnit * speed * Vector3.right;
+        // Vector3 deltaPosition = kmPerUnit * speedPerFrame * Vector3.right;
 
         // locationContainer.position -= deltaPosition;
 
@@ -93,7 +115,7 @@ public class SpaceShip : MonoBehaviour
         //     parallaxBackgrounds[i].transform.position -= parallaxBackgroundSpeedMultipliers[i] * deltaPosition;
         // }
 
-        remaningKm -= speed;
+        remaningKm -= kmPerFrame;
         progress = (float)(1 - remaningKm / totalKm);
 
         VoyageMilestoneUI.Ins.SetVoyageProgress(progress);
