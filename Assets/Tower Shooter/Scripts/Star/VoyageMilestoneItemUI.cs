@@ -59,6 +59,16 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         startProgressValue = voyageMilestone.percent - progressPerOneUnit * (0.5f * container.sizeDelta.x);
         endProgressValue = voyageMilestone.percent + progressPerOneUnit * (0.5f * container.sizeDelta.x);
 
+        if (voyageMilestone.isStart)
+        {
+            startProgressValue = 0;
+        }
+
+        if (voyageMilestone.isEnd)
+        {
+            endProgressValue = 1;
+        }
+
         this.voyageMilestone = voyageMilestone;
     }
 

@@ -84,6 +84,11 @@ public class CharacterStats : MonoBehaviour
     #region Save/Load
     public void SaveStats()
     {
+        if (characterStatsData == null)
+        {
+            LoadStats();
+        }
+
         characterStatsData.stats = new List<Stat>();
 
         foreach (var statType in statDict.Keys)

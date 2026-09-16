@@ -106,15 +106,16 @@ public class SpaceShip : MonoBehaviour
         if (StarManager.Ins.IsLastVoyage(voyageData.starPathConfigIndex))
         {
             voyageData.isReachedLastStar = true;
-
-            SaveCurrentVoyage();
         }
         else
         {
             voyageData.starPathConfigIndex++;
+            voyageData.remaningKm = GameConstants.KmPerLightYear * StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).distanceInLightyear;
 
-            LoadCurrentVoyage();
+            Init();
         }
+
+        SaveCurrentVoyage();
 
         isFlying = true;
     }
@@ -123,6 +124,11 @@ public class SpaceShip : MonoBehaviour
     {
         voyageData = DataUtility.Load($"{SaveSlotManager.Ins.currentSaveSlotData}_voyageData", StarManager.Ins.GetFirstVoyage());
 
+        Init();
+    }
+
+    private void Init()
+    {
         float distance = end.position.x - start.position.x;
 
         totalKm = GameConstants.KmPerLightYear * StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).distanceInLightyear;
