@@ -9,6 +9,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public Button openAugmentSelectionButton;
     public Button openUpgradeButton;
     public Button augmentOverviewButton;
+    public Button selectThemeButton;
 
     [Header("Node")]
     public RectTransform nodeContainer;
@@ -38,6 +39,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         openUpgradeButton.onClick.AddListener(OpenUpgrade);
         augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
+        selectThemeButton.onClick.AddListener(OpenSelectThemePopup);
 
         normalFilterButton.onClick.AddListener(EnableNormalFilter);
         enableAugmentFilterButton.onClick.AddListener(EnableAugmentFilter);
@@ -65,6 +67,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     private void OpenAugmentOverview()
     {
         switchRouteEvent?.Invoke(ScreenRoute.AugmentOverview);
+    }
+
+    private void OpenSelectThemePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.SelectTheme);
     }
 
     public void UpdateUpgradePointText(int upgradePoint)

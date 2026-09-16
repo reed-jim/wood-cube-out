@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NodeManager : Singleton<NodeManager>
 {
+    [Header("UI")]
     public RectTransform nodeGroupContainer;
+    public Button openNodeDetailButton;
     public NodeDetailUI nodeDetailUI;
 
     public List<BaseCharacter> nodes;
@@ -17,6 +20,8 @@ public class NodeManager : Singleton<NodeManager>
 
         nodes = new List<BaseCharacter>();
         nodeGroups = new List<NodeGroup>();
+
+        openNodeDetailButton.onClick.AddListener(OpenNodeDetail);
     }
 
     void Start()
@@ -107,5 +112,10 @@ public class NodeManager : Singleton<NodeManager>
         node.id = currentNodeIdToAllocate;
 
         currentNodeIdToAllocate++;
+    }
+
+    public void OpenNodeDetail()
+    {
+        nodeDetailUI.Init(UpgradeNodeUI.Ins.selectedNode);
     }
 }
