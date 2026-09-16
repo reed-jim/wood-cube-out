@@ -5,11 +5,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NodeDetailUI : MonoBehaviour
+public class NodeDetailUI : BasePopup
 {
-    public RectTransform container;
     public TMP_Text nameText;
-    public Button closeButton;
+    public TMP_Text noAugmentText;
 
     public SerializableDictionary<StatType, UIElementsOfStat> UIElementsOfStats;
 
@@ -25,22 +24,36 @@ public class NodeDetailUI : MonoBehaviour
     public RectTransform pendingAugmentContainer;
     public List<PendingAugmentItemUI> pendingAugmentItemUIs = new List<PendingAugmentItemUI>();
 
-    [Header("Animation")]
-    public ScaleTransition scaleTransition;
-
-    void Awake()
+    protected override void MoreActionInAwake()
     {
-        closeButton.onClick.AddListener(Close);
+        base.MoreActionInAwake();
+
         unlockButton.onClick.AddListener(Unlock);
     }
 
-    public void Init(BaseCharacter node)
+    protected override void RegisterMoreEvent()
+    {
+        base.RegisterMoreEvent();
+
+        NodeManager.showNodeDetailEvent += ShowNodeDetail;
+    }
+
+    protected override void UnregisterMoreEvent()
+    {
+        base.UnregisterMoreEvent();
+
+        NodeManager.showNodeDetailEvent -= ShowNodeDetail;
+    }
+
+    public void ShowNodeDetail(BaseCharacter node)
     {
         this.node = node;
 
-        container.position = node.serviceLocator.nodeUI.container.transform.position;
+        // container.position = node.serviceLocator.nodeUI.container.transform.position;
 
         Show();
+
+        nameText.text = node.name;
 
         foreach (var statType in UIElementsOfStats.Keys)
         {
@@ -97,36 +110,6 @@ public class NodeDetailUI : MonoBehaviour
         ResourceManager.Ins.ChangeResource(ResourceType.UpgradePoint, -1);
 
         node.Unlock();
-
-        Close();
-
-        // if (ResourceManager.Ins.GetResourceValue(ResourceType.UpgradePoint) > 0)
-        // {
-        //     ResourceManager.Ins.ChangeResource(ResourceType.UpgradePoint, -1);
-
-        //     node.nodeData.isUnlocked = true;
-
-        //     node.Init();
-
-        //     Close();
-        // }
-        // else
-        // {
-
-        // }
-    }
-
-    public void Show()
-    {
-        scaleTransition.Show(onCompletedAction: () =>
-        {
-
-        });
-    }
-
-    public void Close()
-    {
-        scaleTransition.Hide();
     }
 
     #region Current Augments
@@ -134,13 +117,13 @@ public class NodeDetailUI : MonoBehaviour
     {
         if (node.ownedAugments.Count == 0)
         {
-            currentAugmentContainer.gameObject.SetActive(false);
+            noAugmentText.gameObject.SetActive(true);
 
             return;
         }
         else
         {
-            currentAugmentContainer.gameObject.SetActive(true);
+            noAugmentText.gameObject.SetActive(false);
         }
 
         for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
@@ -159,7 +142,7 @@ public class NodeDetailUI : MonoBehaviour
             nodeDetailAugmentItemUI.transform.SetParent(currentAugmentContainer);
             nodeDetailAugmentItemUI.transform.localScale = Vector3.one;
 
-            nodeDetailAugmentItemUI.Init(node.ownedAugments[i]);
+            nodeDetailAugmentItemUI.Init(node.ownedAugments[i], expectedWidth: 720);
 
             nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
         }
@@ -196,7 +179,7 @@ public class NodeDetailUI : MonoBehaviour
             pendingAugmentItemUI.transform.SetParent(pendingAugmentContainer);
             pendingAugmentItemUI.transform.localScale = Vector3.one;
 
-            pendingAugmentItemUI.Init(AugmentManager.Ins.pendingAugments[i], node, onApply: Close);
+            pendingAugmentItemUI.Init(AugmentManager.Ins.pendingAugments[i], node, onApply: Hide);
 
             pendingAugmentItemUIs.Add(pendingAugmentItemUI);
         }

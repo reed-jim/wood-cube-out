@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,8 @@ public class NodeManager : Singleton<NodeManager>
     public List<NodeGroup> nodeGroups;
 
     public int currentNodeIdToAllocate;
+
+    public static event Action<BaseCharacter> showNodeDetailEvent;
 
     protected override void MoreActionOnAwake()
     {
@@ -110,12 +113,13 @@ public class NodeManager : Singleton<NodeManager>
     public void AllocateIdForNode(BaseCharacter node)
     {
         node.id = currentNodeIdToAllocate;
+        node.name = $"Node {node.id}";
 
         currentNodeIdToAllocate++;
     }
 
     public void OpenNodeDetail()
     {
-        nodeDetailUI.Init(UpgradeNodeUI.Ins.selectedNode);
+        showNodeDetailEvent?.Invoke(UpgradeNodeUI.Ins.selectedNode);
     }
 }

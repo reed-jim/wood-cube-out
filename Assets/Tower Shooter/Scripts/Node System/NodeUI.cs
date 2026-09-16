@@ -87,12 +87,12 @@ public class NodeUI : MonoBehaviour
         }
     }
 
-    public void OpenNodeDetail()
-    {
-        NodeManager.Ins.nodeDetailUI.Init(serviceLocator.character);
+    // public void OpenNodeDetail()
+    // {
+    //     NodeManager.Ins.nodeDetailUI.Init(serviceLocator.character);
 
-        UpgradeNodeUI.Ins.SelectNode(serviceLocator.character);
-    }
+    //     UpgradeNodeUI.Ins.SelectNode(serviceLocator.character);
+    // }
 
     public void SelectNodeToApplyAugment()
     {
