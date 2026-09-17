@@ -54,6 +54,8 @@ public class TaskManager : Singleton<TaskManager>
 
             addTaskItemUI?.Invoke(taskItemUI);
         }
+
+        MultiverseIdleGameplayScreen.Ins.NotifyTask();
     }
 
     private BaseTask GetTaskComponentFromPool(TaskType taskType)

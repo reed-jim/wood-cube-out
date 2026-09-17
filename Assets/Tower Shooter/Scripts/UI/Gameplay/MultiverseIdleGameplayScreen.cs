@@ -156,6 +156,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     #region Task
     private void OnTaskCompleted()
     {
+        NotifyTask();
+    }
+
+    public void NotifyTask()
+    {
         taskNotification.Notify();
     }
 

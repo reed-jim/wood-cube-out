@@ -61,6 +61,7 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
         MultiverseIdleGameplayScreen.switchRouteEvent += OnRouteSwitched;
+        MultiverseIdleMenuScreen.switchRouteEvent += OnRouteSwitched;
         LevelLoader.switchRouteEvent += OnRouteSwitched;
 
         SettingPopup.switchRouteEvent += OnRouteSwitched;
@@ -116,7 +117,7 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
         MultiverseIdleGameplayScreen.switchRouteEvent -= OnRouteSwitched;
-
+        MultiverseIdleMenuScreen.switchRouteEvent -= OnRouteSwitched;
 
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
 
