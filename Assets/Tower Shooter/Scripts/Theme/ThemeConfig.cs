@@ -1,4 +1,5 @@
 using UnityEngine;
+using static ThemeableUI;
 
 [CreateAssetMenu(fileName = "ThemeConfig", menuName = "Idle/UI/ThemeConfig")]
 public class ThemeConfig : ScriptableObject
@@ -129,5 +130,16 @@ public class ThemeConfig : ScriptableObject
     {
         ColorUtility.TryParseHtmlString(hex, out Color color);
         return color;
+    }
+
+    public Color GetColor(ElementRole role)
+    {
+        return role switch
+        {
+            ElementRole.Primary => primary,
+            ElementRole.OnPrimary => onPrimary,
+            ElementRole.OnPrimaryContainer => onPrimaryContainer,
+            _ => common
+        };
     }
 }

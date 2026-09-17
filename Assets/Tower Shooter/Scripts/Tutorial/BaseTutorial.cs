@@ -1,9 +1,12 @@
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BaseTutorial : MonoBehaviour
 {
+    public CanvasGroup canvasGroup;
     public Button nextButton;
+    public Button doAgainButton;
     public Transform tutorialElementContainer;
 
     public int maxStep;
@@ -14,6 +17,7 @@ public class BaseTutorial : MonoBehaviour
     void Awake()
     {
         nextButton.onClick.AddListener(NextStep);
+        doAgainButton.onClick.AddListener(DoAgain);
 
         MoreActionOnAwake();
     }
@@ -36,6 +40,20 @@ public class BaseTutorial : MonoBehaviour
     protected void NextStep()
     {
         step++;
+        isWaitForNextStep = false;
+    }
+
+    protected virtual void EndTutorial()
+    {
+        Tween.Alpha(canvasGroup, 0, duration: 0.3f).OnComplete(() =>
+        {
+            canvasGroup.gameObject.SetActive(false);
+        });
+    }
+
+    protected virtual void DoAgain()
+    {
+        step = 0;
         isWaitForNextStep = false;
     }
 }

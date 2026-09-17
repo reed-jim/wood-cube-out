@@ -22,6 +22,7 @@ public class BaseCharacter : MonoBehaviour
     public List<Augment> ownedAugments;
 
     [Header("State")]
+    public bool isPaused;
     public int currentCycle;
     public float lastPowerGenerated;
     public bool isJustCrit;
@@ -104,6 +105,16 @@ public class BaseCharacter : MonoBehaviour
         DataManager.Ins.SaveData();
     }
 
+    public void Pause()
+    {
+        isPaused = true;
+    }
+
+    public void Unpause()
+    {
+        isPaused = false;
+    }
+
     private IEnumerator Generating()
     {
         RectTransform container = serviceLocator.nodeUI.container;
@@ -122,82 +133,89 @@ public class BaseCharacter : MonoBehaviour
 
         while (true)
         {
-            float power = stats.GetStat(StatType.Damage).Value;
-            float speed = stats.GetStat(StatType.AttackSpeed).Value;
-            float efficiency = stats.GetStat(StatType.Efficiency).Value;
-
-            speedToSpaceShip = efficiency * (power * speed);
-
-            float interval = 1f / speed;
-
-            powerText.text = $"{power:F2}";
-
-            Tween.Custom(0, 1, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
+            if (!isPaused)
             {
-                circleProgress.fillAmount = newVal;
-            })
-            .OnComplete(() =>
-            {
-                power = stats.GetStat(StatType.Damage).Value;
-                float criticalChance = stats.GetStat(StatType.CritChance).Value;
-                float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
-                float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
-                float powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
-                float chanceToRepeatLastCyclePower = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
-                bool isCritical = false;
+                float power = stats.GetStat(StatType.Damage).Value;
+                float speed = stats.GetStat(StatType.AttackSpeed).Value;
+                float efficiency = stats.GetStat(StatType.Efficiency).Value;
 
-                // Crit
-                if (UnityEngine.Random.value < criticalChance || isGuaranteedCrit)
+                speedToSpaceShip = efficiency * (power * speed);
+
+                float interval = 1f / speed;
+
+                powerText.text = $"{power:F2}";
+
+                Tween.Custom(0, 1, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
                 {
-                    power *= criticalMultiplier;
-
-                    isCritical = true;
-
-                    isGuaranteedCrit = false;
-                }
-
-                if (UnityEngine.Random.value < chanceForMorePowerOnCircleCompletion)
+                    circleProgress.fillAmount = newVal;
+                })
+                .OnComplete(() =>
                 {
-                    power *= powerOnCircleCompletionMultiplier;
+                    power = stats.GetStat(StatType.Damage).Value;
+                    float criticalChance = stats.GetStat(StatType.CritChance).Value;
+                    float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
+                    float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
+                    float powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
+                    float chanceToRepeatLastCyclePower = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
+                    bool isCritical = false;
 
-                    isCritical = true;
-                }
-
-                PowerManager.Ins.AddPower(power);
-
-                ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
-
-                // chance for repeat last cycle
-                if (UnityEngine.Random.value < chanceToRepeatLastCyclePower)
-                {
-                    TweenManager.Ins.AddTween(Tween.Delay(0.3f).OnComplete(() =>
+                    // Crit
+                    if (UnityEngine.Random.value < criticalChance || isGuaranteedCrit)
                     {
-                        PowerManager.Ins.AddPower(power);
+                        power *= criticalMultiplier;
 
-                        ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
-                    }));
-                }
+                        isCritical = true;
 
-                lastPowerGenerated = power;
-                isJustCrit = isCritical;
+                        isGuaranteedCrit = false;
+                    }
 
-                ApplyAugmentEffectsOnCycleCompletion();
-                nodeGroup.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this);
+                    if (UnityEngine.Random.value < chanceForMorePowerOnCircleCompletion)
+                    {
+                        power *= powerOnCircleCompletionMultiplier;
 
-                currentCycle++;
+                        isCritical = true;
+                    }
 
-                #region Energy Cube
-                EnergyCube energyCube = ObjectPoolingEverything.GetFromPool<EnergyCube>(GameConstants.energyCube);
+                    PowerManager.Ins.AddPower(power);
 
-                energyCube.transform.SetParent(transform);
-                energyCube.transform.localPosition = Vector3.zero;
-                energyCube.Move(energyPoints);
-                #endregion
+                    ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
 
-                cycleCompleteEvent?.Invoke(this);
-            });
+                    // chance for repeat last cycle
+                    if (UnityEngine.Random.value < chanceToRepeatLastCyclePower)
+                    {
+                        TweenManager.Ins.AddTween(Tween.Delay(0.3f).OnComplete(() =>
+                        {
+                            PowerManager.Ins.AddPower(power);
 
-            yield return new WaitForSeconds(interval);
+                            ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
+                        }));
+                    }
+
+                    lastPowerGenerated = power;
+                    isJustCrit = isCritical;
+
+                    ApplyAugmentEffectsOnCycleCompletion();
+                    nodeGroup.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this);
+
+                    currentCycle++;
+
+                    #region Energy Cube
+                    EnergyCube energyCube = ObjectPoolingEverything.GetFromPool<EnergyCube>(GameConstants.energyCube);
+
+                    energyCube.transform.SetParent(transform);
+                    energyCube.transform.localPosition = Vector3.zero;
+                    energyCube.Move(energyPoints);
+                    #endregion
+
+                    cycleCompleteEvent?.Invoke(this);
+                });
+
+                yield return new WaitForSeconds(interval);
+            }
+            else
+            {
+                yield return new WaitForSeconds(1f / 30);
+            }
         }
     }
 

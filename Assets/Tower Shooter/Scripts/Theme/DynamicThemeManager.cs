@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static ThemeableUI;
 
 public class DynamicThemeManager : Singleton<DynamicThemeManager>
 {
@@ -39,6 +40,13 @@ public class DynamicThemeManager : Singleton<DynamicThemeManager>
 
         DataUtility.Save($"{SaveSlotManager.Ins.currentSaveSlotData}_ThemeData", themeData);
     }
+
+    #region Util
+    public string GetHex(ElementRole elementRole)
+    {
+        return ColorUtil.ColorToHex(CurrentTheme.GetColor(elementRole));
+    }
+    #endregion
 }
 
 public class ThemeData
