@@ -641,6 +641,7 @@ GameObject:
   - component: {fileID: 288349754}
   - component: {fileID: 288349759}
   - component: {fileID: 288349758}
+  - component: {fileID: 288349761}
   - component: {fileID: 288349760}
   - component: {fileID: 288349757}
   - component: {fileID: 288349756}
@@ -807,6 +808,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &288349761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288349753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5baaa49823bfc7949afe16a06131c3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoopScaleAnimation
+  clickButton: {fileID: 288349756}
+  zoomUpScale: 1.1
+  isNotAutoScaleDown: 0
 --- !u!1 &339457699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,7 +1130,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &431631028
 RectTransform:
   m_ObjectHideFlags: 0

@@ -11,13 +11,6 @@ public class PowerManager : Singleton<PowerManager>
 
     public void AddPower(float power)
     {
-        float coin = ResourceManager.Ins.ChangeResource(ResourceType.Coin, power);
-
-        if (coin >= AugmentManager.Ins.currentBuyAugmentCost)
-        {
-            MultiverseIdleGameplayScreen.Ins.NotifyBuyAugment();
-        }
-
         UpdateUI();
     }
 
