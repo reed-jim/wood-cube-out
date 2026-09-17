@@ -34,7 +34,14 @@ public class NodeUI : MonoBehaviour
 
     void Awake()
     {
+        BaseCharacter.selectNodeEvent += OnNodeSelected;
+
         selectButton.onClick.AddListener(Select);
+    }
+
+    void OnDestroy()
+    {
+        BaseCharacter.selectNodeEvent -= OnNodeSelected;
     }
 
     #region Energy Path
@@ -77,6 +84,10 @@ public class NodeUI : MonoBehaviour
         if (IdleGameInputManager.inputMode == IdleGameInputMode.Normal)
         {
             UpgradeNodeUI.Ins.SelectNode(serviceLocator.character);
+
+            serviceLocator.character.InvokeSelectNodeEvent();
+
+            SaferioTween.AlphaShow(highlight);
         }
         else if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNode)
         {
@@ -210,4 +221,15 @@ public class NodeUI : MonoBehaviour
         });
     }
     #endregion
+
+    private void OnNodeSelected(BaseCharacter node)
+    {
+        if (serviceLocator.character != node)
+        {
+            if (highlight.gameObject.activeSelf)
+            {
+                SaferioTween.AlphaHide(highlight);
+            }
+        }
+    }
 }

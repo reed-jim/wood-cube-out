@@ -32,6 +32,7 @@ public class BaseCharacter : MonoBehaviour
     public List<Vector2> energyPoints;
 
     public static event Action<BaseCharacter> cycleCompleteEvent;
+    public static event Action<BaseCharacter> selectNodeEvent;
 
     void Awake()
     {
@@ -234,5 +235,10 @@ public class BaseCharacter : MonoBehaviour
                 augmentEffect.ApplyEffectOnCycleCompleted(serviceLocator.stats);
             }
         }
+    }
+
+    public void InvokeSelectNodeEvent()
+    {
+        selectNodeEvent?.Invoke(this);
     }
 }
