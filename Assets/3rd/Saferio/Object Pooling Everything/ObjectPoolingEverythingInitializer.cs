@@ -26,6 +26,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject baseTask;
     [SerializeField] private GameObject upgradeNodeTask;
     [SerializeField] private GameObject taskItemUI;
+    [SerializeField] private GameObject rewardItemUI;
 
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
@@ -163,6 +164,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<BaseTask>(GameConstants.baseTask, baseTask, 5);
         RegisterPool<UpgradeNodeTask>(GameConstants.upgradeNodeTask, upgradeNodeTask, 5);
         RegisterPool<TaskItemUI>(GameConstants.taskItemUI, taskItemUI, 10);
+        RegisterPool<RewardItemUI>(GameConstants.rewardItemUI, rewardItemUI, 10);
         // RegisterPool<StatItemUI>(GameConstants.stackingItemUI, stackingItemUI, 20);
         #endregion
 

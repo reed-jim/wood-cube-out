@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d134424536ed944da494751335cfb7e, type: 3}
+  m_Name: Inner Oort Milestone Config
+  m_EditorClassIdentifier: Assembly-CSharp::VoyageMilestoneConfig
+  startLocation: Mars
+  endLocation: Neptune
+  voyageMilestones:
+  - percent: 0
+    isStart: 1
+    isEnd: 0
+    starPathConfig: {fileID: 11400000, guid: a659ea2e2deee7642b9a9918524261ae, type: 2}
+    rewards: []
+  - percent: 0.2
+    isStart: 0
+    isEnd: 0
+    starPathConfig: {fileID: 0}
+    rewards:
+    - resourceType: 0
+      value: 200
+    - resourceType: 2
+      value: 1
+  - percent: 0.5
+    isStart: 0
+    isEnd: 0
+    starPathConfig: {fileID: 0}
+    rewards:
+    - resourceType: 0
+      value: 500
+    - resourceType: 2
+      value: 1
+  - percent: 1
+    isStart: 0
+    isEnd: 1
+    starPathConfig: {fileID: 11400000, guid: 8550683cd0982ab46a92a9fb13032f00, type: 2}
+    rewards: []

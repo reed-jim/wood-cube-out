@@ -6,6 +6,7 @@ public enum SpaceObjectType
     Mars,
     Neptune,
     InnerOortGate,
+    OuterOortCloud,
     ProximaCentauri
 }
 

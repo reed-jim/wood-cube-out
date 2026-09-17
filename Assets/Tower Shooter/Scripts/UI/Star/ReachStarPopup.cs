@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class ReachStarPopup : BasePopup
 {
     public TMP_Text starName;
-    public TMP_Text coinRewardText;
     public Button goNextStarButton;
+    public RectTransform rewardContainer;
     public RectTransform rewardAugmentContainer;
 
     private VoyageData voyageData;
@@ -38,7 +38,17 @@ public class ReachStarPopup : BasePopup
         starPathConfig = StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex);
 
         starName.text = $"You've reached {starPathConfig.starName}";
-        // coinRewardText.text = $"{starPathConfig.coinReward}";
+
+        for (int i = 0; i < starPathConfig.rewards.Count; i++)
+        {
+            ResourceDataItem rewardData = starPathConfig.rewards[i];
+            RewardItemUI rewardItemUI = ObjectPoolingEverything.GetFromPool<RewardItemUI>(GameConstants.rewardItemUI);
+
+            rewardItemUI.transform.SetParent(rewardContainer);
+            rewardItemUI.transform.localScale = Vector3.one;
+
+            rewardItemUI.Init(rewardData);
+        }
 
         for (int i = 0; i < starPathConfig.unlockedAugments.Count; i++)
         {
