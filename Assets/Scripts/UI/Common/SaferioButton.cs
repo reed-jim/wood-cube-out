@@ -19,7 +19,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     private List<Tween> _tweens;
     private bool _isAnimating;
 
-    public static event Action preventMultiClickEvent;
+    public static event Action<int> preventMultiClickEvent;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -95,11 +95,16 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 
     private void PreventMultiButtonClickConcurrently()
     {
-        preventMultiClickEvent?.Invoke();
+        preventMultiClickEvent?.Invoke(gameObject.GetInstanceID());
     }
 
-    private void OnOtherButtonClicked()
+    private void OnOtherButtonClicked(int instanceId)
     {
+        if (instanceId == gameObject.GetInstanceID())
+        {
+            return;
+        }
+
         if (!_button.interactable)
         {
             return;
