@@ -23,6 +23,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject applyAugmentToNodeGroupEffect;
     [SerializeField] private GameObject voyageMilestoneItemUI;
     [SerializeField] private GameObject collectResourceItemUI;
+    [SerializeField] private GameObject baseTask;
+    [SerializeField] private GameObject taskItemUI;
 
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
@@ -156,6 +158,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ApplyAugmentToNodeGroupEffect>(GameConstants.applyAugmentToNodeGroupEffect, applyAugmentToNodeGroupEffect, 5);
         RegisterPool<VoyageMilestoneItemUI>(GameConstants.voyageMilestoneItemUI, voyageMilestoneItemUI, 10);
         RegisterPool<CollectResourceItemUI>(GameConstants.collectResourceItemUI, collectResourceItemUI, 10);
+
+        RegisterPool<BaseTask>(GameConstants.baseTask, baseTask, 10);
+        RegisterPool<TaskItemUI>(GameConstants.taskItemUI, taskItemUI, 10);
         // RegisterPool<StatItemUI>(GameConstants.stackingItemUI, stackingItemUI, 20);
         #endregion
 

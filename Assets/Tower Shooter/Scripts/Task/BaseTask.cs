@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BaseTask : MonoBehaviour
 {
+    public float valueRequired;
     public float valueDone;
 
     private void Awake()
@@ -32,5 +33,15 @@ public class BaseTask : MonoBehaviour
     public virtual bool IsTaskCompleted()
     {
         return false;
+    }
+
+    public virtual string GetDescription()
+    {
+        return "";
+    }
+
+    public virtual string GetProgressText()
+    {
+        return $"{valueDone}/{valueRequired}";
     }
 }

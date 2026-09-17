@@ -37,6 +37,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
             ApplyUpgrade(node, statModifier);
         }
 
+        upgradeStatEvent?.Invoke(statType);
+
         return statUpgradeData;
     }
 

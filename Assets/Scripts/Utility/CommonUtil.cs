@@ -12,6 +12,12 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    public static void SetParentAndResetScale(Transform target, Transform parent)
+    {
+        target.SetParent(parent);
+        target.localScale = Vector3.one;
+    }
+
     #region Round
     public static float RoundToDecimalPlaces(float value, int decimalPlaces)
     {

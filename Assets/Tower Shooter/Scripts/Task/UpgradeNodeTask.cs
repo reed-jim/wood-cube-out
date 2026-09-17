@@ -3,7 +3,6 @@ using UnityEngine;
 public class UpgradeNodeTask : BaseTask
 {
     public StatType statToUpgrade;
-    public int numUpgradeRequired;
 
     protected override void MoreActionOnAwake()
     {
@@ -19,9 +18,20 @@ public class UpgradeNodeTask : BaseTask
         UpgradeManager.upgradeStatEvent -= OnNodeStatUpgraded;
     }
 
+    public void Init(StatType statType, int requiredNumber)
+    {
+        statToUpgrade = statType;
+        valueRequired = requiredNumber;
+    }
+
     public override bool IsTaskCompleted()
     {
-        return valueDone >= numUpgradeRequired;
+        return valueDone >= valueRequired;
+    }
+
+    public override string GetDescription()
+    {
+        return $"Upgrade {statToUpgrade} of any node for {valueRequired} time";
     }
 
     private void OnNodeStatUpgraded(StatType statType)

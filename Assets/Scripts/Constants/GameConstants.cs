@@ -19,6 +19,8 @@ public static class GameConstants
     public static string applyAugmentToNodeGroupEffect = "applyAugmentToNodeGroupEffect";
     public static string voyageMilestoneItemUI = "voyageMilestoneItemUI";
     public static string collectResourceItemUI = "collectResourceItemUI";
+    public static string baseTask = "baseTask";
+    public static string taskItemUI = "taskItemUI";
     public static string statItemUI = "statItemUI";
 
     public static string gameData = "gameData";
