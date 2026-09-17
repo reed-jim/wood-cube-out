@@ -66,7 +66,7 @@ public class GameLoading : MonoBehaviour
 
         GamePersistentVariable.hasAppJustLaunched = true;
 
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
 
         return;
 

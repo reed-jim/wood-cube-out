@@ -26,6 +26,7 @@ public class NodeUI : MonoBehaviour
 
     [Header("Filter")]
     public RectTransform augmentFilterContainer;
+    public Image augmentLink;
     public float filterAugmentItemScale;
     private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
 
@@ -159,25 +160,7 @@ public class NodeUI : MonoBehaviour
     }
 
     #region Filter
-    public void EnableAugmentFilter()
-    {
-        for (int i = 0; i < serviceLocator.character.ownedAugments.Count; i++)
-        {
-            Augment augment = serviceLocator.character.ownedAugments[i];
-
-            NodeDetailAugmentItemUI nodeDetailAugmentItemUI = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
-
-            nodeDetailAugmentItemUI.transform.SetParent(augmentFilterContainer);
-            nodeDetailAugmentItemUI.transform.localScale = filterAugmentItemScale * Vector3.one;
-            // nodeDetailAugmentItemUI.transform.localPosition = Vector3.zero;
-
-            nodeDetailAugmentItemUI.Init(augment);
-
-            nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
-        }
-    }
-
-    public void DisableAugmentFilter()
+    public void EnableAugmentFilter(Action onCompleteAction = null)
     {
         for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
         {
@@ -185,6 +168,46 @@ public class NodeUI : MonoBehaviour
 
             ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUI.gameObject);
         }
+
+        nodeDetailAugmentItemUIs.Clear();
+
+        for (int i = 0; i < serviceLocator.character.ownedAugments.Count; i++)
+        {
+            Augment augment = serviceLocator.character.ownedAugments[i];
+
+            NodeDetailAugmentItemUI nodeDetailAugmentItemUI = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
+
+            nodeDetailAugmentItemUI.transform.SetParent(augmentFilterContainer);
+            nodeDetailAugmentItemUI.transform.localScale = Vector3.one;
+            // nodeDetailAugmentItemUI.transform.localPosition = Vector3.zero;
+
+            nodeDetailAugmentItemUI.Init(augment);
+
+            nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
+        }
+
+        SaferioTween.AlphaShow(augmentLink);
+
+        SaferioTween.ScaleUpWithPunch(augmentFilterContainer, filterAugmentItemScale, onCompleteAction: onCompleteAction);
+    }
+
+    public void DisableAugmentFilter(Action onCompleteAction = null)
+    {
+        SaferioTween.AlphaHide(augmentLink);
+
+        SaferioTween.ScaleDownWithPunch(augmentFilterContainer, onCompleteAction: () =>
+        {
+            for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
+            {
+                NodeDetailAugmentItemUI nodeDetailAugmentItemUI = nodeDetailAugmentItemUIs[i];
+
+                ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUI.gameObject);
+            }
+
+            nodeDetailAugmentItemUIs.Clear();
+
+            onCompleteAction?.Invoke();
+        });
     }
     #endregion
 }
