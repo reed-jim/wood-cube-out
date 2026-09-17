@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     [Header("Customize")]
     public float percentAddPerUpgrade;
+
+    public static event Action<StatType> upgradeStatEvent;
 
     public StatUpgradeData Upgrade(BaseCharacter node, StatType statType)
     {
