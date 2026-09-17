@@ -17,6 +17,9 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     [Header("Augment")]
     public TMP_Text buyAugmentCostText;
     public NotificationDot buyAugmentNotification;
+    public ThemeableUI augmentSelectionContainerThemeable;
+    public ThemeableUI augmentSelectionIconThemeable;
+    public ThemeableUI augmentSelectionTextThemeable;
 
     [Header("Resource")]
     public TMP_Text upgradePointText;
@@ -40,6 +43,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         base.MoreActionOnAwake();
 
         BaseTask.taskCompleteEvent += OnTaskCompleted;
+        ResourceManager.changeResourceValueEvent += OnResourceValueChanged;
 
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         openUpgradeButton.onClick.AddListener(OpenUpgrade);
@@ -53,15 +57,18 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     void OnDestroy()
     {
         BaseTask.taskCompleteEvent -= OnTaskCompleted;
+        ResourceManager.changeResourceValueEvent -= OnResourceValueChanged;
     }
 
     private void OpenAugmentSelection()
     {
-        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= AugmentManager.Ins.currentBuyAugmentCost)
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.AugmentPoint) > 0)
         {
             switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
 
             HideBuyAugmentNotification();
+
+            ResourceManager.Ins.ChangeResource(ResourceType.AugmentPoint, -1);
         }
         else
         {
@@ -91,16 +98,16 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
     public void UpdateBuyAugmentCostText(float cost)
     {
-        buyAugmentCostText.text = $"Augment ({cost:F2})";
+        // buyAugmentCostText.text = $"Augment ({cost:F2})";
 
-        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= cost)
-        {
-            NotifyBuyAugment();
-        }
-        else
-        {
-            HideBuyAugmentNotification();
-        }
+        // if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= cost)
+        // {
+        //     NotifyBuyAugment();
+        // }
+        // else
+        // {
+        //     HideBuyAugmentNotification();
+        // }
     }
 
     public void NotifyBuyAugment()
@@ -131,6 +138,38 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         nodeContainer.transform.SetSiblingIndex(nodeContainerSiblingIndex);
 
         selectAugmentUI.Hide();
+    }
+
+    private void HandleAugmentPointChanged(int point)
+    {
+        if (point > 0)
+        {
+            augmentSelectionContainerThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
+            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
+
+            if (!buyAugmentNotification.gameObject.activeSelf)
+            {
+                NotifyBuyAugment();
+            }
+        }
+        else
+        {
+            augmentSelectionContainerThemeable.ChangeRole(ThemeableUI.ElementRole.Secondary);
+            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
+            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
+
+            HideBuyAugmentNotification();
+        }
+
+        if (point > 1)
+        {
+            buyAugmentCostText.text = $"{point} Augments left";
+        }
+        else
+        {
+            buyAugmentCostText.text = $"{point} Augment left";
+        }
     }
     #endregion
 
@@ -169,4 +208,12 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         taskNotification.Hide();
     }
     #endregion
+
+    private void OnResourceValueChanged(ResourceType resourceType, float value)
+    {
+        if (resourceType == ResourceType.AugmentPoint)
+        {
+            HandleAugmentPointChanged((int)value);
+        }
+    }
 }

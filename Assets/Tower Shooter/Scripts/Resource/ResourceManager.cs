@@ -17,11 +17,28 @@ public class ResourceManager : Singleton<ResourceManager>
     public SerializableDictionary<ResourceType, TMP_Text> resourceTexts;
     public ResourceData resourceData;
 
+    public static event Action<ResourceType, float> changeResourceValueEvent;
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
 
         LoadResourceData();
+    }
+
+    void Start()
+    {
+        UpdateResouceValues();
+    }
+
+    private void UpdateResouceValues()
+    {
+        for (int i = 0; i < resourceData.resourceDataItems.Count; i++)
+        {
+            ResourceDataItem resourceDataItem = resourceData.resourceDataItems[i];
+
+            changeResourceValueEvent?.Invoke(resourceDataItem.resourceType, resourceDataItem.value);
+        }
     }
 
     public float ChangeResource(ResourceType resourceType, float value)
@@ -44,14 +61,22 @@ public class ResourceManager : Singleton<ResourceManager>
 
         SaveResourceData();
 
-        return resources[resourceType].value;
+        float currentValue = resources[resourceType].value;
+
+        changeResourceValueEvent?.Invoke(resourceType, currentValue);
+
+        return currentValue;
     }
 
     public ResourceData GetDefaultResourceData()
     {
         ResourceData resourceData = new ResourceData();
 
-        resourceData.resourceDataItems = new List<ResourceDataItem>();
+        resourceData.resourceDataItems = new List<ResourceDataItem>
+        {
+            new ResourceDataItem(ResourceType.Coin, 0),
+            new ResourceDataItem(ResourceType.AugmentPoint, 0)
+        };
 
         return resourceData;
     }

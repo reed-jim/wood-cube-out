@@ -329,6 +329,12 @@ public class ThemeableUI : MonoBehaviour
         }
     }
 
+    public void ChangeRole(ElementRole role)
+    {
+        this.role = role;
+
+        ApplyTheme(DynamicThemeManager.Ins.CurrentTheme);
+    }
 
     // =============================================================
     // COLOR APPLICATION

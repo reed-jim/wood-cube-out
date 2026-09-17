@@ -1359,7 +1359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 1
+  role: 5
 --- !u!222 &205067783
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7675,7 +7675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 1
+  role: 5
 --- !u!1 &408175356
 GameObject:
   m_ObjectHideFlags: 0
@@ -8270,7 +8270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 1
+  role: 5
 --- !u!222 &486188837
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14390,7 +14390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
+  role: 4
 --- !u!114 &710463122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16488,7 +16488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
+  role: 4
 --- !u!114 &1322471745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17920,10 +17920,11 @@ MonoBehaviour:
     keys: 
     values: []
   resourceTexts:
-    keys: 0100000000000000
+    keys: 010000000000000002000000
     values:
     - {fileID: 2053227761}
     - {fileID: 250130704}
+    - {fileID: 1310223759}
   resourceData:
     resourceDataItems: []
 --- !u!1 &1584805015
@@ -18072,7 +18073,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 431631028}
   - {fileID: 1687014200}
@@ -20099,6 +20100,9 @@ MonoBehaviour:
   nodeContainer: {fileID: 606075538}
   buyAugmentCostText: {fileID: 1310223759}
   buyAugmentNotification: {fileID: 1572946670}
+  augmentSelectionContainerThemeable: {fileID: 1650790015}
+  augmentSelectionIconThemeable: {fileID: 238008596}
+  augmentSelectionTextThemeable: {fileID: 1310223761}
   upgradePointText: {fileID: 2053227761}
   selectAugmentUI: {fileID: 1752343688}
   normalFilterButton: {fileID: 838876970}
@@ -25147,7 +25151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 1
+  role: 5
 --- !u!114 &6434864604834121860
 MonoBehaviour:
   m_ObjectHideFlags: 0
