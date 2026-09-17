@@ -16,6 +16,7 @@ public class NodeManager : Singleton<NodeManager>
     public int currentNodeIdToAllocate;
 
     public static event Action<BaseCharacter> showNodeDetailEvent;
+    public static event Action nodeManagerInitEvent;
 
     protected override void MoreActionOnAwake()
     {
@@ -46,6 +47,8 @@ public class NodeManager : Singleton<NodeManager>
 
             nodeGroups.Add(nodeGroup);
         }
+
+        nodeManagerInitEvent?.Invoke();
     }
 
     public List<BaseCharacter> GetNeighborNodes(BaseCharacter node)

@@ -10,7 +10,27 @@ public class BasicTutorial : BaseTutorial
 
     public Transform[] objectsToHide;
 
-    void Start()
+    public Transform nodeGroup;
+    public Transform node;
+
+    private Transform nodeGroupParent;
+    private Transform nodeParent;
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        NodeManager.nodeManagerInitEvent += OnNodeManagerInit;
+    }
+
+    protected override void MoreActionOnDestroy()
+    {
+        base.MoreActionOnDestroy();
+
+        NodeManager.nodeManagerInitEvent -= OnNodeManagerInit;
+    }
+
+    private void OnNodeManagerInit()
     {
         StartCoroutine(RunTutorial());
     }
@@ -21,12 +41,11 @@ public class BasicTutorial : BaseTutorial
 
         isWaitForNextStep = true;
 
-        for (int i = 0; i < objectsToHide.Length; i++)
-        {
-            Transform objectToHide = objectsToHide[i];
+        nodeGroup = NodeManager.Ins.nodeGroups[0].transform;
+        node = NodeManager.Ins.nodeGroups[0].nodes[4].transform;
 
-            SaferioTween.ScaleDownWithPunch(objectToHide);
-        }
+        nodeGroupParent = nodeGroup.parent;
+        nodeGroup.SetParent(tutorialElementContainer);
     }
 
     private void Step2()
@@ -41,6 +60,17 @@ public class BasicTutorial : BaseTutorial
         description.text = "Node completes cycle to generate power";
 
         isWaitForNextStep = true;
+
+        nodeParent = node.parent;
+        node.SetParent(tutorialElementContainer);
+        nodeGroup.SetParent(nodeGroupParent);
+    }
+
+    private void Step4()
+    {
+        isWaitForNextStep = true;
+
+        node.SetParent(nodeParent);
     }
 
     private IEnumerator RunTutorial()
@@ -58,6 +88,10 @@ public class BasicTutorial : BaseTutorial
             else if (step == 2 && !isWaitForNextStep)
             {
                 Step3();
+            }
+            else if (step == 4 && !isWaitForNextStep)
+            {
+                Step4();
             }
 
             yield return new WaitForSeconds(1f / 30);

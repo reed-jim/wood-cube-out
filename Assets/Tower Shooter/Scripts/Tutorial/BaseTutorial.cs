@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class BaseTutorial : MonoBehaviour
 {
     public Button nextButton;
+    public Transform tutorialElementContainer;
 
     public int maxStep;
     protected int step;
@@ -13,6 +14,23 @@ public class BaseTutorial : MonoBehaviour
     void Awake()
     {
         nextButton.onClick.AddListener(NextStep);
+
+        MoreActionOnAwake();
+    }
+
+    void OnDestroy()
+    {
+        MoreActionOnDestroy();
+    }
+
+    protected virtual void MoreActionOnAwake()
+    {
+
+    }
+
+    protected virtual void MoreActionOnDestroy()
+    {
+
     }
 
     protected void NextStep()
