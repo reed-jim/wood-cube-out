@@ -74,7 +74,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         resourceData.resourceDataItems = new List<ResourceDataItem>
         {
-            new ResourceDataItem(ResourceType.Coin, 0),
+            new ResourceDataItem(ResourceType.Coin, 10),
             new ResourceDataItem(ResourceType.AugmentPoint, 0)
         };
 

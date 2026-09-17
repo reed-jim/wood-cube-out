@@ -8159,6 +8159,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 843668709}
+  - {fileID: 2144443012}
   m_Father: {fileID: 1920970497}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &449398698
@@ -15342,7 +15343,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &843668709
 Transform:
   m_ObjectHideFlags: 0
@@ -27120,6 +27121,61 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &2144443011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2144443012}
+  - component: {fileID: 2144443013}
+  m_Layer: 0
+  m_Name: Upgrade Node Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2144443012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144443011}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 448780276}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2144443013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144443011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69be10a43e8af984396ae67b597e5d5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeNodeTutorial
+  canvasGroup: {fileID: 1101193471}
+  nextButton: {fileID: 1930892438}
+  doAgainButton: {fileID: 1828343541}
+  tutorialElementContainer: {fileID: 587940889}
+  maxStep: 3
+  description: {fileID: 1031977871}
+  upgradeNodeContainer: {fileID: 602039395}
+  upgradePowerButton: {fileID: 8893707307852016321}
+  upgradeSpeedButton: {fileID: 8893707307852016320}
+  nodeGroup: {fileID: 0}
+  node: {fileID: 0}
 --- !u!114 &1244407183542591526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27729,6 +27785,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5203f4ea188a7b94599690c392aa2da5, type: 3}
+--- !u!114 &8893707307852016320 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2315250036094272380, guid: 5203f4ea188a7b94599690c392aa2da5, type: 3}
+  m_PrefabInstance: {fileID: 8893707307852016319}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+--- !u!114 &8893707307852016321 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8408668258214545510, guid: 5203f4ea188a7b94599690c392aa2da5, type: 3}
+  m_PrefabInstance: {fileID: 8893707307852016319}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!224 &8919054253655506533 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 173449601479797626, guid: 48cde961d00cc4a4eb110e9d8d32bf11, type: 3}
