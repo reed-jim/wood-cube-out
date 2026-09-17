@@ -18,6 +18,13 @@ public static class CommonUtil
         target.localScale = Vector3.one;
     }
 
+    public static void SetParentAndResetScale(Transform target, Transform parent, Vector3 localPosition)
+    {
+        target.SetParent(parent);
+        target.localScale = Vector3.one;
+        target.localPosition = localPosition;
+    }
+
     #region Round
     public static float RoundToDecimalPlaces(float value, int decimalPlaces)
     {

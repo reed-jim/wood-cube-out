@@ -9,6 +9,8 @@ public class BaseTutorial : MonoBehaviour
     public Button doAgainButton;
     public Transform tutorialElementContainer;
 
+    public Image tutorialHand;
+
     public int maxStep;
     protected int step;
 

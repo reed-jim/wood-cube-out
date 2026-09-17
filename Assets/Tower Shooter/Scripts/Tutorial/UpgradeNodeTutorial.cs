@@ -1,4 +1,5 @@
 using System.Collections;
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -27,6 +28,8 @@ public class UpgradeNodeTutorial : BaseTutorial
     private string onPrimaryHex;
     private string onPrimaryContainerHex;
     #endregion
+
+    private Tween moveHandTween;
 
     protected override void MoreActionOnAwake()
     {
@@ -82,6 +85,15 @@ public class UpgradeNodeTutorial : BaseTutorial
         upgradeNodeContainer.SetParent(upgradeNodeContainerParent);
         upgradePowerButton.transform.SetParent(tutorialElementContainer);
 
+        if (moveHandTween.isAlive)
+        {
+            moveHandTween.Stop();
+        }
+
+        CommonUtil.SetParentAndResetScale(tutorialHand.transform, upgradePowerButton.transform, new Vector3(0, 160));
+
+        moveHandTween = Tween.LocalPositionY(tutorialHand.transform, 0, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
+
         nextButton.gameObject.SetActive(false);
     }
 
@@ -93,6 +105,15 @@ public class UpgradeNodeTutorial : BaseTutorial
 
         upgradePowerButton.transform.SetParent(upgradePowerButtonParent);
         upgradeSpeedButton.transform.SetParent(tutorialElementContainer);
+
+        if (moveHandTween.isAlive)
+        {
+            moveHandTween.Stop();
+        }
+
+        CommonUtil.SetParentAndResetScale(tutorialHand.transform, upgradeSpeedButton.transform, new Vector3(0, 160));
+
+        moveHandTween = Tween.LocalPositionY(tutorialHand.transform, 0, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
     }
 
     private void Step4()
