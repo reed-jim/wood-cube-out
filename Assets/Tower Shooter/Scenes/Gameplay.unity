@@ -15379,6 +15379,9 @@ MonoBehaviour:
   objectsToHide: []
   nodeGroup: {fileID: 0}
   node: {fileID: 0}
+  nextButtonThemeable: {fileID: 1930892440}
+  nextButtonIconThemeable: {fileID: 1556545746}
+  nextButtonTextThemeable: {fileID: 1894128354}
 --- !u!1 &889603272
 GameObject:
   m_ObjectHideFlags: 0
@@ -21091,7 +21094,7 @@ GameObject:
   - component: {fileID: 1930892440}
   - component: {fileID: 1930892439}
   - component: {fileID: 1930892438}
-  - component: {fileID: 1930892437}
+  - component: {fileID: 1930892442}
   m_Layer: 5
   m_Name: Next Button
   m_TagString: Untagged
@@ -21119,19 +21122,6 @@ RectTransform:
   m_AnchoredPosition: {x: 150, y: 200}
   m_SizeDelta: {x: 280, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1930892437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1930892435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlaySound: 1
 --- !u!114 &1930892438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21227,6 +21217,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930892435}
   m_CullTransparentMesh: 1
+--- !u!114 &1930892442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930892435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
+  isPlaySound: 1
 --- !u!1 &1941414973
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,10 @@ public class BasicTutorial : BaseTutorial
     private Transform nodeParent;
 
     #region Theme
+    public ThemeableUI nextButtonThemeable;
+    public ThemeableUI nextButtonIconThemeable;
+    public ThemeableUI nextButtonTextThemeable;
+
     private string primaryHex;
     private string onPrimaryHex;
     private string onPrimaryContainerHex;
@@ -27,6 +31,7 @@ public class BasicTutorial : BaseTutorial
         base.MoreActionOnAwake();
 
         NodeManager.nodeManagerInitEvent += OnNodeManagerInit;
+        BaseCharacter.cycleCompleteEvent += OnNodeCycleCompleted;
     }
 
     protected override void MoreActionOnDestroy()
@@ -34,6 +39,7 @@ public class BasicTutorial : BaseTutorial
         base.MoreActionOnDestroy();
 
         NodeManager.nodeManagerInitEvent -= OnNodeManagerInit;
+        BaseCharacter.cycleCompleteEvent -= OnNodeCycleCompleted;
     }
 
     private void OnNodeManagerInit()
@@ -62,7 +68,7 @@ public class BasicTutorial : BaseTutorial
 
     private void Step2()
     {
-        description.text = $"There are 9 <color={onPrimaryContainerHex}>Nodes</color> inside a <color={onPrimaryContainerHex}>Node Group";
+        description.text = $"There are <color={onPrimaryContainerHex}>9 Nodes</color> inside a <color={onPrimaryContainerHex}>Node Group";
 
         isWaitForNextStep = true;
     }
@@ -78,6 +84,12 @@ public class BasicTutorial : BaseTutorial
         nodeGroup.SetParent(nodeGroupParent);
 
         node.Unpause();
+
+        nextButton.interactable = false;
+
+        nextButtonThemeable.ChangeRole(ThemeableUI.ElementRole.Secondary);
+        nextButtonIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
+        nextButtonTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
     }
 
     private IEnumerator RunTutorial()
@@ -116,5 +128,17 @@ public class BasicTutorial : BaseTutorial
 
         node.transform.SetParent(nodeParent);
         nodeGroup.SetParent(nodeGroupParent);
+    }
+
+    private void OnNodeCycleCompleted(BaseCharacter node)
+    {
+        if (step == 2 && isWaitForNextStep && nextButton.interactable == false)
+        {
+            nextButton.interactable = true;
+
+            nextButtonThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            nextButtonIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
+            nextButtonTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
+        }
     }
 }
