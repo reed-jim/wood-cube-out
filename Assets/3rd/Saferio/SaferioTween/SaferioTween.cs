@@ -371,7 +371,7 @@ namespace Saferio.Util.SaferioTween
             onCompletedAction?.Invoke();
         }
 
-        public static Sequence ScaleUpWithPunch(Transform target, float targetScale, float delay = 0, Action onCompleteAction = null)
+        public static Sequence ScaleUpWithPunch(Transform target, float targetScale = 1, float delay = 0, Action onCompleteAction = null)
         {
             target.gameObject.SetActive(true);
 

@@ -65,26 +65,26 @@ namespace NamPhuThuy.GamePlay
 
         private BaseWeeklyTask GenerateTask()
         {
-            BaseWeeklyTask task;
+            BaseWeeklyTask task = null;
 
             TaskType randomTaskType = GetRandomEnumValue<TaskType>();
 
             int randomDifficultyFactor = Random.Range(1, 5);
 
-            if (randomTaskType == TaskType.Uncrew)
-            {
-                task = new UnscrewTask();
+            // if (randomTaskType == TaskType.Uncrew)
+            // {
+            //     task = new UnscrewTask();
 
-                task.RequirementValue = randomDifficultyFactor * 50;
-            }
-            else
-            {
-                task = new CompleteLevelTask();
+            //     task.RequirementValue = randomDifficultyFactor * 50;
+            // }
+            // else
+            // {
+            //     task = new CompleteLevelTask();
 
-                task.RequirementValue = randomDifficultyFactor * 2;
-            }
+            //     task.RequirementValue = randomDifficultyFactor * 2;
+            // }
 
-            task.Reward = randomDifficultyFactor * 2;
+            // task.Reward = randomDifficultyFactor * 2;
 
             return task;
         }

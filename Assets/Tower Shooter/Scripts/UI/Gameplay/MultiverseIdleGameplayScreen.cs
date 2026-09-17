@@ -30,11 +30,16 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public Button normalFilterButton;
     public Button enableAugmentFilterButton;
 
+    [Header("Task")]
+    public NotificationDot taskNotification;
+
     public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
+
+        BaseTask.taskCompleteEvent += OnTaskCompleted;
 
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         openUpgradeButton.onClick.AddListener(OpenUpgrade);
@@ -43,6 +48,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
         normalFilterButton.onClick.AddListener(EnableNormalFilter);
         enableAugmentFilterButton.onClick.AddListener(EnableAugmentFilter);
+    }
+
+    void OnDestroy()
+    {
+        BaseTask.taskCompleteEvent -= OnTaskCompleted;
     }
 
     private void OpenAugmentSelection()
@@ -140,6 +150,18 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
             FilterManager.filterMode = GameFilterMode.Normal;
         }
+    }
+    #endregion
+
+    #region Task
+    private void OnTaskCompleted()
+    {
+        taskNotification.Notify();
+    }
+
+    public void HideTaskNotification()
+    {
+        taskNotification.Hide();
     }
     #endregion
 }

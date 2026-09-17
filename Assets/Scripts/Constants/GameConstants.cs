@@ -20,6 +20,7 @@ public static class GameConstants
     public static string voyageMilestoneItemUI = "voyageMilestoneItemUI";
     public static string collectResourceItemUI = "collectResourceItemUI";
     public static string baseTask = "baseTask";
+    public static string upgradeNodeTask = "upgradeNodeTask";
     public static string taskItemUI = "taskItemUI";
     public static string statItemUI = "statItemUI";
 
