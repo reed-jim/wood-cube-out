@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class NodeGroupDetailUI : BasePopup
     public RectTransform augmentContainer;
 
     private NodeGroup nodeGroup;
+    private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
 
     protected override void RegisterMoreEvent()
     {
@@ -39,6 +41,15 @@ public class NodeGroupDetailUI : BasePopup
 
         totalPowerOutputText.text = $"Total Power Output: {totalPower}";
 
+        for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
+        {
+            NodeDetailAugmentItemUI nodeDetailAugmentItemUI = nodeDetailAugmentItemUIs[i];
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUI.gameObject);
+        }
+
+        nodeDetailAugmentItemUIs.Clear();
+
         for (int i = 0; i < nodeGroup.activeAugments.Count; i++)
         {
             Augment augment = nodeGroup.activeAugments[i];
@@ -48,6 +59,8 @@ public class NodeGroupDetailUI : BasePopup
             CommonUtil.SetParentAndResetScale(nodeDetailAugmentItemUI.transform, augmentContainer);
 
             nodeDetailAugmentItemUI.Init(augment);
+
+            nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
         }
     }
 
