@@ -14,6 +14,7 @@ public class NodeManager : Singleton<NodeManager>
     public List<NodeGroup> nodeGroups;
 
     public int currentNodeIdToAllocate;
+    public int currentNodeGroupIdToAllocate;
 
     public static event Action<BaseCharacter> showNodeDetailEvent;
     public static event Action nodeManagerInitEvent;
@@ -119,6 +120,14 @@ public class NodeManager : Singleton<NodeManager>
         node.name = $"Node {node.id}";
 
         currentNodeIdToAllocate++;
+    }
+
+    public void AllocateIdForNodeGroup(NodeGroup nodeGroup)
+    {
+        nodeGroup.id = currentNodeGroupIdToAllocate;
+        nodeGroup.name = $"Node Group {nodeGroup.id}";
+
+        currentNodeGroupIdToAllocate++;
     }
 
     public void OpenNodeDetail()

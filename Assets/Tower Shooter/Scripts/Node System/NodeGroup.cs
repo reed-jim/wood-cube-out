@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class NodeGroup : MonoBehaviour
 {
+    [Header("Identifier")]
+    public int id = -1;
+
     public NodeGroupServiceLocator serviceLocator;
     public RectTransform container;
 
@@ -40,6 +43,11 @@ public class NodeGroup : MonoBehaviour
 
         float maxX = 0;
         float maxY = 0;
+
+        if (id == -1)
+        {
+            NodeManager.Ins.AllocateIdForNodeGroup(this);
+        }
 
         for (int i = 0; i < nodeGroupData.nodeDataItems.Count; i++)
         {

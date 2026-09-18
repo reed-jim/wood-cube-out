@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class NodeGroupUI : MonoBehaviour
     private Sequence highlightSequence;
     private Tween highlightTween;
 
+    public static event Action<NodeGroup> showNodeGroupDetailEvent;
+
     void Awake()
     {
         selectButton.onClick.AddListener(Select);
@@ -23,7 +26,11 @@ public class NodeGroupUI : MonoBehaviour
 
     public void Select()
     {
-        if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNodeGroup)
+        if (IdleGameInputManager.inputMode == IdleGameInputMode.Normal)
+        {
+            showNodeGroupDetailEvent?.Invoke(serviceLocator.nodeGroup);
+        }
+        else if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNodeGroup)
         {
             AugmentManager.Ins.ApplyAugmentForNodeGroup(serviceLocator.nodeGroup);
 
