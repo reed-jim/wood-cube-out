@@ -69,11 +69,6 @@ public class AlternativeAugmentEffectRuntime : BaseAugmentEffectRuntime
         speedIncrease = new StatModifier(speedIncreaseData.statType, speedIncreaseData.modType, speedIncreaseData.value);
     }
 
-    public void SetAugment(Augment augment)
-    {
-        this.augment = augment;
-    }
-
     public void Alternate(CharacterStats target)
     {
         BaseCharacter node = target.serviceLocator.character;

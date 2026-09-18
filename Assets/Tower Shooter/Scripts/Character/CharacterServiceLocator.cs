@@ -18,5 +18,6 @@ public class CharacterServiceLocator : MonoBehaviour
     public ChainCriticalAugmentEffectRuntime chainCriticalAugmentEffectRuntime;
     public PredictionAugmentEffectRuntime predictionAugmentEffectRuntime;
     public AlternativeAugmentEffectRuntime alternativeAugmentEffectRuntime;
+    public CritBoostSpeedAugmentEffectRuntime critBoostSpeedAugmentEffectRuntime;
     #endregion
 }
