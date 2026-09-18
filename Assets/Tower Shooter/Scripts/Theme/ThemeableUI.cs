@@ -160,7 +160,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.OnSecondaryContainer:
-                ApplyTextColor(theme.onSecondaryContainer);
+                ApplyColor(theme.onSecondaryContainer);
                 break;
 
 
@@ -173,7 +173,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.OnTertiary:
-                ApplyTextColor(theme.onTertiary);
+                ApplyColor(theme.onTertiary);
                 break;
 
             case ElementRole.TertiaryContainer:
@@ -181,7 +181,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.OnTertiaryContainer:
-                ApplyTextColor(theme.onTertiaryContainer);
+                ApplyColor(theme.onTertiaryContainer);
                 break;
 
 
@@ -194,7 +194,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.OnError:
-                ApplyTextColor(theme.onError);
+                ApplyColor(theme.onError);
                 break;
 
             case ElementRole.ErrorContainer:
@@ -202,7 +202,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.OnErrorContainer:
-                ApplyTextColor(theme.onErrorContainer);
+                ApplyColor(theme.onErrorContainer);
                 break;
 
 
@@ -248,11 +248,11 @@ public class ThemeableUI : MonoBehaviour
             // =====================================================
 
             case ElementRole.OnSurface:
-                ApplyTextColor(theme.onSurface);
+                ApplyColor(theme.onSurface);
                 break;
 
             case ElementRole.OnSurfaceVariant:
-                ApplyTextColor(theme.onSurfaceVariant);
+                ApplyColor(theme.onSurfaceVariant);
                 break;
 
 
@@ -265,7 +265,7 @@ public class ThemeableUI : MonoBehaviour
                 break;
 
             case ElementRole.InverseOnSurface:
-                ApplyTextColor(theme.inverseOnSurface);
+                ApplyColor(theme.inverseOnSurface);
                 break;
 
             case ElementRole.InversePrimary:
