@@ -38,6 +38,8 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
 
         startLocationNameText.text = voyageMilestoneConfig.startLocation;
         endLocationNameText.text = voyageMilestoneConfig.endLocation;
+
+        progressFill.transform.SetAsLastSibling();
     }
 
     public void SetVoyageProgress(float progress)

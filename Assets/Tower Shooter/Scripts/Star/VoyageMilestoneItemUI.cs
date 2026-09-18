@@ -37,7 +37,7 @@ public class VoyageMilestoneItemUI : MonoBehaviour
 
         if (voyageMilestone.isStart || voyageMilestone.isEnd)
         {
-            container.sizeDelta = 36 * Vector3.one;
+            container.sizeDelta = (36 + 8) * Vector3.one;
             fill.rectTransform.sizeDelta = 36 * Vector3.one;
 
             openStarDetailButton.interactable = true;
