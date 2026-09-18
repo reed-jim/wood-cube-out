@@ -7,7 +7,6 @@ using static GameEnum;
 public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScreen>
 {
     public Button openAugmentSelectionButton;
-    public Button openUpgradeButton;
     public Button augmentOverviewButton;
     public Button selectThemeButton;
 
@@ -20,9 +19,6 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public ThemeableUI augmentSelectionContainerThemeable;
     public ThemeableUI augmentSelectionIconThemeable;
     public ThemeableUI augmentSelectionTextThemeable;
-
-    [Header("Resource")]
-    public TMP_Text upgradePointText;
 
     [Header("Select Augment UI")]
     public SelectAugmentUI selectAugmentUI;
@@ -46,7 +42,6 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         ResourceManager.changeResourceValueEvent += OnResourceValueChanged;
 
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
-        openUpgradeButton.onClick.AddListener(OpenUpgrade);
         augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
         selectThemeButton.onClick.AddListener(OpenSelectThemePopup);
 
@@ -93,7 +88,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
     public void UpdateUpgradePointText(int upgradePoint)
     {
-        upgradePointText.text = $"{upgradePoint}";
+
     }
 
     public void UpdateBuyAugmentCostText(float cost)
