@@ -20,5 +20,6 @@ public class CharacterServiceLocator : MonoBehaviour
     public AlternativeAugmentEffectRuntime alternativeAugmentEffectRuntime;
     public CritBoostSpeedAugmentEffectRuntime critBoostSpeedAugmentEffectRuntime;
     public SumAugmentEffectRuntime sumAugmentEffectRuntime;
+    public DebuffAdjacentBuffSelfAugmentEffectRuntime debuffAdjacentBuffSelfAugmentEffectRuntime;
     #endregion
 }
