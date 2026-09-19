@@ -13,8 +13,14 @@ public class NodeUI : MonoBehaviour
     [Header("UI")]
     public RectTransform container;
     public Image circleProgress;
+    public Image lockIcon;
     public TMP_Text powerText;
     public Button selectButton;
+
+    [Header("Theme")]
+    public ThemeableUI backgroundThemeableUI;
+    public ThemeableUI borderThemeableUI;
+    public ThemeableUI textThemeableUI;
 
     [Header("Highlight")]
     public Image highlight;
@@ -132,12 +138,22 @@ public class NodeUI : MonoBehaviour
         circleProgress.fillAmount = 0;
         powerText.text = "Locked";
 
-        powerText.color = ThemeManager.DisabledText;
+        backgroundThemeableUI.ChangeRole(ThemeableUI.ElementRole.SurfaceDim);
+        borderThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+        textThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+
+        lockIcon.gameObject.SetActive(true);
+        powerText.gameObject.SetActive(false);
     }
 
     public void Unlock()
     {
-        powerText.color = ThemeManager.ActiveText;
+        backgroundThemeableUI.ChangeRole(ThemeableUI.ElementRole.Surface);
+        borderThemeableUI.ChangeRole(ThemeableUI.ElementRole.Primary);
+        textThemeableUI.ChangeRole(ThemeableUI.ElementRole.Primary);
+
+        lockIcon.gameObject.SetActive(false);
+        powerText.gameObject.SetActive(true);
     }
 
     public void Highlight()

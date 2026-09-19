@@ -76,7 +76,7 @@ public class BaseCharacter : MonoBehaviour
 
             serviceLocator.stats.LoadStats();
 
-            serviceLocator.nodeUI.InitEnergyPath();
+            // serviceLocator.nodeUI.InitEnergyPath();
         }
 
         if (nodeData.isUnlocked)
@@ -200,11 +200,11 @@ public class BaseCharacter : MonoBehaviour
                     currentCycle++;
 
                     #region Energy Cube
-                    EnergyCube energyCube = ObjectPoolingEverything.GetFromPool<EnergyCube>(GameConstants.energyCube);
+                    // EnergyCube energyCube = ObjectPoolingEverything.GetFromPool<EnergyCube>(GameConstants.energyCube);
 
-                    energyCube.transform.SetParent(transform);
-                    energyCube.transform.localPosition = Vector3.zero;
-                    energyCube.Move(energyPoints);
+                    // energyCube.transform.SetParent(transform);
+                    // energyCube.transform.localPosition = Vector3.zero;
+                    // energyCube.Move(energyPoints);
                     #endregion
 
                     cycleCompleteEvent?.Invoke(this);
