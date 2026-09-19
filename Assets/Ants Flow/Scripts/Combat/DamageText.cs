@@ -7,6 +7,10 @@ public class DamageText : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageText;
 
+    [Header("Theme")]
+    [SerializeField] private Material lightTextBorderMaterial;
+    [SerializeField] private Material darkTextBorderMaterial;
+
     [Header("Animation Settings")]
     [SerializeField] private float lifetime = 0.85f;
     [SerializeField] private float floatDistance = 1.2f;
@@ -22,6 +26,30 @@ public class DamageText : MonoBehaviour
 
     private Sequence currentSequence;
     private Action<DamageText> onCompleteCallback;
+
+    void Awake()
+    {
+        DynamicThemeManager.OnThemeChanged += OnThemeChanged;
+    }
+
+    void OnDestroy()
+    {
+        DynamicThemeManager.OnThemeChanged -= OnThemeChanged;
+    }
+
+    void Start()
+    {
+        normalColor = DynamicThemeManager.Ins.CurrentTheme.primary;
+
+        if (DynamicThemeManager.Ins.CurrentTheme.isDarkTheme)
+        {
+            damageText.fontMaterial = darkTextBorderMaterial;
+        }
+        else
+        {
+            damageText.fontMaterial = lightTextBorderMaterial;
+        }
+    }
 
     public void ShowDamage(float damage, Vector3 spawnPosition, bool isCritical, Transform target, string prefix = "", string suffix = "", Action<DamageText> onComplete = null)
     {
@@ -117,5 +145,19 @@ public class DamageText : MonoBehaviour
         CurrentTarget = null;
         onCompleteCallback?.Invoke(this);
         ObjectPoolingEverything.ReturnToPool(GameConstants.damageText, gameObject);
+    }
+
+    private void OnThemeChanged(ThemeConfig themeConfig)
+    {
+        normalColor = DynamicThemeManager.Ins.CurrentTheme.primary;
+
+        if (themeConfig.isDarkTheme)
+        {
+            damageText.fontMaterial = darkTextBorderMaterial;
+        }
+        else
+        {
+            damageText.fontMaterial = lightTextBorderMaterial;
+        }
     }
 }

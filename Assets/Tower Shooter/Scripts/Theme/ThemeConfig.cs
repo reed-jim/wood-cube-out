@@ -4,6 +4,9 @@ using static ThemeableUI;
 [CreateAssetMenu(fileName = "ThemeConfig", menuName = "Idle/UI/ThemeConfig")]
 public class ThemeConfig : ScriptableObject
 {
+    [Header("General")]
+    public bool isDarkTheme;
+
     // =========================================================
     // Material Theme
     // =========================================================
