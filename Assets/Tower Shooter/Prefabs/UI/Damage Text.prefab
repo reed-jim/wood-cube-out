@@ -52,7 +52,7 @@ MonoBehaviour:
   damageText: {fileID: 3487229856350012539}
   lifetime: 0.7
   floatDistance: 80
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  normalColor: {r: 0.2509804, g: 0.37254903, b: 0.5686275, a: 1}
   critColor: {r: 1, g: 0.85, b: 0.2, a: 1}
 --- !u!1 &5236357193936377023
 GameObject:
@@ -64,6 +64,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5302397865877183217}
   - component: {fileID: 1722405846339575506}
+  - component: {fileID: 8490971968597748140}
   - component: {fileID: 3487229856350012539}
   m_Layer: 5
   m_Name: Health Text
@@ -99,6 +100,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5236357193936377023}
   m_CullTransparentMesh: 1
+--- !u!114 &8490971968597748140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5236357193936377023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 0
 --- !u!114 &3487229856350012539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,7 +136,7 @@ MonoBehaviour:
   m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: bd43e967ce90be44095bc3fb28461598, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 6b0a73ef9b6c0054a8ee4b1609b7e045, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
