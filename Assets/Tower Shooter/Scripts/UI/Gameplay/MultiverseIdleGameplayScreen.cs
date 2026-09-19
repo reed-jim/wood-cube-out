@@ -27,7 +27,9 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
     [Header("Filter")]
     public Button normalFilterButton;
-    public Button enableAugmentFilterButton;
+    public Button augmentFilterButton;
+    public ThemeableUI normalFilterThemeable;
+    public ThemeableUI augmentFilterThemeable;
 
     [Header("Task")]
     public NotificationDot taskNotification;
@@ -46,7 +48,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         selectThemeButton.onClick.AddListener(OpenSelectThemePopup);
 
         normalFilterButton.onClick.AddListener(EnableNormalFilter);
-        enableAugmentFilterButton.onClick.AddListener(EnableAugmentFilter);
+        augmentFilterButton.onClick.AddListener(EnableAugmentFilter);
     }
 
     void OnDestroy()
@@ -174,6 +176,9 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         FilterManager.Ins.EnableAugmentFilter();
 
         FilterManager.filterMode = GameFilterMode.Augment;
+
+        normalFilterThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+        augmentFilterThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
     }
 
     public void EnableNormalFilter()
@@ -183,6 +188,9 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
             FilterManager.Ins.DisableAugmentFilter();
 
             FilterManager.filterMode = GameFilterMode.Normal;
+
+            normalFilterThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            augmentFilterThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
         }
     }
     #endregion
