@@ -79,7 +79,7 @@ public class VoyageMilestoneItemUI : MonoBehaviour
 
     public void SetMilestoneProgress(float voyageProgress)
     {
-        if (voyageProgress <= endProgressValue && fill.fillAmount < 1)
+        if (voyageProgress <= endProgressValue || fill.fillAmount < 1)
         {
             fill.fillAmount = Mathf.Lerp(0, 1, Mathf.InverseLerp(startProgressValue, endProgressValue, voyageProgress));
         }
