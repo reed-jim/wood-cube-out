@@ -59,18 +59,20 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
     private void OpenAugmentSelection()
     {
-        if (ResourceManager.Ins.GetResourceValue(ResourceType.AugmentPoint) > 0)
-        {
-            switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
+        switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
+        
+        // if (ResourceManager.Ins.GetResourceValue(ResourceType.AugmentPoint) > 0)
+        // {
+        //     switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
 
-            HideBuyAugmentNotification();
+        //     HideBuyAugmentNotification();
 
-            ResourceManager.Ins.ChangeResource(ResourceType.AugmentPoint, -1);
-        }
-        else
-        {
+        //     ResourceManager.Ins.ChangeResource(ResourceType.AugmentPoint, -1);
+        // }
+        // else
+        // {
 
-        }
+        // }
     }
 
     private void OpenUpgrade()
