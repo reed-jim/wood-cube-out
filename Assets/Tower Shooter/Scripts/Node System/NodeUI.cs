@@ -184,6 +184,8 @@ public class NodeUI : MonoBehaviour
 
             SaferioTween.ScaleDownWithPunch(highlight.rectTransform);
         }
+
+        serviceLocator.character.SetToInitialParent();
     }
 
     #region Filter

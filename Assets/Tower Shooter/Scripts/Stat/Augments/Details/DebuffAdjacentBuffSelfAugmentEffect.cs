@@ -41,7 +41,7 @@ public class DebuffAdjacentBuffSelfAugmentEffect : AugmentEffect
 
     private void SetAugmentForRuntime(CharacterStats stats, Augment augment)
     {
-        stats.serviceLocator.alternativeAugmentEffectRuntime.SetAugment(augment);
+        stats.serviceLocator.debuffAdjacentBuffSelfAugmentEffectRuntime.SetAugment(augment);
     }
 
     private void InitRuntime(CharacterStats stats)

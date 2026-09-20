@@ -29,6 +29,9 @@ public class BaseCharacter : MonoBehaviour
     public bool isGuaranteedCrit;
     public NodeGroup nodeGroup;
 
+    private Transform initialParent;
+    private int siblingIndex;
+
     [Header("Energy Path")]
     public List<Vector2> energyPoints;
 
@@ -45,6 +48,9 @@ public class BaseCharacter : MonoBehaviour
         this.nodeData = nodeData;
 
         Init(nodeGroup);
+
+        initialParent = transform.parent;
+        siblingIndex = transform.GetSiblingIndex();
     }
 
     public void Init(NodeGroup nodeGroup = null)
@@ -259,4 +265,12 @@ public class BaseCharacter : MonoBehaviour
     {
         selectNodeEvent?.Invoke(this);
     }
+
+    #region Util 
+    public void SetToInitialParent()
+    {
+        transform.SetParent(initialParent);
+        transform.SetSiblingIndex(siblingIndex);
+    }
+    #endregion
 }

@@ -87,6 +87,8 @@ public class NodeManager : Singleton<NodeManager>
             if (node.nodeData.isUnlocked)
             {
                 node.serviceLocator.nodeUI.Highlight();
+
+                MultiverseIdleGameplayScreen.Ins.SetSelectAugmentUIAsParent(node.transform);
             }
         }
     }
@@ -100,6 +102,8 @@ public class NodeManager : Singleton<NodeManager>
             if (!node.nodeData.isUnlocked)
             {
                 node.serviceLocator.nodeUI.Highlight();
+
+                MultiverseIdleGameplayScreen.Ins.SetSelectAugmentUIAsParent(node.transform);
             }
         }
     }

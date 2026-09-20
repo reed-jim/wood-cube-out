@@ -121,10 +121,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public void ShowSelectAugmentUI(bool isSelectNode)
     {
         selectAugmentUISiblingIndex = selectAugmentUI.transform.GetSiblingIndex();
-        nodeContainerSiblingIndex = nodeContainer.transform.GetSiblingIndex();
 
         selectAugmentUI.transform.SetAsLastSibling();
-        nodeContainer.transform.SetAsLastSibling();
 
         selectAugmentUI.Show(isSelectNode);
     }
@@ -135,6 +133,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         nodeContainer.transform.SetSiblingIndex(nodeContainerSiblingIndex);
 
         selectAugmentUI.Hide();
+    }
+
+    public void SetSelectAugmentUIAsParent(Transform child)
+    {
+        child.SetParent(selectAugmentUI.transform);
     }
 
     private void HandleAugmentPointChanged(int point)
