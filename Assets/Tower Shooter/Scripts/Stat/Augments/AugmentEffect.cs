@@ -55,6 +55,11 @@ public abstract class AugmentEffect : ScriptableObject
     }
     #endregion
 
+    public virtual void ApplyGlobalEffect()
+    {
+        
+    }
+
     /// <summary>
     /// Evaluates the template string. Override GetDescriptionTokens to inject custom parameters.
     /// </summary>

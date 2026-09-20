@@ -56,7 +56,17 @@ public class AugmentItemUIs : MonoBehaviour
 
     public void PickAugment()
     {
-        AugmentManager.Ins.PickNodeForAugment(augment);
+        if (augment.isNeedCharacterToApply)
+        {
+            AugmentManager.Ins.PickNodeForAugment(augment);
+        }
+        else
+        {
+            foreach (var augmentEffect in augment.dynamicEffects)
+            {
+                augmentEffect.ApplyGlobalEffect();
+            }
+        }
 
         onAugmentSelected?.Invoke();
     }
