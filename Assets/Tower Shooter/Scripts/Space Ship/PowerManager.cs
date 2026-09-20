@@ -11,7 +11,7 @@ public class PowerManager : Singleton<PowerManager>
 
     public void AddPower(float power)
     {
-        UpdateUI();
+        ResourceManager.Ins.ChangeResource(ResourceType.Coin, power);
     }
 
     public void UpdateUI()

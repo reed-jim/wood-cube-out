@@ -22,5 +22,6 @@ public class CharacterServiceLocator : MonoBehaviour
     public SumAugmentEffectRuntime sumAugmentEffectRuntime;
     public DebuffAdjacentBuffSelfAugmentEffectRuntime debuffAdjacentBuffSelfAugmentEffectRuntime;
     public HighRiskSurgeAugmentEffectRuntime highRiskSurgeAugmentEffectRuntime;
+    public ShipPowerAugmentEffectRuntime shipPowerAugmentEffectRuntime;
     #endregion
 }
