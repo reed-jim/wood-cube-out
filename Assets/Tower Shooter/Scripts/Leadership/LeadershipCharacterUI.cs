@@ -8,13 +8,14 @@ public class LeadershipCharacterUI : MonoBehaviour
 {
     public TMP_Text nameText;
     public TMP_Text statText;
-    public Image nationality;
+    public Image flag;
 
     public StatColorConfigSO config;
+    public CountryFlagDatabase countryFlagDatabase;
 
     private List<StatModifier> statModifiers;
 
-    public void Init(List<StatModifier> statModifiers)
+    public void Init(string name, Country country, List<StatModifier> statModifiers)
     {
         StringBuilder statDescription = new StringBuilder();
 
@@ -33,7 +34,9 @@ public class LeadershipCharacterUI : MonoBehaviour
             statDescription.AppendLine($"<color=#{hex}>{valStr} {mod.Type}</color>");
         }
 
+        nameText.text = name;
         statText.text = statDescription.ToString().TrimEnd();
+        flag.sprite = countryFlagDatabase.GetFlag(country);
 
         this.statModifiers = statModifiers;
     }

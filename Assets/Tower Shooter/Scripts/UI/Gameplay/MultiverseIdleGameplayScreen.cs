@@ -9,6 +9,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public Button openAugmentSelectionButton;
     public Button augmentOverviewButton;
     public Button selectThemeButton;
+    public Button leadershipButton;
 
     [Header("Node")]
     public RectTransform nodeContainer;
@@ -35,6 +36,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public NotificationDot taskNotification;
 
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action openLeadershipUIEvent;
 
     protected override void MoreActionOnAwake()
     {
@@ -46,6 +48,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
         selectThemeButton.onClick.AddListener(OpenSelectThemePopup);
+        leadershipButton.onClick.AddListener(OpenLeadershipPopup);
 
         normalFilterButton.onClick.AddListener(EnableNormalFilter);
         augmentFilterButton.onClick.AddListener(EnableAugmentFilter);
@@ -60,7 +63,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     private void OpenAugmentSelection()
     {
         switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
-        
+
         // if (ResourceManager.Ins.GetResourceValue(ResourceType.AugmentPoint) > 0)
         // {
         //     switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);
@@ -88,6 +91,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     private void OpenSelectThemePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.SelectTheme);
+    }
+
+    private void OpenLeadershipPopup()
+    {
+        openLeadershipUIEvent?.Invoke();
     }
 
     public void UpdateUpgradePointText(int upgradePoint)
