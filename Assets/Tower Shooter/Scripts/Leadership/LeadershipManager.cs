@@ -33,14 +33,9 @@ public class LeadershipManager : Singleton<LeadershipManager>
         MultiverseIdleGameplayScreen.openLeadershipUIEvent -= Show;
     }
 
-    void Start()
-    {
-        Init();
-    }
-
     public void Init()
     {
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 3; i++)
         {
             LeadershipCharacterUI leadershipCharacterUI =
                 ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
@@ -58,6 +53,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
             leadershipCharacterUI.Init(name, country, statModifiers);
 
             CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
+            leadershipCharacterUI.transform.localScale *= 0.48f;
         }
     }
 
@@ -77,6 +73,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         container.localPosition = new Vector3(0, -1.5f * container.sizeDelta.y);
 
         Tween.LocalPositionY(container, -70, duration: 0.3f);
+
+        Init();
     }
 
     private void Hide()
