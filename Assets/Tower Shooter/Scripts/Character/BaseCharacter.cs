@@ -23,6 +23,7 @@ public class BaseCharacter : MonoBehaviour
 
     [Header("State")]
     public bool isPaused;
+    public bool isIdle;
     public int currentCycle;
     public float lastPowerGenerated;
     public bool isJustCrit;

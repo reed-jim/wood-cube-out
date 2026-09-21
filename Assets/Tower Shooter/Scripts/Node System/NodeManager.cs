@@ -139,6 +139,7 @@ public class NodeManager : Singleton<NodeManager>
         showNodeDetailEvent?.Invoke(UpgradeNodeUI.Ins.selectedNode);
     }
 
+    #region Util
     public int GetNumUnlockedNode()
     {
         int count = 0;
@@ -155,4 +156,22 @@ public class NodeManager : Singleton<NodeManager>
 
         return count;
     }
+
+    public List<BaseCharacter> GetAllUnlockedNodes()
+    {
+        List<BaseCharacter> unlockedNodes = new List<BaseCharacter>();
+
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            BaseCharacter node = nodes[i];
+
+            if (node.nodeData.isUnlocked)
+            {
+                unlockedNodes.Add(node);
+            }
+        }
+
+        return unlockedNodes;
+    }
+    #endregion
 }
