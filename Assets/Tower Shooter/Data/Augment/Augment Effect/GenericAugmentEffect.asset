@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26011e362bbf6574187136dadc81a081, type: 3}
   m_Name: GenericAugmentEffect
   m_EditorClassIdentifier: Assembly-CSharp::GenericAugmentEffect
-  effectName: 
-  effectColor: {r: 0, g: 0, b: 0, a: 0}
-  descriptionTemplate: 
+  effectName: Test
+  effectColor: {r: 0.78431374, g: 0.3529412, b: 1, a: 1}
+  descriptionTemplate: '{trigger} {operation} {baseValue:percent:Damage} {Damage}'
   config:
     trigger: 0
     scope: 0
@@ -23,8 +23,8 @@ MonoBehaviour:
     targetStat: 2
     operation: 0
     scalingFunction: 0
-    baseValue: 0
-    scalingFactor: 1
+    baseValue: 5
+    scalingFactor: 0
     condition: 0
     comparisonStat: 2
     thresholdValue: 0
