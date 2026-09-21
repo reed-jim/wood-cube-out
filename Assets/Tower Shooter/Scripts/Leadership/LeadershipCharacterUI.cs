@@ -9,11 +9,17 @@ public class LeadershipCharacterUI : MonoBehaviour
     public TMP_Text nameText;
     public TMP_Text statText;
     public Image flag;
+    public Button selectButton;
 
     public StatColorConfigSO config;
     public CountryFlagDatabase countryFlagDatabase;
 
     private List<StatModifier> statModifiers;
+
+    void Awake()
+    {
+        selectButton.onClick.AddListener(Select);
+    }
 
     public void Init(string name, Country country, List<StatModifier> statModifiers)
     {
@@ -39,5 +45,10 @@ public class LeadershipCharacterUI : MonoBehaviour
         flag.sprite = countryFlagDatabase.GetFlag(country);
 
         this.statModifiers = statModifiers;
+    }
+
+    private void Select()
+    {
+        LeadershipManager.Ins.AssignLeadershipPosition(this);
     }
 }

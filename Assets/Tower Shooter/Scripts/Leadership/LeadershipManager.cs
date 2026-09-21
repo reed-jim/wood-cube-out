@@ -3,11 +3,19 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum LeadershipPosition
+{
+    Captain,
+    Chieftain
+}
+
 public class LeadershipManager : Singleton<LeadershipManager>
 {
     public RectTransform container;
     public RectTransform characterContainer;
     public Button closeButton;
+
+    public LeadershipPositionUI selectedLeadershipPosition;
 
     protected override void MoreActionOnAwake()
     {
@@ -51,6 +59,16 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
         }
+    }
+
+    public void SelectLeadershipPosition(LeadershipPositionUI leadershipPositionUI)
+    {
+        selectedLeadershipPosition = leadershipPositionUI;
+    }
+
+    public void AssignLeadershipPosition(LeadershipCharacterUI leadershipCharacterUI)
+    {
+        selectedLeadershipPosition.AssignCharacter(leadershipCharacterUI);
     }
 
     private void Show()
