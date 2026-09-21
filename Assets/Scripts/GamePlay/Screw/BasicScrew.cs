@@ -1,5 +1,4 @@
 using System;
-using CandyCoded.HapticFeedback;
 using PrimeTween;
 using UnityEngine;
 
@@ -75,11 +74,6 @@ namespace NamPhuThuy.GamePlay
 
                 SoundManager.Instance.PlaySoundLoosenScrewFail();
 
-                if (gameSetting.IsVibrate)
-                {
-                    HapticFeedback.MediumFeedback();
-                }
-
                 _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
                 .OnComplete(() =>
                 {
@@ -117,11 +111,6 @@ namespace NamPhuThuy.GamePlay
             if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
             {
                 SoundManager.Instance.PlaySoundLoosenScrew();
-
-                if (gameSetting.IsVibrate)
-                {
-                    HapticFeedback.MediumFeedback();
-                }
             }
         }
 

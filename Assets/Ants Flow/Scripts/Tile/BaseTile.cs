@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CandyCoded.HapticFeedback;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -200,11 +199,6 @@ namespace AntsFlow
 
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
-
-            if (GamePersistentVariable.IsVibrate)
-            {
-                HapticFeedback.LightFeedback();
-            }
 
             isMovedToAnt = true;
 

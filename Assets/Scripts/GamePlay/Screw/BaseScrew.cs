@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using CandyCoded.HapticFeedback;
 using NamPhuThuy;
 using NamPhuThuy.VFX;
 using PrimeTween;
@@ -579,11 +578,6 @@ namespace NamPhuThuy.GamePlay
             fakeScrew.IsRotating = true;
 
             SoundManager.Instance.PlaySoundLoosenScrewFail();
-
-            if (gameSetting.IsVibrate)
-            {
-                HapticFeedback.MediumFeedback();
-            }
 
             _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
             .OnComplete(() =>

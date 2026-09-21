@@ -1,4 +1,3 @@
-using CandyCoded.HapticFeedback;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -55,10 +54,5 @@ public class HiddenAntBox : WashingMachineItem
         }
 
         Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
-
-        if (GamePersistentVariable.IsVibrate)
-        {
-            HapticFeedback.MediumFeedback();
-        }
     }
 }

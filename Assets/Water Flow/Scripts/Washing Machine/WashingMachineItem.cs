@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
-using CandyCoded.HapticFeedback;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -409,11 +408,6 @@ public class WashingMachineItem : MonoBehaviour
 
         OnSelectTrueCompleted();
 
-        if (GamePersistentVariable.IsVibrate)
-        {
-            HapticFeedback.MediumFeedback();
-        }
-
         // entry = skeletonAnimation.AnimationState.SetAnimation(0, selectTrueAnimation, false);
         // entry.Complete += OnSelectTrueCompleted;
     }
@@ -450,11 +444,6 @@ public class WashingMachineItem : MonoBehaviour
         // }
 
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
-
-        if (GamePersistentVariable.IsVibrate)
-        {
-            HapticFeedback.MediumFeedback();
-        }
     }
 
     public void TurnOnWarningLoseAnimation()

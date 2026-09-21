@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CandyCoded.HapticFeedback;
 using Firebase.RemoteConfig;
 using NamPhuThuy;
 using PrimeTween;
@@ -135,11 +134,6 @@ public class ScrewBox : MonoBehaviour
             .OnComplete(() =>
             {
                 shakeCameraEvent?.Invoke();
-
-                if (GamePersistentVariable.IsVibrate)
-                {
-                    HapticFeedback.HeavyFeedback();
-                }
 
                 // FX
                 if (_isPlayBoxCompleteFx)

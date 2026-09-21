@@ -1,4 +1,3 @@
-using CandyCoded.HapticFeedback;
 using UnityEngine;
 
 public class HapticFeedbackManager : Singleton<HapticFeedbackManager>
@@ -7,9 +6,6 @@ public class HapticFeedbackManager : Singleton<HapticFeedbackManager>
 
     public void MediumFeedback()
     {
-        if(gameSetting.IsVibrate)
-        {
-            HapticFeedback.MediumFeedback();
-        }
+        
     }
 }

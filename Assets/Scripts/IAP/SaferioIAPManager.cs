@@ -215,35 +215,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         bool validPurchase = true; // Presume valid for platforms with no R.V.
 
-#if !UNITY_EDITOR
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
-        // Choose one Apple certificate. NOTE AppleStoreKitTestTangle requires
-        // the active Xcode Scheme set to use a StoreKit Configuration file.
-        // Here we use a symbol, defined either in code or Project Settings >
-        // Player > Scripting Define Symbols, to choose which Apple IAP system
-        // we intend to test with in Xcode, next.
-
-#if !DEBUG_STOREKIT_TEST
-        var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
-            AppleTangle.Data(), Application.identifier);
-#else
-            var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
-                AppleStoreKitTestTangle.Data(), Application.identifier);
-#endif
-#endif
-
-        try
-        {
-            validator.Validate(e.purchasedProduct.receipt);
-        }
-        catch (IAPSecurityException exception)
-        {
-            SaferioTracking.TrackInvalidIAPEvent(exception.Message);
-
-            validPurchase = false;
-        }
-#endif
-
         if (validPurchase)
         {
             if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
