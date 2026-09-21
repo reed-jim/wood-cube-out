@@ -17,7 +17,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         closeButton.onClick.AddListener(Hide);
 
-        gameObject.SetActive(false);
+        container.gameObject.SetActive(false);
     }
 
     void OnDestroy()
@@ -39,8 +39,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             List<StatModifier> statModifiers = new List<StatModifier>
             {
-                new StatModifier(StatType.Damage, ModifierType.PercentMult, Random.Range(-20, 100)),
-                new StatModifier(StatType.AttackSpeed, ModifierType.PercentMult, Random.Range(-20, 100))
+                new StatModifier(StatType.Damage, ModifierType.PercentMult, Random.RandomRange(-0.2f, 1)),
+                new StatModifier(StatType.AttackSpeed, ModifierType.PercentMult, Random.RandomRange(-0.2f, 1))
             };
 
             Country country = CommonUtil.GetRandomEnumValue<Country>();
@@ -49,21 +49,21 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             leadershipCharacterUI.Init(name, country, statModifiers);
 
-            CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer);
+            CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
         }
     }
 
     private void Show()
     {
         container.gameObject.SetActive(true);
-        container.localPosition = new Vector3(0, 0.5f * container.sizeDelta.y);
+        container.localPosition = new Vector3(0, -1.5f * container.sizeDelta.y);
 
-        Tween.LocalPositionY(container, 0, duration: 0.3f);
+        Tween.LocalPositionY(container, -70, duration: 0.3f);
     }
 
     private void Hide()
     {
-        Tween.LocalPositionY(container, 0.5f * container.sizeDelta.y, duration: 0.3f)
+        Tween.LocalPositionY(container, -1.5f * container.sizeDelta.y, duration: 0.3f)
         .OnComplete(() =>
         {
             container.gameObject.SetActive(false);

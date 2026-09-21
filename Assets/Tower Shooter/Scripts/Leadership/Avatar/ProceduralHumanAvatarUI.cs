@@ -294,14 +294,14 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
             {
                 case HairType.ShortCrop:
                     float angle = Mathf.Lerp(-65f, 65f, (float)i / (hairClumps.Count - 1));
-                    Vector3 pos = Quaternion.Euler(0, 0, angle) * Vector3.up * 52f;
+                    Vector3 pos = Quaternion.Euler(0, 0, angle) * Vector3.up * 100f;
                     rect.anchoredPosition = pos + new Vector3(0f, 45f, 0f);
                     rect.sizeDelta = Vector2.one * (45f * hairScaleProgress);
                     break;
 
                 case HairType.MessyBangs:
                     float bangX = Mathf.Lerp(-45f, 45f, (float)i / (hairClumps.Count - 1));
-                    float bangY = 55f - (Mathf.Abs(bangX) * 0.15f);
+                    float bangY = 100f - (Mathf.Abs(bangX) * 0.15f);
                     rect.anchoredPosition = new Vector2(bangX, bangY);
                     rect.sizeDelta = new Vector2(38f, 42f * hairScaleProgress);
                     break;
@@ -309,13 +309,13 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
                 case HairType.AfroPuff:
                     float afroAngle = (i / (float)hairClumps.Count) * 360f;
                     Vector3 afroPos = Quaternion.Euler(0, 0, afroAngle) * Vector3.up * 42f;
-                    rect.anchoredPosition = afroPos + new Vector3(0f, 55f, 0f);
+                    rect.anchoredPosition = afroPos + new Vector3(0f, 100f, 0f);
                     rect.sizeDelta = Vector2.one * (60f * hairScaleProgress);
                     break;
 
                 case HairType.MediumSlick:
                     float slickX = Mathf.Lerp(-38f, 38f, (float)i / (hairClumps.Count - 1));
-                    rect.anchoredPosition = new Vector2(slickX, 62f);
+                    rect.anchoredPosition = new Vector2(slickX, 100f);
                     rect.sizeDelta = new Vector2(50f, 35f * hairScaleProgress);
                     break;
             }

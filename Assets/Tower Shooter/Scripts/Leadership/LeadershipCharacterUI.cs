@@ -28,8 +28,8 @@ public class LeadershipCharacterUI : MonoBehaviour
             string sign = isPositive ? "+" : "";
 
             string valStr = mod.ModType == ModifierType.Flat
-                ? $"{sign}{mod.Value}"
-                : $"{sign}{mod.Value * 100f}%";
+                ? $"{sign}{mod.Value:F2}"
+                : $"{sign}{mod.Value * 100f:F2}%";
 
             statDescription.AppendLine($"<color=#{hex}>{valStr} {mod.Type}</color>");
         }
