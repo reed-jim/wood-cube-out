@@ -71,7 +71,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
                 medalIcon.sprite = medalSprites[index];
             }
 
-            flag.sprite = countryDataContainer.Countries[items[index].countryIndex].Flag;
+            // flag.sprite = countryDataContainer.Countries[items[index].countryIndex].Flag;
 
             UIUtil.SetSizeKeepRatioY(flag.rectTransform, flag.rectTransform.sizeDelta.x);
         }
@@ -125,7 +125,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
                 medalIcon.sprite = medalSprites[rank];
             }
 
-            flag.sprite = countryDataContainer.Countries[data.countryIndex].Flag;
+            // flag.sprite = countryDataContainer.Countries[data.countryIndex].Flag;
         }
         catch (System.Exception e)
         {

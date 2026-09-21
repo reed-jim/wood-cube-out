@@ -274,7 +274,7 @@ public class HingeJointGenerator : EditorWindow
         {
             Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(file);
 
-            countryDataContainer.Countries[index].Flag = sprite;
+            // countryDataContainer.Countries[index].Flag = sprite;
 
             index++;
         }

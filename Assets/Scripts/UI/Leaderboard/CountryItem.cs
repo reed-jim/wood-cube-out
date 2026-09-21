@@ -32,23 +32,23 @@ public class CountryItem : MonoBehaviour, ISaferioScrollViewItem
     {
         try
         {
-            List<Country> countries = countryDataContainer.Countries;
+            // List<Country> countries = countryDataContainer.Countries;
 
-            if (!string.IsNullOrEmpty(GamePersistentVariable.countrySearchQuery))
-            {
-                List<Country> filterCountries =
-                    countryDataContainer.Countries.
-                        Where(c => c.Name.StartsWith(GamePersistentVariable.countrySearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            // if (!string.IsNullOrEmpty(GamePersistentVariable.countrySearchQuery))
+            // {
+            //     List<Country> filterCountries =
+            //         countryDataContainer.Countries.
+            //             Where(c => c.Name.StartsWith(GamePersistentVariable.countrySearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
 
-                countries = filterCountries;
-            }
+            //     countries = filterCountries;
+            // }
 
-            _currentCountry = countries[index];
+            // _currentCountry = countries[index];
 
-            flag.sprite = _currentCountry.Flag;
-            countryNameText.text = _currentCountry.Name;
+            // flag.sprite = _currentCountry.Flag;
+            // countryNameText.text = _currentCountry.Name;
 
-            gameObject.SetActive(true);
+            // gameObject.SetActive(true);
         }
         catch (System.Exception e)
         {

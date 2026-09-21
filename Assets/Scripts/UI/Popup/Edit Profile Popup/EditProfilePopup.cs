@@ -85,8 +85,8 @@ public class EditProfilePopup : BasePopup
     {
         _selectedCountryIndex = 244;
 
-        selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
-        selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
+        // selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
+        // selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
 
         countryPickerScrollView.Refresh();
     }
@@ -104,8 +104,8 @@ public class EditProfilePopup : BasePopup
         }
         else
         {
-            selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
-            selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
+            // selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
+            // selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
 
             countryDisplay.gameObject.SetActive(true);
 
@@ -210,20 +210,20 @@ public class EditProfilePopup : BasePopup
 
     private void SelectCountry(Country country)
     {
-        selectedCountryFlag.sprite = country.Flag;
-        selectedCountryName.text = country.Name;
+        // selectedCountryFlag.sprite = country.Flag;
+        // selectedCountryName.text = country.Name;
 
         UIUtil.SetSizeKeepRatioY(selectedCountryFlag, selectedCountryFlag.rectTransform.sizeDelta.x);
 
-        for (int i = 0; i < countryDataContainer.Countries.Count; i++)
-        {
-            if (countryDataContainer.Countries[i].Name == country.Name)
-            {
-                _selectedCountryIndex = i;
+        // for (int i = 0; i < countryDataContainer.Countries.Count; i++)
+        // {
+        //     if (countryDataContainer.Countries[i].Name == country.Name)
+        //     {
+        //         _selectedCountryIndex = i;
 
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
 
         HideCountryPicker();
 
@@ -236,11 +236,11 @@ public class EditProfilePopup : BasePopup
     {
         GamePersistentVariable.countrySearchQuery = text;
 
-        List<Country> filterCountries =
-                    countryDataContainer.Countries.
-                        Where(c => c.Name.StartsWith(GamePersistentVariable.countrySearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+        // List<Country> filterCountries =
+        //             countryDataContainer.Countries.
+        //                 Where(c => c.Name.StartsWith(GamePersistentVariable.countrySearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
 
-        countryPickerScrollView.SetMaxItemNumber(filterCountries.Count);
-        countryPickerScrollView.Refresh();
+        // countryPickerScrollView.SetMaxItemNumber(filterCountries.Count);
+        // countryPickerScrollView.Refresh();
     }
 }
