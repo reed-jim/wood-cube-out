@@ -40,6 +40,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public Button closeButton;
     public Button hireCharacterButton;
     public Button electionButton;
+    public Image selectCharacterOverlay;
+    public Button cancelAppointCharacterButton;
 
     [Header("Customize")]
     public int maxCharacter;
@@ -68,9 +70,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         closeButton.onClick.AddListener(Hide);
         hireCharacterButton.onClick.AddListener(HireNewCharacters);
-        electionButton.onClick.AddListener(ShowElection);
+        cancelAppointCharacterButton.onClick.AddListener(CancelSelectLeadershipPosition);
 
         container.gameObject.SetActive(false);
+        selectCharacterOverlay.gameObject.SetActive(false);
+        cancelAppointCharacterButton.gameObject.SetActive(false);
     }
 
     void OnDestroy()
@@ -159,6 +163,26 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public void SelectLeadershipPosition(LeadershipPositionUI leadershipPositionUI)
     {
         selectedLeadershipPosition = leadershipPositionUI;
+
+        selectCharacterOverlay.gameObject.SetActive(true);
+        selectCharacterOverlay.color = ColorUtil.WithAlpha(selectCharacterOverlay.color, 0);
+
+        Tween.Alpha(selectCharacterOverlay, 0.95f, duration: 0.3f);
+
+        SaferioTween.ScaleUpWithPunch(cancelAppointCharacterButton.transform);
+    }
+
+    public void CancelSelectLeadershipPosition()
+    {
+        Tween.Alpha(selectCharacterOverlay, 0f, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            selectCharacterOverlay.gameObject.SetActive(false);
+        });
+
+        selectedLeadershipPosition = null;
+
+        SaferioTween.ScaleDownWithPunch(cancelAppointCharacterButton.transform);
     }
 
     public void AssignLeadershipPosition(LeadershipCharacterUI leadershipCharacterUI)
@@ -166,6 +190,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         selectedLeadershipPosition.AssignCharacter(leadershipCharacterUI);
 
         CalculateBonusStat();
+
+        CancelSelectLeadershipPosition();
     }
 
     private void Show()
@@ -242,7 +268,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     #region Character Trait
     public void ShowTraitDetail(CharacterTraitItemUI characterTraitItemUI)
     {
-        characterTrailDetail.transform.position = characterTraitItemUI.transform.position.AddX(360);
+        characterTrailDetail.transform.position = characterTraitItemUI.transform.position.AddX(400);
 
         characterTrailDetail.ShowAt(characterTraitItemUI);
     }
@@ -254,7 +280,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     #endregion
 
     #region Election
-    private void ShowElection()
+    public void ShowElection()
     {
         electionPopup.Show();
     }

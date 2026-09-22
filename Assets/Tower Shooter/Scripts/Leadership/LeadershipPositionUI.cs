@@ -13,6 +13,8 @@ public class LeadershipPositionUI : MonoBehaviour
     public TMP_Text efficiencyText;
     public Button selectButton;
 
+    public ThemeableUI borderThemeable;
+
     [Header("Customize")]
     public LeadershipPosition leadershipPosition;
     public bool isBuffAllStats;
@@ -55,12 +57,33 @@ public class LeadershipPositionUI : MonoBehaviour
 
         positionNameText.text = $"{leadershipPosition}";
         description.text = statDescription.ToString().TrimEnd();
-        efficiencyText.text = $"Efficiency: {(int)(baseEfficiency * 100)}%";
+
+        if (leadershipCharacterUI == null)
+        {
+            efficiencyText.color = DynamicThemeManager.Ins.CurrentTheme.onSurface;
+            efficiencyText.text = $"Vacant";
+
+            borderThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+        }
+        else
+        {
+            efficiencyText.color = DynamicThemeManager.Ins.CurrentTheme.primary;
+            efficiencyText.text = $"Efficiency: {(int)(baseEfficiency * 100)}%";
+
+            borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+        }
     }
 
     private void Select()
     {
-        LeadershipManager.Ins.SelectLeadershipPosition(this);
+        if (leadershipPosition == LeadershipPosition.Captain)
+        {
+            LeadershipManager.Ins.ShowElection();
+        }
+        else
+        {
+            LeadershipManager.Ins.SelectLeadershipPosition(this);
+        }
     }
 
     public void AssignCharacter(LeadershipCharacterUI leadershipCharacterUI)
@@ -86,7 +109,10 @@ public class LeadershipPositionUI : MonoBehaviour
             }
         }
 
-        efficiencyText.text = $"Efficiency: {(int)(baseEfficiency * 100)}%";
+        efficiencyText.color = DynamicThemeManager.Ins.CurrentTheme.primary;
+        efficiencyText.text = $"Efficiency: {(int)(efficiency * 100)}%";
+
+        borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
 
         this.leadershipCharacterUI = leadershipCharacterUI;
     }
