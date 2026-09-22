@@ -15,6 +15,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public RectTransform characterContainer;
     public Button closeButton;
 
+    public CharacterTrailDetail characterTrailDetail;
+
     public LeadershipPositionUI selectedLeadershipPosition;
 
     public CharacterTraitContainer characterTraitContainer;
@@ -89,4 +91,13 @@ public class LeadershipManager : Singleton<LeadershipManager>
             container.gameObject.SetActive(false);
         });
     }
+
+    #region Character Trait
+    public void ShowTraitDetail(CharacterTraitItemUI characterTraitItemUI)
+    {
+        CommonUtil.SetParentAndResetScale(characterTrailDetail.transform, characterTraitItemUI.transform);
+
+        characterTrailDetail.ShowAt(characterTraitItemUI);
+    }
+    #endregion
 }

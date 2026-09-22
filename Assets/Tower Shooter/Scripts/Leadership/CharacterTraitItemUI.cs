@@ -6,8 +6,14 @@ public class CharacterTraitItemUI : MonoBehaviour
 {
     public Image circle;
     public TMP_Text traitName;
+    public Button selectButton;
 
-    private CharacterTrait characterTrait;
+    public CharacterTrait characterTrait;
+
+    void Awake()
+    {
+        selectButton.onClick.AddListener(Select);
+    }
 
     public void Init(CharacterTrait characterTrait)
     {
@@ -16,6 +22,8 @@ public class CharacterTraitItemUI : MonoBehaviour
 
         circle.color = traitColor;
         traitName.color = traitColor;
+
+        circle.gameObject.SetActive(true);
 
         traitName.text = characterTrait.traitName;
 
@@ -27,9 +35,15 @@ public class CharacterTraitItemUI : MonoBehaviour
         Color traitColor =
             traitEfficiencyModifier.efficiencyModifier > 0 ? DynamicThemeManager.Ins.CurrentTheme.primary : DynamicThemeManager.Ins.CurrentTheme.error;
 
-        circle.color = traitColor;
         traitName.color = traitColor;
 
-        traitName.text = $"{traitEfficiencyModifier.efficiencyModifier} for {traitEfficiencyModifier.leadershipPosition} position";
+        circle.gameObject.SetActive(false);
+
+        traitName.text = $"{traitEfficiencyModifier.efficiencyModifier * 100}% efficiency for <color=#666>{traitEfficiencyModifier.leadershipPosition}</color> position";
+    }
+
+    private void Select()
+    {
+        LeadershipManager.Ins.ShowTraitDetail(this);
     }
 }
