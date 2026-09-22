@@ -14,6 +14,7 @@ public class LeadershipPositionUI : MonoBehaviour
     public Button selectButton;
 
     public ThemeableUI borderThemeable;
+    public ThemeableUI titleThemeable;
 
     [Header("Customize")]
     public LeadershipPosition leadershipPosition;
@@ -64,6 +65,7 @@ public class LeadershipPositionUI : MonoBehaviour
             efficiencyText.text = $"Vacant";
 
             borderThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+            titleThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
         }
         else
         {
@@ -71,6 +73,7 @@ public class LeadershipPositionUI : MonoBehaviour
             efficiencyText.text = $"Efficiency: {(int)(baseEfficiency * 100)}%";
 
             borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            titleThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
         }
     }
 
@@ -113,6 +116,7 @@ public class LeadershipPositionUI : MonoBehaviour
         efficiencyText.text = $"Efficiency: {(int)(efficiency * 100)}%";
 
         borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+        titleThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
 
         this.leadershipCharacterUI = leadershipCharacterUI;
     }

@@ -24,7 +24,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     public CountryFlagDatabase countryFlagDatabase;
 
     private List<CharacterTrait> characterTraits;
-    public LeadershipCharacterData CharacterData { get; private set; }
+    public LeadershipCharacterData leadershipCharacterData;
 
     public static event Action<LeadershipCharacterData, List<CharacterTrait>> showLeadershipCharacterDetailEvent;
 
@@ -36,7 +36,7 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     public void Init(LeadershipCharacterData data, List<CharacterTrait> traits)
     {
-        CharacterData = data;
+        leadershipCharacterData = data;
         this.characterTraits = traits;
 
         nameText.text = data.characterName;
@@ -67,7 +67,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     {
         if (LeadershipManager.Ins.selectedLeadershipPosition == null)
         {
-            showLeadershipCharacterDetailEvent?.Invoke(CharacterData, characterTraits);
+            showLeadershipCharacterDetailEvent?.Invoke(leadershipCharacterData, characterTraits);
         }
         else
         {
@@ -86,6 +86,12 @@ public class LeadershipCharacterUI : MonoBehaviour
 
         electionPointText.text = $"Election Points: {electionPoint}";
         supportCostText.text = $"{supportCost}";
+    }
+
+    public void DisableSupportOption()
+    {
+        supportButton.gameObject.SetActive(false);
+        electionPointText.gameObject.SetActive(false);
     }
 
     private void Support()

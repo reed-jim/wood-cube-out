@@ -4,14 +4,20 @@ using UnityEngine;
 public class IdleTimeManager : Singleton<IdleTimeManager>
 {
     [Header("Settings")]
-    public float secondsPerInGameDay = 5f; // 5 real-time seconds = 1 in-game day
+    public float secondsPerInGameDay = 5f;
     public int currentYear = 2026;
     public int currentMonth = 1;
     public int currentDay = 1;
 
     [Header("Election Settings")]
     public int yearsBetweenElections = 4;
-    public int nextElectionYear = 2030;
+    public int nextElectionYear = 2026;
+
+    [Tooltip("Specific month for election day (1-12)")]
+    public int electionMonth = 3;
+
+    [Tooltip("Specific day of the month for election day (1-30)")]
+    public int electionDay = 1;
 
     public static event Action OnDayPassed;
     public static event Action OnYearPassed;
@@ -19,7 +25,16 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
 
     private float _timer;
 
+    private GameTimeData gameTimeData;
+
     public DateTime CurrentDateTime => new DateTime(currentYear, currentMonth, currentDay);
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        LoadGameTimeData();
+    }
 
     private void Update()
     {
@@ -34,7 +49,7 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
     private void AdvanceDay()
     {
         currentDay++;
-        if (currentDay > 30) // Simplified 30-day month model
+        if (currentDay > 30)
         {
             currentDay = 1;
             currentMonth++;
@@ -43,19 +58,65 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
                 currentMonth = 1;
                 currentYear++;
                 OnYearPassed?.Invoke();
-                CheckElection();
             }
         }
 
+        // Check if today matches the scheduled election date
+        CheckElectionDate();
+
         OnDayPassed?.Invoke();
+
+        SaveGameTimeData();
     }
 
-    private void CheckElection()
+    private void CheckElectionDate()
     {
-        if (currentYear >= nextElectionYear)
+        if (currentYear == nextElectionYear && currentMonth == electionMonth && currentDay == electionDay)
         {
-            nextElectionYear = currentYear + yearsBetweenElections;
             OnElectionStarted?.Invoke();
         }
     }
+
+    public void ScheduleNextElection()
+    {
+        nextElectionYear = currentYear + yearsBetweenElections;
+    }
+
+    #region Load/Save
+    public void LoadGameTimeData()
+    {
+        gameTimeData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("gameTimeData"), GetDefaultGameTimeData());
+
+        currentDay = gameTimeData.currentDay;
+        currentMonth = gameTimeData.currentMonth;
+        currentYear = gameTimeData.currentYear;
+    }
+
+    public void SaveGameTimeData()
+    {
+        gameTimeData.currentDay = currentDay;
+        gameTimeData.currentMonth = currentMonth;
+        gameTimeData.currentYear = currentYear;
+
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("gameTimeData"), gameTimeData);
+    }
+
+    public GameTimeData GetDefaultGameTimeData()
+    {
+        GameTimeData gameTimeData = new GameTimeData();
+
+        gameTimeData.currentDay = 1;
+        gameTimeData.currentMonth = 1;
+        gameTimeData.currentYear = 2026;
+
+        return gameTimeData;
+    }
+    #endregion
+}
+
+public class GameTimeData
+{
+    public int currentYear;
+    public int currentMonth;
+    public int currentDay;
 }

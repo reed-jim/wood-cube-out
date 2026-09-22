@@ -17,20 +17,51 @@ public class ElectionPopup : MonoBehaviour
 
     public CharacterTraitContainer characterTraitContainer;
 
+    private ElectionData electionData;
+
     private readonly List<LeadershipCharacterUI> loadedCharacterUIs = new List<LeadershipCharacterUI>();
 
     private void Awake()
     {
+        IdleTimeManager.OnDayPassed += UpdateTimerUI;
+
         closeButton.onClick.AddListener(Hide);
-        if (concludeElectionButton != null)
+        concludeElectionButton.onClick.AddListener(ConcludeElection);
+    }
+
+    void OnDestroy()
+    {
+        IdleTimeManager.OnDayPassed -= UpdateTimerUI;
+    }
+
+    private void UpdateTimerUI()
+    {
+        int remainingDays = CalculateRemainingDays();
+
+        if (remainingDays <= 0)
         {
-            concludeElectionButton.onClick.AddListener(ConcludeElection);
+            timerText.text = "Election Ending...";
+            ConcludeElection();
+        }
+        else
+        {
+            timerText.text = $"Time Remaining: {remainingDays} Days";
         }
     }
 
-    void Update()
+    private int CalculateRemainingDays()
     {
-        timerText.text = $"{IdleTimeManager.Ins.currentDay}/{IdleTimeManager.Ins.currentMonth}/{IdleTimeManager.Ins.currentYear}";
+        // Convert current in-game date to absolute total days
+        int currentTotalDays = (IdleTimeManager.Ins.currentYear * 360)
+                             + (IdleTimeManager.Ins.currentMonth * 30)
+                             + IdleTimeManager.Ins.currentDay;
+
+        // Convert target election date to absolute total days
+        int targetElectionTotalDays = (IdleTimeManager.Ins.nextElectionYear * 360)
+                                    + (IdleTimeManager.Ins.electionMonth * 30)
+                                    + IdleTimeManager.Ins.electionDay;
+
+        return Mathf.Max(0, targetElectionTotalDays - currentTotalDays);
     }
 
     private void ShowAllCharacters()
@@ -73,6 +104,8 @@ public class ElectionPopup : MonoBehaviour
             LeadershipPositionUI captainUI = LeadershipManager.Ins.leadershipPositionUIs
                 .FirstOrDefault(p => p.leadershipPosition == LeadershipPosition.Captain);
 
+            winner.DisableSupportOption();
+
             if (captainUI != null)
             {
                 captainUI.AssignCharacter(winner);
@@ -81,9 +114,11 @@ public class ElectionPopup : MonoBehaviour
 
             IngameNotificationManager.Ins.ShowNotification(
                 "ELECTION RESULTS",
-                $"{winner.CharacterData.characterName} has won the election and was appointed Captain!"
+                $"{winner.leadershipCharacterData.characterName} has won the election and was appointed Captain!"
             );
         }
+
+        IdleTimeManager.Ins.ScheduleNextElection();
 
         Hide();
     }
@@ -102,5 +137,28 @@ public class ElectionPopup : MonoBehaviour
     {
         Tween.LocalPositionY(container, -1.5f * container.sizeDelta.y, duration: 0.3f)
             .OnComplete(() => container.gameObject.SetActive(false));
+    }
+
+    #region Save/Load
+    public void LoadElectionData()
+    {
+        electionData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("electionData"), new ElectionData(isElectionActive: true));
+    }
+
+    public void SaveElectionData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("electionData"), electionData);
+    }
+    #endregion
+}
+
+[System.Serializable]
+public class ElectionData
+{
+    public bool isElectionActive;
+
+    public ElectionData(bool isElectionActive)
+    {
+        this.isElectionActive = isElectionActive;
     }
 }
