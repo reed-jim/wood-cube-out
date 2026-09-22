@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using PrimeTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,62 +12,80 @@ public class ElectionPopup : MonoBehaviour
     public RectTransform container;
     public RectTransform characterContainer;
     public Button closeButton;
-
-    public List<LeadershipCharacterUI> leadershipCharacterUIs;
+    public Button concludeElectionButton;
+    public TMP_Text timerText;
 
     public CharacterTraitContainer characterTraitContainer;
 
-    void Awake()
+    private readonly List<LeadershipCharacterUI> loadedCharacterUIs = new List<LeadershipCharacterUI>();
+
+    private void Awake()
     {
         closeButton.onClick.AddListener(Hide);
+        if (concludeElectionButton != null)
+        {
+            concludeElectionButton.onClick.AddListener(ConcludeElection);
+        }
     }
 
-    private void Init()
+    void Update()
     {
-        ShowAllCharacters();
+        timerText.text = $"{IdleTimeManager.Ins.currentDay}/{IdleTimeManager.Ins.currentMonth}/{IdleTimeManager.Ins.currentYear}";
     }
 
     private void ShowAllCharacters()
     {
-        for (int i = 0; i < LeadershipManager.Ins.leadershipData.leadershipCharacterDataItems.Count; i++)
-        {
-            LeadershipCharacterData leadershipCharacterData = LeadershipManager.Ins.leadershipData.leadershipCharacterDataItems[i];
+        CommonUtil.ReturnListToPool(loadedCharacterUIs, item => item.gameObject);
 
-            LoadLeadershipCharacter(leadershipCharacterData);
+        var characterDataList = LeadershipManager.Ins.leadershipData.leadershipCharacterDataItems;
+
+        for (int i = 0; i < characterDataList.Count; i++)
+        {
+            LeadershipCharacterData data = characterDataList[i];
+            LeadershipCharacterUI ui = ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
+
+            List<CharacterTrait> traits = characterTraitContainer.characterTraits
+                .Where(t => data.traitIndexes.Contains(t.id))
+                .ToList();
+
+            ui.Init(data, traits);
+            ui.EnableSupportOption();
+
+            CommonUtil.SetParentAndResetScale(ui.transform, characterContainer, Vector3.zero);
+            ui.transform.localScale *= 0.48f;
+
+            loadedCharacterUIs.Add(ui);
         }
     }
 
-    private void LoadLeadershipCharacter(LeadershipCharacterData leadershipCharacterData)
+    public void ConcludeElection()
     {
-        LeadershipCharacterUI leadershipCharacterUI =
-                ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
+        if (loadedCharacterUIs.Count == 0) return;
 
-        Country country = leadershipCharacterData.country;
-        string name = leadershipCharacterData.characterName;
-        DateTime birthDay = DateTime.ParseExact(
-            leadershipCharacterData.birthDayString,
-            "yyyy-MM-dd",
-            CultureInfo.InvariantCulture
-        );
-        int age = CommonUtil.GetAge(birthDay, DateTime.Today);
+        // Calculate votes: Base election points + random electorate variance
+        LeadershipCharacterUI winner = loadedCharacterUIs
+            .OrderByDescending(c => c.electionPoint + UnityEngine.Random.Range(0, 15))
+            .FirstOrDefault();
 
-        List<CharacterTrait> characterTraits = new List<CharacterTrait>();
-
-        for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
+        if (winner != null)
         {
-            CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
+            // Assign winner as Captain
+            LeadershipPositionUI captainUI = LeadershipManager.Ins.leadershipPositionUIs
+                .FirstOrDefault(p => p.leadershipPosition == LeadershipPosition.Captain);
 
-            if (leadershipCharacterData.traitIndexes.Contains(characterTrait.id))
+            if (captainUI != null)
             {
-                characterTraits.Add(characterTrait);
+                captainUI.AssignCharacter(winner);
+                LeadershipManager.Ins.CalculateBonusStat();
             }
+
+            IngameNotificationManager.Ins.ShowNotification(
+                "ELECTION RESULTS",
+                $"{winner.CharacterData.characterName} has won the election and was appointed Captain!"
+            );
         }
 
-        leadershipCharacterUI.Init(name, country, age, characterTraits);
-        leadershipCharacterUI.EnableSupportOption();
-
-        CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
-        leadershipCharacterUI.transform.localScale *= 0.48f;
+        Hide();
     }
 
     public void Show()
@@ -75,15 +95,12 @@ public class ElectionPopup : MonoBehaviour
 
         Tween.LocalPositionY(container, -70, duration: 0.3f);
 
-        Init();
+        ShowAllCharacters();
     }
 
     private void Hide()
     {
         Tween.LocalPositionY(container, -1.5f * container.sizeDelta.y, duration: 0.3f)
-        .OnComplete(() =>
-        {
-            container.gameObject.SetActive(false);
-        });
+            .OnComplete(() => container.gameObject.SetActive(false));
     }
 }

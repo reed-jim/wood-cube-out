@@ -26,6 +26,8 @@ public static class CommonUtil
 
             ObjectPoolingEverything.ReturnToPool("key not needed", getGameObject(item).gameObject);
         }
+
+        items.Clear();
     }
 
     public static void SetParentAndResetScale(Transform target, Transform parent, Vector3 localPosition)

@@ -63,6 +63,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         base.MoreActionOnAwake();
 
         MultiverseIdleGameplayScreen.openLeadershipUIEvent += Show;
+        IdleTimeManager.OnElectionStarted += ShowElection; // Trigger election event automatically
 
         closeButton.onClick.AddListener(Hide);
         hireCharacterButton.onClick.AddListener(HireNewCharacters);
@@ -74,6 +75,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     void OnDestroy()
     {
         MultiverseIdleGameplayScreen.openLeadershipUIEvent -= Show;
+        IdleTimeManager.OnElectionStarted -= ShowElection;
     }
 
     void Start()
@@ -122,7 +124,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
             }
         }
 
-        leadershipCharacterUI.Init(name, country, age, characterTraits);
+        leadershipCharacterUI.Init(leadershipCharacterData, characterTraits);
 
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
         leadershipCharacterUI.transform.localScale *= 0.48f;
@@ -145,26 +147,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         for (int i = 0; i < numCharacterToHire; i++)
         {
-            Country country = CommonUtil.GetRandomEnumValue<Country>();
-
-            string name = CountryNameGenerator.Ins.GetRandomName(country);
-
-            DateTime birthday = CommonUtil.RandomBirthday(2026 - 18, 2026 - 18 + 50);
-
-            List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
-            List<int> characterTraitIndexes = new List<int>();
-
-            for (int j = 0; j < characterTraits.Count; j++)
-            {
-                characterTraitIndexes.Add(characterTraits[j].id);
-            }
-
-            LeadershipCharacterData leadershipCharacterData = new LeadershipCharacterData();
-
-            leadershipCharacterData.characterName = name;
-            leadershipCharacterData.country = country;
-            leadershipCharacterData.birthDayString = birthday.ToString("yyyy-MM-dd");
-            leadershipCharacterData.traitIndexes = characterTraitIndexes;
+            LeadershipCharacterData leadershipCharacterData = GetRandomLeadershipCharacterData();
 
             leadershipData.leadershipCharacterDataItems.Add(leadershipCharacterData);
 
@@ -300,31 +283,38 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         for (int i = 0; i < numStartCharacter; i++)
         {
-            Country country = CommonUtil.GetRandomEnumValue<Country>();
-
-            string name = CountryNameGenerator.Ins.GetRandomName(country);
-
-            DateTime birthday = CommonUtil.RandomBirthday(2026 - 18, 2026 - 18 + 50);
-
-            List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
-            List<int> characterTraitIndexes = new List<int>();
-
-            for (int j = 0; j < characterTraits.Count; j++)
-            {
-                characterTraitIndexes.Add(characterTraits[j].id);
-            }
-
-            LeadershipCharacterData leadershipCharacterData = new LeadershipCharacterData();
-
-            leadershipCharacterData.characterName = name;
-            leadershipCharacterData.country = country;
-            leadershipCharacterData.birthDayString = birthday.ToString("yyyy-MM-dd");
-            leadershipCharacterData.traitIndexes = characterTraitIndexes;
+            LeadershipCharacterData leadershipCharacterData = GetRandomLeadershipCharacterData();
 
             defaultLeadershipData.leadershipCharacterDataItems.Add(leadershipCharacterData);
         }
 
         return defaultLeadershipData;
+    }
+
+    private LeadershipCharacterData GetRandomLeadershipCharacterData()
+    {
+        Country country = CommonUtil.GetRandomEnumValue<Country>();
+
+        string name = CountryNameGenerator.Ins.GetRandomName(country);
+
+        DateTime birthday = CommonUtil.RandomBirthday(2026 - 55, 2026 - 16);
+
+        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
+        List<int> characterTraitIndexes = new List<int>();
+
+        for (int j = 0; j < characterTraits.Count; j++)
+        {
+            characterTraitIndexes.Add(characterTraits[j].id);
+        }
+
+        LeadershipCharacterData leadershipCharacterData = new LeadershipCharacterData();
+
+        leadershipCharacterData.characterName = name;
+        leadershipCharacterData.country = country;
+        leadershipCharacterData.birthDayString = birthday.ToString("yyyy-MM-dd");
+        leadershipCharacterData.traitIndexes = characterTraitIndexes;
+
+        return leadershipCharacterData;
     }
     #endregion
 }

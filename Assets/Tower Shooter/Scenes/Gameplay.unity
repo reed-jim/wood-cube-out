@@ -2434,6 +2434,7 @@ GameObject:
   m_Component:
   - component: {fileID: 294049659}
   - component: {fileID: 294049661}
+  - component: {fileID: 294049662}
   - component: {fileID: 294049660}
   m_Layer: 5
   m_Name: Divider (1)
@@ -2499,6 +2500,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 294049658}
   m_CullTransparentMesh: 1
+--- !u!114 &294049662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294049658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 24
 --- !u!1 &296480046
 GameObject:
   m_ObjectHideFlags: 0
@@ -17280,6 +17294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1002711623}
   - component: {fileID: 1002711625}
+  - component: {fileID: 1002711626}
   - component: {fileID: 1002711624}
   m_Layer: 5
   m_Name: Divider
@@ -17345,6 +17360,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002711622}
   m_CullTransparentMesh: 1
+--- !u!114 &1002711626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002711622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 24
 --- !u!1 &1021405958
 GameObject:
   m_ObjectHideFlags: 0
@@ -18119,6 +18147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1184646122}
   - component: {fileID: 1184646124}
+  - component: {fileID: 1184646125}
   - component: {fileID: 1184646123}
   m_Layer: 5
   m_Name: Divider (2)
@@ -18184,6 +18213,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1184646121}
   m_CullTransparentMesh: 1
+--- !u!114 &1184646125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184646121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 24
 --- !u!1 &1200620157
 GameObject:
   m_ObjectHideFlags: 0
@@ -22776,6 +22818,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1801979204}
   - component: {fileID: 1801979206}
+  - component: {fileID: 1801979207}
   - component: {fileID: 1801979205}
   m_Layer: 5
   m_Name: Divider (3)
@@ -22841,6 +22884,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1801979203}
   m_CullTransparentMesh: 1
+--- !u!114 &1801979207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801979203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 24
 --- !u!1 &1828343538
 GameObject:
   m_ObjectHideFlags: 0
@@ -23616,6 +23672,7 @@ Transform:
   - {fileID: 1601129620}
   - {fileID: 781160892}
   - {fileID: 2009205295}
+  - {fileID: 1962419804}
   - {fileID: 1661734487}
   - {fileID: 448780276}
   m_Father: {fileID: 0}
@@ -24205,6 +24262,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1961213057}
   m_CullTransparentMesh: 1
+--- !u!1 &1962419803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1962419804}
+  - component: {fileID: 1962419805}
+  m_Layer: 0
+  m_Name: Idle Time Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1962419804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962419803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1920970497}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1962419805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962419803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4b9edc8db2308a4c8667718e7d72c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IdleTimeManager
+  secondsPerInGameDay: 5
+  currentYear: 2026
+  currentMonth: 1
+  currentDay: 1
+  yearsBetweenElections: 4
+  nextElectionYear: 2030
 --- !u!1 &1978220173
 GameObject:
   m_ObjectHideFlags: 0

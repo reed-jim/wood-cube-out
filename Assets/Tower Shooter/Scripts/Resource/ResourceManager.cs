@@ -68,6 +68,11 @@ public class ResourceManager : Singleton<ResourceManager>
         return currentValue;
     }
 
+    public float DeductResource(ResourceType resourceType, float value)
+    {
+        return ChangeResource(resourceType, value);
+    }
+
     public ResourceData GetDefaultResourceData()
     {
         ResourceData resourceData = new ResourceData();

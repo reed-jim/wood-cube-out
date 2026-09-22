@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +14,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     public Button supportButton;
     public TMP_Text supportCostText;
     public TMP_Text electionPointText;
+    public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
     public int electionPoint;
     public float supportCost;
@@ -23,6 +23,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     public CountryFlagDatabase countryFlagDatabase;
 
     private List<CharacterTrait> characterTraits;
+    public LeadershipCharacterData CharacterData { get; private set; }
 
     void Awake()
     {
@@ -30,25 +31,33 @@ public class LeadershipCharacterUI : MonoBehaviour
         supportButton.onClick.AddListener(Support);
     }
 
-    public void Init(string name, Country country, int age, List<CharacterTrait> characterTraits)
+    public void Init(LeadershipCharacterData data, List<CharacterTrait> traits)
     {
-        nameText.text = name;
+        CharacterData = data;
+        this.characterTraits = traits;
+
+        nameText.text = data.characterName;
+
+        System.DateTime birthDay = System.DateTime.ParseExact(
+            data.birthDayString,
+            "yyyy-MM-dd",
+            System.Globalization.CultureInfo.InvariantCulture
+        );
+        int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
+
         ageText.text = $"{age} years old";
-        flag.sprite = countryFlagDatabase.GetFlag(country);
+        proceduralHumanAvatarUI.age = age / 60f;
+        flag.sprite = countryFlagDatabase.GetFlag(data.country);
 
-        for (int i = 0; i < characterTraits.Count; i++)
+        for (int i = 0; i < traits.Count; i++)
         {
-            CharacterTrait characterTrait = characterTraits[i];
-            CharacterTraitItemUI characterTraitItemUI = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
-
-            CommonUtil.SetParentAndResetScale(characterTraitItemUI.transform, traitContainer);
-            characterTraitItemUI.Init(characterTrait);
+            CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
+            CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
+            item.Init(traits[i]);
         }
 
         supportButton.gameObject.SetActive(false);
         electionPointText.gameObject.SetActive(false);
-
-        this.characterTraits = characterTraits;
     }
 
     private void Select()
@@ -56,19 +65,16 @@ public class LeadershipCharacterUI : MonoBehaviour
         LeadershipManager.Ins.AssignLeadershipPosition(this);
     }
 
-    public List<CharacterTrait> GetCharacterTraits()
-    {
-        return characterTraits;
-    }
+    public List<CharacterTrait> GetCharacterTraits() => characterTraits;
 
     public void EnableSupportOption()
     {
         supportButton.gameObject.SetActive(true);
         electionPointText.gameObject.SetActive(true);
 
-        supportCost = 10 * characterTraits.Count(item => item.isGoodTrait);
+        supportCost = Mathf.Max(10, 10 * characterTraits.Count(item => item.isGoodTrait));
 
-        electionPointText.text = $"Election Point: {electionPoint}";
+        electionPointText.text = $"Election Points: {electionPoint}";
         supportCostText.text = $"{supportCost}";
     }
 
@@ -76,15 +82,13 @@ public class LeadershipCharacterUI : MonoBehaviour
     {
         if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= supportCost)
         {
-
+            ResourceManager.Ins.DeductResource(ResourceType.Coin, supportCost);
+            electionPoint += 10;
+            electionPointText.text = $"Election Points: {electionPoint}";
         }
         else
         {
-            IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Not enough power to support this character!");
+            IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Not enough resources to support this character!");
         }
-
-        electionPoint += 10;
-
-        electionPointText.text = $"Election Point: {electionPoint}";
     }
 }
