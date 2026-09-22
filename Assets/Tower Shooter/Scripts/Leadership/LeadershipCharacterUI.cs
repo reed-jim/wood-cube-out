@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class LeadershipCharacterUI : MonoBehaviour
 {
     public TMP_Text nameText;
+    public TMP_Text ageText;
     public Image flag;
     public Button selectButton;
     public RectTransform traitContainer;
@@ -19,9 +20,10 @@ public class LeadershipCharacterUI : MonoBehaviour
         selectButton.onClick.AddListener(Select);
     }
 
-    public void Init(string name, Country country, List<CharacterTrait> characterTraits)
+    public void Init(string name, Country country, int age, List<CharacterTrait> characterTraits)
     {
         nameText.text = name;
+        ageText.text = $"{age} years old";
         flag.sprite = countryFlagDatabase.GetFlag(country);
 
         for (int i = 0; i < characterTraits.Count; i++)

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +23,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     public CharacterTraitContainer characterTraitContainer;
 
+    private LeadershipData leadershipData;
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -37,26 +41,47 @@ public class LeadershipManager : Singleton<LeadershipManager>
         MultiverseIdleGameplayScreen.openLeadershipUIEvent -= Show;
     }
 
+    void Start()
+    {
+        LoadLeadershipData();
+    }
+
     public void Init()
     {
-        for (int i = 0; i < 3; i++)
+        LoadCurrentCharacters();
+    }
+
+    private void LoadCurrentCharacters()
+    {
+        for (int i = 0; i < leadershipData.leadershipCharacterDataItems.Count; i++)
         {
+            LeadershipCharacterData leadershipCharacterData = leadershipData.leadershipCharacterDataItems[i];
+
             LeadershipCharacterUI leadershipCharacterUI =
                 ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
 
-            List<StatModifier> statModifiers = new List<StatModifier>
+            Country country = leadershipCharacterData.country;
+            string name = leadershipCharacterData.characterName;
+            DateTime birthDay = DateTime.ParseExact(
+                leadershipCharacterData.birthDayString,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture
+            );
+            int age = CommonUtil.GetAge(birthDay, DateTime.Today);
+
+            List<CharacterTrait> characterTraits = new List<CharacterTrait>();
+
+            for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
             {
-                new StatModifier(StatType.Damage, ModifierType.PercentMult, Random.RandomRange(-0.2f, 1)),
-                new StatModifier(StatType.AttackSpeed, ModifierType.PercentMult, Random.RandomRange(-0.2f, 1))
-            };
+                CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
 
-            Country country = CommonUtil.GetRandomEnumValue<Country>();
+                if (leadershipCharacterData.traitIndexes.Contains(characterTrait.id))
+                {
+                    characterTraits.Add(characterTrait);
+                }
+            }
 
-            string name = CountryNameGenerator.Ins.GetRandomName(country);
-
-            List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
-
-            leadershipCharacterUI.Init(name, country, characterTraits);
+            leadershipCharacterUI.Init(name, country, age, characterTraits);
 
             CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
             leadershipCharacterUI.transform.localScale *= 0.48f;
@@ -100,4 +125,77 @@ public class LeadershipManager : Singleton<LeadershipManager>
         characterTrailDetail.ShowAt(characterTraitItemUI);
     }
     #endregion
+
+    #region Save/Load
+    private void LoadLeadershipData()
+    {
+        leadershipData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("leadershipData"), GetDefaultLeadershipData());
+
+        if (!leadershipData.isScoutAnyCharacter)
+        {
+            leadershipData.isScoutAnyCharacter = true;
+
+            SaveLeadershipData();
+        }
+    }
+
+    private void SaveLeadershipData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("leadershipData"), leadershipData);
+    }
+
+    private LeadershipData GetDefaultLeadershipData()
+    {
+        LeadershipData defaultLeadershipData = new LeadershipData();
+
+        defaultLeadershipData.isScoutAnyCharacter = false;
+        defaultLeadershipData.leadershipCharacterDataItems = new List<LeadershipCharacterData>();
+
+        int numStartCharacter = 3;
+
+        for (int i = 0; i < numStartCharacter; i++)
+        {
+            Country country = CommonUtil.GetRandomEnumValue<Country>();
+
+            string name = CountryNameGenerator.Ins.GetRandomName(country);
+
+            DateTime birthday = CommonUtil.RandomBirthday(2026 - 18, 2026 - 18 + 50);
+
+            List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
+            List<int> characterTraitIndexes = new List<int>();
+
+            for (int j = 0; j < characterTraits.Count; j++)
+            {
+                characterTraitIndexes.Add(characterTraits[j].id);
+            }
+
+            LeadershipCharacterData leadershipCharacterData = new LeadershipCharacterData();
+
+            leadershipCharacterData.characterName = name;
+            leadershipCharacterData.country = country;
+            leadershipCharacterData.birthDayString = birthday.ToString("yyyy-MM-dd");
+            leadershipCharacterData.traitIndexes = characterTraitIndexes;
+
+            defaultLeadershipData.leadershipCharacterDataItems.Add(leadershipCharacterData);
+        }
+
+        return defaultLeadershipData;
+    }
+    #endregion
+}
+
+[Serializable]
+public class LeadershipData
+{
+    public bool isScoutAnyCharacter;
+    public List<LeadershipCharacterData> leadershipCharacterDataItems;
+}
+
+[Serializable]
+public class LeadershipCharacterData
+{
+    public string characterName;
+    public Country country;
+    public string birthDayString;
+    public List<int> traitIndexes;
 }

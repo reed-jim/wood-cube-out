@@ -440,6 +440,27 @@ public static class CommonUtil
         }
         return false;
     }
+
+    public static DateTime RandomBirthday(int startYear, int endYear)
+    {
+        int year = UnityEngine.Random.Range(startYear, endYear + 1);
+        int month = UnityEngine.Random.Range(1, 13);
+
+        int daysInMonth = DateTime.DaysInMonth(year, month);
+        int day = UnityEngine.Random.Range(1, daysInMonth + 1);
+
+        return new DateTime(year, month, day);
+    }
+
+    public static int GetAge(DateTime birthday, DateTime currentDate)
+    {
+        int age = currentDate.Year - birthday.Year;
+
+        if (currentDate < birthday.AddYears(age))
+            age--;
+
+        return age;
+    }
     #endregion
 
     #region RANDOMIZE
