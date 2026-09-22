@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PrimeTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class CharacterTrailDetail : MonoBehaviour
 {
     public RectTransform container;
     public CanvasGroup canvasGroup;
+    public TMP_Text traitName;
     public RectTransform infoContainer;
     public Button closeButton;
 
@@ -21,6 +23,12 @@ public class CharacterTrailDetail : MonoBehaviour
     {
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
 
+        Color traitColor =
+            characterTrait.isGoodTrait ? DynamicThemeManager.Ins.CurrentTheme.primary : DynamicThemeManager.Ins.CurrentTheme.error;
+
+        traitName.color = traitColor;
+        traitName.text = characterTrait.traitName;
+
         for (int i = 0; i < characterTrait.traitEfficiencyModifiers.Count; i++)
         {
             TraitEfficiencyModifier traitEfficiencyModifier = characterTrait.traitEfficiencyModifiers[i];
@@ -30,6 +38,8 @@ public class CharacterTrailDetail : MonoBehaviour
             CommonUtil.SetParentAndResetScale(characterTraitItemUI.transform, infoContainer);
 
             characterTraitItemUI.Init(traitEfficiencyModifier);
+
+            characterTraitItemUIs.Add(characterTraitItemUI);
         }
     }
 
@@ -37,19 +47,21 @@ public class CharacterTrailDetail : MonoBehaviour
     {
         container.gameObject.SetActive(true);
 
-        canvasGroup.alpha = 0;
+        // canvasGroup.alpha = 0;
 
-        Tween.Alpha(canvasGroup, 1, duration: 0.3f);
+        // Tween.Alpha(canvasGroup, 1, duration: 0.3f);
 
         Init(characterTraitItemUI.characterTrait);
     }
 
-    private void Hide()
+    public void Hide()
     {
-        Tween.Alpha(canvasGroup, 0, duration: 0.3f)
-        .OnComplete(() =>
-        {
-            container.gameObject.SetActive(false);
-        });
+        container.gameObject.SetActive(false);
+
+        // Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+        // .OnComplete(() =>
+        // {
+        //     container.gameObject.SetActive(false);
+        // });
     }
 }

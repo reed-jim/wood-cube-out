@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CharacterTraitItemUI : MonoBehaviour
+public class CharacterTraitItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Image circle;
     public TMP_Text traitName;
@@ -10,10 +11,8 @@ public class CharacterTraitItemUI : MonoBehaviour
 
     public CharacterTrait characterTrait;
 
-    void Awake()
-    {
-        selectButton.onClick.AddListener(Select);
-    }
+    private string primaryHex;
+    private string onSurfaceHex;
 
     public void Init(CharacterTrait characterTrait)
     {
@@ -32,18 +31,24 @@ public class CharacterTraitItemUI : MonoBehaviour
 
     public void Init(TraitEfficiencyModifier traitEfficiencyModifier)
     {
-        Color traitColor =
-            traitEfficiencyModifier.efficiencyModifier > 0 ? DynamicThemeManager.Ins.CurrentTheme.primary : DynamicThemeManager.Ins.CurrentTheme.error;
+        primaryHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.Primary);
+        Color onSurfaceColor = DynamicThemeManager.Ins.CurrentTheme.onSurface;
 
-        traitName.color = traitColor;
+        traitName.color = onSurfaceColor;
 
         circle.gameObject.SetActive(false);
 
-        traitName.text = $"{traitEfficiencyModifier.efficiencyModifier * 100}% efficiency for <color=#666>{traitEfficiencyModifier.leadershipPosition}</color> position";
+        traitName.text =
+            $"<color={primaryHex}>{traitEfficiencyModifier.efficiencyModifier * 100}% efficiency</color> for <color={primaryHex}>{traitEfficiencyModifier.leadershipPosition}</color> position";
     }
 
-    private void Select()
+    public void OnPointerEnter(PointerEventData eventData)
     {
         LeadershipManager.Ins.ShowTraitDetail(this);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        LeadershipManager.Ins.HideTraitDetail();
     }
 }

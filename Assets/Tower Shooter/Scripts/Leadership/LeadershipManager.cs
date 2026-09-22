@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -241,9 +242,14 @@ public class LeadershipManager : Singleton<LeadershipManager>
     #region Character Trait
     public void ShowTraitDetail(CharacterTraitItemUI characterTraitItemUI)
     {
-        CommonUtil.SetParentAndResetScale(characterTrailDetail.transform, characterTraitItemUI.transform);
+        characterTrailDetail.transform.position = characterTraitItemUI.transform.position.AddX(360);
 
         characterTrailDetail.ShowAt(characterTraitItemUI);
+    }
+
+    public void HideTraitDetail()
+    {
+        characterTrailDetail.Hide();
     }
     #endregion
 
