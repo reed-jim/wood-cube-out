@@ -17,6 +17,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     public LeadershipPositionUI selectedLeadershipPosition;
 
+    public CharacterTraitContainer characterTraitContainer;
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -50,7 +52,9 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             string name = CountryNameGenerator.Ins.GetRandomName(country);
 
-            leadershipCharacterUI.Init(name, country, statModifiers);
+            List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
+
+            leadershipCharacterUI.Init(name, country, characterTraits);
 
             CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
             leadershipCharacterUI.transform.localScale *= 0.48f;

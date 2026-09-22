@@ -7,44 +7,31 @@ using UnityEngine.UI;
 public class LeadershipCharacterUI : MonoBehaviour
 {
     public TMP_Text nameText;
-    public TMP_Text statText;
     public Image flag;
     public Button selectButton;
+    public RectTransform traitContainer;
 
     public StatColorConfigSO config;
     public CountryFlagDatabase countryFlagDatabase;
-
-    private List<StatModifier> statModifiers;
 
     void Awake()
     {
         selectButton.onClick.AddListener(Select);
     }
 
-    public void Init(string name, Country country, List<StatModifier> statModifiers)
+    public void Init(string name, Country country, List<CharacterTrait> characterTraits)
     {
-        StringBuilder statDescription = new StringBuilder();
-
-        foreach (var mod in statModifiers)
-        {
-            string hex = config.GetHex(mod.Type);
-
-            bool isPositive = mod.Value >= 0;
-
-            string sign = isPositive ? "+" : "";
-
-            string valStr = mod.ModType == ModifierType.Flat
-                ? $"{sign}{mod.Value:F2}"
-                : $"{sign}{mod.Value * 100f:F2}%";
-
-            statDescription.AppendLine($"<color=#{hex}>{valStr} {mod.Type}</color>");
-        }
-
         nameText.text = name;
-        statText.text = statDescription.ToString().TrimEnd();
         flag.sprite = countryFlagDatabase.GetFlag(country);
 
-        this.statModifiers = statModifiers;
+        for (int i = 0; i < characterTraits.Count; i++)
+        {
+            CharacterTrait characterTrait = characterTraits[i];
+            CharacterTraitItemUI characterTraitItemUI = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
+
+            CommonUtil.SetParentAndResetScale(characterTraitItemUI.transform, traitContainer);
+            characterTraitItemUI.Init(characterTrait);
+        }
     }
 
     private void Select()

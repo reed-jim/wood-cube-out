@@ -24,6 +24,7 @@ public static class GameConstants
     public static string taskItemUI = "taskItemUI";
     public static string rewardItemUI = "rewardItemUI";
     public static string leadershipCharacterUI = "leadershipCharacterUI";
+    public static string characterTraitItemUI = "characterTraitItemUI";
     public static string statItemUI = "statItemUI";
 
     public static string gameData = "gameData";
