@@ -46,6 +46,7 @@ public class LeadershipCharacterUI : MonoBehaviour
         }
 
         supportButton.gameObject.SetActive(false);
+        electionPointText.gameObject.SetActive(false);
 
         this.characterTraits = characterTraits;
     }
@@ -63,6 +64,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     public void EnableSupportOption()
     {
         supportButton.gameObject.SetActive(true);
+        electionPointText.gameObject.SetActive(true);
 
         supportCost = 10 * characterTraits.Count(item => item.isGoodTrait);
 
