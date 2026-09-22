@@ -38,17 +38,19 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public RectTransform characterContainer;
     public Button closeButton;
     public Button hireCharacterButton;
+    public Button electionButton;
 
     [Header("Customize")]
     public int maxCharacter;
 
     public CharacterTrailDetail characterTrailDetail;
+    public ElectionPopup electionPopup;
 
     public LeadershipPositionUI selectedLeadershipPosition;
 
     public CharacterTraitContainer characterTraitContainer;
 
-    private LeadershipData leadershipData;
+    public LeadershipData leadershipData;
 
     [Header("Leadership Positions")]
     public List<LeadershipPositionUI> leadershipPositionUIs;
@@ -64,6 +66,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         closeButton.onClick.AddListener(Hide);
         hireCharacterButton.onClick.AddListener(HireNewCharacters);
+        electionButton.onClick.AddListener(ShowElection);
 
         container.gameObject.SetActive(false);
     }
@@ -258,6 +261,13 @@ public class LeadershipManager : Singleton<LeadershipManager>
         CommonUtil.SetParentAndResetScale(characterTrailDetail.transform, characterTraitItemUI.transform);
 
         characterTrailDetail.ShowAt(characterTraitItemUI);
+    }
+    #endregion
+
+    #region Election
+    private void ShowElection()
+    {
+        electionPopup.Show();
     }
     #endregion
 
