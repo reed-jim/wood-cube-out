@@ -15,6 +15,8 @@ public class LeadershipCharacterUI : MonoBehaviour
     public StatColorConfigSO config;
     public CountryFlagDatabase countryFlagDatabase;
 
+    private List<CharacterTrait> characterTraits;
+
     void Awake()
     {
         selectButton.onClick.AddListener(Select);
@@ -34,10 +36,17 @@ public class LeadershipCharacterUI : MonoBehaviour
             CommonUtil.SetParentAndResetScale(characterTraitItemUI.transform, traitContainer);
             characterTraitItemUI.Init(characterTrait);
         }
+
+        this.characterTraits = characterTraits;
     }
 
     private void Select()
     {
         LeadershipManager.Ins.AssignLeadershipPosition(this);
+    }
+
+    public List<CharacterTrait> GetCharacterTraits()
+    {
+        return characterTraits;
     }
 }

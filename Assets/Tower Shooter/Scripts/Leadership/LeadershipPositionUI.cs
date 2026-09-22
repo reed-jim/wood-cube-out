@@ -19,6 +19,9 @@ public class LeadershipPositionUI : MonoBehaviour
     public List<StatModifierData> statModifierDataItems;
     public float baseEfficiency;
 
+    public LeadershipCharacterUI leadershipCharacterUI;
+    public float efficiency;
+
     public StatColorConfigSO config;
 
     void Awake()
@@ -63,5 +66,28 @@ public class LeadershipPositionUI : MonoBehaviour
     public void AssignCharacter(LeadershipCharacterUI leadershipCharacterUI)
     {
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterUIContainer, Vector3.zero);
+
+        efficiency = baseEfficiency;
+
+        List<CharacterTrait> characterTraits = leadershipCharacterUI.GetCharacterTraits();
+
+        for (int i = 0; i < characterTraits.Count; i++)
+        {
+            CharacterTrait characterTrait = characterTraits[i];
+
+            for (int j = 0; j < characterTrait.traitEfficiencyModifiers.Count; j++)
+            {
+                TraitEfficiencyModifier traitEfficiencyModifier = characterTrait.traitEfficiencyModifiers[j];
+
+                if (traitEfficiencyModifier.leadershipPosition == leadershipPosition)
+                {
+                    efficiency += traitEfficiencyModifier.efficiencyModifier;
+                }
+            }
+        }
+
+        efficiencyText.text = $"Efficiency: {(int)(baseEfficiency * 100)}%";
+
+        this.leadershipCharacterUI = leadershipCharacterUI;
     }
 }

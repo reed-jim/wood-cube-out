@@ -50,6 +50,12 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     private LeadershipData leadershipData;
 
+    [Header("Leadership Positions")]
+    public List<LeadershipPositionUI> leadershipPositionUIs;
+
+    [Header("Bonus Stat")]
+    public List<StatModifier> statModifiers = new List<StatModifier>();
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -171,6 +177,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public void AssignLeadershipPosition(LeadershipCharacterUI leadershipCharacterUI)
     {
         selectedLeadershipPosition.AssignCharacter(leadershipCharacterUI);
+
+        CalculateBonusStat();
     }
 
     private void Show()
@@ -191,6 +199,58 @@ public class LeadershipManager : Singleton<LeadershipManager>
             container.gameObject.SetActive(false);
         });
     }
+
+    #region Bonus Stat
+    public void CalculateBonusStat()
+    {
+        StatModifier damageStatModifier = new StatModifier(StatType.Damage, ModifierType.PercentMult, 0);
+        StatModifier speedStatModifier = new StatModifier(StatType.AttackSpeed, ModifierType.PercentMult, 0);
+        StatModifier critChanceStatModifier = new StatModifier(StatType.CritChance, ModifierType.PercentMult, 0);
+        StatModifier critMultiplierStatModifier = new StatModifier(StatType.CritMultiplier, ModifierType.PercentMult, 0);
+
+        if (statModifiers.Count == 0)
+        {
+            statModifiers.Add(damageStatModifier);
+            statModifiers.Add(speedStatModifier);
+            statModifiers.Add(critChanceStatModifier);
+            statModifiers.Add(critMultiplierStatModifier);
+        }
+
+        for (int i = 0; i < leadershipPositionUIs.Count; i++)
+        {
+            LeadershipPositionUI leadershipPositionUI = leadershipPositionUIs[i];
+
+            float efficiency = leadershipPositionUI.efficiency;
+
+            if (leadershipPositionUI.characterUIContainer != null)
+            {
+                for (int j = 0; j < leadershipPositionUI.statModifierDataItems.Count; j++)
+                {
+                    StatModifierData statModifierData = leadershipPositionUI.statModifierDataItems[j];
+
+                    for (int k = 0; k < statModifiers.Count; k++)
+                    {
+                        if (statModifiers[k].Type == statModifierData.statType)
+                        {
+                            statModifiers[k].Value += efficiency * statModifierData.value;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Apply Stats to Nodes
+        for (int i = 0; i < NodeManager.Ins.nodes.Count; i++)
+        {
+            BaseCharacter node = NodeManager.Ins.nodes[i];
+
+            for (int j = 0; j < statModifiers.Count; j++)
+            {
+                node.serviceLocator.stats.AddModifier(statModifiers[j]);
+            }
+        }
+    }
+    #endregion
 
     #region Character Trait
     public void ShowTraitDetail(CharacterTraitItemUI characterTraitItemUI)
