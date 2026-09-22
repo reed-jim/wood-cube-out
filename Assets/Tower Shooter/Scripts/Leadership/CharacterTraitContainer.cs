@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CharacterTrait", menuName = "Idle/Traits/CharacterTrait")]
+[CreateAssetMenu(fileName = "CharacterTraitContainer", menuName = "Idle/Traits/CharacterTraitContainer")]
 public class CharacterTraitContainer : ScriptableObject
 {
     public List<CharacterTrait> characterTraits;

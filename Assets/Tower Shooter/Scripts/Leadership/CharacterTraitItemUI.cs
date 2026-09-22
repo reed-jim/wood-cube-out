@@ -21,4 +21,15 @@ public class CharacterTraitItemUI : MonoBehaviour
 
         this.characterTrait = characterTrait;
     }
+
+    public void Init(TraitEfficiencyModifier traitEfficiencyModifier)
+    {
+        Color traitColor =
+            traitEfficiencyModifier.efficiencyModifier > 0 ? DynamicThemeManager.Ins.CurrentTheme.primary : DynamicThemeManager.Ins.CurrentTheme.error;
+
+        circle.color = traitColor;
+        traitName.color = traitColor;
+
+        traitName.text = $"{traitEfficiencyModifier.efficiencyModifier} for {traitEfficiencyModifier.leadershipPosition} position";
+    }
 }

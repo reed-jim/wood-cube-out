@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class CharacterTrait : ScriptableObject
     public bool isGoodTrait;
 }
 
+[Serializable]
 public class TraitEfficiencyModifier
 {
     public LeadershipPosition leadershipPosition;

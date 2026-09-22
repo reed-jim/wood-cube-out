@@ -18,6 +18,16 @@ public static class CommonUtil
         target.localScale = Vector3.one;
     }
 
+    public static void ReturnListToPool<T>(List<T> items, Func<T, GameObject> getGameObject)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            T item = items[i];
+
+            ObjectPoolingEverything.ReturnToPool("key not needed", getGameObject(item).gameObject);
+        }
+    }
+
     public static void SetParentAndResetScale(Transform target, Transform parent, Vector3 localPosition)
     {
         target.SetParent(parent);
