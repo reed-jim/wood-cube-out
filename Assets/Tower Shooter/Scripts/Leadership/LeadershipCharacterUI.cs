@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -24,6 +25,8 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     private List<CharacterTrait> characterTraits;
     public LeadershipCharacterData CharacterData { get; private set; }
+
+    public static event Action<LeadershipCharacterData, List<CharacterTrait>> showLeadershipCharacterDetailEvent;
 
     void Awake()
     {
@@ -62,7 +65,14 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     private void Select()
     {
-        LeadershipManager.Ins.AssignLeadershipPosition(this);
+        if (LeadershipManager.Ins.selectedLeadershipPosition == null)
+        {
+            showLeadershipCharacterDetailEvent?.Invoke(CharacterData, characterTraits);
+        }
+        else
+        {
+            LeadershipManager.Ins.AssignLeadershipPosition(this);
+        }
     }
 
     public List<CharacterTrait> GetCharacterTraits() => characterTraits;
