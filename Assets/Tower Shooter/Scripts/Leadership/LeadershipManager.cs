@@ -7,8 +7,29 @@ using UnityEngine.UI;
 
 public enum LeadershipPosition
 {
+    None,
+
+    // Command
     Captain,
-    Chieftain
+    FirstOfficer,
+
+    // Navigation & Operations
+    Navigator,
+    OperationsOfficer,
+    CommunicationsOfficer,
+
+    // Engineering
+    ChiefEngineer,
+    SystemsEngineer,
+
+    // Science
+    ScienceOfficer,
+    ResearchOfficer,
+
+    // Ship Support
+    MedicalOfficer,
+    Quartermaster,
+    MaintenanceOfficer,
 }
 
 public class LeadershipManager : Singleton<LeadershipManager>
@@ -16,6 +37,10 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public RectTransform container;
     public RectTransform characterContainer;
     public Button closeButton;
+    public Button hireCharacterButton;
+
+    [Header("Customize")]
+    public int maxCharacter;
 
     public CharacterTrailDetail characterTrailDetail;
 
@@ -32,6 +57,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         MultiverseIdleGameplayScreen.openLeadershipUIEvent += Show;
 
         closeButton.onClick.AddListener(Hide);
+        hireCharacterButton.onClick.AddListener(HireNewCharacters);
 
         container.gameObject.SetActive(false);
     }
@@ -57,34 +83,83 @@ public class LeadershipManager : Singleton<LeadershipManager>
         {
             LeadershipCharacterData leadershipCharacterData = leadershipData.leadershipCharacterDataItems[i];
 
-            LeadershipCharacterUI leadershipCharacterUI =
+            LoadLeadershipCharacter(leadershipCharacterData);
+        }
+    }
+
+    private void LoadLeadershipCharacter(LeadershipCharacterData leadershipCharacterData)
+    {
+        LeadershipCharacterUI leadershipCharacterUI =
                 ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
 
-            Country country = leadershipCharacterData.country;
-            string name = leadershipCharacterData.characterName;
-            DateTime birthDay = DateTime.ParseExact(
-                leadershipCharacterData.birthDayString,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture
-            );
-            int age = CommonUtil.GetAge(birthDay, DateTime.Today);
+        Country country = leadershipCharacterData.country;
+        string name = leadershipCharacterData.characterName;
+        DateTime birthDay = DateTime.ParseExact(
+            leadershipCharacterData.birthDayString,
+            "yyyy-MM-dd",
+            CultureInfo.InvariantCulture
+        );
+        int age = CommonUtil.GetAge(birthDay, DateTime.Today);
 
-            List<CharacterTrait> characterTraits = new List<CharacterTrait>();
+        List<CharacterTrait> characterTraits = new List<CharacterTrait>();
 
-            for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
+        for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
+        {
+            CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
+
+            if (leadershipCharacterData.traitIndexes.Contains(characterTrait.id))
             {
-                CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
+                characterTraits.Add(characterTrait);
+            }
+        }
 
-                if (leadershipCharacterData.traitIndexes.Contains(characterTrait.id))
-                {
-                    characterTraits.Add(characterTrait);
-                }
+        leadershipCharacterUI.Init(name, country, age, characterTraits);
+
+        CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
+        leadershipCharacterUI.transform.localScale *= 0.48f;
+    }
+
+    public void HireNewCharacters()
+    {
+        int numCharacterToHire = 3;
+
+        int currentCharacter = leadershipData.leadershipCharacterDataItems.Count;
+
+        numCharacterToHire = Mathf.Min(numCharacterToHire, maxCharacter - currentCharacter);
+
+        if (numCharacterToHire == 0)
+        {
+            IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "You have reached max character!");
+
+            return;
+        }
+
+        for (int i = 0; i < numCharacterToHire; i++)
+        {
+            Country country = CommonUtil.GetRandomEnumValue<Country>();
+
+            string name = CountryNameGenerator.Ins.GetRandomName(country);
+
+            DateTime birthday = CommonUtil.RandomBirthday(2026 - 18, 2026 - 18 + 50);
+
+            List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
+            List<int> characterTraitIndexes = new List<int>();
+
+            for (int j = 0; j < characterTraits.Count; j++)
+            {
+                characterTraitIndexes.Add(characterTraits[j].id);
             }
 
-            leadershipCharacterUI.Init(name, country, age, characterTraits);
+            LeadershipCharacterData leadershipCharacterData = new LeadershipCharacterData();
 
-            CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
-            leadershipCharacterUI.transform.localScale *= 0.48f;
+            leadershipCharacterData.characterName = name;
+            leadershipCharacterData.country = country;
+            leadershipCharacterData.birthDayString = birthday.ToString("yyyy-MM-dd");
+            leadershipCharacterData.traitIndexes = characterTraitIndexes;
+
+            leadershipData.leadershipCharacterDataItems.Add(leadershipCharacterData);
+
+            LoadLeadershipCharacter(leadershipCharacterData);
         }
     }
 
@@ -198,4 +273,5 @@ public class LeadershipCharacterData
     public Country country;
     public string birthDayString;
     public List<int> traitIndexes;
+    public LeadershipPosition leadershipPosition;
 }
