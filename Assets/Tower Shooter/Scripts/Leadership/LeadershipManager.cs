@@ -345,6 +345,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         leadershipCharacterData.country = country;
         leadershipCharacterData.birthDayString = birthday.ToString("yyyy-MM-dd");
         leadershipCharacterData.traitIndexes = characterTraitIndexes;
+        leadershipCharacterData.faceSeed = UnityEngine.Random.Range(1000, 999999);
 
         return leadershipCharacterData;
     }
@@ -365,5 +366,6 @@ public class LeadershipCharacterData
     public Country country;
     public string birthDayString;
     public List<int> traitIndexes;
+    public int faceSeed;
     public LeadershipPosition leadershipPosition;
 }

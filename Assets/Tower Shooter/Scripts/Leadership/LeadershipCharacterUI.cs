@@ -52,6 +52,8 @@ public class LeadershipCharacterUI : MonoBehaviour
         proceduralHumanAvatarUI.age = age / 60f;
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
 
+        proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
+
         for (int i = 0; i < traits.Count; i++)
         {
             CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
