@@ -570,10 +570,17 @@ MonoBehaviour:
   characterContainer: {fileID: 7577152861054954500}
   closeButton: {fileID: 8639046269303212000}
   hireCharacterButton: {fileID: 3482063112666056491}
+  electionButton: {fileID: 5980300601804103033}
   maxCharacter: 10
   characterTrailDetail: {fileID: 0}
+  electionPopup: {fileID: 0}
   selectedLeadershipPosition: {fileID: 0}
   characterTraitContainer: {fileID: 11400000, guid: 343d2de67c8e9dc4e90d82b78159140e, type: 2}
+  leadershipData:
+    isScoutAnyCharacter: 0
+    leadershipCharacterDataItems: []
+  leadershipPositionUIs: []
+  statModifiers: []
 --- !u!1 &3511277117570579838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1508,6 +1515,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
+--- !u!114 &5980300601804103033 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5187201363141550269, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
+  m_PrefabInstance: {fileID: 1514035888662773188}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!224 &6343872573473466929 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5551559419601704949, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
