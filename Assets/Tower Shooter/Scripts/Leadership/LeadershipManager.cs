@@ -487,4 +487,5 @@ public class LeadershipPeriodData
     public LeadershipCharacterData leader;
     public string startDateTimeString;
     public string endDateTimeString;
+    public List<StarDiscoveryEventDataItem> starDiscoveryEventDataItems;
 }
