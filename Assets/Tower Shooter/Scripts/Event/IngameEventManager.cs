@@ -17,6 +17,23 @@ public class IngameEventManager : Singleton<IngameEventManager>
 
     public IngameEventData ingameEventData;
 
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        MultiverseIdleGameplayScreen.openIngameEventScreenEvent += ShowIngameEventScreen;
+    }
+
+    void OnDestroy()
+    {
+        MultiverseIdleGameplayScreen.openIngameEventScreenEvent -= ShowIngameEventScreen;
+    }
+
+    public void ShowIngameEventScreen()
+    {
+        ingameEventScreen.Show(ingameEventData);
+    }
+
     public void ShowIngameEventDetail(IngameEventType eventType, params object[] args)
     {
         ingameEventDetailUI.ShowIngameEventDetail(eventType, args);

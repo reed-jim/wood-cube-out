@@ -10,6 +10,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public Button augmentOverviewButton;
     public Button selectThemeButton;
     public Button leadershipButton;
+    public Button ingameEventButton;
 
     [Header("Node")]
     public RectTransform nodeContainer;
@@ -37,6 +38,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
 
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action openLeadershipUIEvent;
+    public static event Action openIngameEventScreenEvent;
 
     protected override void MoreActionOnAwake()
     {
@@ -49,6 +51,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
         selectThemeButton.onClick.AddListener(OpenSelectThemePopup);
         leadershipButton.onClick.AddListener(OpenLeadershipPopup);
+        ingameEventButton.onClick.AddListener(OpenIngameEventPopup);
 
         normalFilterButton.onClick.AddListener(EnableNormalFilter);
         augmentFilterButton.onClick.AddListener(EnableAugmentFilter);
@@ -96,6 +99,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     private void OpenLeadershipPopup()
     {
         openLeadershipUIEvent?.Invoke();
+    }
+
+    private void OpenIngameEventPopup()
+    {
+        openIngameEventScreenEvent?.Invoke();
     }
 
     public void UpdateUpgradePointText(int upgradePoint)
