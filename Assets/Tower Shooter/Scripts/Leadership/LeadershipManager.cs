@@ -39,9 +39,15 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public RectTransform characterContainer;
     public Button closeButton;
     public Button hireCharacterButton;
-    public Button electionButton;
+    public CanvasGroup overlayCanvasGroup;
     public Image selectCharacterOverlay;
     public Button cancelAppointCharacterButton;
+
+    [Header("Remove")]
+    public CanvasGroup removeCharacterOverlayCanvasGroup;
+    public Button confirmRemoveCharacterButton;
+    public Button enterRemoveCharacterModeButton;
+    public Button exitRemoveCharacterButton;
 
     [Header("Customize")]
     public int maxCharacter;
@@ -57,6 +63,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     [Header("Leadership Positions")]
     public List<LeadershipPositionUI> leadershipPositionUIs;
+    private List<LeadershipCharacterUI> leadershipCharacterUIs;
 
     [Header("Bonus Stat")]
     public List<StatModifier> statModifiers = new List<StatModifier>();
@@ -71,6 +78,10 @@ public class LeadershipManager : Singleton<LeadershipManager>
         closeButton.onClick.AddListener(Hide);
         hireCharacterButton.onClick.AddListener(HireNewCharacters);
         cancelAppointCharacterButton.onClick.AddListener(CancelSelectLeadershipPosition);
+
+        confirmRemoveCharacterButton.onClick.AddListener(ConfirmRemoveCharacters);
+        enterRemoveCharacterModeButton.onClick.AddListener(EnterRemoveCharacterMode);
+        exitRemoveCharacterButton.onClick.AddListener(ExitRemoveCharacterMode);
 
         container.gameObject.SetActive(false);
         selectCharacterOverlay.gameObject.SetActive(false);
@@ -95,6 +106,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     private void LoadCurrentCharacters()
     {
+        CommonUtil.ReturnListToPool(leadershipCharacterUIs, item => item.gameObject);
+
         for (int i = 0; i < leadershipData.leadershipCharacterDataItems.Count; i++)
         {
             LeadershipCharacterData leadershipCharacterData = leadershipData.leadershipCharacterDataItems[i];
@@ -133,6 +146,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
         leadershipCharacterUI.transform.localScale *= 0.48f;
+
+        leadershipCharacterUIs.Add(leadershipCharacterUI);
     }
 
     public void HireNewCharacters()
@@ -348,6 +363,55 @@ public class LeadershipManager : Singleton<LeadershipManager>
         leadershipCharacterData.faceSeed = UnityEngine.Random.Range(1000, 999999);
 
         return leadershipCharacterData;
+    }
+    #endregion
+
+    #region Remove
+    private void EnterRemoveCharacterMode()
+    {
+        removeCharacterOverlayCanvasGroup.interactable = false;
+
+        SaferioTween.AlphaShow(removeCharacterOverlayCanvasGroup, onCompleteAction: () =>
+        {
+            removeCharacterOverlayCanvasGroup.interactable = true;
+        });
+
+        IdleGameInputManager.inputMode = IdleGameInputMode.RemoveLeadershipCharacter;
+    }
+
+    private void ExitRemoveCharacterMode()
+    {
+        removeCharacterOverlayCanvasGroup.interactable = false;
+
+        SaferioTween.AlphaHide(removeCharacterOverlayCanvasGroup);
+
+        IdleGameInputManager.inputMode = IdleGameInputMode.Normal;
+    }
+
+    private void ConfirmRemoveCharacters()
+    {
+        List<LeadershipCharacterUI> toRemoveList = new List<LeadershipCharacterUI>();
+
+        for (int i = 0; i < leadershipCharacterUIs.Count; i++)
+        {
+            LeadershipCharacterUI leadershipCharacterUI = leadershipCharacterUIs[i];
+
+            if (leadershipCharacterUI.isMarkForRemove)
+            {
+                toRemoveList.Add(leadershipCharacterUI);
+            }
+        }
+
+        for (int i = 0; i < toRemoveList.Count; i++)
+        {
+            leadershipData.leadershipCharacterDataItems.Remove(toRemoveList[i].leadershipCharacterData);
+        }
+
+        CommonUtil.ReturnListToPool(toRemoveList, item => item.gameObject);
+
+        ExitRemoveCharacterMode();
+
+        SaveLeadershipData();
     }
     #endregion
 }

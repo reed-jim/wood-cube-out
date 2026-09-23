@@ -17,8 +17,12 @@ public class LeadershipCharacterUI : MonoBehaviour
     public TMP_Text electionPointText;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
+    [Header("Theme")]
+    public ThemeableUI borderThemable;
+
     public int electionPoint;
     public float supportCost;
+    public bool isMarkForRemove;
 
     public StatColorConfigSO config;
     public CountryFlagDatabase countryFlagDatabase;
@@ -67,7 +71,20 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     private void Select()
     {
-        if (LeadershipManager.Ins.selectedLeadershipPosition == null)
+        if (IdleGameInputManager.inputMode == IdleGameInputMode.RemoveLeadershipCharacter)
+        {
+            if (isMarkForRemove)
+            {
+                borderThemable.ChangeRole(ThemeableUI.ElementRole.Outline);
+            }
+            else
+            {
+                borderThemable.ChangeRole(ThemeableUI.ElementRole.Error);
+            }
+
+            isMarkForRemove = !isMarkForRemove;
+        }
+        else if (LeadershipManager.Ins.selectedLeadershipPosition == null)
         {
             showLeadershipCharacterDetailEvent?.Invoke(leadershipCharacterData, characterTraits);
         }

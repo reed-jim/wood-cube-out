@@ -4,7 +4,8 @@ public enum IdleGameInputMode
 {
     Normal,
     SelectNode,
-    SelectNodeGroup
+    SelectNodeGroup,
+    RemoveLeadershipCharacter
 }
 
 public class IdleGameInputManager : Singleton<IdleGameInputManager>
