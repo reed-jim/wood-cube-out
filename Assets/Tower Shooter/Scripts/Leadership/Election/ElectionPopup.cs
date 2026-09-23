@@ -114,6 +114,8 @@ public class ElectionPopup : MonoBehaviour
             );
 
             IngameEventManager.Ins.CreateElectionCompleteEvent(winner.leadershipCharacterData);
+
+            LeadershipManager.Ins.AddLeadershipPeriod(winner.leadershipCharacterData, IdleTimeManager.Ins.CurrentDateTime);
         }
 
         IdleTimeManager.Ins.ScheduleNextElection();

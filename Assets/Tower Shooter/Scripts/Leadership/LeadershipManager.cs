@@ -68,6 +68,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public List<StatModifier> statModifiers = new List<StatModifier>();
 
     private List<LeadershipCharacterUI> leadershipCharacterUIs = new List<LeadershipCharacterUI>();
+    private LeadershipCharacterUI currentCaptain;
 
     protected override void MoreActionOnAwake()
     {
@@ -140,6 +141,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
                 if (leadershipPositionUI.leadershipPosition == leadershipCharacterData.leadershipPosition)
                 {
                     leadershipPositionUI.AssignCharacter(leadershipCharacterUI);
+
+                    if (leadershipPositionUI.leadershipPosition == LeadershipPosition.Captain)
+                    {
+                        currentCaptain = leadershipCharacterUI;
+                    }
 
                     break;
                 }
@@ -322,6 +328,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         defaultLeadershipData.isScoutAnyCharacter = false;
         defaultLeadershipData.leadershipCharacterDataItems = new List<LeadershipCharacterData>();
+        defaultLeadershipData.leadershipPeriodDataItems = new List<LeadershipPeriodData>();
 
         int numStartCharacter = 3;
 
@@ -422,6 +429,37 @@ public class LeadershipManager : Singleton<LeadershipManager>
         SaveLeadershipData();
     }
     #endregion
+
+    #region Leadership Period
+    public void AddLeadershipPeriod(LeadershipCharacterData leadershipCharacterData, DateTime startDateTime)
+    {
+        TryEndCurrentLeadershipPeriod();
+
+        LeadershipPeriodData leadershipPeriodData = new LeadershipPeriodData();
+
+        leadershipPeriodData.leader = leadershipCharacterData;
+        leadershipPeriodData.startDateTimeString = startDateTime.ToString("yyyy-MM-dd");
+
+        leadershipData.leadershipPeriodDataItems.Add(leadershipPeriodData);
+
+        SaveLeadershipData();
+    }
+
+    public void TryEndCurrentLeadershipPeriod()
+    {
+        for (int i = 0; i < leadershipData.leadershipPeriodDataItems.Count; i++)
+        {
+            LeadershipPeriodData leadershipPeriodData = leadershipData.leadershipPeriodDataItems[i];
+
+            if (leadershipPeriodData.leader == currentCaptain.leadershipCharacterData)
+            {
+                leadershipPeriodData.endDateTimeString = IdleTimeManager.Ins.CurrentDateTime.ToString("yyyy-MM-dd");
+            }
+        }
+
+        SaveLeadershipData();
+    }
+    #endregion
 }
 
 [Serializable]
@@ -429,6 +467,7 @@ public class LeadershipData
 {
     public bool isScoutAnyCharacter;
     public List<LeadershipCharacterData> leadershipCharacterDataItems;
+    public List<LeadershipPeriodData> leadershipPeriodDataItems;
 }
 
 [Serializable]
@@ -440,4 +479,12 @@ public class LeadershipCharacterData
     public List<int> traitIndexes;
     public int faceSeed;
     public LeadershipPosition leadershipPosition;
+}
+
+[Serializable]
+public class LeadershipPeriodData
+{
+    public LeadershipCharacterData leader;
+    public string startDateTimeString;
+    public string endDateTimeString;
 }
