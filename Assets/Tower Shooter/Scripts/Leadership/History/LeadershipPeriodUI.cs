@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LeadershipPeriodUI : MonoBehaviour
 {
     public RectTransform container;
     public RectTransform itemContainer;
+    [SerializeField] private Button closeButton;
 
     private List<LeadershipPeriodItemUI> leadershipPeriodItemUIs = new List<LeadershipPeriodItemUI>();
 
     void Awake()
     {
         LeadershipManager.openLeadershipPeriodScreenEvent += Show;
+
+        closeButton.onClick.AddListener(Hide);
     }
 
     void OnDestroy()

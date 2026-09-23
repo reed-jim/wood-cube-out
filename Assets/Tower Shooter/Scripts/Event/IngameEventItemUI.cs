@@ -22,6 +22,11 @@ public class IngameEventItemUI : MonoBehaviour
         description.text = ingameEventDataItem.description;
 
         this.ingameEventDataItem = ingameEventDataItem;
+
+        if (ingameEventDataItem.eventType == IngameEventType.ElectionComplete)
+        {
+            this.ingameEventDataItem = (ElectionCompleteEventDataItem)this.ingameEventDataItem;
+        }
     }
 
     private void Select()

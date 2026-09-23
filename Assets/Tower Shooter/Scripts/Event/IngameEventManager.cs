@@ -22,6 +22,8 @@ public class IngameEventManager : Singleton<IngameEventManager>
         base.MoreActionOnAwake();
 
         MultiverseIdleGameplayScreen.openIngameEventScreenEvent += ShowIngameEventScreen;
+
+        LoadIngameEventData();
     }
 
     void OnDestroy()
@@ -54,6 +56,8 @@ public class IngameEventManager : Singleton<IngameEventManager>
     {
         ElectionCompleteEventDataItem electionCompleteEventDataItem = new ElectionCompleteEventDataItem();
 
+        electionCompleteEventDataItem.title = "Election Result";
+        electionCompleteEventDataItem.description = $"{leadershipCharacterData.characterName} is the new Captain of the ship!";
         electionCompleteEventDataItem.dateTimeString = IdleTimeManager.Ins.GetCurrentDateTime();
         electionCompleteEventDataItem.eventType = IngameEventType.ElectionComplete;
         electionCompleteEventDataItem.leadershipCharacterData = leadershipCharacterData;
@@ -63,13 +67,13 @@ public class IngameEventManager : Singleton<IngameEventManager>
 
     public void CreateCharacterDeathEvent(LeadershipCharacterData leadershipCharacterData)
     {
-        ElectionCompleteEventDataItem electionCompleteEventDataItem = new ElectionCompleteEventDataItem();
+        ElectionCompleteEventDataItem characterDeathEventDataItem = new ElectionCompleteEventDataItem();
 
-        electionCompleteEventDataItem.dateTimeString = IdleTimeManager.Ins.GetCurrentDateTime();
-        electionCompleteEventDataItem.eventType = IngameEventType.CharacterDeath;
-        electionCompleteEventDataItem.leadershipCharacterData = leadershipCharacterData;
+        characterDeathEventDataItem.dateTimeString = IdleTimeManager.Ins.GetCurrentDateTime();
+        characterDeathEventDataItem.eventType = IngameEventType.CharacterDeath;
+        characterDeathEventDataItem.leadershipCharacterData = leadershipCharacterData;
 
-        AddIngameEventData(electionCompleteEventDataItem);
+        AddIngameEventData(characterDeathEventDataItem);
     }
 
     #region Save/Load

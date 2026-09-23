@@ -1,18 +1,26 @@
 using System.Linq;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class IngameEventDetailUI : MonoBehaviour
 {
+    [SerializeField] private RectTransform container;
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text description;
     [SerializeField] private Image descriptionImage;
     [SerializeField] private RectTransform descriptionContainer;
+    [SerializeField] private Button closeButton;
 
     private LeadershipCharacterUI electionWinner;
 
     public StarVoyageContainer starVoyageContainer;
+
+    void Awake()
+    {
+        closeButton.onClick.AddListener(Hide);
+    }
 
     public void ShowIngameEventDetail(IngameEventType eventType, params object[] args)
     {
@@ -28,6 +36,8 @@ public class IngameEventDetailUI : MonoBehaviour
 
             ShowElectionCompleteEvent(winnerData);
         }
+
+        Show();
     }
 
     private void ShowStarDiscoveryEvent(int starPathConfigId)
@@ -55,5 +65,22 @@ public class IngameEventDetailUI : MonoBehaviour
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, descriptionContainer, Vector3.zero);
 
         electionWinner = leadershipCharacterUI;
+    }
+
+    private void Show()
+    {
+        container.gameObject.SetActive(true);
+        container.localPosition = new Vector3(0, -1.5f * container.sizeDelta.y);
+
+        Tween.LocalPositionY(container, -70, duration: 0.3f);
+    }
+
+    private void Hide()
+    {
+        Tween.LocalPositionY(container, -1.5f * container.sizeDelta.y, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            container.gameObject.SetActive(false);
+        });
     }
 }
