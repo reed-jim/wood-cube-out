@@ -164,6 +164,11 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     private void OnYearPassed()
     {
+        if (!gameObject.activeSelf)
+        {
+            return;
+        }
+
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
 
         ageText.text = $"{age} years old";
@@ -175,12 +180,16 @@ public class LeadershipCharacterUI : MonoBehaviour
 
             if (UnityEngine.Random.value < deathChance)
             {
-                
+                Die();
             }
         }
     }
 
     #region Old Age
-
+    private void Die()
+    {
+        IngameEventManager.Ins.CreateCharacterDeathEvent(leadershipCharacterData);
+        LeadershipManager.Ins.RemoveSingleCharacter(this);
+    }
     #endregion
 }

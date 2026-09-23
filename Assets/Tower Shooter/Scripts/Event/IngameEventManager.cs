@@ -59,6 +59,16 @@ public class IngameEventManager : Singleton<IngameEventManager>
         AddIngameEventData(electionCompleteEventDataItem);
     }
 
+    public void CreateCharacterDeathEvent(LeadershipCharacterData leadershipCharacterData)
+    {
+        ElectionCompleteEventDataItem electionCompleteEventDataItem = new ElectionCompleteEventDataItem();
+
+        electionCompleteEventDataItem.eventType = IngameEventType.CharacterDeath;
+        electionCompleteEventDataItem.leadershipCharacterData = leadershipCharacterData;
+
+        AddIngameEventData(electionCompleteEventDataItem);
+    }
+
     #region Save/Load
     private void LoadIngameEventData()
     {

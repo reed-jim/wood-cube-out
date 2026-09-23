@@ -63,7 +63,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     [Header("Leadership Positions")]
     public List<LeadershipPositionUI> leadershipPositionUIs;
-    
+
     [Header("Bonus Stat")]
     public List<StatModifier> statModifiers = new List<StatModifier>();
 
@@ -407,6 +407,17 @@ public class LeadershipManager : Singleton<LeadershipManager>
         CommonUtil.ReturnListToPool(toRemoveList, item => item.gameObject);
 
         ExitRemoveCharacterMode();
+
+        SaveLeadershipData();
+    }
+
+    public void RemoveSingleCharacter(LeadershipCharacterUI leadershipCharacterUI)
+    {
+        leadershipData.leadershipCharacterDataItems.Remove(leadershipCharacterUI.leadershipCharacterData);
+
+        ObjectPoolingEverything.ReturnToPool(GameConstants.leadershipCharacterUI, leadershipCharacterUI.gameObject);
+
+        leadershipCharacterUIs.Remove(leadershipCharacterUI);
 
         SaveLeadershipData();
     }
