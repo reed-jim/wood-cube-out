@@ -33,6 +33,11 @@ public class IngameEventDetailUI : MonoBehaviour
 
     public void ShowIngameEventDetail(IngameEventType eventType, params object[] args)
     {
+        if (electionWinner != null)
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.leadershipCharacterUI, electionWinner.gameObject);
+        }
+
         if (eventType == IngameEventType.NewStarDiscovered)
         {
             int starPathConfigId = (int)args[0];
@@ -53,7 +58,8 @@ public class IngameEventDetailUI : MonoBehaviour
     {
         StarPathConfig starPathConfig = starVoyageContainer.starPathConfigs.First(item => item.id == starPathConfigId);
 
-        titleText.text = $"BREAKING NEWS: {starPathConfig.starName} has just been discoverd!";
+        titleText.text = "New Star Discorved!";
+        description.text = $"BREAKING NEWS: <color={primaryHex}>{starPathConfig.starName}</color> has just been discoverd!";
     }
 
     private void ShowElectionCompleteEvent(LeadershipCharacterData winnerData)
@@ -61,11 +67,6 @@ public class IngameEventDetailUI : MonoBehaviour
         titleText.text = "Election Result";
         description.text =
             $"BREAKING NEWS: <color={primaryHex}>{winnerData.characterName}</color> has won the election to become the new <color={primaryHex}>{winnerData.leadershipPosition}!";
-
-        if (electionWinner != null)
-        {
-            ObjectPoolingEverything.ReturnToPool(GameConstants.leadershipCharacterUI, electionWinner.gameObject);
-        }
 
         LeadershipCharacterUI leadershipCharacterUI =
                 ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);

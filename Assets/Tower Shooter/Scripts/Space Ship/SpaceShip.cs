@@ -77,11 +77,15 @@ public class SpaceShip : MonoBehaviour
 
         if (remaningKm <= 0)
         {
-            remaningKmText.text = $"You're at {StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).starName}";
+            StarPathConfig starPathConfig = StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex);
+
+            remaningKmText.text = $"You're at {starPathConfig.starName}";
 
             reachStarEvent?.Invoke(voyageData);
 
             isFlying = false;
+
+            IngameEventManager.Ins.CreateStarDiscoveryEvent(starPathConfig);
 
             return;
         }

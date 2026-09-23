@@ -45,6 +45,8 @@ public class IngameEventManager : Singleton<IngameEventManager>
     {
         StarDiscoveryEventDataItem starDiscoveryEventDataItem = new StarDiscoveryEventDataItem();
 
+        starDiscoveryEventDataItem.title = "New Star Discorved!";
+        starDiscoveryEventDataItem.description = $"You have discoverd {starPathConfig.starName}!";
         starDiscoveryEventDataItem.dateTimeString = IdleTimeManager.Ins.GetCurrentDateTime();
         starDiscoveryEventDataItem.eventType = IngameEventType.NewStarDiscovered;
         starDiscoveryEventDataItem.starPathConfigId = starPathConfig.id;
