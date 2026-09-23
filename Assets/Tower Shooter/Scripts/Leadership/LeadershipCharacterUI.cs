@@ -31,6 +31,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     public CharacterTraitContainer characterTraitContainer;
     public CountryFlagDatabase countryFlagDatabase;
 
+    private DateTime birthDay;
     private List<CharacterTrait> characterTraits;
     public LeadershipCharacterData leadershipCharacterData;
 
@@ -38,8 +39,15 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     void Awake()
     {
+        IdleTimeManager.OnYearPassed += OnYearPassed;
+
         selectButton.onClick.AddListener(Select);
         supportButton.onClick.AddListener(Support);
+    }
+
+    void OnDestroy()
+    {
+        IdleTimeManager.OnYearPassed -= OnYearPassed;
     }
 
     public void Init(LeadershipCharacterData data)
@@ -92,6 +100,7 @@ public class LeadershipCharacterUI : MonoBehaviour
         supportButton.gameObject.SetActive(false);
         electionPointText.gameObject.SetActive(false);
 
+        this.birthDay = birthDay;
         this.characterTraits = characterTraits;
     }
 
@@ -152,4 +161,26 @@ public class LeadershipCharacterUI : MonoBehaviour
             IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Not enough resources to support this character!");
         }
     }
+
+    private void OnYearPassed()
+    {
+        int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
+
+        ageText.text = $"{age} years old";
+        proceduralHumanAvatarUI.age = age / 60f;
+
+        if (age > 60)
+        {
+            float deathChance = age / 500f;
+
+            if (UnityEngine.Random.value < deathChance)
+            {
+                
+            }
+        }
+    }
+
+    #region Old Age
+
+    #endregion
 }
