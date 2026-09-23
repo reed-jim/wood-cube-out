@@ -41,7 +41,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
         ingameEventDetailUI.ShowIngameEventDetail(eventType, args);
     }
 
-    public void CreateStarDiscoveryEvent(StarPathConfig starPathConfig)
+    public StarDiscoveryEventDataItem CreateStarDiscoveryEvent(StarPathConfig starPathConfig)
     {
         StarDiscoveryEventDataItem starDiscoveryEventDataItem = new StarDiscoveryEventDataItem();
 
@@ -52,6 +52,8 @@ public class IngameEventManager : Singleton<IngameEventManager>
         starDiscoveryEventDataItem.starPathConfigId = starPathConfig.id;
 
         AddIngameEventData(starDiscoveryEventDataItem);
+
+        return starDiscoveryEventDataItem;
     }
 
     public void CreateElectionCompleteEvent(LeadershipCharacterData leadershipCharacterData)

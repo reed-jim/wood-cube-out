@@ -39,6 +39,7 @@ public class LeadershipPeriodUI : MonoBehaviour
             leadershipPeriodItemUI.Init(leadershipPeriodData);
 
             CommonUtil.SetParentAndResetScale(leadershipPeriodItemUI.transform, itemContainer);
+            leadershipPeriodItemUI.transform.localScale = 0.5f * Vector3.one;
 
             leadershipPeriodItemUIs.Add(leadershipPeriodItemUI);
         }

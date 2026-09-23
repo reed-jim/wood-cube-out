@@ -85,7 +85,8 @@ public class SpaceShip : MonoBehaviour
 
             isFlying = false;
 
-            IngameEventManager.Ins.CreateStarDiscoveryEvent(starPathConfig);
+            StarDiscoveryEventDataItem starDiscoveryEventDataItem = IngameEventManager.Ins.CreateStarDiscoveryEvent(starPathConfig);
+            LeadershipManager.Ins.AddStarDiscoveryEventLeadershipPeriod(starDiscoveryEventDataItem);
 
             return;
         }

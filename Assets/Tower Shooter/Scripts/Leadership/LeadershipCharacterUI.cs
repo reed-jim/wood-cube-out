@@ -58,7 +58,7 @@ public class LeadershipCharacterUI : MonoBehaviour
 
         System.DateTime birthDay = System.DateTime.ParseExact(
             data.birthDayString,
-            "yyyy-MM-dd",
+            "dd/MM/yyyy",
             System.Globalization.CultureInfo.InvariantCulture
         );
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
