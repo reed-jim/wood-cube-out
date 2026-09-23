@@ -112,6 +112,13 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
         return gameTimeData;
     }
     #endregion
+
+    #region Util
+    public string GetCurrentDateTime()
+    {
+        return CurrentDateTime.ToString("yyyy-MM-dd");
+    }
+    #endregion
 }
 
 public class GameTimeData

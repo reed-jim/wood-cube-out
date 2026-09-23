@@ -43,6 +43,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
     {
         StarDiscoveryEventDataItem starDiscoveryEventDataItem = new StarDiscoveryEventDataItem();
 
+        starDiscoveryEventDataItem.dateTimeString = IdleTimeManager.Ins.GetCurrentDateTime();
         starDiscoveryEventDataItem.eventType = IngameEventType.NewStarDiscovered;
         starDiscoveryEventDataItem.starPathConfigId = starPathConfig.id;
 
@@ -53,6 +54,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
     {
         ElectionCompleteEventDataItem electionCompleteEventDataItem = new ElectionCompleteEventDataItem();
 
+        electionCompleteEventDataItem.dateTimeString = IdleTimeManager.Ins.GetCurrentDateTime();
         electionCompleteEventDataItem.eventType = IngameEventType.ElectionComplete;
         electionCompleteEventDataItem.leadershipCharacterData = leadershipCharacterData;
 
@@ -63,6 +65,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
     {
         ElectionCompleteEventDataItem electionCompleteEventDataItem = new ElectionCompleteEventDataItem();
 
+        electionCompleteEventDataItem.dateTimeString = IdleTimeManager.Ins.GetCurrentDateTime();
         electionCompleteEventDataItem.eventType = IngameEventType.CharacterDeath;
         electionCompleteEventDataItem.leadershipCharacterData = leadershipCharacterData;
 
@@ -110,6 +113,7 @@ public class IngameEventDataItem
     public IngameEventType eventType;
     public string title;
     public string description;
+    public string dateTimeString;
 
     public virtual object[] GetParams()
     {

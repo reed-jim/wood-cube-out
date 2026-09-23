@@ -42,6 +42,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public CanvasGroup overlayCanvasGroup;
     public Image selectCharacterOverlay;
     public Button cancelAppointCharacterButton;
+    public Button leadershipPeriodButton;
 
     [Header("Remove")]
     public CanvasGroup removeCharacterOverlayCanvasGroup;
@@ -70,6 +71,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
     private List<LeadershipCharacterUI> leadershipCharacterUIs = new List<LeadershipCharacterUI>();
     private LeadershipCharacterUI currentCaptain;
 
+    public static event Action openLeadershipPeriodScreenEvent;
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -84,6 +87,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         confirmRemoveCharacterButton.onClick.AddListener(ConfirmRemoveCharacters);
         enterRemoveCharacterModeButton.onClick.AddListener(EnterRemoveCharacterMode);
         exitRemoveCharacterButton.onClick.AddListener(ExitRemoveCharacterMode);
+
+        leadershipPeriodButton.onClick.AddListener(OpenLeadershipPeriodScreen);
 
         container.gameObject.SetActive(false);
         selectCharacterOverlay.gameObject.SetActive(false);
@@ -431,6 +436,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
     #endregion
 
     #region Leadership Period
+    public void OpenLeadershipPeriodScreen()
+    {
+        openLeadershipPeriodScreenEvent?.Invoke();
+    }
+
     public void AddLeadershipPeriod(LeadershipCharacterData leadershipCharacterData, DateTime startDateTime)
     {
         TryEndCurrentLeadershipPeriod();
@@ -487,4 +497,5 @@ public class LeadershipPeriodData
     public LeadershipCharacterData leader;
     public string startDateTimeString;
     public string endDateTimeString;
+    public List<ElectionCompleteEventDataItem> electionCompleteEventDataItems;
 }
