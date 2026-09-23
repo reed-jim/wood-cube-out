@@ -16,14 +16,18 @@ public class LeadershipCharacterUI : MonoBehaviour
     public TMP_Text supportCostText;
     public TMP_Text electionPointText;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
+    public TMP_Text leadershipPositionText;
+    public TMP_Text levelText;
 
     [Header("Theme")]
     public ThemeableUI borderThemable;
 
+    [Header("State")]
     public int electionPoint;
     public float supportCost;
     public bool isMarkForRemove;
 
+    [Header("SO")]
     public CharacterTraitContainer characterTraitContainer;
     public CountryFlagDatabase countryFlagDatabase;
 
@@ -66,6 +70,15 @@ public class LeadershipCharacterUI : MonoBehaviour
         ageText.text = $"{age} years old";
         proceduralHumanAvatarUI.age = age / 60f;
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
+
+        if (leadershipCharacterData.leadershipPosition == LeadershipPosition.None)
+        {
+            leadershipPositionText.text = "No position taken";
+        }
+        else
+        {
+            leadershipPositionText.text = $"{leadershipCharacterData.leadershipPosition}";
+        }
 
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
 
