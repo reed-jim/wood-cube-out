@@ -39,14 +39,24 @@ public class IngameEventManager : Singleton<IngameEventManager>
         ingameEventDetailUI.ShowIngameEventDetail(eventType, args);
     }
 
+    public void CreateStarDiscoveryEvent(StarPathConfig starPathConfig)
+    {
+        StarDiscoveryEventDataItem starDiscoveryEventDataItem = new StarDiscoveryEventDataItem();
+
+        starDiscoveryEventDataItem.eventType = IngameEventType.NewStarDiscovered;
+        starDiscoveryEventDataItem.starPathConfigId = starPathConfig.id;
+
+        AddIngameEventData(starDiscoveryEventDataItem);
+    }
+
     public void CreateElectionCompleteEvent(LeadershipCharacterData leadershipCharacterData)
     {
-        ElectionCompleteEventDataItem electionCompleteEventData = new ElectionCompleteEventDataItem();
+        ElectionCompleteEventDataItem electionCompleteEventDataItem = new ElectionCompleteEventDataItem();
 
-        electionCompleteEventData.eventType = IngameEventType.ElectionComplete;
-        electionCompleteEventData.leadershipCharacterData = leadershipCharacterData;
+        electionCompleteEventDataItem.eventType = IngameEventType.ElectionComplete;
+        electionCompleteEventDataItem.leadershipCharacterData = leadershipCharacterData;
 
-        AddIngameEventData(electionCompleteEventData);
+        AddIngameEventData(electionCompleteEventDataItem);
     }
 
     #region Save/Load
@@ -94,6 +104,16 @@ public class IngameEventDataItem
     public virtual object[] GetParams()
     {
         return null;
+    }
+}
+
+public class StarDiscoveryEventDataItem : IngameEventDataItem
+{
+    public int starPathConfigId;
+
+    public override object[] GetParams()
+    {
+        return new object[] { starPathConfigId };
     }
 }
 

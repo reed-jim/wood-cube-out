@@ -112,6 +112,8 @@ public class ElectionPopup : MonoBehaviour
                 "ELECTION RESULTS",
                 $"{winner.leadershipCharacterData.characterName} has won the election and was appointed Captain!"
             );
+
+            IngameEventManager.Ins.CreateElectionCompleteEvent(winner.leadershipCharacterData);
         }
 
         IdleTimeManager.Ins.ScheduleNextElection();

@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,14 +12,29 @@ public class IngameEventDetailUI : MonoBehaviour
 
     private LeadershipCharacterUI electionWinner;
 
+    public StarVoyageContainer starVoyageContainer;
+
     public void ShowIngameEventDetail(IngameEventType eventType, params object[] args)
     {
-        if (eventType == IngameEventType.ElectionComplete)
+        if (eventType == IngameEventType.NewStarDiscovered)
+        {
+            int starPathConfigId = (int)args[0];
+
+            ShowStarDiscoveryEvent(starPathConfigId);
+        }
+        else if (eventType == IngameEventType.ElectionComplete)
         {
             LeadershipCharacterData winnerData = (LeadershipCharacterData)args[0];
 
             ShowElectionCompleteEvent(winnerData);
         }
+    }
+
+    private void ShowStarDiscoveryEvent(int starPathConfigId)
+    {
+        StarPathConfig starPathConfig = starVoyageContainer.starPathConfigs.First(item => item.id == starPathConfigId);
+
+        titleText.text = $"BREAKING NEWS: {starPathConfig.starName} has just been discoverd!";
     }
 
     private void ShowElectionCompleteEvent(LeadershipCharacterData winnerData)
