@@ -17,9 +17,18 @@ public class IngameEventDetailUI : MonoBehaviour
 
     public StarVoyageContainer starVoyageContainer;
 
+    private string primaryHex;
+    private string onSurfaceHex;
+
     void Awake()
     {
         closeButton.onClick.AddListener(Hide);
+    }
+
+    void Start()
+    {
+        primaryHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.Primary);
+        onSurfaceHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.OnSurface);
     }
 
     public void ShowIngameEventDetail(IngameEventType eventType, params object[] args)
@@ -49,8 +58,9 @@ public class IngameEventDetailUI : MonoBehaviour
 
     private void ShowElectionCompleteEvent(LeadershipCharacterData winnerData)
     {
-        titleText.text = $"BREAKING NEWS: {winnerData.characterName} has won the election to become the new {winnerData.leadershipPosition}!";
-        description.text = $"{winnerData.characterName} {winnerData.birthDayString}";
+        titleText.text = "Election Result";
+        description.text =
+            $"BREAKING NEWS: <color={primaryHex}>{winnerData.characterName}</color> has won the election to become the new <color={primaryHex}>{winnerData.leadershipPosition}!";
 
         if (electionWinner != null)
         {
