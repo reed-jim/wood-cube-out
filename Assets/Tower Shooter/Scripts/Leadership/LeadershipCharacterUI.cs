@@ -24,7 +24,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     public float supportCost;
     public bool isMarkForRemove;
 
-    public StatColorConfigSO config;
+    public CharacterTraitContainer characterTraitContainer;
     public CountryFlagDatabase countryFlagDatabase;
 
     private List<CharacterTrait> characterTraits;
@@ -38,10 +38,9 @@ public class LeadershipCharacterUI : MonoBehaviour
         supportButton.onClick.AddListener(Support);
     }
 
-    public void Init(LeadershipCharacterData data, List<CharacterTrait> traits)
+    public void Init(LeadershipCharacterData data)
     {
         leadershipCharacterData = data;
-        this.characterTraits = traits;
 
         nameText.text = data.characterName;
 
@@ -52,21 +51,35 @@ public class LeadershipCharacterUI : MonoBehaviour
         );
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
 
+        List<CharacterTrait> characterTraits = new List<CharacterTrait>();
+
+        for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
+        {
+            CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
+
+            if (leadershipCharacterData.traitIndexes.Contains(characterTrait.id))
+            {
+                characterTraits.Add(characterTrait);
+            }
+        }
+
         ageText.text = $"{age} years old";
         proceduralHumanAvatarUI.age = age / 60f;
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
 
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
 
-        for (int i = 0; i < traits.Count; i++)
+        for (int i = 0; i < characterTraits.Count; i++)
         {
             CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
             CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
-            item.Init(traits[i]);
+            item.Init(characterTraits[i]);
         }
 
         supportButton.gameObject.SetActive(false);
         electionPointText.gameObject.SetActive(false);
+
+        this.characterTraits = characterTraits;
     }
 
     private void Select()

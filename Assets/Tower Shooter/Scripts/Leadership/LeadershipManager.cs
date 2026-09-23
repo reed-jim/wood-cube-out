@@ -63,10 +63,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     [Header("Leadership Positions")]
     public List<LeadershipPositionUI> leadershipPositionUIs;
-    private List<LeadershipCharacterUI> leadershipCharacterUIs;
-
+    
     [Header("Bonus Stat")]
     public List<StatModifier> statModifiers = new List<StatModifier>();
+
+    private List<LeadershipCharacterUI> leadershipCharacterUIs = new List<LeadershipCharacterUI>();
 
     protected override void MoreActionOnAwake()
     {
@@ -86,6 +87,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         container.gameObject.SetActive(false);
         selectCharacterOverlay.gameObject.SetActive(false);
         cancelAppointCharacterButton.gameObject.SetActive(false);
+        removeCharacterOverlayCanvasGroup.gameObject.SetActive(false);
     }
 
     void OnDestroy()
@@ -121,33 +123,28 @@ public class LeadershipManager : Singleton<LeadershipManager>
         LeadershipCharacterUI leadershipCharacterUI =
                 ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
 
-        Country country = leadershipCharacterData.country;
-        string name = leadershipCharacterData.characterName;
-        DateTime birthDay = DateTime.ParseExact(
-            leadershipCharacterData.birthDayString,
-            "yyyy-MM-dd",
-            CultureInfo.InvariantCulture
-        );
-        int age = CommonUtil.GetAge(birthDay, DateTime.Today);
-
-        List<CharacterTrait> characterTraits = new List<CharacterTrait>();
-
-        for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
-        {
-            CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
-
-            if (leadershipCharacterData.traitIndexes.Contains(characterTrait.id))
-            {
-                characterTraits.Add(characterTrait);
-            }
-        }
-
-        leadershipCharacterUI.Init(leadershipCharacterData, characterTraits);
+        leadershipCharacterUI.Init(leadershipCharacterData);
 
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
         leadershipCharacterUI.transform.localScale *= 0.48f;
 
         leadershipCharacterUIs.Add(leadershipCharacterUI);
+
+        // Assign Position
+        if (leadershipCharacterData.leadershipPosition != LeadershipPosition.None)
+        {
+            for (int i = 0; i < leadershipPositionUIs.Count; i++)
+            {
+                LeadershipPositionUI leadershipPositionUI = leadershipPositionUIs[i];
+
+                if (leadershipPositionUI.leadershipPosition == leadershipCharacterData.leadershipPosition)
+                {
+                    leadershipPositionUI.AssignCharacter(leadershipCharacterUI);
+
+                    break;
+                }
+            }
+        }
     }
 
     public void HireNewCharacters()
@@ -314,7 +311,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         }
     }
 
-    private void SaveLeadershipData()
+    public void SaveLeadershipData()
     {
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("leadershipData"), leadershipData);
     }

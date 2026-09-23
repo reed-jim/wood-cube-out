@@ -118,6 +118,12 @@ public class LeadershipPositionUI : MonoBehaviour
         borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
         titleThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
 
+        if (leadershipCharacterUI.leadershipCharacterData.leadershipPosition != leadershipPosition)
+        {
+            leadershipCharacterUI.leadershipCharacterData.leadershipPosition = leadershipPosition;
+            LeadershipManager.Ins.SaveLeadershipData();
+        }
+
         this.leadershipCharacterUI = leadershipCharacterUI;
     }
 }

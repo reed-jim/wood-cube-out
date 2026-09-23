@@ -75,11 +75,7 @@ public class ElectionPopup : MonoBehaviour
             LeadershipCharacterData data = characterDataList[i];
             LeadershipCharacterUI ui = ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
 
-            List<CharacterTrait> traits = characterTraitContainer.characterTraits
-                .Where(t => data.traitIndexes.Contains(t.id))
-                .ToList();
-
-            ui.Init(data, traits);
+            ui.Init(data);
             ui.EnableSupportOption();
 
             CommonUtil.SetParentAndResetScale(ui.transform, characterContainer, Vector3.zero);
