@@ -20,6 +20,11 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     public bool useRandomSeed = true;
     public int seed = 12345;
 
+    [Header("Death / Grayscale State")]
+    public Material grayscaleMaterial; // Assign a custom Grayscale UI Material or leave null for dynamic creation
+    private bool isDead = false;
+    private Dictionary<Image, Material> originalMaterials = new Dictionary<Image, Material>();
+
     public enum HairType { Bald, ShortCrop, MessyBangs, SoftWaves, BuzzCut, SidePart }
     public enum BeardType { None, LightStubble, NeatGoatee }
 
@@ -559,6 +564,68 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Triggers the death state and turns all avatar UI elements grayscale.
+    /// </summary>
+    public void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // Ensure we have a valid grayscale material
+        if (grayscaleMaterial == null)
+        {
+            grayscaleMaterial = CreateDefaultGrayscaleMaterial();
+        }
+
+        // Cache original materials and apply grayscale material to every Image component
+        Image[] images = GetComponentsInChildren<Image>(true);
+        originalMaterials.Clear();
+
+        foreach (Image img in images)
+        {
+            if (img != null)
+            {
+                originalMaterials[img] = img.material;
+                img.material = grayscaleMaterial;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Resets the avatar back to its original colored state.
+    /// </summary>
+    public void Revive()
+    {
+        if (!isDead) return;
+        isDead = false;
+
+        // Restore original materials
+        foreach (var pair in originalMaterials)
+        {
+            if (pair.Key != null)
+            {
+                pair.Key.material = pair.Value;
+            }
+        }
+        originalMaterials.Clear();
+    }
+
+    /// <summary>
+    /// Helper method to dynamically generate a Grayscale Material using Unity's UI shader if none is provided.
+    /// </summary>
+    private Material CreateDefaultGrayscaleMaterial()
+    {
+        // Uses a built-in Unity UI grayscale-compatible shader or custom shader string
+        Shader shader = Shader.Find("UI/Default");
+        Material mat = new Material(shader);
+
+        // If using a custom shader with a grayscale toggle/property:
+        // mat.SetFloat("_GrayscaleAmount", 1.0f);
+
+        return mat;
+    }
+
     private void ApplyUITransform(GameObject go, Vector2 pos, Vector2 size, Color color)
     {
         if (go == null) return;
@@ -608,4 +675,5 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
+
 }
