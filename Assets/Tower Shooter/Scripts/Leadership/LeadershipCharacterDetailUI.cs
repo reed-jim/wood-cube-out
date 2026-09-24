@@ -8,6 +8,7 @@ public class LeadershipCharacterDetailUI : BasePopup
 {
     public TMP_Text nameText;
     public TMP_Text ageText;
+    public TMP_Text leadershipPositionText;
     public Image flag;
     public RectTransform traitContainer;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
@@ -58,6 +59,15 @@ public class LeadershipCharacterDetailUI : BasePopup
         proceduralHumanAvatarUI.age = age / 60f;
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
+
+        if (data.leadershipPosition == LeadershipPosition.None)
+        {
+            leadershipPositionText.text = "No position taken";
+        }
+        else
+        {
+            leadershipPositionText.text = $"{data.leadershipPosition}";
+        }
 
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
 

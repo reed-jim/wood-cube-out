@@ -46,6 +46,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public CanvasGroup overlayCanvasGroup;
 
     public Button leadershipPeriodButton;
+    public Button electionButton;
     public TMP_Text candidatesCountText;
     public TMP_Text totalEffectText;
 
@@ -102,6 +103,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         exitRemoveCharacterButton.onClick.AddListener(ExitRemoveCharacterMode);
 
         leadershipPeriodButton.onClick.AddListener(OpenLeadershipPeriodScreen);
+        electionButton.onClick.AddListener(ShowElection);
 
         container.gameObject.SetActive(false);
         appointCharacterOverlayCanvasGroup.gameObject.SetActive(false);
