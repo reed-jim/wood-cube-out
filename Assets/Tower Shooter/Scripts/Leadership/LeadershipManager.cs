@@ -39,6 +39,7 @@ public enum LeadershipPosition
 public class LeadershipManager : Singleton<LeadershipManager>
 {
     public RectTransform container;
+    public ScrollableLayoutGroup scrollableCharacterContainer;
     public RectTransform characterContainer;
     public Button closeButton;
     public Button hireCharacterButton;
@@ -135,6 +136,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
     {
         CommonUtil.ReturnListToPool(leadershipCharacterUIs, item => item.gameObject);
 
+        scrollableCharacterContainer.ClearAllItems();
+
         for (int i = 0; i < leadershipData.leadershipCharacterDataItems.Count; i++)
         {
             LeadershipCharacterData leadershipCharacterData = leadershipData.leadershipCharacterDataItems[i];
@@ -155,7 +158,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         // Candidate
         if (leadershipCharacterData.leadershipPosition == LeadershipPosition.None)
         {
-            CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
+            // CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
+            scrollableCharacterContainer.AddItem(leadershipCharacterUI.gameObject, targetScale: 0.48f * Vector3.one);
             leadershipCharacterUI.transform.localScale *= 0.48f;
         }
 
@@ -217,6 +221,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         }
 
         UpdateNumCandidates();
+
+        SaveLeadershipData();
     }
 
     public void SelectLeadershipPosition(LeadershipPositionUI leadershipPositionUI)

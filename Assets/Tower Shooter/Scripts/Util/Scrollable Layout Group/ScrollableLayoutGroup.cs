@@ -42,11 +42,13 @@ public class ScrollableLayoutGroup : MonoBehaviour
     /// <summary>
     /// Adds a new item to the layout with pop-in and reposition animations.
     /// </summary>
-    public void AddItem(GameObject itemPrefab, int insertIndex = -1)
+    public void AddItem(GameObject item, Vector3 targetScale, int insertIndex = -1)
     {
-        GameObject newObj = Instantiate(itemPrefab, transform);
-        RectTransform itemRect = newObj.GetComponent<RectTransform>();
-        CanvasGroup canvasGroup = newObj.GetComponent<CanvasGroup>() ?? newObj.AddComponent<CanvasGroup>();
+        CommonUtil.SetParentAndResetScale(item.transform, transform);
+        item.transform.localScale = targetScale;
+
+        RectTransform itemRect = item.GetComponent<RectTransform>();
+        CanvasGroup canvasGroup = item.GetComponent<CanvasGroup>() ?? item.AddComponent<CanvasGroup>();
 
         // Set anchors matching the layout orientation
         SetupItemAnchors(itemRect);
@@ -70,10 +72,17 @@ public class ScrollableLayoutGroup : MonoBehaviour
         canvasGroup.alpha = 0f;
 
         // Animate new item in
-        itemRect.DOScale(Vector3.one, animDuration).SetEase(animEase);
+        itemRect.DOScale(targetScale, animDuration).SetEase(animEase);
         canvasGroup.DOFade(1f, animDuration).SetEase(animEase);
 
         // Animate all existing items to their new offsets
+        UpdateLayoutPositions(true);
+    }
+
+    public void ClearAllItems()
+    {
+        items.Clear();
+
         UpdateLayoutPositions(true);
     }
 

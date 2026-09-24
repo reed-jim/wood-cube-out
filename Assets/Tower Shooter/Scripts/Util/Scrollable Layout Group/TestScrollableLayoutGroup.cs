@@ -12,7 +12,7 @@ public class TestScrollableLayoutGroup : MonoBehaviour
     [ContextMenu("AddItem")]
     public void AddItem()
     {
-        scrollableLayoutGroup.AddItem(poolObjects[currentIndex]);
+        // scrollableLayoutGroup.AddItem(poolObjects[currentIndex]);
 
         currentIndex++;
     }
