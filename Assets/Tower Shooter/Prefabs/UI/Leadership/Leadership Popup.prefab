@@ -550,7 +550,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1011918570986854528}
-  m_Father: {fileID: 2950709935183104750}
+  m_Father: {fileID: 2570274577034415992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -723,7 +723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
+  role: 29
 --- !u!114 &1660353465089739289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -816,6 +816,96 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &2461828139146505197
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2570274577034415992}
+  - component: {fileID: 5827349706539942491}
+  - component: {fileID: 560602616923114}
+  - component: {fileID: 5770229506289775082}
+  m_Layer: 5
+  m_Name: Appoint Character Overlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2570274577034415992
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2461828139146505197}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7410166732997210754}
+  - {fileID: 2817623111410940223}
+  m_Father: {fileID: 2950709935183104750}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 3000, y: 3000}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5827349706539942491
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2461828139146505197}
+  m_CullTransparentMesh: 1
+--- !u!225 &560602616923114
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2461828139146505197}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &5770229506289775082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2461828139146505197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.028301895, g: 0.028301895, b: 0.028301895, a: 0.9607843}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2466644144026952076
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,12 +1176,12 @@ MonoBehaviour:
   closeButton: {fileID: 8639046269303212000}
   hireCharacterButton: {fileID: 3482063112666056491}
   hireCharacterCostText: {fileID: 8735032451028274123}
-  overlayCanvasGroup: {fileID: 0}
-  selectCharacterOverlay: {fileID: 1735993223707065857}
-  cancelAppointCharacterButton: {fileID: 8542759886207423595}
+  overlayCanvasGroup: {fileID: 560602616923114}
   leadershipPeriodButton: {fileID: 8535690442782398455}
   candidatesCountText: {fileID: 9099483287744944857}
   totalEffectText: {fileID: 8575012359797663321}
+  appointCharacterOverlayCanvasGroup: {fileID: 560602616923114}
+  cancelAppointCharacterButton: {fileID: 8542759886207423595}
   removeCharacterOverlayCanvasGroup: {fileID: 8364579027696548275}
   confirmRemoveCharacterButton: {fileID: 8538788871215514998}
   enterRemoveCharacterModeButton: {fileID: 7619066080070049113}
@@ -1411,7 +1501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
+  role: 29
 --- !u!114 &7214904127226171015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1728,8 +1818,7 @@ RectTransform:
   - {fileID: 7206080042090714204}
   - {fileID: 2680005265705100291}
   - {fileID: 4922503982371858000}
-  - {fileID: 7410166732997210754}
-  - {fileID: 2817623111410940223}
+  - {fileID: 2570274577034415992}
   - {fileID: 7683950433881567048}
   - {fileID: 7577152861054954500}
   - {fileID: 8844894397933745370}
@@ -3660,15 +3749,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
+  m_fontSize: 18
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 28
+  m_fontSizeMax: 18
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -3881,12 +3970,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9040394312537798305}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2950709935183104750}
+  m_Father: {fileID: 2570274577034415992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4037,7 +4126,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8392472639747074806, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: leadershipPosition
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8392472639747074806, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: statModifierDataItems.Array.size
@@ -4235,7 +4324,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3874265438990885454, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
       propertyPath: role
-      value: 0
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 5228802592774246861, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
       propertyPath: m_Pivot.x
@@ -4750,7 +4839,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8392472639747074806, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: leadershipPosition
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8392472639747074806, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: statModifierDataItems.Array.size

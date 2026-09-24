@@ -128,9 +128,12 @@ public class NodeUI : MonoBehaviour
 
     public void UpdatePower()
     {
-        powerText.text = $"{serviceLocator.stats.GetStat(StatType.Damage).Value:F2}";
+        if (powerText.gameObject.activeSelf)
+        {
+            powerText.text = $"{serviceLocator.stats.GetStat(StatType.Damage).Value:F2}";
 
-        SaferioTween.Punch(powerText.transform);
+            SaferioTween.Punch(powerText.transform);
+        }
     }
 
     public void Lock()

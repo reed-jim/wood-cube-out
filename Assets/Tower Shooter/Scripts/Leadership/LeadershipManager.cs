@@ -44,11 +44,14 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public Button hireCharacterButton;
     public TMP_Text hireCharacterCostText;
     public CanvasGroup overlayCanvasGroup;
-    public Image selectCharacterOverlay;
-    public Button cancelAppointCharacterButton;
+
     public Button leadershipPeriodButton;
     public TMP_Text candidatesCountText;
     public TMP_Text totalEffectText;
+
+    [Header("Appoint")]
+    public CanvasGroup appointCharacterOverlayCanvasGroup;
+    public Button cancelAppointCharacterButton;
 
     [Header("Remove")]
     public CanvasGroup removeCharacterOverlayCanvasGroup;
@@ -101,8 +104,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         leadershipPeriodButton.onClick.AddListener(OpenLeadershipPeriodScreen);
 
         container.gameObject.SetActive(false);
-        selectCharacterOverlay.gameObject.SetActive(false);
-        cancelAppointCharacterButton.gameObject.SetActive(false);
+        appointCharacterOverlayCanvasGroup.gameObject.SetActive(false);
         removeCharacterOverlayCanvasGroup.gameObject.SetActive(false);
     }
 
@@ -112,9 +114,10 @@ public class LeadershipManager : Singleton<LeadershipManager>
         IdleTimeManager.OnElectionStarted -= ShowElection;
     }
 
-    void Start()
+    public void LoadData()
     {
         LoadLeadershipData();
+        CalculateBonusStat();
     }
 
     public void Init()
@@ -187,6 +190,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
             return;
         }
 
+        ResourceManager.Ins.DeductResource(ResourceType.Coin, hireNewCharactersCost);
+
         int numCharacterToHire = 3;
 
         int currentCharacter = GetNumCandidates();
@@ -214,27 +219,23 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     public void SelectLeadershipPosition(LeadershipPositionUI leadershipPositionUI)
     {
+        appointCharacterOverlayCanvasGroup.interactable = false;
+
+        SaferioTween.AlphaShow(appointCharacterOverlayCanvasGroup, onCompleteAction: () =>
+        {
+            appointCharacterOverlayCanvasGroup.interactable = true;
+        });
+
         selectedLeadershipPosition = leadershipPositionUI;
-
-        selectCharacterOverlay.gameObject.SetActive(true);
-        selectCharacterOverlay.color = ColorUtil.WithAlpha(selectCharacterOverlay.color, 0);
-
-        Tween.Alpha(selectCharacterOverlay, 0.95f, duration: 0.3f);
-
-        SaferioTween.ScaleUpWithPunch(cancelAppointCharacterButton.transform);
     }
 
     public void CancelSelectLeadershipPosition()
     {
-        Tween.Alpha(selectCharacterOverlay, 0f, duration: 0.3f)
-        .OnComplete(() =>
-        {
-            selectCharacterOverlay.gameObject.SetActive(false);
-        });
+        appointCharacterOverlayCanvasGroup.interactable = false;
+
+        SaferioTween.AlphaHide(appointCharacterOverlayCanvasGroup);
 
         selectedLeadershipPosition = null;
-
-        SaferioTween.ScaleDownWithPunch(cancelAppointCharacterButton.transform);
     }
 
     public void AssignLeadershipPosition(LeadershipCharacterUI leadershipCharacterUI)
@@ -285,15 +286,35 @@ public class LeadershipManager : Singleton<LeadershipManager>
             statModifiers.Add(critChanceStatModifier);
             statModifiers.Add(critMultiplierStatModifier);
         }
+        else
+        {
+            for (int i = 0; i < statModifiers.Count; i++)
+            {
+                StatModifier statModifier = statModifiers[i];
+
+                statModifier.Value = 0;
+            }
+        }
+
+        Dictionary<LeadershipPosition, LeadershipPositionUI> leadershipPositionDictionary = new Dictionary<LeadershipPosition, LeadershipPositionUI>();
 
         for (int i = 0; i < leadershipPositionUIs.Count; i++)
         {
             LeadershipPositionUI leadershipPositionUI = leadershipPositionUIs[i];
 
-            float efficiency = leadershipPositionUI.efficiency;
+            leadershipPositionDictionary.Add(leadershipPositionUI.leadershipPosition, leadershipPositionUI);
+        }
 
-            if (leadershipPositionUI.characterUIContainer != null)
+        for (int i = 0; i < leadershipData.leadershipCharacterDataItems.Count; i++)
+        {
+            LeadershipCharacterData leadershipCharacterData = leadershipData.leadershipCharacterDataItems[i];
+
+            if (leadershipCharacterData.leadershipPosition != LeadershipPosition.None)
             {
+                LeadershipPositionUI leadershipPositionUI = leadershipPositionDictionary[leadershipCharacterData.leadershipPosition];
+
+                float efficiency = leadershipPositionUI.CalculateEfficiency(leadershipCharacterData);
+
                 for (int j = 0; j < leadershipPositionUI.statModifierDataItems.Count; j++)
                 {
                     StatModifierData statModifierData = leadershipPositionUI.statModifierDataItems[j];
@@ -302,7 +323,10 @@ public class LeadershipManager : Singleton<LeadershipManager>
                     {
                         if (statModifiers[k].Type == statModifierData.statType)
                         {
+                            statModifiers[k].statModifierSource = StatModifierSource.LeadershipPosition;
                             statModifiers[k].Value += efficiency * statModifierData.value;
+
+                            break;
                         }
                     }
                 }
@@ -314,11 +338,12 @@ public class LeadershipManager : Singleton<LeadershipManager>
         {
             BaseCharacter node = NodeManager.Ins.nodes[i];
 
+            node.serviceLocator.stats.RemoveAllModifiersFromSource(StatModifierSource.LeadershipPosition);
+
             for (int j = 0; j < statModifiers.Count; j++)
             {
                 statModifiers[j].statModifierSource = StatModifierSource.LeadershipPosition;
 
-                node.serviceLocator.stats.RemoveAllModifiersFromSource(StatModifierSource.LeadershipPosition);
                 node.serviceLocator.stats.AddModifier(statModifiers[j]);
             }
         }
@@ -332,6 +357,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         foreach (var mod in statModifiers)
         {
+            if (mod.Value == 0)
+            {
+                continue;
+            }
+
             string hex = statColorConfigSO.GetHex(mod.Type);
 
             bool isPositive = mod.Value >= 0;

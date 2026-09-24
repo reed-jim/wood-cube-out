@@ -113,6 +113,11 @@ public class CharacterStats : MonoBehaviour
 
         foreach (var stat in characterStatsData.stats)
         {
+            stat.RemoveAllModifiersFromSource(StatModifierSource.LeadershipPosition);
+        }
+
+        foreach (var stat in characterStatsData.stats)
+        {
             if (characterStatsData.isExist)
             {
                 stat.CalculateValue();

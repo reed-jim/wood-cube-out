@@ -29,12 +29,7 @@ public class NodeManager : Singleton<NodeManager>
         openNodeDetailButton.onClick.AddListener(OpenNodeDetail);
     }
 
-    void Start()
-    {
-        Init();
-    }
-
-    private void Init()
+    public void Init()
     {
         GameData gameData = DataManager.Ins.LoadData();
 

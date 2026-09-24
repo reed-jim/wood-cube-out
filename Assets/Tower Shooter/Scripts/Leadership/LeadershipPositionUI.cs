@@ -25,6 +25,8 @@ public class LeadershipPositionUI : MonoBehaviour
     public LeadershipCharacterUI leadershipCharacterUI;
     public float efficiency;
 
+    [Header("SO")]
+    public CharacterTraitContainer characterTraitContainer;
     public StatColorConfigSO config;
 
     void Awake()
@@ -93,9 +95,35 @@ public class LeadershipPositionUI : MonoBehaviour
     {
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterUIContainer, Vector3.zero);
 
-        efficiency = baseEfficiency;
+        efficiency = CalculateEfficiency(leadershipCharacterUI.leadershipCharacterData);
 
-        List<CharacterTrait> characterTraits = leadershipCharacterUI.GetCharacterTraits();
+        efficiencyText.color = DynamicThemeManager.Ins.CurrentTheme.primary;
+        efficiencyText.text = $"Efficiency: {(int)(efficiency * 100)}%";
+
+        borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+        titleThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+
+        if (leadershipCharacterUI.leadershipCharacterData.leadershipPosition != leadershipPosition)
+        {
+            leadershipCharacterUI.leadershipCharacterData.leadershipPosition = leadershipPosition;
+            LeadershipManager.Ins.SaveLeadershipData();
+        }
+
+        this.leadershipCharacterUI = leadershipCharacterUI;
+    }
+
+    public float CalculateEfficiency(LeadershipCharacterData leadershipCharacterData)
+    {
+        float efficiency = baseEfficiency;
+
+        List<CharacterTrait> characterTraits = new List<CharacterTrait>();
+
+        for (int i = 0; i < leadershipCharacterData.traitIndexes.Count; i++)
+        {
+            int traitIndex = leadershipCharacterData.traitIndexes[i];
+
+            characterTraits.Add(characterTraitContainer.characterTraits[traitIndex]);
+        }
 
         for (int i = 0; i < characterTraits.Count; i++)
         {
@@ -112,18 +140,6 @@ public class LeadershipPositionUI : MonoBehaviour
             }
         }
 
-        efficiencyText.color = DynamicThemeManager.Ins.CurrentTheme.primary;
-        efficiencyText.text = $"Efficiency: {(int)(efficiency * 100)}%";
-
-        borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
-        titleThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
-
-        if (leadershipCharacterUI.leadershipCharacterData.leadershipPosition != leadershipPosition)
-        {
-            leadershipCharacterUI.leadershipCharacterData.leadershipPosition = leadershipPosition;
-            LeadershipManager.Ins.SaveLeadershipData();
-        }
-
-        this.leadershipCharacterUI = leadershipCharacterUI;
+        return efficiency;
     }
 }
