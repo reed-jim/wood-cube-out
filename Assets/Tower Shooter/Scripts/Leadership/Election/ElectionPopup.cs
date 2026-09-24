@@ -71,7 +71,8 @@ public class ElectionPopup : MonoBehaviour
     {
         CommonUtil.ReturnListToPool(loadedCharacterUIs, item => item.gameObject);
 
-        var characterDataList = LeadershipManager.Ins.leadershipData.leadershipCharacterDataItems;
+        var characterDataList = LeadershipManager.Ins.leadershipData.leadershipCharacterDataItems
+            .OrderByDescending(item => item.electionPoint).ToList();
 
         for (int i = 0; i < characterDataList.Count; i++)
         {
@@ -80,6 +81,7 @@ public class ElectionPopup : MonoBehaviour
 
             ui.Init(data);
             ui.EnableSupportOption();
+            ui.SetElectionRank(i + 1);
 
             CommonUtil.SetParentAndResetScale(ui.transform, characterContainer, Vector3.zero);
             ui.transform.localScale *= 0.48f;

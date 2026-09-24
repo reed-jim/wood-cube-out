@@ -12,12 +12,16 @@ public class LeadershipCharacterUI : MonoBehaviour
     public Image flag;
     public Button selectButton;
     public RectTransform traitContainer;
-    public Button supportButton;
-    public TMP_Text supportCostText;
-    public TMP_Text electionPointText;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
     public TMP_Text leadershipPositionText;
     public TMP_Text levelText;
+
+    [Header("Election")]
+    public Button supportButton;
+    public TMP_Text supportCostText;
+    public TMP_Text electionPointText;
+    public TMP_Text electionRank;
+    public ThemeableUI electionRankThemeable;
 
     [Header("Theme")]
     public ThemeableUI borderThemable;
@@ -99,9 +103,11 @@ public class LeadershipCharacterUI : MonoBehaviour
 
         supportButton.gameObject.SetActive(false);
         electionPointText.gameObject.SetActive(false);
+        electionRank.gameObject.SetActive(false);
 
         this.birthDay = birthDay;
         this.characterTraits = characterTraits;
+        this.electionPoint = data.electionPoint;
     }
 
     private void Select()
@@ -135,6 +141,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     {
         supportButton.gameObject.SetActive(true);
         electionPointText.gameObject.SetActive(true);
+        electionRank.gameObject.SetActive(true);
 
         supportCost =
             CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id) * (1 + 0.1f * characterTraits.Count(item => item.isGoodTrait));
@@ -147,6 +154,21 @@ public class LeadershipCharacterUI : MonoBehaviour
     {
         supportButton.gameObject.SetActive(false);
         electionPointText.gameObject.SetActive(false);
+        electionRank.gameObject.SetActive(false);
+    }
+
+    public void SetElectionRank(int rank)
+    {
+        electionRank.text = $"{CommonUtil.GetOrdinal(rank)}";
+
+        if (rank == 1)
+        {
+            electionRankThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+        }
+        else
+        {
+            electionRankThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+        }
     }
 
     private void Support()
@@ -156,6 +178,10 @@ public class LeadershipCharacterUI : MonoBehaviour
             ResourceManager.Ins.DeductResource(ResourceType.Coin, supportCost);
             electionPoint += 10;
             electionPointText.text = $"Election Points: {electionPoint}";
+
+            leadershipCharacterData.electionPoint = electionPoint;
+
+            LeadershipManager.Ins.SaveLeadershipData();
         }
         else
         {

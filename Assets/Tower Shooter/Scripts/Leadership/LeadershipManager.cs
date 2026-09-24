@@ -492,6 +492,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
         leadershipCharacterData.traitIndexes = characterTraitIndexes;
         leadershipCharacterData.faceSeed = UnityEngine.Random.Range(1000, 999999);
+        leadershipCharacterData.electionPoint = UnityEngine.Random.Range(10, 100);
 
         return leadershipCharacterData;
     }
@@ -640,6 +641,7 @@ public class LeadershipCharacterData
     public List<int> traitIndexes;
     public int faceSeed;
     public LeadershipPosition leadershipPosition;
+    public int electionPoint;
 }
 
 [Serializable]

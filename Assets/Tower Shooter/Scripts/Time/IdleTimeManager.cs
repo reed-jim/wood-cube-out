@@ -85,7 +85,9 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
 
     public void StartElectionImmediately()
     {
-        nextElectionYear = currentYear + 1;
+        nextElectionYear = currentYear;
+        electionDay = currentDay + 3;
+        electionMonth = currentMonth;
 
         SaveGameTimeData();
     }
