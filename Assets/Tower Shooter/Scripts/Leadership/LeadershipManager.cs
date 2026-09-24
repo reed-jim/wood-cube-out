@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +45,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public Image selectCharacterOverlay;
     public Button cancelAppointCharacterButton;
     public Button leadershipPeriodButton;
+    public TMP_Text candidatesCountText;
 
     [Header("Remove")]
     public CanvasGroup removeCharacterOverlayCanvasGroup;
@@ -123,6 +125,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             LoadLeadershipCharacter(leadershipCharacterData);
         }
+
+        UpdateNumCandidates();
     }
 
     private void LoadLeadershipCharacter(LeadershipCharacterData leadershipCharacterData)
@@ -132,10 +136,12 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         leadershipCharacterUI.Init(leadershipCharacterData);
 
-        CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
-        leadershipCharacterUI.transform.localScale *= 0.48f;
-
-        leadershipCharacterUIs.Add(leadershipCharacterUI);
+        // Candidate
+        if (leadershipCharacterData.leadershipPosition == LeadershipPosition.None)
+        {
+            CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterContainer, Vector3.zero);
+            leadershipCharacterUI.transform.localScale *= 0.48f;
+        }
 
         // Assign Position
         if (leadershipCharacterData.leadershipPosition != LeadershipPosition.None)
@@ -157,13 +163,15 @@ public class LeadershipManager : Singleton<LeadershipManager>
                 }
             }
         }
+
+        leadershipCharacterUIs.Add(leadershipCharacterUI);
     }
 
     public void HireNewCharacters()
     {
         int numCharacterToHire = 3;
 
-        int currentCharacter = leadershipData.leadershipCharacterDataItems.Count;
+        int currentCharacter = GetNumCandidates();
 
         numCharacterToHire = Mathf.Min(numCharacterToHire, maxCharacter - currentCharacter);
 
@@ -182,6 +190,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             LoadLeadershipCharacter(leadershipCharacterData);
         }
+
+        UpdateNumCandidates();
     }
 
     public void SelectLeadershipPosition(LeadershipPositionUI leadershipPositionUI)
@@ -216,6 +226,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
         CalculateBonusStat();
 
         CancelSelectLeadershipPosition();
+    }
+
+    public void UpdateNumCandidates()
+    {
+        candidatesCountText.text = $"{GetNumCandidates()}/{maxCharacter}";
     }
 
     private void Show()
@@ -479,6 +494,25 @@ public class LeadershipManager : Singleton<LeadershipManager>
         currentLeadershipPeriodData.starDiscoveryEventDataItems.Add(starDiscoveryEventDataItem);
 
         SaveLeadershipData();
+    }
+    #endregion
+
+    #region Util
+    public int GetNumCandidates()
+    {
+        int currentCharacter = 0;
+
+        for (int i = 0; i < leadershipData.leadershipCharacterDataItems.Count; i++)
+        {
+            LeadershipCharacterData leadershipCharacterData = leadershipData.leadershipCharacterDataItems[i];
+
+            if (leadershipCharacterData.leadershipPosition == LeadershipPosition.None)
+            {
+                currentCharacter++;
+            }
+        }
+
+        return currentCharacter;
     }
     #endregion
 }
