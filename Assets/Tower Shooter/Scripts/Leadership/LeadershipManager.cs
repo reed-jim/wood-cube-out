@@ -76,6 +76,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     [Header("Leadership Positions")]
     public List<LeadershipPositionUI> leadershipPositionUIs;
     private float hireNewCharactersCost;
+    public float forceElectionCost;
 
     [Header("Bonus Stat")]
     public List<StatModifier> statModifiers = new List<StatModifier>();
@@ -130,6 +131,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         hireNewCharactersCost = CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id);
 
         hireCharacterCostText.text = $"{hireNewCharactersCost}";
+
+        forceElectionCost = CurveManager.Ins.GetHireCharactersCost(DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("forceElectionTime"), 0));
     }
 
     private void LoadCurrentCharacters()
@@ -415,17 +418,15 @@ public class LeadershipManager : Singleton<LeadershipManager>
         }
         else
         {
-            if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) > 500)
+            if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= forceElectionCost)
             {
-
+                IdleTimeManager.Ins.StartElectionImmediately();
             }
             else
             {
-
+                IngameNotificationManager.Ins.ShowNotification(
+                    GameConstants.WARNING, $"Can't start election now. {currentCaptain.leadershipCharacterData.characterName} is the current Captain");
             }
-
-            IngameNotificationManager.Ins.ShowNotification(
-                GameConstants.WARNING, $"Can't start election now. {currentCaptain.leadershipCharacterData.characterName} is the current Captain");
         }
     }
     #endregion

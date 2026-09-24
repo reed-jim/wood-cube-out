@@ -14,6 +14,7 @@ public class ElectionPopup : MonoBehaviour
     public Button closeButton;
     public Button concludeElectionButton;
     public Button forceStartElectionButton;
+    public TMP_Text forceElectionCostText;
     public TMP_Text timerText;
 
     public CharacterTraitContainer characterTraitContainer;
@@ -138,6 +139,8 @@ public class ElectionPopup : MonoBehaviour
         Tween.LocalPositionY(container, -70, duration: 0.3f);
 
         ShowAllCharacters();
+
+        forceElectionCostText.text = $"{LeadershipManager.Ins.forceElectionCost}";
     }
 
     private void Hide()
