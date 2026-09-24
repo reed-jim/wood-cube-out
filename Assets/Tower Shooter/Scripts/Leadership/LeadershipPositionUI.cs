@@ -64,7 +64,7 @@ public class LeadershipPositionUI : MonoBehaviour
             efficiencyText.color = DynamicThemeManager.Ins.CurrentTheme.onSurface;
             efficiencyText.text = $"Vacant";
 
-            borderThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+            borderThemeable.ChangeRole(ThemeableUI.ElementRole.Outline);
             titleThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
         }
         else

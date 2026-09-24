@@ -49,13 +49,14 @@ public class LeadershipCharacterDetailUI : BasePopup
 
         System.DateTime birthDay = System.DateTime.ParseExact(
             data.birthDayString,
-            "yyyy-MM-dd",
+            "dd/MM/yyyy",
             System.Globalization.CultureInfo.InvariantCulture
         );
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
 
         ageText.text = $"{age} years old";
         proceduralHumanAvatarUI.age = age / 60f;
+        proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
 
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);

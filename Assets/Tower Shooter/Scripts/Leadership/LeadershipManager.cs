@@ -123,7 +123,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         hireNewCharactersCost = CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id);
 
-        hireCharacterCostText.text = $"hireNewCharactersCost";
+        hireCharacterCostText.text = $"{hireNewCharactersCost}";
     }
 
     private void LoadCurrentCharacters()

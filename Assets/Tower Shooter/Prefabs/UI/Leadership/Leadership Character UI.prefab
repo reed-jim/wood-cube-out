@@ -1719,7 +1719,7 @@ RectTransform:
   m_GameObject: {fileID: 7038352582047816304}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2950709935183104750}
@@ -1743,8 +1743,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProceduralHumanAvatarUI
   age: 0.5
   expression: 0
+  basicShapeCornerRadius: 24
   useRandomSeed: 1
   seed: 12345
+  grayscaleMaterial: {fileID: 0}
+  circleSprite: {fileID: 0}
 --- !u!1 &7084403194019443309
 GameObject:
   m_ObjectHideFlags: 0
