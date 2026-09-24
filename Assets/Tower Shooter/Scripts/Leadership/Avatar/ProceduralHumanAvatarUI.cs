@@ -13,26 +13,34 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     public enum Expression { FriendlyNeutral, Happy, Gentle, Focused, Surprised }
     public Expression expression = Expression.FriendlyNeutral;
 
+    [Header("Customize")]
+    public float basicShapeCornerRadius = 24;
+
     [Header("Manual Seed (Optional)")]
     public bool useRandomSeed = true;
     public int seed = 12345;
 
     public enum HairType { Bald, ShortCrop, MessyBangs, SoftWaves, BuzzCut, SidePart }
     public enum BeardType { None, LightStubble, NeatGoatee }
-    public enum MilitaryType { ModernWoodland, TacticalTan, AirForceBlue, CoastGuardNavy }
+
+    // --- CHANGED: Leader Outfit Types ---
+    public enum LeaderOutfitType { ClassicBlackTie, ExecutiveNavy, ModernCharcoal, RegalBurgundy }
     public enum FaceShape { SoftOval, Round, Heart, SoftSquare }
 
-    // --- GENETIC & UNIFORM DATA ---
+    // --- GENETIC & CLOTHING DATA ---
     private Color skinColor;
     private Color eyeColor;
     private Color naturalHairColor;
-    private Color uniformColor;
-    private Color undershirtColor;
-    private Color accentColor;
-    
+
+    // --- CHANGED: Leader Attire Colors ---
+    private Color suitColor;
+    private Color shirtColor;
+    private Color tieColor;
+    private Color lapelColor;
+
     private HairType hairStyle;
     private BeardType beardStyle;
-    private MilitaryType militaryStyle;
+    private LeaderOutfitType outfitStyle;
     private FaceShape faceShape;
 
     // Softened Genetic Parameters
@@ -43,14 +51,15 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private float gene_NoseWidth;
     private float gene_NoseLength;
     private float gene_ShoulderWidth;
-    
+
     private float gene_HairVolume;
     private float gene_BrowThickness;
 
     // --- RENDER GAME OBJECTS (UI) ---
-    private GameObject neck, shoulders, undershirt, chinShadow, cheekL, cheekR;
+    private GameObject neck, shoulders, shirt, tie, lapelL, lapelR, suitPocket, pocketSquare;
     private GameObject head, leftEar, rightEar;
-    
+    private GameObject chinShadow, cheekL, cheekR;
+
     // Eyes & Face Details
     private GameObject leftEye, rightEye, pupilL, pupilR, irisRingL, irisRingR;
     private GameObject highlightL1, highlightR1, highlightL2, highlightR2;
@@ -59,8 +68,8 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private GameObject noseBridge, noseTip, noseNostrilL, noseNostrilR;
     private GameObject upperLip, lowerLip, mouthCornerL, mouthCornerR;
 
-    // Modern Military Gear
-    private GameObject collarL, collarR, pocketL, pocketR, branchPatch;
+    // Shirt Collar
+    private GameObject collarL, collarR;
 
     // Multi-Clump Hair Objects
     private List<GameObject> hairClumps = new List<GameObject>();
@@ -68,7 +77,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private List<Vector2> hairScales = new List<Vector2>();
     private GameObject beardJaw, beardMustache;
 
-    private Sprite circleSprite;
+    public Sprite circleSprite;
 
     private void Start()
     {
@@ -137,8 +146,8 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
         eyeColor = Random.ColorHSV(0.05f, 0.65f, 0.4f, 0.7f, 0.4f, 0.8f);
 
-        militaryStyle = (MilitaryType)Random.Range(0, System.Enum.GetValues(typeof(MilitaryType)).Length);
-        SetupMilitaryColors();
+        outfitStyle = (LeaderOutfitType)Random.Range(0, System.Enum.GetValues(typeof(LeaderOutfitType)).Length);
+        SetupLeaderOutfitColors();
 
         hairStyle = (HairType)Random.Range(0, System.Enum.GetValues(typeof(HairType)).Length);
         beardStyle = (BeardType)Random.Range(0, System.Enum.GetValues(typeof(BeardType)).Length);
@@ -148,39 +157,44 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         gene_HeadWidthRatio = Random.Range(0.88f, 1.12f);
         gene_HeadHeightRatio = Random.Range(0.90f, 1.10f);
         gene_EyeSpacing = Random.Range(-8f, 8f);
-        gene_EyeScaleY = Random.Range(0.80f, 1.10f); // Wider, friendlier eyes
+        gene_EyeScaleY = Random.Range(0.80f, 1.10f);
 
         gene_NoseWidth = Random.Range(0.80f, 1.20f);
         gene_NoseLength = Random.Range(0.80f, 1.15f);
         gene_ShoulderWidth = Random.Range(0.95f, 1.20f);
 
         gene_HairVolume = Random.Range(0.85f, 1.25f);
-        gene_BrowThickness = Random.Range(4f, 7f); // Softer brows
+        gene_BrowThickness = Random.Range(4f, 7f);
     }
 
-    private void SetupMilitaryColors()
+    // --- CHANGED: Tailored Suit Color Palettes ---
+    private void SetupLeaderOutfitColors()
     {
-        switch (militaryStyle)
+        switch (outfitStyle)
         {
-            case MilitaryType.ModernWoodland:
-                uniformColor = new Color(0.31f, 0.36f, 0.24f); // Sage/Olive
-                undershirtColor = new Color(0.20f, 0.22f, 0.18f); // Charcoal
-                accentColor = new Color(0.22f, 0.26f, 0.18f);
+            case LeaderOutfitType.ClassicBlackTie:
+                suitColor = new Color(0.10f, 0.10f, 0.12f);       // Obsidian Black
+                shirtColor = new Color(0.96f, 0.96f, 0.98f);      // Crisp White
+                tieColor = new Color(0.65f, 0.08f, 0.12f);        // Deep Red / Crimson
+                lapelColor = new Color(0.05f, 0.05f, 0.06f);      // Satin Black Accent
                 break;
-            case MilitaryType.TacticalTan:
-                uniformColor = new Color(0.72f, 0.65f, 0.53f); // Tan
-                undershirtColor = new Color(0.35f, 0.30f, 0.25f); // Coyote Brown
-                accentColor = new Color(0.55f, 0.48f, 0.38f);
+            case LeaderOutfitType.ExecutiveNavy:
+                suitColor = new Color(0.12f, 0.18f, 0.30f);       // Midnight Navy
+                shirtColor = new Color(0.92f, 0.94f, 0.98f);      // Light Ice Blue
+                tieColor = new Color(0.80f, 0.60f, 0.15f);        // Gold/Amber
+                lapelColor = new Color(0.09f, 0.14f, 0.24f);
                 break;
-            case MilitaryType.AirForceBlue:
-                uniformColor = new Color(0.22f, 0.28f, 0.36f); // Air Force Blue
-                undershirtColor = new Color(0.88f, 0.88f, 0.88f); // Light Grey
-                accentColor = new Color(0.15f, 0.20f, 0.28f);
+            case LeaderOutfitType.ModernCharcoal:
+                suitColor = new Color(0.22f, 0.24f, 0.26f);       // Slate Charcoal
+                shirtColor = new Color(0.98f, 0.98f, 0.98f);      // Pure White
+                tieColor = new Color(0.15f, 0.32f, 0.38f);        // Teal/Royal Steel
+                lapelColor = new Color(0.16f, 0.18f, 0.20f);
                 break;
-            case MilitaryType.CoastGuardNavy:
-                uniformColor = new Color(0.16f, 0.22f, 0.30f); // Navy Utility
-                undershirtColor = new Color(0.10f, 0.12f, 0.15f); // Black Tee
-                accentColor = new Color(0.25f, 0.32f, 0.42f);
+            case LeaderOutfitType.RegalBurgundy:
+                suitColor = new Color(0.28f, 0.10f, 0.14f);       // Wine Burgundy
+                shirtColor = new Color(0.95f, 0.92f, 0.88f);      // Cream
+                tieColor = new Color(0.12f, 0.12f, 0.15f);        // Dark Onyx
+                lapelColor = new Color(0.20f, 0.07f, 0.10f);
                 break;
         }
     }
@@ -189,16 +203,18 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     {
         int order = 0;
 
-        // --- Body & Uniform Layer (Relaxed Military Utility) ---
-        shoulders = CreatePart("Shoulders", transform, circleSprite, uniformColor, order++);
-        undershirt = CreatePart("Undershirt", shoulders.transform, circleSprite, undershirtColor, order++);
-        pocketL = CreatePart("PocketL", shoulders.transform, circleSprite, accentColor, order++);
-        pocketR = CreatePart("PocketR", shoulders.transform, circleSprite, accentColor, order++);
-        branchPatch = CreatePart("BranchPatch", shoulders.transform, circleSprite, accentColor * 1.1f, order++);
+        // --- Body & Leader Suit Layer ---
+        shoulders = CreatePart("Shoulders", transform, circleSprite, suitColor, order++);
+        shirt = CreatePart("DressShirt", shoulders.transform, circleSprite, shirtColor, order++);
+        tie = CreatePart("NeckTie", shoulders.transform, circleSprite, tieColor, order++);
+        lapelL = CreatePart("LapelL", shoulders.transform, circleSprite, lapelColor, order++);
+        lapelR = CreatePart("LapelR", shoulders.transform, circleSprite, lapelColor, order++);
+        suitPocket = CreatePart("SuitPocket", shoulders.transform, circleSprite, lapelColor, order++);
+        pocketSquare = CreatePart("PocketSquare", suitPocket.transform, circleSprite, shirtColor, order++);
 
         neck = CreatePart("Neck", transform, circleSprite, skinColor * 0.88f, order++);
-        collarL = CreatePart("CollarL", neck.transform, circleSprite, uniformColor * 0.95f, order++);
-        collarR = CreatePart("CollarR", neck.transform, circleSprite, uniformColor * 0.95f, order++);
+        collarL = CreatePart("ShirtCollarL", neck.transform, circleSprite, shirtColor, order++);
+        collarR = CreatePart("ShirtCollarR", neck.transform, circleSprite, shirtColor, order++);
 
         // --- Head Base Layer ---
         leftEar = CreatePart("LeftEar", transform, circleSprite, skinColor * 0.95f, order++);
@@ -211,12 +227,12 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         // --- Eyes ---
         leftEye = CreatePart("LeftEye", head.transform, circleSprite, Color.white, order++);
         rightEye = CreatePart("RightEye", head.transform, circleSprite, Color.white, order++);
-        
+
         irisRingL = CreatePart("IrisRingL", leftEye.transform, circleSprite, eyeColor, order++);
         irisRingR = CreatePart("IrisRingR", rightEye.transform, circleSprite, eyeColor, order++);
         pupilL = CreatePart("PupilL", irisRingL.transform, circleSprite, new Color(0.1f, 0.1f, 0.1f), order++);
         pupilR = CreatePart("PupilR", irisRingR.transform, circleSprite, new Color(0.1f, 0.1f, 0.1f), order++);
-        
+
         highlightL1 = CreatePart("HighlightL1", leftEye.transform, circleSprite, Color.white, order++);
         highlightR1 = CreatePart("HighlightR1", rightEye.transform, circleSprite, Color.white, order++);
         highlightL2 = CreatePart("HighlightL2", leftEye.transform, circleSprite, Color.white, order++);
@@ -252,34 +268,44 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
     private void UpdateCharacter(float t)
     {
-        Color currentHairColor = (t > 0.60f) 
-            ? Color.Lerp(naturalHairColor, new Color(0.85f, 0.85f, 0.85f), (t - 0.60f) * 2.5f) 
+        Color currentHairColor = (t > 0.60f)
+            ? Color.Lerp(naturalHairColor, new Color(0.85f, 0.85f, 0.85f), (t - 0.60f) * 2.5f)
             : naturalHairColor;
 
         Color currentSkinColor = Color.Lerp(skinColor, skinColor * 0.92f, t);
         head.GetComponent<Image>().color = currentSkinColor;
 
-        // --- 1. CASUAL MILITARY UNIFORM ---
+        // --- 1. EXECUTIVE SUIT & FORMAL ATTIRE ---
         float shoulderW = Mathf.Lerp(140f, 380f * gene_ShoulderWidth, Mathf.Clamp01(t * 1.5f));
-        ApplyUITransform(shoulders, new Vector2(0f, Mathf.Lerp(-130f, -190f, t)), new Vector2(shoulderW, Mathf.Lerp(90f, 200f, t)), uniformColor);
+        ApplyUITransform(shoulders, new Vector2(0f, Mathf.Lerp(-130f, -190f, t)), new Vector2(shoulderW, Mathf.Lerp(90f, 200f, t)), suitColor);
 
-        // Open Crew-neck Undershirt
-        ApplyUITransform(undershirt, new Vector2(0f, 40f), new Vector2(55f, 65f), undershirtColor);
-        
-        // Pockets & Service Namepatch
-        ApplyUITransform(pocketL, new Vector2(-shoulderW * 0.28f, -10f), new Vector2(48f, 42f), accentColor);
-        ApplyUITransform(pocketR, new Vector2(shoulderW * 0.28f, -10f), new Vector2(48f, 42f), accentColor);
-        ApplyUITransform(branchPatch, new Vector2(shoulderW * 0.28f, 28f), new Vector2(38f, 12f), accentColor * 1.2f);
+        // V-Neck Opening for Dress Shirt
+        ApplyUITransform(shirt, new Vector2(0f, 30f), new Vector2(shoulderW * 0.38f, 110f), shirtColor);
 
-        // Relaxed Open Collar
+        // Silk Tie
+        ApplyUITransform(tie, new Vector2(0f, 10f), new Vector2(18f, 105f), tieColor);
+
+        // Tailored Suit Lapels
+        float lapelW = 32f;
+        float lapelH = 115f;
+        ApplyUITransform(lapelL, new Vector2(-shoulderW * 0.20f, 15f), new Vector2(lapelW, lapelH), lapelColor);
+        ApplyUITransform(lapelR, new Vector2(shoulderW * 0.20f, 15f), new Vector2(lapelW, lapelH), lapelColor);
+        lapelL.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -18f);
+        lapelR.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, 18f);
+
+        // Breast Pocket & Folded Pocket Square
+        ApplyUITransform(suitPocket, new Vector2(shoulderW * 0.30f, -15f), new Vector2(40f, 6f), lapelColor);
+        ApplyUITransform(pocketSquare, new Vector2(0f, 6f), new Vector2(28f, 10f), shirtColor);
+
+        // Pressed Dress Shirt Collar
         float neckW = Mathf.Lerp(55f, 105f * gene_HeadWidthRatio, t);
         float neckH = Mathf.Lerp(60f, 115f, t);
         ApplyUITransform(neck, new Vector2(0f, Mathf.Lerp(-70f, -100f, t)), new Vector2(neckW, neckH), currentSkinColor * 0.88f);
-        
-        ApplyUITransform(collarL, new Vector2(-neckW * 0.45f, -15f), new Vector2(35f, 45f), uniformColor * 0.9f);
-        ApplyUITransform(collarR, new Vector2(neckW * 0.45f, -15f), new Vector2(35f, 45f), uniformColor * 0.9f);
-        collarL.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -20f);
-        collarR.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, 20f);
+
+        ApplyUITransform(collarL, new Vector2(-neckW * 0.28f, -10f), new Vector2(30f, 38f), shirtColor);
+        ApplyUITransform(collarR, new Vector2(neckW * 0.28f, -10f), new Vector2(30f, 38f), shirtColor);
+        collarL.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -35f);
+        collarR.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, 35f);
 
         // --- 2. SOFT, FRIENDLY FACE SHAPES ---
         float baseHeadW = Mathf.Lerp(200f, 180f, t) * gene_HeadWidthRatio;
@@ -300,7 +326,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
         // Soft Chin Contour
         ApplyUITransform(chinShadow, new Vector2(0f, Mathf.Lerp(-42f, -35f, t) * shapeScale.y), new Vector2(headW * 0.42f, Mathf.Lerp(20f, 32f, t)), currentSkinColor * 0.90f);
-        
+
         // Gentle Cheek Blush/Structure
         Color cheekColor = currentSkinColor;
         cheekColor.r = Mathf.Min(1f, cheekColor.r * 1.04f);
@@ -332,7 +358,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         float noseY = Mathf.Lerp(-28f, -4f, t);
         float bridgeHeight = Mathf.Lerp(12f, 38f * gene_NoseLength, t);
         ApplyUITransform(noseBridge, new Vector2(0f, noseY + (bridgeHeight * 0.45f)), new Vector2(8f * gene_NoseWidth, bridgeHeight), currentSkinColor * 0.94f);
-        
+
         float noseWidth = Mathf.Lerp(22f, 34f, t) * gene_NoseWidth;
         ApplyUITransform(noseTip, new Vector2(0f, noseY - (bridgeHeight * 0.1f)), new Vector2(noseWidth, Mathf.Lerp(16f, 24f, t)), currentSkinColor * 0.88f);
         ApplyUITransform(noseNostrilL, new Vector2(-noseWidth * 0.35f, -1f), new Vector2(5f, 4f), currentSkinColor * 0.72f);
@@ -353,7 +379,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         ApplyUITransform(iris, Vector2.zero, new Vector2(irisSize, irisSize), eyeColor);
         ApplyUITransform(pupil, Vector2.zero, new Vector2(irisSize * 0.50f, irisSize * 0.50f), new Color(0.12f, 0.12f, 0.12f));
 
-        // Vibrant Double Catchlights
+        // Vibrant Catchlights
         ApplyUITransform(h1, new Vector2(size * 0.14f, size * 0.14f), new Vector2(size * 0.22f, size * 0.22f), Color.white);
         ApplyUITransform(h2, new Vector2(-size * 0.12f, -size * 0.12f), new Vector2(size * 0.12f, size * 0.12f), new Color(1f, 1f, 1f, 0.7f));
 
@@ -380,7 +406,6 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         switch (expression)
         {
             case Expression.FriendlyNeutral:
-                // Gentle natural upturn at corners
                 ApplyUITransform(upperLip, new Vector2(0f, mouthY + 2f), new Vector2(lipWidth, 6f), upperLipCol);
                 ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 3f), new Vector2(lipWidth * 0.88f, 8f), lowerLipCol);
                 ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.5f, mouthY + 2f), new Vector2(4f, 4f), upperLipCol * 0.8f);
@@ -563,15 +588,20 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     {
         int size = 128;
         Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
-        float center = size / 2f;
-        float radius = (size / 2f) - 2f;
+
+        float cornerRadius = basicShapeCornerRadius;
+        float halfSize = size / 2f;
+        Vector2 boxHalfSize = new Vector2(halfSize - cornerRadius, halfSize - cornerRadius);
 
         for (int y = 0; y < size; y++)
         {
             for (int x = 0; x < size; x++)
             {
-                float dist = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
-                float alpha = Mathf.Clamp01((radius - dist) / 1.5f);
+                Vector2 p = new Vector2(x - halfSize + 0.5f, y - halfSize + 0.5f);
+                Vector2 d = new Vector2(Mathf.Abs(p.x), Mathf.Abs(p.y)) - boxHalfSize;
+                float dist = Vector2.Max(d, Vector2.zero).magnitude + Mathf.Min(Mathf.Max(d.x, d.y), 0f) - cornerRadius;
+
+                float alpha = Mathf.Clamp01(0.5f - dist);
                 tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
             }
         }
