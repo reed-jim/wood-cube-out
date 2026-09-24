@@ -20,6 +20,12 @@ public class CurveManager : Singleton<CurveManager>
     public float maxCost;
     public int maxBuyAugmentTime;
 
+    [Header("Hire Character")]
+    public AnimationCurve hireCharactersCostCurve;
+    public float minHireCharactersCost;
+    public float maxHireCharactersCost;
+    public int maxHireCharactersTime;
+
     public float GetStatPercentAdd(int upgradeTime)
     {
         float progress = statIncreaseCurve.Evaluate((float)upgradeTime / maxStatUpgradeTime);
@@ -45,6 +51,15 @@ public class CurveManager : Singleton<CurveManager>
         float progress = costIncreaseCurve.Evaluate((float)upgradeTime / maxBuyAugmentTime);
 
         float cost = Mathf.Lerp(minCost, maxCost, progress);
+
+        return Mathf.Round(cost * 1000f) / 1000f;
+    }
+
+    public float GetHireCharactersCost(int planetIndex)
+    {
+        float progress = hireCharactersCostCurve.Evaluate((float)planetIndex / maxHireCharactersTime);
+
+        float cost = Mathf.Lerp(minHireCharactersCost, maxHireCharactersCost, progress);
 
         return Mathf.Round(cost * 1000f) / 1000f;
     }

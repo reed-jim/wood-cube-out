@@ -42,6 +42,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public RectTransform characterContainer;
     public Button closeButton;
     public Button hireCharacterButton;
+    public TMP_Text hireCharacterCostText;
     public CanvasGroup overlayCanvasGroup;
     public Image selectCharacterOverlay;
     public Button cancelAppointCharacterButton;
@@ -69,6 +70,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     [Header("Leadership Positions")]
     public List<LeadershipPositionUI> leadershipPositionUIs;
+    private float hireNewCharactersCost;
 
     [Header("Bonus Stat")]
     public List<StatModifier> statModifiers = new List<StatModifier>();
@@ -118,6 +120,10 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public void Init()
     {
         LoadCurrentCharacters();
+
+        hireNewCharactersCost = CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id);
+
+        hireCharacterCostText.text = $"hireNewCharactersCost";
     }
 
     private void LoadCurrentCharacters()
@@ -174,6 +180,13 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     public void HireNewCharacters()
     {
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) < hireNewCharactersCost)
+        {
+            IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Not enough power to hire new characters!");
+
+            return;
+        }
+
         int numCharacterToHire = 3;
 
         int currentCharacter = GetNumCandidates();

@@ -90,6 +90,7 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
         currentDay = gameTimeData.currentDay;
         currentMonth = gameTimeData.currentMonth;
         currentYear = gameTimeData.currentYear;
+        nextElectionYear = gameTimeData.nextElectionYear;
     }
 
     public void SaveGameTimeData()
@@ -97,6 +98,7 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
         gameTimeData.currentDay = currentDay;
         gameTimeData.currentMonth = currentMonth;
         gameTimeData.currentYear = currentYear;
+        gameTimeData.nextElectionYear = nextElectionYear;
 
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("gameTimeData"), gameTimeData);
     }
@@ -126,4 +128,5 @@ public class GameTimeData
     public int currentYear;
     public int currentMonth;
     public int currentDay;
+    public int nextElectionYear;
 }

@@ -136,7 +136,8 @@ public class LeadershipCharacterUI : MonoBehaviour
         supportButton.gameObject.SetActive(true);
         electionPointText.gameObject.SetActive(true);
 
-        supportCost = Mathf.Max(10, 10 * characterTraits.Count(item => item.isGoodTrait));
+        supportCost =
+            CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id) * (1 + 0.1f * characterTraits.Count(item => item.isGoodTrait));
 
         electionPointText.text = $"Election Points: {electionPoint}";
         supportCostText.text = $"{supportCost}";
