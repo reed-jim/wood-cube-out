@@ -13,6 +13,7 @@ public class ElectionPopup : MonoBehaviour
     public RectTransform characterContainer;
     public Button closeButton;
     public Button concludeElectionButton;
+    public Button forceStartElectionButton;
     public TMP_Text timerText;
 
     public CharacterTraitContainer characterTraitContainer;
@@ -27,6 +28,7 @@ public class ElectionPopup : MonoBehaviour
 
         closeButton.onClick.AddListener(Hide);
         concludeElectionButton.onClick.AddListener(ConcludeElection);
+        forceStartElectionButton.onClick.AddListener(ForceStartElection);
     }
 
     void OnDestroy()
@@ -121,6 +123,11 @@ public class ElectionPopup : MonoBehaviour
         IdleTimeManager.Ins.ScheduleNextElection();
 
         Hide();
+    }
+
+    private void ForceStartElection()
+    {
+        LeadershipManager.Ins.ForceStartElection();
     }
 
     public void Show()

@@ -69,6 +69,7 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
         SaveGameTimeData();
     }
 
+    #region Election
     private void CheckElectionDate()
     {
         if (currentYear == nextElectionYear && currentMonth == electionMonth && currentDay == electionDay)
@@ -81,6 +82,14 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
     {
         nextElectionYear = currentYear + yearsBetweenElections;
     }
+
+    public void StartElectionImmediately()
+    {
+        nextElectionYear = currentYear + 1;
+
+        SaveGameTimeData();
+    }
+    #endregion
 
     #region Load/Save
     public void LoadGameTimeData()

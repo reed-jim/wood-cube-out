@@ -368,6 +368,28 @@ public class LeadershipManager : Singleton<LeadershipManager>
     {
         electionPopup.Show();
     }
+
+    public void ForceStartElection()
+    {
+        if (currentCaptain == null)
+        {
+            IdleTimeManager.Ins.StartElectionImmediately();
+        }
+        else
+        {
+            if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) > 500)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            IngameNotificationManager.Ins.ShowNotification(
+                GameConstants.WARNING, $"Can't start election now. {currentCaptain.leadershipCharacterData.characterName} is the current Captain");
+        }
+    }
     #endregion
 
     #region Save/Load
