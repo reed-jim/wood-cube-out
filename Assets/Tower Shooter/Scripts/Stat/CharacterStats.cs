@@ -71,6 +71,14 @@ public class CharacterStats : MonoBehaviour
         return newValue;
     }
 
+    public void RemoveAllModifiersFromSource(StatModifierSource source)
+    {
+        foreach (var statType in statDict.Keys)
+        {
+            GetStat(statType).RemoveAllModifiersFromSource(source);
+        }
+    }
+
     public void RemoveModifier(StatModifier mod) => GetStat(mod.Type).RemoveModifier(mod);
 
     public void RemoveSource(object source)

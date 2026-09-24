@@ -298,6 +298,9 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             for (int j = 0; j < statModifiers.Count; j++)
             {
+                statModifiers[j].statModifierSource = StatModifierSource.LeadershipPosition;
+
+                node.serviceLocator.stats.RemoveAllModifiersFromSource(StatModifierSource.LeadershipPosition);
                 node.serviceLocator.stats.AddModifier(statModifiers[j]);
             }
         }

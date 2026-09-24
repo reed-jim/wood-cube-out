@@ -83,6 +83,26 @@ public class Stat
         return false;
     }
 
+    public bool RemoveAllModifiersFromSource(StatModifierSource statModifierSource)
+    {
+        bool removed = false;
+        for (int i = modifiers.Count - 1; i >= 0; i--)
+        {
+            if (modifiers[i].statModifierSource == statModifierSource)
+            {
+                modifiers.RemoveAt(i);
+                removed = true;
+            }
+        }
+
+        if (removed)
+        {
+            isDirty = true;
+            OnStatChanged?.Invoke();
+        }
+        return removed;
+    }
+
     public bool RemoveAllModifiersFromSource(object source)
     {
         bool removed = false;

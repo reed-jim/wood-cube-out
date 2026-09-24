@@ -28,6 +28,13 @@ public enum ModifierType
     PercentMult = 300   // Applied sequentially: Value * Mult1 * Mult2
 }
 
+public enum StatModifierSource
+{
+    None,
+    Augment,
+    LeadershipPosition
+}
+
 [Serializable]
 public class StatModifier
 {
@@ -35,6 +42,7 @@ public class StatModifier
     public ModifierType ModType;
     public float Value;
     public int UpgradeTime;
+    public StatModifierSource statModifierSource;
     public readonly object Source; // Identifies origin (e.g., AugmentSO, ItemInstance)
 
     public StatModifier(StatType type, ModifierType modType, float value, int upgradeTime = 0, object source = null)
