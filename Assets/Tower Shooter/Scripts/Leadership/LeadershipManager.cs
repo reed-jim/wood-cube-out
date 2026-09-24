@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -46,6 +47,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public Button cancelAppointCharacterButton;
     public Button leadershipPeriodButton;
     public TMP_Text candidatesCountText;
+    public TMP_Text totalEffectText;
 
     [Header("Remove")]
     public CanvasGroup removeCharacterOverlayCanvasGroup;
@@ -70,6 +72,9 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     [Header("Bonus Stat")]
     public List<StatModifier> statModifiers = new List<StatModifier>();
+
+    [Header("SO")]
+    public StatColorConfigSO statColorConfigSO;
 
     private List<LeadershipCharacterUI> leadershipCharacterUIs = new List<LeadershipCharacterUI>();
     private LeadershipCharacterUI currentCaptain;
@@ -304,6 +309,30 @@ public class LeadershipManager : Singleton<LeadershipManager>
                 node.serviceLocator.stats.AddModifier(statModifiers[j]);
             }
         }
+
+        UpdateTotalBonusText();
+    }
+
+    public void UpdateTotalBonusText()
+    {
+        StringBuilder statDescription = new StringBuilder();
+
+        foreach (var mod in statModifiers)
+        {
+            string hex = statColorConfigSO.GetHex(mod.Type);
+
+            bool isPositive = mod.Value >= 0;
+
+            string sign = isPositive ? "+" : "";
+
+            string valStr = mod.ModType == ModifierType.Flat
+                ? $"{sign}{mod.Value:F2}"
+                : $"{sign}{mod.Value * 100f:F2}%";
+
+            statDescription.AppendLine($"<color=#{hex}>{valStr} {mod.Type}</color>");
+        }
+
+        totalEffectText.text = statDescription.ToString();
     }
     #endregion
 
