@@ -70,6 +70,11 @@ public static class DataUtility
         int attempt = 0;
         int maxRetries = 3;
 
+        JsonSerializerSettings settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+
         while (attempt < maxRetries)
         {
             try
@@ -83,12 +88,12 @@ public static class DataUtility
 
                 if (json.ContainsKey(key))
                 {
-                    json[key] = JsonConvert.SerializeObject(data);
+                    json[key] = JsonConvert.SerializeObject(data, settings: settings);
                     // json[key] = JsonUtility.ToJson(data);
                 }
                 else
                 {
-                    json.Add(key, JsonConvert.SerializeObject(data));
+                    json.Add(key, JsonConvert.SerializeObject(data, settings: settings));
                     // json.Add(key, JsonUtility.ToJson(data));
                 }
 
@@ -99,7 +104,7 @@ public static class DataUtility
             catch (Exception e)
             {
                 attempt++;
-                DebugLogger.LogSimple(message:$"{e}");
+                DebugLogger.LogSimple(message: $"{e}");
             }
         }
     }
@@ -147,6 +152,11 @@ public static class DataUtility
     {
         string filePath = Application.persistentDataPath + $"/{fileName}.json";
 
+        JsonSerializerSettings settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+
         try
         {
             if (File.Exists(filePath))
@@ -159,7 +169,7 @@ public static class DataUtility
 
                     if (json.ContainsKey(key))
                     {
-                        return JsonConvert.DeserializeObject<T>(json[key].ToString());
+                        return JsonConvert.DeserializeObject<T>(json[key].ToString(), settings: settings);
                     }
                     else
                     {
@@ -178,7 +188,7 @@ public static class DataUtility
         }
         catch (Exception e)
         {
-            
+
         }
 
         return defaultValue;

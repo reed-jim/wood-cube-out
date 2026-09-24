@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -42,6 +43,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public CanvasGroup overlayCanvasGroup;
     public Image selectCharacterOverlay;
     public Button cancelAppointCharacterButton;
+    public Button leadershipPeriodButton;
 
     [Header("Remove")]
     public CanvasGroup removeCharacterOverlayCanvasGroup;
@@ -70,6 +72,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
     private List<LeadershipCharacterUI> leadershipCharacterUIs = new List<LeadershipCharacterUI>();
     private LeadershipCharacterUI currentCaptain;
 
+    public static event Action openLeadershipPeriodScreenEvent;
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -84,6 +88,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         confirmRemoveCharacterButton.onClick.AddListener(ConfirmRemoveCharacters);
         enterRemoveCharacterModeButton.onClick.AddListener(EnterRemoveCharacterMode);
         exitRemoveCharacterButton.onClick.AddListener(ExitRemoveCharacterMode);
+
+        leadershipPeriodButton.onClick.AddListener(OpenLeadershipPeriodScreen);
 
         container.gameObject.SetActive(false);
         selectCharacterOverlay.gameObject.SetActive(false);
@@ -362,7 +368,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         leadershipCharacterData.characterName = name;
         leadershipCharacterData.country = country;
-        leadershipCharacterData.birthDayString = birthday.ToString("yyyy-MM-dd");
+        leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
         leadershipCharacterData.traitIndexes = characterTraitIndexes;
         leadershipCharacterData.faceSeed = UnityEngine.Random.Range(1000, 999999);
 
@@ -431,6 +437,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
     #endregion
 
     #region Leadership Period
+    public void OpenLeadershipPeriodScreen()
+    {
+        openLeadershipPeriodScreenEvent?.Invoke();
+    }
+
     public void AddLeadershipPeriod(LeadershipCharacterData leadershipCharacterData, DateTime startDateTime)
     {
         TryEndCurrentLeadershipPeriod();
@@ -438,7 +449,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         LeadershipPeriodData leadershipPeriodData = new LeadershipPeriodData();
 
         leadershipPeriodData.leader = leadershipCharacterData;
-        leadershipPeriodData.startDateTimeString = startDateTime.ToString("yyyy-MM-dd");
+        leadershipPeriodData.startDateTimeString = startDateTime.ToString("dd/MM/yyyy");
+        leadershipPeriodData.starDiscoveryEventDataItems = new List<StarDiscoveryEventDataItem>();
 
         leadershipData.leadershipPeriodDataItems.Add(leadershipPeriodData);
 
@@ -453,9 +465,18 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
             if (leadershipPeriodData.leader == currentCaptain.leadershipCharacterData)
             {
-                leadershipPeriodData.endDateTimeString = IdleTimeManager.Ins.CurrentDateTime.ToString("yyyy-MM-dd");
+                leadershipPeriodData.endDateTimeString = IdleTimeManager.Ins.CurrentDateTime.ToString("dd/MM/yyyy");
             }
         }
+
+        SaveLeadershipData();
+    }
+
+    public void AddStarDiscoveryEventLeadershipPeriod(StarDiscoveryEventDataItem starDiscoveryEventDataItem)
+    {
+        LeadershipPeriodData currentLeadershipPeriodData = leadershipData.leadershipPeriodDataItems.Last();
+
+        currentLeadershipPeriodData.starDiscoveryEventDataItems.Add(starDiscoveryEventDataItem);
 
         SaveLeadershipData();
     }

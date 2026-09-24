@@ -1,13 +1,20 @@
 using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IngameEventScreen : MonoBehaviour
 {
     public RectTransform container;
     public RectTransform itemContainer;
+    [SerializeField] private Button closeButton;
 
     private List<IngameEventItemUI> ingameEventItemUIs = new List<IngameEventItemUI>();
+
+    void Awake()
+    {
+        closeButton.onClick.AddListener(Hide);
+    }
 
     private void Init(IngameEventData ingameEventData)
     {

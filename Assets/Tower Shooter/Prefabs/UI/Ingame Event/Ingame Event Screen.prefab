@@ -376,7 +376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7577152861054954500}
-  - component: {fileID: 4423666925144942724}
+  - component: {fileID: 5020167691217539154}
   m_Layer: 5
   m_Name: Item Container
   m_TagString: Untagged
@@ -400,10 +400,10 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1800, y: 600}
+  m_AnchoredPosition: {x: 0, y: -60}
+  m_SizeDelta: {x: 1800, y: 680}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4423666925144942724
+--- !u!114 &5020167691217539154
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -412,16 +412,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2095766825495252847}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
   m_Padding:
     m_Left: 0
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 140
+  m_ChildAlignment: 1
+  m_Spacing: 20
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -480,6 +480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngameEventScreen
   container: {fileID: 2950709935183104750}
   itemContainer: {fileID: 7577152861054954500}
+  closeButton: {fileID: 8639046269303212000}
 --- !u!1 &3511277117570579838
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
+  role: 24
 --- !u!114 &7214904127226171015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1017,7 +1018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3874265438990885454, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
       propertyPath: role
-      value: 0
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 5228802592774246861, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
       propertyPath: m_Pivot.x
@@ -1121,3 +1122,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5228802592774246861, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
   m_PrefabInstance: {fileID: 1225360545801071633}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8639046269303212000 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7414424875025771505, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
+  m_PrefabInstance: {fileID: 1225360545801071633}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

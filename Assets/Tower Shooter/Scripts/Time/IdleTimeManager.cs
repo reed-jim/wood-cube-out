@@ -114,7 +114,7 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
     #endregion
 
     #region Util
-    public string GetCurrentDateTimeString()
+    public string GetCurrentDateTime()
     {
         return CurrentDateTime.ToString("yyyy-MM-dd");
     }
