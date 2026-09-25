@@ -28,8 +28,8 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     public enum HairType { Bald, ShortCrop, MessyBangs, SoftWaves, BuzzCut, SidePart }
     public enum BeardType { None, LightStubble, NeatGoatee }
 
-    // --- CHANGED: Leader Outfit Types ---
-    public enum LeaderOutfitType { ClassicBlackTie, ExecutiveNavy, ModernCharcoal, RegalBurgundy }
+    // --- Space Suit Outfit Types ---
+    public enum OutfitType { NASAClassicWhite, DeepSpaceOrange, StealthOnyx, CommanderSilver }
     public enum FaceShape { SoftOval, Round, Heart, SoftSquare }
 
     // --- GENETIC & CLOTHING DATA ---
@@ -37,15 +37,14 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private Color eyeColor;
     private Color naturalHairColor;
 
-    // --- CHANGED: Leader Attire Colors ---
-    private Color suitColor;
-    private Color shirtColor;
-    private Color tieColor;
-    private Color lapelColor;
+    // --- Space Suit Attire Colors ---
+    private Color suitColor;        // Main torso fabric
+    private Color suitAccentColor;  // Joint rings, collar trim, chest pack
+    private Color chestBadgeColor;  // Mission patch / LED accent
 
     private HairType hairStyle;
     private BeardType beardStyle;
-    private LeaderOutfitType outfitStyle;
+    private OutfitType outfitStyle;
     private FaceShape faceShape;
 
     // Softened Genetic Parameters
@@ -61,7 +60,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private float gene_BrowThickness;
 
     // --- RENDER GAME OBJECTS (UI) ---
-    private GameObject neck, shoulders, shirt, tie, lapelL, lapelR, suitPocket, pocketSquare;
+    private GameObject neck, shoulders, chestPack, lifeSupportBadge, neckRing;
     private GameObject head, leftEar, rightEar;
     private GameObject chinShadow, cheekL, cheekR;
 
@@ -72,9 +71,6 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private GameObject leftBrow, rightBrow, foreheadWrinkle;
     private GameObject noseBridge, noseTip, noseNostrilL, noseNostrilR;
     private GameObject upperLip, lowerLip, mouthCornerL, mouthCornerR;
-
-    // Shirt Collar
-    private GameObject collarL, collarR;
 
     // Multi-Clump Hair Objects
     private List<GameObject> hairClumps = new List<GameObject>();
@@ -87,6 +83,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private void Start()
     {
         circleSprite = CreateCircleSprite();
+        GenerateNewRandomCharacter();
     }
 
     private void OnValidate()
@@ -156,8 +153,8 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
         eyeColor = Random.ColorHSV(0.05f, 0.65f, 0.4f, 0.7f, 0.4f, 0.8f);
 
-        outfitStyle = (LeaderOutfitType)Random.Range(0, System.Enum.GetValues(typeof(LeaderOutfitType)).Length);
-        SetupLeaderOutfitColors();
+        outfitStyle = (OutfitType)Random.Range(0, System.Enum.GetValues(typeof(OutfitType)).Length);
+        SetupSpaceSuitColors();
 
         hairStyle = (HairType)Random.Range(0, System.Enum.GetValues(typeof(HairType)).Length);
         beardStyle = (BeardType)Random.Range(0, System.Enum.GetValues(typeof(BeardType)).Length);
@@ -177,34 +174,32 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         gene_BrowThickness = Random.Range(4f, 7f);
     }
 
-    // --- CHANGED: Tailored Suit Color Palettes ---
-    private void SetupLeaderOutfitColors()
+    private void SetupSpaceSuitColors()
     {
         switch (outfitStyle)
         {
-            case LeaderOutfitType.ClassicBlackTie:
-                suitColor = new Color(0.10f, 0.10f, 0.12f);       // Obsidian Black
-                shirtColor = new Color(0.96f, 0.96f, 0.98f);      // Crisp White
-                tieColor = new Color(0.65f, 0.08f, 0.12f);        // Deep Red / Crimson
-                lapelColor = new Color(0.05f, 0.05f, 0.06f);      // Satin Black Accent
+            case OutfitType.NASAClassicWhite:
+                suitColor = new Color(0.92f, 0.93f, 0.95f); // Bright Space White
+                suitAccentColor = new Color(0.15f, 0.25f, 0.55f); // Deep Royal Blue
+                chestBadgeColor = new Color(0.80f, 0.15f, 0.15f); // Mission Red Accent
                 break;
-            case LeaderOutfitType.ExecutiveNavy:
-                suitColor = new Color(0.12f, 0.18f, 0.30f);       // Midnight Navy
-                shirtColor = new Color(0.92f, 0.94f, 0.98f);      // Light Ice Blue
-                tieColor = new Color(0.80f, 0.60f, 0.15f);        // Gold/Amber
-                lapelColor = new Color(0.09f, 0.14f, 0.24f);
+
+            case OutfitType.DeepSpaceOrange:
+                suitColor = new Color(0.90f, 0.40f, 0.10f); // High-Vis Flight Orange
+                suitAccentColor = new Color(0.15f, 0.15f, 0.18f); // Dark Charcoal
+                chestBadgeColor = new Color(0.95f, 0.95f, 0.95f); // White Patch
                 break;
-            case LeaderOutfitType.ModernCharcoal:
-                suitColor = new Color(0.22f, 0.24f, 0.26f);       // Slate Charcoal
-                shirtColor = new Color(0.98f, 0.98f, 0.98f);      // Pure White
-                tieColor = new Color(0.15f, 0.32f, 0.38f);        // Teal/Royal Steel
-                lapelColor = new Color(0.16f, 0.18f, 0.20f);
+
+            case OutfitType.StealthOnyx:
+                suitColor = new Color(0.12f, 0.13f, 0.15f); // Matte Black
+                suitAccentColor = new Color(0.30f, 0.32f, 0.35f); // Metallic Grey
+                chestBadgeColor = new Color(0.10f, 0.80f, 0.40f); // Neon Green
                 break;
-            case LeaderOutfitType.RegalBurgundy:
-                suitColor = new Color(0.28f, 0.10f, 0.14f);       // Wine Burgundy
-                shirtColor = new Color(0.95f, 0.92f, 0.88f);      // Cream
-                tieColor = new Color(0.12f, 0.12f, 0.15f);        // Dark Onyx
-                lapelColor = new Color(0.20f, 0.07f, 0.10f);
+
+            case OutfitType.CommanderSilver:
+                suitColor = new Color(0.75f, 0.78f, 0.82f); // Metallic Silver
+                suitAccentColor = new Color(0.50f, 0.10f, 0.15f); // Maroon Red
+                chestBadgeColor = new Color(0.90f, 0.70f, 0.10f); // Gold Crest
                 break;
         }
     }
@@ -213,20 +208,15 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     {
         int order = 0;
 
-        // --- Body & Leader Suit Layer ---
-        shoulders = CreatePart("Shoulders", transform, circleSprite, suitColor, order++);
-        shirt = CreatePart("DressShirt", shoulders.transform, circleSprite, shirtColor, order++);
-        tie = CreatePart("NeckTie", shoulders.transform, circleSprite, tieColor, order++);
-        lapelL = CreatePart("LapelL", shoulders.transform, circleSprite, lapelColor, order++);
-        lapelR = CreatePart("LapelR", shoulders.transform, circleSprite, lapelColor, order++);
-        suitPocket = CreatePart("SuitPocket", shoulders.transform, circleSprite, lapelColor, order++);
-        pocketSquare = CreatePart("PocketSquare", suitPocket.transform, circleSprite, shirtColor, order++);
+        // --- 1. Space Suit Clothes Base Layer ---
+        shoulders = CreatePart("SuitShoulders", transform, circleSprite, suitColor, order++);
+        chestPack = CreatePart("ChestPack", shoulders.transform, circleSprite, suitAccentColor, order++);
+        lifeSupportBadge = CreatePart("LifeSupportBadge", chestPack.transform, circleSprite, chestBadgeColor, order++);
 
         neck = CreatePart("Neck", transform, circleSprite, skinColor * 0.88f, order++);
-        collarL = CreatePart("ShirtCollarL", neck.transform, circleSprite, shirtColor, order++);
-        collarR = CreatePart("ShirtCollarR", neck.transform, circleSprite, shirtColor, order++);
+        neckRing = CreatePart("HelmetNeckRing", transform, circleSprite, suitAccentColor, order++);
 
-        // --- Head Base Layer ---
+        // --- 2. Head & Facial Features ---
         leftEar = CreatePart("LeftEar", transform, circleSprite, skinColor * 0.95f, order++);
         rightEar = CreatePart("RightEar", transform, circleSprite, skinColor * 0.95f, order++);
         head = CreatePart("Head", transform, circleSprite, skinColor, order++);
@@ -234,7 +224,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         cheekL = CreatePart("CheekL", head.transform, circleSprite, skinColor * 1.04f, order++);
         cheekR = CreatePart("CheekR", head.transform, circleSprite, skinColor * 1.04f, order++);
 
-        // --- Eyes ---
+        // Eyes
         leftEye = CreatePart("LeftEye", head.transform, circleSprite, Color.white, order++);
         rightEye = CreatePart("RightEye", head.transform, circleSprite, Color.white, order++);
 
@@ -253,19 +243,19 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         eyeBagL = CreatePart("EyeBagL", leftEye.transform, circleSprite, skinColor * 0.82f, order++);
         eyeBagR = CreatePart("EyeBagR", rightEye.transform, circleSprite, skinColor * 0.82f, order++);
 
-        // --- Nose ---
+        // Nose
         noseBridge = CreatePart("NoseBridge", head.transform, circleSprite, skinColor * 0.94f, order++);
         noseTip = CreatePart("NoseTip", head.transform, circleSprite, skinColor * 0.88f, order++);
         noseNostrilL = CreatePart("NostrilL", noseTip.transform, circleSprite, skinColor * 0.72f, order++);
         noseNostrilR = CreatePart("NostrilR", noseTip.transform, circleSprite, skinColor * 0.72f, order++);
 
-        // --- Mouth ---
+        // Mouth
         upperLip = CreatePart("UpperLip", head.transform, circleSprite, new Color(0.68f, 0.38f, 0.38f), order++);
         lowerLip = CreatePart("LowerLip", head.transform, circleSprite, new Color(0.75f, 0.45f, 0.45f), order++);
         mouthCornerL = CreatePart("MouthCornerL", head.transform, circleSprite, new Color(0.50f, 0.25f, 0.25f), order++);
         mouthCornerR = CreatePart("MouthCornerR", head.transform, circleSprite, new Color(0.50f, 0.25f, 0.25f), order++);
 
-        // --- Facial Hair & Eyebrows ---
+        // Facial Hair & Eyebrows
         beardJaw = CreatePart("BeardJaw", head.transform, circleSprite, naturalHairColor, order++);
         beardMustache = CreatePart("BeardMustache", head.transform, circleSprite, naturalHairColor, order++);
 
@@ -285,39 +275,21 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         Color currentSkinColor = Color.Lerp(skinColor, skinColor * 0.92f, t);
         head.GetComponent<Image>().color = currentSkinColor;
 
-        // --- 1. EXECUTIVE SUIT & FORMAL ATTIRE ---
-        float shoulderW = Mathf.Lerp(140f, 380f * gene_ShoulderWidth, Mathf.Clamp01(t * 1.5f));
-        ApplyUITransform(shoulders, new Vector2(0f, Mathf.Lerp(-130f, -190f, t)), new Vector2(shoulderW, Mathf.Lerp(90f, 200f, t)), suitColor);
+        // --- 1. ASTRONAUT SUIT CLOTHES ---
+        float shoulderW = Mathf.Lerp(160f, 410f * gene_ShoulderWidth, Mathf.Clamp01(t * 1.5f));
+        ApplyUITransform(shoulders, new Vector2(0f, Mathf.Lerp(-130f, -190f, t)), new Vector2(shoulderW, Mathf.Lerp(110f, 220f, t)), suitColor);
 
-        // V-Neck Opening for Dress Shirt
-        ApplyUITransform(shirt, new Vector2(0f, 30f), new Vector2(shoulderW * 0.38f, 110f), shirtColor);
+        // Chest control unit / Life support module
+        ApplyUITransform(chestPack, new Vector2(0f, -10f), new Vector2(shoulderW * 0.35f, 75f), suitAccentColor);
+        ApplyUITransform(lifeSupportBadge, new Vector2(0f, 0f), new Vector2(25f, 25f), chestBadgeColor);
 
-        // Silk Tie
-        ApplyUITransform(tie, new Vector2(0f, 10f), new Vector2(18f, 105f), tieColor);
-
-        // Tailored Suit Lapels
-        float lapelW = 32f;
-        float lapelH = 115f;
-        ApplyUITransform(lapelL, new Vector2(-shoulderW * 0.20f, 15f), new Vector2(lapelW, lapelH), lapelColor);
-        ApplyUITransform(lapelR, new Vector2(shoulderW * 0.20f, 15f), new Vector2(lapelW, lapelH), lapelColor);
-        lapelL.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -18f);
-        lapelR.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, 18f);
-
-        // Breast Pocket & Folded Pocket Square
-        ApplyUITransform(suitPocket, new Vector2(shoulderW * 0.30f, -15f), new Vector2(40f, 6f), lapelColor);
-        ApplyUITransform(pocketSquare, new Vector2(0f, 6f), new Vector2(28f, 10f), shirtColor);
-
-        // Pressed Dress Shirt Collar
-        float neckW = Mathf.Lerp(55f, 105f * gene_HeadWidthRatio, t);
+        // Neck & Collar Attachment Ring
+        float neckW = Mathf.Lerp(75f, 125f * gene_HeadWidthRatio, t);
         float neckH = Mathf.Lerp(60f, 115f, t);
         ApplyUITransform(neck, new Vector2(0f, Mathf.Lerp(-70f, -100f, t)), new Vector2(neckW, neckH), currentSkinColor * 0.88f);
+        ApplyUITransform(neckRing, new Vector2(0f, Mathf.Lerp(-60f, -90f, t)), new Vector2(neckW * 1.15f, 35f), suitAccentColor);
 
-        ApplyUITransform(collarL, new Vector2(-neckW * 0.28f, -10f), new Vector2(30f, 38f), shirtColor);
-        ApplyUITransform(collarR, new Vector2(neckW * 0.28f, -10f), new Vector2(30f, 38f), shirtColor);
-        collarL.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -35f);
-        collarR.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, 35f);
-
-        // --- 2. SOFT, FRIENDLY FACE SHAPES ---
+        // --- 2. FACE SHAPES ---
         float baseHeadW = Mathf.Lerp(200f, 180f, t) * gene_HeadWidthRatio;
         float baseHeadH = Mathf.Lerp(195f, 250f, t) * gene_HeadHeightRatio;
 
@@ -337,7 +309,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         // Soft Chin Contour
         ApplyUITransform(chinShadow, new Vector2(0f, Mathf.Lerp(-42f, -35f, t) * shapeScale.y), new Vector2(headW * 0.42f, Mathf.Lerp(20f, 32f, t)), currentSkinColor * 0.90f);
 
-        // Gentle Cheek Blush/Structure
+        // Cheek Structure
         Color cheekColor = currentSkinColor;
         cheekColor.r = Mathf.Min(1f, cheekColor.r * 1.04f);
         ApplyUITransform(cheekL, new Vector2(-headW * 0.30f, -8f), new Vector2(45f, 35f), cheekColor);
@@ -349,7 +321,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         ApplyUITransform(leftEar, new Vector2(-headW * 0.48f, earY), new Vector2(36f, earH), currentSkinColor * 0.95f);
         ApplyUITransform(rightEar, new Vector2(headW * 0.48f, earY), new Vector2(36f, earH), currentSkinColor * 0.95f);
 
-        // --- 3. EXPRESSIVE EYES ---
+        // --- 3. EYES ---
         float eyeY = Mathf.Lerp(-8f, 20f, t);
         float eyeSpacing = Mathf.Lerp(50f, 40f, t) + gene_EyeSpacing;
         float eyeSize = Mathf.Lerp(50f, 36f, t);
@@ -361,10 +333,10 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         wColor.a = Mathf.Clamp01((t - 0.55f) * 2f);
         ApplyUITransform(foreheadWrinkle, new Vector2(0f, eyeY + 36f), new Vector2(55f, 3f), wColor);
 
-        // --- 4. WARM EXPRESSIONS ---
+        // --- 4. EXPRESSIONS ---
         ApplyFacialExpression(eyeY, eyeSpacing, t, currentHairColor);
 
-        // --- 5. NATURAL NOSE ---
+        // --- 5. NOSE ---
         float noseY = Mathf.Lerp(-28f, -4f, t);
         float bridgeHeight = Mathf.Lerp(12f, 38f * gene_NoseLength, t);
         ApplyUITransform(noseBridge, new Vector2(0f, noseY + (bridgeHeight * 0.45f)), new Vector2(8f * gene_NoseWidth, bridgeHeight), currentSkinColor * 0.94f);
@@ -377,7 +349,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         // Beard
         UpdateBeardGrowth(t, currentHairColor, Mathf.Lerp(-50f, -40f, t));
 
-        // Softened Hair
+        // Hair
         UpdateMultiClumpHair(t, currentHairColor, headW);
     }
 
@@ -389,7 +361,6 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         ApplyUITransform(iris, Vector2.zero, new Vector2(irisSize, irisSize), eyeColor);
         ApplyUITransform(pupil, Vector2.zero, new Vector2(irisSize * 0.50f, irisSize * 0.50f), new Color(0.12f, 0.12f, 0.12f));
 
-        // Vibrant Catchlights
         ApplyUITransform(h1, new Vector2(size * 0.14f, size * 0.14f), new Vector2(size * 0.22f, size * 0.22f), Color.white);
         ApplyUITransform(h2, new Vector2(-size * 0.12f, -size * 0.12f), new Vector2(size * 0.12f, size * 0.12f), new Color(1f, 1f, 1f, 0.7f));
 
@@ -578,13 +549,11 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // Ensure we have a valid grayscale material
         if (grayscaleMaterial == null)
         {
             grayscaleMaterial = CreateDefaultGrayscaleMaterial();
         }
 
-        // Cache original materials and apply grayscale material to every Image component
         Image[] images = GetComponentsInChildren<Image>(true);
         originalMaterials.Clear();
 
@@ -606,7 +575,6 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         if (!isDead) return;
         isDead = false;
 
-        // Restore original materials
         foreach (var pair in originalMaterials)
         {
             if (pair.Key != null)
@@ -617,18 +585,10 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         originalMaterials.Clear();
     }
 
-    /// <summary>
-    /// Helper method to dynamically generate a Grayscale Material using Unity's UI shader if none is provided.
-    /// </summary>
     private Material CreateDefaultGrayscaleMaterial()
     {
-        // Uses a built-in Unity UI grayscale-compatible shader or custom shader string
         Shader shader = Shader.Find("UI/Default");
         Material mat = new Material(shader);
-
-        // If using a custom shader with a grayscale toggle/property:
-        // mat.SetFloat("_GrayscaleAmount", 1.0f);
-
         return mat;
     }
 
@@ -681,5 +641,4 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
-
 }
