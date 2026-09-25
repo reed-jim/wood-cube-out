@@ -2,278 +2,272 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(RectTransform))]
-public class ProceduralHorizontalRankBadgeUI : MonoBehaviour
+[RequireComponent(typeof(Image))]
+public class ProceduralHorizontalRankBadgeUI_Cached : MonoBehaviour
 {
     [Header("Rank Settings")]
     [Range(1, 10)]
     public int rankLevel = 1;
 
     [Header("Layout & Sizing")]
-    public Vector2 badgeSize = new Vector2(600f, 100f);
+    public Vector2Int badgeTextureSize = new Vector2Int(600, 100);
     public float cornerRadius = 16f;
 
-    // Procedural Rounded Texture
-    private Sprite badgeSprite;
+    [Header("Optimization")]
+    [Tooltip("If true, reuses cached rank textures across multiple badge instances.")]
+    public bool enableGlobalCaching = true;
 
-    // Structural UI Components
-    private GameObject haloAura;
-    private GameObject outerFrame;
-    private GameObject innerPlate;
-    private GameObject leftWing, rightWing;
-    private GameObject rankIconFrame;
-    private GameObject coreGem;
-    private GameObject levelTextContainer;
-    private GameObject crownAccent;
+    // Static runtime texture cache across all instances (Rank Level -> Baked Sprite)
+    private static Dictionary<int, Sprite> spriteCache = new Dictionary<int, Sprite>();
 
-    private List<GameObject> progressChevrons = new List<GameObject>();
-    private List<GameObject> starInsignias = new List<GameObject>();
+    // Dynamic procedural sprite base
+    private Sprite roundedBaseSprite;
+    private Image targetImage;
 
-    // Color Palette Variables
-    private Color primaryColor;
-    private Color secondaryColor;
-    private Color plateColor;
-    private Color glowColor;
-    private Color gemColor;
+    private void Awake()
+    {
+        targetImage = GetComponent<Image>();
+    }
 
     private void Start()
     {
-        badgeSprite = CreateRoundedSquareSprite();
-        BuildBadgeHierarchy();
-        UpdateBadge(rankLevel);
+        SetRankLevel(rankLevel);
     }
 
     private void OnValidate()
     {
-        if (outerFrame != null)
+        if (Application.isPlaying && targetImage != null)
         {
-            UpdateBadge(rankLevel);
+            SetRankLevel(rankLevel);
         }
-    }
-
-    [ContextMenu("Rebuild & Refresh Badge")]
-    public void RefreshBadge()
-    {
-        if (badgeSprite == null)
-        {
-            badgeSprite = CreateRoundedSquareSprite();
-        }
-
-        for (int i = transform.childCount - 1; i >= 0; i--)
-        {
-            DestroyImmediate(transform.GetChild(i).gameObject);
-        }
-
-        progressChevrons.Clear();
-        starInsignias.Clear();
-        BuildBadgeHierarchy();
-        UpdateBadge(rankLevel);
     }
 
     public void SetRankLevel(int level)
     {
         rankLevel = Mathf.Clamp(level, 1, 10);
-        UpdateBadge(rankLevel);
+
+        // 1. Check runtime cache first (0 Draw Call / Performance overhead)
+        if (enableGlobalCaching && spriteCache.TryGetValue(rankLevel, out Sprite cachedSprite))
+        {
+            if (cachedSprite != null)
+            {
+                ApplyCachedSprite(cachedSprite);
+                return;
+            }
+        }
+
+        // 2. Bake texture if not cached
+        Sprite newSprite = BakeBadgeToSprite(rankLevel);
+
+        if (enableGlobalCaching && newSprite != null)
+        {
+            spriteCache[rankLevel] = newSprite;
+        }
+
+        ApplyCachedSprite(newSprite);
     }
 
-    private void SetupTierColors(int level)
+    /// <summary>
+    /// Clears the global sprite cache (useful if resolution or visual settings change at runtime).
+    /// </summary>
+    public static void ClearCache()
     {
-        if (level <= 2) // Tier 1: Cadet (Bronze/Copper)
+        foreach (var pair in spriteCache)
         {
-            primaryColor = new Color(0.68f, 0.44f, 0.25f);
-            secondaryColor = new Color(0.45f, 0.28f, 0.15f);
-            plateColor = new Color(0.16f, 0.14f, 0.14f);
-            glowColor = new Color(0.80f, 0.50f, 0.20f, 0.20f);
-            gemColor = new Color(0.75f, 0.38f, 0.18f);
+            if (pair.Value != null && pair.Value.texture != null)
+            {
+                Destroy(pair.Value.texture);
+                Destroy(pair.Value);
+            }
         }
-        else if (level <= 4) // Tier 2: Officer (Silver/Steel)
-        {
-            primaryColor = new Color(0.78f, 0.82f, 0.88f);
-            secondaryColor = new Color(0.42f, 0.48f, 0.56f);
-            plateColor = new Color(0.12f, 0.15f, 0.18f);
-            glowColor = new Color(0.40f, 0.70f, 1.00f, 0.35f);
-            gemColor = new Color(0.20f, 0.65f, 0.95f);
-        }
-        else if (level <= 6) // Tier 3: Elite (Gold/Amber)
-        {
-            primaryColor = new Color(0.98f, 0.78f, 0.18f);
-            secondaryColor = new Color(0.68f, 0.48f, 0.08f);
-            plateColor = new Color(0.18f, 0.14f, 0.08f);
-            glowColor = new Color(1.00f, 0.80f, 0.20f, 0.50f);
-            gemColor = new Color(0.95f, 0.20f, 0.15f);
-        }
-        else if (level <= 8) // Tier 4: Master (Platinum/Cyan Glow)
-        {
-            primaryColor = new Color(0.85f, 0.95f, 0.98f);
-            secondaryColor = new Color(0.20f, 0.58f, 0.68f);
-            plateColor = new Color(0.08f, 0.12f, 0.16f);
-            glowColor = new Color(0.10f, 0.95f, 0.98f, 0.65f);
-            gemColor = new Color(0.00f, 0.90f, 0.90f);
-        }
-        else // Tier 5: Legend (Imperial Gold & Obsidian / Radiant Halo)
-        {
-            primaryColor = new Color(1.00f, 0.84f, 0.00f);
-            secondaryColor = new Color(0.88f, 0.12f, 0.22f);
-            plateColor = new Color(0.08f, 0.05f, 0.09f);
-            glowColor = new Color(0.95f, 0.25f, 0.95f, 0.80f);
-            gemColor = new Color(0.80f, 0.10f, 1.00f);
-        }
+        spriteCache.Clear();
     }
 
-    private void BuildBadgeHierarchy()
+    private void ApplyCachedSprite(Sprite sprite)
     {
+        if (targetImage == null) targetImage = GetComponent<Image>();
+        targetImage.sprite = sprite;
+        targetImage.type = Image.Type.Simple;
+
+        // Match RectTransform size to texture dimensions
+        RectTransform rt = GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(badgeTextureSize.x, badgeTextureSize.y);
+    }
+
+    private Sprite BakeBadgeToSprite(int level)
+    {
+        if (roundedBaseSprite == null)
+        {
+            roundedBaseSprite = CreateRoundedSquareSprite();
+        }
+
+        // --- 1. Create Temporary off-screen Canvas Hierarchy ---
+        GameObject bakerRoot = new GameObject("TempBadgeBaker", typeof(RectTransform), typeof(Canvas));
+        Canvas bakerCanvas = bakerRoot.GetComponent<Canvas>();
+        bakerCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+        RectTransform rootRect = bakerRoot.GetComponent<RectTransform>();
+        rootRect.sizeDelta = badgeTextureSize;
+
+        // Build procedural hierarchy inside baker root
+        BuildBadgeHierarchy(bakerRoot.transform, level);
+
+        // Force UI layout rebuild
+        Canvas.ForceUpdateCanvases();
+
+        // --- 2. Setup Render Camera & RenderTexture ---
+        GameObject cameraObj = new GameObject("TempBakerCamera", typeof(Camera));
+        Camera bakerCamera = cameraObj.GetComponent<Camera>();
+        bakerCamera.clearFlags = CameraClearFlags.SolidColor;
+        bakerCamera.backgroundColor = new Color(0, 0, 0, 0); // Transparent background
+        bakerCamera.cullingMask = 1 << bakerRoot.layer;
+        bakerCamera.orthographic = true;
+        bakerCamera.orthographicSize = badgeTextureSize.y / 2f;
+        bakerCamera.nearClipPlane = -100f;
+        bakerCamera.farClipPlane = 100f;
+
+        RenderTexture renderTex = RenderTexture.GetTemporary(badgeTextureSize.x, badgeTextureSize.y, 24, RenderTextureFormat.ARGB32);
+        bakerCamera.targetTexture = renderTex;
+
+        // --- 3. Render and Extract Texture ---
+        bakerCamera.Render();
+
+        RenderTexture.active = renderTex;
+        Texture2D resultTex = new Texture2D(badgeTextureSize.x, badgeTextureSize.y, TextureFormat.RGBA32, false);
+        resultTex.ReadPixels(new Rect(0, 0, badgeTextureSize.x, badgeTextureSize.y), 0, 0);
+        resultTex.Apply();
+
+        RenderTexture.active = null;
+        bakerCamera.targetTexture = null;
+        RenderTexture.ReleaseTemporary(renderTex);
+
+        // --- 4. Cleanup Off-screen GameObjects ---
+        DestroyImmediate(bakerRoot);
+        DestroyImmediate(cameraObj);
+
+        // --- 5. Generate and Return Final Sprite ---
+        return Sprite.Create(resultTex, new Rect(0, 0, badgeTextureSize.x, badgeTextureSize.y), new Vector2(0.5f, 0.5f), 100f);
+    }
+
+    #region Procedural Visual Builders
+
+    private void BuildBadgeHierarchy(Transform root, int level)
+    {
+        Color primaryColor, secondaryColor, plateColor, glowColor, gemColor;
+        SetupTierColors(level, out primaryColor, out secondaryColor, out plateColor, out glowColor, out gemColor);
+
+        float w = badgeTextureSize.x;
+        float h = badgeTextureSize.y;
         int order = 0;
 
-        // Back-to-front rendering order
-        haloAura = CreatePart("HaloAura", transform, badgeSprite, glowColor, order++);
-
-        leftWing = CreatePart("LeftWing", transform, badgeSprite, secondaryColor, order++);
-        rightWing = CreatePart("RightWing", transform, badgeSprite, secondaryColor, order++);
-
-        outerFrame = CreatePart("OuterFrame", transform, badgeSprite, primaryColor, order++);
-        innerPlate = CreatePart("InnerPlate", outerFrame.transform, badgeSprite, plateColor, order++);
-
-        // Structural Chevrons inside the horizontal bar
-        for (int i = 0; i < 4; i++)
-        {
-            GameObject chevron = CreatePart($"Chevron_{i}", innerPlate.transform, badgeSprite, secondaryColor, order++);
-            progressChevrons.Add(chevron);
-        }
-
-        // Left Crest / Icon Unit
-        rankIconFrame = CreatePart("RankIconFrame", innerPlate.transform, badgeSprite, primaryColor, order++);
-        coreGem = CreatePart("CoreGem", rankIconFrame.transform, badgeSprite, gemColor, order++);
-
-        // Crown Accent at top
-        crownAccent = CreatePart("CrownAccent", outerFrame.transform, badgeSprite, primaryColor, order++);
-
-        // Right-Side Rank Star Insignias
-        for (int i = 0; i < 5; i++)
-        {
-            GameObject star = CreatePart($"StarInsignia_{i}", innerPlate.transform, badgeSprite, primaryColor, order++);
-            starInsignias.Add(star);
-        }
-    }
-
-    private void UpdateBadge(int level)
-    {
-        SetupTierColors(level);
-
-        float width = badgeSize.x;
-        float height = badgeSize.y;
-
-        // Set Root RectTransform size
-        GetComponent<RectTransform>().sizeDelta = badgeSize;
-
-        // 1. Base Banner Frame & Inner Plate
-        ApplyUITransform(outerFrame, Vector2.zero, badgeSize, primaryColor);
-        ApplyUITransform(innerPlate, Vector2.zero, new Vector2(width - 12f, height - 12f), plateColor);
-
-        // 2. Backlight Aura (Level 7+)
-        bool hasHalo = level >= 7;
-        haloAura.SetActive(hasHalo);
-        if (hasHalo)
+        // 1. Halo Aura (Level 7+)
+        if (level >= 7)
         {
             float extraSize = (level >= 9) ? 40f : 20f;
-            ApplyUITransform(haloAura, Vector2.zero, new Vector2(width + extraSize, height + extraSize), glowColor);
+            CreatePart("HaloAura", root, roundedBaseSprite, glowColor, new Vector2(w + extraSize, h + extraSize), Vector2.zero, order++);
         }
 
-        // 3. Horizontal Wings (Level 3+)
-        bool hasWings = level >= 3;
-        leftWing.SetActive(hasWings);
-        rightWing.SetActive(hasWings);
-        if (hasWings)
+        // 2. Wings (Level 3+)
+        if (level >= 3)
         {
             float wingW = (level >= 8) ? 60f : 40f;
-            float wingH = height * 0.7f;
-            ApplyUITransform(leftWing, new Vector2(-(width / 2f + wingW / 3f), 0), new Vector2(wingW, wingH), secondaryColor);
-            ApplyUITransform(rightWing, new Vector2((width / 2f + wingW / 3f), 0), new Vector2(wingW, wingH), secondaryColor);
+            float wingH = h * 0.7f;
+            GameObject leftWing = CreatePart("LeftWing", root, roundedBaseSprite, secondaryColor, new Vector2(wingW, wingH), new Vector2(-(w / 2f + wingW / 3f), 0), order++);
+            GameObject rightWing = CreatePart("RightWing", root, roundedBaseSprite, secondaryColor, new Vector2(wingW, wingH), new Vector2((w / 2f + wingW / 3f), 0), order++);
+
+            leftWing.transform.localRotation = Quaternion.Euler(0, 0, 15f);
+            rightWing.transform.localRotation = Quaternion.Euler(0, 0, -15f);
         }
 
-        // 4. Embedded Icon Crest (Left Side)
-        float crestSize = height * 0.75f;
-        float crestX = -(width / 2f) + (crestSize / 2f) + 16f;
-        ApplyUITransform(rankIconFrame, new Vector2(crestX, 0), new Vector2(crestSize, crestSize), primaryColor);
-        rankIconFrame.transform.localRotation = Quaternion.Euler(0, 0, 45f); // Diamond shape
+        // 3. Base Outer Frame & Inner Plate
+        GameObject outerFrame = CreatePart("OuterFrame", root, roundedBaseSprite, primaryColor, badgeTextureSize, Vector2.zero, order++);
+        GameObject innerPlate = CreatePart("InnerPlate", outerFrame.transform, roundedBaseSprite, plateColor, new Vector2(w - 12f, h - 12f), Vector2.zero, order++);
 
-        // Core Gem (Level 5+)
-        bool hasGem = level >= 5;
-        coreGem.SetActive(hasGem);
-        if (hasGem)
+        // 4. Slanted Progress Chevrons
+        float crestSize = h * 0.75f;
+        float crestX = -(w / 2f) + (crestSize / 2f) + 16f;
+        float chevronsStartX = crestX + (crestSize / 2f) + 24f;
+        int chevronCount = Mathf.Clamp((level - 1) % 4 + 1, 1, 4);
+
+        for (int i = 0; i < chevronCount; i++)
+        {
+            float posX = chevronsStartX + (i * 22f);
+            GameObject chevron = CreatePart($"Chevron_{i}", innerPlate.transform, roundedBaseSprite, secondaryColor, new Vector2(12f, h * 0.5f), new Vector2(posX, 0), order++);
+            chevron.transform.localRotation = Quaternion.Euler(0, 0, 15f);
+        }
+
+        // 5. Embedded Icon Crest (Left Side)
+        GameObject rankIconFrame = CreatePart("RankIconFrame", innerPlate.transform, roundedBaseSprite, primaryColor, new Vector2(crestSize, crestSize), new Vector2(crestX, 0), order++);
+        rankIconFrame.transform.localRotation = Quaternion.Euler(0, 0, 45f);
+
+        if (level >= 5)
         {
             float gemSize = crestSize * 0.55f;
-            ApplyUITransform(coreGem, Vector2.zero, new Vector2(gemSize, gemSize), gemColor);
+            CreatePart("CoreGem", rankIconFrame.transform, roundedBaseSprite, gemColor, new Vector2(gemSize, gemSize), Vector2.zero, order++);
         }
 
-        // 5. Crown Top Ornament (Level 9+)
-        bool hasCrown = level >= 9;
-        crownAccent.SetActive(hasCrown);
-        if (hasCrown)
+        // 6. Crown Accent (Level 9+)
+        if (level >= 9)
         {
-            ApplyUITransform(crownAccent, new Vector2(crestX, height / 2f + 8f), new Vector2(crestSize * 0.7f, 16f), primaryColor);
+            CreatePart("CrownAccent", outerFrame.transform, roundedBaseSprite, primaryColor, new Vector2(crestSize * 0.7f, 16f), new Vector2(crestX, h / 2f + 8f), order++);
         }
 
-        // 6. Progress Chevrons (Middle Section)
-        int chevronCount = Mathf.Clamp((level - 1) % 4 + 1, 1, 4);
-        float chevronsStartX = crestX + (crestSize / 2f) + 24f;
-
-        for (int i = 0; i < progressChevrons.Count; i++)
-        {
-            if (i < chevronCount)
-            {
-                progressChevrons[i].SetActive(true);
-                float posX = chevronsStartX + (i * 22f);
-                ApplyUITransform(progressChevrons[i], new Vector2(posX, 0), new Vector2(12f, height * 0.5f), secondaryColor);
-                progressChevrons[i].transform.localRotation = Quaternion.Euler(0, 0, 15f); // Slanted chevrons
-            }
-            else
-            {
-                progressChevrons[i].SetActive(false);
-            }
-        }
-
-        // 7. Rank Star Insignias (Right Side)
+        // 7. Right Side Star Insignias
         int starCount = (level <= 2) ? 1 : (level <= 4) ? 2 : (level <= 6) ? 3 : (level <= 8) ? 4 : 5;
-        float starsStartX = (width / 2f) - 40f;
+        float starsStartX = (w / 2f) - 40f;
 
-        for (int i = 0; i < starInsignias.Count; i++)
+        for (int i = 0; i < starCount; i++)
         {
-            if (i < starCount)
-            {
-                starInsignias[i].SetActive(true);
-                float posX = starsStartX - (i * 28f);
-                ApplyUITransform(starInsignias[i], new Vector2(posX, 0), new Vector2(18f, 18f), primaryColor);
-                starInsignias[i].transform.localRotation = Quaternion.Euler(0, 0, 45f);
-            }
-            else
-            {
-                starInsignias[i].SetActive(false);
-            }
+            float posX = starsStartX - (i * 28f);
+            GameObject star = CreatePart($"StarInsignia_{i}", innerPlate.transform, roundedBaseSprite, primaryColor, new Vector2(18f, 18f), new Vector2(posX, 0), order++);
+            star.transform.localRotation = Quaternion.Euler(0, 0, 45f);
         }
     }
 
-    private void ApplyUITransform(GameObject go, Vector2 pos, Vector2 size, Color color)
+    private void SetupTierColors(int level, out Color primary, out Color secondary, out Color plate, out Color glow, out Color gem)
     {
-        if (go == null) return;
-        RectTransform rect = go.GetComponent<RectTransform>();
-        rect.anchoredPosition = pos;
-        rect.sizeDelta = size;
-
-        Image img = go.GetComponent<Image>();
-        if (img != null) img.color = color;
+        if (level <= 2)
+        {
+            primary = new Color(0.68f, 0.44f, 0.25f); secondary = new Color(0.45f, 0.28f, 0.15f);
+            plate = new Color(0.16f, 0.14f, 0.14f); glow = new Color(0.80f, 0.50f, 0.20f, 0.20f); gem = new Color(0.75f, 0.38f, 0.18f);
+        }
+        else if (level <= 4)
+        {
+            primary = new Color(0.78f, 0.82f, 0.88f); secondary = new Color(0.42f, 0.48f, 0.56f);
+            plate = new Color(0.12f, 0.15f, 0.18f); glow = new Color(0.40f, 0.70f, 1.00f, 0.35f); gem = new Color(0.20f, 0.65f, 0.95f);
+        }
+        else if (level <= 6)
+        {
+            primary = new Color(0.98f, 0.78f, 0.18f); secondary = new Color(0.68f, 0.48f, 0.08f);
+            plate = new Color(0.18f, 0.14f, 0.08f); glow = new Color(1.00f, 0.80f, 0.20f, 0.50f); gem = new Color(0.95f, 0.20f, 0.15f);
+        }
+        else if (level <= 8)
+        {
+            primary = new Color(0.85f, 0.95f, 0.98f); secondary = new Color(0.20f, 0.58f, 0.68f);
+            plate = new Color(0.08f, 0.12f, 0.16f); glow = new Color(0.10f, 0.95f, 0.98f, 0.65f); gem = new Color(0.00f, 0.90f, 0.90f);
+        }
+        else
+        {
+            primary = new Color(1.00f, 0.84f, 0.00f); secondary = new Color(0.88f, 0.12f, 0.22f);
+            plate = new Color(0.08f, 0.05f, 0.09f); glow = new Color(0.95f, 0.25f, 0.95f, 0.80f); gem = new Color(0.80f, 0.10f, 1.00f);
+        }
     }
 
-    private GameObject CreatePart(string name, Transform parent, Sprite sprite, Color color, int siblingIndex)
+    private GameObject CreatePart(string name, Transform parent, Sprite sprite, Color color, Vector2 size, Vector2 pos, int order)
     {
         GameObject go = new GameObject(name, typeof(RectTransform));
         go.transform.SetParent(parent, false);
+
+        RectTransform rect = go.GetComponent<RectTransform>();
+        rect.anchoredPosition = pos;
+        rect.sizeDelta = size;
 
         Image img = go.AddComponent<Image>();
         img.sprite = sprite;
         img.color = color;
         img.raycastTarget = false;
 
-        go.transform.SetSiblingIndex(siblingIndex);
+        go.transform.SetSiblingIndex(order);
         return go;
     }
 
@@ -301,4 +295,6 @@ public class ProceduralHorizontalRankBadgeUI : MonoBehaviour
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
+
+    #endregion
 }
