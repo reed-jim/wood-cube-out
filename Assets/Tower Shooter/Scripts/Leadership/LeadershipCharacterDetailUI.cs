@@ -10,13 +10,14 @@ public class LeadershipCharacterDetailUI : BasePopup
     public TMP_Text ageText;
     public TMP_Text leadershipPositionText;
     public Image flag;
+    public Button removeFromLeaderPositionButton;
     public RectTransform traitContainer;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
     public CountryFlagDatabase countryFlagDatabase;
 
     private List<CharacterTrait> characterTraits;
-    public LeadershipCharacterData CharacterData { get; private set; }
+    private LeadershipCharacterData leadershipCharacterData;
 
     private List<CharacterTraitItemUI> characterTraitItemUIs = new List<CharacterTraitItemUI>();
 
@@ -25,6 +26,8 @@ public class LeadershipCharacterDetailUI : BasePopup
         base.RegisterMoreEvent();
 
         LeadershipCharacterUI.showLeadershipCharacterDetailEvent += InitAndShow;
+
+        removeFromLeaderPositionButton.onClick.AddListener(RemoveFromLeaderPosition);
     }
 
     protected override void UnregisterMoreEvent()
@@ -43,8 +46,8 @@ public class LeadershipCharacterDetailUI : BasePopup
 
     public void Init(LeadershipCharacterData data, List<CharacterTrait> traits)
     {
-        CharacterData = data;
         this.characterTraits = traits;
+        this.leadershipCharacterData = data;
 
         nameText.text = data.characterName;
 
@@ -63,10 +66,12 @@ public class LeadershipCharacterDetailUI : BasePopup
         if (data.leadershipPosition == LeadershipPosition.None)
         {
             leadershipPositionText.text = "No position taken";
+            removeFromLeaderPositionButton.gameObject.SetActive(false);
         }
         else
         {
             leadershipPositionText.text = $"{data.leadershipPosition}";
+            removeFromLeaderPositionButton.gameObject.SetActive(true);
         }
 
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
@@ -80,5 +85,14 @@ public class LeadershipCharacterDetailUI : BasePopup
 
             characterTraitItemUIs.Add(item);
         }
+    }
+
+    private void RemoveFromLeaderPosition()
+    {
+        leadershipCharacterData.leadershipPosition = LeadershipPosition.None;
+
+        Init(leadershipCharacterData, characterTraits);
+
+        LeadershipManager.Ins.SaveLeadershipData();
     }
 }

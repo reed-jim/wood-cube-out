@@ -159,7 +159,14 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     public void SetElectionRank(int rank)
     {
-        electionRank.text = $"{CommonUtil.GetOrdinal(rank)}";
+        if (leadershipCharacterData.leadershipPosition == LeadershipPosition.Captain)
+        {
+            electionRank.text = $"{CommonUtil.GetOrdinal(rank)} - Reigning {leadershipCharacterData.leadershipPosition}";
+        }
+        else
+        {
+            electionRank.text = $"{CommonUtil.GetOrdinal(rank)}";
+        }
 
         if (rank == 1)
         {
