@@ -51,6 +51,9 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public TMP_Text candidatesCountText;
     public TMP_Text totalEffectText;
 
+    [Header("Switchable Screen")]
+    public SwitchableScreenType switchableScreenType;
+
     [Header("Appoint")]
     public CanvasGroup appointCharacterOverlayCanvasGroup;
     public Button cancelAppointCharacterButton;
@@ -94,6 +97,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         base.MoreActionOnAwake();
 
         MultiverseIdleGameplayScreen.openLeadershipUIEvent += Show;
+        SwitchableScreenButton.switchScreenEvent += OnScreenSwitch;
         IdleTimeManager.OnElectionStarted += ShowElection; // Trigger election event automatically
 
         closeButton.onClick.AddListener(Hide);
@@ -115,6 +119,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     void OnDestroy()
     {
         MultiverseIdleGameplayScreen.openLeadershipUIEvent -= Show;
+        SwitchableScreenButton.switchScreenEvent -= OnScreenSwitch;
         IdleTimeManager.OnElectionStarted -= ShowElection;
     }
 
@@ -261,6 +266,18 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public void UpdateNumCandidates()
     {
         candidatesCountText.text = $"{GetNumCandidates()}/{maxCharacter}";
+    }
+
+    private void OnScreenSwitch(SwitchableScreenType switchableScreenType)
+    {
+        if (switchableScreenType == this.switchableScreenType)
+        {
+            Show();
+        }
+        else
+        {
+            Hide();
+        }
     }
 
     private void Show()
@@ -471,7 +488,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     private LeadershipCharacterData GetRandomLeadershipCharacterData()
     {
-        Country country = CommonUtil.GetRandomEnumValue<Country>();
+        Country country = TopCountries.GetRandomTop50Country();
 
         string name = CountryNameGenerator.Ins.GetRandomName(country);
 

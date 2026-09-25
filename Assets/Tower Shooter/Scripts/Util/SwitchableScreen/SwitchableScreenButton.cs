@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ public class SwitchableScreenButton : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private Button switchButton;
-    [SerializeField] private ThemeableUI buttonThemeable;
+    [SerializeField] private List<ThemeableUI> themeableElements;
 
     [Header("Customize")]
     public SwitchableScreenType switchableScreenType;
@@ -32,13 +33,16 @@ public class SwitchableScreenButton : MonoBehaviour
 
     private void OnScreenSwitch(SwitchableScreenType switchableScreenType)
     {
-        if (switchableScreenType == this.switchableScreenType)
+        for (int i = 0; i < themeableElements.Count; i++)
         {
-            buttonThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
-        }
-        else
-        {
-            buttonThemeable.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+            if (switchableScreenType == this.switchableScreenType)
+            {
+                themeableElements[i].ChangeRole(ThemeableUI.ElementRole.Primary);
+            }
+            else
+            {
+                themeableElements[i].ChangeRole(ThemeableUI.ElementRole.OnSurface);
+            }
         }
     }
 }
