@@ -439,6 +439,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8684835883523114881}
   - component: {fileID: 1422117245110283121}
+  - component: {fileID: 7504734032959578843}
   m_Layer: 5
   m_Name: Ingame Event Screen
   m_TagString: Untagged
@@ -481,6 +482,21 @@ MonoBehaviour:
   container: {fileID: 2950709935183104750}
   itemContainer: {fileID: 7577152861054954500}
   closeButton: {fileID: 8639046269303212000}
+--- !u!114 &7504734032959578843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3113824652823305248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291baea3419d7fb42acb0455441a54e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreen
+  canvasGroup: {fileID: 7747717071837103800}
+  container: {fileID: 2950709935183104750}
+  switchableScreenType: 2
 --- !u!1 &3511277117570579838
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +694,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2950709935183104750
 RectTransform:
   m_ObjectHideFlags: 0

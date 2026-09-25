@@ -15476,6 +15476,7 @@ GameObject:
   m_Component:
   - component: {fileID: 647468295}
   - component: {fileID: 647468299}
+  - component: {fileID: 647468301}
   - component: {fileID: 647468298}
   - component: {fileID: 647468297}
   - component: {fileID: 647468300}
@@ -15616,6 +15617,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &647468301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647468294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 711ce28cb5ae7e74e8a7c63620f590de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
+  switchButton: {fileID: 647468300}
+  switchableScreenType: 2
 --- !u!1 &653106928
 GameObject:
   m_ObjectHideFlags: 0
@@ -18105,10 +18120,6 @@ PrefabInstance:
     - target: {fileID: 3113824652823305248, guid: 9b146bb64fa145048998161840b4a6e0, type: 3}
       propertyPath: m_Name
       value: Ingame Event Screen
-      objectReference: {fileID: 0}
-    - target: {fileID: 3851817383288235027, guid: 9b146bb64fa145048998161840b4a6e0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8684835883523114881, guid: 9b146bb64fa145048998161840b4a6e0, type: 3}
       propertyPath: m_Pivot.x
@@ -21396,14 +21407,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Leadership Popup
       objectReference: {fileID: 0}
-    - target: {fileID: 3113824652823305248, guid: 4efb6ae954f7cef44a207fed3292fcec, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3851817383288235027, guid: 4efb6ae954f7cef44a207fed3292fcec, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8684835883523114881, guid: 4efb6ae954f7cef44a207fed3292fcec, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -23557,6 +23560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1775809928}
   - component: {fileID: 1775809932}
+  - component: {fileID: 1775809934}
   - component: {fileID: 1775809931}
   - component: {fileID: 1775809930}
   - component: {fileID: 1775809933}
@@ -23697,6 +23701,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1775809934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775809927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 711ce28cb5ae7e74e8a7c63620f590de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
+  switchButton: {fileID: 1775809933}
+  switchableScreenType: 1
 --- !u!1 &1801979203
 GameObject:
   m_ObjectHideFlags: 0

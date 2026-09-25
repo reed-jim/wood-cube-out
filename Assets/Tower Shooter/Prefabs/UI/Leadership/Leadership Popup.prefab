@@ -1664,6 +1664,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8684835883523114881}
   - component: {fileID: 1818755359734151392}
+  - component: {fileID: 5016475562783091489}
   m_Layer: 5
   m_Name: Leadership Popup
   m_TagString: Untagged
@@ -1735,8 +1736,24 @@ MonoBehaviour:
   - {fileID: 8280907295107992084}
   - {fileID: 8385470975840417898}
   - {fileID: 1534134480644706136}
+  forceElectionCost: 0
   statModifiers: []
   statColorConfigSO: {fileID: 11400000, guid: 0c6ac4bfe7dc28147a782fd773a38a63, type: 2}
+--- !u!114 &5016475562783091489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3113824652823305248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291baea3419d7fb42acb0455441a54e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreen
+  canvasGroup: {fileID: 7747717071837103800}
+  container: {fileID: 2950709935183104750}
+  switchableScreenType: 1
 --- !u!1 &3182350438106585987
 GameObject:
   m_ObjectHideFlags: 0
@@ -2443,7 +2460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2950709935183104750
 RectTransform:
   m_ObjectHideFlags: 0

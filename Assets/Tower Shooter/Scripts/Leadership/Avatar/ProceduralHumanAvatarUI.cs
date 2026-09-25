@@ -118,6 +118,11 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
     public void GenerateNewRandomCharacterWithSeed(int seed)
     {
+        if (circleSprite == null)
+        {
+            circleSprite = CreateCircleSprite();
+        }
+
         Random.InitState(seed);
 
         for (int i = transform.childCount - 1; i >= 0; i--)
@@ -567,6 +572,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     /// <summary>
     /// Triggers the death state and turns all avatar UI elements grayscale.
     /// </summary>
+    [ContextMenu("Die")]
     public void Die()
     {
         if (isDead) return;

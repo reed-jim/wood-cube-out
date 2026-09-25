@@ -50,8 +50,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
         selectThemeButton.onClick.AddListener(OpenSelectThemePopup);
-        leadershipButton.onClick.AddListener(OpenLeadershipPopup);
-        ingameEventButton.onClick.AddListener(OpenIngameEventPopup);
+        // leadershipButton.onClick.AddListener(OpenLeadershipPopup);
+        // ingameEventButton.onClick.AddListener(OpenIngameEventPopup);
 
         normalFilterButton.onClick.AddListener(EnableNormalFilter);
         augmentFilterButton.onClick.AddListener(EnableAugmentFilter);
