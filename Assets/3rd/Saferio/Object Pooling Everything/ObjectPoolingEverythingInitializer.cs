@@ -31,6 +31,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject characterTraitItemUI;
     [SerializeField] private GameObject ingameEventItemUI;
     [SerializeField] private GameObject leadershipPeriodItemUI;
+    [SerializeField] private GameObject electionItemUI;
 
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
@@ -173,6 +174,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI, characterTraitItemUI, 20);
         RegisterPool<IngameEventItemUI>(GameConstants.ingameEventItemUI, ingameEventItemUI, 20);
         RegisterPool<LeadershipPeriodItemUI>(GameConstants.leadershipPeriodItemUI, leadershipPeriodItemUI, 20);
+        RegisterPool<ElectionItemUI>(GameConstants.electionItemUI, electionItemUI, 20);
         #endregion
 
         // RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);

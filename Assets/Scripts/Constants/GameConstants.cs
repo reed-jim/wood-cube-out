@@ -27,6 +27,10 @@ public static class GameConstants
     public static string characterTraitItemUI = "characterTraitItemUI";
     public static string ingameEventItemUI = "ingameEventItemUI";
     public static string leadershipPeriodItemUI = "leadershipPeriodItemUI";
+    public static string electionItemUI = "electionItemUI";
+
+
+
 
 
 

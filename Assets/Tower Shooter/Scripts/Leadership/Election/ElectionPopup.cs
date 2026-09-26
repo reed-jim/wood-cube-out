@@ -21,7 +21,7 @@ public class ElectionPopup : MonoBehaviour
 
     private ElectionData electionData;
 
-    private readonly List<LeadershipCharacterUI> loadedCharacterUIs = new List<LeadershipCharacterUI>();
+    private readonly List<ElectionItemUI> loadedCharacterUIs = new List<ElectionItemUI>();
 
     private void Awake()
     {
@@ -79,7 +79,7 @@ public class ElectionPopup : MonoBehaviour
         for (int i = 0; i < characterDataList.Count; i++)
         {
             LeadershipCharacterData data = characterDataList[i];
-            LeadershipCharacterUI ui = ObjectPoolingEverything.GetFromPool<LeadershipCharacterUI>(GameConstants.leadershipCharacterUI);
+            ElectionItemUI ui = ObjectPoolingEverything.GetFromPool<ElectionItemUI>(GameConstants.electionItemUI);
 
             ui.Init(data);
             ui.EnableSupportOption();
@@ -97,7 +97,7 @@ public class ElectionPopup : MonoBehaviour
         if (loadedCharacterUIs.Count == 0) return;
 
         // Calculate votes: Base election points + random electorate variance
-        LeadershipCharacterUI winner = loadedCharacterUIs
+        ElectionItemUI winner = loadedCharacterUIs
             .OrderByDescending(c => c.electionPoint + UnityEngine.Random.Range(0, 15))
             .FirstOrDefault();
 
@@ -111,7 +111,7 @@ public class ElectionPopup : MonoBehaviour
 
             if (captainUI != null)
             {
-                captainUI.AssignCharacter(winner);
+                // captainUI.AssignCharacter(winner);
                 LeadershipManager.Ins.CalculateBonusStat();
             }
 
