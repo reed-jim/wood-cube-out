@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class ElectionPopup : MonoBehaviour
 {
     public RectTransform container;
-    public RectTransform characterContainer;
+    public ScrollableLayoutGroup scrollableCharacterContainer;
     public Button closeButton;
     public Button concludeElectionButton;
     public Button forceStartElectionButton;
@@ -71,6 +71,8 @@ public class ElectionPopup : MonoBehaviour
     {
         CommonUtil.ReturnListToPool(loadedCharacterUIs, item => item.gameObject);
 
+        scrollableCharacterContainer.ClearAllItems();
+
         var characterDataList = LeadershipManager.Ins.leadershipData.leadershipCharacterDataItems
             .OrderByDescending(item => item.electionPoint).ToList();
 
@@ -83,7 +85,7 @@ public class ElectionPopup : MonoBehaviour
             ui.EnableSupportOption();
             ui.SetElectionRank(i + 1);
 
-            CommonUtil.SetParentAndResetScale(ui.transform, characterContainer, Vector3.zero);
+            scrollableCharacterContainer.AddItem(ui.gameObject, targetScale: 0.48f * Vector3.one);
             ui.transform.localScale *= 0.48f;
 
             loadedCharacterUIs.Add(ui);
