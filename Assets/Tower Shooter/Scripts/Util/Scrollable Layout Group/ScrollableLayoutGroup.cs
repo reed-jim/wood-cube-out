@@ -79,6 +79,11 @@ public class ScrollableLayoutGroup : MonoBehaviour
         UpdateLayoutPositions(true);
     }
 
+    public void AddItem(GameObject item)
+    {
+        AddItem(item, Vector3.one);
+    }
+
     public void ClearAllItems()
     {
         items.Clear();
@@ -96,17 +101,17 @@ public class ScrollableLayoutGroup : MonoBehaviour
         RectTransform itemToRemove = items[index];
         items.RemoveAt(index);
 
-        CanvasGroup canvasGroup = itemToRemove.GetComponent<CanvasGroup>();
+        // CanvasGroup canvasGroup = itemToRemove.GetComponent<CanvasGroup>();
 
-        // Sequence removal: Shrink & Fade -> Destroy -> Rearrange Layout
-        Sequence removeSeq = DOTween.Sequence();
-        removeSeq.Join(itemToRemove.DOScale(Vector3.zero, animDuration).SetEase(Ease.InCubic));
-        removeSeq.Join(canvasGroup.DOFade(0f, animDuration).SetEase(Ease.InCubic));
+        // // Sequence removal: Shrink & Fade -> Destroy -> Rearrange Layout
+        // Sequence removeSeq = DOTween.Sequence();
+        // removeSeq.Join(itemToRemove.DOScale(Vector3.zero, animDuration).SetEase(Ease.InCubic));
+        // removeSeq.Join(canvasGroup.DOFade(0f, animDuration).SetEase(Ease.InCubic));
 
-        removeSeq.OnComplete(() =>
-        {
-            Destroy(itemToRemove.gameObject);
-        });
+        // removeSeq.OnComplete(() =>
+        // {
+        //     Destroy(itemToRemove.gameObject);
+        // });
 
         // Immediately start shifting remaining items into their new slots
         UpdateLayoutPositions(true);

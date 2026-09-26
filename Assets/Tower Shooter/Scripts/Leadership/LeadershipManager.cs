@@ -613,6 +613,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     public void AddStarDiscoveryEventLeadershipPeriod(StarDiscoveryEventDataItem starDiscoveryEventDataItem)
     {
+        if (leadershipData.leadershipCharacterDataItems.Count == 0)
+        {
+            return;
+        }
+
         LeadershipPeriodData currentLeadershipPeriodData = leadershipData.leadershipPeriodDataItems.Last();
 
         currentLeadershipPeriodData.starDiscoveryEventDataItems.Add(starDiscoveryEventDataItem);

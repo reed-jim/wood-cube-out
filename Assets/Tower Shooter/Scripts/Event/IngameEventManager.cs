@@ -21,19 +21,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
     {
         base.MoreActionOnAwake();
 
-        MultiverseIdleGameplayScreen.openIngameEventScreenEvent += ShowIngameEventScreen;
-
         LoadIngameEventData();
-    }
-
-    void OnDestroy()
-    {
-        MultiverseIdleGameplayScreen.openIngameEventScreenEvent -= ShowIngameEventScreen;
-    }
-
-    public void ShowIngameEventScreen()
-    {
-        ingameEventScreen.Show(ingameEventData);
     }
 
     public void ShowIngameEventDetail(IngameEventType eventType, params object[] args)
@@ -78,6 +66,13 @@ public class IngameEventManager : Singleton<IngameEventManager>
         characterDeathEventDataItem.leadershipCharacterData = leadershipCharacterData;
 
         AddIngameEventData(characterDeathEventDataItem);
+    }
+    
+    public void RemoveEvent(IngameEventDataItem ingameEventDataItem)
+    {
+        ingameEventData.ingameEventDataItems.Remove(ingameEventDataItem);
+
+        SaveIngameEventData();
     }
 
     #region Save/Load
