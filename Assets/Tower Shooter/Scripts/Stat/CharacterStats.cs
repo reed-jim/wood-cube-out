@@ -40,7 +40,7 @@ public class CharacterStats : MonoBehaviour
 
     public float GetValue(StatType type) => GetStat(type).Value;
 
-    public float AddModifier(StatModifier mod, bool isApplyAugmentEffect = true, bool isInvokeStatModifiedEvent = true)
+    public float AddModifier(StatModifier mod, bool isApplyAugmentEffect = true, bool isInvokeStatModifiedEvent = true, bool isSave = true)
     {
         float newValue = GetStat(mod.Type).AddModifier(mod);
 
@@ -66,7 +66,10 @@ public class CharacterStats : MonoBehaviour
             nodeStatModifiedEvent?.Invoke();
         }
 
-        SaveStats();
+        if (isSave)
+        {
+            SaveStats();
+        }
 
         return newValue;
     }

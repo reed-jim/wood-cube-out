@@ -408,14 +408,21 @@ public class LeadershipManager : Singleton<LeadershipManager>
         {
             BaseCharacter node = NodeManager.Ins.nodes[i];
 
+            if (!node.nodeData.isUnlocked)
+            {
+                continue;
+            }
+
             node.serviceLocator.stats.RemoveAllModifiersFromSource(StatModifierSource.LeadershipPosition);
 
             for (int j = 0; j < statModifiers.Count; j++)
             {
                 statModifiers[j].statModifierSource = StatModifierSource.LeadershipPosition;
 
-                node.serviceLocator.stats.AddModifier(statModifiers[j]);
+                node.serviceLocator.stats.AddModifier(statModifiers[j], isSave: false);
             }
+
+            node.serviceLocator.stats.SaveStats();
         }
 
         UpdateTotalBonusText();
