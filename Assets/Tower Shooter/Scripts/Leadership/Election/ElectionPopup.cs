@@ -85,7 +85,7 @@ public class ElectionPopup : MonoBehaviour
             ui.EnableSupportOption();
             ui.SetElectionRank(i + 1);
 
-            scrollableCharacterContainer.AddItem(ui.gameObject, targetScale: 0.48f * Vector3.one);
+            scrollableCharacterContainer.AddItem(ui.gameObject);
             ui.transform.localScale *= 0.48f;
 
             loadedCharacterUIs.Add(ui);

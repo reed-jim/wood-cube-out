@@ -120,7 +120,7 @@ public class ElectionItemUI : MonoBehaviour
         supportCost =
             CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id) * (1 + 0.1f * characterTraits.Count(item => item.isGoodTrait));
 
-        electionPointText.text = $"Election Points: {electionPoint}";
+        electionPointText.text = $"{electionPoint} votes";
         supportCostText.text = $"{supportCost}";
     }
 
