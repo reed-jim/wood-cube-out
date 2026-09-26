@@ -117,6 +117,17 @@ public class ScrollableLayoutGroup : MonoBehaviour
         UpdateLayoutPositions(true);
     }
 
+    public void RemoveItem(RectTransform item)
+    {
+        if (items.Contains(item))
+        {
+            items.Remove(item);
+
+            // Immediately start shifting remaining items into their new slots
+            UpdateLayoutPositions(true);
+        }
+    }
+
     /// <summary>
     /// Recalculates position for every item in the container and resizes the Content RectTransform.
     /// </summary>

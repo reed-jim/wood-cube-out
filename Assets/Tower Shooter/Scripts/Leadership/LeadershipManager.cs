@@ -600,8 +600,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         for (int i = 0; i < toRemoveList.Count; i++)
         {
-            leadershipData.leadershipCharacterDataItems.Remove(toRemoveList[i].leadershipCharacterData);
-            scrollableCharacterContainer.RemoveItemAt(leadershipCharacterUIs.IndexOf(toRemoveList[i]));
+            LeadershipCharacterUI leadershipCharacterUI = toRemoveList[i];
+
+            leadershipData.leadershipCharacterDataItems.Remove(leadershipCharacterUI.leadershipCharacterData);
+            scrollableCharacterContainer.RemoveItem(leadershipCharacterUI.GetComponent<RectTransform>());
+            leadershipCharacterUIs.Remove(leadershipCharacterUI);
         }
 
         ExitRemoveCharacterMode();
