@@ -146,6 +146,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public void Refresh()
     {
         Init();
+        CalculateBonusStat();
     }
 
     private void LoadCurrentCharacters()
@@ -424,11 +425,17 @@ public class LeadershipManager : Singleton<LeadershipManager>
     {
         StringBuilder statDescription = new StringBuilder();
 
+        bool isAnyBonus = false;
+
         foreach (var mod in statModifiers)
         {
             if (mod.Value == 0)
             {
                 continue;
+            }
+            else
+            {
+                isAnyBonus = true;
             }
 
             string hex = statColorConfigSO.GetHex(mod.Type);
@@ -444,7 +451,14 @@ public class LeadershipManager : Singleton<LeadershipManager>
             statDescription.AppendLine($"<color=#{hex}>{valStr} {mod.Type}</color>");
         }
 
-        totalEffectText.text = statDescription.ToString();
+        if (isAnyBonus)
+        {
+            totalEffectText.text = statDescription.ToString();
+        }
+        else
+        {
+            totalEffectText.text = "No Effect.";
+        }
     }
     #endregion
 
@@ -629,6 +643,21 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         SaveLeadershipData();
     }
+
+    public void RemoveFromLeaderPosition(LeadershipPosition leadershipPosition)
+    {
+        for (int i = 0; i < leadershipPositionUIs.Count; i++)
+        {
+            LeadershipPositionUI leadershipPositionUI = leadershipPositionUIs[i];
+
+            if (leadershipPositionUI.leadershipPosition == leadershipPosition)
+            {
+                leadershipPositionUI.RemoveCharacter();
+
+                break;
+            }
+        }
+    }
     #endregion
 
     #region Leadership Period
@@ -669,7 +698,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     public void AddStarDiscoveryEventLeadershipPeriod(StarDiscoveryEventDataItem starDiscoveryEventDataItem)
     {
-        if (leadershipData.leadershipCharacterDataItems.Count == 0)
+        if (leadershipData.leadershipPeriodDataItems.Count == 0)
         {
             return;
         }
@@ -679,6 +708,13 @@ public class LeadershipManager : Singleton<LeadershipManager>
         currentLeadershipPeriodData.starDiscoveryEventDataItems.Add(starDiscoveryEventDataItem);
 
         SaveLeadershipData();
+    }
+    #endregion
+
+    #region ScrollableLayoutGroup
+    public void RemoveItemFromScrollableLayoutGroup(LeadershipCharacterUI leadershipCharacterUI)
+    {
+        scrollableCharacterContainer.RemoveItem(leadershipCharacterUI.GetComponent<RectTransform>());
     }
     #endregion
 

@@ -55,15 +55,14 @@ public static class CommonUtil
 
         // Position
         rt.anchoredPosition = Vector2.zero;
-        rt.anchoredPosition3D = Vector3.zero;
         rt.localPosition = Vector3.zero;
 
         // Size
         rt.sizeDelta = new Vector2(100f, 100f);
 
         // Offsets
-        rt.offsetMin = Vector2.zero;
-        rt.offsetMax = Vector2.zero;
+        // rt.offsetMin = Vector2.zero;
+        // rt.offsetMax = Vector2.zero;
 
         // Rotation
         rt.localRotation = Quaternion.identity;

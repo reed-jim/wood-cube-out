@@ -119,7 +119,7 @@ public class LeadershipCharacterUI : MonoBehaviour
         }
         else if (LeadershipManager.Ins.selectedLeadershipPosition == null)
         {
-            showLeadershipCharacterDetailEvent?.Invoke(leadershipCharacterData, characterTraits);
+            ShowLeadershipCharacterDetail();
         }
         else
         {
@@ -129,7 +129,10 @@ public class LeadershipCharacterUI : MonoBehaviour
         selectLeadershipCharacterUIEvent?.Invoke();
     }
 
-    public List<CharacterTrait> GetCharacterTraits() => characterTraits;
+    public void ShowLeadershipCharacterDetail()
+    {
+        showLeadershipCharacterDetailEvent?.Invoke(leadershipCharacterData, characterTraits);
+    }
 
     #region Election
     public void EnableSupportOption()

@@ -71,8 +71,10 @@ public class LeadershipPositionUI : MonoBehaviour
         }
         else
         {
+            efficiency = CalculateEfficiency(leadershipCharacterUI.leadershipCharacterData);
+
             efficiencyText.color = DynamicThemeManager.Ins.CurrentTheme.primary;
-            efficiencyText.text = $"Efficiency: {(int)(baseEfficiency * 100)}%";
+            efficiencyText.text = $"Efficiency: {(int)(efficiency * 100)}%";
 
             borderThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
             titleThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
@@ -81,20 +83,29 @@ public class LeadershipPositionUI : MonoBehaviour
 
     private void Select()
     {
-        if (leadershipPosition == LeadershipPosition.Captain)
+        if (leadershipCharacterUI == null)
         {
-            LeadershipManager.Ins.ShowElection();
+            if (leadershipPosition == LeadershipPosition.Captain)
+            {
+                LeadershipManager.Ins.ShowElection();
+            }
+            else
+            {
+                LeadershipManager.Ins.SelectLeadershipPosition(this);
+            }
         }
         else
         {
-            LeadershipManager.Ins.SelectLeadershipPosition(this);
+            leadershipCharacterUI.ShowLeadershipCharacterDetail();
         }
     }
 
     public void AssignCharacter(LeadershipCharacterUI leadershipCharacterUI)
     {
-        CommonUtil.ResetRectTransform(leadershipCharacterUI.GetComponent<RectTransform>());
+        LeadershipManager.Ins.RemoveItemFromScrollableLayoutGroup(leadershipCharacterUI);
+
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterUIContainer, Vector3.zero);
+        CommonUtil.ResetRectTransform(leadershipCharacterUI.GetComponent<RectTransform>());
 
         efficiency = CalculateEfficiency(leadershipCharacterUI.leadershipCharacterData);
 
@@ -111,6 +122,13 @@ public class LeadershipPositionUI : MonoBehaviour
         }
 
         this.leadershipCharacterUI = leadershipCharacterUI;
+    }
+
+    public void RemoveCharacter()
+    {
+        leadershipCharacterUI = null;
+
+        Init();
     }
 
     public float CalculateEfficiency(LeadershipCharacterData leadershipCharacterData)
@@ -133,6 +151,8 @@ public class LeadershipPositionUI : MonoBehaviour
             for (int j = 0; j < characterTrait.traitEfficiencyModifiers.Count; j++)
             {
                 TraitEfficiencyModifier traitEfficiencyModifier = characterTrait.traitEfficiencyModifiers[j];
+
+                // Debug.Log($"CalculateEfficiency2 {traitEfficiencyModifier.leadershipPosition} {traitEfficiencyModifier.efficiencyModifier}");
 
                 if (traitEfficiencyModifier.leadershipPosition == leadershipPosition)
                 {

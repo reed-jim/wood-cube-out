@@ -17,7 +17,7 @@ public class ScrollableLayoutGroup : MonoBehaviour
     [SerializeField] private float animDuration = 0.35f;
     [SerializeField] private Ease animEase = Ease.OutCubic;
 
-    private readonly List<RectTransform> items = new List<RectTransform>();
+    [SerializeField] private List<RectTransform> items = new List<RectTransform>();
     private RectTransform contentRect;
 
     private void Awake()

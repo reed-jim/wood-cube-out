@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -89,9 +90,9 @@ public class LeadershipCharacterDetailUI : BasePopup
 
     private void RemoveFromLeaderPosition()
     {
-        leadershipCharacterData.leadershipPosition = LeadershipPosition.None;
+        LeadershipManager.Ins.RemoveFromLeaderPosition(leadershipCharacterData.leadershipPosition);
 
-        Init(leadershipCharacterData, characterTraits);
+        leadershipCharacterData.leadershipPosition = LeadershipPosition.None;
 
         LeadershipManager.Ins.SaveLeadershipData();
         LeadershipManager.Ins.Refresh();
