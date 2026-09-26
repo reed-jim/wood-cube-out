@@ -60,6 +60,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
     [Header("Remove")]
     public CanvasGroup removeCharacterOverlayCanvasGroup;
+    public CanvasGroup confirmRemoveCharacterButtonCanvasGroup;
     public Button confirmRemoveCharacterButton;
     public Button enterRemoveCharacterModeButton;
     public Button exitRemoveCharacterButton;
@@ -98,7 +99,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         MultiverseIdleGameplayScreen.openLeadershipUIEvent += Show;
         SwitchableScreenButton.switchScreenEvent += OnScreenSwitch;
-        IdleTimeManager.OnElectionStarted += ShowElection; // Trigger election event automatically
+        IdleTimeManager.OnElectionStarted += ShowElection;
+        LeadershipCharacterUI.selectLeadershipCharacterUIEvent += OnSelectLeadershipCharacterUI;
 
         closeButton.onClick.AddListener(Hide);
         hireCharacterButton.onClick.AddListener(HireNewCharacters);
@@ -121,6 +123,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         MultiverseIdleGameplayScreen.openLeadershipUIEvent -= Show;
         SwitchableScreenButton.switchScreenEvent -= OnScreenSwitch;
         IdleTimeManager.OnElectionStarted -= ShowElection;
+        LeadershipCharacterUI.selectLeadershipCharacterUIEvent -= OnSelectLeadershipCharacterUI;
     }
 
     public void LoadData()
@@ -277,6 +280,37 @@ public class LeadershipManager : Singleton<LeadershipManager>
         else
         {
             Hide();
+        }
+    }
+
+    private void OnSelectLeadershipCharacterUI()
+    {
+        if (IdleGameInputManager.inputMode == IdleGameInputMode.RemoveLeadershipCharacter)
+        {
+            bool isAnyCharacterSelectedToRemove = false;
+
+            for (int i = 0; i < leadershipCharacterUIs.Count; i++)
+            {
+                LeadershipCharacterUI leadershipCharacterUI = leadershipCharacterUIs[i];
+
+                if (leadershipCharacterUI.isMarkForRemove)
+                {
+                    isAnyCharacterSelectedToRemove = true;
+
+                    break;
+                }
+            }
+
+            if (isAnyCharacterSelectedToRemove)
+            {
+                confirmRemoveCharacterButtonCanvasGroup.alpha = 1;
+                confirmRemoveCharacterButtonCanvasGroup.interactable = true;
+            }
+            else
+            {
+                confirmRemoveCharacterButtonCanvasGroup.alpha = 0.2f;
+                confirmRemoveCharacterButtonCanvasGroup.interactable = false;
+            }
         }
     }
 
@@ -525,6 +559,9 @@ public class LeadershipManager : Singleton<LeadershipManager>
             removeCharacterOverlayCanvasGroup.interactable = true;
         });
 
+        confirmRemoveCharacterButtonCanvasGroup.alpha = 0.2f;
+        confirmRemoveCharacterButtonCanvasGroup.interactable = false;
+
         IdleGameInputManager.inputMode = IdleGameInputMode.RemoveLeadershipCharacter;
     }
 
@@ -533,6 +570,16 @@ public class LeadershipManager : Singleton<LeadershipManager>
         removeCharacterOverlayCanvasGroup.interactable = false;
 
         SaferioTween.AlphaHide(removeCharacterOverlayCanvasGroup);
+
+        for (int i = 0; i < leadershipCharacterUIs.Count; i++)
+        {
+            LeadershipCharacterUI leadershipCharacterUI = leadershipCharacterUIs[i];
+
+            if (leadershipCharacterUI.isMarkForRemove)
+            {
+                leadershipCharacterUI.MarkForRemove(false);
+            }
+        }
 
         IdleGameInputManager.inputMode = IdleGameInputMode.Normal;
     }
@@ -554,9 +601,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         for (int i = 0; i < toRemoveList.Count; i++)
         {
             leadershipData.leadershipCharacterDataItems.Remove(toRemoveList[i].leadershipCharacterData);
+            scrollableCharacterContainer.RemoveItemAt(leadershipCharacterUIs.IndexOf(toRemoveList[i]));
         }
-
-        CommonUtil.ReturnListToPool(toRemoveList, item => item.gameObject);
 
         ExitRemoveCharacterMode();
 

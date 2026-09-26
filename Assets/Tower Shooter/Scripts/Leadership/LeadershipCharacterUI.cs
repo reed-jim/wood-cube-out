@@ -40,6 +40,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     public LeadershipCharacterData leadershipCharacterData;
 
     public static event Action<LeadershipCharacterData, List<CharacterTrait>> showLeadershipCharacterDetailEvent;
+    public static event Action selectLeadershipCharacterUIEvent;
 
     void Awake()
     {
@@ -114,16 +115,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     {
         if (IdleGameInputManager.inputMode == IdleGameInputMode.RemoveLeadershipCharacter)
         {
-            if (isMarkForRemove)
-            {
-                borderThemable.ChangeRole(ThemeableUI.ElementRole.Outline);
-            }
-            else
-            {
-                borderThemable.ChangeRole(ThemeableUI.ElementRole.Error);
-            }
-
-            isMarkForRemove = !isMarkForRemove;
+            MarkForRemove(!isMarkForRemove);
         }
         else if (LeadershipManager.Ins.selectedLeadershipPosition == null)
         {
@@ -133,10 +125,13 @@ public class LeadershipCharacterUI : MonoBehaviour
         {
             LeadershipManager.Ins.AssignLeadershipPosition(this);
         }
+
+        selectLeadershipCharacterUIEvent?.Invoke();
     }
 
     public List<CharacterTrait> GetCharacterTraits() => characterTraits;
 
+    #region Election
     public void EnableSupportOption()
     {
         supportButton.gameObject.SetActive(true);
@@ -218,6 +213,23 @@ public class LeadershipCharacterUI : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Remove
+    public void MarkForRemove(bool isMarkForRemove)
+    {
+        if (isMarkForRemove)
+        {
+            borderThemable.ChangeRole(ThemeableUI.ElementRole.Error);
+        }
+        else
+        {
+            borderThemable.ChangeRole(ThemeableUI.ElementRole.Outline);
+        }
+
+        this.isMarkForRemove = isMarkForRemove;
+    }
+    #endregion
 
     #region Old Age
     private void Die()

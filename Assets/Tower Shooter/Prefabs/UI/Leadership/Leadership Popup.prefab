@@ -1718,6 +1718,7 @@ MonoBehaviour:
   appointCharacterOverlayCanvasGroup: {fileID: 560602616923114}
   cancelAppointCharacterButton: {fileID: 8542759886207423595}
   removeCharacterOverlayCanvasGroup: {fileID: 8364579027696548275}
+  confirmRemoveCharacterButtonCanvasGroup: {fileID: 4701742706157179840}
   confirmRemoveCharacterButton: {fileID: 8538788871215514998}
   enterRemoveCharacterModeButton: {fileID: 7619066080070049113}
   exitRemoveCharacterButton: {fileID: 4305550368657178853}
@@ -3594,6 +3595,7 @@ GameObject:
   - component: {fileID: 6785892452436286992}
   - component: {fileID: 7312067054040813763}
   - component: {fileID: 2110372154862635372}
+  - component: {fileID: 4701742706157179840}
   - component: {fileID: 204590812905157715}
   - component: {fileID: 8538788871215514998}
   - component: {fileID: 6695963026409211527}
@@ -3645,6 +3647,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
   role: 12
+--- !u!225 &4701742706157179840
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6086840761825105709}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &204590812905157715
 MonoBehaviour:
   m_ObjectHideFlags: 0
