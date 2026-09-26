@@ -16,6 +16,7 @@ public class SwitchableScreen : MonoBehaviour
 
     [Header("Customize")]
     public SwitchableScreenType switchableScreenType;
+    public bool isDisableGameObjectOnHiding = true;
 
     void Awake()
     {
@@ -29,15 +30,18 @@ public class SwitchableScreen : MonoBehaviour
 
     private void Show()
     {
-        container.gameObject.SetActive(true);
+        if (isDisableGameObjectOnHiding)
+        {
+            container.gameObject.SetActive(true);
+        }
 
         canvasGroup.alpha = 1;
 
-        float initialPositionY = container.localPosition.y;
+        float initialPositionX = container.localPosition.x;
 
-        container.localPosition = new Vector3(0, -container.sizeDelta.y);
+        container.localPosition = new Vector3(-container.sizeDelta.x, 0);
 
-        Tween.LocalPositionY(container, initialPositionY, duration: 0.3f);
+        Tween.LocalPositionX(container, initialPositionX, duration: 0.3f);
     }
 
     private void Hide()
@@ -50,7 +54,10 @@ public class SwitchableScreen : MonoBehaviour
         Tween.Alpha(canvasGroup, 0, duration: 0.3f)
         .OnComplete(() =>
         {
-            container.gameObject.SetActive(false);
+            if (isDisableGameObjectOnHiding)
+            {
+                container.gameObject.SetActive(false);
+            }
         });
     }
 
