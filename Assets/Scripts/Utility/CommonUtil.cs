@@ -25,7 +25,7 @@ public static class CommonUtil
             default: return number + "th";
         }
     }
-    
+
     public static void SetParentAndResetScale(Transform target, Transform parent)
     {
         target.SetParent(parent);
@@ -42,6 +42,34 @@ public static class CommonUtil
         }
 
         items.Clear();
+    }
+
+    public static void ResetRectTransform(RectTransform rt)
+    {
+        // Anchors
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+
+        // Pivot
+        rt.pivot = new Vector2(0.5f, 0.5f);
+
+        // Position
+        rt.anchoredPosition = Vector2.zero;
+        rt.anchoredPosition3D = Vector3.zero;
+        rt.localPosition = Vector3.zero;
+
+        // Size
+        rt.sizeDelta = new Vector2(100f, 100f);
+
+        // Offsets
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+
+        // Rotation
+        rt.localRotation = Quaternion.identity;
+
+        // Scale
+        rt.localScale = Vector3.one;
     }
 
     public static void SetParentAndResetScale(Transform target, Transform parent, Vector3 localPosition)

@@ -143,6 +143,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
         forceElectionCost = CurveManager.Ins.GetHireCharactersCost(DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("forceElectionTime"), 0));
     }
 
+    public void Refresh()
+    {
+        Init();
+    }
+
     private void LoadCurrentCharacters()
     {
         CommonUtil.ReturnListToPool(leadershipCharacterUIs, item => item.gameObject);
@@ -260,6 +265,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public void AssignLeadershipPosition(LeadershipCharacterUI leadershipCharacterUI)
     {
         selectedLeadershipPosition.AssignCharacter(leadershipCharacterUI);
+
+        Refresh();
 
         CalculateBonusStat();
 

@@ -59,7 +59,7 @@ public class LeadershipCharacterDetailUI : BasePopup
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
 
         ageText.text = $"{age} years old";
-        proceduralHumanAvatarUI.age = age / 60f;
+        proceduralHumanAvatarUI.age = age / 100f;
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
 
@@ -94,5 +94,8 @@ public class LeadershipCharacterDetailUI : BasePopup
         Init(leadershipCharacterData, characterTraits);
 
         LeadershipManager.Ins.SaveLeadershipData();
+        LeadershipManager.Ins.Refresh();
+
+        Hide();
     }
 }

@@ -83,7 +83,6 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private void Start()
     {
         circleSprite = CreateCircleSprite();
-        GenerateNewRandomCharacter();
     }
 
     private void OnValidate()

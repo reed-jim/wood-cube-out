@@ -93,6 +93,7 @@ public class LeadershipPositionUI : MonoBehaviour
 
     public void AssignCharacter(LeadershipCharacterUI leadershipCharacterUI)
     {
+        CommonUtil.ResetRectTransform(leadershipCharacterUI.GetComponent<RectTransform>());
         CommonUtil.SetParentAndResetScale(leadershipCharacterUI.transform, characterUIContainer, Vector3.zero);
 
         efficiency = CalculateEfficiency(leadershipCharacterUI.leadershipCharacterData);

@@ -81,7 +81,7 @@ public class LeadershipCharacterUI : MonoBehaviour
         }
 
         ageText.text = $"{age} years old";
-        proceduralHumanAvatarUI.age = age / 60f;
+        proceduralHumanAvatarUI.age = age / 100f;
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
 
         if (leadershipCharacterData.leadershipPosition == LeadershipPosition.None)
@@ -201,7 +201,7 @@ public class LeadershipCharacterUI : MonoBehaviour
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
 
         ageText.text = $"{age} years old";
-        proceduralHumanAvatarUI.age = age / 60f;
+        proceduralHumanAvatarUI.age = age / 100f;
 
         if (age > 60)
         {
