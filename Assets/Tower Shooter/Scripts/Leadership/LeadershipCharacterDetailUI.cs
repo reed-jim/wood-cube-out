@@ -10,6 +10,7 @@ public class LeadershipCharacterDetailUI : BasePopup
     public TMP_Text nameText;
     public TMP_Text ageText;
     public TMP_Text leadershipPositionText;
+    public TMP_Text chanceGainElectionPointText;
     public Image flag;
     public Button removeFromLeaderPositionButton;
     public RectTransform traitContainer;
@@ -61,6 +62,7 @@ public class LeadershipCharacterDetailUI : BasePopup
         proceduralHumanAvatarUI.age = age / 100f;
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
+        chanceGainElectionPointText.text = $"Chance gain election point: {(int)(data.chanceToGainElectionPoint * 100)}%";
 
         if (data.leadershipPosition == LeadershipPosition.None)
         {

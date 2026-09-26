@@ -14,6 +14,7 @@ public class ElectionItemUI : MonoBehaviour
     public RectTransform traitContainer;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
     public TMP_Text leadershipPositionText;
+    public TMP_Text efficiencyText;
     public TMP_Text levelText;
 
     [Header("Election")]
@@ -84,12 +85,19 @@ public class ElectionItemUI : MonoBehaviour
 
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
 
+        float bonusEfficiency = 0;
+
         for (int i = 0; i < characterTraits.Count; i++)
         {
+            CharacterTrait characterTrait = characterTraits[i];
             CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
             CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
-            item.Init(characterTraits[i]);
+            item.Init(characterTrait);
+
+            bonusEfficiency += characterTrait.GetBonusEfficiencyForPosition(LeadershipPosition.Captain);
         }
+
+        efficiencyText.text = $"{(int)(bonusEfficiency * 100)}% Effiency for Captain";
 
         supportButton.gameObject.SetActive(false);
         electionPointText.gameObject.SetActive(false);
@@ -120,7 +128,7 @@ public class ElectionItemUI : MonoBehaviour
         supportCost =
             CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id) * (1 + 0.1f * characterTraits.Count(item => item.isGoodTrait));
 
-        electionPointText.text = $"{electionPoint} votes";
+        electionPointText.text = $"Election Points: {electionPoint}";
         supportCostText.text = $"{supportCost}";
     }
 

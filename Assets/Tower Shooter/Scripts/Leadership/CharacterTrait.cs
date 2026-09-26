@@ -9,6 +9,23 @@ public class CharacterTrait : ScriptableObject
     public string traitName;
     public List<TraitEfficiencyModifier> traitEfficiencyModifiers;
     public bool isGoodTrait;
+
+    public float GetBonusEfficiencyForPosition(LeadershipPosition leadershipPosition)
+    {
+        float result = 0;
+
+        for (int i = 0; i < traitEfficiencyModifiers.Count; i++)
+        {
+            TraitEfficiencyModifier traitEfficiencyModifier = traitEfficiencyModifiers[i];
+
+            if (traitEfficiencyModifier.leadershipPosition == leadershipPosition)
+            {
+                result += traitEfficiencyModifier.efficiencyModifier;
+            }
+        }
+
+        return result;
+    }
 }
 
 [Serializable]

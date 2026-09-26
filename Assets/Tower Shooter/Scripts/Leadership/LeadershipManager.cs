@@ -100,6 +100,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         MultiverseIdleGameplayScreen.openLeadershipUIEvent += Show;
         SwitchableScreenButton.switchScreenEvent += OnScreenSwitch;
         IdleTimeManager.OnElectionStarted += ShowElection;
+        IdleTimeManager.OnDayPassed += OnDayPassed;
         LeadershipCharacterUI.selectLeadershipCharacterUIEvent += OnSelectLeadershipCharacterUI;
 
         closeButton.onClick.AddListener(Hide);
@@ -123,6 +124,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         MultiverseIdleGameplayScreen.openLeadershipUIEvent -= Show;
         SwitchableScreenButton.switchScreenEvent -= OnScreenSwitch;
         IdleTimeManager.OnElectionStarted -= ShowElection;
+        IdleTimeManager.OnDayPassed -= OnDayPassed;
         LeadershipCharacterUI.selectLeadershipCharacterUIEvent -= OnSelectLeadershipCharacterUI;
     }
 
@@ -571,7 +573,8 @@ public class LeadershipManager : Singleton<LeadershipManager>
         leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
         leadershipCharacterData.traitIndexes = characterTraitIndexes;
         leadershipCharacterData.faceSeed = UnityEngine.Random.Range(1000, 999999);
-        leadershipCharacterData.electionPoint = UnityEngine.Random.Range(10, 100);
+        leadershipCharacterData.electionPoint = 0;
+        leadershipCharacterData.chanceToGainElectionPoint = UnityEngine.Random.RandomRange(0.1f, 0.9f);
 
         return leadershipCharacterData;
     }
@@ -725,6 +728,30 @@ public class LeadershipManager : Singleton<LeadershipManager>
     }
     #endregion
 
+    #region Event Subscribe
+    private void OnDayPassed()
+    {
+        bool isDirty = false;
+
+        for (int i = 0; i < leadershipData.leadershipCharacterDataItems.Count; i++)
+        {
+            LeadershipCharacterData leadershipCharacterData = leadershipData.leadershipCharacterDataItems[i];
+
+            if (UnityEngine.Random.value < leadershipCharacterData.chanceToGainElectionPoint)
+            {
+                leadershipCharacterData.electionPoint++;
+
+                isDirty = true;
+            }
+        }
+
+        if (isDirty)
+        {
+            SaveLeadershipData();
+        }
+    }
+    #endregion
+
     #region Util
     public int GetNumCandidates()
     {
@@ -775,6 +802,7 @@ public class LeadershipCharacterData
     public int faceSeed;
     public LeadershipPosition leadershipPosition;
     public int electionPoint;
+    public float chanceToGainElectionPoint;
 }
 
 [Serializable]
