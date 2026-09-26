@@ -17,7 +17,6 @@ public class LeadershipCharacterDetailUI : BasePopup
 
     public CountryFlagDatabase countryFlagDatabase;
 
-    private List<CharacterTrait> characterTraits;
     private LeadershipCharacterData leadershipCharacterData;
 
     private List<CharacterTraitItemUI> characterTraitItemUIs = new List<CharacterTraitItemUI>();
@@ -38,16 +37,15 @@ public class LeadershipCharacterDetailUI : BasePopup
         LeadershipCharacterUI.showLeadershipCharacterDetailEvent -= InitAndShow;
     }
 
-    private void InitAndShow(LeadershipCharacterData data, List<CharacterTrait> traits)
+    private void InitAndShow(LeadershipCharacterData data)
     {
         Show();
 
-        Init(data, traits);
+        Init(data);
     }
 
-    public void Init(LeadershipCharacterData data, List<CharacterTrait> traits)
+    public void Init(LeadershipCharacterData data)
     {
-        this.characterTraits = traits;
         this.leadershipCharacterData = data;
 
         nameText.text = data.characterName;
@@ -77,12 +75,14 @@ public class LeadershipCharacterDetailUI : BasePopup
 
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
 
-        for (int i = 0; i < traits.Count; i++)
+        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(data.traitIndexes);
+
+        for (int i = 0; i < characterTraits.Count; i++)
         {
             CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
 
             CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
-            item.Init(traits[i]);
+            item.Init(characterTraits[i]);
 
             characterTraitItemUIs.Add(item);
         }

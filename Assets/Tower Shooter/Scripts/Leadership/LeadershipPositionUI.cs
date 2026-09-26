@@ -152,7 +152,7 @@ public class LeadershipPositionUI : MonoBehaviour
             {
                 TraitEfficiencyModifier traitEfficiencyModifier = characterTrait.traitEfficiencyModifiers[j];
 
-                // Debug.Log($"CalculateEfficiency2 {traitEfficiencyModifier.leadershipPosition} {traitEfficiencyModifier.efficiencyModifier}");
+                // Debug.Log($"CalculateEfficiency2 {characterTrait.traitName} {traitEfficiencyModifier.leadershipPosition} {traitEfficiencyModifier.efficiencyModifier}");
 
                 if (traitEfficiencyModifier.leadershipPosition == leadershipPosition)
                 {

@@ -742,6 +742,18 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
         return currentCharacter;
     }
+
+    public List<CharacterTrait> GetCharacterTraits(List<int> traitIndexes)
+    {
+        List<CharacterTrait> traits = new List<CharacterTrait>();
+
+        for (int i = 0; i < traitIndexes.Count; i++)
+        {
+            traits.Add(characterTraitContainer.characterTraits[traitIndexes[i]]);
+        }
+
+        return traits;
+    }
     #endregion
 }
 

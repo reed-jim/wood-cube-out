@@ -39,7 +39,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     private List<CharacterTrait> characterTraits;
     public LeadershipCharacterData leadershipCharacterData;
 
-    public static event Action<LeadershipCharacterData, List<CharacterTrait>> showLeadershipCharacterDetailEvent;
+    public static event Action<LeadershipCharacterData> showLeadershipCharacterDetailEvent;
     public static event Action selectLeadershipCharacterUIEvent;
 
     void Awake()
@@ -68,18 +68,7 @@ public class LeadershipCharacterUI : MonoBehaviour
         );
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
 
-        List<CharacterTrait> characterTraits = new List<CharacterTrait>();
-
-        for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
-        {
-            CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
-
-            if (leadershipCharacterData.traitIndexes.Contains(characterTrait.id))
-            {
-                characterTraits.Add(characterTrait);
-            }
-        }
-
+        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(data.traitIndexes);
         ageText.text = $"{age} years old";
         proceduralHumanAvatarUI.age = age / 100f;
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
@@ -131,7 +120,7 @@ public class LeadershipCharacterUI : MonoBehaviour
 
     public void ShowLeadershipCharacterDetail()
     {
-        showLeadershipCharacterDetailEvent?.Invoke(leadershipCharacterData, characterTraits);
+        showLeadershipCharacterDetailEvent?.Invoke(leadershipCharacterData);
     }
 
     #region Election
