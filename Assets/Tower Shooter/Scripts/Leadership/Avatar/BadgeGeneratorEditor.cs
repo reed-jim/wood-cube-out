@@ -17,7 +17,7 @@ public class BadgeGeneratorEditor : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("High-Quality Sci-Fi Badge Generator", EditorStyles.boldLabel);
+        GUILayout.Label("Immersive Progressive Rank Badge Generator", EditorStyles.boldLabel);
         EditorGUILayout.Space();
 
         badgeSize = EditorGUILayout.Vector2IntField("Badge Dimensions (PX)", badgeSize);
@@ -25,7 +25,7 @@ public class BadgeGeneratorEditor : EditorWindow
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Generate 10 High-Quality Sci-Fi Badges", GUILayout.Height(40)))
+        if (GUILayout.Button("Generate Progressive 10 Rank Badges", GUILayout.Height(40)))
         {
             GenerateAndSaveAllBadges();
         }
@@ -39,28 +39,21 @@ public class BadgeGeneratorEditor : EditorWindow
             AssetDatabase.Refresh();
         }
 
-        // Generate procedural quality texture assets
-        Sprite flatRect = CreateFlatSquareSprite();
-        Sprite metallicPlate = CreateMetallicGradientSprite(256, 256);
-        Sprite glowTexture = CreateSoftGlowSprite(256, 256);
-        Sprite bevelFrame = CreateBevelBorderSprite(256, 256, 12);
+        Sprite solidSprite = CreateFlatSquareSprite();
+        Sprite softGlowSprite = CreateRadialGlowSprite(128);
 
         for (int level = 1; level <= 10; level++)
         {
-            byte[] pngData = BakeBadgeToPNG(level, badgeSize, flatRect, metallicPlate, glowTexture, bevelFrame);
+            byte[] pngData = BakeBadgeToPNG(level, badgeSize, solidSprite, softGlowSprite);
             string filePath = Path.Combine(saveFolderPath, $"RankBadge_Lv{level}.png");
             File.WriteAllBytes(filePath, pngData);
         }
 
-        // Cleanup temporary sprites
-        DestroyImmediate(flatRect.texture); DestroyImmediate(flatRect);
-        DestroyImmediate(metallicPlate.texture); DestroyImmediate(metallicPlate);
-        DestroyImmediate(glowTexture.texture); DestroyImmediate(glowTexture);
-        DestroyImmediate(bevelFrame.texture); DestroyImmediate(bevelFrame);
+        DestroyImmediate(solidSprite.texture); DestroyImmediate(solidSprite);
+        DestroyImmediate(softGlowSprite.texture); DestroyImmediate(softGlowSprite);
 
         AssetDatabase.Refresh();
 
-        // Reimport as single sprites with full quality
         for (int level = 1; level <= 10; level++)
         {
             string filePath = Path.Combine(saveFolderPath, $"RankBadge_Lv{level}.png");
@@ -76,10 +69,10 @@ public class BadgeGeneratorEditor : EditorWindow
             }
         }
 
-        EditorUtility.DisplayDialog("Success", $"Generated 10 HQ Sci-Fi Badges inside:\n{saveFolderPath}", "OK");
+        EditorUtility.DisplayDialog("Success", $"Generated 10 Progressive Rank Badges inside:\n{saveFolderPath}", "OK");
     }
 
-    private byte[] BakeBadgeToPNG(int level, Vector2Int size, Sprite flatSprite, Sprite metallicSprite, Sprite glowSprite, Sprite bevelSprite)
+    private byte[] BakeBadgeToPNG(int level, Vector2Int size, Sprite solidSprite, Sprite glowSprite)
     {
         GameObject bakerRoot = new GameObject("TempBadgeBaker", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         Canvas bakerCanvas = bakerRoot.GetComponent<Canvas>();
@@ -104,7 +97,7 @@ public class BadgeGeneratorEditor : EditorWindow
 
         bakerCanvas.worldCamera = bakerCamera;
 
-        BuildBadgeHierarchy(bakerRoot.transform, level, size, flatSprite, metallicSprite, glowSprite, bevelSprite);
+        BuildImmersiveBadgeHierarchy(bakerRoot.transform, level, size, solidSprite, glowSprite);
         Canvas.ForceUpdateCanvases();
 
         RenderTexture renderTex = RenderTexture.GetTemporary(size.x, size.y, 24, RenderTextureFormat.ARGB32);
@@ -129,142 +122,173 @@ public class BadgeGeneratorEditor : EditorWindow
         return pngData;
     }
 
-    #region HQ Sci-Fi Builders
+    #region Immersive Procedural Builders
 
-    private void BuildBadgeHierarchy(Transform root, int level, Vector2Int size, Sprite flat, Sprite metallic, Sprite glow, Sprite bevel)
+    private void BuildImmersiveBadgeHierarchy(Transform root, int level, Vector2Int size, Sprite solid, Sprite glow)
     {
-        Color primary, secondary, plate, glowColor, gem;
-        SetupSciFiTierColors(level, out primary, out secondary, out plate, out glowColor, out gem);
+        Color primaryAccent, secondaryAccent, plateBg, outerBorderColor;
+        SetupHighContrastColors(level, out primaryAccent, out secondaryAccent, out plateBg, out outerBorderColor);
 
         float w = size.x;
         float h = size.y;
         int order = 0;
 
-        // 1. Core Back Ambient Reactor Glow (Level 5+)
-        if (level >= 5)
+        Color voidDark = new Color(0.03f, 0.04f, 0.07f);
+        Color crispWhite = new Color(0.98f, 0.98f, 1.00f);
+
+        // 1. DYNAMIC AURA BACKDROP (Scales dramatically with rank level)
+        if (level >= 4)
         {
-            float extraGlow = (level >= 8) ? 48f : 24f;
-            CreatePart("ReactorGlow", root, glow, glowColor, new Vector2(w + extraGlow, h + extraGlow), Vector2.zero, order++);
+            float extraGlow = (level >= 9) ? 50f : (level >= 7) ? 35f : 20f;
+            float glowAlpha = (level >= 9) ? 0.75f : (level >= 7) ? 0.55f : 0.35f;
+            CreatePart("OuterGlowField", root, glow, outerBorderColor * new Color(1, 1, 1, glowAlpha), new Vector2(w + extraGlow, h + extraGlow), Vector2.zero, order++);
         }
 
-        // 2. Angular Side Wing Thruster Fins (Level 3+)
+        // 2. WING STABILIZERS (Progressively larger & more detailed)
         if (level >= 3)
         {
-            float wingW = (level >= 8) ? 38f : 26f;
-            float wingH = h * 0.85f;
-            
-            GameObject leftWing = CreatePart("LeftWing", root, metallic, secondary * 0.8f, new Vector2(wingW, wingH), new Vector2(-(w / 2f + wingW / 2f - 4f), 0), order++);
-            GameObject rightWing = CreatePart("RightWing", root, metallic, secondary * 0.8f, new Vector2(wingW, wingH), new Vector2((w / 2f + wingW / 2f - 4f), 0), order++);
+            float wingW = (level >= 9) ? 38f : (level >= 7) ? 30f : (level >= 5) ? 24f : 18f;
+            float wingH = h * ((level >= 7) ? 0.85f : 0.70f);
 
-            leftWing.transform.localRotation = Quaternion.Euler(0, 0, 12f);
-            rightWing.transform.localRotation = Quaternion.Euler(0, 0, -12f);
+            GameObject leftWingOutline = CreatePart("LeftWingOutline", root, solid, voidDark, new Vector2(wingW + 6f, wingH + 6f), new Vector2(-(w / 2f + wingW / 2f), 0), order++);
+            GameObject rightWingOutline = CreatePart("RightWingOutline", root, solid, voidDark, new Vector2(wingW + 6f, wingH + 6f), new Vector2((w / 2f + wingW / 2f), 0), order++);
 
-            // Wing edge energy strip
-            CreatePart("LeftWingGlow", leftWing.transform, glow, glowColor, new Vector2(wingW * 0.5f, wingH), Vector2.zero, order++);
-            CreatePart("RightWingGlow", rightWing.transform, glow, glowColor, new Vector2(wingW * 0.5f, wingH), Vector2.zero, order++);
+            leftWingOutline.transform.localRotation = Quaternion.Euler(0, 0, 12f);
+            rightWingOutline.transform.localRotation = Quaternion.Euler(0, 0, -12f);
+
+            CreatePart("LeftWingFill", leftWingOutline.transform, solid, secondaryAccent, new Vector2(wingW, wingH), Vector2.zero, order++);
+            CreatePart("RightWingFill", rightWingOutline.transform, solid, secondaryAccent, new Vector2(wingW, wingH), Vector2.zero, order++);
+
+            // Thruster Energy Accents on Wing Tips (Rank 7+)
+            if (level >= 7)
+            {
+                CreatePart("LeftWingEnergy", leftWingOutline.transform, solid, primaryAccent, new Vector2(4f, wingH * 0.6f), new Vector2(-wingW / 3f, 0), order++);
+                CreatePart("RightWingEnergy", rightWingOutline.transform, solid, primaryAccent, new Vector2(4f, wingH * 0.6f), new Vector2(wingW / 3f, 0), order++);
+            }
         }
 
-        // 3. Main Outer Chassis (Metallic Frame + Metallic Bevel Edge)
-        GameObject outerFrame = CreatePart("OuterFrame", root, metallic, primary, size, Vector2.zero, order++);
-        CreatePart("OuterFrameBevel", outerFrame.transform, bevel, primary * 1.3f, size, Vector2.zero, order++);
+        // 3. MAIN RECTANGULAR CONTAINER CHASSIS
+        GameObject outerStroke = CreatePart("OuterStrokeFrame", root, solid, outerBorderColor, size, Vector2.zero, order++);
 
-        // 4. Dark Tech Inner Hull Plate
-        GameObject innerPlate = CreatePart("InnerPlate", outerFrame.transform, metallic, plate, new Vector2(w - 10f, h - 10f), Vector2.zero, order++);
-        CreatePart("InnerPlateBevel", innerPlate.transform, bevel, new Color(0, 0, 0, 0.6f), new Vector2(w - 10f, h - 10f), Vector2.zero, order++);
+        float borderThickness = 4f;
+        GameObject darkBorder = CreatePart("DarkBorder", outerStroke.transform, solid, voidDark, new Vector2(w - (borderThickness * 2), h - (borderThickness * 2)), Vector2.zero, order++);
 
-        // 5. Tech Corner Brackets (High-Tech Rectangular Trim)
-        float bracketSize = 14f;
-        float halfW = (w - 10f) / 2f - (bracketSize / 2f);
-        float halfH = (h - 10f) / 2f - (bracketSize / 2f);
+        GameObject innerPlate = CreatePart("InnerPlate", darkBorder.transform, solid, plateBg, new Vector2(w - (borderThickness * 4), h - (borderThickness * 4)), Vector2.zero, order++);
 
-        CreatePart("BracketTL", innerPlate.transform, flat, primary, new Vector2(bracketSize, 3f), new Vector2(-halfW, halfH + 4f), order++);
-        CreatePart("BracketTR", innerPlate.transform, flat, primary, new Vector2(bracketSize, 3f), new Vector2(halfW, halfH + 4f), order++);
-        CreatePart("BracketBL", innerPlate.transform, flat, primary, new Vector2(bracketSize, 3f), new Vector2(-halfW, -halfH - 4f), order++);
-        CreatePart("BracketBR", innerPlate.transform, flat, primary, new Vector2(bracketSize, 3f), new Vector2(halfW, -halfH - 4f), order++);
+        // 4. TOP / BOTTOM COMMAND RAIL ACCENTS (Rank 5+)
+        if (level >= 5)
+        {
+            float railH = (level >= 8) ? 4f : 3f;
+            CreatePart("TopAccentRail", innerPlate.transform, solid, primaryAccent, new Vector2(w - 24f, railH), new Vector2(0, (h / 2f) - 8f), order++);
+            CreatePart("BottomAccentRail", innerPlate.transform, solid, primaryAccent, new Vector2(w - 24f, railH), new Vector2(0, -(h / 2f) + 8f), order++);
+        }
 
-        // 6. Top/Bottom Metallic Hull Energy Rails
-        float railThickness = 4f;
-        GameObject topRail = CreatePart("TopRail", innerPlate.transform, metallic, primary, new Vector2(w - 32f, railThickness), new Vector2(0, (h / 2f) - 10f), order++);
-        GameObject bottomRail = CreatePart("BottomRail", innerPlate.transform, metallic, primary, new Vector2(w - 32f, railThickness), new Vector2(0, -(h / 2f) + 10f), order++);
-        
-        // Add rail specular edge lines
-        CreatePart("TopRailGlow", topRail.transform, glow, primary * 1.5f, new Vector2(w - 32f, railThickness * 2f), Vector2.zero, order++);
-        CreatePart("BottomRailGlow", bottomRail.transform, glow, primary * 1.5f, new Vector2(w - 32f, railThickness * 2f), Vector2.zero, order++);
-
-        // 7. Slanted Power Indicators (Chevrons with glow effect)
-        float crestSize = h * 0.68f;
+        // 5. CHEVRONS & PROGRESSIVE HULL GRID LINES
+        float crestSize = h * ((level >= 8) ? 0.72f : 0.62f);
         float crestX = -(w / 2f) + (crestSize / 2f) + 24f;
-        float chevronsStartX = crestX + (crestSize / 2f) + 28f;
+        float chevronsStartX = crestX + (crestSize / 2f) + 24f;
         int chevronCount = Mathf.Clamp((level - 1) % 4 + 1, 1, 4);
 
         for (int i = 0; i < chevronCount; i++)
         {
-            float posX = chevronsStartX + (i * 22f);
-            GameObject chevron = CreatePart($"Chevron_{i}", innerPlate.transform, metallic, secondary, new Vector2(9f, h * 0.52f), new Vector2(posX, 0), order++);
-            chevron.transform.localRotation = Quaternion.Euler(0, 0, 20f);
+            float posX = chevronsStartX + (i * 20f);
+
+            GameObject chevronBorder = CreatePart($"ChevronBorder_{i}", innerPlate.transform, solid, voidDark, new Vector2(12f, h * 0.54f), new Vector2(posX, 0), order++);
+            chevronBorder.transform.localRotation = Quaternion.Euler(0, 0, 18f);
+
+            CreatePart($"ChevronFill_{i}", chevronBorder.transform, solid, primaryAccent, new Vector2(6f, h * 0.46f), Vector2.zero, order++);
             
-            // Glowing core for chevron
-            GameObject chevronGlow = CreatePart($"ChevronGlow_{i}", chevron.transform, glow, primary * 1.4f, new Vector2(5f, h * 0.45f), Vector2.zero, order++);
+            // Higher ranks get inner core chevron highlights
+            if (level >= 6)
+            {
+                CreatePart($"ChevronCore_{i}", chevronBorder.transform, solid, crispWhite, new Vector2(2f, h * 0.35f), Vector2.zero, order++);
+            }
         }
 
-        // 8. Central Crest Node (Diamond Engine Core)
-        GameObject rankIconFrame = CreatePart("RankIconFrame", innerPlate.transform, metallic, primary, new Vector2(crestSize, crestSize), new Vector2(crestX, 0), order++);
-        rankIconFrame.transform.localRotation = Quaternion.Euler(0, 0, 45f);
-        CreatePart("RankIconBevel", rankIconFrame.transform, bevel, primary * 1.5f, new Vector2(crestSize, crestSize), Vector2.zero, order++);
+        // 6. CENTRAL CREST & REACTOR NODE (Progressively richer layers)
+        GameObject diamondDarkBase = CreatePart("DiamondDarkBase", innerPlate.transform, solid, voidDark, new Vector2(crestSize + 8f, crestSize + 8f), new Vector2(crestX, 0), order++);
+        diamondDarkBase.transform.localRotation = Quaternion.Euler(0, 0, 45f);
 
-        if (level >= 5)
+        GameObject diamondBorder = CreatePart("DiamondBorder", diamondDarkBase.transform, solid, outerBorderColor, new Vector2(crestSize + 4f, crestSize + 4f), Vector2.zero, order++);
+        GameObject diamondFill = CreatePart("DiamondFill", diamondBorder.transform, solid, primaryAccent, new Vector2(crestSize, crestSize), Vector2.zero, order++);
+
+        if (level >= 4)
         {
-            float gemSize = crestSize * 0.55f;
-            GameObject coreGem = CreatePart("CoreGem", rankIconFrame.transform, metallic, gem, new Vector2(gemSize, gemSize), Vector2.zero, order++);
-            CreatePart("CoreGemGlow", coreGem.transform, glow, gem * 1.6f, new Vector2(gemSize * 1.4f, gemSize * 1.4f), Vector2.zero, order++);
+            float coreSize = crestSize * 0.5f;
+            CreatePart("CoreNodeBase", diamondFill.transform, solid, voidDark, new Vector2(coreSize + 4f, coreSize + 4f), Vector2.zero, order++);
+            CreatePart("CoreNode", diamondFill.transform, solid, crispWhite, new Vector2(coreSize, coreSize), Vector2.zero, order++);
         }
 
-        // 9. Crown Mod / Commander Crest (Level 9+)
+        if (level >= 8)
+        {
+            // Inner Starburst Core for High Tiers
+            float innerStarSize = crestSize * 0.28f;
+            GameObject starburst = CreatePart("CoreStarburst", diamondFill.transform, solid, secondaryAccent, new Vector2(innerStarSize, innerStarSize), Vector2.zero, order++);
+            starburst.transform.localRotation = Quaternion.Euler(0, 0, 45f);
+        }
+
+        // 7. UPPER COMMAND CROWN MOD (Rank 9+)
         if (level >= 9)
         {
-            GameObject crown = CreatePart("CrownAccent", outerFrame.transform, metallic, primary, new Vector2(crestSize * 0.85f, 10f), new Vector2(crestX, h / 2f + 5f), order++);
-            CreatePart("CrownGlow", crown.transform, glow, glowColor, new Vector2(crestSize * 1.1f, 18f), Vector2.zero, order++);
+            GameObject crownDark = CreatePart("CrownDark", outerStroke.transform, solid, voidDark, new Vector2(crestSize + 12f, 10f), new Vector2(crestX, h / 2f + 4f), order++);
+            CreatePart("CrownFill", crownDark.transform, solid, primaryAccent, new Vector2(crestSize + 8f, 6f), Vector2.zero, order++);
         }
 
-        // 10. Star Badges / Tech Level Insignias
+        // 8. RANK INSIGNIA STARS
         int starCount = (level <= 2) ? 1 : (level <= 4) ? 2 : (level <= 6) ? 3 : (level <= 8) ? 4 : 5;
-        float starsStartX = (w / 2f) - 38f;
+        float starsStartX = (w / 2f) - 36f;
 
         for (int i = 0; i < starCount; i++)
         {
             float posX = starsStartX - (i * 26f);
-            GameObject star = CreatePart($"TechInsignia_{i}", innerPlate.transform, metallic, primary, new Vector2(16f, 16f), new Vector2(posX, 0), order++);
-            star.transform.localRotation = Quaternion.Euler(0, 0, 45f);
-            CreatePart($"TechInsigniaGlow_{i}", star.transform, glow, glowColor * 1.2f, new Vector2(24f, 24f), Vector2.zero, order++);
+
+            GameObject starBorder = CreatePart($"StarBorder_{i}", innerPlate.transform, solid, voidDark, new Vector2(20f, 20f), new Vector2(posX, 0), order++);
+            starBorder.transform.localRotation = Quaternion.Euler(0, 0, 45f);
+
+            GameObject starOuter = CreatePart($"StarOuter_{i}", starBorder.transform, solid, outerBorderColor, new Vector2(16f, 16f), Vector2.zero, order++);
+            CreatePart($"StarCore_{i}", starOuter.transform, solid, primaryAccent, new Vector2(10f, 10f), Vector2.zero, order++);
+
+            if (level >= 7)
+            {
+                // Crisp white star core dot for high ranks
+                CreatePart($"StarPoint_{i}", starOuter.transform, solid, crispWhite, new Vector2(4f, 4f), Vector2.zero, order++);
+            }
         }
     }
 
-    private void SetupSciFiTierColors(int level, out Color primary, out Color secondary, out Color plate, out Color glow, out Color gem)
+    private void SetupHighContrastColors(int level, out Color primaryAccent, out Color secondaryAccent, out Color plateBg, out Color outerBorderColor)
     {
-        if (level <= 2) // Tier 1: Cadet / Steel Blue
+        plateBg = new Color(0.04f, 0.05f, 0.10f);
+
+        if (level <= 2) // Tier 1: Recruit (Electric Cyan)
         {
-            primary = new Color(0.55f, 0.65f, 0.75f); secondary = new Color(0.35f, 0.45f, 0.55f);
-            plate = new Color(0.06f, 0.08f, 0.10f); glow = new Color(0.30f, 0.60f, 0.90f, 0.35f); gem = new Color(0.20f, 0.70f, 0.90f);
+            primaryAccent = new Color(0.00f, 0.95f, 1.00f);
+            secondaryAccent = new Color(0.15f, 0.40f, 0.65f);
+            outerBorderColor = new Color(0.00f, 0.85f, 1.00f);
         }
-        else if (level <= 4) // Tier 2: Officer / Neon Plasma
+        else if (level <= 4) // Tier 2: Officer (Vivid Violet)
         {
-            primary = new Color(0.20f, 0.88f, 0.98f); secondary = new Color(0.10f, 0.50f, 0.70f);
-            plate = new Color(0.04f, 0.07f, 0.11f); glow = new Color(0.00f, 0.95f, 1.00f, 0.50f); gem = new Color(0.00f, 1.00f, 0.85f);
+            primaryAccent = new Color(0.68f, 0.38f, 1.00f);
+            secondaryAccent = new Color(0.38f, 0.18f, 0.68f);
+            outerBorderColor = new Color(0.60f, 0.32f, 0.98f);
         }
-        else if (level <= 6) // Tier 3: Commander / Solar Amber
+        else if (level <= 6) // Tier 3: Commander (Solar Orange)
         {
-            primary = new Color(1.00f, 0.70f, 0.10f); secondary = new Color(0.70f, 0.38f, 0.00f);
-            plate = new Color(0.10f, 0.07f, 0.03f); glow = new Color(1.00f, 0.65f, 0.00f, 0.60f); gem = new Color(1.00f, 0.20f, 0.00f);
+            primaryAccent = new Color(1.00f, 0.40f, 0.00f);
+            secondaryAccent = new Color(0.65f, 0.20f, 0.00f);
+            outerBorderColor = new Color(1.00f, 0.50f, 0.10f);
         }
-        else if (level <= 8) // Tier 4: Dreadnought / Warp Violet
+        else if (level <= 8) // Tier 4: Dreadnought (Electric Lime)
         {
-            primary = new Color(0.85f, 0.25f, 1.00f); secondary = new Color(0.50f, 0.08f, 0.70f);
-            plate = new Color(0.08f, 0.03f, 0.10f); glow = new Color(0.90f, 0.15f, 1.00f, 0.70f); gem = new Color(1.00f, 0.00f, 0.60f);
+            primaryAccent = new Color(0.00f, 1.00f, 0.40f);
+            secondaryAccent = new Color(0.00f, 0.50f, 0.25f);
+            outerBorderColor = new Color(0.20f, 0.95f, 0.45f);
         }
-        else // Tier 5: Singularity / Hyper Gold
+        else // Tier 5: Singularity / Overlord (Hyperdrive Gold & Magenta)
         {
-            primary = new Color(1.00f, 0.92f, 0.30f); secondary = new Color(0.95f, 0.25f, 0.15f);
-            plate = new Color(0.05f, 0.04f, 0.04f); glow = new Color(1.00f, 0.85f, 0.15f, 0.85f); gem = new Color(0.00f, 0.98f, 1.00f);
+            primaryAccent = new Color(1.00f, 0.85f, 0.00f);
+            secondaryAccent = new Color(1.00f, 0.15f, 0.52f);
+            outerBorderColor = new Color(1.00f, 0.80f, 0.10f);
         }
     }
 
@@ -286,10 +310,6 @@ public class BadgeGeneratorEditor : EditorWindow
         return go;
     }
 
-    #endregion
-
-    #region Procedural Texture Generators
-
     private Sprite CreateFlatSquareSprite()
     {
         Texture2D tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
@@ -298,70 +318,25 @@ public class BadgeGeneratorEditor : EditorWindow
         return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 100f);
     }
 
-    private Sprite CreateMetallicGradientSprite(int width, int height)
+    private Sprite CreateRadialGlowSprite(int size)
     {
-        Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
-        for (int y = 0; y < height; y++)
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        Vector2 center = new Vector2(size / 2f, size / 2f);
+        float maxDist = size / 2f;
+
+        for (int y = 0; y < size; y++)
         {
-            float v = y / (float)height;
-            // High-contrast metallic reflection curve
-            float metallic = Mathf.Sin(v * Mathf.PI * 2f) * 0.18f + 0.82f;
-            if (v > 0.85f) metallic += (v - 0.85f) * 1.2f; // Top specular highlight
-
-            Color col = new Color(metallic, metallic, metallic, 1f);
-            for (int x = 0; x < width; x++)
-            {
-                tex.SetPixel(x, y, col);
-            }
-        }
-        tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
-    }
-
-    private Sprite CreateSoftGlowSprite(int width, int height)
-    {
-        Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
-        Vector2 center = new Vector2(width / 2f, height / 2f);
-        float maxDist = width / 2f;
-
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < size; x++)
             {
                 float dist = Vector2.Distance(new Vector2(x, y), center);
                 float normDist = Mathf.Clamp01(dist / maxDist);
-                float alpha = Mathf.Pow(1f - normDist, 2f); // Smooth radial falloff
+                float alpha = Mathf.Pow(1f - normDist, 2.5f);
 
                 tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
             }
         }
         tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
-    }
-
-    private Sprite CreateBevelBorderSprite(int width, int height, int borderWidth)
-    {
-        Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
-
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                bool isBorder = (x < borderWidth || x >= width - borderWidth || y < borderWidth || y >= height - borderWidth);
-                if (isBorder)
-                {
-                    // Light from top, dark on bottom for realistic beveling
-                    float val = (y > height / 2f) ? 0.9f : 0.3f;
-                    tex.SetPixel(x, y, new Color(val, val, val, 1f));
-                }
-                else
-                {
-                    tex.SetPixel(x, y, new Color(0, 0, 0, 0));
-                }
-            }
-        }
-        tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
+        return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
 
     #endregion
