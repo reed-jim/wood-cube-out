@@ -11,6 +11,7 @@ public class LeadershipCharacterDetailUI : BasePopup
     public TMP_Text ageText;
     public TMP_Text leadershipPositionText;
     public TMP_Text chanceGainElectionPointText;
+    public TMP_Text efficiencyText;
     public Image flag;
     public Button removeFromLeaderPositionButton;
     public RectTransform traitContainer;
@@ -23,6 +24,8 @@ public class LeadershipCharacterDetailUI : BasePopup
     public CountryFlagDatabase countryFlagDatabase;
 
     private LeadershipCharacterData leadershipCharacterData;
+
+    private string primaryHex;
 
     private List<CharacterTraitItemUI> characterTraitItemUIs = new List<CharacterTraitItemUI>();
 
@@ -51,6 +54,8 @@ public class LeadershipCharacterDetailUI : BasePopup
 
     public void Init(LeadershipCharacterData data)
     {
+        primaryHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.Primary);
+
         this.leadershipCharacterData = data;
 
         nameText.text = data.characterName;
@@ -68,12 +73,17 @@ public class LeadershipCharacterDetailUI : BasePopup
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
         chanceGainElectionPointText.text = $"Chance gain election point: {(int)(data.chanceToGainElectionPoint * 100)}%";
 
+        int rankValue = (int)data.rank;
         float exp = data.currentExp;
-        float expRequiredForNextLevel = CurveManager.Ins.GetBuyAugmentCost((int)data.rank);
+        float expRequiredForNextLevel = CurveManager.Ins.GetBuyAugmentCost(rankValue);
         float expProgress = exp / expRequiredForNextLevel;
 
         expFill.fillAmount = expProgress;
-        expText.text = $"{(int)(expRequiredForNextLevel - exp)}exp required to Level {(int)data.rank + 2}";
+        expText.text = $"{(int)(expRequiredForNextLevel - exp)}exp required to Level {rankValue + 2}";
+
+        float currentEfficiency = CurveManager.Ins.GetCharacterEfficiencyPercent(rankValue);
+        float nextEfficiency = CurveManager.Ins.GetCharacterEfficiencyPercent(rankValue + 1);
+        efficiencyText.text = $"Base Efficiency: {currentEfficiency}% --> <color={primaryHex}>{nextEfficiency}%";
 
         if (data.leadershipPosition == LeadershipPosition.None)
         {

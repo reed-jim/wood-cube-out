@@ -133,7 +133,7 @@ public class LeadershipPositionUI : MonoBehaviour
 
     public float CalculateEfficiency(LeadershipCharacterData leadershipCharacterData)
     {
-        float efficiency = baseEfficiency;
+        float efficiency = CurveManager.Ins.GetCharacterEfficiency((int)leadershipCharacterData.rank);
 
         List<CharacterTrait> characterTraits = new List<CharacterTrait>();
 

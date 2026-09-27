@@ -26,6 +26,12 @@ public class CurveManager : Singleton<CurveManager>
     public float maxHireCharactersCost;
     public int maxHireCharactersTime;
 
+    [Header("Character Efficiency")]
+    public AnimationCurve characterEfficiencyCurve;
+    public float minCharacterEfficiency;
+    public float maxCharacterEfficiency;
+    public int maxCharacterEfficiencyTime;
+
     public float GetStatPercentAdd(int upgradeTime)
     {
         float progress = statIncreaseCurve.Evaluate((float)upgradeTime / maxStatUpgradeTime);
@@ -62,5 +68,19 @@ public class CurveManager : Singleton<CurveManager>
         float cost = Mathf.Lerp(minHireCharactersCost, maxHireCharactersCost, progress);
 
         return Mathf.Round(cost * 1000f) / 1000f;
+    }
+
+    public float GetCharacterEfficiency(int time)
+    {
+        float progress = characterEfficiencyCurve.Evaluate((float)time / maxCharacterEfficiencyTime);
+
+        float cost = Mathf.Lerp(minCharacterEfficiency, maxCharacterEfficiency, progress);
+
+        return Mathf.Round(cost * 1000f) / 1000f;
+    }
+
+    public int GetCharacterEfficiencyPercent(int time)
+    {
+        return (int)(GetCharacterEfficiency(time) * 100);
     }
 }
