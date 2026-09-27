@@ -16,6 +16,13 @@ public class AugmentSetItemUI : MonoBehaviour
 
     public void Init(SpaceObjectType spaceObjectType)
     {
+        if(!AugmentManager.Ins.augmentOfSameSpaceObjectType.ContainsKey(spaceObjectType))
+        {
+            gameObject.SetActive(false);
+            
+            return;
+        }
+
         int totalSetItem = AugmentManager.Ins.numAugmentOfSpaceObjectType[spaceObjectType];
         int augmentActive = AugmentManager.Ins.augmentOfSameSpaceObjectType[spaceObjectType].Count;
 

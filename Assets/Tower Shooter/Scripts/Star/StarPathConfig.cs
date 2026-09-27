@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "StarPathConfig", menuName = "Star/StarPathConfig")]
 public class StarPathConfig : ScriptableObject
@@ -8,6 +9,7 @@ public class StarPathConfig : ScriptableObject
     public string starName;
     public double distanceInLightyear;
     public SpaceObjectType spaceObjectType;
+    public Sprite picture;
 
     [Header("Milstone")]
     public VoyageMilestoneConfig voyageMilestoneConfig;

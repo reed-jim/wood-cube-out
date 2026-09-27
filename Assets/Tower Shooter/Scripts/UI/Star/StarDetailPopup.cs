@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StarDetailPopup : BasePopup
 {
     public TMP_Text title;
+    public Image descriptionImage;
     public TMP_Text description;
 
     public RectTransform augmentContainer;
@@ -34,17 +36,15 @@ public class StarDetailPopup : BasePopup
     {
         title.text = starPathConfig.starName;
 
-        for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
-        {
-            ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, nodeDetailAugmentItemUIs[i].gameObject);
-        }
+        CommonUtil.ReturnListToPool(nodeDetailAugmentItemUIs, item => item.gameObject);
 
         if (augmentSetItemUI != null)
         {
             ObjectPoolingEverything.ReturnToPool(GameConstants.nodeDetailAugmentItemUI, augmentSetItemUI.gameObject);
         }
 
-        nodeDetailAugmentItemUIs.Clear();
+        descriptionImage.sprite = starPathConfig.picture;
+        descriptionImage.SetNativeSize();
 
         for (int i = 0; i < starPathConfig.unlockedAugments.Count; i++)
         {
@@ -57,6 +57,8 @@ public class StarDetailPopup : BasePopup
             nodeDetailAugmentItemUI.transform.localScale = Vector3.one;
 
             nodeDetailAugmentItemUI.Init(augment);
+
+            nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
         }
 
         augmentSetItemUI = ObjectPoolingEverything.GetFromPool<AugmentSetItemUI>(GameConstants.augmentSetItemUI);
