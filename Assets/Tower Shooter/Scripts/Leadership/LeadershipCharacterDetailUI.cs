@@ -16,6 +16,10 @@ public class LeadershipCharacterDetailUI : BasePopup
     public RectTransform traitContainer;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
+    [Header("Exp")]
+    public Image expFill;
+    public TMP_Text expText;
+
     public CountryFlagDatabase countryFlagDatabase;
 
     private LeadershipCharacterData leadershipCharacterData;
@@ -63,6 +67,13 @@ public class LeadershipCharacterDetailUI : BasePopup
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
         flag.sprite = countryFlagDatabase.GetFlag(data.country);
         chanceGainElectionPointText.text = $"Chance gain election point: {(int)(data.chanceToGainElectionPoint * 100)}%";
+
+        float exp = data.currentExp;
+        float expRequiredForNextLevel = CurveManager.Ins.GetBuyAugmentCost((int)data.rank);
+        float expProgress = exp / expRequiredForNextLevel;
+
+        expFill.fillAmount = expProgress;
+        expText.text = $"{(int)(expRequiredForNextLevel - exp)}exp required to Level {(int)data.rank + 2}";
 
         if (data.leadershipPosition == LeadershipPosition.None)
         {

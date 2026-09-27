@@ -743,6 +743,16 @@ public class LeadershipManager : Singleton<LeadershipManager>
 
                 isDirty = true;
             }
+
+            leadershipCharacterData.currentExp++;
+
+            float expRequiredForNextLevel = CurveManager.Ins.GetBuyAugmentCost((int)leadershipCharacterData.rank);
+
+            if (leadershipCharacterData.currentExp >= expRequiredForNextLevel)
+            {
+                leadershipCharacterData.rank++;
+                leadershipCharacterData.currentExp = 0;
+            }
         }
 
         if (isDirty)
@@ -803,6 +813,8 @@ public class LeadershipCharacterData
     public LeadershipPosition leadershipPosition;
     public int electionPoint;
     public float chanceToGainElectionPoint;
+    public float currentExp;
+    public CharacterRank rank;
 }
 
 [Serializable]

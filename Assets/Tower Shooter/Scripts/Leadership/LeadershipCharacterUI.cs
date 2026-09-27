@@ -23,6 +23,10 @@ public class LeadershipCharacterUI : MonoBehaviour
     public TMP_Text electionRank;
     public ThemeableUI electionRankThemeable;
 
+    [Header("Rank")]
+    public Image rankImage;
+    public TMP_Text rankText;
+
     [Header("Theme")]
     public ThemeableUI borderThemable;
 
@@ -34,6 +38,7 @@ public class LeadershipCharacterUI : MonoBehaviour
     [Header("SO")]
     public CharacterTraitContainer characterTraitContainer;
     public CountryFlagDatabase countryFlagDatabase;
+    public CharacterRankAssetContainer characterRankAssetContainer;
 
     private DateTime birthDay;
     private List<CharacterTrait> characterTraits;
@@ -83,6 +88,9 @@ public class LeadershipCharacterUI : MonoBehaviour
         }
 
         proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
+
+        rankImage.sprite = characterRankAssetContainer.GetRankSprite(data.rank);
+        rankText.text = $"Level {(int)data.rank + 1}";
 
         for (int i = 0; i < characterTraits.Count; i++)
         {
