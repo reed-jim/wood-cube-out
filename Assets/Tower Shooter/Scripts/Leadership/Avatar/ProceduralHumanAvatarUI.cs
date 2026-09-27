@@ -10,8 +10,8 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     [Tooltip("0.0 = Child, 0.3 = Youth, 0.6 = Adult, 1.0 = Elder")]
     public float age = 0.6f;
 
-    public enum Expression { ConfidentLeader, Determined, Commanding, Noble, FriendlyNeutral }
-    public Expression expression = Expression.ConfidentLeader;
+    public enum Expression { WarmLeader, Inspirational, Approachable, Determined, Confident }
+    public Expression expression = Expression.WarmLeader;
 
     [Header("Customize")]
     public float basicShapeCornerRadius = 24;
@@ -25,7 +25,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private bool isDead = false;
     private Dictionary<Image, Material> originalMaterials = new Dictionary<Image, Material>();
 
-    public enum FaceShape { SoftOval, SoftSquare, Chiseled, CommandingBlock }
+    public enum FaceShape { SoftOval, SoftSquare, Chiseled }
 
     // --- GENETIC DATA ---
     private Color skinColor;
@@ -45,7 +45,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
     private FaceShape faceShape;
 
-    // Genetic Parameters (Leader-tuned)
+    // Genetic Parameters (Friendly Leader)
     private float gene_HeadWidthRatio;
     private float gene_HeadHeightRatio;
     private float gene_EyeSpacing;
@@ -132,40 +132,40 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
     private void RollGenetics()
     {
         float skinToneRoll = Random.value;
-        if (skinToneRoll < 0.30f) skinColor = new Color(0.96f, 0.84f, 0.74f);
-        else if (skinToneRoll < 0.60f) skinColor = new Color(0.82f, 0.62f, 0.46f);
-        else if (skinToneRoll < 0.85f) skinColor = new Color(0.52f, 0.35f, 0.22f);
-        else skinColor = new Color(0.28f, 0.18f, 0.12f);
+        if (skinToneRoll < 0.35f) skinColor = new Color(0.96f, 0.85f, 0.75f);
+        else if (skinToneRoll < 0.65f) skinColor = new Color(0.84f, 0.65f, 0.50f);
+        else if (skinToneRoll < 0.88f) skinColor = new Color(0.55f, 0.38f, 0.25f);
+        else skinColor = new Color(0.32f, 0.22f, 0.15f);
 
         float hairRoll = Random.value;
-        if (hairRoll < 0.40f) hairColor = new Color(0.12f, 0.10f, 0.08f); // Dark silver/black
-        else if (hairRoll < 0.70f) hairColor = new Color(0.30f, 0.20f, 0.12f); // Dark brown
-        else hairColor = new Color(0.55f, 0.55f, 0.58f); // Commander grey
+        if (hairRoll < 0.35f) hairColor = new Color(0.18f, 0.14f, 0.12f); // Warm dark brown
+        else if (hairRoll < 0.70f) hairColor = new Color(0.38f, 0.26f, 0.16f); // Chestnut brown
+        else hairColor = new Color(0.60f, 0.58f, 0.55f); // Distinguished silver
 
-        eyeColor = Random.ColorHSV(0.55f, 0.65f, 0.5f, 0.8f, 0.4f, 0.8f); // Steel Blue / Gray eyes
+        eyeColor = Random.ColorHSV(0.52f, 0.62f, 0.4f, 0.7f, 0.4f, 0.8f); // Warm hazel / steel blue
         faceShape = (FaceShape)Random.Range(0, System.Enum.GetValues(typeof(FaceShape)).Length);
 
-        // Leader proportions: Balanced & strong jawlines
-        gene_HeadWidthRatio = Random.Range(0.95f, 1.08f);
-        gene_HeadHeightRatio = Random.Range(0.96f, 1.06f);
+        // Friendly leader proportions: Rounded, balanced, warm structure
+        gene_HeadWidthRatio = Random.Range(0.96f, 1.04f);
+        gene_HeadHeightRatio = Random.Range(0.96f, 1.03f);
 
-        gene_EyeSpacing = Random.Range(-2f, 6f);
-        gene_EyeScaleY = Random.Range(0.85f, 1.0f);
-        gene_EyeSize = Random.Range(0.90f, 1.05f);
+        gene_EyeSpacing = Random.Range(-1f, 5f);
+        gene_EyeScaleY = Random.Range(0.90f, 1.02f);
+        gene_EyeSize = Random.Range(0.95f, 1.08f);
 
-        gene_NoseWidth = Random.Range(0.85f, 1.15f);
-        gene_NoseLength = Random.Range(0.90f, 1.10f);
+        gene_NoseWidth = Random.Range(0.90f, 1.10f);
+        gene_NoseLength = Random.Range(0.90f, 1.05f);
 
-        gene_LipWidth = Random.Range(0.90f, 1.15f);
-        gene_LipFullness = Random.Range(0.80f, 1.10f);
+        gene_LipWidth = Random.Range(0.95f, 1.15f);
+        gene_LipFullness = Random.Range(0.90f, 1.15f);
 
-        gene_EarSize = Random.Range(0.85f, 1.10f);
-        gene_EarYOffset = Random.Range(-4f, 4f);
+        gene_EarSize = Random.Range(0.88f, 1.08f);
+        gene_EarYOffset = Random.Range(-3f, 3f);
 
-        gene_BrowThickness = Random.Range(6f, 10f);
-        gene_BrowAngleOffset = Random.Range(-6f, 2f); // Sharp, focused brows
-        gene_CheekProminence = Random.Range(0.85f, 1.15f);
-        gene_HairVolume = Random.Range(0.90f, 1.10f);
+        gene_BrowThickness = Random.Range(5f, 8f);
+        gene_BrowAngleOffset = Random.Range(-2f, 3f); // Relaxed, approachable brow line
+        gene_CheekProminence = Random.Range(0.90f, 1.10f);
+        gene_HairVolume = Random.Range(0.92f, 1.05f);
     }
 
     private void BuildHierarchy()
@@ -192,8 +192,8 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         rightEar = CreatePart("RightEar", transform, circleSprite, skinColor * 0.95f, order++);
         head = CreatePart("Head", transform, circleSprite, skinColor, order++);
         chinShadow = CreatePart("ChinShadow", head.transform, circleSprite, skinColor * 0.90f, order++);
-        cheekL = CreatePart("CheekL", head.transform, circleSprite, skinColor * 1.03f, order++);
-        cheekR = CreatePart("CheekR", head.transform, circleSprite, skinColor * 1.03f, order++);
+        cheekL = CreatePart("CheekL", head.transform, circleSprite, skinColor * 1.04f, order++);
+        cheekR = CreatePart("CheekR", head.transform, circleSprite, skinColor * 1.04f, order++);
 
         foreheadWrinkle1 = CreatePart("ForeheadWrinkle1", head.transform, circleSprite, Color.clear, order++);
         foreheadWrinkle2 = CreatePart("ForeheadWrinkle2", head.transform, circleSprite, Color.clear, order++);
@@ -209,24 +209,24 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
         irisRingL = CreatePart("IrisRingL", leftEye.transform, circleSprite, eyeColor, order++);
         irisRingR = CreatePart("IrisRingR", rightEye.transform, circleSprite, eyeColor, order++);
-        pupilL = CreatePart("PupilL", irisRingL.transform, circleSprite, new Color(0.1f, 0.1f, 0.1f), order++);
-        pupilR = CreatePart("PupilR", irisRingR.transform, circleSprite, new Color(0.1f, 0.1f, 0.1f), order++);
+        pupilL = CreatePart("PupilL", irisRingL.transform, circleSprite, new Color(0.12f, 0.12f, 0.12f), order++);
+        pupilR = CreatePart("PupilR", irisRingR.transform, circleSprite, new Color(0.12f, 0.12f, 0.12f), order++);
 
         highlightL1 = CreatePart("HighlightL1", leftEye.transform, circleSprite, Color.white, order++);
         highlightR1 = CreatePart("HighlightR1", rightEye.transform, circleSprite, Color.white, order++);
 
-        upperLidL = CreatePart("UpperLidL", leftEye.transform, circleSprite, skinColor * 0.85f, order++);
-        upperLidR = CreatePart("UpperLidR", rightEye.transform, circleSprite, skinColor * 0.85f, order++);
+        upperLidL = CreatePart("UpperLidL", leftEye.transform, circleSprite, skinColor * 0.88f, order++);
+        upperLidR = CreatePart("UpperLidR", rightEye.transform, circleSprite, skinColor * 0.88f, order++);
 
         noseBridge = CreatePart("NoseBridge", head.transform, circleSprite, skinColor * 0.94f, order++);
-        noseTip = CreatePart("NoseTip", head.transform, circleSprite, skinColor * 0.86f, order++);
-        noseNostrilL = CreatePart("NostrilL", noseTip.transform, circleSprite, skinColor * 0.72f, order++);
-        noseNostrilR = CreatePart("NostrilR", noseTip.transform, circleSprite, skinColor * 0.72f, order++);
+        noseTip = CreatePart("NoseTip", head.transform, circleSprite, skinColor * 0.88f, order++);
+        noseNostrilL = CreatePart("NostrilL", noseTip.transform, circleSprite, skinColor * 0.74f, order++);
+        noseNostrilR = CreatePart("NostrilR", noseTip.transform, circleSprite, skinColor * 0.74f, order++);
 
-        upperLip = CreatePart("UpperLip", head.transform, circleSprite, new Color(0.65f, 0.38f, 0.38f), order++);
-        lowerLip = CreatePart("LowerLip", head.transform, circleSprite, new Color(0.72f, 0.42f, 0.42f), order++);
-        mouthCornerL = CreatePart("MouthCornerL", head.transform, circleSprite, new Color(0.48f, 0.25f, 0.25f), order++);
-        mouthCornerR = CreatePart("MouthCornerR", head.transform, circleSprite, new Color(0.48f, 0.25f, 0.25f), order++);
+        upperLip = CreatePart("UpperLip", head.transform, circleSprite, new Color(0.68f, 0.42f, 0.42f), order++);
+        lowerLip = CreatePart("LowerLip", head.transform, circleSprite, new Color(0.76f, 0.46f, 0.46f), order++);
+        mouthCornerL = CreatePart("MouthCornerL", head.transform, circleSprite, new Color(0.52f, 0.28f, 0.28f), order++);
+        mouthCornerR = CreatePart("MouthCornerR", head.transform, circleSprite, new Color(0.52f, 0.28f, 0.28f), order++);
 
         leftBrow = CreatePart("LeftBrow", head.transform, circleSprite, hairColor, order++);
         rightBrow = CreatePart("RightBrow", head.transform, circleSprite, hairColor, order++);
@@ -236,7 +236,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
 
     private void UpdateCharacter(float t)
     {
-        Color currentSkinColor = Color.Lerp(skinColor, Color.Lerp(skinColor, new Color(0.82f, 0.78f, 0.75f), 0.45f), t);
+        Color currentSkinColor = Color.Lerp(skinColor, Color.Lerp(skinColor, new Color(0.85f, 0.80f, 0.77f), 0.40f), t);
         head.GetComponent<Image>().color = currentSkinColor;
 
         float fixedShoulderW = 410f;
@@ -260,16 +260,15 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         ApplyUITransform(neckRingBase, new Vector2(0f, -68f), new Vector2(fixedNeckW * 1.30f, 38f), neckRingBaseColor);
         ApplyUITransform(neckRingBlue, new Vector2(0f, 4f), new Vector2(fixedNeckW * 1.25f, 16f), neckRingBlueColor);
 
-        // --- FACIAL GEOMETRY (Solid, regal proportions) ---
-        float baseHeadW = 185f * gene_HeadWidthRatio;
-        float baseHeadH = 210f * gene_HeadHeightRatio;
+        // --- FACIAL GEOMETRY ---
+        float baseHeadW = 182f * gene_HeadWidthRatio;
+        float baseHeadH = 205f * gene_HeadHeightRatio;
 
         Vector2 shapeScale = Vector2.one;
         switch (faceShape)
         {
-            case FaceShape.SoftSquare: shapeScale = new Vector2(1.04f, 0.98f); break;
-            case FaceShape.Chiseled: shapeScale = new Vector2(0.98f, 1.04f); break;
-            case FaceShape.CommandingBlock: shapeScale = new Vector2(1.06f, 1.02f); break;
+            case FaceShape.SoftSquare: shapeScale = new Vector2(1.02f, 0.99f); break;
+            case FaceShape.Chiseled: shapeScale = new Vector2(0.99f, 1.02f); break;
             case FaceShape.SoftOval: shapeScale = new Vector2(1.0f, 1.0f); break;
         }
 
@@ -277,26 +276,26 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         float headH = baseHeadH * shapeScale.y;
         ApplyUITransform(head, Vector2.zero, new Vector2(headW, headH), currentSkinColor);
 
-        float chinShadowH = Mathf.Lerp(22f, 34f, t);
-        ApplyUITransform(chinShadow, new Vector2(0f, -headH * 0.38f), new Vector2(headW * 0.50f, chinShadowH), currentSkinColor * 0.88f);
+        float chinShadowH = Mathf.Lerp(18f, 28f, t);
+        ApplyUITransform(chinShadow, new Vector2(0f, -headH * 0.38f), new Vector2(headW * 0.48f, chinShadowH), currentSkinColor * 0.91f);
 
         Color cheekColor = currentSkinColor;
-        cheekColor.r = Mathf.Min(1f, cheekColor.r * 1.03f);
-        float cheekW = 32f * gene_CheekProminence;
-        ApplyUITransform(cheekL, new Vector2(-headW * 0.33f, -5f), new Vector2(cheekW, 28f), cheekColor);
-        ApplyUITransform(cheekR, new Vector2(headW * 0.33f, -5f), new Vector2(cheekW, 28f), cheekColor);
+        cheekColor.r = Mathf.Min(1f, cheekColor.r * 1.04f);
+        float cheekW = 34f * gene_CheekProminence;
+        ApplyUITransform(cheekL, new Vector2(-headW * 0.32f, -4f), new Vector2(cheekW, 28f), cheekColor);
+        ApplyUITransform(cheekR, new Vector2(headW * 0.32f, -4f), new Vector2(cheekW, 28f), cheekColor);
 
-        float earH = 48f * gene_EarSize;
+        float earH = 46f * gene_EarSize;
         float earY = gene_EarYOffset;
-        ApplyUITransform(leftEar, new Vector2(-headW * 0.49f, earY), new Vector2(24f * gene_EarSize, earH), currentSkinColor * 0.95f);
-        ApplyUITransform(rightEar, new Vector2(headW * 0.49f, earY), new Vector2(24f * gene_EarSize, earH), currentSkinColor * 0.95f);
+        ApplyUITransform(leftEar, new Vector2(-headW * 0.49f, earY), new Vector2(23f * gene_EarSize, earH), currentSkinColor * 0.95f);
+        ApplyUITransform(rightEar, new Vector2(headW * 0.49f, earY), new Vector2(23f * gene_EarSize, earH), currentSkinColor * 0.95f);
 
         UpdateAgingDetails(headW, headH, t, currentSkinColor);
 
-        // --- FIXED EYES ---
+        // --- EYES ---
         float eyeY = 12f;
         float eyeSpacing = 42f + gene_EyeSpacing;
-        float eyeSize = 34f * gene_EyeSize;
+        float eyeSize = 35f * gene_EyeSize;
 
         PositionEyeUI(leftEye, irisRingL, pupilL, highlightL1, upperLidL, -eyeSpacing, eyeY, eyeSize, currentSkinColor);
         PositionEyeUI(rightEye, irisRingR, pupilR, highlightR1, upperLidR, eyeSpacing, eyeY, eyeSize, currentSkinColor);
@@ -304,134 +303,157 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         leftEye.GetComponent<RectTransform>().localRotation = Quaternion.identity;
         rightEye.GetComponent<RectTransform>().localRotation = Quaternion.identity;
 
-        // --- HAIR (THINNER & HORIZONTALLY SCALED CORRECTLY) ---
-        Color currentHair = Color.Lerp(hairColor, new Color(0.82f, 0.82f, 0.85f), Mathf.Clamp01((t - 0.3f) * 1.2f));
+        // --- HAIR ---
+        Color currentHair = Color.Lerp(hairColor, new Color(0.80f, 0.80f, 0.82f), Mathf.Clamp01((t - 0.3f) * 1.2f));
         ApplyFacialExpression(eyeY, eyeSpacing, t, currentHair);
 
-        // Thin, sharp military style hair cut matching top skull outline exactly
-        float hairW = headW * 0.96f * gene_HairVolume;
-        float hairH = headH * 0.16f; // Thinner profile
-        float hairY = (headH * 0.50f) - (hairH * 0.45f); // Anchored cleanly to the crown
+        float hairW = headW * 0.95f * gene_HairVolume;
+        float hairH = headH * 0.15f;
+        float hairY = (headH * 0.50f) - (hairH * 0.45f);
         ApplyUITransform(simpleHair, new Vector2(0f, hairY), new Vector2(hairW, hairH), currentHair);
 
-        // --- NOSE (Strong Bridge) ---
+        // --- NOSE ---
         float noseY = -8f;
-        float bridgeHeight = 28f * gene_NoseLength;
+        float bridgeHeight = 26f * gene_NoseLength;
         float bridgeW = 8f * gene_NoseWidth;
-        ApplyUITransform(noseBridge, new Vector2(0f, noseY + (bridgeHeight * 0.38f)), new Vector2(bridgeW, bridgeHeight), currentSkinColor * 0.92f);
+        ApplyUITransform(noseBridge, new Vector2(0f, noseY + (bridgeHeight * 0.38f)), new Vector2(bridgeW, bridgeHeight), currentSkinColor * 0.93f);
 
         float noseWidth = 24f * gene_NoseWidth;
-        float tipHeight = 16f;
-        ApplyUITransform(noseTip, new Vector2(0f, noseY - (bridgeHeight * 0.15f)), new Vector2(noseWidth, tipHeight), currentSkinColor * 0.86f);
-        ApplyUITransform(noseNostrilL, new Vector2(-noseWidth * 0.35f, -1f), new Vector2(5f, 4f), currentSkinColor * 0.70f);
-        ApplyUITransform(noseNostrilR, new Vector2(noseWidth * 0.35f, -1f), new Vector2(5f, 4f), currentSkinColor * 0.70f);
+        float tipHeight = 15f;
+        ApplyUITransform(noseTip, new Vector2(0f, noseY - (bridgeHeight * 0.15f)), new Vector2(noseWidth, tipHeight), currentSkinColor * 0.88f);
+        ApplyUITransform(noseNostrilL, new Vector2(-noseWidth * 0.35f, -1f), new Vector2(5f, 4f), currentSkinColor * 0.74f);
+        ApplyUITransform(noseNostrilR, new Vector2(noseWidth * 0.35f, -1f), new Vector2(5f, 4f), currentSkinColor * 0.74f);
     }
 
     private void UpdateAgingDetails(float headW, float headH, float t, Color skinCol)
     {
-        Color wrinkleColor = skinCol * 0.75f;
-        wrinkleColor.a = Mathf.Clamp01((t - 0.35f) * 2.0f);
+        Color wrinkleColor = skinCol * 0.80f;
+        wrinkleColor.a = Mathf.Clamp01((t - 0.35f) * 1.5f);
 
-        Color ageSpotColor = skinCol * 0.68f;
-        ageSpotColor.a = Mathf.Clamp01((t - 0.60f) * 2.0f);
+        Color ageSpotColor = skinCol * 0.72f;
+        ageSpotColor.a = Mathf.Clamp01((t - 0.60f) * 1.5f);
 
-        ApplyUITransform(foreheadWrinkle1, new Vector2(0f, headH * 0.22f), new Vector2(headW * 0.50f, 3.5f), wrinkleColor);
-        ApplyUITransform(foreheadWrinkle2, new Vector2(0f, headH * 0.28f), new Vector2(headW * 0.38f, 3f), wrinkleColor);
+        ApplyUITransform(foreheadWrinkle1, new Vector2(0f, headH * 0.22f), new Vector2(headW * 0.45f, 3f), wrinkleColor);
+        ApplyUITransform(foreheadWrinkle2, new Vector2(0f, headH * 0.28f), new Vector2(headW * 0.35f, 2.5f), wrinkleColor);
 
-        ApplyUITransform(crowsFeetL, new Vector2(-headW * 0.38f, 10f), new Vector2(14f, 10f), wrinkleColor);
-        ApplyUITransform(crowsFeetR, new Vector2(headW * 0.38f, 10f), new Vector2(14f, 10f), wrinkleColor);
+        // Softened crow's feet (laugh lines)
+        ApplyUITransform(crowsFeetL, new Vector2(-headW * 0.38f, 10f), new Vector2(12f, 8f), wrinkleColor);
+        ApplyUITransform(crowsFeetR, new Vector2(headW * 0.38f, 10f), new Vector2(12f, 8f), wrinkleColor);
 
-        ApplyUITransform(nasolabialFoldL, new Vector2(-26f, -30f), new Vector2(4f, Mathf.Lerp(8f, 30f, t)), wrinkleColor);
-        ApplyUITransform(nasolabialFoldR, new Vector2(26f, -30f), new Vector2(4f, Mathf.Lerp(8f, 30f, t)), wrinkleColor);
+        // Softened smile lines
+        ApplyUITransform(nasolabialFoldL, new Vector2(-28f, -28f), new Vector2(3f, Mathf.Lerp(6f, 24f, t)), wrinkleColor);
+        ApplyUITransform(nasolabialFoldR, new Vector2(28f, -28f), new Vector2(3f, Mathf.Lerp(6f, 24f, t)), wrinkleColor);
 
-        nasolabialFoldL.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -15f);
-        nasolabialFoldR.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, 15f);
+        nasolabialFoldL.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -12f);
+        nasolabialFoldR.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, 12f);
 
-        ApplyUITransform(ageSpot1, new Vector2(-headW * 0.28f, headH * 0.18f), new Vector2(10f, 8f), ageSpotColor);
-        ApplyUITransform(ageSpot2, new Vector2(headW * 0.22f, -headH * 0.15f), new Vector2(12f, 9f), ageSpotColor);
+        ApplyUITransform(ageSpot1, new Vector2(-headW * 0.28f, headH * 0.18f), new Vector2(8f, 7f), ageSpotColor);
+        ApplyUITransform(ageSpot2, new Vector2(headW * 0.22f, -headH * 0.15f), new Vector2(10f, 8f), ageSpotColor);
     }
 
     private void PositionEyeUI(GameObject eye, GameObject iris, GameObject pupil, GameObject h1, GameObject upperLid, float x, float y, float size, Color skinCol)
     {
         float socketW = size * 1.15f;
-        float socketH = size * 0.70f * gene_EyeScaleY;
+        float socketH = size * 0.72f * gene_EyeScaleY;
         ApplyUITransform(eye, new Vector2(x, y), new Vector2(socketW, socketH), Color.white);
 
-        // Iris centered perfectly
         float irisSize = socketH * 0.80f;
         ApplyUITransform(iris, Vector2.zero, new Vector2(irisSize, irisSize), eyeColor);
 
-        float pupilSize = irisSize * 0.48f;
-        ApplyUITransform(pupil, Vector2.zero, new Vector2(pupilSize, pupilSize), new Color(0.1f, 0.1f, 0.1f));
+        float pupilSize = irisSize * 0.46f;
+        ApplyUITransform(pupil, Vector2.zero, new Vector2(pupilSize, pupilSize), new Color(0.12f, 0.12f, 0.12f));
 
-        ApplyUITransform(h1, new Vector2(irisSize * 0.20f, irisSize * 0.20f), new Vector2(irisSize * 0.25f, irisSize * 0.25f), Color.white);
+        ApplyUITransform(h1, new Vector2(irisSize * 0.20f, irisSize * 0.20f), new Vector2(irisSize * 0.28f, irisSize * 0.28f), Color.white);
 
-        // Subtle lid outline that doesn't obscure pupil center
-        ApplyUITransform(upperLid, new Vector2(0f, socketH * 0.42f), new Vector2(socketW * 1.05f, socketH * 0.20f), skinCol * 0.85f);
+        // Relaxed upper lid
+        ApplyUITransform(upperLid, new Vector2(0f, socketH * 0.44f), new Vector2(socketW * 1.02f, socketH * 0.16f), skinCol * 0.88f);
     }
 
     private void ApplyFacialExpression(float eyeY, float eyeSpacing, float t, Color browColor)
     {
-        float browY = eyeY + 15f;
-        float mouthY = -48f;
+        float browY = eyeY + 16f;
+        float mouthY = -46f;
 
-        Color upperLipCol = new Color(0.65f, 0.38f, 0.38f);
-        Color lowerLipCol = new Color(0.72f, 0.42f, 0.42f);
+        Color upperLipCol = new Color(0.68f, 0.42f, 0.42f);
+        Color lowerLipCol = new Color(0.76f, 0.46f, 0.46f);
 
-        float lipWidth = 46f * gene_LipWidth;
+        float lipWidth = 48f * gene_LipWidth;
         float upperLipH = 6f * gene_LipFullness;
-        float lowerLipH = 7f * gene_LipFullness;
+        float lowerLipH = 7.5f * gene_LipFullness;
 
-        float browAngleL = -3f;
-        float browAngleR = 3f;
+        float browAngleL = 1f;
+        float browAngleR = -1f;
         float browOffsetL = 0f;
         float browOffsetR = 0f;
 
         switch (expression)
         {
-            case Expression.ConfidentLeader:
-                // Determined brow tilt + disciplined mouth
+            case Expression.WarmLeader:
+                // Gentle smile curve + soft brow
                 ApplyUITransform(upperLip, new Vector2(0f, mouthY + 1f), new Vector2(lipWidth, upperLipH), upperLipCol);
+                ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 3f), new Vector2(lipWidth * 0.92f, lowerLipH), lowerLipCol);
+                
+                // Slightly raised corners create a warm, natural smile
+                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.50f, mouthY + 3.5f), new Vector2(5f, 5f), upperLipCol * 0.85f);
+                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.50f, mouthY + 3.5f), new Vector2(5f, 5f), upperLipCol * 0.85f);
+                
+                browAngleL = 2f;
+                browAngleR = -2f;
+                browOffsetL = 1f;
+                browOffsetR = 1f;
+                break;
+
+            case Expression.Inspirational:
+                ApplyUITransform(upperLip, new Vector2(0f, mouthY + 2f), new Vector2(lipWidth * 1.02f, upperLipH), upperLipCol);
+                ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 2f), new Vector2(lipWidth * 0.95f, lowerLipH + 1f), lowerLipCol);
+                
+                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.51f, mouthY + 4.5f), new Vector2(5f, 5f), upperLipCol * 0.85f);
+                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.51f, mouthY + 4.5f), new Vector2(5f, 5f), upperLipCol * 0.85f);
+                
+                browAngleL = 4f;
+                browAngleR = -4f;
+                browOffsetL = 2f;
+                browOffsetR = 2f;
+                break;
+
+            case Expression.Approachable:
+                ApplyUITransform(upperLip, new Vector2(0f, mouthY + 1f), new Vector2(lipWidth * 0.98f, upperLipH), upperLipCol);
                 ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 3f), new Vector2(lipWidth * 0.90f, lowerLipH), lowerLipCol);
-                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.5f, mouthY + 2f), new Vector2(4f, 4f), upperLipCol * 0.8f);
-                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.5f, mouthY + 3f), new Vector2(4f, 4f), upperLipCol * 0.8f);
-                browAngleL = -8f;
-                browAngleR = 8f;
-                browOffsetL = -1f;
-                browOffsetR = -1f;
+                
+                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.49f, mouthY + 3f), new Vector2(4f, 4f), upperLipCol * 0.85f);
+                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.49f, mouthY + 3f), new Vector2(4f, 4f), upperLipCol * 0.85f);
+                
+                browAngleL = 1f;
+                browAngleR = -1f;
                 break;
 
             case Expression.Determined:
                 ApplyUITransform(upperLip, new Vector2(0f, mouthY), new Vector2(lipWidth * 0.95f, upperLipH), upperLipCol);
-                ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 3f), new Vector2(lipWidth * 0.85f, lowerLipH), lowerLipCol);
-                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.48f, mouthY - 1f), new Vector2(4f, 4f), upperLipCol * 0.8f);
-                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.48f, mouthY - 1f), new Vector2(4f, 4f), upperLipCol * 0.8f);
-                browAngleL = -12f;
-                browAngleR = 12f;
-                browOffsetL = -3f;
-                browOffsetR = -3f;
-                break;
-
-            case Expression.Commanding:
-                ApplyUITransform(upperLip, new Vector2(0f, mouthY + 1f), new Vector2(lipWidth * 1.05f, upperLipH + 1f), upperLipCol);
-                ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 3f), new Vector2(lipWidth * 0.92f, lowerLipH), lowerLipCol);
-                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.52f, mouthY + 1f), new Vector2(4f, 4f), upperLipCol * 0.8f);
-                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.52f, mouthY + 1f), new Vector2(4f, 4f), upperLipCol * 0.8f);
-                browAngleL = -6f;
-                browAngleR = 14f; // Raised brow for authority
-                browOffsetR = 3f;
-                break;
-
-            case Expression.Noble:
-            case Expression.FriendlyNeutral:
-                ApplyUITransform(upperLip, new Vector2(0f, mouthY + 1f), new Vector2(lipWidth, upperLipH), upperLipCol);
                 ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 3f), new Vector2(lipWidth * 0.88f, lowerLipH), lowerLipCol);
-                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.48f, mouthY + 2f), new Vector2(4f, 4f), upperLipCol * 0.8f);
-                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.48f, mouthY + 2f), new Vector2(4f, 4f), upperLipCol * 0.8f);
+                
+                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.48f, mouthY + 1f), new Vector2(4f, 4f), upperLipCol * 0.85f);
+                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.48f, mouthY + 1f), new Vector2(4f, 4f), upperLipCol * 0.85f);
+                
+                browAngleL = -3f;
+                browAngleR = 3f;
+                browOffsetL = -1f;
+                browOffsetR = -1f;
+                break;
+
+            case Expression.Confident:
+                ApplyUITransform(upperLip, new Vector2(0f, mouthY + 1f), new Vector2(lipWidth, upperLipH), upperLipCol);
+                ApplyUITransform(lowerLip, new Vector2(0f, mouthY - 3f), new Vector2(lipWidth * 0.90f, lowerLipH), lowerLipCol);
+                
+                ApplyUITransform(mouthCornerL, new Vector2(-lipWidth * 0.50f, mouthY + 2f), new Vector2(4f, 4f), upperLipCol * 0.85f);
+                ApplyUITransform(mouthCornerR, new Vector2(lipWidth * 0.50f, mouthY + 4f), new Vector2(4f, 4f), upperLipCol * 0.85f);
+                
+                browAngleL = 0f;
+                browAngleR = -3f;
+                browOffsetR = 1f;
                 break;
         }
 
-        Vector2 browSize = new Vector2(34f * gene_LipWidth, gene_BrowThickness);
+        Vector2 browSize = new Vector2(33f * gene_LipWidth, gene_BrowThickness);
         ApplyUITransform(leftBrow, new Vector2(-eyeSpacing, browY + browOffsetL), browSize, browColor);
         ApplyUITransform(rightBrow, new Vector2(eyeSpacing, browY + browOffsetR), browSize, browColor);
 
