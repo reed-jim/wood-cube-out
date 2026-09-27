@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class StarDetailPopup : BasePopup
 {
     public TMP_Text title;
+    public RectTransform descriptionImageContainer;
     public Image descriptionImage;
     public TMP_Text description;
 
@@ -44,7 +45,8 @@ public class StarDetailPopup : BasePopup
         }
 
         descriptionImage.sprite = starPathConfig.picture;
-        descriptionImage.SetNativeSize();
+        UIUtil.SetSizeKeepRatioY(descriptionImage, descriptionImageContainer.sizeDelta.x);
+        description.text = starPathConfig.description;
 
         for (int i = 0; i < starPathConfig.unlockedAugments.Count; i++)
         {
