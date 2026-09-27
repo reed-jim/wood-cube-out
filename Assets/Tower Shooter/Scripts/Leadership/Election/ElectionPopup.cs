@@ -23,6 +23,8 @@ public class ElectionPopup : MonoBehaviour
 
     private readonly List<ElectionItemUI> loadedCharacterUIs = new List<ElectionItemUI>();
 
+    public static Action<string, Action> showConfirmPopupEvent;
+
     private void Awake()
     {
         IdleTimeManager.OnDayPassed += UpdateTimerUI;
@@ -132,7 +134,10 @@ public class ElectionPopup : MonoBehaviour
 
     private void ForceStartElection()
     {
-        LeadershipManager.Ins.ForceStartElection();
+        showConfirmPopupEvent?.Invoke("The election will end in 3 days!", () =>
+        {
+            LeadershipManager.Ins.ForceStartElection();
+        });
     }
 
     public void Show()
