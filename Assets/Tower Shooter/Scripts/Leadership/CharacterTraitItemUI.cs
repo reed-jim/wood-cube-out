@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,6 +11,9 @@ public class CharacterTraitItemUI : MonoBehaviour, IPointerEnterHandler, IPointe
     public Button selectButton;
 
     public CharacterTrait characterTrait;
+
+    [SerializeField] private float hoverDelay = 0.5f; // Set delay in seconds via Inspector
+    private Coroutine hoverCoroutine;
 
     private string primaryHex;
     private string onSurfaceHex;
@@ -44,11 +48,33 @@ public class CharacterTraitItemUI : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        LeadershipManager.Ins.ShowTraitDetail(this);
+        // Stop any existing coroutine to prevent overlap
+        if (hoverCoroutine != null)
+        {
+            StopCoroutine(hoverCoroutine);
+        }
+
+        // Start waiting
+        hoverCoroutine = StartCoroutine(ShowDetailWithDelay());
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        // Cancel the delay if the pointer exits early
+        if (hoverCoroutine != null)
+        {
+            StopCoroutine(hoverCoroutine);
+            hoverCoroutine = null;
+        }
+
+        // Hide the detail view
         LeadershipManager.Ins.HideTraitDetail();
+    }
+
+    private IEnumerator ShowDetailWithDelay()
+    {
+        yield return new WaitForSeconds(hoverDelay);
+        LeadershipManager.Ins.ShowTraitDetail(this);
+        hoverCoroutine = null;
     }
 }
