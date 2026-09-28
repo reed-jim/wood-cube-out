@@ -15,7 +15,8 @@ public class ConfirmPopup : BasePopup
     {
         base.RegisterMoreEvent(); 
 
-        ElectionPopup.showConfirmPopupEvent += Init;  
+        ElectionPopup.showConfirmPopupEvent += Init;
+        LeadershipCharacterCreationUI.showConfirmPopupEvent += Init;  
 
         acceptButton.onClick.AddListener(Accept);
         denyButton.onClick.AddListener(Deny);
@@ -26,6 +27,7 @@ public class ConfirmPopup : BasePopup
         base.UnregisterMoreEvent();
 
         ElectionPopup.showConfirmPopupEvent -= Init;
+        LeadershipCharacterCreationUI.showConfirmPopupEvent -= Init;
     }
 
     private void Init(string description, Action acceptAction)

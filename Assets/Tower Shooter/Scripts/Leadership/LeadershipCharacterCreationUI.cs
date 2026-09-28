@@ -16,14 +16,12 @@ public class LeadershipCharacterCreationUI : BasePopup
     public TMP_Text ageText;
     public Button randomizeNameButton;
     public Button randomizeFaceButton;
+    public Button randomizeAllButton;
     public Button addNewCharacterButton;
+    public Button boostGoodTraitChanceButton;
 
     [Header("UI")]
-    public TMP_Text nameText;
-    public TMP_Text leadershipPositionText;
-    public TMP_Text chanceGainElectionPointText;
-    public TMP_Text efficiencyText;
-    public RectTransform traitContainer;
+    public TMP_Text goodTraitChanceText;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
     [Header("Exp")]
@@ -39,8 +37,9 @@ public class LeadershipCharacterCreationUI : BasePopup
 
     private string nameInputString;
     private Country selectedCountry;
+    private float goodTraitChance;
 
-    private List<CharacterTraitItemUI> characterTraitItemUIs = new List<CharacterTraitItemUI>();
+    public static Action<string, Action> showConfirmPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -52,7 +51,9 @@ public class LeadershipCharacterCreationUI : BasePopup
         selectCountryButton.onClick.AddListener(OpenCountryPicker);
         randomizeNameButton.onClick.AddListener(RandomizeName);
         randomizeFaceButton.onClick.AddListener(RandomizeFace);
-        addNewCharacterButton.onClick.AddListener(CreateCharacter);
+        randomizeAllButton.onClick.AddListener(RandomizeAll);
+        boostGoodTraitChanceButton.onClick.AddListener(BoostGoodTraitChance);
+        addNewCharacterButton.onClick.AddListener(ConfirmCreateCharacter);
         ageSlider.onValueChanged.AddListener(OnAgeSliderChanged);
     }
 
@@ -61,6 +62,28 @@ public class LeadershipCharacterCreationUI : BasePopup
         base.UnregisterMoreEvent();
 
         LeadershipManager.openCharacterCreationEvent -= ShowCharacterCreation;
+    }
+
+    private void Init()
+    {
+        primaryHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.Primary);
+
+        selectedCountry = Country.UnitedStates;
+        proceduralHumanAvatarUI.age = 0.18f;
+        goodTraitChance = 0.5f;
+
+        goodTraitChanceText.text = $"Change to get good traits <color={primaryHex}>{(int)(goodTraitChance * 100)}%";
+
+        countryPicker.gameObject.SetActive(false);
+
+        proceduralHumanAvatarUI.GenerateNewRandomCharacter();
+    }
+
+    private void ShowCharacterCreation()
+    {
+        Show();
+
+        Init();
     }
 
     private void GetNameInput(string name)
@@ -74,6 +97,22 @@ public class LeadershipCharacterCreationUI : BasePopup
         proceduralHumanAvatarUI.UpdateCharacter(value);
 
         ageText.text = $"Age {(int)(value * 100)}";
+    }
+
+    private void ConfirmCreateCharacter()
+    {
+        float cost = CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id);
+
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= cost)
+        {
+
+        }
+        else
+        {
+
+        }
+
+        showConfirmPopupEvent?.Invoke($"Are you sure to spend {cost} to create this character", () => CreateCharacter());
     }
 
     private void CreateCharacter()
@@ -93,7 +132,7 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
 
-        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
+        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits(goodTraitChance);
         List<int> characterTraitIndexes = new List<int>();
 
         for (int j = 0; j < characterTraits.Count; j++)
@@ -119,7 +158,7 @@ public class LeadershipCharacterCreationUI : BasePopup
         {
             selectedCountry = country;
 
-            flag.sprite = countryFlagDatabase.GetFlag(country);
+            flag.sprite = countryFlagDatabase.GetFlag(selectedCountry);
 
             countryPicker.gameObject.SetActive(false);
         });
@@ -138,81 +177,32 @@ public class LeadershipCharacterCreationUI : BasePopup
         proceduralHumanAvatarUI.GenerateNewRandomCharacter();
     }
 
-    private void ShowCharacterCreation()
+    private void RandomizeAll()
     {
-        Show();
+        selectedCountry = CommonUtil.GetRandomEnumValue<Country>();
 
-        countryPicker.gameObject.SetActive(false);
+        flag.sprite = countryFlagDatabase.GetFlag(selectedCountry);
+        
+        RandomizeName();
 
-        proceduralHumanAvatarUI.GenerateNewRandomCharacter();
+        proceduralHumanAvatarUI.age = UnityEngine.Random.RandomRange(0.18f, 0.8f);
+        ageSlider.value = proceduralHumanAvatarUI.age;
+        ageText.text = $"Age {(int)(proceduralHumanAvatarUI.age * 100)}";
+
+        RandomizeFace();
     }
 
-    public void Init(LeadershipCharacterData data)
+    private void BoostGoodTraitChance()
     {
-        primaryHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.Primary);
-
-        this.leadershipCharacterData = data;
-
-        nameText.text = data.characterName;
-
-        System.DateTime birthDay = System.DateTime.ParseExact(
-            data.birthDayString,
-            "dd/MM/yyyy",
-            System.Globalization.CultureInfo.InvariantCulture
-        );
-        int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
-
-        ageText.text = $"{age} years old";
-        proceduralHumanAvatarUI.age = age / 100f;
-        proceduralHumanAvatarUI.GenerateNewRandomCharacterWithSeed(data.faceSeed);
-        flag.sprite = countryFlagDatabase.GetFlag(data.country);
-        chanceGainElectionPointText.text = $"Chance gain election point: {(int)(data.chanceToGainElectionPoint * 100)}%";
-
-        int rankValue = (int)data.rank;
-        float exp = data.currentExp;
-        float expRequiredForNextLevel = CurveManager.Ins.GetBuyAugmentCost(rankValue);
-        float expProgress = exp / expRequiredForNextLevel;
-
-        expFill.fillAmount = expProgress;
-        expText.text = $"{(int)(expRequiredForNextLevel - exp)}exp required to Level {rankValue + 2}";
-
-        float currentEfficiency = CurveManager.Ins.GetCharacterEfficiencyPercent(rankValue);
-        float nextEfficiency = CurveManager.Ins.GetCharacterEfficiencyPercent(rankValue + 1);
-        efficiencyText.text = $"Base Efficiency: {currentEfficiency}% --> <color={primaryHex}>{nextEfficiency}%";
-
-        if (data.leadershipPosition == LeadershipPosition.None)
+        if (goodTraitChance < 1)
         {
-            leadershipPositionText.text = "No position taken";
+            goodTraitChance += 0.05f;
+
+            goodTraitChanceText.text = $"Change to get good traits <color={primaryHex}>{(int)(goodTraitChance * 100)}%";
         }
         else
         {
-            leadershipPositionText.text = $"{data.leadershipPosition}";
+            IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Max boosted!");
         }
-
-        CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
-
-        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(data.traitIndexes);
-
-        for (int i = 0; i < characterTraits.Count; i++)
-        {
-            CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
-
-            CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
-            item.Init(characterTraits[i]);
-
-            characterTraitItemUIs.Add(item);
-        }
-    }
-
-    private void RemoveFromLeaderPosition()
-    {
-        LeadershipManager.Ins.RemoveFromLeaderPosition(leadershipCharacterData.leadershipPosition);
-
-        leadershipCharacterData.leadershipPosition = LeadershipPosition.None;
-
-        LeadershipManager.Ins.SaveLeadershipData();
-        LeadershipManager.Ins.Refresh();
-
-        Hide();
     }
 }
