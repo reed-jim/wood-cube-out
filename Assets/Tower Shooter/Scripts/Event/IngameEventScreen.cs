@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PrimeTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ public class IngameEventScreen : MonoBehaviour
 {
     public RectTransform container;
     public ScrollableLayoutGroup scrollableLayoutGroup;
+    [SerializeField] private TMP_Text countText;
+    [SerializeField] private Button removeAllButton;
     [SerializeField] private Button closeButton;
 
     [Header("Switchable Screen")]
@@ -19,6 +22,7 @@ public class IngameEventScreen : MonoBehaviour
         SwitchableScreenButton.switchScreenEvent += OnScreenSwitch;
         IngameEventItemUI.removeIngameEventItemUIEvent += OnItemRemoved;
 
+        removeAllButton.onClick.AddListener(RemoveAll);
         closeButton.onClick.AddListener(Hide);
     }
 
@@ -46,11 +50,33 @@ public class IngameEventScreen : MonoBehaviour
 
             ingameEventItemUIs.Add(ingameEventItemUI);
         }
+
+        int count = ingameEventData.ingameEventDataItems.Count;
+
+        if (count > 1)
+        {
+            countText.text = $"There are {count} events";
+        }
+        else if (count == 1)
+        {
+            countText.text = $"There is {count} event";
+        }
+        else
+        {
+            countText.text = $"There is no event";
+        }
     }
 
     public void RemoveItem(IngameEventItemUI ingameEventItemUI)
     {
         scrollableLayoutGroup.RemoveItemAt(ingameEventItemUIs.IndexOf(ingameEventItemUI));
+    }
+
+    public void RemoveAll()
+    {
+        CommonUtil.ReturnListToPool(ingameEventItemUIs, item => item.gameObject);
+
+        scrollableLayoutGroup.ClearAllItems();
     }
 
     private void OnItemRemoved(IngameEventItemUI ingameEventItemUI)
