@@ -245,6 +245,26 @@ public class LeadershipManager : Singleton<LeadershipManager>
         SaveLeadershipData();
     }
 
+    public void AddNewCharacter(LeadershipCharacterData leadershipCharacterData)
+    {
+        // if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) < hireNewCharactersCost)
+        // {
+        //     IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Not enough power to hire new characters!");
+
+        //     return;
+        // }
+
+        // ResourceManager.Ins.DeductResource(ResourceType.Coin, hireNewCharactersCost);
+
+        leadershipData.leadershipCharacterDataItems.Add(leadershipCharacterData);
+
+        LoadLeadershipCharacter(leadershipCharacterData);
+
+        UpdateNumCandidates();
+
+        SaveLeadershipData();
+    }
+
     public void SelectLeadershipPosition(LeadershipPositionUI leadershipPositionUI)
     {
         appointCharacterOverlayCanvasGroup.interactable = false;
@@ -539,7 +559,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         defaultLeadershipData.leadershipCharacterDataItems = new List<LeadershipCharacterData>();
         defaultLeadershipData.leadershipPeriodDataItems = new List<LeadershipPeriodData>();
 
-        int numStartCharacter = 3;
+        int numStartCharacter = 0;
 
         for (int i = 0; i < numStartCharacter; i++)
         {

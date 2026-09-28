@@ -14,7 +14,9 @@ public class LeadershipCharacterCreationUI : BasePopup
     public Image flag;
     public Slider ageSlider;
     public TMP_Text ageText;
+    public Button randomizeNameButton;
     public Button randomizeFaceButton;
+    public Button addNewCharacterButton;
 
     [Header("UI")]
     public TMP_Text nameText;
@@ -29,6 +31,7 @@ public class LeadershipCharacterCreationUI : BasePopup
     public TMP_Text expText;
 
     public CountryFlagDatabase countryFlagDatabase;
+    public CharacterTraitContainer characterTraitContainer;
 
     private LeadershipCharacterData leadershipCharacterData;
 
@@ -47,7 +50,9 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         nameInput.onEndEdit.AddListener(GetNameInput);
         selectCountryButton.onClick.AddListener(OpenCountryPicker);
+        randomizeNameButton.onClick.AddListener(RandomizeName);
         randomizeFaceButton.onClick.AddListener(RandomizeFace);
+        addNewCharacterButton.onClick.AddListener(CreateCharacter);
         ageSlider.onValueChanged.AddListener(OnAgeSliderChanged);
     }
 
@@ -77,6 +82,33 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         leadershipCharacterData.characterName = nameInputString;
         leadershipCharacterData.country = selectedCountry;
+
+        DateTime birthday = CommonUtil.RandomBirthday(2026 - 55, 2026 - 16);
+
+        birthday = new DateTime(
+            2026 - (int)(ageSlider.value * 100),
+            birthday.Month,
+            birthday.Day
+        );
+
+        leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
+
+        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits();
+        List<int> characterTraitIndexes = new List<int>();
+
+        for (int j = 0; j < characterTraits.Count; j++)
+        {
+            characterTraitIndexes.Add(characterTraits[j].id);
+        }
+
+        leadershipCharacterData.traitIndexes = characterTraitIndexes;
+        leadershipCharacterData.faceSeed = proceduralHumanAvatarUI.seed;
+        leadershipCharacterData.electionPoint = 0;
+        leadershipCharacterData.chanceToGainElectionPoint = UnityEngine.Random.RandomRange(0.1f, 0.9f);
+
+        LeadershipManager.Ins.AddNewCharacter(leadershipCharacterData);
+
+        Hide();
     }
 
     private void OpenCountryPicker()
@@ -91,6 +123,14 @@ public class LeadershipCharacterCreationUI : BasePopup
 
             countryPicker.gameObject.SetActive(false);
         });
+    }
+
+    private void RandomizeName()
+    {
+        string name = CountryNameGenerator.Ins.GetRandomName(selectedCountry);
+
+        nameInput.text = name;
+        nameInputString = name;
     }
 
     private void RandomizeFace()
