@@ -9,14 +9,17 @@ public class LeadershipCharacterCreationUI : BasePopup
 {
     [Header("Input")]
     public TMP_InputField nameInput;
+    public Button selectCountryButton;
+    [SerializeField] private PooledCountryScrollView countryPicker;
+    public TMP_Text selectedCountryText;
+    public Image flag;
 
+    [Header("UI")]
     public TMP_Text nameText;
     public TMP_Text ageText;
     public TMP_Text leadershipPositionText;
     public TMP_Text chanceGainElectionPointText;
     public TMP_Text efficiencyText;
-    public Image flag;
-    public Button removeFromLeaderPositionButton;
     public RectTransform traitContainer;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
@@ -31,6 +34,7 @@ public class LeadershipCharacterCreationUI : BasePopup
     private string primaryHex;
 
     private string nameInputString;
+    private Country selectedCountry;
 
     private List<CharacterTraitItemUI> characterTraitItemUIs = new List<CharacterTraitItemUI>();
 
@@ -38,18 +42,17 @@ public class LeadershipCharacterCreationUI : BasePopup
     {
         base.RegisterMoreEvent();
 
-        LeadershipCharacterUI.showLeadershipCharacterDetailEvent += InitAndShow;
-
-        removeFromLeaderPositionButton.onClick.AddListener(RemoveFromLeaderPosition);
+        LeadershipManager.openCharacterCreationEvent += ShowCharacterCreation;
 
         nameInput.onEndEdit.AddListener(GetNameInput);
+        selectCountryButton.onClick.AddListener(OpenCountryPicker);
     }
 
     protected override void UnregisterMoreEvent()
     {
         base.UnregisterMoreEvent();
 
-        LeadershipCharacterUI.showLeadershipCharacterDetailEvent -= InitAndShow;
+        LeadershipManager.openCharacterCreationEvent -= ShowCharacterCreation;
     }
 
     private void GetNameInput(string name)
@@ -64,11 +67,24 @@ public class LeadershipCharacterCreationUI : BasePopup
         leadershipCharacterData.characterName = nameInputString;
     }
 
-    private void InitAndShow(LeadershipCharacterData data)
+    private void OpenCountryPicker()
+    {
+        countryPicker.gameObject.SetActive(true);
+        
+        countryPicker.Initialize(onSelect: country =>
+        {
+            selectedCountry = country;
+            selectedCountryText.text = $"{country}";
+
+            flag.sprite = countryFlagDatabase.GetFlag(country);
+        });
+    }
+
+    private void ShowCharacterCreation()
     {
         Show();
 
-        Init(data);
+        countryPicker.gameObject.SetActive(false);
     }
 
     public void Init(LeadershipCharacterData data)
@@ -107,12 +123,10 @@ public class LeadershipCharacterCreationUI : BasePopup
         if (data.leadershipPosition == LeadershipPosition.None)
         {
             leadershipPositionText.text = "No position taken";
-            removeFromLeaderPositionButton.gameObject.SetActive(false);
         }
         else
         {
             leadershipPositionText.text = $"{data.leadershipPosition}";
-            removeFromLeaderPositionButton.gameObject.SetActive(true);
         }
 
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);

@@ -42,11 +42,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
     public ScrollableLayoutGroup scrollableCharacterContainer;
     public RectTransform characterContainer;
     public Button closeButton;
-    public Button hireCharacterButton;
     public TMP_Text hireCharacterCostText;
     public CanvasGroup overlayCanvasGroup;
 
     public Button leadershipPeriodButton;
+    public Button openCharacterCreationButton;
     public Button electionButton;
     public TMP_Text candidatesCountText;
     public TMP_Text totalEffectText;
@@ -92,6 +92,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
     private LeadershipCharacterUI currentCaptain;
 
     public static event Action openLeadershipPeriodScreenEvent;
+    public static event Action openCharacterCreationEvent;
 
     protected override void MoreActionOnAwake()
     {
@@ -104,7 +105,6 @@ public class LeadershipManager : Singleton<LeadershipManager>
         LeadershipCharacterUI.selectLeadershipCharacterUIEvent += OnSelectLeadershipCharacterUI;
 
         closeButton.onClick.AddListener(Hide);
-        hireCharacterButton.onClick.AddListener(HireNewCharacters);
         cancelAppointCharacterButton.onClick.AddListener(CancelSelectLeadershipPosition);
 
         confirmRemoveCharacterButton.onClick.AddListener(ConfirmRemoveCharacters);
@@ -112,6 +112,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         exitRemoveCharacterButton.onClick.AddListener(ExitRemoveCharacterMode);
 
         leadershipPeriodButton.onClick.AddListener(OpenLeadershipPeriodScreen);
+        openCharacterCreationButton.onClick.AddListener(OpenCharacterCreation);
         electionButton.onClick.AddListener(ShowElection);
 
         container.gameObject.SetActive(false);
@@ -718,6 +719,13 @@ public class LeadershipManager : Singleton<LeadershipManager>
         currentLeadershipPeriodData.starDiscoveryEventDataItems.Add(starDiscoveryEventDataItem);
 
         SaveLeadershipData();
+    }
+    #endregion
+
+    #region Character Creation
+    public void OpenCharacterCreation()
+    {
+        openCharacterCreationEvent?.Invoke();
     }
     #endregion
 
