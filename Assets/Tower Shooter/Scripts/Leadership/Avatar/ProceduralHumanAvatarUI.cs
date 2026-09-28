@@ -234,7 +234,7 @@ public class ProceduralHumanAvatarUI : MonoBehaviour
         simpleHair = CreatePart("SimpleHair", head.transform, circleSprite, hairColor, order++);
     }
 
-    private void UpdateCharacter(float t)
+    public void UpdateCharacter(float t)
     {
         Color currentSkinColor = Color.Lerp(skinColor, Color.Lerp(skinColor, new Color(0.85f, 0.80f, 0.77f), 0.40f), t);
         head.GetComponent<Image>().color = currentSkinColor;

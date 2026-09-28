@@ -11,12 +11,13 @@ public class LeadershipCharacterCreationUI : BasePopup
     public TMP_InputField nameInput;
     public Button selectCountryButton;
     [SerializeField] private PooledCountryScrollView countryPicker;
-    public TMP_Text selectedCountryText;
     public Image flag;
+    public Slider ageSlider;
+    public TMP_Text ageText;
+    public Button randomizeFaceButton;
 
     [Header("UI")]
     public TMP_Text nameText;
-    public TMP_Text ageText;
     public TMP_Text leadershipPositionText;
     public TMP_Text chanceGainElectionPointText;
     public TMP_Text efficiencyText;
@@ -46,6 +47,8 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         nameInput.onEndEdit.AddListener(GetNameInput);
         selectCountryButton.onClick.AddListener(OpenCountryPicker);
+        randomizeFaceButton.onClick.AddListener(RandomizeFace);
+        ageSlider.onValueChanged.AddListener(OnAgeSliderChanged);
     }
 
     protected override void UnregisterMoreEvent()
@@ -60,24 +63,39 @@ public class LeadershipCharacterCreationUI : BasePopup
         nameInputString = name;
     }
 
+    private void OnAgeSliderChanged(float value)
+    {
+        proceduralHumanAvatarUI.age = value;
+        proceduralHumanAvatarUI.UpdateCharacter(value);
+
+        ageText.text = $"Age {(int)(value * 100)}";
+    }
+
     private void CreateCharacter()
     {
         LeadershipCharacterData leadershipCharacterData = new LeadershipCharacterData();
 
         leadershipCharacterData.characterName = nameInputString;
+        leadershipCharacterData.country = selectedCountry;
     }
 
     private void OpenCountryPicker()
     {
         countryPicker.gameObject.SetActive(true);
-        
+
         countryPicker.Initialize(onSelect: country =>
         {
             selectedCountry = country;
-            selectedCountryText.text = $"{country}";
 
             flag.sprite = countryFlagDatabase.GetFlag(country);
+
+            countryPicker.gameObject.SetActive(false);
         });
+    }
+
+    private void RandomizeFace()
+    {
+        proceduralHumanAvatarUI.GenerateNewRandomCharacter();
     }
 
     private void ShowCharacterCreation()
@@ -85,6 +103,8 @@ public class LeadershipCharacterCreationUI : BasePopup
         Show();
 
         countryPicker.gameObject.SetActive(false);
+
+        proceduralHumanAvatarUI.GenerateNewRandomCharacter();
     }
 
     public void Init(LeadershipCharacterData data)
