@@ -12,6 +12,37 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    private static readonly string[] Suffixes =
+    {
+        "", "K", "M", "B", "T",
+        "Qa", "Qi", "Sx", "Sp", "Oc",
+        "No", "Dc", "Ud", "Dd", "Td",
+        "Qad", "Qid", "Sxd", "Spd", "Ocd",
+        "Nod", "Vg"
+    };
+
+    public static string FormatNumber(double value)
+    {
+        if (double.IsNaN(value))
+            return "NaN";
+
+        if (double.IsInfinity(value))
+            return "Infinity";
+
+        if (value < 1000)
+            return value.ToString("0.##");
+
+        int suffixIndex = 0;
+
+        while (value >= 1000 && suffixIndex < Suffixes.Length - 1)
+        {
+            value /= 1000;
+            suffixIndex++;
+        }
+
+        return value.ToString("0.##") + Suffixes[suffixIndex];
+    }
+
     public static string GetOrdinal(int number)
     {
         if (number % 100 >= 11 && number % 100 <= 13)

@@ -56,7 +56,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         if (resourceTexts.ContainsKey(resourceType))
         {
-            resourceTexts[resourceType].text = $"{resources[resourceType].value}";
+            resourceTexts[resourceType].text = $"{CommonUtil.FormatNumber(resources[resourceType].value)}";
         }
 
         SaveResourceData();
