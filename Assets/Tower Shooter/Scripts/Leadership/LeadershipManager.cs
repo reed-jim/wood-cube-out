@@ -843,6 +843,7 @@ public class LeadershipCharacterData
     public float chanceToGainElectionPoint;
     public float currentExp;
     public CharacterRank rank;
+    public List<StatModifier> buffs;
 }
 
 [Serializable]

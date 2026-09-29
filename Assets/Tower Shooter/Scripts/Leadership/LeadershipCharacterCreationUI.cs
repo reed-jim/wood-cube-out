@@ -18,7 +18,7 @@ public class LeadershipCharacterCreationUI : BasePopup
     public Button randomizeNameButton;
     public Button randomizeFaceButton;
     public Button randomizeAllButton;
-    public Button addNewCharacterButton;
+    public Button createCharacterButton;
     public Button boostAbilityPotentialButton;
 
     [Header("Ability")]
@@ -65,9 +65,9 @@ public class LeadershipCharacterCreationUI : BasePopup
         randomizeNameButton.onClick.AddListener(RandomizeName);
         randomizeFaceButton.onClick.AddListener(RandomizeFace);
         randomizeAllButton.onClick.AddListener(RandomizeAll);
-        confirmAbilityButton.onClick.AddListener(ConfirmAbility);
         boostAbilityPotentialButton.onClick.AddListener(BoostAbilityPotential);
-        addNewCharacterButton.onClick.AddListener(RevealCharacterAbility);
+        createCharacterButton.onClick.AddListener(ConfirmCreateCharacter);
+        confirmAbilityButton.onClick.AddListener(ConfirmAbility);
         ageSlider.onValueChanged.AddListener(OnAgeSliderChanged);
     }
 
@@ -147,22 +147,15 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
 
-        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits(abilityPotential);
-        List<int> characterTraitIndexes = new List<int>();
-
-        for (int j = 0; j < characterTraits.Count; j++)
-        {
-            characterTraitIndexes.Add(characterTraits[j].id);
-        }
-
-        leadershipCharacterData.traitIndexes = characterTraitIndexes;
         leadershipCharacterData.faceSeed = proceduralHumanAvatarUI.seed;
         leadershipCharacterData.electionPoint = 0;
         leadershipCharacterData.chanceToGainElectionPoint = UnityEngine.Random.RandomRange(0.1f, 0.9f);
 
+        RevealCharacterAbility(leadershipCharacterData);
+
         LeadershipManager.Ins.AddNewCharacter(leadershipCharacterData);
 
-        Hide();
+        ShowCharacterAbility();
     }
 
     private void OpenCountryPicker()
@@ -227,18 +220,20 @@ public class LeadershipCharacterCreationUI : BasePopup
         abilityPotentialText.text = $"Change to get good traits <color={primaryHex}>{(int)(abilityPotential * 100)}%";
     }
 
-    private void RevealCharacterAbility()
+    private void RevealCharacterAbility(LeadershipCharacterData leadershipCharacterData)
     {
         rank = CharacterRank.FlightCadet;
 
         buffs = new List<StatModifier>();
 
-        StatModifier powerBuff = new StatModifier(StatType.Damage, CommonUtil.GetRandomEnumValue<ModifierType>(), abilityPotential);
-        StatModifier cycleSpeedBuff = new StatModifier(StatType.AttackSpeed, CommonUtil.GetRandomEnumValue<ModifierType>(), abilityPotential);
-        StatModifier critMultiplierBuff = new StatModifier(StatType.CritMultiplier, CommonUtil.GetRandomEnumValue<ModifierType>(), abilityPotential);
+        StatModifier powerBuff = StatModifierGenerator.Generate(StatType.Damage, abilityPotential);
+        StatModifier cycleSpeedBuff = StatModifierGenerator.Generate(StatType.AttackSpeed, abilityPotential);
+        StatModifier critChanceBuff = StatModifierGenerator.Generate(StatType.CritChance, abilityPotential);
+        StatModifier critMultiplierBuff = StatModifierGenerator.Generate(StatType.CritMultiplier, abilityPotential);
 
         buffs.Add(powerBuff);
         buffs.Add(cycleSpeedBuff);
+        buffs.Add(critChanceBuff);
         buffs.Add(critMultiplierBuff);
 
         List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits(abilityPotential);
@@ -249,6 +244,13 @@ public class LeadershipCharacterCreationUI : BasePopup
             characterTraitIndexes.Add(characterTraits[j].id);
         }
 
+        leadershipCharacterData.rank = rank;
+        leadershipCharacterData.buffs = buffs;
+        leadershipCharacterData.traitIndexes = characterTraitIndexes;
+    }
+
+    private void ShowCharacterAbility()
+    {
         rankImage.sprite = characterRankAssetContainer.GetRankSprite(rank);
         rankText.text = $"Level {(int)rank + 1}";
 
