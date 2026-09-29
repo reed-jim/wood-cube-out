@@ -32,4 +32,22 @@ public class NotificationBadge : MonoBehaviour
             scaleTransition.Hide();
         });
     }
+
+    public void ShowNotification(string description)
+    {
+        // titleText.text = title;
+        descriptionText.text = description;
+
+        if (hideTween.isAlive)
+        {
+            hideTween.Stop();
+        }
+
+        scaleTransition.Show(onCompletedAction: null);
+
+        hideTween = Tween.Delay(existDuration).OnComplete(() =>
+        {
+            scaleTransition.Hide();
+        });
+    }
 }

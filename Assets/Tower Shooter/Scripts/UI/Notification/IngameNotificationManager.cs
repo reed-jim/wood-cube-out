@@ -15,6 +15,16 @@ public class IngameNotificationManager : Singleton<IngameNotificationManager>
         notificationBadge.ShowNotification(title, description);
     }
 
+    public void ShowNotification(string description)
+    {
+        NotificationBadge notificationBadge = ObjectPoolingEverything.GetFromPool<NotificationBadge>(GameConstants.notificationBadge);
+
+        notificationBadge.transform.SetParent(notificationBadgeContainer);
+        notificationBadge.transform.localPosition = new Vector3(0, 400);
+
+        notificationBadge.ShowNotification(description);
+    }
+
     public void ShowNotification(string title, string description, Vector3 position, float scale)
     {
         NotificationBadge notificationBadge = ObjectPoolingEverything.GetFromPool<NotificationBadge>(GameConstants.notificationBadge);

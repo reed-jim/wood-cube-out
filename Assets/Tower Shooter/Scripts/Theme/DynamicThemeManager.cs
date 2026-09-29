@@ -13,6 +13,8 @@ public class DynamicThemeManager : Singleton<DynamicThemeManager>
 
     public ThemeConfig CurrentTheme => currentTheme;
 
+    public string PrimaryHex => GetHex(ThemeableUI.ElementRole.Primary);
+
     void Start()
     {
         LoadThemeData();
