@@ -73,7 +73,7 @@ public class LeadershipCharacterUI : MonoBehaviour
         );
         int age = CommonUtil.GetAge(birthDay, IdleTimeManager.Ins.CurrentDateTime);
 
-        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(data.traitIndexes);
+        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(data.traitIds);
         ageText.text = $"{age} years old";
         proceduralHumanAvatarUI.age = age / 100f;
         flag.sprite = countryFlagDatabase.GetFlag(data.country);

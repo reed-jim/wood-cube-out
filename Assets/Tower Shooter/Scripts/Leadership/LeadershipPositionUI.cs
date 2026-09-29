@@ -135,14 +135,7 @@ public class LeadershipPositionUI : MonoBehaviour
     {
         float efficiency = CurveManager.Ins.GetCharacterEfficiency((int)leadershipCharacterData.rank);
 
-        List<CharacterTrait> characterTraits = new List<CharacterTrait>();
-
-        for (int i = 0; i < leadershipCharacterData.traitIndexes.Count; i++)
-        {
-            int traitIndex = leadershipCharacterData.traitIndexes[i];
-
-            characterTraits.Add(characterTraitContainer.characterTraits[traitIndex]);
-        }
+        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(leadershipCharacterData.traitIds);
 
         for (int i = 0; i < characterTraits.Count; i++)
         {

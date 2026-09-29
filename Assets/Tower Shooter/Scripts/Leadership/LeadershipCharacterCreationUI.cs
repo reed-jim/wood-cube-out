@@ -238,17 +238,17 @@ public class LeadershipCharacterCreationUI : BasePopup
         buffs.Add(critChanceBuff);
         buffs.Add(critMultiplierBuff);
 
-        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits(abilityPotential);
-        List<int> characterTraitIndexes = new List<int>();
+        characterTraits = characterTraitContainer.GetRandomTraits(abilityPotential);
+        List<int> characterTraitIds = new List<int>();
 
         for (int j = 0; j < characterTraits.Count; j++)
         {
-            characterTraitIndexes.Add(characterTraits[j].id);
+            characterTraitIds.Add(characterTraits[j].id);
         }
 
         leadershipCharacterData.rank = rank;
         leadershipCharacterData.buffs = buffs;
-        leadershipCharacterData.traitIndexes = characterTraitIndexes;
+        leadershipCharacterData.traitIds = characterTraitIds;
     }
 
     private IEnumerator ShowCharacterAbility()
@@ -311,9 +311,13 @@ public class LeadershipCharacterCreationUI : BasePopup
                         },
                         onComplete: NextSubStep
                     );
+
+                    isWaitForNextStep = true;
                 }
                 else
                 {
+                    subStep = 0;
+
                     NextStep();
                 }
             }
@@ -336,6 +340,8 @@ public class LeadershipCharacterCreationUI : BasePopup
                         },
                         onComplete: NextSubStep
                     );
+
+                    isWaitForNextStep = true;
                 }
                 else
                 {
@@ -345,6 +351,8 @@ public class LeadershipCharacterCreationUI : BasePopup
 
             yield return waitForSeconds;
         }
+
+        revealAbilityFx.gameObject.SetActive(false);
 
         abilityCanvasGroup.interactable = true;
 
@@ -368,17 +376,15 @@ public class LeadershipCharacterCreationUI : BasePopup
 
     private void PlayRevealAbilityFxAt(RectTransform target, Action onFxShown, Action onComplete)
     {
-        revealAbilityFx.transform.SetParent(target.parent);
-        revealAbilityFx.transform.localScale = Vector3.zero;
         revealAbilityFx.rectTransform.sizeDelta = target.sizeDelta;
+        revealAbilityFx.rectTransform.anchoredPosition = target.anchoredPosition;
         revealAbilityFx.color = ColorUtil.WithAlpha(revealAbilityFx.color, 0);
 
         Sequence sequence = Sequence.Create(Tween.Scale(revealAbilityFx.transform, 1.5f, duration: 0.3f));
-        sequence.Group(Tween.Alpha(revealAbilityFx, 1, duration: 0.3f));
-        sequence.OnComplete(() =>
+        sequence.Group(Tween.Alpha(revealAbilityFx, 1, duration: 0.3f).OnComplete(() =>
         {
             onFxShown?.Invoke();
-        });
+        }));
         sequence.Chain(Tween.Scale(revealAbilityFx.transform, 0, duration: 0.3f));
         sequence.Group(Tween.Alpha(revealAbilityFx, 0, duration: 0.3f));
         sequence.OnComplete(() =>

@@ -592,7 +592,6 @@ public class LeadershipManager : Singleton<LeadershipManager>
         leadershipCharacterData.characterName = name;
         leadershipCharacterData.country = country;
         leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
-        leadershipCharacterData.traitIndexes = characterTraitIndexes;
         leadershipCharacterData.faceSeed = UnityEngine.Random.Range(1000, 999999);
         leadershipCharacterData.electionPoint = 0;
         leadershipCharacterData.chanceToGainElectionPoint = UnityEngine.Random.RandomRange(0.1f, 0.9f);
@@ -808,13 +807,25 @@ public class LeadershipManager : Singleton<LeadershipManager>
         return currentCharacter;
     }
 
-    public List<CharacterTrait> GetCharacterTraits(List<int> traitIndexes)
+    public List<CharacterTrait> GetCharacterTraits(List<int> traitIds)
     {
         List<CharacterTrait> traits = new List<CharacterTrait>();
 
-        for (int i = 0; i < traitIndexes.Count; i++)
+        for (int i = 0; i < traitIds.Count; i++)
         {
-            traits.Add(characterTraitContainer.characterTraits[traitIndexes[i]]);
+            int id = traitIds[i];
+
+            for (int j = 0; j < characterTraitContainer.characterTraits.Count; j++)
+            {
+                CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
+
+                if(characterTrait.id == id)
+                {
+                    traits.Add(characterTrait);
+
+                    break;
+                }
+            }
         }
 
         return traits;
@@ -836,7 +847,7 @@ public class LeadershipCharacterData
     public string characterName;
     public Country country;
     public string birthDayString;
-    public List<int> traitIndexes;
+    public List<int> traitIds;
     public int faceSeed;
     public LeadershipPosition leadershipPosition;
     public int electionPoint;

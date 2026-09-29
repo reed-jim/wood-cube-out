@@ -98,7 +98,7 @@ public class LeadershipCharacterDetailUI : BasePopup
 
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
 
-        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(data.traitIndexes);
+        List<CharacterTrait> characterTraits = LeadershipManager.Ins.GetCharacterTraits(data.traitIds);
 
         for (int i = 0; i < characterTraits.Count; i++)
         {
