@@ -36,6 +36,24 @@ public class BaseCharacter : MonoBehaviour
     [Header("Energy Path")]
     public List<Vector2> energyPoints;
 
+    [Header("High-Speed Performance Settings")]
+    [Tooltip("Cycles per second threshold before switching from discrete tweening to delta-time lump generation.")]
+    public float highSpeedThreshold = 20f;
+
+    [Tooltip("Maximum rate (in seconds) at which floating damage text UI spawns during super high-speed generation.")]
+    public float damageTextThrottleInterval = 0.15f;
+
+    // Shader property IDs
+    private Material instanceMaterial;
+    private static readonly int FillAmountID = Shader.PropertyToID("_FillAmount");
+    private static readonly int HighSpeedID = Shader.PropertyToID("_HighSpeed");
+    private static readonly int RotationID = Shader.PropertyToID("_Rotation");
+
+    // Throttling and accumulation trackers for high speed
+    private float highSpeedTimer;
+    private float highSpeedAccumulatedPower;
+    private bool highSpeedHasCrit;
+
     public static event Action<BaseCharacter> cycleCompleteEvent;
     public static event Action<BaseCharacter> selectNodeEvent;
 
@@ -61,7 +79,7 @@ public class BaseCharacter : MonoBehaviour
             this.nodeGroup = nodeGroup;
         }
 
-        // load augments
+        // Load augments
         if (nodeData.activeAugmentsIds != null)
         {
             for (int i = 0; i < AugmentManager.Ins.augmentContainer.augments.Count; i++)
@@ -84,6 +102,18 @@ public class BaseCharacter : MonoBehaviour
             serviceLocator.stats.LoadStats();
 
             // serviceLocator.nodeUI.InitEnergyPath();
+        }
+
+        // Material setup for UI shader parameters
+        if (serviceLocator != null && serviceLocator.nodeUI != null && serviceLocator.nodeUI.circleProgress != null)
+        {
+            Image circleProgress = serviceLocator.nodeUI.circleProgress;
+            if (circleProgress.material != null)
+            {
+                // Create material instance to avoid sharing material parameters across all nodes
+                instanceMaterial = new Material(circleProgress.material);
+                circleProgress.material = instanceMaterial;
+            }
         }
 
         if (nodeData.isUnlocked)
@@ -142,23 +172,75 @@ public class BaseCharacter : MonoBehaviour
         {
             if (!isPaused)
             {
-                float power = stats.GetStat(StatType.Damage).Value;
+                float basePower = stats.GetStat(StatType.Damage).Value;
                 float speed = stats.GetStat(StatType.AttackSpeed).Value;
                 float efficiency = stats.GetStat(StatType.Efficiency).Value;
 
-                speedToSpaceShip = efficiency * (power * speed);
+                speedToSpaceShip = efficiency * (basePower * speed);
+                powerText.text = $"{basePower:F2}";
 
-                float interval = 1f / speed;
-
-                powerText.text = $"{power:F2}";
-
-                Tween.Custom(0, 1, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
+                // --- HIGH SPEED MODE (Delta-time Accumulation) ---
+                if (speed >= highSpeedThreshold)
                 {
-                    circleProgress.fillAmount = newVal;
-                })
-                .OnComplete(() =>
+                    UpdateShaderProperties(1.0f, 1.0f, Time.time * speed * 0.5f);
+
+                    float deltaCycles = speed * Time.deltaTime;
+                    float criticalChance = stats.GetStat(StatType.CritChance).Value;
+                    float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
+                    float chanceForMorePower = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
+                    float powerMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
+                    float chanceToRepeat = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
+
+                    // Calculate average power multiplier per cycle
+                    float avgCritMultiplier = 1f + (Mathf.Clamp01(criticalChance) * (criticalMultiplier - 1f));
+                    float avgMorePowerMultiplier = 1f + (Mathf.Clamp01(chanceForMorePower) * (powerMultiplier - 1f));
+                    float avgRepeatMultiplier = 1f + Mathf.Clamp01(chanceToRepeat);
+
+                    float powerPerCycle = basePower * avgCritMultiplier * avgMorePowerMultiplier * avgRepeatMultiplier;
+                    float framePower = powerPerCycle * deltaCycles;
+
+                    PowerManager.Ins.AddPower(framePower);
+
+                    highSpeedAccumulatedPower += framePower;
+                    highSpeedTimer += Time.deltaTime;
+
+                    if (criticalChance > 0f) highSpeedHasCrit = true;
+
+                    // Throttled UI Text Creation
+                    if (highSpeedTimer >= damageTextThrottleInterval)
+                    {
+                        ShowGeneratedPowerText(highSpeedAccumulatedPower, highSpeedHasCrit, container.position, container.parent);
+                        highSpeedAccumulatedPower = 0f;
+                        highSpeedTimer = 0f;
+                        highSpeedHasCrit = false;
+                    }
+
+                    int completedCyclesThisFrame = Mathf.FloorToInt(deltaCycles);
+                    for (int i = 0; i < Mathf.Min(completedCyclesThisFrame, 5); i++)
+                    {
+                        ApplyAugmentEffectsOnCycleCompletion();
+                        nodeGroup?.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this);
+                        currentCycle++;
+                        cycleCompleteEvent?.Invoke(this);
+                    }
+
+                    yield return null;
+                }
+                // --- NORMAL MODE (Discrete Cycles & Tweens) ---
+                else
                 {
-                    power = stats.GetStat(StatType.Damage).Value;
+                    float interval = 1f / speed;
+                    float highSpeedVisualFactor = Mathf.Clamp01(speed / highSpeedThreshold);
+
+                    Tween progressTween = Tween.Custom(0f, 1f, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
+                    {
+                        circleProgress.fillAmount = newVal;
+                        UpdateShaderProperties(newVal, highSpeedVisualFactor, Time.time * speed);
+                    });
+
+                    yield return progressTween.ToYieldInstruction();
+
+                    float power = basePower;
                     float criticalChance = stats.GetStat(StatType.CritChance).Value;
                     float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
                     float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
@@ -170,30 +252,25 @@ public class BaseCharacter : MonoBehaviour
                     if (UnityEngine.Random.value < criticalChance || isGuaranteedCrit)
                     {
                         power *= criticalMultiplier;
-
                         isCritical = true;
-
                         isGuaranteedCrit = false;
                     }
 
                     if (UnityEngine.Random.value < chanceForMorePowerOnCircleCompletion)
                     {
                         power *= powerOnCircleCompletionMultiplier;
-
                         isCritical = true;
                     }
 
                     PowerManager.Ins.AddPower(power);
-
                     ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
 
-                    // chance for repeat last cycle
+                    // Chance to repeat last cycle
                     if (UnityEngine.Random.value < chanceToRepeatLastCyclePower)
                     {
                         TweenManager.Ins.AddTween(Tween.Delay(0.3f).OnComplete(() =>
                         {
                             PowerManager.Ins.AddPower(power);
-
                             ShowGeneratedPowerText(power, isCritical, container.position, container.parent);
                         }));
                     }
@@ -202,7 +279,7 @@ public class BaseCharacter : MonoBehaviour
                     isJustCrit = isCritical;
 
                     ApplyAugmentEffectsOnCycleCompletion();
-                    nodeGroup.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this);
+                    nodeGroup?.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this);
 
                     currentCycle++;
 
@@ -215,15 +292,22 @@ public class BaseCharacter : MonoBehaviour
                     #endregion
 
                     cycleCompleteEvent?.Invoke(this);
-                });
-
-                yield return new WaitForSeconds(interval);
+                }
             }
             else
             {
                 yield return new WaitForSeconds(1f / 30);
             }
         }
+    }
+
+    private void UpdateShaderProperties(float fillAmount, float highSpeedAmount, float rotation)
+    {
+        if (instanceMaterial == null) return;
+
+        instanceMaterial.SetFloat(FillAmountID, fillAmount);
+        instanceMaterial.SetFloat(HighSpeedID, highSpeedAmount);
+        instanceMaterial.SetFloat(RotationID, rotation);
     }
 
     public void GenerateInstantPower(float power, float delay = 0.3f)
