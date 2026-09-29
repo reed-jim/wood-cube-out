@@ -9,7 +9,7 @@ public class StatItemUI : MonoBehaviour
 
     public StatColorConfigSO statColorConfigSO;
 
-    public void Init(StatType statType, float value, ModifierType modifierType)
+    public void Init(StatType statType, ModifierType modifierType, float value)
     {
         Color color = ColorUtil.GetColorFromHex(statColorConfigSO.GetHex(statType));
 

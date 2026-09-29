@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,18 +19,24 @@ public class LeadershipCharacterCreationUI : BasePopup
     public Button randomizeFaceButton;
     public Button randomizeAllButton;
     public Button addNewCharacterButton;
-    public Button boostGoodTraitChanceButton;
+    public Button boostAbilityPotentialButton;
+
+    [Header("Ability")]
+    public CanvasGroup abilityCanvasGroup;
+    public Image rankImage;
+    public TMP_Text rankText;
+    public RectTransform buffContainer;
+    public RectTransform traitContainer;
+    public Button confirmAbilityButton;
 
     [Header("UI")]
-    public TMP_Text goodTraitChanceText;
+    public TMP_Text abilityPotentialText;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
-    [Header("Exp")]
-    public Image expFill;
-    public TMP_Text expText;
-
-    public CountryFlagDatabase countryFlagDatabase;
+    [Header("SO")]
     public CharacterTraitContainer characterTraitContainer;
+    public CountryFlagDatabase countryFlagDatabase;
+    public CharacterRankAssetContainer characterRankAssetContainer;
 
     private LeadershipCharacterData leadershipCharacterData;
 
@@ -37,9 +44,15 @@ public class LeadershipCharacterCreationUI : BasePopup
 
     private string nameInputString;
     private Country selectedCountry;
-    private float goodTraitChance;
+    private float abilityPotential;
+    private CharacterRank rank;
+    private List<StatModifier> buffs;
+    private List<CharacterTrait> characterTraits;
 
     public static Action<string, Action> showConfirmPopupEvent;
+
+    private List<StatItemUI> statItemUIs = new List<StatItemUI>();
+    private List<CharacterTraitItemUI> characterTraitItemUIs = new List<CharacterTraitItemUI>();
 
     protected override void RegisterMoreEvent()
     {
@@ -52,8 +65,9 @@ public class LeadershipCharacterCreationUI : BasePopup
         randomizeNameButton.onClick.AddListener(RandomizeName);
         randomizeFaceButton.onClick.AddListener(RandomizeFace);
         randomizeAllButton.onClick.AddListener(RandomizeAll);
-        boostGoodTraitChanceButton.onClick.AddListener(BoostGoodTraitChance);
-        addNewCharacterButton.onClick.AddListener(ConfirmCreateCharacter);
+        confirmAbilityButton.onClick.AddListener(ConfirmAbility);
+        boostAbilityPotentialButton.onClick.AddListener(BoostAbilityPotential);
+        addNewCharacterButton.onClick.AddListener(RevealCharacterAbility);
         ageSlider.onValueChanged.AddListener(OnAgeSliderChanged);
     }
 
@@ -70,13 +84,14 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         selectedCountry = Country.UnitedStates;
         proceduralHumanAvatarUI.age = 0.18f;
-        goodTraitChance = 0.5f;
+        abilityPotential = 0.5f;
 
-        goodTraitChanceText.text = $"Change to get good traits <color={primaryHex}>{(int)(goodTraitChance * 100)}%";
-
-        countryPicker.gameObject.SetActive(false);
+        UpdateAbilityPotentialText();
 
         proceduralHumanAvatarUI.GenerateNewRandomCharacter();
+
+        countryPicker.gameObject.SetActive(false);
+        abilityCanvasGroup.gameObject.SetActive(false);
     }
 
     private void ShowCharacterCreation()
@@ -132,7 +147,7 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         leadershipCharacterData.birthDayString = birthday.ToString("dd/MM/yyyy");
 
-        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits(goodTraitChance);
+        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits(abilityPotential);
         List<int> characterTraitIndexes = new List<int>();
 
         for (int j = 0; j < characterTraits.Count; j++)
@@ -182,7 +197,7 @@ public class LeadershipCharacterCreationUI : BasePopup
         selectedCountry = CommonUtil.GetRandomEnumValue<Country>();
 
         flag.sprite = countryFlagDatabase.GetFlag(selectedCountry);
-        
+
         RandomizeName();
 
         proceduralHumanAvatarUI.age = UnityEngine.Random.RandomRange(0.18f, 0.8f);
@@ -192,17 +207,91 @@ public class LeadershipCharacterCreationUI : BasePopup
         RandomizeFace();
     }
 
-    private void BoostGoodTraitChance()
+    #region Ability
+    private void BoostAbilityPotential()
     {
-        if (goodTraitChance < 1)
+        if (abilityPotential < 1)
         {
-            goodTraitChance += 0.05f;
+            abilityPotential += 0.05f;
 
-            goodTraitChanceText.text = $"Change to get good traits <color={primaryHex}>{(int)(goodTraitChance * 100)}%";
+            UpdateAbilityPotentialText();
         }
         else
         {
             IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Max boosted!");
         }
     }
+
+    private void UpdateAbilityPotentialText()
+    {
+        abilityPotentialText.text = $"Change to get good traits <color={primaryHex}>{(int)(abilityPotential * 100)}%";
+    }
+
+    private void RevealCharacterAbility()
+    {
+        rank = CharacterRank.FlightCadet;
+
+        buffs = new List<StatModifier>();
+
+        StatModifier powerBuff = new StatModifier(StatType.Damage, CommonUtil.GetRandomEnumValue<ModifierType>(), abilityPotential);
+        StatModifier cycleSpeedBuff = new StatModifier(StatType.AttackSpeed, CommonUtil.GetRandomEnumValue<ModifierType>(), abilityPotential);
+        StatModifier critMultiplierBuff = new StatModifier(StatType.CritMultiplier, CommonUtil.GetRandomEnumValue<ModifierType>(), abilityPotential);
+
+        buffs.Add(powerBuff);
+        buffs.Add(cycleSpeedBuff);
+        buffs.Add(critMultiplierBuff);
+
+        List<CharacterTrait> characterTraits = characterTraitContainer.GetRandomTraits(abilityPotential);
+        List<int> characterTraitIndexes = new List<int>();
+
+        for (int j = 0; j < characterTraits.Count; j++)
+        {
+            characterTraitIndexes.Add(characterTraits[j].id);
+        }
+
+        rankImage.sprite = characterRankAssetContainer.GetRankSprite(rank);
+        rankText.text = $"Level {(int)rank + 1}";
+
+        CommonUtil.ReturnListToPool(statItemUIs, item => item.gameObject);
+        CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
+
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            StatModifier buff = buffs[i];
+
+            StatItemUI statItemUI = ObjectPoolingEverything.GetFromPool<StatItemUI>(GameConstants.statItemUI);
+
+            CommonUtil.SetParentAndResetScale(statItemUI.transform, buffContainer);
+
+            statItemUI.Init(buff.Type, buff.ModType, buff.Value);
+
+            statItemUIs.Add(statItemUI);
+        }
+
+        for (int i = 0; i < characterTraits.Count; i++)
+        {
+            CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
+
+            CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
+            item.Init(characterTraits[i]);
+
+            characterTraitItemUIs.Add(item);
+        }
+
+        abilityCanvasGroup.gameObject.SetActive(true);
+
+        abilityCanvasGroup.interactable = false;
+
+        Tween.Alpha(abilityCanvasGroup, 1, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            abilityCanvasGroup.interactable = true;
+        });
+    }
+
+    private void ConfirmAbility()
+    {
+        Hide();
+    }
+    #endregion
 }
