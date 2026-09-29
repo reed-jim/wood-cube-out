@@ -376,8 +376,10 @@ public class LeadershipCharacterCreationUI : BasePopup
 
     private void PlayRevealAbilityFxAt(RectTransform target, Action onFxShown, Action onComplete)
     {
+        revealAbilityFx.transform.SetParent(target);
+        revealAbilityFx.transform.localScale = Vector3.zero;
         revealAbilityFx.rectTransform.sizeDelta = target.sizeDelta;
-        revealAbilityFx.rectTransform.anchoredPosition = target.anchoredPosition;
+        revealAbilityFx.rectTransform.localPosition = Vector3.zero;
         revealAbilityFx.color = ColorUtil.WithAlpha(revealAbilityFx.color, 0);
 
         Sequence sequence = Sequence.Create(Tween.Scale(revealAbilityFx.transform, 1.5f, duration: 0.3f));
