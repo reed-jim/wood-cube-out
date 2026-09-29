@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class StatItemUI : MonoBehaviour
 {
+    public RectTransform container;
     public Image icon;
     public TMP_Text valueText;
 

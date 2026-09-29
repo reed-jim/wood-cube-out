@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CharacterTraitItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public RectTransform container;
     public Image circle;
     public TMP_Text traitName;
     public Button selectButton;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
@@ -33,12 +34,13 @@ public class LeadershipCharacterCreationUI : BasePopup
     public TMP_Text abilityPotentialText;
     public ProceduralHumanAvatarUI proceduralHumanAvatarUI;
 
+    [Header("Fx")]
+    public Image revealAbilityFx;
+
     [Header("SO")]
     public CharacterTraitContainer characterTraitContainer;
     public CountryFlagDatabase countryFlagDatabase;
     public CharacterRankAssetContainer characterRankAssetContainer;
-
-    private LeadershipCharacterData leadershipCharacterData;
 
     private string primaryHex;
 
@@ -155,7 +157,7 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         LeadershipManager.Ins.AddNewCharacter(leadershipCharacterData);
 
-        ShowCharacterAbility();
+        StartCoroutine(ShowCharacterAbility());
     }
 
     private void OpenCountryPicker()
@@ -249,51 +251,140 @@ public class LeadershipCharacterCreationUI : BasePopup
         leadershipCharacterData.traitIndexes = characterTraitIndexes;
     }
 
-    private void ShowCharacterAbility()
+    private IEnumerator ShowCharacterAbility()
     {
-        rankImage.sprite = characterRankAssetContainer.GetRankSprite(rank);
-        rankText.text = $"Level {(int)rank + 1}";
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 30f);
+
+        int step = 0;
+        int maxStep = 2;
+        int subStep = 0;
+        bool isWaitForNextStep = false;
+
+        rankImage.gameObject.SetActive(false);
 
         CommonUtil.ReturnListToPool(statItemUIs, item => item.gameObject);
         CommonUtil.ReturnListToPool(characterTraitItemUIs, item => item.gameObject);
-
-        for (int i = 0; i < buffs.Count; i++)
-        {
-            StatModifier buff = buffs[i];
-
-            StatItemUI statItemUI = ObjectPoolingEverything.GetFromPool<StatItemUI>(GameConstants.statItemUI);
-
-            CommonUtil.SetParentAndResetScale(statItemUI.transform, buffContainer);
-
-            statItemUI.Init(buff.Type, buff.ModType, buff.Value);
-
-            statItemUIs.Add(statItemUI);
-        }
-
-        for (int i = 0; i < characterTraits.Count; i++)
-        {
-            CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
-
-            CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
-            item.Init(characterTraits[i]);
-
-            characterTraitItemUIs.Add(item);
-        }
 
         abilityCanvasGroup.gameObject.SetActive(true);
 
         abilityCanvasGroup.interactable = false;
 
-        Tween.Alpha(abilityCanvasGroup, 1, duration: 0.3f)
-        .OnComplete(() =>
+        Tween.Alpha(abilityCanvasGroup, 1, duration: 0.3f);
+
+        while (step <= maxStep)
         {
-            abilityCanvasGroup.interactable = true;
-        });
+            if (step == 0 && !isWaitForNextStep)
+            {
+                PlayRevealAbilityFxAt
+                (
+                    rankImage.rectTransform,
+                    onFxShown: () =>
+                    {
+                        rankImage.gameObject.SetActive(true);
+
+                        rankImage.sprite = characterRankAssetContainer.GetRankSprite(rank);
+                        rankText.text = $"Level {(int)rank + 1}";
+                    },
+                    onComplete: NextStep
+                );
+
+                isWaitForNextStep = true;
+            }
+            else if (step == 1 && !isWaitForNextStep)
+            {
+                if (subStep < buffs.Count)
+                {
+                    StatItemUI statItemUI = ObjectPoolingEverything.GetFromPool<StatItemUI>(GameConstants.statItemUI);
+
+                    CommonUtil.SetParentAndResetScale(statItemUI.transform, buffContainer);
+
+                    PlayRevealAbilityFxAt
+                    (
+                        statItemUI.container,
+                        onFxShown: () =>
+                        {
+                            StatModifier buff = buffs[subStep];
+
+                            statItemUI.Init(buff.Type, buff.ModType, buff.Value);
+
+                            statItemUIs.Add(statItemUI);
+                        },
+                        onComplete: NextSubStep
+                    );
+                }
+                else
+                {
+                    NextStep();
+                }
+            }
+            else if (step == 2 && !isWaitForNextStep)
+            {
+                if (subStep < characterTraits.Count)
+                {
+                    CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
+
+                    CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
+
+                    PlayRevealAbilityFxAt
+                    (
+                        item.container,
+                        onFxShown: () =>
+                        {
+                            item.Init(characterTraits[subStep]);
+
+                            characterTraitItemUIs.Add(item);
+                        },
+                        onComplete: NextSubStep
+                    );
+                }
+                else
+                {
+                    NextStep();
+                }
+            }
+
+            yield return waitForSeconds;
+        }
+
+        abilityCanvasGroup.interactable = true;
+
+        void NextStep()
+        {
+            step++;
+            isWaitForNextStep = false;
+        }
+
+        void NextSubStep()
+        {
+            subStep++;
+            isWaitForNextStep = false;
+        }
     }
 
     private void ConfirmAbility()
     {
         Hide();
+    }
+
+    private void PlayRevealAbilityFxAt(RectTransform target, Action onFxShown, Action onComplete)
+    {
+        revealAbilityFx.transform.SetParent(target.parent);
+        revealAbilityFx.transform.localScale = Vector3.zero;
+        revealAbilityFx.rectTransform.sizeDelta = target.sizeDelta;
+        revealAbilityFx.color = ColorUtil.WithAlpha(revealAbilityFx.color, 0);
+
+        Sequence sequence = Sequence.Create(Tween.Scale(revealAbilityFx.transform, 1.5f, duration: 0.3f));
+        sequence.Group(Tween.Alpha(revealAbilityFx, 1, duration: 0.3f));
+        sequence.OnComplete(() =>
+        {
+            onFxShown?.Invoke();
+        });
+        sequence.Chain(Tween.Scale(revealAbilityFx.transform, 0, duration: 0.3f));
+        sequence.Group(Tween.Alpha(revealAbilityFx, 0, duration: 0.3f));
+        sequence.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
     }
     #endregion
 }
