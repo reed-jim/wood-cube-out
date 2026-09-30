@@ -27,6 +27,19 @@ public static class StatModifierGenerator
         return new StatModifier(statType, modType, value);
     }
 
+    public static StatModifier GenerateFlatModifier(StatType statType, float abilityPotential)
+    {
+        abilityPotential = Mathf.Max(0f, abilityPotential);
+
+        StatType stat = GetRandomStat();
+
+        ModifierType modType = ModifierType.Flat;
+
+        float value = GetModifierValue(stat, modType, abilityPotential);
+
+        return new StatModifier(statType, modType, value);
+    }
+
     private static StatType GetRandomStat()
     {
         float totalWeight = 0f;

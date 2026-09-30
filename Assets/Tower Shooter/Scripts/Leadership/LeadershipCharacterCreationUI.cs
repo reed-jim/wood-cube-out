@@ -20,7 +20,6 @@ public class LeadershipCharacterCreationUI : BasePopup
     public Button randomizeFaceButton;
     public Button randomizeAllButton;
     public Button createCharacterButton;
-    public Button boostAbilityPotentialButton;
 
     [Header("Ability")]
     public CanvasGroup abilityCanvasGroup;
@@ -28,6 +27,8 @@ public class LeadershipCharacterCreationUI : BasePopup
     public TMP_Text rankText;
     public RectTransform buffContainer;
     public RectTransform traitContainer;
+    public Button boostAbilityPotentialButton;
+    public TMP_Text boostAbilityCostText;
     public Button confirmAbilityButton;
 
     [Header("UI")]
@@ -47,6 +48,8 @@ public class LeadershipCharacterCreationUI : BasePopup
     private string nameInputString;
     private Country selectedCountry;
     private float abilityPotential;
+    private int abilityPotentialUpgradeTime;
+    private float abilityPotentialUpgradeCost;
     private CharacterRank rank;
     private List<StatModifier> buffs;
     private List<CharacterTrait> characterTraits;
@@ -87,6 +90,7 @@ public class LeadershipCharacterCreationUI : BasePopup
         selectedCountry = Country.UnitedStates;
         proceduralHumanAvatarUI.age = 0.18f;
         abilityPotential = 0.5f;
+        abilityPotentialUpgradeTime = 0;
 
         UpdateAbilityPotentialText();
 
@@ -205,9 +209,17 @@ public class LeadershipCharacterCreationUI : BasePopup
     #region Ability
     private void BoostAbilityPotential()
     {
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) < abilityPotentialUpgradeCost)
+        {
+            IngameNotificationManager.Ins.ShowNotEnoughPower();
+
+            return;
+        }
+
         if (abilityPotential < 1)
         {
             abilityPotential += 0.05f;
+            abilityPotentialUpgradeTime++;
 
             UpdateAbilityPotentialText();
         }
@@ -219,7 +231,10 @@ public class LeadershipCharacterCreationUI : BasePopup
 
     private void UpdateAbilityPotentialText()
     {
+        abilityPotentialUpgradeCost = CurveManager.Ins.GetBuyAugmentCost(abilityPotentialUpgradeTime);
+
         abilityPotentialText.text = $"Change to get good traits <color={primaryHex}>{(int)(abilityPotential * 100)}%";
+        boostAbilityCostText.text = $"{abilityPotentialUpgradeCost}";
     }
 
     private void RevealCharacterAbility(LeadershipCharacterData leadershipCharacterData)
@@ -228,10 +243,10 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         buffs = new List<StatModifier>();
 
-        StatModifier powerBuff = StatModifierGenerator.Generate(StatType.Damage, abilityPotential);
-        StatModifier cycleSpeedBuff = StatModifierGenerator.Generate(StatType.AttackSpeed, abilityPotential);
-        StatModifier critChanceBuff = StatModifierGenerator.Generate(StatType.CritChance, abilityPotential);
-        StatModifier critMultiplierBuff = StatModifierGenerator.Generate(StatType.CritMultiplier, abilityPotential);
+        StatModifier powerBuff = StatModifierGenerator.GenerateFlatModifier(StatType.Damage, abilityPotential);
+        StatModifier cycleSpeedBuff = StatModifierGenerator.GenerateFlatModifier(StatType.AttackSpeed, abilityPotential);
+        StatModifier critChanceBuff = StatModifierGenerator.GenerateFlatModifier(StatType.CritChance, abilityPotential);
+        StatModifier critMultiplierBuff = StatModifierGenerator.GenerateFlatModifier(StatType.CritMultiplier, abilityPotential);
 
         buffs.Add(powerBuff);
         buffs.Add(cycleSpeedBuff);
@@ -372,6 +387,8 @@ public class LeadershipCharacterCreationUI : BasePopup
     private void ConfirmAbility()
     {
         Hide();
+
+        PowerManager.Ins.ShowTotalPowerOutputPerSecond();
     }
 
     private void PlayRevealAbilityFxAt(RectTransform target, Action onFxShown, Action onComplete)

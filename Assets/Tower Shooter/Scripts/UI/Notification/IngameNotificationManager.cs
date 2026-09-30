@@ -35,4 +35,16 @@ public class IngameNotificationManager : Singleton<IngameNotificationManager>
 
         notificationBadge.ShowNotification(title, description);
     }
+
+    #region Specific
+    public void ShowNotEnoughPower()
+    {
+        NotificationBadge notificationBadge = ObjectPoolingEverything.GetFromPool<NotificationBadge>(GameConstants.notificationBadge);
+
+        notificationBadge.transform.SetParent(notificationBadgeContainer);
+        notificationBadge.transform.localPosition = new Vector3(0, 400);
+
+        notificationBadge.ShowNotification(GameConstants.WARNING, "Not enough power!");
+    }
+    #endregion
 }
