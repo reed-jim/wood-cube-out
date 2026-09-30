@@ -4,6 +4,7 @@ using UnityEngine;
 public class SpaceEventUI : MonoBehaviour
 {
     [SerializeField] private Transform container;
+    [SerializeField] private Transform itemContainer;
 
     private readonly List<SpaceEventItemUI> spawnedItems = new List<SpaceEventItemUI>();
 
@@ -41,6 +42,8 @@ public class SpaceEventUI : MonoBehaviour
         foreach (var activeEvent in activeEvents)
         {
             SpaceEventItemUI spaceEventItemUI = ObjectPoolingEverything.GetFromPool<SpaceEventItemUI>(GameConstants.spaceEventItemUI);
+
+            CommonUtil.SetParentAndResetScale(spaceEventItemUI.transform, itemContainer);
 
             spaceEventItemUI.Bind(activeEvent);
 

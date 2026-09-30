@@ -21,8 +21,6 @@ public class SpaceEventManager : Singleton<SpaceEventManager>
 
     public IReadOnlyList<ActiveSpaceEvent> ActiveEvents => activeEvents;
 
-    private SpaceEventSaveData spaceEventSaveData;
-
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -73,6 +71,8 @@ public class SpaceEventManager : Singleton<SpaceEventManager>
         ActiveSpaceEvent newEvent = new ActiveSpaceEvent(config, duration);
         activeEvents.Add(newEvent);
 
+        ApplySpaceEventEffects();
+
         OnEventStarted?.Invoke(newEvent);
         OnEventsUpdated?.Invoke();
     }
@@ -80,20 +80,66 @@ public class SpaceEventManager : Singleton<SpaceEventManager>
     private void ExpireEvent(ActiveSpaceEvent activeEvent)
     {
         activeEvents.Remove(activeEvent);
+
+        ApplySpaceEventEffects();
+
         OnEventExpired?.Invoke(activeEvent);
         OnEventsUpdated?.Invoke();
     }
+
+    #region Effect
+    private void ApplySpaceEventEffects()
+    {
+        Dictionary<StatType, StatModifier> statModifierDictionary = new Dictionary<StatType, StatModifier>();
+
+        for (int i = 0; i < ActiveEvents.Count; i++)
+        {
+            ActiveSpaceEvent activeSpaceEvent = ActiveEvents[i];
+
+            for (int j = 0; j < activeSpaceEvent.Config.buffs.Count; j++)
+            {
+                StatModifierData buff = activeSpaceEvent.Config.buffs[j];
+
+                if (statModifierDictionary.ContainsKey(buff.statType))
+                {
+                    statModifierDictionary[buff.statType].Value += buff.value;
+                }
+                else
+                {
+                    statModifierDictionary.Add(buff.statType, new StatModifier(buff.statType, buff.modType, buff.value, statModifierSource: StatModifierSource.SpaceEvent));
+                }
+            }
+        }
+
+        for (int i = 0; i < NodeManager.Ins.nodes.Count; i++)
+        {
+            BaseCharacter node = NodeManager.Ins.nodes[i];
+
+            if (node.nodeData.isUnlocked)
+            {
+                node.serviceLocator.stats.RemoveAllModifiersFromSource(StatModifierSource.SpaceEvent);
+
+                foreach (var statType in statModifierDictionary.Keys)
+                {
+                    node.serviceLocator.stats.AddModifier(statModifierDictionary[statType]);
+                }
+            }
+        }
+    }
+    #endregion
 
     #region Save & Load API Hooks
 
     public void LoadSpaceEventData()
     {
-        spaceEventSaveData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("spaceEventSaveData"), GetDefaultSpaceEventData());
+        SpaceEventSaveData spaceEventSaveData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("spaceEventSaveData"), GetDefaultSpaceEventData());
+
+        LoadSaveData(spaceEventSaveData);
     }
 
     public void SaveSpaceEventData()
     {
-        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("spaceEventSaveData"), spaceEventSaveData);
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("spaceEventSaveData"), GetSaveData());
     }
 
     public SpaceEventSaveData GetDefaultSpaceEventData()

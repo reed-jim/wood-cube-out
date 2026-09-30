@@ -32,7 +32,8 @@ public enum StatModifierSource
 {
     None,
     Augment,
-    LeadershipPosition
+    LeadershipPosition,
+    SpaceEvent
 }
 
 [Serializable]
@@ -52,6 +53,14 @@ public class StatModifier
         Value = value;
         UpgradeTime = upgradeTime;
         Source = source;
+    }
+
+    public StatModifier(StatType type, ModifierType modType, float value, StatModifierSource statModifierSource)
+    {
+        Type = type;
+        ModType = modType;
+        Value = value;
+        Source = statModifierSource;
     }
 
     public static float GetPercentAdd(int upgradeTime)
