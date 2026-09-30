@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SpaceEventManager : MonoBehaviour
+public class SpaceEventManager : Singleton<SpaceEventManager>
 {
-    public static SpaceEventManager Instance { get; private set; }
-
     [Header("Configurations")]
     [SerializeField] private List<SpaceEventSO> availableEventPool;
     [SerializeField] private float spawnInterval = 60f;
@@ -19,18 +17,17 @@ public class SpaceEventManager : MonoBehaviour
     // Events for UI and Buff systems to subscribe to
     public event Action<ActiveSpaceEvent> OnEventStarted;
     public event Action<ActiveSpaceEvent> OnEventExpired;
-    public event Action OnEventsUpdated;
+    public static event Action OnEventsUpdated;
 
     public IReadOnlyList<ActiveSpaceEvent> ActiveEvents => activeEvents;
 
-    private void Awake()
+    private SpaceEventSaveData spaceEventSaveData;
+
+    protected override void MoreActionOnAwake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+        base.MoreActionOnAwake();
+
+        LoadSpaceEventData();
     }
 
     private void Update()
@@ -75,7 +72,7 @@ public class SpaceEventManager : MonoBehaviour
     {
         ActiveSpaceEvent newEvent = new ActiveSpaceEvent(config, duration);
         activeEvents.Add(newEvent);
-        
+
         OnEventStarted?.Invoke(newEvent);
         OnEventsUpdated?.Invoke();
     }
@@ -88,6 +85,25 @@ public class SpaceEventManager : MonoBehaviour
     }
 
     #region Save & Load API Hooks
+
+    public void LoadSpaceEventData()
+    {
+        spaceEventSaveData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("spaceEventSaveData"), GetDefaultSpaceEventData());
+    }
+
+    public void SaveSpaceEventData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("spaceEventSaveData"), spaceEventSaveData);
+    }
+
+    public SpaceEventSaveData GetDefaultSpaceEventData()
+    {
+        SpaceEventSaveData spaceEventSaveData = new SpaceEventSaveData();
+
+        spaceEventSaveData.activeEvents = new List<SpaceEventData>();
+
+        return spaceEventSaveData;
+    }
 
     public SpaceEventSaveData GetSaveData()
     {

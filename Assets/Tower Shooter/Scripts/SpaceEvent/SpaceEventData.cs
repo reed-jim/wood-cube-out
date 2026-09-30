@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class SpaceEventData
@@ -16,5 +17,5 @@ public class SpaceEventData
 [Serializable]
 public class SpaceEventSaveData
 {
-    public System.Collections.Generic.List<SpaceEventData> activeEvents;
+    public List<SpaceEventData> activeEvents;
 }

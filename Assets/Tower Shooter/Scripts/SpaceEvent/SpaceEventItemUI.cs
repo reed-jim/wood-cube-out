@@ -5,8 +5,8 @@ using TMPro;
 public class SpaceEventItemUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private TextMeshProUGUI titleText;
-    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TMP_Text titleText;
+    [SerializeField] private TMP_Text timerText;
     [SerializeField] private Image fillBar;
 
     public ActiveSpaceEvent BoundEvent { get; private set; }

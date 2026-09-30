@@ -4,25 +4,22 @@ using UnityEngine;
 public class SpaceEventUI : MonoBehaviour
 {
     [SerializeField] private Transform container;
-    [SerializeField] private SpaceEventItemUI itemPrefab;
 
     private readonly List<SpaceEventItemUI> spawnedItems = new List<SpaceEventItemUI>();
 
-    private void OnEnable()
+    void Awake()
     {
-        if (SpaceEventManager.Instance != null)
-        {
-            SpaceEventManager.Instance.OnEventsUpdated += RefreshList;
-            RefreshList();
-        }
+        SpaceEventManager.OnEventsUpdated += RefreshList;
     }
 
-    private void OnDisable()
+    void OnDestroy()
     {
-        if (SpaceEventManager.Instance != null)
-        {
-            SpaceEventManager.Instance.OnEventsUpdated -= RefreshList;
-        }
+        SpaceEventManager.OnEventsUpdated -= RefreshList;
+    }
+
+    private void OnEnable()
+    {
+        RefreshList();
     }
 
     private void Update()
@@ -37,19 +34,17 @@ public class SpaceEventUI : MonoBehaviour
     private void RefreshList()
     {
         // Clear old UI
-        foreach (var item in spawnedItems)
-        {
-            Destroy(item.gameObject);
-        }
-        spawnedItems.Clear();
+        CommonUtil.ReturnListToPool(spawnedItems, item => item.gameObject);
 
         // Populate new UI items
-        var activeEvents = SpaceEventManager.Instance.ActiveEvents;
+        var activeEvents = SpaceEventManager.Ins.ActiveEvents;
         foreach (var activeEvent in activeEvents)
         {
-            SpaceEventItemUI newItem = Instantiate(itemPrefab, container);
-            newItem.Bind(activeEvent);
-            spawnedItems.Add(newItem);
+            SpaceEventItemUI spaceEventItemUI = ObjectPoolingEverything.GetFromPool<SpaceEventItemUI>(GameConstants.spaceEventItemUI);
+
+            spaceEventItemUI.Bind(activeEvent);
+
+            spawnedItems.Add(spaceEventItemUI);
         }
     }
 }
