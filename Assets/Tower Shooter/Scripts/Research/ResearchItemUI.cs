@@ -6,11 +6,9 @@ using UnityEngine.UI;
 public class ResearchItemUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private TMP_Text titleText;
-    [SerializeField] private TMP_Text costText;
-    [SerializeField] private Button purchaseButton;
-    [SerializeField] private GameObject lockedOverlay;
-    [SerializeField] private GameObject completedOverlay;
+    [SerializeField] private Button selectButton;
+    [SerializeField] private RectTransform lockedOverlay;
+    [SerializeField] private RectTransform completedOverlay;
 
     public ResearchNodeSO BoundConfig { get; private set; }
 
@@ -18,10 +16,7 @@ public class ResearchItemUI : MonoBehaviour
 
     private void Awake()
     {
-        if (purchaseButton != null)
-        {
-            purchaseButton.onClick.AddListener(OnItemClicked);
-        }
+        selectButton.onClick.AddListener(OnItemClicked);
     }
 
     public void Bind(ResearchNodeSO config)
@@ -29,7 +24,6 @@ public class ResearchItemUI : MonoBehaviour
         BoundConfig = config;
 
         if (iconImage) iconImage.sprite = config.researchIcon;
-        if (titleText) titleText.text = config.researchTitle;
 
         UpdateUI();
     }
@@ -41,10 +35,8 @@ public class ResearchItemUI : MonoBehaviour
         bool isUnlocked = ResearchManager.Ins.IsUnlocked(BoundConfig.researchID);
         bool canResearch = ResearchManager.Ins.CanResearch(BoundConfig);
 
-        if (costText) costText.text = isUnlocked ? "Unlocked" : CommonUtil.FormatNumber(BoundConfig.cost);
-        if (lockedOverlay) lockedOverlay.SetActive(!isUnlocked && !canResearch);
-        if (completedOverlay) completedOverlay.SetActive(isUnlocked);
-        if (purchaseButton) purchaseButton.interactable = !isUnlocked;
+        lockedOverlay.gameObject.SetActive(!isUnlocked && !canResearch);
+        completedOverlay.gameObject.SetActive(isUnlocked);
     }
 
     private void OnItemClicked()

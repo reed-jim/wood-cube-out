@@ -4,34 +4,34 @@ using UnityEngine.UI;
 using UnityEditor;
 using System.IO;
 
-public class BorderAuraGeneratorEditor : EditorWindow
+public class ResearchIconGeneratorEditor : EditorWindow
 {
-    private Vector2Int nodeSize = new Vector2Int(512, 512);
-    private string saveFolderPath = "Assets/NodeAuraBorders";
+    private Vector2Int iconSize = new Vector2Int(512, 512);
+    private string saveFolderPath = "Assets/ResearchIcons";
 
-    [MenuItem("Tools/2D Circle Aura Generator")]
+    [MenuItem("Tools/2D Sci-Fi Research Icon Generator")]
     public static void ShowWindow()
     {
-        GetWindow<BorderAuraGeneratorEditor>("Aura Generator");
+        GetWindow<ResearchIconGeneratorEditor>("Research Icon Generator");
     }
 
     private void OnGUI()
     {
-        GUILayout.Label("10-Rank Circular Border Aura Generator", EditorStyles.boldLabel);
+        GUILayout.Label("2D Idle Spaceship Game - Research Icons Generator", EditorStyles.boldLabel);
         EditorGUILayout.Space();
 
-        nodeSize = EditorGUILayout.Vector2IntField("Sprite Dimensions (PX)", nodeSize);
+        iconSize = EditorGUILayout.Vector2IntField("Sprite Dimensions (PX)", iconSize);
         saveFolderPath = EditorGUILayout.TextField("Save Folder Path", saveFolderPath);
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Generate 10 Border Aura Ranks", GUILayout.Height(40)))
+        if (GUILayout.Button("Generate 5 Sci-Fi Research Icons", GUILayout.Height(40)))
         {
-            GenerateAndSaveAllAuras();
+            GenerateAndSaveAllIcons();
         }
     }
 
-    private void GenerateAndSaveAllAuras()
+    private void GenerateAndSaveAllIcons()
     {
         if (!Directory.Exists(saveFolderPath))
         {
@@ -39,33 +39,43 @@ public class BorderAuraGeneratorEditor : EditorWindow
             AssetDatabase.Refresh();
         }
 
-        // Generate procedural base textures
+        // Procedural primitives
         Sprite solidSprite = CreateFlatSquareSprite();
-        Sprite softGlowSprite = CreateRadialGlowSprite(256);
+        Sprite glowSprite = CreateRadialGlowSprite(256);
         Sprite circleSprite = CreateCircleSprite(256);
-        Sprite ringSprite = CreateRingSprite(256, 0.85f);
+        Sprite ringSprite = CreateRingSprite(256, 0.82f);
         Sprite thinRingSprite = CreateRingSprite(256, 0.94f);
 
-        for (int rank = 1; rank <= 10; rank++)
+        string[] iconNames = new string[]
         {
-            byte[] pngData = BakeAuraToPNG(rank, nodeSize, solidSprite, softGlowSprite, circleSprite, ringSprite, thinRingSprite);
-            string filePath = Path.Combine(saveFolderPath, $"BorderAura_Rank{rank}.png");
+            "Research_01_QuantumComputing",
+            "Research_02_PlasmaPropulsion",
+            "Research_03_ShieldTech",
+            "Research_04_AIMatrix",
+            "Research_05_WarpDrive"
+        };
+
+        for (int i = 0; i < iconNames.Length; i++)
+        {
+            int iconId = i + 1;
+            byte[] pngData = BakeIconToPNG(iconId, iconSize, solidSprite, glowSprite, circleSprite, ringSprite, thinRingSprite);
+            string filePath = Path.Combine(saveFolderPath, $"{iconNames[i]}.png");
             File.WriteAllBytes(filePath, pngData);
         }
 
-        // Clean up temporary textures
+        // Clean up temporary procedural textures
         DestroyImmediate(solidSprite.texture); DestroyImmediate(solidSprite);
-        DestroyImmediate(softGlowSprite.texture); DestroyImmediate(softGlowSprite);
+        DestroyImmediate(glowSprite.texture); DestroyImmediate(glowSprite);
         DestroyImmediate(circleSprite.texture); DestroyImmediate(circleSprite);
         DestroyImmediate(ringSprite.texture); DestroyImmediate(ringSprite);
         DestroyImmediate(thinRingSprite.texture); DestroyImmediate(thinRingSprite);
 
         AssetDatabase.Refresh();
 
-        // Reimport as 2D Sprites
-        for (int rank = 1; rank <= 10; rank++)
+        // Reimport as Sprites
+        for (int i = 0; i < iconNames.Length; i++)
         {
-            string filePath = Path.Combine(saveFolderPath, $"BorderAura_Rank{rank}.png");
+            string filePath = Path.Combine(saveFolderPath, $"{iconNames[i]}.png");
             TextureImporter importer = AssetImporter.GetAtPath(filePath) as TextureImporter;
 
             if (importer != null)
@@ -78,12 +88,12 @@ public class BorderAuraGeneratorEditor : EditorWindow
             }
         }
 
-        EditorUtility.DisplayDialog("Success", $"Generated 10 Border Aura Ranks inside:\n{saveFolderPath}", "OK");
+        EditorUtility.DisplayDialog("Success", $"Generated 5 Research Icons inside:\n{saveFolderPath}", "OK");
     }
 
-    private byte[] BakeAuraToPNG(int rank, Vector2Int size, Sprite solidSprite, Sprite glowSprite, Sprite circleSprite, Sprite ringSprite, Sprite thinRingSprite)
+    private byte[] BakeIconToPNG(int iconId, Vector2Int size, Sprite solid, Sprite glow, Sprite circle, Sprite ring, Sprite thinRing)
     {
-        GameObject bakerRoot = new GameObject("TempAuraBaker", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+        GameObject bakerRoot = new GameObject("TempIconBaker", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         Canvas bakerCanvas = bakerRoot.GetComponent<Canvas>();
         bakerCanvas.renderMode = RenderMode.WorldSpace;
 
@@ -106,7 +116,7 @@ public class BorderAuraGeneratorEditor : EditorWindow
 
         bakerCanvas.worldCamera = bakerCamera;
 
-        BuildAuraHierarchy(bakerRoot.transform, rank, size, solidSprite, glowSprite, circleSprite, ringSprite, thinRingSprite);
+        BuildResearchIconHierarchy(bakerRoot.transform, iconId, size, solid, glow, circle, ring, thinRing);
         Canvas.ForceUpdateCanvases();
 
         RenderTexture renderTex = RenderTexture.GetTemporary(size.x, size.y, 24, RenderTextureFormat.ARGB32);
@@ -131,134 +141,181 @@ public class BorderAuraGeneratorEditor : EditorWindow
         return pngData;
     }
 
-    private void BuildAuraHierarchy(Transform root, int rank, Vector2Int size, Sprite solid, Sprite glow, Sprite circle, Sprite ring, Sprite thinRing)
+    private void BuildResearchIconHierarchy(Transform root, int iconId, Vector2Int size, Sprite solid, Sprite glow, Sprite circle, Sprite ring, Sprite thinRing)
     {
-        Color primaryAccent, secondaryAccent, glowColor, rimColor;
-        GetRankColors(rank, out primaryAccent, out secondaryAccent, out glowColor, out rimColor);
+        Color primary, secondary, highlight, darkBg;
+        GetIconColorScheme(iconId, out primary, out secondary, out highlight, out darkBg);
 
-        Color crispWhite = new Color(0.98f, 0.98f, 1.00f, 0.95f);
-        Color voidDark = new Color(0.02f, 0.02f, 0.05f, 0.85f);
-
-        // Core dimensions (Center remains hollow)
-        float baseBorderDiameter = Mathf.Min(size.x, size.y) * 0.60f;
         int order = 0;
+        float baseSize = Mathf.Min(size.x, size.y) * 0.75f;
 
-        // 1. DISTANT OUTER GLOW (Scales intensity and reach per rank)
-        float outerGlowSize = baseBorderDiameter * (1.30f + (rank * 0.06f));
-        float glowAlpha = Mathf.Min(0.3f + (rank * 0.06f), 0.85f);
-        Color finalOuterGlow = glowColor;
-        finalOuterGlow.a = glowAlpha;
-        CreatePart("OuterAuraGlow", root, glow, finalOuterGlow, new Vector2(outerGlowSize, outerGlowSize), Vector2.zero, order++);
+        // 1. Tech Hex / Circle Background Frame
+        CreatePart("Glow_Background", root, glow, primary * new Color(1, 1, 1, 0.4f), new Vector2(baseSize * 1.3f, baseSize * 1.3f), Vector2.zero, order++);
+        CreatePart("Backing_Plate", root, circle, darkBg, new Vector2(baseSize, baseSize), Vector2.zero, order++);
+        CreatePart("Outer_Tech_Ring", root, ring, secondary, new Vector2(baseSize, baseSize), Vector2.zero, order++);
 
-        // 2. RAY BURSTS / STARBURST BEAMS (Unlocks Rank 7+)
-        if (rank >= 7)
+        // 2. Icon Specific Graphics
+        switch (iconId)
         {
-            int rayCount = (rank >= 9) ? 8 : 4;
-            float rayLength = baseBorderDiameter * (0.8f + (rank * 0.05f));
-            float rayThickness = 6f + rank;
-
-            for (int i = 0; i < rayCount; i++)
-            {
-                float angle = i * (180f / rayCount);
-                GameObject ray = CreatePart($"AuraRay_{i}", root, solid, primaryAccent * new Color(1, 1, 1, 0.5f), new Vector2(rayThickness, rayLength), Vector2.zero, order++);
-                ray.transform.localRotation = Quaternion.Euler(0, 0, angle);
-            }
+            case 1: // Quantum Computing
+                BuildQuantumComputingIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+                break;
+            case 2: // Plasma Propulsion
+                BuildPlasmaPropulsionIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+                break;
+            case 3: // Shield Tech
+                BuildShieldTechIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+                break;
+            case 4: // AI Matrix
+                BuildAIMatrixIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+                break;
+            case 5: // Warp Drive
+                BuildWarpDriveIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+                break;
         }
 
-        // 3. SECONDARY OUTER ORBITAL RINGS (Unlocks Rank 5+)
-        if (rank >= 5)
-        {
-            float ring1Size = baseBorderDiameter * 1.18f;
-            CreatePart("OuterEnergyRing", root, thinRing, secondaryAccent * 0.8f, new Vector2(ring1Size, ring1Size), Vector2.zero, order++);
+        // 3. Common Foreground Overlay Framing
+        CreatePart("Inner_Tech_Rim", root, thinRing, highlight * new Color(1, 1, 1, 0.8f), new Vector2(baseSize * 0.92f, baseSize * 0.92f), Vector2.zero, order++);
+    }
 
-            if (rank >= 9)
-            {
-                float ring2Size = baseBorderDiameter * 1.32f;
-                GameObject secondaryRing = CreatePart("FarEnergyRing", root, thinRing, primaryAccent * 0.6f, new Vector2(ring2Size, ring2Size), Vector2.zero, order++);
-                secondaryRing.transform.localRotation = Quaternion.Euler(0, 0, 30f);
-            }
+    #region Icon Implementations
+
+    private void BuildQuantumComputingIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    {
+        // Orbital Atomic Loops
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject ringObj = CreatePart($"Orbit_Ring_{i}", root, thinRing, primary, new Vector2(baseSize * 0.65f, baseSize * 0.22f), Vector2.zero, order++);
+            ringObj.transform.localRotation = Quaternion.Euler(0, 0, i * 60f);
         }
 
-        // 4. MAIN BORDER FRAME & DARK BACKING RIM
-        float darkBackingSize = baseBorderDiameter + 8f + (rank * 0.8f);
-        CreatePart("RimBacking", root, ring, voidDark, new Vector2(darkBackingSize, darkBackingSize), Vector2.zero, order++);
+        // Center Atom Core
+        CreatePart("Core_Glow", root, glow, primary, new Vector2(baseSize * 0.4f, baseSize * 0.4f), Vector2.zero, order++);
+        CreatePart("Core_Node", root, circle, highlight, new Vector2(baseSize * 0.15f, baseSize * 0.15f), Vector2.zero, order++);
 
-        // Main colored rim frame
-        CreatePart("MainBorderRim", root, ring, rimColor, new Vector2(baseBorderDiameter, baseBorderDiameter), Vector2.zero, order++);
-
-        // 5. INNER & OUTER RIM HIGHLIGHTS (Unlocks Rank 2+)
-        if (rank >= 2)
+        // Floating Quantum Particles
+        float orbitR = baseSize * 0.28f;
+        for (int i = 0; i < 6; i++)
         {
-            float outerHighlightSize = baseBorderDiameter * 1.05f;
-            CreatePart("OuterRimEdge", root, thinRing, primaryAccent, new Vector2(outerHighlightSize, outerHighlightSize), Vector2.zero, order++);
-        }
-
-        if (rank >= 4)
-        {
-            float innerHighlightSize = baseBorderDiameter * 0.88f;
-            CreatePart("InnerRimEdge", root, thinRing, crispWhite, new Vector2(innerHighlightSize, innerHighlightSize), Vector2.zero, order++);
-        }
-
-        // 6. ORBITING AURA NODES / CAPACITORS ALONG THE BORDER (Unlocks Rank 3+)
-        if (rank >= 3)
-        {
-            int nodeCount = Mathf.Clamp(rank, 3, 12);
-            float orbitRadius = baseBorderDiameter / 2f;
-
-            for (int i = 0; i < nodeCount; i++)
-            {
-                float angle = i * (360f / nodeCount) * Mathf.Deg2Rad;
-                Vector2 nodePos = new Vector2(Mathf.Cos(angle) * orbitRadius, Mathf.Sin(angle) * orbitRadius);
-                float orbSize = 8f + (rank * 1.2f);
-
-                GameObject orbDark = CreatePart($"AuraNodeDark_{i}", root, circle, voidDark, new Vector2(orbSize + 4f, orbSize + 4f), nodePos, order++);
-                CreatePart($"AuraNodeCore_{i}", orbDark.transform, circle, primaryAccent, new Vector2(orbSize, orbSize), Vector2.zero, order++);
-
-                if (rank >= 6)
-                {
-                    CreatePart($"AuraNodeGlow_{i}", orbDark.transform, glow, secondaryAccent, new Vector2(orbSize * 2f, orbSize * 2f), Vector2.zero, order++);
-                    CreatePart($"AuraNodeHighlight_{i}", orbDark.transform, circle, crispWhite, new Vector2(orbSize * 0.4f, orbSize * 0.4f), Vector2.zero, order++);
-                }
-            }
+            float angle = i * 60f * Mathf.Deg2Rad;
+            Vector2 pos = new Vector2(Mathf.Cos(angle) * orbitR, Mathf.Sin(angle) * orbitR);
+            CreatePart($"Particle_{i}", root, circle, highlight, new Vector2(baseSize * 0.05f, baseSize * 0.05f), pos, order++);
         }
     }
 
-    private void GetRankColors(int rank, out Color primary, out Color secondary, out Color glow, out Color rim)
+    private void BuildPlasmaPropulsionIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
     {
-        if (rank <= 2) // Tier 1: Soft Cyan / Azure
+        // Thrust Nozzle Frame
+        GameObject nozzle = CreatePart("Nozzle_Base", root, solid, primary, new Vector2(baseSize * 0.35f, baseSize * 0.18f), new Vector2(0, baseSize * 0.2f), order++);
+        nozzle.transform.localRotation = Quaternion.Euler(0, 0, 0);
+
+        // Exhaust Beams / Plume
+        for (int i = 0; i < 3; i++)
         {
-            primary = new Color(0.00f, 0.85f, 1.00f);
-            secondary = new Color(0.10f, 0.45f, 0.75f);
-            glow = new Color(0.00f, 0.70f, 1.00f);
-            rim = new Color(0.15f, 0.75f, 0.95f);
+            float width = baseSize * (0.12f - (i * 0.03f));
+            float length = baseSize * (0.55f + (i * 0.1f));
+            Vector2 pos = new Vector2(0, -baseSize * 0.1f - (i * 10f));
+
+            CreatePart($"Flame_Layer_{i}", root, solid, (i == 0) ? highlight : primary, new Vector2(width, length), pos, order++);
         }
-        else if (rank <= 4) // Tier 2: Amethyst Purple
+
+        // Energy Shock Diamond Core
+        CreatePart("Flame_Glow", root, glow, primary, new Vector2(baseSize * 0.5f, baseSize * 0.7f), new Vector2(0, -baseSize * 0.15f), order++);
+    }
+
+    private void BuildShieldTechIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    {
+        // Central Emblem Shield Core
+        GameObject shieldTop = CreatePart("Shield_Top", root, solid, primary, new Vector2(baseSize * 0.4f, baseSize * 0.35f), new Vector2(0, baseSize * 0.05f), order++);
+        GameObject shieldBottom = CreatePart("Shield_Tip", root, solid, primary, new Vector2(baseSize * 0.3f, baseSize * 0.3f), new Vector2(0, -baseSize * 0.15f), order++);
+        shieldBottom.transform.localRotation = Quaternion.Euler(0, 0, 45f);
+
+        // Protective Hex Core Glow
+        CreatePart("Shield_Glow", root, glow, primary, new Vector2(baseSize * 0.6f, baseSize * 0.6f), Vector2.zero, order++);
+
+        // Emblem Cross Highlight
+        CreatePart("Emblem_V", root, solid, highlight, new Vector2(baseSize * 0.06f, baseSize * 0.3f), Vector2.zero, order++);
+        CreatePart("Emblem_H", root, solid, highlight, new Vector2(baseSize * 0.25f, baseSize * 0.06f), new Vector2(0, baseSize * 0.05f), order++);
+    }
+
+    private void BuildAIMatrixIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    {
+        // Microchip Core Shape
+        CreatePart("Chip_Base", root, solid, primary, new Vector2(baseSize * 0.35f, baseSize * 0.35f), Vector2.zero, order++);
+        CreatePart("Chip_Inner", root, solid, highlight, new Vector2(baseSize * 0.2f, baseSize * 0.2f), Vector2.zero, order++);
+
+        // Bus Lines / Connectors
+        float offset = baseSize * 0.28f;
+        int lineCount = 4;
+        for (int i = 0; i < lineCount; i++)
         {
-            primary = new Color(0.70f, 0.35f, 1.00f);
-            secondary = new Color(0.40f, 0.15f, 0.70f);
-            glow = new Color(0.60f, 0.20f, 0.95f);
-            rim = new Color(0.65f, 0.30f, 0.90f);
+            float pos = -baseSize * 0.12f + (i * (baseSize * 0.08f));
+
+            // Top / Bottom Pins
+            CreatePart($"Pin_T_{i}", root, solid, primary, new Vector2(baseSize * 0.03f, baseSize * 0.12f), new Vector2(pos, offset), order++);
+            CreatePart($"Pin_B_{i}", root, solid, primary, new Vector2(baseSize * 0.03f, baseSize * 0.12f), new Vector2(pos, -offset), order++);
+
+            // Left / Right Pins
+            CreatePart($"Pin_L_{i}", root, solid, primary, new Vector2(baseSize * 0.12f, baseSize * 0.03f), new Vector2(-offset, pos), order++);
+            CreatePart($"Pin_R_{i}", root, solid, primary, new Vector2(baseSize * 0.12f, baseSize * 0.03f), new Vector2(offset, pos), order++);
         }
-        else if (rank <= 6) // Tier 3: Crimson Ember
+
+        CreatePart("Chip_Glow", root, glow, primary, new Vector2(baseSize * 0.5f, baseSize * 0.5f), Vector2.zero, order++);
+    }
+
+    private void BuildWarpDriveIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    {
+        // Portal Singularity Center
+        CreatePart("Singularity_Core", root, circle, new Color(0.02f, 0.02f, 0.05f, 1f), new Vector2(baseSize * 0.22f, baseSize * 0.22f), Vector2.zero, order++);
+        CreatePart("Singularity_Glow", root, glow, primary, new Vector2(baseSize * 0.65f, baseSize * 0.65f), Vector2.zero, order++);
+
+        // Accelerating Vortex Rings
+        for (int i = 1; i <= 3; i++)
         {
-            primary = new Color(1.00f, 0.30f, 0.15f);
-            secondary = new Color(0.65f, 0.10f, 0.05f);
-            glow = new Color(0.95f, 0.20f, 0.00f);
-            rim = new Color(0.90f, 0.35f, 0.10f);
+            float ringScale = baseSize * (0.2f + (i * 0.12f));
+            GameObject vRing = CreatePart($"Vortex_Ring_{i}", root, thinRing, highlight * new Color(1, 1, 1, 1f - (i * 0.2f)), new Vector2(ringScale, ringScale), Vector2.zero, order++);
+            vRing.transform.localRotation = Quaternion.Euler(0, 0, i * 25f);
         }
-        else if (rank <= 8) // Tier 4: Radiance Emerald
+
+        // Warp Ray Bursts
+        for (int i = 0; i < 4; i++)
         {
-            primary = new Color(0.10f, 1.00f, 0.50f);
-            secondary = new Color(0.00f, 0.55f, 0.30f);
-            glow = new Color(0.00f, 0.90f, 0.40f);
-            rim = new Color(0.20f, 0.95f, 0.55f);
+            float angle = i * 45f;
+            GameObject ray = CreatePart($"Warp_Ray_{i}", root, solid, highlight, new Vector2(baseSize * 0.03f, baseSize * 0.7f), Vector2.zero, order++);
+            ray.transform.localRotation = Quaternion.Euler(0, 0, angle);
         }
-        else // Tier 5 (Ranks 9–10): Celestial Mythic Gold & Magenta
+    }
+
+    #endregion
+
+    private void GetIconColorScheme(int iconId, out Color primary, out Color secondary, out Color highlight, out Color darkBg)
+    {
+        darkBg = new Color(0.03f, 0.05f, 0.10f, 0.9f);
+        highlight = new Color(0.98f, 0.98f, 1.0f, 0.95f);
+
+        switch (iconId)
         {
-            primary = new Color(1.00f, 0.84f, 0.00f);
-            secondary = new Color(1.00f, 0.20f, 0.60f);
-            glow = new Color(1.00f, 0.60f, 0.00f);
-            rim = new Color(1.00f, 0.80f, 0.20f);
+            case 1: // Quantum - Electric Cyan & Violet
+                primary = new Color(0.00f, 0.85f, 1.00f);
+                secondary = new Color(0.45f, 0.20f, 0.90f);
+                break;
+            case 2: // Plasma - Fire Orange & Bright Yellow
+                primary = new Color(1.00f, 0.40f, 0.00f);
+                secondary = new Color(1.00f, 0.75f, 0.00f);
+                break;
+            case 3: // Shield - Emerald Tech Green
+                primary = new Color(0.00f, 0.95f, 0.45f);
+                secondary = new Color(0.00f, 0.50f, 0.35f);
+                break;
+            case 4: // AI Matrix - Crimson & Deep Magenta
+                primary = new Color(1.00f, 0.15f, 0.35f);
+                secondary = new Color(0.60f, 0.00f, 0.40f);
+                break;
+            case 5: // Warp Drive - Celestial Gold & Deep Blue
+            default:
+                primary = new Color(0.20f, 0.55f, 1.00f);
+                secondary = new Color(1.00f, 0.80f, 0.10f);
+                break;
         }
     }
 
