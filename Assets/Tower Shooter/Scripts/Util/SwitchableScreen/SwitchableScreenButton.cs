@@ -28,7 +28,14 @@ public class SwitchableScreenButton : MonoBehaviour
 
     private void SwitchScreen()
     {
-        switchScreenEvent?.Invoke(switchableScreenType);
+        if (IsUnlock())
+        {
+            switchScreenEvent?.Invoke(switchableScreenType);
+        }
+        else
+        {
+            IngameNotificationManager.Ins.ShowNotification(GetLockDescription());
+        }
     }
 
     private void OnScreenSwitch(SwitchableScreenType switchableScreenType)
@@ -44,5 +51,15 @@ public class SwitchableScreenButton : MonoBehaviour
                 themeableElements[i].ChangeRole(ThemeableUI.ElementRole.OnSurface);
             }
         }
+    }
+
+    protected virtual bool IsUnlock()
+    {
+        return true;
+    }
+
+    protected virtual string GetLockDescription()
+    {
+        return "";
     }
 }
