@@ -10,6 +10,7 @@ public class VoyageMilestoneItemUI : MonoBehaviour
     public Image fill;
     public Image reward;
     public Image tick;
+    public Image fx;
     public Button rewardButton;
     public Button openStarDetailButton;
 
@@ -95,6 +96,8 @@ public class VoyageMilestoneItemUI : MonoBehaviour
 
                     loopScaleRewardTween = Tween.Scale(reward.transform, 1.1f, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
                 });
+
+                SaferioTween.PlayExplosiveAt(fx, container, targetScale: 8f, onFxShown: null);
             }
         }
     }

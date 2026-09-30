@@ -93,6 +93,7 @@ public class NodeUI : MonoBehaviour
 
             serviceLocator.character.InvokeSelectNodeEvent();
 
+            SaferioTween.Punch(container);
             // SaferioTween.AlphaShow(highlight);
         }
         else if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNode)

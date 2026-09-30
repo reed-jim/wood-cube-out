@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +18,8 @@ public class ResourceManager : Singleton<ResourceManager>
     public SerializableDictionary<ResourceType, ResourceDataItem> resources;
     public SerializableDictionary<ResourceType, TMP_Text> resourceTexts;
     public ResourceData resourceData;
+
+    private Dictionary<ResourceType, Sequence> resourceTextSequences = new Dictionary<ResourceType, Sequence>();
 
     public static event Action<ResourceType, float> changeResourceValueEvent;
 
@@ -57,6 +61,20 @@ public class ResourceManager : Singleton<ResourceManager>
         if (resourceTexts.ContainsKey(resourceType))
         {
             resourceTexts[resourceType].text = $"{CommonUtil.FormatNumber(resources[resourceType].value)}";
+
+            if (resourceTextSequences.ContainsKey(resourceType))
+            {
+                if (resourceTextSequences[resourceType].isAlive)
+                {
+                    resourceTextSequences[resourceType].Stop();
+                }
+
+                resourceTextSequences[resourceType] = SaferioTween.Punch(resourceTexts[resourceType].transform);
+            }
+            else
+            {
+                resourceTextSequences.Add(resourceType, SaferioTween.Punch(resourceTexts[resourceType].transform));
+            }
         }
 
         SaveResourceData();

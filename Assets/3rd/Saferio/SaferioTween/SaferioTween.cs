@@ -16,6 +16,33 @@ namespace Saferio.Util.SaferioTween
     {
         private const float ALLOWED_ERROR = 0.01f;
 
+        #region Effect
+        public static void PlayExplosiveAt(Image revealAbilityFx, RectTransform target, float targetScale = 1.5f, Action onFxShown = null, Action onComplete = null)
+        {
+            revealAbilityFx.gameObject.SetActive(true);
+
+            revealAbilityFx.transform.SetParent(target);
+            revealAbilityFx.transform.localScale = Vector3.zero;
+            revealAbilityFx.rectTransform.sizeDelta = target.sizeDelta;
+            revealAbilityFx.rectTransform.localPosition = Vector3.zero;
+            revealAbilityFx.color = ColorUtil.WithAlpha(revealAbilityFx.color, 0);
+
+            Sequence sequence = Sequence.Create(Tween.Scale(revealAbilityFx.transform, targetScale, duration: 0.3f));
+            sequence.Group(Tween.Alpha(revealAbilityFx, 1, duration: 0.3f).OnComplete(() =>
+            {
+                onFxShown?.Invoke();
+            }));
+            sequence.Chain(Tween.Scale(revealAbilityFx.transform, 0, duration: 0.3f));
+            sequence.Group(Tween.Alpha(revealAbilityFx, 0, duration: 0.3f));
+            sequence.OnComplete(() =>
+            {
+                revealAbilityFx.gameObject.SetActive(false);
+
+                onComplete?.Invoke();
+            });
+        }
+        #endregion
+
         #region POSITION
         public static void Position
         (
