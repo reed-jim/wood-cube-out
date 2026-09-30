@@ -81,28 +81,12 @@ public class NodeDetailUI : BasePopup
 
     public void UpdateStatText(BaseCharacter node, StatType statType)
     {
-        // StatUpgradeData upgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
-
-        // UIElementsOfStats[statType].statText.text = $"{upgradeData.currentValue:F2} --> <color=#008502>{upgradeData.nextValue:F2}</color>";
-        // UIElementsOfStats[statType].costText.text = $"{(int)upgradeData.coinRequired}";
-
         Stat stat = node.serviceLocator.stats.GetStat(statType);
 
         float baseValue = stat.BaseValue;
         float currentValue = stat.Value;
 
-        Color color = ThemeManager.PrimaryText;
-
-        if (currentValue > baseValue)
-        {
-            color = Color.green;
-        }
-        else if (currentValue < baseValue)
-        {
-            color = Color.red;
-        }
-
-        UIElementsOfStats[statType].statText.text = $"{statType}: <color={ColorUtil.ColorToHex(color)}>{node.serviceLocator.stats.GetStat(statType).Value}";
+        UIElementsOfStats[statType].statText.text = $"{statType}: <color={DynamicThemeManager.Ins.PrimaryHex}>{node.serviceLocator.stats.GetStat(statType).Value}";
     }
 
     public void Unlock()
