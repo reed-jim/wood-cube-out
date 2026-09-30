@@ -73,7 +73,7 @@ public class DamageText : MonoBehaviour
         Vector3 targetPos = spawnPosition + new Vector3(xOffset, floatDistance, 0f);
 
         // Subtle random rotation (-8 to 8 deg)
-        transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-8f, 8f));
+        // transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-8f, 8f));
 
         float targetScale = isCritical ? 1.4f : 1.0f;
         transform.localScale = Vector3.zero;

@@ -128,25 +128,24 @@ public class NodeUI : MonoBehaviour
 
     public void UpdatePower()
     {
-        if (powerText.gameObject.activeSelf)
-        {
-            powerText.text = $"{serviceLocator.stats.GetStat(StatType.Damage).Value:F2}";
+        // if (powerText.gameObject.activeSelf)
+        // {
+        //     powerText.text = $"{serviceLocator.stats.GetStat(StatType.Damage).Value:F2}";
 
-            SaferioTween.Punch(powerText.transform);
-        }
+        //     SaferioTween.Punch(powerText.transform);
+        // }
     }
 
     public void Lock()
     {
         circleProgress.fillAmount = 0;
-        powerText.text = "Locked";
 
         backgroundThemeableUI.ChangeRole(ThemeableUI.ElementRole.SurfaceDim);
         borderThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
         textThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
 
         lockIcon.gameObject.SetActive(true);
-        powerText.gameObject.SetActive(false);
+        // powerText.gameObject.SetActive(false);
     }
 
     public void Unlock()
@@ -156,7 +155,7 @@ public class NodeUI : MonoBehaviour
         textThemeableUI.ChangeRole(ThemeableUI.ElementRole.Primary);
 
         lockIcon.gameObject.SetActive(false);
-        powerText.gameObject.SetActive(true);
+        // powerText.gameObject.SetActive(true);
     }
 
     public void Highlight()
