@@ -19,23 +19,22 @@ public class ResearchDetailUI : BasePopup
     protected override void RegisterMoreEvent()
     {
         base.RegisterMoreEvent();
+
         ResearchItemUI.showResearchDetailEvent += ShowDetail;
         ResearchManager.OnResearchUpdated += UpdateDynamicUI;
     }
 
-    protected override void MoreActionOnDestroy()
+    protected override void UnregisterMoreEvent()
     {
-        base.MoreActionOnDestroy();
+        base.UnregisterMoreEvent();
+
         ResearchItemUI.showResearchDetailEvent -= ShowDetail;
         ResearchManager.OnResearchUpdated -= UpdateDynamicUI;
     }
 
     private void Awake()
     {
-        if (unlockButton != null)
-        {
-            unlockButton.onClick.AddListener(OnUnlockClicked);
-        }
+        unlockButton.onClick.AddListener(OnUnlockClicked);
     }
 
     public void ShowDetail(ResearchNodeSO researchSO)

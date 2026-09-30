@@ -23,9 +23,9 @@ public class SpaceEventDetailUI : BasePopup
         SpaceEventItemUI.showSpaceEventDetailEvent += ShowDetail;
     }
 
-    protected override void MoreActionOnDestroy()
+    protected override void UnregisterMoreEvent()
     {
-        base.MoreActionOnDestroy();
+        base.UnregisterMoreEvent();
 
         SpaceEventItemUI.showSpaceEventDetailEvent -= ShowDetail;
     }
