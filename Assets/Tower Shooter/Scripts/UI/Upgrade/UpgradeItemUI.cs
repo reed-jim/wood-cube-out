@@ -65,8 +65,9 @@ public class UpgradeItemUI : MonoBehaviour
     public void UpdateText(StatUpgradeData statUpgradeData)
     {
         statIcon.sprite = statColorConfigSO.GetIcon(statType);
+        float delta = statUpgradeData.nextValue - statUpgradeData.currentValue;
         upgradeText.text =
-            $"{TextUtil.FormatFloat(statUpgradeData.currentValue)} <color=#1EFF1E>({TextUtil.FormatFloat(statUpgradeData.nextValue)})</color>";
+            $"{TextUtil.FormatFloat(statUpgradeData.currentValue)} (+{TextUtil.FormatFloat(delta)})";
         coinText.text = $"{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
     }
 
