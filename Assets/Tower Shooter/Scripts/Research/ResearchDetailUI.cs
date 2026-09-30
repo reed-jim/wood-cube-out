@@ -32,8 +32,10 @@ public class ResearchDetailUI : BasePopup
         ResearchManager.OnResearchUpdated -= UpdateDynamicUI;
     }
 
-    private void Awake()
+    protected override void MoreActionInAwake()
     {
+        base.MoreActionInAwake();
+
         unlockButton.onClick.AddListener(OnUnlockClicked);
     }
 
@@ -69,7 +71,7 @@ public class ResearchDetailUI : BasePopup
         bool isUnlocked = ResearchManager.Ins.IsUnlocked(currentResearch.researchID);
         bool canResearch = ResearchManager.Ins.CanResearch(currentResearch);
 
-        if (costText) costText.text = isUnlocked ? "Completed" : $"Cost: {CommonUtil.FormatNumber(currentResearch.cost)}";
+        if (costText) costText.text = isUnlocked ? "Completed" : $"{CommonUtil.FormatNumber(currentResearch.cost)}";
         if (unlockButton) unlockButton.interactable = canResearch && !isUnlocked;
     }
 

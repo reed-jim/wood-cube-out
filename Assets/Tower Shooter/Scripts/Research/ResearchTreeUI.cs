@@ -21,11 +21,13 @@ public class ResearchTreeUI : MonoBehaviour
     private void Awake()
     {
         ResearchManager.OnResearchUpdated += RefreshTree;
+        SwitchableScreenButton.switchScreenEvent += OnScreenSwitch;
     }
 
     private void OnDestroy()
     {
         ResearchManager.OnResearchUpdated -= RefreshTree;
+        SwitchableScreenButton.switchScreenEvent -= OnScreenSwitch;
     }
 
     public void GenerateTree()
