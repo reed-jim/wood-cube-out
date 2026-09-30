@@ -8,7 +8,7 @@ public class ResearchItemUI : MonoBehaviour
     [SerializeField] private Image iconImage;
     [SerializeField] private Button selectButton;
     [SerializeField] private RectTransform lockedOverlay;
-    [SerializeField] private RectTransform completedOverlay;
+    [SerializeField] private RectTransform inactiveOverlay;
 
     public ResearchNodeSO BoundConfig { get; private set; }
 
@@ -36,7 +36,7 @@ public class ResearchItemUI : MonoBehaviour
         bool canResearch = ResearchManager.Ins.CanResearch(BoundConfig);
 
         lockedOverlay.gameObject.SetActive(!isUnlocked && !canResearch);
-        completedOverlay.gameObject.SetActive(isUnlocked);
+        inactiveOverlay.gameObject.SetActive(!isUnlocked);
     }
 
     private void OnItemClicked()
