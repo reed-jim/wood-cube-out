@@ -1,58 +1,54 @@
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
 
 public class ResearchItemUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text titleText;
-    [SerializeField] private TMP_Text levelText;
-    [SerializeField] private Image progressBar;
-    [SerializeField] private TMP_Text timerText;
-    [SerializeField] private Button clickButton;
+    [SerializeField] private TMP_Text costText;
+    [SerializeField] private Button purchaseButton;
+    [SerializeField] private GameObject lockedOverlay;
+    [SerializeField] private GameObject completedOverlay;
 
-    public ResearchNodeSO BoundNode { get; private set; }
+    public ResearchNodeSO BoundConfig { get; private set; }
+
     public static event Action<ResearchNodeSO> showResearchDetailEvent;
 
     private void Awake()
     {
-        clickButton.onClick.AddListener(OnItemClicked);
+        if (purchaseButton != null)
+        {
+            purchaseButton.onClick.AddListener(OnItemClicked);
+        }
     }
 
     public void Bind(ResearchNodeSO config)
     {
-        BoundNode = config;
-        if (iconImage) iconImage.sprite = config.icon;
-        if (titleText) titleText.text = config.researchName;
+        BoundConfig = config;
+
+        if (iconImage) iconImage.sprite = config.researchIcon;
+        if (titleText) titleText.text = config.researchTitle;
 
         UpdateUI();
     }
 
     public void UpdateUI()
     {
-        if (BoundNode == null) return;
+        if (BoundConfig == null) return;
 
-        int currentLevel = ResearchManager.Ins.GetResearchLevel(BoundNode.researchID);
-        if (levelText) levelText.text = $"Lv. {currentLevel} / {BoundNode.maxLevel}";
+        bool isUnlocked = ResearchManager.Ins.IsUnlocked(BoundConfig.researchID);
+        bool canResearch = ResearchManager.Ins.CanResearch(BoundConfig);
 
-        ActiveResearch active = ResearchManager.Ins.CurrentActiveResearch;
-
-        if (active != null && active.Config.researchID == BoundNode.researchID)
-        {
-            float progress = 1f - (active.RemainingTime / active.TotalDuration);
-            if (progressBar) progressBar.fillAmount = Mathf.Clamp01(progress);
-            if (timerText) timerText.text = $"{Mathf.CeilToInt(active.RemainingTime)}s";
-        }
-        else
-        {
-            if (progressBar) progressBar.fillAmount = 0f;
-            if (timerText) timerText.text = string.Empty;
-        }
+        if (costText) costText.text = isUnlocked ? "Unlocked" : CommonUtil.FormatNumber(BoundConfig.cost);
+        if (lockedOverlay) lockedOverlay.SetActive(!isUnlocked && !canResearch);
+        if (completedOverlay) completedOverlay.SetActive(isUnlocked);
+        if (purchaseButton) purchaseButton.interactable = !isUnlocked;
     }
 
     private void OnItemClicked()
     {
-        showResearchDetailEvent?.Invoke(BoundNode);
+        showResearchDetailEvent?.Invoke(BoundConfig);
     }
 }

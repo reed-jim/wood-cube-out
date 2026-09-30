@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System.Collections.Generic;
 
 public class ResearchDetailUI : BasePopup
 {
@@ -10,77 +10,75 @@ public class ResearchDetailUI : BasePopup
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text descriptionText;
     [SerializeField] private TMP_Text costText;
-    [SerializeField] private TMP_Text durationText;
-    [SerializeField] private Button startResearchButton;
+    [SerializeField] private Button unlockButton;
     [SerializeField] private RectTransform buffContainer;
 
     private List<StatItemUI> statItemUIs = new List<StatItemUI>();
-    private ResearchNodeSO currentConfig;
+    private ResearchNodeSO currentResearch;
 
     protected override void RegisterMoreEvent()
     {
         base.RegisterMoreEvent();
         ResearchItemUI.showResearchDetailEvent += ShowDetail;
-        startResearchButton.onClick.AddListener(OnStartResearchClicked);
+        ResearchManager.OnResearchUpdated += UpdateDynamicUI;
     }
 
     protected override void MoreActionOnDestroy()
     {
         base.MoreActionOnDestroy();
         ResearchItemUI.showResearchDetailEvent -= ShowDetail;
-        startResearchButton.onClick.RemoveListener(OnStartResearchClicked);
+        ResearchManager.OnResearchUpdated -= UpdateDynamicUI;
     }
 
-    public void ShowDetail(ResearchNodeSO config)
+    private void Awake()
+    {
+        if (unlockButton != null)
+        {
+            unlockButton.onClick.AddListener(OnUnlockClicked);
+        }
+    }
+
+    public void ShowDetail(ResearchNodeSO researchSO)
     {
         Show();
-        currentConfig = config;
+        currentResearch = researchSO;
 
-        iconImage.sprite = config.icon;
-        titleText.text = config.researchName;
-        descriptionText.text = config.description;
+        iconImage.sprite = researchSO.researchIcon;
+        titleText.text = researchSO.researchTitle;
+        descriptionText.text = researchSO.researchDescription;
 
-        int currentLevel = ResearchManager.Ins.GetResearchLevel(config.researchID);
-        int targetLevel = currentLevel + 1;
-
-        if (currentLevel >= config.maxLevel)
-        {
-            costText.text = "MAXED";
-            durationText.text = "--";
-            startResearchButton.interactable = false;
-        }
-        else
-        {
-            double cost = config.GetCostForLevel(targetLevel);
-            float duration = config.GetDurationForLevel(targetLevel);
-
-            costText.text = $"{cost:N0}";
-            durationText.text = $"{Mathf.CeilToInt(duration)}s";
-
-            startResearchButton.interactable = ResearchManager.Ins.CanStartResearch(config, out _);
-        }
-
-        // Render Stats
         CommonUtil.ReturnListToPool(statItemUIs, item => item.gameObject);
 
-        for (int i = 0; i < config.baseStatModifiers.Count; i++)
+        for (int i = 0; i < researchSO.statModifiers.Count; i++)
         {
-            StatModifierData statData = config.baseStatModifiers[i];
+            StatModifierData statModifierData = researchSO.statModifiers[i];
             StatItemUI statItemUI = ObjectPoolingEverything.GetFromPool<StatItemUI>(GameConstants.statItemUI);
 
-            statItemUI.Init(statData.statType, statData.modType, statData.value);
+            statItemUI.Init(statModifierData.statType, statModifierData.modType, statModifierData.value);
             CommonUtil.SetParentAndResetScale(statItemUI.transform, buffContainer);
+
             statItemUIs.Add(statItemUI);
         }
+
+        UpdateDynamicUI();
     }
 
-    private void OnStartResearchClicked()
+    private void UpdateDynamicUI()
     {
-        if (currentConfig == null) return;
+        if (currentResearch == null) return;
 
-        if (ResearchManager.Ins.TryStartResearch(currentConfig))
+        bool isUnlocked = ResearchManager.Ins.IsUnlocked(currentResearch.researchID);
+        bool canResearch = ResearchManager.Ins.CanResearch(currentResearch);
+
+        if (costText) costText.text = isUnlocked ? "Completed" : $"Cost: {CommonUtil.FormatNumber(currentResearch.cost)}";
+        if (unlockButton) unlockButton.interactable = canResearch && !isUnlocked;
+    }
+
+    private void OnUnlockClicked()
+    {
+        if (currentResearch != null && ResearchManager.Ins.TryUnlockResearch(currentResearch))
         {
-            Hide();
+            UpdateDynamicUI();
         }
     }
 }
