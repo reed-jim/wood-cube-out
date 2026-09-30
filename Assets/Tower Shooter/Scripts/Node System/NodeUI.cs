@@ -93,7 +93,7 @@ public class NodeUI : MonoBehaviour
 
             serviceLocator.character.InvokeSelectNodeEvent();
 
-            SaferioTween.AlphaShow(highlight);
+            // SaferioTween.AlphaShow(highlight);
         }
         else if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNode)
         {
@@ -244,12 +244,12 @@ public class NodeUI : MonoBehaviour
 
     private void OnNodeSelected(BaseCharacter node)
     {
-        if (serviceLocator.character != node)
-        {
-            if (highlight.gameObject.activeSelf)
-            {
-                SaferioTween.AlphaHide(highlight);
-            }
-        }
+        // if (serviceLocator.character != node)
+        // {
+        //     if (highlight.gameObject.activeSelf)
+        //     {
+        //         SaferioTween.AlphaHide(highlight);
+        //     }
+        // }
     }
 }

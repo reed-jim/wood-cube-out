@@ -45,11 +45,13 @@ public class UpgradeItemUI : MonoBehaviour
         {
             UpgradeManager.Ins.Upgrade(node, statType);
 
-            ShowAddedStatValueText((statUpgradeData.nextValue / statUpgradeData.currentValue) - 1, transform.position, transform);
+            // ShowAddedStatValueText((statUpgradeData.nextValue / statUpgradeData.currentValue) - 1, transform.position, transform);
 
-            ResourceManager.Ins.ChangeResource(ResourceType.Coin, -statUpgradeData.coinRequired);
+            ResourceManager.Ins.DeductResource(ResourceType.Coin, statUpgradeData.coinRequired);
 
             UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+
+            PowerManager.Ins.ShowTotalPowerOutputPerSecond();
         }
         else
         {

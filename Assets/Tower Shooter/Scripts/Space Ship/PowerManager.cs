@@ -56,7 +56,9 @@ public class PowerManager : Singleton<PowerManager>
 
     public void ShowTotalPowerOutputPerSecond()
     {
-        IngameNotificationManager.Ins.ShowNotification($"Output per second: <color={DynamicThemeManager.Ins.PrimaryHex}>{GetTotalPowerOutputPerSecond()}");
+        string notificationString = $"Output per second: <color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(GetTotalPowerOutputPerSecond())}";
+
+        IngameNotificationManager.Ins.ShowNotification(notificationString);
     }
 
     public float GetSpaceShipSpeed()

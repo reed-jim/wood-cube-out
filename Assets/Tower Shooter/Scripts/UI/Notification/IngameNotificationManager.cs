@@ -5,6 +5,9 @@ public class IngameNotificationManager : Singleton<IngameNotificationManager>
 {
     public RectTransform notificationBadgeContainer;
 
+    NotificationBadge lastNotificationBadge;
+    private bool isCurrentNotificationBadgeActive;
+
     public void ShowNotification(string title, string description)
     {
         NotificationBadge notificationBadge = ObjectPoolingEverything.GetFromPool<NotificationBadge>(GameConstants.notificationBadge);
@@ -17,12 +20,21 @@ public class IngameNotificationManager : Singleton<IngameNotificationManager>
 
     public void ShowNotification(string description)
     {
-        NotificationBadge notificationBadge = ObjectPoolingEverything.GetFromPool<NotificationBadge>(GameConstants.notificationBadge);
+        if (isCurrentNotificationBadgeActive)
+        {
+            lastNotificationBadge.UpdateDescription(description);
 
-        notificationBadge.transform.SetParent(notificationBadgeContainer);
-        notificationBadge.transform.localPosition = new Vector3(0, 400);
+            return;
+        }
 
-        notificationBadge.ShowNotification(description);
+        lastNotificationBadge = ObjectPoolingEverything.GetFromPool<NotificationBadge>(GameConstants.notificationBadge);
+
+        lastNotificationBadge.transform.SetParent(notificationBadgeContainer);
+        lastNotificationBadge.transform.localPosition = new Vector3(0, 400);
+
+        lastNotificationBadge.ShowNotification(description, onStartHidden: OnNotificationBadgeHidden);
+
+        isCurrentNotificationBadgeActive = true;
     }
 
     public void ShowNotification(string title, string description, Vector3 position, float scale)
@@ -47,4 +59,9 @@ public class IngameNotificationManager : Singleton<IngameNotificationManager>
         notificationBadge.ShowNotification(GameConstants.WARNING, "Not enough power!");
     }
     #endregion
+
+    private void OnNotificationBadgeHidden()
+    {
+        isCurrentNotificationBadgeActive = false;
+    }
 }
