@@ -120,20 +120,37 @@ public class LeadershipCharacterCreationUI : BasePopup
         ageText.text = $"Age {(int)(value * 100)}";
     }
 
+    private bool ValidateCharacter()
+    {
+        bool isValid = true;
+
+        if (string.IsNullOrWhiteSpace(nameInputString))
+        {
+            isValid = false;
+
+            IngameNotificationManager.Ins.ShowNotification("Character name is not valid!");
+        }
+
+        return isValid;
+    }
+
     private void ConfirmCreateCharacter()
     {
+        if (!ValidateCharacter())
+        {
+            return;
+        }
+
         float cost = CurveManager.Ins.GetHireCharactersCost(StarManager.Ins.currentStarPathConfig.id);
 
         if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= cost)
         {
-
+            showConfirmPopupEvent?.Invoke($"Are you sure to spend {cost} to create this character", () => CreateCharacter());
         }
         else
         {
-
+            IngameNotificationManager.Ins.ShowNotEnoughPower();
         }
-
-        showConfirmPopupEvent?.Invoke($"Are you sure to spend {cost} to create this character", () => CreateCharacter());
     }
 
     private void CreateCharacter()
@@ -285,6 +302,8 @@ public class LeadershipCharacterCreationUI : BasePopup
         abilityCanvasGroup.interactable = false;
 
         Tween.Alpha(abilityCanvasGroup, 1, duration: 0.3f);
+
+        yield return new WaitForSeconds(0.3f);
 
         while (step <= maxStep)
         {
