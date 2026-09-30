@@ -4,20 +4,20 @@ using UnityEngine.UI;
 using UnityEditor;
 using System.IO;
 
-public class BadgeGeneratorEditor : EditorWindow
+public class BorderAuraGeneratorEditor : EditorWindow
 {
     private Vector2Int nodeSize = new Vector2Int(512, 512);
-    private string saveFolderPath = "Assets/NodeSprites";
+    private string saveFolderPath = "Assets/NodeAuraBorders";
 
-    [MenuItem("Tools/2D Node Sprite Generator")]
+    [MenuItem("Tools/2D Circle Aura Generator")]
     public static void ShowWindow()
     {
-        GetWindow<BadgeGeneratorEditor>("Node Generator");
+        GetWindow<BorderAuraGeneratorEditor>("Aura Generator");
     }
 
     private void OnGUI()
     {
-        GUILayout.Label("Progressive 2D Circular Power Node Generator", EditorStyles.boldLabel);
+        GUILayout.Label("10-Rank Circular Border Aura Generator", EditorStyles.boldLabel);
         EditorGUILayout.Space();
 
         nodeSize = EditorGUILayout.Vector2IntField("Sprite Dimensions (PX)", nodeSize);
@@ -25,13 +25,13 @@ public class BadgeGeneratorEditor : EditorWindow
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Generate Progressive 10 Node Levels", GUILayout.Height(40)))
+        if (GUILayout.Button("Generate 10 Border Aura Ranks", GUILayout.Height(40)))
         {
-            GenerateAndSaveAllNodes();
+            GenerateAndSaveAllAuras();
         }
     }
 
-    private void GenerateAndSaveAllNodes()
+    private void GenerateAndSaveAllAuras()
     {
         if (!Directory.Exists(saveFolderPath))
         {
@@ -39,31 +39,33 @@ public class BadgeGeneratorEditor : EditorWindow
             AssetDatabase.Refresh();
         }
 
-        // Generate base procedural textures
+        // Generate procedural base textures
         Sprite solidSprite = CreateFlatSquareSprite();
         Sprite softGlowSprite = CreateRadialGlowSprite(256);
         Sprite circleSprite = CreateCircleSprite(256);
-        Sprite ringSprite = CreateRingSprite(256, 0.82f);
+        Sprite ringSprite = CreateRingSprite(256, 0.85f);
+        Sprite thinRingSprite = CreateRingSprite(256, 0.94f);
 
-        for (int level = 1; level <= 10; level++)
+        for (int rank = 1; rank <= 10; rank++)
         {
-            byte[] pngData = BakeNodeToPNG(level, nodeSize, solidSprite, softGlowSprite, circleSprite, ringSprite);
-            string filePath = Path.Combine(saveFolderPath, $"PowerNode_Lv{level}.png");
+            byte[] pngData = BakeAuraToPNG(rank, nodeSize, solidSprite, softGlowSprite, circleSprite, ringSprite, thinRingSprite);
+            string filePath = Path.Combine(saveFolderPath, $"BorderAura_Rank{rank}.png");
             File.WriteAllBytes(filePath, pngData);
         }
 
-        // Clean up memory
+        // Clean up temporary textures
         DestroyImmediate(solidSprite.texture); DestroyImmediate(solidSprite);
         DestroyImmediate(softGlowSprite.texture); DestroyImmediate(softGlowSprite);
         DestroyImmediate(circleSprite.texture); DestroyImmediate(circleSprite);
         DestroyImmediate(ringSprite.texture); DestroyImmediate(ringSprite);
+        DestroyImmediate(thinRingSprite.texture); DestroyImmediate(thinRingSprite);
 
         AssetDatabase.Refresh();
 
-        // Reimport assets as 2D Sprites
-        for (int level = 1; level <= 10; level++)
+        // Reimport as 2D Sprites
+        for (int rank = 1; rank <= 10; rank++)
         {
-            string filePath = Path.Combine(saveFolderPath, $"PowerNode_Lv{level}.png");
+            string filePath = Path.Combine(saveFolderPath, $"BorderAura_Rank{rank}.png");
             TextureImporter importer = AssetImporter.GetAtPath(filePath) as TextureImporter;
 
             if (importer != null)
@@ -76,12 +78,12 @@ public class BadgeGeneratorEditor : EditorWindow
             }
         }
 
-        EditorUtility.DisplayDialog("Success", $"Generated 10 Level Power Nodes inside:\n{saveFolderPath}", "OK");
+        EditorUtility.DisplayDialog("Success", $"Generated 10 Border Aura Ranks inside:\n{saveFolderPath}", "OK");
     }
 
-    private byte[] BakeNodeToPNG(int level, Vector2Int size, Sprite solidSprite, Sprite glowSprite, Sprite circleSprite, Sprite ringSprite)
+    private byte[] BakeAuraToPNG(int rank, Vector2Int size, Sprite solidSprite, Sprite glowSprite, Sprite circleSprite, Sprite ringSprite, Sprite thinRingSprite)
     {
-        GameObject bakerRoot = new GameObject("TempNodeBaker", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+        GameObject bakerRoot = new GameObject("TempAuraBaker", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         Canvas bakerCanvas = bakerRoot.GetComponent<Canvas>();
         bakerCanvas.renderMode = RenderMode.WorldSpace;
 
@@ -104,7 +106,7 @@ public class BadgeGeneratorEditor : EditorWindow
 
         bakerCanvas.worldCamera = bakerCamera;
 
-        BuildNodeHierarchy(bakerRoot.transform, level, size, solidSprite, glowSprite, circleSprite, ringSprite);
+        BuildAuraHierarchy(bakerRoot.transform, rank, size, solidSprite, glowSprite, circleSprite, ringSprite, thinRingSprite);
         Canvas.ForceUpdateCanvases();
 
         RenderTexture renderTex = RenderTexture.GetTemporary(size.x, size.y, 24, RenderTextureFormat.ARGB32);
@@ -129,134 +131,138 @@ public class BadgeGeneratorEditor : EditorWindow
         return pngData;
     }
 
-    #region Procedural Builders
-
-    private void BuildNodeHierarchy(Transform root, int level, Vector2Int size, Sprite solid, Sprite glow, Sprite circle, Sprite ring)
+    private void BuildAuraHierarchy(Transform root, int rank, Vector2Int size, Sprite solid, Sprite glow, Sprite circle, Sprite ring, Sprite thinRing)
     {
-        Color primaryAccent, secondaryAccent, plateBg, outerBorderColor;
-        SetupHighContrastColors(level, out primaryAccent, out secondaryAccent, out plateBg, out outerBorderColor);
+        Color primaryAccent, secondaryAccent, glowColor, rimColor;
+        GetRankColors(rank, out primaryAccent, out secondaryAccent, out glowColor, out rimColor);
 
-        Color voidDark = new Color(0.03f, 0.04f, 0.07f);
-        Color crispWhite = new Color(0.98f, 0.98f, 1.00f);
+        Color crispWhite = new Color(0.98f, 0.98f, 1.00f, 0.95f);
+        Color voidDark = new Color(0.02f, 0.02f, 0.05f, 0.85f);
 
-        float baseDiameter = Mathf.Min(size.x, size.y) * 0.72f;
+        // Core dimensions (Center remains hollow)
+        float baseBorderDiameter = Mathf.Min(size.x, size.y) * 0.60f;
         int order = 0;
 
-        // 1. POWER AURA GLOW (Unlocks Lv3+)
-        if (level >= 3)
-        {
-            float glowScale = 1.25f + (level * 0.05f);
-            float glowAlpha = 0.25f + (level * 0.06f);
-            CreatePart("AuraGlow", root, glow, outerBorderColor * new Color(1, 1, 1, glowAlpha), new Vector2(baseDiameter * glowScale, baseDiameter * glowScale), Vector2.zero, order++);
-        }
+        // 1. DISTANT OUTER GLOW (Scales intensity and reach per rank)
+        float outerGlowSize = baseBorderDiameter * (1.30f + (rank * 0.06f));
+        float glowAlpha = Mathf.Min(0.3f + (rank * 0.06f), 0.85f);
+        Color finalOuterGlow = glowColor;
+        finalOuterGlow.a = glowAlpha;
+        CreatePart("OuterAuraGlow", root, glow, finalOuterGlow, new Vector2(outerGlowSize, outerGlowSize), Vector2.zero, order++);
 
-        // 2. ORBITAL RUNIC RINGS (Unlocks Lv5+ and Lv8+)
-        if (level >= 5)
+        // 2. RAY BURSTS / STARBURST BEAMS (Unlocks Rank 7+)
+        if (rank >= 7)
         {
-            float ring1Size = baseDiameter * 1.15f;
-            GameObject outerRing = CreatePart("OuterOrbitalRing", root, ring, primaryAccent * 0.85f, new Vector2(ring1Size, ring1Size), Vector2.zero, order++);
+            int rayCount = (rank >= 9) ? 8 : 4;
+            float rayLength = baseBorderDiameter * (0.8f + (rank * 0.05f));
+            float rayThickness = 6f + rank;
 
-            if (level >= 8)
+            for (int i = 0; i < rayCount; i++)
             {
-                float ring2Size = baseDiameter * 1.30f;
-                GameObject secondaryRing = CreatePart("SecondaryOrbitalRing", root, ring, secondaryAccent, new Vector2(ring2Size, ring2Size), Vector2.zero, order++);
-                secondaryRing.transform.localRotation = Quaternion.Euler(0, 0, 45f);
+                float angle = i * (180f / rayCount);
+                GameObject ray = CreatePart($"AuraRay_{i}", root, solid, primaryAccent * new Color(1, 1, 1, 0.5f), new Vector2(rayThickness, rayLength), Vector2.zero, order++);
+                ray.transform.localRotation = Quaternion.Euler(0, 0, angle);
             }
         }
 
-        // 3. MAIN CIRCULAR CHASSIS
-        GameObject darkBorder = CreatePart("NodeBaseDark", root, circle, voidDark, new Vector2(baseDiameter, baseDiameter), Vector2.zero, order++);
-
-        float outerThickness = baseDiameter * 0.92f;
-        GameObject outerFrame = CreatePart("NodeOuterFrame", darkBorder.transform, circle, outerBorderColor, new Vector2(outerThickness, outerThickness), Vector2.zero, order++);
-
-        float innerFillSize = baseDiameter * 0.84f;
-        GameObject nodePlate = CreatePart("NodePlate", outerFrame.transform, circle, plateBg, new Vector2(innerFillSize, innerFillSize), Vector2.zero, order++);
-
-        // 4. INNER ACCENT RING (Unlocks Lv2+)
-        if (level >= 2)
+        // 3. SECONDARY OUTER ORBITAL RINGS (Unlocks Rank 5+)
+        if (rank >= 5)
         {
-            float accentRingSize = innerFillSize * 0.88f;
-            CreatePart("InnerAccentRing", nodePlate.transform, ring, primaryAccent, new Vector2(accentRingSize, accentRingSize), Vector2.zero, order++);
-        }
+            float ring1Size = baseBorderDiameter * 1.18f;
+            CreatePart("OuterEnergyRing", root, thinRing, secondaryAccent * 0.8f, new Vector2(ring1Size, ring1Size), Vector2.zero, order++);
 
-        // 5. ORBITING POWER CAPACITOR SUB-NODES (Scales 2 to 8 nodes based on level)
-        int orbCount = Mathf.Clamp(level, 2, 8);
-        float orbRadius = (innerFillSize / 2f) * 0.70f;
-
-        for (int i = 0; i < orbCount; i++)
-        {
-            float angle = i * (360f / orbCount) * Mathf.Deg2Rad;
-            Vector2 orbPos = new Vector2(Mathf.Cos(angle) * orbRadius, Mathf.Sin(angle) * orbRadius);
-            float orbSize = (level >= 7) ? 16f : 12f;
-
-            GameObject orbDark = CreatePart($"OrbDark_{i}", nodePlate.transform, circle, voidDark, new Vector2(orbSize + 4f, orbSize + 4f), orbPos, order++);
-            CreatePart($"OrbCore_{i}", orbDark.transform, circle, primaryAccent, new Vector2(orbSize, orbSize), Vector2.zero, order++);
-
-            if (level >= 6)
+            if (rank >= 9)
             {
-                CreatePart($"OrbHighlight_{i}", orbDark.transform, circle, crispWhite, new Vector2(orbSize * 0.4f, orbSize * 0.4f), Vector2.zero, order++);
+                float ring2Size = baseBorderDiameter * 1.32f;
+                GameObject secondaryRing = CreatePart("FarEnergyRing", root, thinRing, primaryAccent * 0.6f, new Vector2(ring2Size, ring2Size), Vector2.zero, order++);
+                secondaryRing.transform.localRotation = Quaternion.Euler(0, 0, 30f);
             }
         }
 
-        // 6. CENTRAL POWER CORE REACTOR
-        float coreRatio = (level >= 9) ? 0.48f : (level >= 6) ? 0.40f : 0.32f;
-        float coreSize = innerFillSize * coreRatio;
+        // 4. MAIN BORDER FRAME & DARK BACKING RIM
+        float darkBackingSize = baseBorderDiameter + 8f + (rank * 0.8f);
+        CreatePart("RimBacking", root, ring, voidDark, new Vector2(darkBackingSize, darkBackingSize), Vector2.zero, order++);
 
-        GameObject coreBase = CreatePart("CoreBaseDark", nodePlate.transform, circle, voidDark, new Vector2(coreSize + 6f, coreSize + 6f), Vector2.zero, order++);
-        GameObject coreGlow = CreatePart("CoreGlow", coreBase.transform, circle, primaryAccent, new Vector2(coreSize, coreSize), Vector2.zero, order++);
-        CreatePart("CoreCenter", coreGlow.transform, circle, crispWhite, new Vector2(coreSize * 0.5f, coreSize * 0.5f), Vector2.zero, order++);
+        // Main colored rim frame
+        CreatePart("MainBorderRim", root, ring, rimColor, new Vector2(baseBorderDiameter, baseBorderDiameter), Vector2.zero, order++);
 
-        // 7. HIGH-TIER STARBURST ACCENTS (Unlocks Lv7+)
-        if (level >= 7)
+        // 5. INNER & OUTER RIM HIGHLIGHTS (Unlocks Rank 2+)
+        if (rank >= 2)
         {
-            float starSize = coreSize * 0.70f;
-            GameObject star1 = CreatePart("StarCore1", coreGlow.transform, solid, secondaryAccent, new Vector2(starSize, starSize), Vector2.zero, order++);
-            star1.transform.localRotation = Quaternion.Euler(0, 0, 45f);
+            float outerHighlightSize = baseBorderDiameter * 1.05f;
+            CreatePart("OuterRimEdge", root, thinRing, primaryAccent, new Vector2(outerHighlightSize, outerHighlightSize), Vector2.zero, order++);
+        }
 
-            if (level >= 9)
+        if (rank >= 4)
+        {
+            float innerHighlightSize = baseBorderDiameter * 0.88f;
+            CreatePart("InnerRimEdge", root, thinRing, crispWhite, new Vector2(innerHighlightSize, innerHighlightSize), Vector2.zero, order++);
+        }
+
+        // 6. ORBITING AURA NODES / CAPACITORS ALONG THE BORDER (Unlocks Rank 3+)
+        if (rank >= 3)
+        {
+            int nodeCount = Mathf.Clamp(rank, 3, 12);
+            float orbitRadius = baseBorderDiameter / 2f;
+
+            for (int i = 0; i < nodeCount; i++)
             {
-                GameObject star2 = CreatePart("StarCore2", coreGlow.transform, solid, crispWhite, new Vector2(starSize * 0.55f, starSize * 0.55f), Vector2.zero, order++);
-                star2.transform.localRotation = Quaternion.Euler(0, 0, 0f);
+                float angle = i * (360f / nodeCount) * Mathf.Deg2Rad;
+                Vector2 nodePos = new Vector2(Mathf.Cos(angle) * orbitRadius, Mathf.Sin(angle) * orbitRadius);
+                float orbSize = 8f + (rank * 1.2f);
+
+                GameObject orbDark = CreatePart($"AuraNodeDark_{i}", root, circle, voidDark, new Vector2(orbSize + 4f, orbSize + 4f), nodePos, order++);
+                CreatePart($"AuraNodeCore_{i}", orbDark.transform, circle, primaryAccent, new Vector2(orbSize, orbSize), Vector2.zero, order++);
+
+                if (rank >= 6)
+                {
+                    CreatePart($"AuraNodeGlow_{i}", orbDark.transform, glow, secondaryAccent, new Vector2(orbSize * 2f, orbSize * 2f), Vector2.zero, order++);
+                    CreatePart($"AuraNodeHighlight_{i}", orbDark.transform, circle, crispWhite, new Vector2(orbSize * 0.4f, orbSize * 0.4f), Vector2.zero, order++);
+                }
             }
         }
     }
 
-    private void SetupHighContrastColors(int level, out Color primaryAccent, out Color secondaryAccent, out Color plateBg, out Color outerBorderColor)
+    private void GetRankColors(int rank, out Color primary, out Color secondary, out Color glow, out Color rim)
     {
-        plateBg = new Color(0.04f, 0.05f, 0.10f);
-
-        if (level <= 2) // Tier 1: Electric Cyan
+        if (rank <= 2) // Tier 1: Soft Cyan / Azure
         {
-            primaryAccent = new Color(0.00f, 0.95f, 1.00f);
-            secondaryAccent = new Color(0.15f, 0.40f, 0.65f);
-            outerBorderColor = new Color(0.00f, 0.85f, 1.00f);
+            primary = new Color(0.00f, 0.85f, 1.00f);
+            secondary = new Color(0.10f, 0.45f, 0.75f);
+            glow = new Color(0.00f, 0.70f, 1.00f);
+            rim = new Color(0.15f, 0.75f, 0.95f);
         }
-        else if (level <= 4) // Tier 2: Vivid Violet
+        else if (rank <= 4) // Tier 2: Amethyst Purple
         {
-            primaryAccent = new Color(0.68f, 0.38f, 1.00f);
-            secondaryAccent = new Color(0.38f, 0.18f, 0.68f);
-            outerBorderColor = new Color(0.60f, 0.32f, 0.98f);
+            primary = new Color(0.70f, 0.35f, 1.00f);
+            secondary = new Color(0.40f, 0.15f, 0.70f);
+            glow = new Color(0.60f, 0.20f, 0.95f);
+            rim = new Color(0.65f, 0.30f, 0.90f);
         }
-        else if (level <= 6) // Tier 3: Solar Orange
+        else if (rank <= 6) // Tier 3: Crimson Ember
         {
-            primaryAccent = new Color(1.00f, 0.40f, 0.00f);
-            secondaryAccent = new Color(0.65f, 0.20f, 0.00f);
-            outerBorderColor = new Color(1.00f, 0.50f, 0.10f);
+            primary = new Color(1.00f, 0.30f, 0.15f);
+            secondary = new Color(0.65f, 0.10f, 0.05f);
+            glow = new Color(0.95f, 0.20f, 0.00f);
+            rim = new Color(0.90f, 0.35f, 0.10f);
         }
-        else if (level <= 8) // Tier 4: Electric Lime
+        else if (rank <= 8) // Tier 4: Radiance Emerald
         {
-            primaryAccent = new Color(0.00f, 1.00f, 0.40f);
-            secondaryAccent = new Color(0.00f, 0.50f, 0.25f);
-            outerBorderColor = new Color(0.20f, 0.95f, 0.45f);
+            primary = new Color(0.10f, 1.00f, 0.50f);
+            secondary = new Color(0.00f, 0.55f, 0.30f);
+            glow = new Color(0.00f, 0.90f, 0.40f);
+            rim = new Color(0.20f, 0.95f, 0.55f);
         }
-        else // Tier 5: Overlord Gold & Magenta
+        else // Tier 5 (Ranks 9–10): Celestial Mythic Gold & Magenta
         {
-            primaryAccent = new Color(1.00f, 0.85f, 0.00f);
-            secondaryAccent = new Color(1.00f, 0.15f, 0.52f);
-            outerBorderColor = new Color(1.00f, 0.80f, 0.10f);
+            primary = new Color(1.00f, 0.84f, 0.00f);
+            secondary = new Color(1.00f, 0.20f, 0.60f);
+            glow = new Color(1.00f, 0.60f, 0.00f);
+            rim = new Color(1.00f, 0.80f, 0.20f);
         }
     }
+
+    #region Helpers
 
     private GameObject CreatePart(string name, Transform parent, Sprite sprite, Color color, Vector2 size, Vector2 pos, int order)
     {
