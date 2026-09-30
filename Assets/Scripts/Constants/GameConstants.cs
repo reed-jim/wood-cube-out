@@ -30,7 +30,7 @@ public static class GameConstants
     public static string electionItemUI = "electionItemUI";
     public static string statItemUI = "statItemUI";
     public static string spaceEventItemUI = "spaceEventItemUI";
-
+    public static string researchItemUI = "researchItemUI";
 
 
 

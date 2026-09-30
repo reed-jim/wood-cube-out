@@ -73,6 +73,11 @@ public class ResourceManager : Singleton<ResourceManager>
         return ChangeResource(resourceType, -value);
     }
 
+    public bool HasEnough(ResourceType resourceType, float value)
+    {
+        return GetResourceValue(resourceType) >= value;
+    }
+
     public ResourceData GetDefaultResourceData()
     {
         ResourceData resourceData = new ResourceData();

@@ -33,7 +33,8 @@ public enum StatModifierSource
     None,
     Augment,
     LeadershipPosition,
-    SpaceEvent
+    SpaceEvent,
+    Research
 }
 
 [Serializable]
