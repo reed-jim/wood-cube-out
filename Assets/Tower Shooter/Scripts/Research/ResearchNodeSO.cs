@@ -15,6 +15,10 @@ public class ResearchNodeSO : ScriptableObject
     public float cost; // Supports large numbers for idle games
     public List<ResearchNodeSO> prerequisites; // Mandatory prior research to unlock purchase
 
+    // Add these fields to your existing ResearchSO script:
+    [Header("Tree View Setup")]
+    public Vector2 treePosition; // Manual Grid Coordinates (e.g., X = Depth Level, Y = Branch Index)
+
     [Header("Effects")]
     public List<StatModifierData> statModifiers;
 }

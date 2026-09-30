@@ -5,7 +5,8 @@ public enum SwitchableScreenType
 {
     Voyage,
     Leadership,
-    IngameEvent
+    IngameEvent,
+    Research
 }
 
 public class SwitchableScreen : MonoBehaviour

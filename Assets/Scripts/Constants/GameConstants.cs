@@ -31,7 +31,7 @@ public static class GameConstants
     public static string statItemUI = "statItemUI";
     public static string spaceEventItemUI = "spaceEventItemUI";
     public static string researchItemUI = "researchItemUI";
-
+    public static string UIRectLine = "UIRectLine";
 
 
 
