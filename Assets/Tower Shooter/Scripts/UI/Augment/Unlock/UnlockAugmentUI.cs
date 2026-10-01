@@ -71,13 +71,15 @@ public class UnlockAugmentUI : MonoBehaviour
         overlay.gameObject.SetActive(true);
 
         continueButton.transform.localScale = Vector3.zero;
+        descriptionText.color = ColorUtil.WithAlpha(descriptionText.color, 0);
         overlay.color = ColorUtil.WithAlpha(overlay.color, 0);
 
         Sequence sequence = Sequence.Create(Tween.Delay(1));
 
         sequence.Chain(Tween.LocalPosition(cloneAugmentRT, new Vector3(0, 0.5f * cloneAugmentRT.sizeDelta.y), duration: 1f));
-        sequence.Group(Tween.Alpha(overlay, 0.95f, duration: 1f));
+        sequence.Group(Tween.Alpha(overlay, 0.98f, duration: 1f));
         sequence.Chain(Tween.Alpha(cloneLockCanvasGroup, 0, duration: 1f));
+        sequence.Group(Tween.Alpha(descriptionText, 1, duration: 0.3f));
         sequence.Group(SaferioTween.ScaleUpWithPunch(continueButton.transform));
 
         sequence.OnComplete(() =>
@@ -120,7 +122,7 @@ public class UnlockAugmentUI : MonoBehaviour
 
     private void SaveUnlockAugmentData()
     {
-        DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("UnlockAugmentData"), unlockAugmentData);
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("UnlockAugmentData"), unlockAugmentData);
     }
     #endregion
 }

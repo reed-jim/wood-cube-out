@@ -88,7 +88,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
         newValue = CurveManager.Ins.GetNextStatValue(statType, upgradeTime);
         newValue = CommonUtil.RoundToDecimalPlaces(newValue, 3);
         nextCoinRequired = CurveManager.Ins.GetUpgradeNodeCost(upgradeTime);
-        deltaValue = newValue - currentStatValue;
+        deltaValue = newValue - baseStatValue;
 
         StatUpgradeData statUpgradeData = new StatUpgradeData
         {
