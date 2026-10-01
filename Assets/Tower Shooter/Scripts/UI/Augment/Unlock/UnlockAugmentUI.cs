@@ -60,6 +60,11 @@ public class UnlockAugmentUI : MonoBehaviour
 
     private void Unlock()
     {
+        if (unlockAugmentData.isUnlocked)
+        {
+            return;
+        }
+
         container.gameObject.SetActive(true);
 
         continueButton.interactable = false;
@@ -73,6 +78,8 @@ public class UnlockAugmentUI : MonoBehaviour
         continueButton.transform.localScale = Vector3.zero;
         descriptionText.color = ColorUtil.WithAlpha(descriptionText.color, 0);
         overlay.color = ColorUtil.WithAlpha(overlay.color, 0);
+
+        descriptionText.text = $"Select many <color={DynamicThemeManager.Ins.PrimaryHex}>AUGMENTS</color> to greatly buff your node performance!";
 
         Sequence sequence = Sequence.Create(Tween.Delay(1));
 

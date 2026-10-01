@@ -10,7 +10,18 @@ public static class TextUtil
     public static string FormatFloat(float value)
     {
         // Adjust the number of '#' characters to set your maximum decimal limit
-        return value.ToString("0.#####", System.Globalization.CultureInfo.InvariantCulture);
+        if (value > 10)
+        {
+            return value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+        }
+        else if (value > 0.1f)
+        {
+            return value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            return value.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+        }
     }
 
     public static string FormatDistance(double km)

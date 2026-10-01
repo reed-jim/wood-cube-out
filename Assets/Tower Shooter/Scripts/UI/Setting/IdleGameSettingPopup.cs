@@ -84,21 +84,21 @@ public class IdleGameSettingPopup : BasePopup
     {
         currentSettings.masterVolume = volume;
         float dB = Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f;
-        mainAudioMixer.SetFloat("MasterVol", dB);
+        // mainAudioMixer.SetFloat("MasterVol", dB);
     }
 
     public void SetMusicVolume(float volume)
     {
         currentSettings.musicVolume = volume;
         float dB = Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f;
-        mainAudioMixer.SetFloat("MusicVol", dB);
+        // mainAudioMixer.SetFloat("MusicVol", dB);
     }
 
     public void SetSFXVolume(float volume)
     {
         currentSettings.sfxVolume = volume;
         float dB = Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f;
-        mainAudioMixer.SetFloat("SFXVol", dB);
+        // mainAudioMixer.SetFloat("SFXVol", dB);
     }
 
     #endregion
