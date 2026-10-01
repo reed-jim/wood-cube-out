@@ -56,7 +56,10 @@ public class ResearchManager : Singleton<ResearchManager>
             ApplyResearchEffects();
             SaveResearchData();
 
+            ResourceManager.Ins.DeductResource(ResourceType.Coin, config.cost);
+
             OnResearchUpdated?.Invoke();
+
             return true;
         }
 

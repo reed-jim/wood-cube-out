@@ -14,12 +14,37 @@ public class CurveManager : Singleton<CurveManager>
         public double linearStep;  // Used for linear stat increases
     }
 
-    [Header("Stats Upgrade")]
-    public ProgressionConfig statConfig = new ProgressionConfig
+    [Header("Stats Upgrade Configurations (Different Explode Rates)")]
+    // High exponential growth for DPS scaling
+    public ProgressionConfig powerConfig = new ProgressionConfig
     {
-        baseValue = 0.05,     // Starts at +5%
-        linearStep = 0.025,   // +2.5% per upgrade
-        growthRate = 1.05     // Optional curve accelerator
+        baseValue = 10.0,
+        growthRate = 1.12,   // High growth rate (explodes fast)
+        linearStep = 2.0
+    };
+
+    // Diminishing or capped growth so attack speed doesn't break game logic
+    public ProgressionConfig cycleSpeedConfig = new ProgressionConfig
+    {
+        baseValue = 1.0,
+        growthRate = 1.02,   // Slow growth rate
+        linearStep = 0.05
+    };
+
+    // Low growth rate with strict linear steps (e.g., 0% to 100% max chance)
+    public ProgressionConfig critChanceConfig = new ProgressionConfig
+    {
+        baseValue = 0.05,    // 5% base crit chance
+        growthRate = 1.01,   // Extremely controlled growth
+        linearStep = 0.01    // +1% per upgrade step
+    };
+
+    // Moderate/High growth rate for big critical hits
+    public ProgressionConfig critMultiplierConfig = new ProgressionConfig
+    {
+        baseValue = 1.5,     // 150% base multiplier
+        growthRate = 1.08,   // Medium-high growth rate
+        linearStep = 0.1
     };
 
     [Header("Upgrade Node Cost")]
@@ -55,21 +80,52 @@ public class CurveManager : Singleton<CurveManager>
     // ----------------------------------------------------------------------
 
     /// <summary>
-    /// Calculates percent stat increase per upgrade step with milestone bonuses every 25 levels.
+    /// Calculates value for a given stat type based on upgrade level/time,
+    /// applying custom base rates, exponential growth, and milestone bonuses every 25 levels.
     /// </summary>
-    public float GetStatPercentAdd(int upgradeTime)
+    public float GetNextStatValue(StatType statType, int upgradeTime)
     {
-        if (upgradeTime <= 0) return 0f;
+        if (upgradeTime <= 0)
+            return (float)GetConfigForStat(statType).baseValue;
 
-        // Base linear growth + exponential curve
-        double baseStat = statConfig.baseValue + (upgradeTime * statConfig.linearStep);
+        ProgressionConfig config = GetConfigForStat(statType);
 
-        // Idle milestone boost: 2x bonus every 25 upgrade levels
+        // Exponential value calculation: Base * (GrowthRate ^ level) + (LinearStep * level)
+        double baseCalculated = config.baseValue * Math.Pow(config.growthRate, upgradeTime) + (config.linearStep * upgradeTime);
+
+        // Milestone bonus: 2x boost every 25 levels
         int milestoneCount = upgradeTime / 25;
         double milestoneMultiplier = Math.Pow(2.0, milestoneCount);
 
-        double result = baseStat * milestoneMultiplier;
-        return (float)Math.Round(result, 3);
+        double result = baseCalculated * milestoneMultiplier;
+
+        // Special check: Cap CritChance to 1.0 (100%) if required by your game balance
+        if (statType == StatType.CritChance)
+        {
+            result = Math.Min(result, 1.0);
+        }
+
+        return (float)Math.Round(result, 4);
+    }
+
+    /// <summary>
+    /// Helper method to retrieve the correct configuration struct per stat type.
+    /// </summary>
+    private ProgressionConfig GetConfigForStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Damage:
+                return powerConfig;
+            case StatType.AttackSpeed:
+                return cycleSpeedConfig;
+            case StatType.CritChance:
+                return critChanceConfig;
+            case StatType.CritMultiplier:
+                return critMultiplierConfig;
+            default:
+                return powerConfig;
+        }
     }
 
     /// <summary>
@@ -197,11 +253,11 @@ public class CurveManagerEditor : Editor
             // Table Header
             EditorGUILayout.BeginHorizontal("box");
             EditorGUILayout.LabelField("Lvl", EditorStyles.boldLabel, GUILayout.Width(35));
-            EditorGUILayout.LabelField("Stat % Add", EditorStyles.boldLabel, GUILayout.Width(85));
+            EditorGUILayout.LabelField("Power", EditorStyles.boldLabel, GUILayout.Width(75));
+            EditorGUILayout.LabelField("Speed", EditorStyles.boldLabel, GUILayout.Width(75));
+            EditorGUILayout.LabelField("Crit %", EditorStyles.boldLabel, GUILayout.Width(65));
+            EditorGUILayout.LabelField("Crit Dmg", EditorStyles.boldLabel, GUILayout.Width(75));
             EditorGUILayout.LabelField("Node Cost", EditorStyles.boldLabel, GUILayout.Width(85));
-            EditorGUILayout.LabelField("Augment Cost", EditorStyles.boldLabel, GUILayout.Width(95));
-            EditorGUILayout.LabelField("Hire Cost", EditorStyles.boldLabel, GUILayout.Width(85));
-            EditorGUILayout.LabelField("Efficiency", EditorStyles.boldLabel, GUILayout.Width(75));
             EditorGUILayout.EndHorizontal();
 
             // Table Rows
@@ -210,11 +266,11 @@ public class CurveManagerEditor : Editor
                 EditorGUILayout.BeginHorizontal();
 
                 EditorGUILayout.LabelField(i.ToString(), GUILayout.Width(35));
-                EditorGUILayout.LabelField(manager.GetStatPercentAdd(i).ToString("F3"), GUILayout.Width(85));
+                EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.Damage, i).ToString("N0"), GUILayout.Width(75));
+                EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.AttackSpeed, i).ToString("F2"), GUILayout.Width(75));
+                EditorGUILayout.LabelField((manager.GetNextStatValue(StatType.CritChance, i) * 100f).ToString("F0") + "%", GUILayout.Width(65));
+                EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.CritMultiplier, i).ToString("F2") + "x", GUILayout.Width(75));
                 EditorGUILayout.LabelField(manager.GetUpgradeNodeCost(i).ToString("N0"), GUILayout.Width(85));
-                EditorGUILayout.LabelField(manager.GetBuyAugmentCost(i).ToString("N0"), GUILayout.Width(95));
-                EditorGUILayout.LabelField(manager.GetHireCharactersCost(i).ToString("N0"), GUILayout.Width(85));
-                EditorGUILayout.LabelField(manager.GetCharacterEfficiency(i).ToString("F2"), GUILayout.Width(75));
 
                 EditorGUILayout.EndHorizontal();
             }
