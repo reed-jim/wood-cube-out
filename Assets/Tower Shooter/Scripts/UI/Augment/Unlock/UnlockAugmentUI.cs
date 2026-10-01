@@ -1,17 +1,21 @@
 using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnlockAugmentUI : MonoBehaviour
 {
+    public RectTransform container;
     public CanvasGroup cloneAugmentCanvasGroup;
     public RectTransform cloneAugmentRT;
     public CanvasGroup lockCanvasGroup;
     public CanvasGroup cloneLockCanvasGroup;
     public RectTransform lockCanvasGroupRT;
+    public Image overlay;
 
+    public TMP_Text descriptionText;
     public Button continueButton;
     public Image fx;
 
@@ -24,6 +28,8 @@ public class UnlockAugmentUI : MonoBehaviour
         continueButton.onClick.AddListener(ContinueButton);
 
         LoadUnlockAugmentData();
+
+        Init();
     }
 
     void OnDestroy()
@@ -31,22 +37,66 @@ public class UnlockAugmentUI : MonoBehaviour
         ReachStarPopup.goNextStarEvent -= OnGoNextStarEvent;
     }
 
+    private void Init()
+    {
+        if (unlockAugmentData.isUnlocked)
+        {
+            container.gameObject.SetActive(false);
+        }
+        else
+        {
+            container.gameObject.SetActive(true);
+
+            cloneAugmentCanvasGroup.gameObject.SetActive(false);
+            cloneLockCanvasGroup.gameObject.SetActive(false);
+            descriptionText.gameObject.SetActive(false);
+            continueButton.gameObject.SetActive(false);
+
+            lockCanvasGroup.gameObject.SetActive(true);
+        }
+
+        overlay.gameObject.SetActive(false);
+    }
+
     private void Unlock()
     {
-        Sequence sequence = Sequence.Create(Tween.LocalPosition(cloneAugmentRT, Vector3.zero, duration: 0.6f));
+        container.gameObject.SetActive(true);
 
-        sequence.Chain(Tween.Alpha(cloneLockCanvasGroup, 0, duration: 0.3f));
+        continueButton.interactable = false;
+
+        cloneAugmentCanvasGroup.gameObject.SetActive(true);
+        cloneLockCanvasGroup.gameObject.SetActive(true);
+        descriptionText.gameObject.SetActive(true);
+        continueButton.gameObject.SetActive(true);
+        overlay.gameObject.SetActive(true);
+
+        continueButton.transform.localScale = Vector3.zero;
+        overlay.color = ColorUtil.WithAlpha(overlay.color, 0);
+
+        Sequence sequence = Sequence.Create(Tween.Delay(1));
+
+        sequence.Chain(Tween.LocalPosition(cloneAugmentRT, new Vector3(0, 0.5f * cloneAugmentRT.sizeDelta.y), duration: 1f));
+        sequence.Group(Tween.Alpha(overlay, 0.95f, duration: 1f));
+        sequence.Chain(Tween.Alpha(cloneLockCanvasGroup, 0, duration: 1f));
+        sequence.Group(SaferioTween.ScaleUpWithPunch(continueButton.transform));
+
+        sequence.OnComplete(() =>
+        {
+            cloneLockCanvasGroup.gameObject.SetActive(false);
+
+            continueButton.interactable = true;
+        });
     }
 
     private void ContinueButton()
     {
-        Sequence sequence = Sequence.Create(Tween.LocalPosition(cloneAugmentRT, lockCanvasGroupRT.localPosition, duration: 0.6f));
-
-        sequence.Chain(Tween.Alpha(lockCanvasGroup, 0, duration: 0.3f));
+        Sequence sequence = Sequence.Create(Tween.LocalPosition(cloneAugmentRT, lockCanvasGroupRT.localPosition, duration: 1f));
 
         sequence.OnComplete(() =>
         {
-            SaferioTween.PlayExplosiveAt(fx, lockCanvasGroupRT, onComplete: () =>
+            lockCanvasGroup.gameObject.SetActive(false);
+
+            SaferioTween.PlayExplosiveAt(fx, cloneAugmentRT, targetScale: 3f, onComplete: () =>
             {
                 gameObject.SetActive(false);
             });
@@ -59,7 +109,7 @@ public class UnlockAugmentUI : MonoBehaviour
 
     private void OnGoNextStarEvent()
     {
-
+        Unlock();
     }
 
     #region Save/Load

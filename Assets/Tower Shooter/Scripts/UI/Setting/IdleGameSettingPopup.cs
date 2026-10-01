@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
 
-public class IdleGameSettingPopup : MonoBehaviour
+public class IdleGameSettingPopup : BasePopup
 {
     [Header("Audio")]
     [SerializeField] private AudioMixer mainAudioMixer;
