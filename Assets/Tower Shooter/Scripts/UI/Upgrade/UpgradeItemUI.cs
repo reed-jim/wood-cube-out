@@ -11,7 +11,10 @@ public class UpgradeItemUI : MonoBehaviour
     public Image statIcon;
     public Button upgradeButton;
 
+    [Header("Customize")]
     public StatType statType;
+    public bool isPercentStat;
+
     public BaseCharacter node;
 
     public StatColorConfigSO statColorConfigSO;
@@ -68,8 +71,18 @@ public class UpgradeItemUI : MonoBehaviour
     {
         statIcon.sprite = statColorConfigSO.GetIcon(statType);
         float delta = statUpgradeData.nextValue - statUpgradeData.currentValue;
-        upgradeText.text =
+
+        if (isPercentStat)
+        {
+            upgradeText.text =
+            $"{TextUtil.FormatFloat(statUpgradeData.currentValue * 100)}% (+{TextUtil.FormatFloat(delta * 100)}%)";
+        }
+        else
+        {
+            upgradeText.text =
             $"{TextUtil.FormatFloat(statUpgradeData.currentValue)} (+{TextUtil.FormatFloat(delta)})";
+        }
+
         coinText.text = $"{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
     }
 
