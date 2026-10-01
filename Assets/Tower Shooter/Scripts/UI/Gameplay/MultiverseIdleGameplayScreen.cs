@@ -9,6 +9,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public Button openAugmentSelectionButton;
     public Button augmentOverviewButton;
     public Button selectThemeButton;
+    public Button settingButton;
     public Button leadershipButton;
     public Button ingameEventButton;
 
@@ -50,6 +51,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         openAugmentSelectionButton.onClick.AddListener(OpenAugmentSelection);
         augmentOverviewButton.onClick.AddListener(OpenAugmentOverview);
         selectThemeButton.onClick.AddListener(OpenSelectThemePopup);
+        settingButton.onClick.AddListener(OpenSettingPopup);
         // leadershipButton.onClick.AddListener(OpenLeadershipPopup);
         // ingameEventButton.onClick.AddListener(OpenIngameEventPopup);
 
@@ -94,6 +96,11 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     private void OpenSelectThemePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.SelectTheme);
+    }
+
+    private void OpenSettingPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.Setting);
     }
 
     private void OpenLeadershipPopup()

@@ -4,20 +4,20 @@ using UnityEngine.UI;
 using UnityEditor;
 using System.IO;
 
-public class ResearchIconGeneratorEditor : EditorWindow
+public class MinimalResearchIconGeneratorEditor : EditorWindow
 {
     private Vector2Int iconSize = new Vector2Int(512, 512);
-    private string saveFolderPath = "Assets/ResearchIcons";
+    private string saveFolderPath = "Assets/ResearchIcons_Minimal";
 
-    [MenuItem("Tools/2D Sci-Fi Research Icon Generator")]
+    [MenuItem("Tools/2D Flat Research Icon Generator")]
     public static void ShowWindow()
     {
-        GetWindow<ResearchIconGeneratorEditor>("Research Icon Generator");
+        GetWindow<MinimalResearchIconGeneratorEditor>("Flat Icon Generator");
     }
 
     private void OnGUI()
     {
-        GUILayout.Label("2D Idle Spaceship Game - Research Icons Generator", EditorStyles.boldLabel);
+        GUILayout.Label("Flat Vector Research Icon Generator", EditorStyles.boldLabel);
         EditorGUILayout.Space();
 
         iconSize = EditorGUILayout.Vector2IntField("Sprite Dimensions (PX)", iconSize);
@@ -25,7 +25,7 @@ public class ResearchIconGeneratorEditor : EditorWindow
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Generate 5 Sci-Fi Research Icons", GUILayout.Height(40)))
+        if (GUILayout.Button("Generate 5 Flat UI Research Icons", GUILayout.Height(40)))
         {
             GenerateAndSaveAllIcons();
         }
@@ -39,40 +39,34 @@ public class ResearchIconGeneratorEditor : EditorWindow
             AssetDatabase.Refresh();
         }
 
-        // Procedural primitives
         Sprite solidSprite = CreateFlatSquareSprite();
-        Sprite glowSprite = CreateRadialGlowSprite(256);
         Sprite circleSprite = CreateCircleSprite(256);
-        Sprite ringSprite = CreateRingSprite(256, 0.82f);
-        Sprite thinRingSprite = CreateRingSprite(256, 0.94f);
+        Sprite ringSprite = CreateRingSprite(256, 0.88f);
 
         string[] iconNames = new string[]
         {
-            "Research_01_QuantumComputing",
-            "Research_02_PlasmaPropulsion",
+            "Research_01_ErlenmeyerFlask",
+            "Research_02_SpaceshipEngine",
             "Research_03_ShieldTech",
-            "Research_04_AIMatrix",
-            "Research_05_WarpDrive"
+            "Research_04_EnergyLightning",
+            "Research_05_AIBrainChip"
         };
 
         for (int i = 0; i < iconNames.Length; i++)
         {
-            int iconId = i + 1;
-            byte[] pngData = BakeIconToPNG(iconId, iconSize, solidSprite, glowSprite, circleSprite, ringSprite, thinRingSprite);
+            byte[] pngData = BakeIconToPNG(i + 1, iconSize, solidSprite, circleSprite, ringSprite);
             string filePath = Path.Combine(saveFolderPath, $"{iconNames[i]}.png");
             File.WriteAllBytes(filePath, pngData);
         }
 
-        // Clean up temporary procedural textures
+        // Cleanup
         DestroyImmediate(solidSprite.texture); DestroyImmediate(solidSprite);
-        DestroyImmediate(glowSprite.texture); DestroyImmediate(glowSprite);
         DestroyImmediate(circleSprite.texture); DestroyImmediate(circleSprite);
         DestroyImmediate(ringSprite.texture); DestroyImmediate(ringSprite);
-        DestroyImmediate(thinRingSprite.texture); DestroyImmediate(thinRingSprite);
 
         AssetDatabase.Refresh();
 
-        // Reimport as Sprites
+        // Reimport Sprites
         for (int i = 0; i < iconNames.Length; i++)
         {
             string filePath = Path.Combine(saveFolderPath, $"{iconNames[i]}.png");
@@ -88,10 +82,10 @@ public class ResearchIconGeneratorEditor : EditorWindow
             }
         }
 
-        EditorUtility.DisplayDialog("Success", $"Generated 5 Research Icons inside:\n{saveFolderPath}", "OK");
+        EditorUtility.DisplayDialog("Success", $"Generated 5 Flat UI Research Icons inside:\n{saveFolderPath}", "OK");
     }
 
-    private byte[] BakeIconToPNG(int iconId, Vector2Int size, Sprite solid, Sprite glow, Sprite circle, Sprite ring, Sprite thinRing)
+    private byte[] BakeIconToPNG(int iconId, Vector2Int size, Sprite solid, Sprite circle, Sprite ring)
     {
         GameObject bakerRoot = new GameObject("TempIconBaker", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         Canvas bakerCanvas = bakerRoot.GetComponent<Canvas>();
@@ -116,7 +110,7 @@ public class ResearchIconGeneratorEditor : EditorWindow
 
         bakerCanvas.worldCamera = bakerCamera;
 
-        BuildResearchIconHierarchy(bakerRoot.transform, iconId, size, solid, glow, circle, ring, thinRing);
+        BuildFlatIconHierarchy(bakerRoot.transform, iconId, size, solid, circle, ring);
         Canvas.ForceUpdateCanvases();
 
         RenderTexture renderTex = RenderTexture.GetTemporary(size.x, size.y, 24, RenderTextureFormat.ARGB32);
@@ -141,183 +135,125 @@ public class ResearchIconGeneratorEditor : EditorWindow
         return pngData;
     }
 
-    private void BuildResearchIconHierarchy(Transform root, int iconId, Vector2Int size, Sprite solid, Sprite glow, Sprite circle, Sprite ring, Sprite thinRing)
+    private void BuildFlatIconHierarchy(Transform root, int iconId, Vector2Int size, Sprite solid, Sprite circle, Sprite ring)
     {
-        Color primary, secondary, highlight, darkBg;
-        GetIconColorScheme(iconId, out primary, out secondary, out highlight, out darkBg);
+        // Color Palette matching your UI screenshot
+        Color uiCyan = new Color(0.00f, 0.82f, 1.00f, 1.00f);      // Primary Accent (#00D2FF)
+        Color uiWhite = new Color(1.00f, 1.00f, 1.00f, 1.00f);     // Pure White Icons
+        Color uiNavyBg = new Color(0.08f, 0.12f, 0.20f, 1.00f);    // Panel Navy Background
+        Color uiBorderNavy = new Color(0.18f, 0.25f, 0.38f, 1.00f);// Subtle Border Outline
 
         int order = 0;
-        float baseSize = Mathf.Min(size.x, size.y) * 0.75f;
+        float baseSize = Mathf.Min(size.x, size.y) * 0.72f;
 
-        // 1. Tech Hex / Circle Background Frame
-        CreatePart("Glow_Background", root, glow, primary * new Color(1, 1, 1, 0.4f), new Vector2(baseSize * 1.3f, baseSize * 1.3f), Vector2.zero, order++);
-        CreatePart("Backing_Plate", root, circle, darkBg, new Vector2(baseSize, baseSize), Vector2.zero, order++);
-        CreatePart("Outer_Tech_Ring", root, ring, secondary, new Vector2(baseSize, baseSize), Vector2.zero, order++);
+        // 1. Outer Container Badge (Rounded Frame matching UI containers)
+        CreatePart("Badge_Backing", root, circle, uiNavyBg, new Vector2(baseSize, baseSize), Vector2.zero, order++);
+        CreatePart("Badge_Border", root, ring, uiBorderNavy, new Vector2(baseSize, baseSize), Vector2.zero, order++);
+        CreatePart("Badge_CyanRing", root, ring, uiCyan * new Color(1, 1, 1, 0.4f), new Vector2(baseSize * 0.96f, baseSize * 0.96f), Vector2.zero, order++);
 
-        // 2. Icon Specific Graphics
+        // 2. Minimalist Flat Vector Icons
         switch (iconId)
         {
-            case 1: // Quantum Computing
-                BuildQuantumComputingIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+            case 1: // Flat Science Flask (Matches top bar Research Icon)
+                BuildFlaskIcon(root, solid, circle, uiWhite, uiCyan, ref order, baseSize);
                 break;
-            case 2: // Plasma Propulsion
-                BuildPlasmaPropulsionIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+            case 2: // Flat Rocket Engine (Voyage / Propulsion)
+                BuildRocketIcon(root, solid, circle, uiWhite, uiCyan, ref order, baseSize);
                 break;
-            case 3: // Shield Tech
-                BuildShieldTechIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+            case 3: // Flat Defense Shield
+                BuildShieldIcon(root, solid, circle, uiWhite, uiCyan, ref order, baseSize);
                 break;
-            case 4: // AI Matrix
-                BuildAIMatrixIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+            case 4: // Energy Lightning Bolt (Matches UI power stat)
+                BuildBoltIcon(root, solid, circle, uiWhite, uiCyan, ref order, baseSize);
                 break;
-            case 5: // Warp Drive
-                BuildWarpDriveIcon(root, solid, glow, circle, thinRing, primary, highlight, ref order, baseSize);
+            case 5: // Flat AI Microchip
+                BuildChipIcon(root, solid, circle, uiWhite, uiCyan, ref order, baseSize);
                 break;
-        }
-
-        // 3. Common Foreground Overlay Framing
-        CreatePart("Inner_Tech_Rim", root, thinRing, highlight * new Color(1, 1, 1, 0.8f), new Vector2(baseSize * 0.92f, baseSize * 0.92f), Vector2.zero, order++);
-    }
-
-    #region Icon Implementations
-
-    private void BuildQuantumComputingIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
-    {
-        // Orbital Atomic Loops
-        for (int i = 0; i < 3; i++)
-        {
-            GameObject ringObj = CreatePart($"Orbit_Ring_{i}", root, thinRing, primary, new Vector2(baseSize * 0.65f, baseSize * 0.22f), Vector2.zero, order++);
-            ringObj.transform.localRotation = Quaternion.Euler(0, 0, i * 60f);
-        }
-
-        // Center Atom Core
-        CreatePart("Core_Glow", root, glow, primary, new Vector2(baseSize * 0.4f, baseSize * 0.4f), Vector2.zero, order++);
-        CreatePart("Core_Node", root, circle, highlight, new Vector2(baseSize * 0.15f, baseSize * 0.15f), Vector2.zero, order++);
-
-        // Floating Quantum Particles
-        float orbitR = baseSize * 0.28f;
-        for (int i = 0; i < 6; i++)
-        {
-            float angle = i * 60f * Mathf.Deg2Rad;
-            Vector2 pos = new Vector2(Mathf.Cos(angle) * orbitR, Mathf.Sin(angle) * orbitR);
-            CreatePart($"Particle_{i}", root, circle, highlight, new Vector2(baseSize * 0.05f, baseSize * 0.05f), pos, order++);
         }
     }
 
-    private void BuildPlasmaPropulsionIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    #region Flat Icon Drawings
+
+    private void BuildFlaskIcon(Transform root, Sprite solid, Sprite circle, Color white, Color cyan, ref int order, float baseSize)
     {
-        // Thrust Nozzle Frame
-        GameObject nozzle = CreatePart("Nozzle_Base", root, solid, primary, new Vector2(baseSize * 0.35f, baseSize * 0.18f), new Vector2(0, baseSize * 0.2f), order++);
-        nozzle.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        // Neck & Rim
+        CreatePart("Flask_Rim", root, solid, white, new Vector2(baseSize * 0.16f, baseSize * 0.04f), new Vector2(0, baseSize * 0.22f), order++);
+        CreatePart("Flask_Neck", root, solid, white, new Vector2(baseSize * 0.08f, baseSize * 0.14f), new Vector2(0, baseSize * 0.13f), order++);
 
-        // Exhaust Beams / Plume
-        for (int i = 0; i < 3; i++)
-        {
-            float width = baseSize * (0.12f - (i * 0.03f));
-            float length = baseSize * (0.55f + (i * 0.1f));
-            Vector2 pos = new Vector2(0, -baseSize * 0.1f - (i * 10f));
+        // Flask Triangular Base
+        GameObject body = CreatePart("Flask_Base", root, solid, white, new Vector2(baseSize * 0.32f, baseSize * 0.30f), new Vector2(0, -baseSize * 0.08f), order++);
+        body.transform.localRotation = Quaternion.Euler(0, 0, 45f);
 
-            CreatePart($"Flame_Layer_{i}", root, solid, (i == 0) ? highlight : primary, new Vector2(width, length), pos, order++);
-        }
-
-        // Energy Shock Diamond Core
-        CreatePart("Flame_Glow", root, glow, primary, new Vector2(baseSize * 0.5f, baseSize * 0.7f), new Vector2(0, -baseSize * 0.15f), order++);
+        // Liquid Line (Cyan Accent)
+        CreatePart("Liquid_Level", root, solid, cyan, new Vector2(baseSize * 0.22f, baseSize * 0.06f), new Vector2(0, -baseSize * 0.08f), order++);
+        CreatePart("Bubble_1", root, circle, cyan, new Vector2(baseSize * 0.04f, baseSize * 0.04f), new Vector2(-baseSize * 0.04f, 0f), order++);
+        CreatePart("Bubble_2", root, circle, cyan, new Vector2(baseSize * 0.03f, baseSize * 0.03f), new Vector2(baseSize * 0.05f, baseSize * 0.06f), order++);
     }
 
-    private void BuildShieldTechIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    private void BuildRocketIcon(Transform root, Sprite solid, Sprite circle, Color white, Color cyan, ref int order, float baseSize)
     {
-        // Central Emblem Shield Core
-        GameObject shieldTop = CreatePart("Shield_Top", root, solid, primary, new Vector2(baseSize * 0.4f, baseSize * 0.35f), new Vector2(0, baseSize * 0.05f), order++);
-        GameObject shieldBottom = CreatePart("Shield_Tip", root, solid, primary, new Vector2(baseSize * 0.3f, baseSize * 0.3f), new Vector2(0, -baseSize * 0.15f), order++);
+        // Main Body
+        CreatePart("Rocket_Body", root, solid, white, new Vector2(baseSize * 0.12f, baseSize * 0.32f), new Vector2(0, baseSize * 0.02f), order++);
+
+        // Nose Cone
+        GameObject nose = CreatePart("Rocket_Nose", root, solid, white, new Vector2(baseSize * 0.12f, baseSize * 0.12f), new Vector2(0, baseSize * 0.20f), order++);
+        nose.transform.localRotation = Quaternion.Euler(0, 0, 45f);
+
+        // Wings
+        GameObject wingL = CreatePart("Wing_L", root, solid, white, new Vector2(baseSize * 0.08f, baseSize * 0.16f), new Vector2(-baseSize * 0.10f, -baseSize * 0.05f), order++);
+        wingL.transform.localRotation = Quaternion.Euler(0, 0, 30f);
+
+        GameObject wingR = CreatePart("Wing_R", root, solid, white, new Vector2(baseSize * 0.08f, baseSize * 0.16f), new Vector2(baseSize * 0.10f, -baseSize * 0.05f), order++);
+        wingR.transform.localRotation = Quaternion.Euler(0, 0, -30f);
+
+        // Cyan Flame Thrust
+        CreatePart("Flame_Base", root, solid, cyan, new Vector2(baseSize * 0.08f, baseSize * 0.12f), new Vector2(0, -baseSize * 0.20f), order++);
+    }
+
+    private void BuildShieldIcon(Transform root, Sprite solid, Sprite circle, Color white, Color cyan, ref int order, float baseSize)
+    {
+        // Flat Minimal Shield
+        CreatePart("Shield_Top", root, solid, white, new Vector2(baseSize * 0.32f, baseSize * 0.18f), new Vector2(0, baseSize * 0.08f), order++);
+
+        GameObject shieldBottom = CreatePart("Shield_Tip", root, solid, white, new Vector2(baseSize * 0.22f, baseSize * 0.22f), new Vector2(0, -baseSize * 0.07f), order++);
         shieldBottom.transform.localRotation = Quaternion.Euler(0, 0, 45f);
 
-        // Protective Hex Core Glow
-        CreatePart("Shield_Glow", root, glow, primary, new Vector2(baseSize * 0.6f, baseSize * 0.6f), Vector2.zero, order++);
-
-        // Emblem Cross Highlight
-        CreatePart("Emblem_V", root, solid, highlight, new Vector2(baseSize * 0.06f, baseSize * 0.3f), Vector2.zero, order++);
-        CreatePart("Emblem_H", root, solid, highlight, new Vector2(baseSize * 0.25f, baseSize * 0.06f), new Vector2(0, baseSize * 0.05f), order++);
+        // Inner Cyan Core Symbol
+        CreatePart("Shield_Core", root, solid, cyan, new Vector2(baseSize * 0.08f, baseSize * 0.18f), new Vector2(0, 0), order++);
+        CreatePart("Shield_Cross", root, solid, cyan, new Vector2(baseSize * 0.18f, baseSize * 0.08f), new Vector2(0, baseSize * 0.02f), order++);
     }
 
-    private void BuildAIMatrixIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    private void BuildBoltIcon(Transform root, Sprite solid, Sprite circle, Color white, Color cyan, ref int order, float baseSize)
     {
-        // Microchip Core Shape
-        CreatePart("Chip_Base", root, solid, primary, new Vector2(baseSize * 0.35f, baseSize * 0.35f), Vector2.zero, order++);
-        CreatePart("Chip_Inner", root, solid, highlight, new Vector2(baseSize * 0.2f, baseSize * 0.2f), Vector2.zero, order++);
+        // Sharp Flat Lightning Bolt (Matches Energy icon)
+        GameObject topSegment = CreatePart("Bolt_Top", root, solid, cyan, new Vector2(baseSize * 0.08f, baseSize * 0.28f), new Vector2(baseSize * 0.03f, baseSize * 0.08f), order++);
+        topSegment.transform.localRotation = Quaternion.Euler(0, 0, -25f);
 
-        // Bus Lines / Connectors
-        float offset = baseSize * 0.28f;
-        int lineCount = 4;
-        for (int i = 0; i < lineCount; i++)
-        {
-            float pos = -baseSize * 0.12f + (i * (baseSize * 0.08f));
+        GameObject botSegment = CreatePart("Bolt_Bottom", root, solid, cyan, new Vector2(baseSize * 0.08f, baseSize * 0.28f), new Vector2(-baseSize * 0.03f, -baseSize * 0.08f), order++);
+        botSegment.transform.localRotation = Quaternion.Euler(0, 0, -25f);
 
-            // Top / Bottom Pins
-            CreatePart($"Pin_T_{i}", root, solid, primary, new Vector2(baseSize * 0.03f, baseSize * 0.12f), new Vector2(pos, offset), order++);
-            CreatePart($"Pin_B_{i}", root, solid, primary, new Vector2(baseSize * 0.03f, baseSize * 0.12f), new Vector2(pos, -offset), order++);
-
-            // Left / Right Pins
-            CreatePart($"Pin_L_{i}", root, solid, primary, new Vector2(baseSize * 0.12f, baseSize * 0.03f), new Vector2(-offset, pos), order++);
-            CreatePart($"Pin_R_{i}", root, solid, primary, new Vector2(baseSize * 0.12f, baseSize * 0.03f), new Vector2(offset, pos), order++);
-        }
-
-        CreatePart("Chip_Glow", root, glow, primary, new Vector2(baseSize * 0.5f, baseSize * 0.5f), Vector2.zero, order++);
+        CreatePart("Bolt_Center_Fill", root, solid, cyan, new Vector2(baseSize * 0.14f, baseSize * 0.06f), Vector2.zero, order++);
     }
 
-    private void BuildWarpDriveIcon(Transform root, Sprite solid, Sprite glow, Sprite circle, Sprite thinRing, Color primary, Color highlight, ref int order, float baseSize)
+    private void BuildChipIcon(Transform root, Sprite solid, Sprite circle, Color white, Color cyan, ref int order, float baseSize)
     {
-        // Portal Singularity Center
-        CreatePart("Singularity_Core", root, circle, new Color(0.02f, 0.02f, 0.05f, 1f), new Vector2(baseSize * 0.22f, baseSize * 0.22f), Vector2.zero, order++);
-        CreatePart("Singularity_Glow", root, glow, primary, new Vector2(baseSize * 0.65f, baseSize * 0.65f), Vector2.zero, order++);
+        // Central Microchip Square
+        CreatePart("Chip_Center", root, solid, white, new Vector2(baseSize * 0.24f, baseSize * 0.24f), Vector2.zero, order++);
+        CreatePart("Chip_Core_Accent", root, solid, cyan, new Vector2(baseSize * 0.12f, baseSize * 0.12f), Vector2.zero, order++);
 
-        // Accelerating Vortex Rings
-        for (int i = 1; i <= 3; i++)
+        // Chip Connector Pins
+        float offset = baseSize * 0.18f;
+        for (int i = -1; i <= 1; i += 2)
         {
-            float ringScale = baseSize * (0.2f + (i * 0.12f));
-            GameObject vRing = CreatePart($"Vortex_Ring_{i}", root, thinRing, highlight * new Color(1, 1, 1, 1f - (i * 0.2f)), new Vector2(ringScale, ringScale), Vector2.zero, order++);
-            vRing.transform.localRotation = Quaternion.Euler(0, 0, i * 25f);
-        }
-
-        // Warp Ray Bursts
-        for (int i = 0; i < 4; i++)
-        {
-            float angle = i * 45f;
-            GameObject ray = CreatePart($"Warp_Ray_{i}", root, solid, highlight, new Vector2(baseSize * 0.03f, baseSize * 0.7f), Vector2.zero, order++);
-            ray.transform.localRotation = Quaternion.Euler(0, 0, angle);
+            float shift = i * (baseSize * 0.06f);
+            CreatePart($"Pin_T_{i}", root, solid, white, new Vector2(baseSize * 0.03f, baseSize * 0.08f), new Vector2(shift, offset), order++);
+            CreatePart($"Pin_B_{i}", root, solid, white, new Vector2(baseSize * 0.03f, baseSize * 0.08f), new Vector2(shift, -offset), order++);
+            CreatePart($"Pin_L_{i}", root, solid, white, new Vector2(baseSize * 0.08f, baseSize * 0.03f), new Vector2(-offset, shift), order++);
+            CreatePart($"Pin_R_{i}", root, solid, white, new Vector2(baseSize * 0.08f, baseSize * 0.03f), new Vector2(offset, shift), order++);
         }
     }
 
     #endregion
-
-    private void GetIconColorScheme(int iconId, out Color primary, out Color secondary, out Color highlight, out Color darkBg)
-    {
-        darkBg = new Color(0.03f, 0.05f, 0.10f, 0.9f);
-        highlight = new Color(0.98f, 0.98f, 1.0f, 0.95f);
-
-        switch (iconId)
-        {
-            case 1: // Quantum - Electric Cyan & Violet
-                primary = new Color(0.00f, 0.85f, 1.00f);
-                secondary = new Color(0.45f, 0.20f, 0.90f);
-                break;
-            case 2: // Plasma - Fire Orange & Bright Yellow
-                primary = new Color(1.00f, 0.40f, 0.00f);
-                secondary = new Color(1.00f, 0.75f, 0.00f);
-                break;
-            case 3: // Shield - Emerald Tech Green
-                primary = new Color(0.00f, 0.95f, 0.45f);
-                secondary = new Color(0.00f, 0.50f, 0.35f);
-                break;
-            case 4: // AI Matrix - Crimson & Deep Magenta
-                primary = new Color(1.00f, 0.15f, 0.35f);
-                secondary = new Color(0.60f, 0.00f, 0.40f);
-                break;
-            case 5: // Warp Drive - Celestial Gold & Deep Blue
-            default:
-                primary = new Color(0.20f, 0.55f, 1.00f);
-                secondary = new Color(1.00f, 0.80f, 0.10f);
-                break;
-        }
-    }
 
     #region Helpers
 
@@ -345,27 +281,6 @@ public class ResearchIconGeneratorEditor : EditorWindow
         tex.SetPixel(0, 0, Color.white);
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 100f);
-    }
-
-    private Sprite CreateRadialGlowSprite(int size)
-    {
-        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
-        Vector2 center = new Vector2(size / 2f, size / 2f);
-        float maxDist = size / 2f;
-
-        for (int y = 0; y < size; y++)
-        {
-            for (int x = 0; x < size; x++)
-            {
-                float dist = Vector2.Distance(new Vector2(x, y), center);
-                float normDist = Mathf.Clamp01(dist / maxDist);
-                float alpha = Mathf.Pow(1f - normDist, 2.5f);
-
-                tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
-            }
-        }
-        tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
 
     private Sprite CreateCircleSprite(int size)
