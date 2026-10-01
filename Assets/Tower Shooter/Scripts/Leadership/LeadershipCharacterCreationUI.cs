@@ -30,6 +30,7 @@ public class LeadershipCharacterCreationUI : BasePopup
     public Button boostAbilityPotentialButton;
     public TMP_Text boostAbilityCostText;
     public Button confirmAbilityButton;
+    public Button skipAnimationButton;
 
     [Header("UI")]
     public TMP_Text abilityPotentialText;
@@ -59,6 +60,9 @@ public class LeadershipCharacterCreationUI : BasePopup
     private List<StatItemUI> statItemUIs = new List<StatItemUI>();
     private List<CharacterTraitItemUI> characterTraitItemUIs = new List<CharacterTraitItemUI>();
 
+    private bool isSkippingAnimation; // Flag to interrupt running animation
+    private Sequence activeFxSequence; // Holds the active reveal tween
+
     protected override void RegisterMoreEvent()
     {
         base.RegisterMoreEvent();
@@ -73,6 +77,7 @@ public class LeadershipCharacterCreationUI : BasePopup
         boostAbilityPotentialButton.onClick.AddListener(BoostAbilityPotential);
         createCharacterButton.onClick.AddListener(ConfirmCreateCharacter);
         confirmAbilityButton.onClick.AddListener(ConfirmAbility);
+        skipAnimationButton.onClick.AddListener(SkipAnimation);
         ageSlider.onValueChanged.AddListener(OnAgeSliderChanged);
     }
 
@@ -285,6 +290,7 @@ public class LeadershipCharacterCreationUI : BasePopup
 
     private IEnumerator ShowCharacterAbility()
     {
+        isSkippingAnimation = false;
         WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 30f);
 
         int step = 0;
@@ -307,6 +313,12 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         while (step <= maxStep)
         {
+            // Check if player requested to skip while animating
+            if (isSkippingAnimation)
+            {
+                break;
+            }
+
             if (step == 0 && !isWaitForNextStep)
             {
                 PlayRevealAbilityFxAt
@@ -386,6 +398,44 @@ public class LeadershipCharacterCreationUI : BasePopup
             yield return waitForSeconds;
         }
 
+        // If skip was triggered during animation sequence
+        if (isSkippingAnimation)
+        {
+            // Stop active FX tween
+            if (activeFxSequence.isAlive)
+            {
+                activeFxSequence.Stop();
+            }
+
+            // Instantly setup Rank UI
+            rankImage.gameObject.SetActive(true);
+            rankImage.sprite = characterRankAssetContainer.GetRankSprite(rank);
+            rankText.text = $"Level {(int)rank + 1}";
+
+            // Instantly render remaining Buffs
+            for (int i = statItemUIs.Count; i < buffs.Count; i++)
+            {
+                StatItemUI statItemUI = ObjectPoolingEverything.GetFromPool<StatItemUI>(GameConstants.statItemUI);
+                CommonUtil.SetParentAndResetScale(statItemUI.transform, buffContainer);
+
+                StatModifier buff = buffs[i];
+                statItemUI.Init(buff.Type, buff.ModType, buff.Value);
+                statItemUIs.Add(statItemUI);
+            }
+
+            // Instantly render remaining Traits
+            for (int i = characterTraitItemUIs.Count; i < characterTraits.Count; i++)
+            {
+                CharacterTraitItemUI item = ObjectPoolingEverything.GetFromPool<CharacterTraitItemUI>(GameConstants.characterTraitItemUI);
+                CommonUtil.SetParentAndResetScale(item.transform, traitContainer);
+
+                item.Init(characterTraits[i]);
+                characterTraitItemUIs.Add(item);
+            }
+
+            abilityCanvasGroup.alpha = 1f;
+        }
+
         revealAbilityFx.gameObject.SetActive(false);
 
         abilityCanvasGroup.interactable = true;
@@ -429,6 +479,11 @@ public class LeadershipCharacterCreationUI : BasePopup
         {
             onComplete?.Invoke();
         });
+    }
+
+    public void SkipAnimation()
+    {
+        isSkippingAnimation = true;
     }
     #endregion
 }
