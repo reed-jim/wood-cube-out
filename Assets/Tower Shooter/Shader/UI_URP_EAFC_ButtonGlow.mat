@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UI_URP_2DSwirlTornado
-  m_Shader: {fileID: 4800000, guid: 2418f0774fe7885459759831bb56ed7a, type: 3}
+  m_Name: UI_URP_EAFC_ButtonGlow
+  m_Shader: {fileID: 4800000, guid: eab1ea73cb9e3c54e830397db7299297, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -29,10 +29,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Angle: 50
-    - _Progress: 0
+    - _ColorMask: 15
+    - _EdgeGlowWidth: 0.2
+    - _EffectAmount: 0.5
+    - _SheenAngle: 45
+    - _SheenSoftness: 0.5
+    - _SheenSpeed: 0.2
+    - _SheenWidth: 0.01
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
     m_Colors:
-    - _Center: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.4245283, g: 0.4245283, b: 0.4245283, a: 1}
+    - _EdgeGlowColor: {r: 3, g: 1.8, b: 0.4, a: 1}
+    - _SheenColor: {r: 2.5, g: 2.2, b: 1.5, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

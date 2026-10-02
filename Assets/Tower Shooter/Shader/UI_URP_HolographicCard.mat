@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_URP_CanvasGradientToTexture
-  m_Shader: {fileID: 4800000, guid: 7e28169dce4e6b54591b132045954c3c, type: 3}
+  m_Name: UI_URP_HolographicCard
+  m_Shader: {fileID: 4800000, guid: 342081090a41d544490264e5f9cff628, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -30,16 +30,21 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _GradientEnd: 0.4
-    - _GradientStart: 0.1
+    - _EdgeWidth: 0
+    - _FoilAngle: 60
+    - _Frequency: 6
+    - _HoloBlend: 1
+    - _HoloBrightness: 1.5
+    - _LineContrast: 4
+    - _LineDensity: 35
+    - _MotionSpeed: 1
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _GradientColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.81960785, b: 1, a: 1}
+    - _EdgeGlowColor: {r: 2, g: 2, b: 3.5, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
