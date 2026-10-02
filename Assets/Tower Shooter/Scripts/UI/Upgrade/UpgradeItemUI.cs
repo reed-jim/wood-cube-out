@@ -40,6 +40,7 @@ public class UpgradeItemUI : MonoBehaviour
         this.node = node;
     }
 
+    [ContextMenu("Upgrade")]
     public void Upgrade()
     {
         StatUpgradeData statUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);

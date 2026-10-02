@@ -91,7 +91,7 @@ public class ResearchManager : Singleton<ResearchManager>
                 {
                     statModifierDict.Add(
                         buff.statType,
-                        new StatModifier(buff.statType, buff.modType, buff.value, StatModifierSource.Research)
+                        new StatModifier(buff.statType, buff.modType, buff.value, statModifierSource: StatModifierSource.Research)
                     );
                 }
             }

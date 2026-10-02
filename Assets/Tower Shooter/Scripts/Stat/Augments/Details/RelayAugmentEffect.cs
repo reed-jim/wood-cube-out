@@ -16,7 +16,7 @@ public class RelayAugmentEffect : AugmentEffect
 
             foreach (var modData in statModifiers)
             {
-                node.serviceLocator.stats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, 0, this));
+                node.serviceLocator.stats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, 0));
             }
         }
     }

@@ -188,7 +188,7 @@ public static class DataUtility
         }
         catch (Exception e)
         {
-
+            Debug.LogError($"{key} {e.Message}");
         }
 
         return defaultValue;

@@ -23,7 +23,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
             upgradeTime = oldStatModifier.UpgradeTime + 1;
 
-            StatModifier newStatModifier = new StatModifier(oldStatModifier.Type, oldStatModifier.ModType, statUpgradeData.deltaValue, upgradeTime);
+            StatModifier newStatModifier =
+                new StatModifier(oldStatModifier.Type, oldStatModifier.ModType, statUpgradeData.deltaValue, upgradeTime, oldStatModifier.statModifierSource);
 
             RemoveUpgrade(node, oldStatModifier);
             ApplyUpgrade(node, newStatModifier);
@@ -32,7 +33,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
         {
             upgradeTime = 1;
 
-            StatModifier statModifier = new StatModifier(statType, ModifierType.Flat, statUpgradeData.deltaValue, upgradeTime);
+            StatModifier statModifier = new StatModifier(statType, ModifierType.Flat, statUpgradeData.deltaValue, upgradeTime, StatModifierSource.Upgrade);
 
             ApplyUpgrade(node, statModifier);
         }
