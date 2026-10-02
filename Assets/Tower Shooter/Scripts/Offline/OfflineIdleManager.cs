@@ -36,6 +36,11 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
     {
         return upgradeCost;
     }
+
+    public float PreviewOfflineIdleMultiplierUpgrade()
+    {
+        return CurveManager.Ins.GetOfflineIdleMultiplier(offlineIdleData.upgradeTime) - offlineIdleData.upgradeTime;
+    }
     #endregion
 
     #region Save/Load

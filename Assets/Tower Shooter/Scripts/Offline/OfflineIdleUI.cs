@@ -52,7 +52,13 @@ public class OfflineIdleUI : MonoBehaviour
         totalPowerText.text = $"You have eared <color={primaryHex}>{FormatNumber(powerReward)}";
         timeOfflineText.text = $"You have offlined for <color={primaryHex}>{FormatTime(totalSecondOffline)}";
 
-        idleRewardMultiplierText.text = $"Idle Reward Multiplier: <color={primaryHex}>{idleRewardMultiplier}";
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        idleRewardMultiplierText.text =
+            $"Idle Reward Multiplier: <color={primaryHex}>{idleRewardMultiplier} (+{OfflineIdleManager.Ins.PreviewOfflineIdleMultiplierUpgrade()})";
         upgradeMultiplierCost.text = $"{OfflineIdleManager.Ins.GetUpgradeCost()}";
     }
 
@@ -88,6 +94,8 @@ public class OfflineIdleUI : MonoBehaviour
     private void UpgradeMultiplier()
     {
         OfflineIdleManager.Ins.UpgradeMultiplier();
+
+        UpdateUI();
     }
 
     #region Helper Formatting Functions
