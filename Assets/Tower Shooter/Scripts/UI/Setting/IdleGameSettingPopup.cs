@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,15 +17,64 @@ public class IdleGameSettingPopup : BasePopup
     [SerializeField] private TMP_Dropdown resolutionDropdown;
     [SerializeField] private Toggle fullscreenToggle;
 
+    [Header("Action Buttons")]
+    [SerializeField] private Button confirmButton;
+    [SerializeField] private Button discardButton;
+
     private Resolution[] availableResolutions;
-    private SettingsData currentSettings;
+    private SettingsData currentSettings;  // Currently active & saved settings
+    private SettingsData pendingSettings;  // Temporary settings waiting for confirmation
 
     private const string SAVE_KEY = "settingsSaveData";
+
+    public static Action<string, Action, Action> showConfirmPopupEvent;
+
+    protected override void RegisterMoreEvent()
+    {
+        base.RegisterMoreEvent();
+
+        resolutionDropdown.onValueChanged.AddListener(SetResolution);
+        fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
+
+        masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
+        musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+        sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        if (confirmButton != null)
+        {
+            confirmButton.onClick.AddListener(OnConfirmButtonClicked);
+        }
+
+        if (discardButton != null)
+        {
+            discardButton.onClick.AddListener(DiscardChanges);
+        }
+    }
 
     private void Start()
     {
         SetupResolutions();
         LoadSettingsData();
+    }
+
+    protected override void Hide()
+    {
+        if (IsDirty())
+        {
+            showConfirmPopupEvent?.Invoke(
+            "You have unsaved changes. Do you want to discard them and close?",
+            () =>
+            {
+                DiscardChanges();
+                base.Hide();
+            },
+            null
+        );
+        }
+        else
+        {
+            base.Hide();
+        }
     }
 
     #region Resolution & Display Controls
@@ -51,29 +101,24 @@ public class IdleGameSettingPopup : BasePopup
 
         resolutionDropdown.AddOptions(options);
 
-        // Fallback default index if no settings exist yet
-        if (currentSettings != null)
-        {
-            currentSettings.resolutionIndex = Mathf.Clamp(currentSettings.resolutionIndex, 0, availableResolutions.Length - 1);
-        }
-        else
+        if (currentSettings == null)
         {
             currentSettings = GetDefaultSettingsData();
             currentSettings.resolutionIndex = currentResolutionIndex;
         }
+
+        ResetPendingSettingsToCurrent();
     }
 
     public void SetResolution(int resolutionIndex)
     {
-        currentSettings.resolutionIndex = Mathf.Clamp(resolutionIndex, 0, availableResolutions.Length - 1);
-        Resolution res = availableResolutions[currentSettings.resolutionIndex];
-        Screen.SetResolution(res.width, res.height, Screen.fullScreen);
+        if (availableResolutions == null || availableResolutions.Length == 0) return;
+        pendingSettings.resolutionIndex = Mathf.Clamp(resolutionIndex, 0, availableResolutions.Length - 1);
     }
 
     public void SetFullscreen(bool isFullscreen)
     {
-        currentSettings.isFullscreen = isFullscreen;
-        Screen.fullScreen = isFullscreen;
+        pendingSettings.isFullscreen = isFullscreen;
     }
 
     #endregion
@@ -82,23 +127,94 @@ public class IdleGameSettingPopup : BasePopup
 
     public void SetMasterVolume(float volume)
     {
-        currentSettings.masterVolume = volume;
-        float dB = Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f;
-        // mainAudioMixer.SetFloat("MasterVol", dB);
+        pendingSettings.masterVolume = volume;
     }
 
     public void SetMusicVolume(float volume)
     {
-        currentSettings.musicVolume = volume;
-        float dB = Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f;
-        // mainAudioMixer.SetFloat("MusicVol", dB);
+        pendingSettings.musicVolume = volume;
     }
 
     public void SetSFXVolume(float volume)
     {
-        currentSettings.sfxVolume = volume;
+        pendingSettings.sfxVolume = volume;
+    }
+
+    #endregion
+
+    #region Confirmation, Discard & Application
+
+    public void OnConfirmButtonClicked()
+    {
+        showConfirmPopupEvent?.Invoke("Are you sure you want to apply these settings changes?", ApplyAndSaveSettings, null);
+    }
+
+    /// <summary>
+    /// Reverts pending settings back to currently active settings and refreshes UI controls.
+    /// </summary>
+    public void DiscardChanges()
+    {
+        ResetPendingSettingsToCurrent();
+        UpdateUIFromSettings(currentSettings);
+    }
+
+    private void ResetPendingSettingsToCurrent()
+    {
+        pendingSettings = new SettingsData
+        {
+            masterVolume = currentSettings.masterVolume,
+            musicVolume = currentSettings.musicVolume,
+            sfxVolume = currentSettings.sfxVolume,
+            isFullscreen = currentSettings.isFullscreen,
+            resolutionIndex = currentSettings.resolutionIndex
+        };
+    }
+
+    private void ApplyAndSaveSettings()
+    {
+        currentSettings.masterVolume = pendingSettings.masterVolume;
+        currentSettings.musicVolume = pendingSettings.musicVolume;
+        currentSettings.sfxVolume = pendingSettings.sfxVolume;
+        currentSettings.isFullscreen = pendingSettings.isFullscreen;
+        currentSettings.resolutionIndex = pendingSettings.resolutionIndex;
+
+        ApplySettingsToSystem(currentSettings);
+        SaveSettingsData();
+    }
+
+    private void ApplySettingsToSystem(SettingsData settings)
+    {
+        if (availableResolutions != null && availableResolutions.Length > settings.resolutionIndex)
+        {
+            Resolution res = availableResolutions[settings.resolutionIndex];
+            Screen.SetResolution(res.width, res.height, settings.isFullscreen);
+        }
+        else
+        {
+            Screen.fullScreen = settings.isFullscreen;
+        }
+
+        ApplyAudioMixerVolume("MasterVol", settings.masterVolume);
+        ApplyAudioMixerVolume("MusicVol", settings.musicVolume);
+        ApplyAudioMixerVolume("SFXVol", settings.sfxVolume);
+    }
+
+    private void ApplyAudioMixerVolume(string parameterName, float volume)
+    {
+        if (mainAudioMixer == null) return;
         float dB = Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20f;
-        // mainAudioMixer.SetFloat("SFXVol", dB);
+        mainAudioMixer.SetFloat(parameterName, dB);
+    }
+
+    public bool IsDirty()
+    {
+        if (pendingSettings == null || currentSettings == null) return false;
+
+        return pendingSettings.resolutionIndex != currentSettings.resolutionIndex
+            || pendingSettings.isFullscreen != currentSettings.isFullscreen
+            || !Mathf.Approximately(pendingSettings.masterVolume, currentSettings.masterVolume)
+            || !Mathf.Approximately(pendingSettings.musicVolume, currentSettings.musicVolume)
+            || !Mathf.Approximately(pendingSettings.sfxVolume, currentSettings.sfxVolume);
     }
 
     #endregion
@@ -136,29 +252,25 @@ public class IdleGameSettingPopup : BasePopup
     public void LoadSaveData(SettingsData saveData)
     {
         currentSettings = saveData ?? GetDefaultSettingsData();
+        ResetPendingSettingsToCurrent();
 
-        // Apply UI element values
-        masterVolumeSlider.value = currentSettings.masterVolume;
-        musicVolumeSlider.value = currentSettings.musicVolume;
-        sfxVolumeSlider.value = currentSettings.sfxVolume;
+        UpdateUIFromSettings(currentSettings);
+        ApplySettingsToSystem(currentSettings);
+    }
 
-        fullscreenToggle.isOn = currentSettings.isFullscreen;
+    private void UpdateUIFromSettings(SettingsData settings)
+    {
+        // Temporarily disable listeners or directly set values to prevent triggering pending updates
+        masterVolumeSlider.value = settings.masterVolume;
+        musicVolumeSlider.value = settings.musicVolume;
+        sfxVolumeSlider.value = settings.sfxVolume;
+
+        fullscreenToggle.isOn = settings.isFullscreen;
 
         if (availableResolutions != null && availableResolutions.Length > 0)
         {
-            resolutionDropdown.value = Mathf.Clamp(currentSettings.resolutionIndex, 0, availableResolutions.Length - 1);
+            resolutionDropdown.value = Mathf.Clamp(settings.resolutionIndex, 0, availableResolutions.Length - 1);
             resolutionDropdown.RefreshShownValue();
-        }
-
-        // Apply physical changes
-        SetMasterVolume(currentSettings.masterVolume);
-        SetMusicVolume(currentSettings.musicVolume);
-        SetSFXVolume(currentSettings.sfxVolume);
-        SetFullscreen(currentSettings.isFullscreen);
-
-        if (availableResolutions != null && availableResolutions.Length > currentSettings.resolutionIndex)
-        {
-            SetResolution(currentSettings.resolutionIndex);
         }
     }
 

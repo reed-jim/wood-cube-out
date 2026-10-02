@@ -10,13 +10,15 @@ public class ConfirmPopup : BasePopup
     [SerializeField] private Button denyButton;
 
     private Action acceptAction;
+    private Action denyAction;
 
     protected override void RegisterMoreEvent()
     {
-        base.RegisterMoreEvent(); 
+        base.RegisterMoreEvent();
 
         ElectionPopup.showConfirmPopupEvent += Init;
-        LeadershipCharacterCreationUI.showConfirmPopupEvent += Init;  
+        LeadershipCharacterCreationUI.showConfirmPopupEvent += Init;
+        IdleGameSettingPopup.showConfirmPopupEvent += Init;
 
         acceptButton.onClick.AddListener(Accept);
         denyButton.onClick.AddListener(Deny);
@@ -28,6 +30,7 @@ public class ConfirmPopup : BasePopup
 
         ElectionPopup.showConfirmPopupEvent -= Init;
         LeadershipCharacterCreationUI.showConfirmPopupEvent -= Init;
+        IdleGameSettingPopup.showConfirmPopupEvent -= Init;
     }
 
     private void Init(string description, Action acceptAction)
@@ -39,6 +42,16 @@ public class ConfirmPopup : BasePopup
         this.acceptAction = acceptAction;
     }
 
+    private void Init(string description, Action acceptAction, Action denyAction)
+    {
+        Show();
+
+        descriptionText.text = description;
+
+        this.acceptAction = acceptAction;
+        this.denyAction = denyAction;
+    }
+
     private void Accept()
     {
         acceptAction?.Invoke();
@@ -48,6 +61,8 @@ public class ConfirmPopup : BasePopup
 
     private void Deny()
     {
+        denyAction?.Invoke();
+
         Hide();
     }
 }
