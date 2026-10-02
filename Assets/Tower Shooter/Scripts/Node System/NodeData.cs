@@ -6,7 +6,6 @@ public class NodeData
     public Vector2Int coordinate;
     public bool isUnlocked;
 
-    public List<StatModifier> upgrades;
     public List<int> activeAugmentsIds;
 }
 
@@ -17,5 +16,6 @@ public class NodeGroupData
 
 public class GameData
 {
+    public bool isExist;
     public List<NodeGroupData> nodeGroupDataItems;
 }

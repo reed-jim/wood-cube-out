@@ -10,7 +10,12 @@ public class DataManager : Singleton<DataManager>
     {
         gameData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey(GameConstants.gameData), GetDefaultGameData());
 
-        SaveData();
+        if (!gameData.isExist)
+        {
+            gameData.isExist = true;
+
+            SaveData();
+        }
 
         return gameData;
     }
@@ -60,7 +65,6 @@ public class DataManager : Singleton<DataManager>
     {
         NodeData nodeData = node.nodeData;
 
-        nodeData.upgrades = node.upgrades;
         nodeData.activeAugmentsIds = new List<int>();
 
         for (int i = 0; i < node.ownedAugments.Count; i++)

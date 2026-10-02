@@ -65,6 +65,6 @@ public class StatModifier
         ModType = modType;
         Value = value;
         UpgradeTime = upgradeTime;
-        Source = statModifierSource;
+        this.statModifierSource = statModifierSource;
     }
 }

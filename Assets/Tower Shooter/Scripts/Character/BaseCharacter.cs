@@ -79,7 +79,7 @@ public class BaseCharacter : MonoBehaviour
             this.nodeGroup = nodeGroup;
         }
 
-        // Load augments
+        // Load Augments
         if (nodeData.activeAugmentsIds != null)
         {
             for (int i = 0; i < AugmentManager.Ins.augmentContainer.augments.Count; i++)
@@ -100,6 +100,9 @@ public class BaseCharacter : MonoBehaviour
             NodeManager.Ins.AllocateIdForNode(this);
 
             serviceLocator.stats.LoadStats();
+
+            // Load Upgrades
+            upgrades = serviceLocator.stats.GetAllModifiersFromSource(StatModifierSource.Upgrade);
 
             // serviceLocator.nodeUI.InitEnergyPath();
         }

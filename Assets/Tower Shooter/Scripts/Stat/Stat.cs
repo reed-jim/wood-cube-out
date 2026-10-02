@@ -67,6 +67,23 @@ public class Stat
         return Value;
     }
 
+    public List<StatModifier> GetAllModifiersFromSource(StatModifierSource statModifierSource)
+    {
+        List<StatModifier> statModifiers = new List<StatModifier>();
+
+        for (int i = 0; i < modifiers.Count; i++)
+        {
+            StatModifier statModifier = modifiers[i];
+
+            if (statModifier.statModifierSource == statModifierSource)
+            {
+                statModifiers.Add(statModifier);
+            }
+        }
+
+        return statModifiers;
+    }
+
     public bool RemoveModifier(StatModifier mod)
     {
         if (!modifiers.Contains(mod))
