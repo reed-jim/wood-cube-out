@@ -13,6 +13,10 @@ public class OfflineIdleUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI idleRewardMultiplierText;
     [SerializeField] private Button claimButton;
 
+    [Header("Upgrade")]
+    [SerializeField] private Button upgradeMultiplierButton;
+    [SerializeField] private TextMeshProUGUI upgradeMultiplierCost;
+
     private float calculatedTotalPower;
     private float totalSecondOffline;
     private float idleRewardMultiplier;
@@ -22,10 +26,8 @@ public class OfflineIdleUI : MonoBehaviour
     private void Awake()
     {
         // Bind button click listeners
-        if (claimButton != null)
-        {
-            claimButton.onClick.AddListener(OnClickClaim);
-        }
+        claimButton.onClick.AddListener(OnClickClaim);
+        upgradeMultiplierButton.onClick.AddListener(UpgradeMultiplier);
 
         // Hide UI by default on start
         container.gameObject.SetActive(false);
@@ -51,6 +53,7 @@ public class OfflineIdleUI : MonoBehaviour
         timeOfflineText.text = $"You have offlined for <color={primaryHex}>{FormatTime(totalSecondOffline)}";
 
         idleRewardMultiplierText.text = $"Idle Reward Multiplier: <color={primaryHex}>{idleRewardMultiplier}";
+        upgradeMultiplierCost.text = $"{OfflineIdleManager.Ins.GetUpgradeCost()}";
     }
 
     private void Show()
@@ -80,6 +83,11 @@ public class OfflineIdleUI : MonoBehaviour
         ResourceManager.Ins.ChangeResource(ResourceType.Coin, calculatedTotalPower);
 
         Hide();
+    }
+
+    private void UpgradeMultiplier()
+    {
+        OfflineIdleManager.Ins.UpgradeMultiplier();
     }
 
     #region Helper Formatting Functions

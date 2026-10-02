@@ -7,10 +7,36 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
 
     private OfflineIdleData offlineIdleData;
 
+    private float upgradeCost;
+
     public void Init()
     {
         LoadOfflineIdleData();
     }
+
+    #region Upgrade
+    public void UpgradeMultiplier()
+    {
+        if (ResourceManager.Ins.HasEnough(ResourceType.Coin, upgradeCost))
+        {
+            ResourceManager.Ins.DeductResource(ResourceType.Coin, upgradeCost);
+
+            offlineIdleData.upgradeTime++;
+            offlineIdleData.idleRewardMultiplier = CurveManager.Ins.GetOfflineIdleMultiplier(offlineIdleData.upgradeTime);
+
+            SaveOfflineIdleData();
+        }
+        else
+        {
+            IngameNotificationManager.Ins.ShowNotEnoughPower();
+        }
+    }
+
+    public float GetUpgradeCost()
+    {
+        return upgradeCost;
+    }
+    #endregion
 
     #region Save/Load
     private void LoadOfflineIdleData()
@@ -44,6 +70,8 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
 
             offlineIdleUI.ShowRewards(totalPower, (int)timePassedInSeconds, offlineIdleData.idleRewardMultiplier);
         }
+
+        upgradeCost = CurveManager.Ins.GetOfflineIdleCost(offlineIdleData.upgradeTime);
     }
 
     private void SaveOfflineIdleData()
@@ -69,4 +97,5 @@ public class OfflineIdleData
     public long lastOnlineTimestamp;
 
     public float idleRewardMultiplier;
+    public int upgradeTime;
 }

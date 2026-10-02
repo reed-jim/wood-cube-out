@@ -75,6 +75,10 @@ public class CurveManager : Singleton<CurveManager>
         linearStep = 0.1      // +10% efficiency per upgrade step
     };
 
+    [Header("Offline Idle")]
+    public ProgressionConfig offlineIdleMultiplierConfig = new ProgressionConfig();
+    public ProgressionConfig offlineIdleCostConfig = new ProgressionConfig();
+
     // ----------------------------------------------------------------------
     // Preserved Usage Functions (Updated with Idle Math)
     // ----------------------------------------------------------------------
@@ -187,9 +191,28 @@ public class CurveManager : Singleton<CurveManager>
         return (int)(GetCharacterEfficiency(time) * 100f);
     }
 
+    #region Offline Idle
+    public float GetOfflineIdleMultiplier(int upgradeTime)
+    {
+        return GetProgressionValue(offlineIdleMultiplierConfig, upgradeTime);
+    }
+
+    public float GetOfflineIdleCost(int upgradeTime)
+    {
+        return GetProgressionValue(offlineIdleCostConfig, upgradeTime);
+    }
+    #endregion
+
     // ----------------------------------------------------------------------
     // Idle Bulk Buying Helpers (O(1) Math)
     // ----------------------------------------------------------------------
+    public float GetProgressionValue(ProgressionConfig progressionConfig, int upgradeTime)
+    {
+        if (upgradeTime <= 0) return (float)progressionConfig.baseValue;
+
+        double cost = progressionConfig.baseValue * Math.Pow(progressionConfig.growthRate, upgradeTime);
+        return (float)Math.Round(cost, 3);
+    }
 
     /// <summary>
     /// Calculates total cost to buy multiple levels at once for Node Upgrades.
