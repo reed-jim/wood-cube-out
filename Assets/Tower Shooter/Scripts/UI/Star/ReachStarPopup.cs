@@ -72,6 +72,13 @@ public class ReachStarPopup : BasePopup
             ResourceManager.Ins.ChangeResource(resourceDataItem.resourceType, resourceDataItem.value);
         }
 
+        for (int i = 0; i < starPathConfig.unlockedAugments.Count; i++)
+        {
+            Augment augment = starPathConfig.unlockedAugments[i];
+
+            augment.isUnlocked = true;
+        }
+
         goNextStarEvent?.Invoke();
 
         Hide();

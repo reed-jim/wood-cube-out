@@ -31,11 +31,18 @@ public static class StatModifierGenerator
     {
         abilityPotential = Mathf.Max(0f, abilityPotential);
 
-        StatType stat = GetRandomStat();
-
         ModifierType modType = ModifierType.Flat;
 
-        float value = GetModifierValue(stat, modType, abilityPotential);
+        float value = GetModifierValue(statType, modType, abilityPotential);
+
+        return new StatModifier(statType, modType, value);
+    }
+
+    public static StatModifier GeneratePercentModifier(StatType statType)
+    {
+        ModifierType modType = ModifierType.PercentMult;
+
+        float value = GetRandomModifierValue(statType, modType);
 
         return new StatModifier(statType, modType, value);
     }
@@ -86,5 +93,12 @@ public static class StatModifierGenerator
             value *= 0.01f;
 
         return value;
+    }
+
+    private static float GetRandomModifierValue(
+        StatType stat,
+        ModifierType mode)
+    {
+        return UnityEngine.Random.RandomRange(0, 1);
     }
 }

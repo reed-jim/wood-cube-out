@@ -29,4 +29,9 @@ public class StatItemUI : MonoBehaviour
 
         valueText.color = color;
     }
+
+    public void Init(StatModifier statModifier)
+    {
+        Init(statModifier.Type, statModifier.ModType, statModifier.Value);
+    }
 }

@@ -33,6 +33,8 @@ public class Augment : ScriptableObject
     public bool isApplyImmediatelyAfterPick = true;
     public bool isForNodeGroup;
 
+    public bool isUnlocked;
+
     public virtual void Pick()
     {
 
