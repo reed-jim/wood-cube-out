@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 1404209709}
   - component: {fileID: 1404209708}
   - component: {fileID: 1404209711}
-  - component: {fileID: 1404209710}
+  - component: {fileID: 1404209712}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -467,7 +467,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 188, y: 252}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1404209708
 MonoBehaviour:
@@ -481,7 +481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 2100000, guid: e885be3fd67d75e42a67605909e571c2, type: 2}
+  m_Material: {fileID: 2100000, guid: 4206879d2d9b6014d9cf2e92b81c3505, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -489,7 +489,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b18a979ba13625e4e949e7baa6cf6e5b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17da86b32a078224787b30a3074301f3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -507,18 +507,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1404209706}
   m_CullTransparentMesh: 1
---- !u!114 &1404209710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1404209706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0aafa397c99df0043923aef7bf667861, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITornadoMeshModifier
 --- !u!114 &1404209711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,6 +528,18 @@ MonoBehaviour:
   depthDisplacement: 400
   turbulenceAmount: 15
   turbulenceFrequency: 2
+--- !u!114 &1404209712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404209706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aafa397c99df0043923aef7bf667861, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITornadoMeshModifier
 --- !u!1 &1702575351
 GameObject:
   m_ObjectHideFlags: 0

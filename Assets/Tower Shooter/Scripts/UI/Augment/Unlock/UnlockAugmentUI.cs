@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class UnlockAugmentUI : MonoBehaviour
 {
     public RectTransform container;
+    public CanvasGroup canvasGroup;
     public CanvasGroup cloneAugmentCanvasGroup;
     public RectTransform cloneAugmentRT;
     public CanvasGroup lockCanvasGroup;
@@ -107,9 +108,14 @@ public class UnlockAugmentUI : MonoBehaviour
 
             SaferioTween.PlayExplosiveAt(fx, cloneAugmentRT, targetScale: 3f, onComplete: () =>
             {
-                gameObject.SetActive(false);
+                Tween.Alpha(canvasGroup, 0, duration: 0.3f).OnComplete(() =>
+                {
+                    gameObject.SetActive(false);
+                });
             });
         });
+
+        continueButton.interactable = false;
 
         unlockAugmentData.isUnlocked = true;
 
