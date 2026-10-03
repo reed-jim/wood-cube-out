@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PrestigeUI : BasePopup
 {
     [SerializeField] private RectTransform buffContainer;
+    [SerializeField] private TMP_Text prestigeCountText;
     [SerializeField] private Button acceptButton;
     [SerializeField] private Button denyButton;
 
@@ -43,6 +45,8 @@ public class PrestigeUI : BasePopup
 
             statItemUIs.Add(statItemUI);
         }
+
+        prestigeCountText.text = $"Prestige Count: <color={DynamicThemeManager.Ins.PrimaryHex}>{PrestigeManager.Ins.GetPrestigeCount()}";
     }
 
     private void AcceptPrestige()
@@ -50,6 +54,8 @@ public class PrestigeUI : BasePopup
         ShowConfirmPopup("This will reset the game progress, are you sure?", onAcceptAction: () =>
         {
             PrestigeManager.Ins.AcceptPrestige();
+
+            Hide();
         });
     }
 

@@ -18,10 +18,12 @@ public class PrestigeManager : Singleton<PrestigeManager>
     {
         currentPermanentStatModifiers = new List<StatModifier>();
 
-        StatModifier powerBuff = StatModifierGenerator.GeneratePercentModifier(StatType.Damage);
-        StatModifier cycleSpeedBuff = StatModifierGenerator.GeneratePercentModifier(StatType.AttackSpeed);
-        StatModifier critChanceBuff = StatModifierGenerator.GeneratePercentModifier(StatType.CritChance);
-        StatModifier critMultiplierBuff = StatModifierGenerator.GeneratePercentModifier(StatType.CritMultiplier);
+        float maxChance = CurveManager.Ins.GetPrestigeMaxChance(prestigeData.prestigeCount);
+
+        StatModifier powerBuff = StatModifierGenerator.GeneratePercentModifier(StatType.Damage, maxChance);
+        StatModifier cycleSpeedBuff = StatModifierGenerator.GeneratePercentModifier(StatType.AttackSpeed, maxChance);
+        StatModifier critChanceBuff = StatModifierGenerator.GeneratePercentModifier(StatType.CritChance, maxChance);
+        StatModifier critMultiplierBuff = StatModifierGenerator.GeneratePercentModifier(StatType.CritMultiplier, maxChance);
 
         currentPermanentStatModifiers.Add(powerBuff);
         currentPermanentStatModifiers.Add(cycleSpeedBuff);
@@ -31,9 +33,16 @@ public class PrestigeManager : Singleton<PrestigeManager>
         return currentPermanentStatModifiers;
     }
 
+    public int GetPrestigeCount()
+    {
+        return prestigeData.prestigeCount;
+    }
+
     public void AcceptPrestige()
     {
         CommonUtil.CopyList(currentPermanentStatModifiers, prestigeData.permanentStatModifiers);
+
+        prestigeData.prestigeCount++;
 
         SavePrestigeData();
     }
@@ -59,5 +68,6 @@ public class PrestigeManager : Singleton<PrestigeManager>
 [Serializable]
 public class PrestigeData
 {
+    public int prestigeCount;
     public List<StatModifier> permanentStatModifiers;
 }

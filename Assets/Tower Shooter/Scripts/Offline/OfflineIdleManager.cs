@@ -48,6 +48,8 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
     {
         offlineIdleData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("offlineIdleData"), GetDefaultOfflineIdleData());
 
+        upgradeCost = CurveManager.Ins.GetOfflineIdleCost(offlineIdleData.upgradeTime);
+
         if (offlineIdleData.isFirstSession)
         {
             offlineIdleData.isFirstSession = false;
@@ -75,8 +77,6 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
 
             offlineIdleUI.ShowRewards(totalPower, (int)timePassedInSeconds, offlineIdleData.idleRewardMultiplier);
         }
-
-        upgradeCost = CurveManager.Ins.GetOfflineIdleCost(offlineIdleData.upgradeTime);
     }
 
     private void SaveOfflineIdleData()

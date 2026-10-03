@@ -38,11 +38,11 @@ public static class StatModifierGenerator
         return new StatModifier(statType, modType, value);
     }
 
-    public static StatModifier GeneratePercentModifier(StatType statType)
+    public static StatModifier GeneratePercentModifier(StatType statType, float maxChance = 1)
     {
         ModifierType modType = ModifierType.PercentMult;
 
-        float value = GetRandomModifierValue();
+        float value = GetRandomModifierValue(maxChance: maxChance);
 
         return new StatModifier(statType, modType, value);
     }
@@ -95,8 +95,8 @@ public static class StatModifierGenerator
         return value;
     }
 
-    private static float GetRandomModifierValue()
+    private static float GetRandomModifierValue(float maxChance)
     {
-        return UnityEngine.Random.Range(0f, 1f);
+        return UnityEngine.Random.Range(0f, maxChance);
     }
 }

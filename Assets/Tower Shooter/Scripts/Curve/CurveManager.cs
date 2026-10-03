@@ -79,6 +79,9 @@ public class CurveManager : Singleton<CurveManager>
     public ProgressionConfig offlineIdleMultiplierConfig = new ProgressionConfig();
     public ProgressionConfig offlineIdleCostConfig = new ProgressionConfig();
 
+    [Header("Prestige")]
+    public ProgressionConfig prestigeMaxChanceConfig = new ProgressionConfig();
+
     // ----------------------------------------------------------------------
     // Preserved Usage Functions (Updated with Idle Math)
     // ----------------------------------------------------------------------
@@ -202,6 +205,11 @@ public class CurveManager : Singleton<CurveManager>
         return GetProgressionValue(offlineIdleCostConfig, upgradeTime);
     }
     #endregion
+
+    public float GetPrestigeMaxChance(int time)
+    {
+        return GetProgressionValue(prestigeMaxChanceConfig, time);
+    }
 
     // ----------------------------------------------------------------------
     // Idle Bulk Buying Helpers (O(1) Math)
