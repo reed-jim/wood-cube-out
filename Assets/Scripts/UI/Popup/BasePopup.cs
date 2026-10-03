@@ -37,6 +37,7 @@ public class BasePopup : MonoBehaviour
     public static event Action<ScreenRoute> switchPopupRouteEvent;
     public static event Action<string, string> showNotificationEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    public static Action<string, Action> showConfirmPopupEvent;
 
     /*[Header("Event Channels")]
     [SerializeField] protected SwitchRouteChannelSO switchRouteChannel;
@@ -398,6 +399,11 @@ public class BasePopup : MonoBehaviour
     protected void ShowNotification(string title, string description)
     {
         showNotificationEvent?.Invoke(title, description);
+    }
+
+    protected void ShowConfirmPopup(string description, Action onAcceptAction)
+    {
+        showConfirmPopupEvent?.Invoke(description, onAcceptAction);
     }
 
     protected void InvokeShowAdNotLoadedPopupEvent()

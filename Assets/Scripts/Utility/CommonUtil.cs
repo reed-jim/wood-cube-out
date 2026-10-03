@@ -12,6 +12,12 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    public static void CopyList<T>(List<T> source, List<T> destination)
+    {
+        destination.Clear();
+        destination.AddRange(source);
+    }
+
     private static readonly string[] Suffixes =
     {
         "", "K", "M", "B", "T",

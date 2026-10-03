@@ -31,6 +31,13 @@ public class PrestigeManager : Singleton<PrestigeManager>
         return currentPermanentStatModifiers;
     }
 
+    public void AcceptPrestige()
+    {
+        CommonUtil.CopyList(currentPermanentStatModifiers, prestigeData.permanentStatModifiers);
+
+        SavePrestigeData();
+    }
+
     #region Save/Load
     public void LoadPrestigeData()
     {

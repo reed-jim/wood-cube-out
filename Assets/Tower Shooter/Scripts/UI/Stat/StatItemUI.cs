@@ -24,7 +24,7 @@ public class StatItemUI : MonoBehaviour
         }
         else
         {
-            valueText.text = $"{sign}{value * 100}%  {statType}";
+            valueText.text = $"{sign}{TextUtil.FormatFloat(value * 100)}%  {statType}";
         }
 
         valueText.color = color;

@@ -16,6 +16,7 @@ public class ConfirmPopup : BasePopup
     {
         base.RegisterMoreEvent();
 
+        BasePopup.showConfirmPopupEvent += Init;
         ElectionPopup.showConfirmPopupEvent += Init;
         LeadershipCharacterCreationUI.showConfirmPopupEvent += Init;
         IdleGameSettingPopup.showConfirmPopupEvent += Init;
@@ -28,6 +29,7 @@ public class ConfirmPopup : BasePopup
     {
         base.UnregisterMoreEvent();
 
+        BasePopup.showConfirmPopupEvent -= Init;
         ElectionPopup.showConfirmPopupEvent -= Init;
         LeadershipCharacterCreationUI.showConfirmPopupEvent -= Init;
         IdleGameSettingPopup.showConfirmPopupEvent -= Init;

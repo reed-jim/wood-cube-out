@@ -1,11 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PrestigeUI : MonoBehaviour
+public class PrestigeUI : BasePopup
 {
     [SerializeField] private RectTransform buffContainer;
+    [SerializeField] private Button acceptButton;
+    [SerializeField] private Button denyButton;
 
     private List<StatItemUI> statItemUIs = new List<StatItemUI>();
+
+    protected override void RegisterMoreEvent()
+    {
+        base.RegisterMoreEvent();
+
+        acceptButton.onClick.AddListener(AcceptPrestige);
+        denyButton.onClick.AddListener(DenyPrestige);
+    }
+
+    [ContextMenu("ShowPrestigePopup")]
+    private void ShowPrestigePopup()
+    {
+        Show();
+
+        Init();
+    }
 
     private void Init()
     {
@@ -24,5 +43,18 @@ public class PrestigeUI : MonoBehaviour
 
             statItemUIs.Add(statItemUI);
         }
+    }
+
+    private void AcceptPrestige()
+    {
+        ShowConfirmPopup("This will reset the game progress, are you sure?", onAcceptAction: () =>
+        {
+            PrestigeManager.Ins.AcceptPrestige();
+        });
+    }
+
+    private void DenyPrestige()
+    {
+        Hide();
     }
 }
