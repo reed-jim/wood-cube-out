@@ -1,23 +1,28 @@
-Shader "Custom/URP/LoLSpaceButtonV2"
+Shader "Custom/URP/LoLSpaceButtonComplete"
 {
     Properties
     {
         [MainTexture] _MainTex ("Base Sprite / Texture", 2D) = "white" {}
         
-        [Header(Space Colors Palette)]
+        [Header(Space Color Palette)]
         _BodyColor ("Center Space Void Dark", Color) = (0.02, 0.01, 0.05, 1)
         _BorderColor ("Celestial Gold Rim", Color) = (0.95, 0.82, 0.45, 1)
         _GlowColor ("Electric Neon Purple Glow", Color) = (0.75, 0.25, 1.0, 1)
         _GlowSecondary ("Deep Cosmic Indigo Energy", Color) = (0.15, 0.05, 0.5, 1)
         
-        [Header(Rim Border Settings)]
-        _BorderThickness ("Border Thickness", Range(0.005, 0.15)) = 0.04
+        [Header(Frame Settings)]
+        _BorderThickness ("Border Thickness", Range(0, 1)) = 0.04
         _BevelHardness ("Bevel Specular Sharpness", Range(1.0, 16.0)) = 6.0
         
-        [Header(Energy Streaks Animation)]
+        [Header(Energy Streaks Parallax Nebula)]
         _StreakSpeed ("Energy Flow Speed", Range(0.1, 5.0)) = 1.2
         _StreakDensity ("Streak Density", Range(5.0, 50.0)) = 20.0
         _StreakIntensity ("Streak Brightness", Range(0.0, 2.0)) = 0.6
+        _NebulaSpeed ("Nebula Drift Speed", Range(0.01, 1.0)) = 0.15
+        
+        [Header(Starfield Grid)]
+        _StarGridSize ("Star Grid Resolution", Range(10.0, 50.0)) = 25.0
+        _StarBrightness ("Star Brightness", Range(0.2, 3.0)) = 1.5
         
         [Header(Sweeping Light Reflection)]
         _ShineSpeed ("Sweep Frequency", Range(0.1, 3.0)) = 0.8
@@ -44,7 +49,7 @@ Shader "Custom/URP/LoLSpaceButtonV2"
 
         Pass
         {
-            Name "LoLSpaceButtonV2Pass"
+            Name "LoLSpaceButtonCompletePass"
 
             HLSLPROGRAM
             #pragma vertex vert
@@ -80,6 +85,9 @@ Shader "Custom/URP/LoLSpaceButtonV2"
                 float _StreakSpeed;
                 float _StreakDensity;
                 float _StreakIntensity;
+                float _NebulaSpeed;
+                float _StarGridSize;
+                float _StarBrightness;
                 float _ShineSpeed;
                 float _ShineWidth;
                 float _ShineAngle;
@@ -87,7 +95,7 @@ Shader "Custom/URP/LoLSpaceButtonV2"
                 float _Pressed;
             CBUFFER_END
 
-            // Pseudo-random noise for energy streaks
+            // --- Noise & Hash Utility Functions ---
             float Hash11(float p)
             {
                 p = frac(p * 0.1031);
@@ -96,12 +104,28 @@ Shader "Custom/URP/LoLSpaceButtonV2"
                 return frac(p);
             }
 
+            float2 Hash22(float2 p)
+            {
+                p = float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)));
+                return frac(sin(p) * 43758.5453123);
+            }
+
             float ValueNoise1D(float x)
             {
                 float i = floor(x);
                 float f = frac(x);
                 float u = f * f * (3.0 - 2.0 * f);
                 return lerp(Hash11(i), Hash11(i + 1.0), u);
+            }
+
+            // 4-Point Specular Star Flare
+            float StarFlare(float2 uv, float size)
+            {
+                float d = length(uv);
+                float core = size / (d + 0.001);
+                float rayX = max(0.0, 1.0 - abs(uv.x) * 25.0);
+                float rayY = max(0.0, 1.0 - abs(uv.y) * 25.0);
+                return saturate(core * 0.08 + (rayX + rayY) * 0.25 * smoothstep(size, 0.0, d));
             }
 
             Varyings vert(Attributes input)
@@ -118,27 +142,44 @@ Shader "Custom/URP/LoLSpaceButtonV2"
             {
                 float2 uv = input.uv;
                 float4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) * input.color;
+                float time = _Time.y;
 
-                // 1. Edge Distance Field (Frame Border)
+                // 1. Frame Distance Field (Border Masking)
                 float2 distToEdge2D = min(uv, 1.0 - uv);
                 float distToEdge = min(distToEdge2D.x, distToEdge2D.y);
                 float isBorder = step(distToEdge, _BorderThickness);
 
-                // 2. Base Body Gradient & Inner Vignette
+                // 2. Base Void Body Gradient
                 float centerDist = length(uv - 0.5);
                 float3 baseBody = lerp(_BodyColor.rgb * 1.6, _BodyColor.rgb * 0.3, centerDist * 1.5);
 
-                // 3. Animated Horizontal Cosmic Energy Streaks
-                float time = _Time.y;
+                // 3. Dual-Layer Parallax Cosmic Nebula Drift
+                float2 nebulaUV1 = uv + float2(time * _NebulaSpeed * 0.2, time * _NebulaSpeed * 0.1);
+                float2 nebulaUV2 = uv * 1.5 - float2(time * _NebulaSpeed * 0.15, -time * _NebulaSpeed * 0.25);
+                float nebulaLayer1 = ValueNoise1D(nebulaUV1.x * 12.0 + nebulaUV1.y * 12.0);
+                float nebulaLayer2 = ValueNoise1D(nebulaUV2.x * 14.0 - nebulaUV2.y * 10.0);
+                float3 cosmicCloud = lerp(_GlowSecondary.rgb, _GlowColor.rgb, nebulaLayer1 * nebulaLayer2);
+                baseBody += cosmicCloud * 0.3 * (1.0 + _Hover * 0.6);
+
+                // 4. Horizontal Animated Energy Streaks
                 float streakUV = (uv.y + uv.x * 0.1) * _StreakDensity;
                 float streakNoise = ValueNoise1D(streakUV + time * _StreakSpeed);
-                float horizontalMask = smoothstep(0.4, 0.0, abs(uv.y - 0.5));
-                
+                float horizontalMask = smoothstep(0.45, 0.0, abs(uv.y - 0.5));
                 float energyFlow = pow(streakNoise, 3.0) * _StreakIntensity * horizontalMask;
                 float3 streakColor = lerp(_GlowSecondary.rgb, _GlowColor.rgb, streakNoise);
                 baseBody += streakColor * energyFlow;
 
-                // 4. Multi-frequency Breathing Inner Glow (Indigo to Neon Purple)
+                // 5. Twinkling Procedural Starfield Grid
+                float2 starGrid = floor(uv * _StarGridSize);
+                float2 starLocalUV = frac(uv * _StarGridSize) - 0.5;
+                float2 starOffset = Hash22(starGrid) - 0.5;
+                float2 starPos = starLocalUV - starOffset * 0.6;
+
+                float twinkle = sin(time * 5.0 + starGrid.x * 13.0 + starGrid.y * 7.0) * 0.5 + 0.5;
+                float star = StarFlare(starPos, 0.025 * twinkle * (1.0 + _Hover * 0.8));
+                baseBody += lerp(_BorderColor.rgb, float3(1,1,1), 0.5) * star * _StarBrightness;
+
+                // 6. Breathing Inner Glow (Indigo to Electric Neon Purple)
                 float glowDepth = saturate((_BorderThickness * 3.5 - distToEdge) / (_BorderThickness * 3.5));
                 glowDepth = pow(glowDepth, 2.5);
 
@@ -149,7 +190,7 @@ Shader "Custom/URP/LoLSpaceButtonV2"
                 float3 innerGlow = lerp(_GlowSecondary.rgb, _GlowColor.rgb, glowDepth) * glowDepth * pulseCombined * 1.5;
                 baseBody += innerGlow * (1.0 + _Hover * 1.2);
 
-                // 5. Metallic Celestial Gold Border & 3D Bevel Highlight
+                // 7. Celestial Gold Metallic Frame & 3D Bevel Specular
                 float borderNormalized = saturate(distToEdge / _BorderThickness);
                 float bevelProfile = sin(borderNormalized * 3.14159);
                 float bevelSpec = pow(bevelProfile, _BevelHardness);
@@ -157,14 +198,14 @@ Shader "Custom/URP/LoLSpaceButtonV2"
                 float borderLight = saturate((1.0 - uv.y) * 0.6 + (1.0 - uv.x) * 0.4);
                 float3 goldBorder = _BorderColor.rgb * (0.4 + 0.8 * borderLight + bevelSpec * 0.9);
 
-                // Hover & Press reaction
-                goldBorder += _GlowColor.rgb * _Hover * 0.3;
+                // Frame interaction reaction
+                goldBorder += _GlowColor.rgb * _Hover * 0.35;
                 goldBorder *= (1.0 - _Pressed * 0.3);
 
-                // Combine Frame & Center Body
+                // Combine Border & Inner Body
                 float3 finalColor = lerp(baseBody, goldBorder, isBorder);
 
-                // 6. Sweeping Starlight Reflection Pass
+                // 8. Sweeping Starlight Reflection Pass
                 float sweepPos = frac(time * _ShineSpeed) * 3.0 - 1.0;
                 float sweepCoord = uv.x + uv.y * _ShineAngle;
                 
@@ -177,7 +218,7 @@ Shader "Custom/URP/LoLSpaceButtonV2"
                 
                 finalColor += sweepColor * totalSweep;
 
-                // 7. Interactive State Modifiers
+                // 9. Interactive State Modifiers
                 finalColor += _Hover * 0.08;
                 finalColor *= (1.0 - _Pressed * 0.2);
 
