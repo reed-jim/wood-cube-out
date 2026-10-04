@@ -694,6 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0d12a37d780e74898bcab7946394c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeNodeUI
+  upgradeNodeCanvasGroup: {fileID: 4846362961258522381}
   lockState: {fileID: 2911434422134312636}
   unlockNodeButton: {fileID: 8524171916515045050}
   unlockCostText: {fileID: 4520428173191403060}
@@ -713,6 +714,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2447259259318208267}
   - component: {fileID: 5105335908037252598}
+  - component: {fileID: 4846362961258522381}
   m_Layer: 5
   m_Name: Upgrade Item Container
   m_TagString: Untagged
@@ -769,6 +771,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &4846362961258522381
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5882819149026497363}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6046294575306080072
 GameObject:
   m_ObjectHideFlags: 0

@@ -630,12 +630,12 @@ namespace Saferio.Util.SaferioTween
             });
         }
 
-        public static void AlphaShow(CanvasGroup canvasGroup, float endAlpha = 1, Action onCompleteAction = null)
+        public static Tween AlphaShow(CanvasGroup canvasGroup, float endAlpha = 1, Action onCompleteAction = null)
         {
             canvasGroup.gameObject.SetActive(true);
             canvasGroup.alpha = 0;
 
-            Tween.Alpha(canvasGroup, endAlpha, duration: 0.3f)
+            return Tween.Alpha(canvasGroup, endAlpha, duration: 0.3f)
             .OnComplete(() =>
             {
                 onCompleteAction?.Invoke();

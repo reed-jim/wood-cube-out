@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 public class UpgradeNodeUI : Singleton<UpgradeNodeUI>
 {
     [Header("UI")]
+    public CanvasGroup upgradeNodeCanvasGroup;
     public CanvasGroup lockState;
     public Button unlockNodeButton;
     public TMP_Text unlockCostText;
@@ -17,6 +19,7 @@ public class UpgradeNodeUI : Singleton<UpgradeNodeUI>
 
     private float nodeUnlockCost;
 
+    private Tween upgradeNodeCanvasGroupTween;
     private Tween lockStateTween;
 
     protected override void MoreActionOnAwake()
@@ -37,6 +40,11 @@ public class UpgradeNodeUI : Singleton<UpgradeNodeUI>
             upgradeItemUI.Init(selectedNode);
         }
 
+        if (upgradeNodeCanvasGroupTween.isAlive)
+        {
+            upgradeNodeCanvasGroupTween.Stop();
+        }
+
         if (lockStateTween.isAlive)
         {
             lockStateTween.Stop();
@@ -44,16 +52,27 @@ public class UpgradeNodeUI : Singleton<UpgradeNodeUI>
 
         if (node.nodeData.isUnlocked)
         {
-            lockStateTween = Tween.Alpha(lockState, 0, duration: 0.3f).OnComplete(() =>
+            if (lockState.gameObject.activeSelf)
             {
-                lockState.gameObject.SetActive(false);
-            });
+                lockStateTween = Tween.Alpha(lockState, 0, duration: 0.3f).OnComplete(() =>
+                {
+                    lockState.gameObject.SetActive(false);
+                });
+
+                upgradeNodeCanvasGroupTween = SaferioTween.AlphaShow(upgradeNodeCanvasGroup);
+            }
         }
         else
         {
-            lockState.gameObject.SetActive(true);
+            if (upgradeNodeCanvasGroup.gameObject.activeSelf)
+            {
+                upgradeNodeCanvasGroupTween = Tween.Alpha(upgradeNodeCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
+                {
+                    upgradeNodeCanvasGroup.gameObject.SetActive(false);
+                });
 
-            lockStateTween = Tween.Alpha(lockState, 1, duration: 0.3f);
+                lockStateTween = SaferioTween.AlphaShow(lockState);
+            }
 
             nodeUnlockCost = CurveManager.Ins.GetBuyAugmentCost(NodeManager.Ins.GetNumUnlockedNode());
 
@@ -79,6 +98,6 @@ public class UpgradeNodeUI : Singleton<UpgradeNodeUI>
         else
         {
             IngameNotificationManager.Ins.ShowNotification(GameConstants.WARNING, "Not enough power to unlock this node!");
-        }        
+        }
     }
 }
