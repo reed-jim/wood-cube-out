@@ -53,11 +53,11 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
 
     public void OnTriggerRaised(EffectTrigger raisedTrigger)
     {
-        if (config == null || config.trigger != raisedTrigger) return;
+        // if (config == null || config.trigger != raisedTrigger) return;
 
         if (raisedTrigger == EffectTrigger.OnCrit && node != null && !node.isJustCrit) return;
 
-        if (raisedTrigger == EffectTrigger.EveryXCycles)
+        if (config.trigger == EffectTrigger.EveryXCycles)
         {
             cycleCounter++;
             if (cycleCounter < config.cycleFrequency) return;
