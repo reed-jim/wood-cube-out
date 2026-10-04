@@ -12,7 +12,9 @@ public static class TextUtil
         // Adjust the number of '#' characters to set your maximum decimal limit
         if (value > 10)
         {
-            return value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+            return CommonUtil.FormatNumber(value);
+            
+            // return value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
         }
         else if (value > 0.1f)
         {

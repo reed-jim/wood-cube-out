@@ -20,10 +20,12 @@ public class UpgradeItemUI : MonoBehaviour
     public StatColorConfigSO statColorConfigSO;
 
     private Sequence shakeCoinTextSequence;
+    private float cachedCoinValue;
 
     void Awake()
     {
         AugmentManager.applyAugmentEvent += OnAugmentApplied;
+        ResourceManager.changeResourceValueEvent += OnResourceChanged;
 
         upgradeButton.onClick.AddListener(Upgrade);
     }
@@ -31,6 +33,7 @@ public class UpgradeItemUI : MonoBehaviour
     void OnDestroy()
     {
         AugmentManager.applyAugmentEvent -= OnAugmentApplied;
+        ResourceManager.changeResourceValueEvent -= OnResourceChanged;
     }
 
     public void Init(BaseCharacter node)
@@ -84,12 +87,29 @@ public class UpgradeItemUI : MonoBehaviour
             $"{TextUtil.FormatFloat(statUpgradeData.currentValue)} (+{TextUtil.FormatFloat(delta)})";
         }
 
-        coinText.text = $"{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+        if(cachedCoinValue >= statUpgradeData.coinRequired)
+        {
+            coinText.text = $"<color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+        }
+        else
+        {
+            coinText.text = $"<color={DynamicThemeManager.Ins.OnSurfaceHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+        }
     }
 
     private void OnAugmentApplied()
     {
         UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+    }
+
+    private void OnResourceChanged(ResourceType resourceType, float value)
+    {
+        if (resourceType == ResourceType.Coin)
+        {
+            cachedCoinValue = value;
+
+            UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+        }
     }
 
     private void ShowAddedStatValueText(float increaseRatio, Vector3 position, Transform parent)
