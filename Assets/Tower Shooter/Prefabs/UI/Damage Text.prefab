@@ -30,8 +30,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5302397865877183217}
   - {fileID: 4305585847773553091}
+  - {fileID: 5302397865877183217}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamageText
   damageText: {fileID: 3487229856350012539}
+  critIcon: {fileID: 817327867023400973}
   lightTextBorderMaterial: {fileID: 2100000, guid: f5a4943f1e18e634abb932b727414837, type: 2}
   darkTextBorderMaterial: {fileID: 2100000, guid: f5a4943f1e18e634abb932b727414837, type: 2}
   lifetime: 0.7
@@ -76,7 +77,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 0
+  m_Spacing: 20
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -247,7 +248,7 @@ GameObject:
   - component: {fileID: 2272532416267862780}
   - component: {fileID: 817327867023400973}
   m_Layer: 0
-  m_Name: Icon
+  m_Name: Crit Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

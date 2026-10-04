@@ -2,10 +2,13 @@ using TMPro;
 using UnityEngine;
 using DG.Tweening;
 using System;
+using UnityEngine.UI;
+using Unity.Mathematics;
 
 public class DamageText : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageText;
+    [SerializeField] private Image critIcon;
 
     [Header("Theme")]
     [SerializeField] private Material lightTextBorderMaterial;
@@ -62,8 +65,19 @@ public class DamageText : MonoBehaviour
         KillTweens();
 
         damageText.text = $"{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
+        damageText.rectTransform.sizeDelta = new Vector2(damageText.preferredWidth, damageText.preferredHeight);
         damageText.color = isCritical ? critColor : normalColor;
         damageText.alpha = 1f;
+
+        if (isCritical)
+        {
+            critIcon.gameObject.SetActive(true);
+            critIcon.color = critColor;
+        }
+        else
+        {
+            critIcon.gameObject.SetActive(false);
+        }
 
         transform.position = spawnPosition;
 
