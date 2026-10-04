@@ -243,7 +243,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
         if (augmentUsageTracker.totalPowerGenerated > 0)
         {
-            result = $"Total Power Generated: {augmentUsageTracker.totalPowerGenerated}";
+            result = $"Total Power Generated: {TextUtil.FormatFloat(augmentUsageTracker.totalPowerGenerated)}";
         }
         else if (augmentUsageTracker.totalSpeedBuffDuration > 0)
         {
