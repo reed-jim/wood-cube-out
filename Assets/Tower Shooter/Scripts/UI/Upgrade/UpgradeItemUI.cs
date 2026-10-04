@@ -76,7 +76,7 @@ public class UpgradeItemUI : MonoBehaviour
     public void UpdateText(StatUpgradeData statUpgradeData)
     {
         statIcon.sprite = statColorConfigSO.GetIcon(statType);
-        float delta = statUpgradeData.nextValue - statUpgradeData.currentValue;
+        float delta = statUpgradeData.deltaValue;
 
         if (isPercentStat)
         {

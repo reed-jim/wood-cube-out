@@ -24,7 +24,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
             upgradeTime = oldStatModifier.UpgradeTime + 1;
 
             StatModifier newStatModifier =
-                new StatModifier(oldStatModifier.Type, oldStatModifier.ModType, statUpgradeData.deltaValue, upgradeTime, oldStatModifier.statModifierSource);
+                new StatModifier(
+                    oldStatModifier.Type, oldStatModifier.ModType, oldStatModifier.Value + statUpgradeData.deltaValue, upgradeTime, oldStatModifier.statModifierSource);
 
             RemoveUpgrade(node, oldStatModifier);
             ApplyUpgrade(node, newStatModifier);
@@ -86,10 +87,14 @@ public class UpgradeManager : Singleton<UpgradeManager>
             currentValue = baseStatValue;
         }
 
-        newValue = CurveManager.Ins.GetNextStatValue(statType, upgradeTime);
-        newValue = CommonUtil.RoundToDecimalPlaces(newValue, 3);
+        // newValue = CurveManager.Ins.GetNextStatValue(statType, upgradeTime);
+        // newValue = CommonUtil.RoundToDecimalPlaces(newValue, 3);
+        // nextCoinRequired = CurveManager.Ins.GetUpgradeNodeCost(upgradeTime);
+        // deltaValue = newValue - currentValue;
+
+        deltaValue = CurveManager.Ins.GetNextStatValue(statType, upgradeTime);
+        newValue = currentStatValue + deltaValue;
         nextCoinRequired = CurveManager.Ins.GetUpgradeNodeCost(upgradeTime);
-        deltaValue = newValue - baseStatValue;
 
         StatUpgradeData statUpgradeData = new StatUpgradeData
         {

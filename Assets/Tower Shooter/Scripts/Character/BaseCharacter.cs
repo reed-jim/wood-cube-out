@@ -176,7 +176,7 @@ public class BaseCharacter : MonoBehaviour
             if (!isPaused)
             {
                 float basePower = stats.GetStat(StatType.Damage).Value;
-                float speed = stats.GetStat(StatType.AttackSpeed).Value;
+                float speed = stats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
                 float efficiency = stats.GetStat(StatType.Efficiency).Value;
 
                 speedToSpaceShip = efficiency * (basePower * speed);

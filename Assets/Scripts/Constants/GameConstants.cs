@@ -33,6 +33,10 @@ public static class GameConstants
     public static string researchItemUI = "researchItemUI";
     public static string UIRectLine = "UIRectLine";
 
+    public static float nodeSpeedMultiplier = 0.2f;
+
+
+
 
 
 
