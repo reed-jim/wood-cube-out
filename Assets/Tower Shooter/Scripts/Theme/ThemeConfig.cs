@@ -143,6 +143,8 @@ public class ThemeConfig : ScriptableObject
             ElementRole.OnPrimary => onPrimary,
             ElementRole.OnPrimaryContainer => onPrimaryContainer,
             ElementRole.OnSurface => onSurface,
+            ElementRole.Error => error,
+            ElementRole.OnError => onError,
             _ => common
         };
     }

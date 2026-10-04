@@ -11,6 +11,8 @@ public class UpgradeItemUI : MonoBehaviour
     public Image statIcon;
     public Button upgradeButton;
 
+    public ThemeableUI costIconThemeable;
+
     [Header("Customize")]
     public StatType statType;
     public bool isPercentStat;
@@ -87,13 +89,17 @@ public class UpgradeItemUI : MonoBehaviour
             $"{TextUtil.FormatFloat(statUpgradeData.currentValue)} (+{TextUtil.FormatFloat(delta)})";
         }
 
-        if(cachedCoinValue >= statUpgradeData.coinRequired)
+        if (cachedCoinValue >= statUpgradeData.coinRequired)
         {
             coinText.text = $"<color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+
+            costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
         }
         else
         {
-            coinText.text = $"<color={DynamicThemeManager.Ins.OnSurfaceHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+            coinText.text = $"<color={DynamicThemeManager.Ins.ErrorHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+
+            costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Error);
         }
     }
 

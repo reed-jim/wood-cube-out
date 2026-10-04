@@ -13,8 +13,10 @@ public class DynamicThemeManager : Singleton<DynamicThemeManager>
 
     public ThemeConfig CurrentTheme => currentTheme;
 
-    public string PrimaryHex => GetHex(ThemeableUI.ElementRole.Primary);
-    public string OnSurfaceHex => GetHex(ThemeableUI.ElementRole.OnSurface);
+    public string PrimaryHex => GetHex(ElementRole.Primary);
+    public string OnSurfaceHex => GetHex(ElementRole.OnSurface);
+    public string ErrorHex => GetHex(ElementRole.Error);
+    public string OnErrorHex => GetHex(ElementRole.OnError);
 
     void Start()
     {
