@@ -22,6 +22,13 @@ public class DamageText : MonoBehaviour
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color critColor = new Color(1f, 0.85f, 0.2f); // Punchy yellow-gold
 
+    [Header("Augment Visual Palette")]
+    [SerializeField] private Color damageStatColor = new Color(1f, 0.35f, 0.2f);       // Red / Orange
+    [SerializeField] private Color attackSpeedStatColor = new Color(0.2f, 0.85f, 1f);  // Cyan / Blue
+    [SerializeField] private Color critChanceStatColor = new Color(0.9f, 0.2f, 0.9f);   // Magenta
+    [SerializeField] private Color critMultiStatColor = new Color(1f, 0.8f, 0.1f);    // Yellow / Gold
+    [SerializeField] private Color swapEffectColor = new Color(0.3f, 1f, 0.5f);        // Vibrant Green
+
     // Aggregation tracking
     public Transform CurrentTarget { get; private set; }
     public float CurrentDamage { get; private set; }
@@ -86,9 +93,6 @@ public class DamageText : MonoBehaviour
         float xOffset = UnityEngine.Random.Range(0.4f, 0.7f) * horizontalDir;
         Vector3 targetPos = spawnPosition + new Vector3(xOffset, floatDistance, 0f);
 
-        // Subtle random rotation (-8 to 8 deg)
-        // transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-8f, 8f));
-
         float targetScale = isCritical ? 1.4f : 1.0f;
         transform.localScale = Vector3.zero;
 
@@ -107,7 +111,7 @@ public class DamageText : MonoBehaviour
             transform.DOMoveX(targetPos.x, lifetime).SetEase(Ease.OutCubic)
         );
 
-        // 3. Smooth Critical Hit Impact (Punch Scale instead of position shake)
+        // 3. Smooth Critical Hit Impact
         if (isCritical)
         {
             currentSequence.Insert(
@@ -123,6 +127,124 @@ public class DamageText : MonoBehaviour
         );
 
         currentSequence.OnComplete(FinishAndReturn);
+    }
+
+    /// <summary>
+    /// Displays a visual pop-up effect specifically when a Generic Augment executes on a node.
+    /// </summary>
+    public void ShowAugmentEffect(
+        GenericAugmentData augmentConfig, 
+        float value, 
+        Vector3 spawnPosition, 
+        Transform target, 
+        Color? customColorOverride = null, 
+        Action<DamageText> onComplete = null)
+    {
+        IsActive = true;
+        CurrentTarget = target;
+        CurrentDamage = value;
+        onCompleteCallback = onComplete;
+
+        KillTweens();
+
+        // Hide damage crit icon for generic stat popups
+        if (critIcon != null) critIcon.gameObject.SetActive(false);
+
+        // 1. Format text based on operation type
+        string formattedText = FormatAugmentText(augmentConfig, value);
+        damageText.text = formattedText;
+        damageText.rectTransform.sizeDelta = new Vector2(damageText.preferredWidth, damageText.preferredHeight);
+
+        // 2. Determine color by target stat or operation override
+        Color textColor = customColorOverride ?? GetAugmentStatColor(augmentConfig);
+        damageText.color = textColor;
+        damageText.alpha = 1f;
+
+        transform.position = spawnPosition;
+
+        // Slight upward bounce float trajectory
+        float xOffset = UnityEngine.Random.Range(-0.25f, 0.25f);
+        Vector3 targetPos = spawnPosition + new Vector3(xOffset, floatDistance * 0.85f, 0f);
+
+        transform.localScale = Vector3.zero;
+        currentSequence = DOTween.Sequence();
+
+        // Explosive outward pop
+        currentSequence.Join(
+            transform.DOScale(1.15f, 0.15f).SetEase(Ease.OutBack, 4f)
+        );
+
+        // Vertical float motion
+        currentSequence.Join(
+            transform.DOMoveY(targetPos.y, lifetime).SetEase(Ease.OutSine)
+        );
+        currentSequence.Join(
+            transform.DOMoveX(targetPos.x, lifetime).SetEase(Ease.OutCubic)
+        );
+
+        // Quick elasticity punch for bursts/swaps/stack max
+        if (augmentConfig.durationType == EffectDuration.TemporaryBurst || augmentConfig.operation == EffectOperation.Swap)
+        {
+            currentSequence.Insert(
+                0.1f,
+                transform.DOPunchScale(Vector3.one * 0.35f, 0.2f, vibrato: 6, elasticity: 0.5f)
+            );
+        }
+
+        // Fade Out
+        currentSequence.Insert(
+            lifetime * 0.45f,
+            damageText.DOFade(0f, lifetime * 0.55f).SetEase(Ease.InQuad)
+        );
+
+        currentSequence.OnComplete(FinishAndReturn);
+    }
+
+    // Format display string based on Augment Operation & Target Stat
+    private string FormatAugmentText(GenericAugmentData config, float value)
+    {
+        if (config == null) return $"+{TextUtil.FormatFloat(value)}";
+
+        switch (config.operation)
+        {
+            case EffectOperation.Swap:
+                return $"SWAP [{config.sourceStat} ↔ {config.targetStat}]";
+
+            case EffectOperation.Multiply:
+                return $"x{value:F1} {config.targetStat}";
+
+            case EffectOperation.Convert:
+                return $"CONVERT! +{TextUtil.FormatFloat(value)} {config.targetStat}";
+
+            default:
+                string sign = value >= 0 ? "+" : "";
+                return $"{sign}{TextUtil.FormatFloat(value)} {config.targetStat}";
+        }
+    }
+
+    // Color mapper based on Target Stat
+    private Color GetAugmentStatColor(GenericAugmentData config)
+    {
+        if (config == null) return normalColor;
+
+        if (config.operation == EffectOperation.Swap)
+        {
+            return swapEffectColor;
+        }
+
+        switch (config.targetStat)
+        {
+            case StatType.Damage:
+                return damageStatColor;
+            case StatType.AttackSpeed:
+                return attackSpeedStatColor;
+            case StatType.CritChance:
+                return critChanceStatColor;
+            case StatType.CritMultiplier:
+                return critMultiStatColor;
+            default:
+                return normalColor;
+        }
     }
 
     // Call this to add damage to an existing floating number

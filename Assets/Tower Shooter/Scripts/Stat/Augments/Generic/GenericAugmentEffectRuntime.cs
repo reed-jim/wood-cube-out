@@ -79,6 +79,8 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
             float calculatedVal = ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
 
             ApplyOperationToTarget(tStat, calculatedVal);
+
+            PlayVisualEffects(tStat, calculatedVal);
         }
     }
 
@@ -300,4 +302,56 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
             activeModifier = null;
         }
     }
+
+    #region Visual
+    private void PlayVisualEffects(CharacterStats targetStats, float calculatedVal)
+    {
+        Vector3 targetPosition = targetStats.transform.position;
+
+        // 1. Floating Text Popups
+        string popupText = GetEffectPopupText(calculatedVal);
+        Color textColor = AugmentManager.Ins.GetStatColor(config.targetStat);
+
+        DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+
+        damageText.transform.SetParent(targetStats.transform);
+
+        damageText.ShowAugmentEffect(
+            config,
+            calculatedVal,
+            targetStats.transform.position,
+            targetStats.transform
+        );
+
+        // Call your Floating Text / Damage Number Manager here
+        // FloatingTextManager.Ins.Show(popupText, targetPosition, textColor);
+
+        // 2. Play Beam or Pulse FX for Scope / Propagation
+        if (config.scope == EffectScope.AdjacentNodes || config.scope == EffectScope.Global)
+        {
+            // LineRenderer or Particle burst connecting source node -> target node
+            // VFXManager.Ins.PlayLinkEffect(transform.position, targetPosition);
+        }
+
+        // 3. Optional Node Flash
+        var spriteRenderer = targetStats.GetComponentInChildren<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            // StartCoroutine(FlashNodeRoutine(spriteRenderer, textColor));
+        }
+    }
+
+    private string GetEffectPopupText(float calculatedVal)
+    {
+        switch (config.operation)
+        {
+            case EffectOperation.Swap:
+                return "SWAP!";
+            case EffectOperation.Multiply:
+                return $"x{calculatedVal:F1} {config.targetStat}!";
+            default:
+                return $"+{calculatedVal:F0} {config.targetStat}";
+        }
+    }
+    #endregion
 }

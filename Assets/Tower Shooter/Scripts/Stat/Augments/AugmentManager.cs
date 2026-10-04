@@ -18,7 +18,9 @@ public class AugmentManager : Singleton<AugmentManager>
     public AugmentHistory augmentHistory;
     public float currentBuyAugmentCost;
 
+    [Header("SO")]
     public AugmentContainer augmentContainer;
+    public StatColorConfigSO statColorConfigSO;
 
     private Augment selectAugment;
 
@@ -251,6 +253,13 @@ public class AugmentManager : Singleton<AugmentManager>
         }
 
         return result;
+    }
+    #endregion
+
+    #region Util
+    public Color GetStatColor(StatType statType)
+    {
+        return ColorUtil.GetColorFromHex(statColorConfigSO.GetHex(statType));
     }
     #endregion
 }
