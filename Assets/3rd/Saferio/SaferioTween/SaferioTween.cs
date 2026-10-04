@@ -653,9 +653,9 @@ namespace Saferio.Util.SaferioTween
             });
         }
 
-        public static void AlphaHide(TMP_Text text, Action onCompleteAction = null)
+        public static Tween AlphaHide(TMP_Text text, Action onCompleteAction = null)
         {
-            Tween.Alpha(text, 0, duration: 0.3f)
+            return Tween.Alpha(text, 0, duration: 0.3f)
             .OnComplete(() =>
             {
                 text.gameObject.SetActive(false);

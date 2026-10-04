@@ -85,7 +85,12 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
     private void ApplyOperationToTarget(CharacterStats target, float calculatedVal)
     {
         float oldStatValue = GetStatValue(target, config.targetStat);
-        float currentTargetVal = oldStatValue;
+        float currentTargetVal = 0;
+
+        if (activeModifier != null)
+        {
+            currentTargetVal = activeModifier.Value;
+        }
 
         float resultVal = ScalingMath.ApplyOperation(config.operation, currentTargetVal, calculatedVal);
 

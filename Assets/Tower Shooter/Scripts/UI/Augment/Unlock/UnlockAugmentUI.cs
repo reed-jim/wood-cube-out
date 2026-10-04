@@ -102,6 +102,9 @@ public class UnlockAugmentUI : MonoBehaviour
     {
         Sequence sequence = Sequence.Create(Tween.LocalPosition(cloneAugmentRT, lockCanvasGroupRT.localPosition, duration: 1f));
 
+        sequence.Group(SaferioTween.AlphaHide(descriptionText));
+        sequence.Group(SaferioTween.ScaleDownWithPunch(continueButton.transform));
+
         sequence.OnComplete(() =>
         {
             lockCanvasGroup.gameObject.SetActive(false);
@@ -110,6 +113,8 @@ public class UnlockAugmentUI : MonoBehaviour
             {
                 Tween.Alpha(canvasGroup, 0, duration: 0.3f).OnComplete(() =>
                 {
+                    ResourceManager.Ins.ChangeResource(ResourceType.AugmentPoint, 1);
+
                     gameObject.SetActive(false);
                 });
             });
