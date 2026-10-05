@@ -1,34 +1,43 @@
-Shader "Custom/URP/CanvasGradientToTextureTransparent"
+Shader "UI/URP/CanvasGradientToTextureTransparent"
 {
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Tint Color", Color) = (1,1,1,1)
-        
-        [Header(Gradient Settings)]
-        _GradientColor ("Bottom Color", Color) = (1, 0, 0, 1) // Set Alpha to 0 if you want transparent bottom
-        _GradientStart ("Start Height (Bottom)", Range(0, 1)) = 0.0
-        _GradientEnd ("End Height (Top)", Range(0, 1)) = 1.0
-        
-        // Canvas UI Masking properties
+
+        _Color ("Tint", Color) = (1,1,1,1)
+
+        _GradientColor ("Gradient Color", Color) = (1,0,0,1)
+        _GradientStart ("Gradient Start", Range(0,1)) = 0
+        _GradientEnd ("Gradient End", Range(0,1)) = 1
+
+        // 0 = Left -> Right
+        // 90 = Bottom -> Top
+        // 180 = Right -> Left
+        // 270 = Top -> Bottom
+        _GradientAngle ("Gradient Angle", Range(0,360)) = 0
+
+        [Toggle(UNITY_UI_ALPHACLIP)]
+        _UseUIAlphaClip ("Use UI Alpha Clip", Float) = 0
+
+        // UI Stencil
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
         _StencilOp ("Stencil Operation", Float) = 0
         _StencilWriteMask ("Stencil Write Mask", Float) = 255
         _StencilReadMask ("Stencil Read Mask", Float) = 255
+
         _ColorMask ("Color Mask", Float) = 15
-        [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
     }
 
     SubShader
     {
         Tags
         {
-            "Queue" = "Transparent"
-            "IgnoreProjector" = "True"
-            "RenderType" = "Transparent"
-            "PreviewType" = "Plane"
-            "CanUseSpriteAtlas" = "True"
+            "Queue"="Transparent"
+            "IgnoreProjector"="True"
+            "RenderType"="Transparent"
+            "PreviewType"="Plane"
+            "CanUseSpriteAtlas"="True"
         }
 
         Stencil
@@ -44,93 +53,166 @@ Shader "Custom/URP/CanvasGradientToTextureTransparent"
         Lighting Off
         ZWrite Off
         ZTest [unity_GUIZTestMode]
-        // Standard Premultiplied Alpha blending for UI
         Blend SrcAlpha OneMinusSrcAlpha
         ColorMask [_ColorMask]
 
         Pass
         {
-            Name "Default"
+            Name "UIGradient"
+
             HLSLPROGRAM
+
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 2.0
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+            #pragma target 2.0
 
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
 
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
             struct Attributes
             {
-                float4 positionOS   : POSITION;
-                float4 color        : COLOR;
-                float2 uv           : TEXCOORD0;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
+                float4 positionOS : POSITION;
+                float4 color      : COLOR;
+                float2 uv         : TEXCOORD0;
             };
 
             struct Varyings
             {
-                float4 positionCS   : SV_POSITION;
-                float4 color        : COLOR;
-                float2 uv           : TEXCOORD0;
+                float4 positionCS : SV_POSITION;
+                half4 color       : COLOR;
+                float2 uv         : TEXCOORD0;
+
+                #if defined(UNITY_UI_CLIP_RECT)
                 float4 worldPosition : TEXCOORD1;
-                UNITY_VERTEX_OUTPUT_STEREO
+                #endif
             };
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
 
             CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST;
+
                 float4 _Color;
                 float4 _GradientColor;
+
                 float _GradientStart;
                 float _GradientEnd;
+
+                float _GradientAngle;
+
                 float4 _ClipRect;
+
             CBUFFER_END
 
-            Varyings vert(Attributes input)
+            Varyings vert(Attributes IN)
             {
-                Varyings output = (Varyings)0;
-                UNITY_SETUP_INSTANCE_ID(input);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+                Varyings OUT;
 
-                output.worldPosition = input.positionOS;
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                output.uv = TRANSFORM_TEX(input.uv, _MainTex);
-                output.color = input.color * _Color;
-                
-                return output;
-            }
+                OUT.positionCS = TransformObjectToHClip(IN.positionOS.xyz);
 
-            half4 frag(Varyings input) : SV_Target
-            {
-                // 1. Sample texture (including its alpha channel)
-                half4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
-                
-                // 2. Calculate vertical blend factor (0 at bottom, 1 at top)
-                float blendFactor = saturate((input.uv.y - _GradientStart) / max(0.0001, (_GradientEnd - _GradientStart)));
-                
-                // 3. Interpolate both RGB color AND Alpha transparency
-                half4 finalColor = lerp(_GradientColor, texColor, blendFactor);
-                
-                // 4. Multiply with UI Image Tint / Canvas Group Alpha
-                finalColor *= input.color;
+                OUT.uv = IN.uv;
+                OUT.color = IN.color * _Color;
 
-                // 5. Apply Canvas RectMask2D clipping
-                #ifdef UNITY_UI_CLIP_RECT
-                finalColor.a *= UnityGet2DClipping(input.worldPosition.xy, _ClipRect);
+                #if defined(UNITY_UI_CLIP_RECT)
+                OUT.worldPosition = IN.positionOS;
                 #endif
 
-                // 6. UI Alpha Clipping threshold
-                #ifdef UNITY_UI_ALPHACLIP
-                clip(finalColor.a - 0.001);
+                return OUT;
+            }
+
+            half4 frag(Varyings IN) : SV_Target
+            {
+                // Sample original UI texture
+                half4 texColor = SAMPLE_TEXTURE2D(
+                    _MainTex,
+                    sampler_MainTex,
+                    IN.uv
+                );
+
+                // --------------------------------------------------
+                // Calculate gradient direction
+                // --------------------------------------------------
+
+                float angle = radians(_GradientAngle);
+
+                float2 direction = float2(
+                    cos(angle),
+                    sin(angle)
+                );
+
+                float2 centeredUV = IN.uv - 0.5;
+
+                float gradientPosition =
+                    dot(centeredUV, direction) + 0.5;
+
+                // --------------------------------------------------
+                // Gradient range
+                // --------------------------------------------------
+
+                float range = max(
+                    _GradientEnd - _GradientStart,
+                    0.0001
+                );
+
+                float gradient = saturate(
+                    (gradientPosition - _GradientStart) / range
+                );
+
+                gradient = smoothstep(
+                    0.0,
+                    1.0,
+                    gradient
+                );
+
+                // --------------------------------------------------
+                // Gradient Color -> Texture
+                //
+                // gradient = 0:
+                //     100% Gradient Color
+                //
+                // gradient = 1:
+                //     100% Texture
+                // --------------------------------------------------
+
+                half4 result = lerp(
+                    _GradientColor,
+                    texColor,
+                    gradient
+                );
+
+                // Apply UI vertex tint
+                result *= IN.color;
+
+                // --------------------------------------------------
+                // UI clipping
+                // --------------------------------------------------
+
+                #if defined(UNITY_UI_CLIP_RECT)
+
+                float2 inside =
+                    step(_ClipRect.xy, IN.worldPosition.xy) *
+                    step(IN.worldPosition.xy, _ClipRect.zw);
+
+                result.a *= inside.x * inside.y;
+
                 #endif
 
-                return finalColor;
+                // --------------------------------------------------
+                // Alpha clipping
+                // --------------------------------------------------
+
+                #if defined(UNITY_UI_ALPHACLIP)
+
+                clip(result.a - 0.001);
+
+                #endif
+
+                return result;
             }
+
             ENDHLSL
         }
     }

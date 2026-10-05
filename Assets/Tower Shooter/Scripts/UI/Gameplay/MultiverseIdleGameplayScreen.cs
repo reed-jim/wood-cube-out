@@ -185,8 +185,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         else
         {
             augmentSelectionContainerThemeable.ChangeRole(ThemeableUI.ElementRole.Secondary);
-            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
-            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
+            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
 
             augmentSelectionButtonEffect.TransitionIntensity(0);
 
