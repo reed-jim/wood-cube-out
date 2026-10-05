@@ -1,46 +1,47 @@
-Shader "UI/ProximaCentauriWithCosmicBackground"
+Shader "UI/EarthWithCosmicBackground"
 {
     Properties
     {
         [HideInInspector] _MainTex ("Texture", 2D) = "white" {}
         [HideInInspector] _Color ("Tint", Color) = (1,1,1,1)
 
-        [Header(Star Properties)]
-        _BaseColor ("Base Surface Color", Color) = (0.9, 0.25, 0.05, 1.0)
-        _HotSpotColor ("Flare/Hotspot Color", Color) = (1.0, 0.75, 0.2, 1.0)
-        _GlowColor ("Corona Glow Color", Color) = (0.8, 0.15, 0.02, 1.0)
-        _StarRadius ("Star Radius Size", Range(0.1, 0.45)) = 0.28
+        [Header(Earth Surface)]
+        _OceanColor ("Deep Ocean Color", Color) = (0.01, 0.08, 0.28, 1.0)
+        _ShallowOceanColor ("Shallow Coast Color", Color) = (0.02, 0.35, 0.55, 1.0)
+        _LandColor ("Land Color", Color) = (0.1, 0.45, 0.12, 1.0)
+        _MountainColor ("Mountain/Desert Color", Color) = (0.55, 0.45, 0.25, 1.0)
+        _StarRadius ("Earth Radius Size", Range(0.1, 0.45)) = 0.28
+
+        [Header(Clouds and Atmosphere)]
+        _CloudColor ("Cloud Color", Color) = (0.95, 0.98, 1.0, 1.0)
+        _CloudCoverage ("Cloud Density", Range(0.0, 1.0)) = 0.48
+        _AtmosphereColor ("Atmosphere Blue Glow", Color) = (0.2, 0.65, 1.0, 1.0)
+        _AtmospherePower ("Atmosphere Glow Sharpness", Range(0.5, 10.0)) = 3.5
 
         [Header(Polar Caps)]
-        _PolarCapColor ("Polar Cap Color", Color) = (0.85, 0.95, 1.0, 1.0)
-        _PolarCapSize ("Polar Cap Size", Range(0.0, 1.0)) = 0.6
+        _PolarCapColor ("Polar Ice Color", Color) = (0.9, 0.95, 1.0, 1.0)
+        _PolarCapSize ("Polar Cap Size", Range(0.0, 1.0)) = 0.4
 
-        [Header(Atmospheric Glow)]
-        _AtmosphereColor ("Atmosphere Edge Glow Color", Color) = (0.2, 0.6, 1.0, 1.0)
-        _AtmospherePower ("Atmosphere Glow Sharpness", Range(0.5, 10.0)) = 4.0
-        _PulseSpeed ("Atmosphere Pulse Speed", Range(0.0, 5.0)) = 1.5
+        [Header(Surface Motion)]
+        _Speed ("Animation Speed", Range(0.01, 0.5)) = 0.08
+        _RotationSpeed ("Earth Rotation Speed", Range(-5.0, 5.0)) = 0.4
+        _CloudSpeed ("Cloud Drift Speed Factor", Range(1.0, 3.0)) = 1.3
+        _Turbulence ("Continent Noise Scale", Range(1.0, 10.0)) = 2.8
 
-        [Header(Surface Motion and Swirl)]
-        _Speed ("Animation Speed", Range(0.05, 1.0)) = 0.2
-        _RotationSpeed ("Planet Y-Rotation Speed", Range(-5.0, 5.0)) = 1.0
-        _EquatorialSwirl ("Equatorial Swirl Strength", Range(0.0, 1.5)) = 0.4
-        _Turbulence ("Granulation Turbulence", Range(1.0, 10.0)) = 4.0
-
-        [Header(Atmosphere and Flares)]
-        _RimPower ("Limb Darkening Sharpness", Range(1.0, 20.0)) = 8.0
-        _MinEdgeBrightness ("Minimum Edge Brightness", Range(0.1, 1.0)) = 0.7
-        _FlareIntensity ("Prominence Intensity", Range(0.1, 3.0)) = 1.2
+        [Header(Atmosphere and Lighting)]
+        _RimPower ("Limb Darkening Sharpness", Range(1.0, 20.0)) = 5.0
+        _MinEdgeBrightness ("Minimum Edge Brightness", Range(0.1, 1.0)) = 0.6
 
         [Header(Gradient Properties)]
-        _GradientColor ("Gradient Color", Color) = (1,0,0,1)
+        _GradientColor ("Gradient Color", Color) = (0.02, 0.02, 0.08, 1.0)
         _GradientStart ("Gradient Start", Range(0,1)) = 0
         _GradientEnd ("Gradient End", Range(0,1)) = 1
         _GradientAngle ("Gradient Angle", Range(0,360)) = 0
         _BackgroundBrightness ("Background Brightness", Range(0.0, 2.0)) = 0.8
 
         [Header(Cosmic Background)]
-        _NebulaColorA ("Nebula Color 1", Color) = (0.05, 0.02, 0.15, 1.0)
-        _NebulaColorB ("Nebula Color 2", Color) = (0.1, 0.02, 0.05, 1.0)
+        _NebulaColorA ("Nebula Color 1", Color) = (0.02, 0.04, 0.12, 1.0)
+        _NebulaColorB ("Nebula Color 2", Color) = (0.01, 0.01, 0.05, 1.0)
 
         [Toggle(UNITY_UI_ALPHACLIP)]
         _UseUIAlphaClip ("Use UI Alpha Clip", Float) = 0
@@ -117,24 +118,25 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _Color;
-                float4 _BaseColor;
-                float4 _HotSpotColor;
-                float4 _GlowColor;
+                float4 _OceanColor;
+                float4 _ShallowOceanColor;
+                float4 _LandColor;
+                float4 _MountainColor;
+                float4 _CloudColor;
+                float _CloudCoverage;
                 float _StarRadius;
                 float _Speed;
                 float _RotationSpeed;
-                float _EquatorialSwirl;
+                float _CloudSpeed;
                 float _Turbulence;
                 float _RimPower;
                 float _MinEdgeBrightness;
-                float _FlareIntensity;
 
                 float4 _PolarCapColor;
                 float _PolarCapSize;
 
                 float4 _AtmosphereColor;
                 float _AtmospherePower;
-                float _PulseSpeed;
 
                 float4 _GradientColor;
                 float _GradientStart;
@@ -171,10 +173,10 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
             {
                 float value = 0.0;
                 float amplitude = 0.5;
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     value += amplitude * perlinNoise(uv);
-                    uv *= 2.05;
+                    uv *= 2.02;
                     amplitude *= 0.5;
                 }
                 return value;
@@ -182,8 +184,8 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
 
             half3 renderNebulaBackground(float2 uv, float time)
             {
-                float nebNoiseA = fbm(uv * 3.0 + float2(time * 0.02, 0.0));
-                float nebNoiseB = fbm(uv * 5.0 - float2(0.0, time * 0.03));
+                float nebNoiseA = fbm(uv * 2.5 + float2(time * 0.01, 0.0));
+                float nebNoiseB = fbm(uv * 4.0 - float2(0.0, time * 0.015));
                 half3 background = lerp(_NebulaColorA.rgb, _NebulaColorB.rgb, nebNoiseA * 0.5 + 0.5);
                 background += _NebulaColorA.rgb * nebNoiseB;
 
@@ -223,60 +225,64 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
 
                 half3 finalColor = lerp(_GradientColor.rgb, background, gradient) * _BackgroundBrightness;
 
-                // 2. Dynamic Atmosphere Breathing & Flare calculations
-                float pulse = sin(_Time.y * _PulseSpeed) * 0.15 + 0.85; // subtle breathing wave
+                // 2. Atmosphere Fringe Outside
                 float radius = _StarRadius;
-                float glow = exp(-dist * 10.0 / radius) * 1.2 * pulse;
-
-                float flareAngle = atan2(centeredUV.y, centeredUV.x);
-                float flareNoise = fbm(float2(flareAngle * 4.0, t * 1.5)) * _FlareIntensity;
-                float flare = max(0.0, (1.0 - max(0.0, dist - radius) * 10.0)) * flareNoise;
-
-                half3 coronaGlow = _GlowColor.rgb * (glow + flare);
-
-                // Outer atmospheric fringe with breathing pulse
-                float atmosFringe = exp(-max(0.0, dist - radius) * _AtmospherePower * 10.0) * pulse;
-                half3 atmosphereGlow = _AtmosphereColor.rgb * atmosFringe;
+                float atmosFringe = exp(-max(0.0, dist - radius) * _AtmospherePower * 12.0);
+                half3 atmosphereGlow = _AtmosphereColor.rgb * atmosFringe * 0.9;
 
                 if (dist > radius)
                 {
-                    // Outside planet: background + glow + atmosphere
-                    finalColor += coronaGlow + atmosphereGlow;
+                    // Outside Earth
+                    finalColor += atmosphereGlow;
                 }
                 else
                 {
-                    // Inside planet: calculate 3D sphere surface
+                    // Inside Earth: Calculate 3D sphere surface
                     float N = dist / radius;
                     float z = sqrt(max(0.0, 1.0 - N * N));
                     float2 sphericalUV = centeredUV / (1.0 + z);
 
-                    // Equatorial Swirl: Latitudinal differential rotation
-                    float latitudinalSpeed = cos(sphericalUV.y * 3.14159) * _EquatorialSwirl + 1.0;
-                    float rotOffset = _Time.y * _RotationSpeed * latitudinalSpeed;
-                    float2 rotatingUV = sphericalUV + float2(rotOffset, 0.0);
+                    // Planet Rotation
+                    float rotOffset = _Time.y * _RotationSpeed * 0.1;
+                    float2 groundUV = sphericalUV + float2(rotOffset, 0.0);
 
-                    // Surface noise
-                    float noiseVal = fbm(rotatingUV * _Turbulence + float2(0.0, t * 0.1));
-                    float noiseVal2 = fbm(rotatingUV * (_Turbulence * 1.8) - float2(0.0, -t * 0.2));
-                    float combinedNoise = saturate((noiseVal + noiseVal2) * 0.7 + 0.3);
+                    // --- Land vs Ocean Generation ---
+                    float terrainNoise = fbm(groundUV * _Turbulence);
+                    float elevation = terrainNoise * 0.5 + 0.5;
 
-                    half3 surfaceColor = lerp(_BaseColor.rgb, _HotSpotColor.rgb, pow(combinedNoise, 2.0));
+                    // Sharp continent threshold with coastal shelf
+                    float landMask = smoothstep(0.48, 0.53, elevation);
+                    float coastMask = smoothstep(0.42, 0.48, elevation);
 
-                    // Polar Ice Caps / Biomes
+                    half3 ocean = lerp(_OceanColor.rgb, _ShallowOceanColor.rgb, coastMask);
+                    half3 land = lerp(_LandColor.rgb, _MountainColor.rgb, smoothstep(0.55, 0.75, elevation));
+                    half3 surfaceColor = lerp(ocean, land, landMask);
+
+                    // --- Cloud Layer (Moving faster than land) ---
+                    float2 cloudUV = sphericalUV + float2(rotOffset * _CloudSpeed, t * 0.05);
+                    float cloudNoise = fbm(cloudUV * (_Turbulence * 1.5));
+                    float cloudMask = smoothstep(1.0 - _CloudCoverage, 0.9, cloudNoise * 0.5 + 0.5);
+
+                    // Cloud shadow on terrain below
+                    surfaceColor *= lerp(1.0, 0.6, cloudMask * 0.5);
+                    // Add white cloud layer
+                    surfaceColor = lerp(surfaceColor, _CloudColor.rgb, cloudMask * 0.85);
+
+                    // --- Polar Ice Caps ---
                     float poleFactor = smoothstep(1.0 - _PolarCapSize, 1.0, abs(sphericalUV.y * 2.0));
-                    surfaceColor = lerp(surfaceColor, _PolarCapColor.rgb, poleFactor * 0.85);
+                    surfaceColor = lerp(surfaceColor, _PolarCapColor.rgb, poleFactor * 0.9);
 
-                    // Clamped Limb Darkening
+                    // Clamped Limb Darkening (day/night edge roll-off)
                     float limbDarkening = lerp(_MinEdgeBrightness, 1.0, pow(z, 1.0 / _RimPower));
                     surfaceColor *= limbDarkening;
 
-                    // Additive Fresnel & Pulsing Corona Glow
-                    float fresnel = pow(1.0 - z, _AtmospherePower) * pulse;
-                    surfaceColor += _AtmosphereColor.rgb * fresnel + coronaGlow;
+                    // Blue Rayleigh Atmospheric Scattering (Fresnel edge)
+                    float fresnel = pow(1.0 - z, _AtmospherePower);
+                    surfaceColor += _AtmosphereColor.rgb * fresnel * 0.8;
 
                     // Smooth edge blending right at the radius border
-                    float starMask = smoothstep(radius, radius - 0.005, dist);
-                    finalColor = lerp(finalColor + coronaGlow + atmosphereGlow, surfaceColor, starMask);
+                    float earthMask = smoothstep(radius, radius - 0.005, dist);
+                    finalColor = lerp(finalColor + atmosphereGlow, surfaceColor, earthMask);
                 }
 
                 half4 result = half4(finalColor, 1.0) * input.color;
