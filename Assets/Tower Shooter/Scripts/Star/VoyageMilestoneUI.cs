@@ -8,6 +8,8 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
     public RectTransform container;
     public TMP_Text startLocationNameText;
     public TMP_Text endLocationNameText;
+    public Image startLocationImage;
+    public Image endLocationImage;
     public Image progressFill;
 
     private List<VoyageMilestoneItemUI> milestones = new List<VoyageMilestoneItemUI>();
@@ -38,6 +40,9 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
 
         startLocationNameText.text = voyageMilestoneConfig.startLocation;
         endLocationNameText.text = voyageMilestoneConfig.endLocation;
+
+        startLocationImage.sprite = StarManager.Ins.currentStarPathConfig.picture;
+        endLocationImage.sprite = StarManager.Ins.nextStarPathConfig.picture;
 
         progressFill.transform.SetAsLastSibling();
     }

@@ -17,6 +17,7 @@ public class StarManager : Singleton<StarManager>
     public StarVoyageContainer starVoyageContainer;
 
     public StarPathConfig currentStarPathConfig;
+    public StarPathConfig nextStarPathConfig;
 
     public VoyageData GetFirstVoyage()
     {
@@ -31,7 +32,15 @@ public class StarManager : Singleton<StarManager>
 
     public StarPathConfig GetVoyageConfig(int index)
     {
-        currentStarPathConfig = starVoyageContainer.starPathConfigs[index];
+        if (index < starVoyageContainer.starPathConfigs.Count)
+        {
+            currentStarPathConfig = starVoyageContainer.starPathConfigs[index];
+        }
+
+        if (index + 1 < starVoyageContainer.starPathConfigs.Count)
+        {
+            nextStarPathConfig = starVoyageContainer.starPathConfigs[index + 1];
+        }
 
         return currentStarPathConfig;
     }
