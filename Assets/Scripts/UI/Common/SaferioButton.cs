@@ -6,33 +6,41 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class SaferioButton : MonoBehaviour, IPointerEnterHandler
+public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private float scaleMultiplier = 1.025f;
     private float animationDuration = 0.1f;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isPlaySound = true;
+    [SerializeField] private Graphic targetGraphic;
+
+    [Header("DYNAMIC COLOR SETTINGS")]
+    [Tooltip("Percentage multiplier for hover brightness (e.g., 0.9 = 10% darker, 1.1 = 10% brighter)")]
+    [SerializeField] private float hoverMultiplier = 0.9f;
+
+    [Tooltip("Percentage multiplier for click brightness (e.g., 0.75 = 25% darker)")]
+    [SerializeField] private float clickMultiplier = 0.75f;
 
     private Button _button;
     private Sequence _sequence;
     private List<Tween> _tweens;
-    private bool _isAnimating;
+    private Color _baseColor;
+    private bool isAssignedBaseColor;
 
     public static event Action<int> preventMultiClickEvent;
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        PlayAnimationOnClick();
-    }
 
     private void Awake()
     {
         preventMultiClickEvent += OnOtherButtonClicked;
+        DynamicThemeManager.OnThemeChanged += OnThemeChanged;
 
         _tweens = new List<Tween>();
-
         _button = GetComponent<Button>();
+
+        if (targetGraphic == null)
+        {
+            targetGraphic = GetComponent<Graphic>();
+        }
 
         _button.onClick.AddListener(PreventMultiButtonClickConcurrently);
         _button.onClick.AddListener(PlaySoundOnClick);
@@ -43,6 +51,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     private void OnDestroy()
     {
         preventMultiClickEvent -= OnOtherButtonClicked;
+        DynamicThemeManager.OnThemeChanged -= OnThemeChanged;
 
         if (_sequence.isAlive)
         {
@@ -52,42 +61,87 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
         CommonUtil.StopAllTweens(_tweens);
     }
 
-    private void SetDisabledColor()
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        ColorBlock colorBlock = _button.colors;
+        if (!_button.interactable) return;
 
-        colorBlock.disabledColor = Color.white;
+        AssignBaseColor();
 
-        _button.colors = colorBlock;
+        Color targetColor = GetTargetColor(_baseColor, hoverMultiplier);
+        AnimateColor(targetColor);
     }
 
-    private void PlayAnimationOnClick()
+    public void OnPointerExit(PointerEventData eventData)
     {
-        if (_isAnimating)
+        if (!_button.interactable) return;
+
+        AnimateColor(_baseColor);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!_button.interactable) return;
+
+        PlayClickAnimation();
+    }
+
+    private void AssignBaseColor()
+    {
+        if (!isAssignedBaseColor && targetGraphic != null)
         {
-            return;
+            _baseColor = targetGraphic.color;
+
+            isAssignedBaseColor = true;
         }
+    }
+
+    private Color GetTargetColor(Color baseColor, float multiplier)
+    {
+        return new Color(
+            Mathf.Clamp01(baseColor.r * multiplier),
+            Mathf.Clamp01(baseColor.g * multiplier),
+            Mathf.Clamp01(baseColor.b * multiplier),
+            baseColor.a
+        );
+    }
+
+    private void AnimateColor(Color targetColor)
+    {
+        if (_sequence.isAlive)
+        {
+            _sequence.Stop();
+        }
+
+        _sequence = Sequence.Create()
+            .Group(Tween.Color(targetGraphic, targetColor, duration: animationDuration));
+    }
+
+    private void PlayClickAnimation()
+    {
+        AssignBaseColor();
 
         if (_sequence.isAlive)
         {
             _sequence.Stop();
         }
 
-        float currentScale = transform.localScale.x;
+        Color hoverColor = GetTargetColor(_baseColor, hoverMultiplier);
+        Color clickColor = GetTargetColor(_baseColor, clickMultiplier);
 
-        _sequence = Tween.Scale(transform, scaleMultiplier * currentScale, duration: animationDuration)
-        .Chain(Tween.Scale(transform, 1 / scaleMultiplier * currentScale, duration: animationDuration))
-        .Chain(Tween.Scale(transform, 1f * currentScale, duration: animationDuration).OnComplete(() =>
-        {
-            _isAnimating = false;
-        }));
+        _sequence = Tween.Color(targetGraphic, clickColor, duration: animationDuration)
+            .Chain(Tween.Color(targetGraphic, hoverColor, duration: animationDuration));
+    }
 
-        _isAnimating = true;
+    private void SetDisabledColor()
+    {
+        ColorBlock colorBlock = _button.colors;
+        colorBlock.disabledColor = Color.white;
+        _button.colors = colorBlock;
     }
 
     private void PlaySoundOnClick()
     {
-        if (isPlaySound)
+        if (isPlaySound && SoundManager.Instance != null)
         {
             SoundManager.Instance.PlaySoundClick();
         }
@@ -116,5 +170,12 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
         {
             _button.interactable = true;
         }));
+    }
+
+    private void OnThemeChanged(ThemeConfig themeConfig)
+    {
+        isAssignedBaseColor = false;
+
+        AssignBaseColor();
     }
 }
