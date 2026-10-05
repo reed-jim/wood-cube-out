@@ -22,6 +22,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     public ThemeableUI augmentSelectionContainerThemeable;
     public ThemeableUI augmentSelectionIconThemeable;
     public ThemeableUI augmentSelectionTextThemeable;
+    public CosmicButtonController augmentSelectionButtonEffect;
 
     [Header("Select Augment UI")]
     public SelectAugmentUI selectAugmentUI;
@@ -174,6 +175,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
             augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
             augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
 
+            augmentSelectionButtonEffect.TransitionIntensity(1);
+
             if (!buyAugmentNotification.gameObject.activeSelf)
             {
                 NotifyBuyAugment();
@@ -184,6 +187,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
             augmentSelectionContainerThemeable.ChangeRole(ThemeableUI.ElementRole.Secondary);
             augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
             augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
+
+            augmentSelectionButtonEffect.TransitionIntensity(0);
 
             HideBuyAugmentNotification();
         }

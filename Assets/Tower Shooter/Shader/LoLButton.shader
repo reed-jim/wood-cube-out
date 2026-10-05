@@ -3,6 +3,7 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
     Properties
     {
         [MainTexture] _MainTex ("Base Sprite / Texture", 2D) = "white" {}
+        _EffectIntensity ("Effect Intensity", Range(0.0, 1.0)) = 1.0
         
         [Header(Space Color Palette)]
         _BodyColor ("Center Space Void Dark", Color) = (0.02, 0.01, 0.05, 1)
@@ -76,6 +77,7 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
+                float _EffectIntensity;
                 float4 _BodyColor;
                 float4 _BorderColor;
                 float4 _GlowColor;
@@ -141,7 +143,7 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
             float4 frag(Varyings input) : SV_Target
             {
                 float2 uv = input.uv;
-                float4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) * input.color;
+                float4 defaultTexColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) * input.color;
                 float time = _Time.y;
 
                 // 1. Frame Distance Field (Border Masking)
@@ -203,7 +205,7 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 goldBorder *= (1.0 - _Pressed * 0.3);
 
                 // Combine Border & Inner Body
-                float3 finalColor = lerp(baseBody, goldBorder, isBorder);
+                float3 customEffectColor = lerp(baseBody, goldBorder, isBorder);
 
                 // 8. Sweeping Starlight Reflection Pass
                 float sweepPos = frac(time * _ShineSpeed) * 3.0 - 1.0;
@@ -216,13 +218,17 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float totalSweep = (sharpBeam + softBloom) * (0.4 + _Hover * 0.8);
                 float3 sweepColor = lerp(_BorderColor.rgb, float3(1.0, 1.0, 1.0), sharpBeam);
                 
-                finalColor += sweepColor * totalSweep;
+                customEffectColor += sweepColor * totalSweep;
 
                 // 9. Interactive State Modifiers
-                finalColor += _Hover * 0.08;
-                finalColor *= (1.0 - _Pressed * 0.2);
+                customEffectColor += _Hover * 0.08;
+                customEffectColor *= (1.0 - _Pressed * 0.2);
 
-                return float4(finalColor, texColor.a);
+                // 10. Final Intensity Blend Logic
+                // Smoothly interpolates between raw default texture (at 0) and custom effect (at 1)
+                float3 finalRGB = lerp(defaultTexColor.rgb, customEffectColor, _EffectIntensity);
+
+                return float4(finalRGB, defaultTexColor.a);
             }
             ENDHLSL
         }

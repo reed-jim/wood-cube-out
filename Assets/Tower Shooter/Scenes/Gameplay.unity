@@ -2296,6 +2296,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &240439237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2483,6 +2486,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &288349756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8527,6 +8533,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &398947396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8677,6 +8686,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &408175359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8925,6 +8937,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &449118458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10587,6 +10602,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &563062443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15905,6 +15923,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &647468297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17372,6 +17393,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &783865354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19555,6 +19579,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &1087757387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21748,6 +21775,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &1405195557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23735,6 +23765,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &1579712768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24513,6 +24546,7 @@ GameObject:
   - component: {fileID: 1650790011}
   - component: {fileID: 1650790010}
   - component: {fileID: 1650790012}
+  - component: {fileID: 1650790016}
   m_Layer: 5
   m_Name: Augment Selection Button
   m_TagString: Untagged
@@ -24607,6 +24641,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!222 &1650790013
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -24649,6 +24686,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
   role: 0
+--- !u!114 &1650790016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650790009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53bf0ae472b72af44a6155fe77644c25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CosmicButtonController
+  fadeDuration: 0.3
 --- !u!1 &1658616115
 GameObject:
   m_ObjectHideFlags: 0
@@ -25371,6 +25421,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &1775809930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25690,6 +25743,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &1828343541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27105,6 +27161,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!224 &1941414974 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8057246174478360843, guid: 5203f4ea188a7b94599690c392aa2da5, type: 3}
@@ -28975,6 +29034,7 @@ MonoBehaviour:
   augmentSelectionContainerThemeable: {fileID: 1650790015}
   augmentSelectionIconThemeable: {fileID: 238008596}
   augmentSelectionTextThemeable: {fileID: 1310223761}
+  augmentSelectionButtonEffect: {fileID: 1650790016}
   selectAugmentUI: {fileID: 1752343688}
   normalFilterButton: {fileID: 1405195557}
   augmentFilterButton: {fileID: 783865354}
