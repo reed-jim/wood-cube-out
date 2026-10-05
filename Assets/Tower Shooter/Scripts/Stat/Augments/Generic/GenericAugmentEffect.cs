@@ -81,6 +81,27 @@ public class GenericAugmentEffect : AugmentEffect
     {
         StringBuilder sb = new StringBuilder();
 
+        StatType sourceStat = config.sourceStat;
+        StatType targetStat = config.targetStat;
+        StatType comparisonStat = config.comparisonStat;
+
+        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+        string sourceStatColorHex = AugmentManager.Ins.GetStatColorHex(sourceStat);
+        string targetStatColorHex = AugmentManager.Ins.GetStatColorHex(targetStat);
+        string comparisonStatColorHex = AugmentManager.Ins.GetStatColorHex(comparisonStat);
+
+        string sourceStatWithColor = $"<color={sourceStatColorHex}>{sourceStat}</color>";
+        string targetStatWithColor = $"<color={targetStatColorHex}>{targetStat}</color>";
+        string comparisonStatWithColor = $"<color={comparisonStatColorHex}>{comparisonStat}</color>";
+
+        string baseValueWithColor = $"<color={targetStatColorHex}>{config.baseValue}</color>";
+        string thresholdValueWithColor = $"<color={comparisonStatColorHex}>{config.thresholdValue}</color>";
+
+        string cycleFrequencyWithColor = $"<color={primaryHex}>{config.cycleFrequency}</color>";
+        string durationInSecondsWithColor = $"<color={primaryHex}>{config.durationInSeconds}</color>";
+        string maxStacksWithColor = $"<color={primaryHex}>{config.maxStacks}</color>";
+        string decayRatePerSecondWithColor = $"<color={primaryHex}>{config.decayRatePerSecond}</color>";
+
         // 1. TRIGGER
         switch (config.trigger)
         {
@@ -91,13 +112,13 @@ public class GenericAugmentEffect : AugmentEffect
                 sb.Append("On landing a critical hit, ");
                 break;
             case EffectTrigger.EveryXCycles:
-                sb.Append($"Every {config.cycleFrequency} cycles, ");
+                sb.Append($"Every {cycleFrequencyWithColor} cycles, ");
                 break;
             case EffectTrigger.WhenIdle:
                 sb.Append("While idle, ");
                 break;
             case EffectTrigger.WhenStatCrossesThreshold:
-                sb.Append($"When {config.sourceStat} reaches {config.thresholdValue}, ");
+                sb.Append($"When {sourceStatWithColor} reaches {thresholdValueWithColor}, ");
                 break;
             case EffectTrigger.Permanently:
                 sb.Append("Permanently ");
@@ -108,25 +129,25 @@ public class GenericAugmentEffect : AugmentEffect
         switch (config.operation)
         {
             case EffectOperation.Add:
-                sb.Append($"increases {config.targetStat}");
+                sb.Append($"increases {targetStatWithColor}");
                 break;
             case EffectOperation.Multiply:
-                sb.Append($"multiplies {config.targetStat}");
+                sb.Append($"multiplies {targetStatWithColor}");
                 break;
             case EffectOperation.Convert:
-                sb.Append($"converts {config.sourceStat} into {config.targetStat}");
+                sb.Append($"converts {sourceStatWithColor} into {targetStatWithColor}");
                 break;
             case EffectOperation.Swap:
-                sb.Append($"swaps {config.sourceStat} with {config.targetStat}");
+                sb.Append($"swaps {sourceStatWithColor} with {targetStatWithColor}");
                 break;
             case EffectOperation.SquareRoot:
-                sb.Append($"applies square root scaling to {config.targetStat}");
+                sb.Append($"applies square root scaling to {targetStatWithColor}");
                 break;
             case EffectOperation.Logarithm:
-                sb.Append($"applies logarithmic scaling to {config.targetStat}");
+                sb.Append($"applies logarithmic scaling to {targetStatWithColor}");
                 break;
             case EffectOperation.Copy:
-                sb.Append($"copies {config.sourceStat} to {config.targetStat}");
+                sb.Append($"copies {sourceStatWithColor} to {targetStatWithColor}");
                 break;
         }
 
@@ -135,7 +156,7 @@ public class GenericAugmentEffect : AugmentEffect
         {
             if (config.baseValue > 0)
             {
-                sb.Append($" by {config.baseValue}");
+                sb.Append($" by {baseValueWithColor}");
             }
 
             if (config.scalingFactor != 0 && config.sourceStat != config.targetStat)
@@ -164,13 +185,13 @@ public class GenericAugmentEffect : AugmentEffect
         switch (config.condition)
         {
             case ConditionType.StatGreaterThanOther:
-                sb.Append($" (Requires {config.sourceStat} > {config.comparisonStat})");
+                sb.Append($" (Requires {sourceStatWithColor} > {comparisonStatWithColor})");
                 break;
             case ConditionType.StatLessThanOther:
-                sb.Append($" (Requires {config.sourceStat} < {config.comparisonStat})");
+                sb.Append($" (Requires {sourceStatWithColor} < {comparisonStatWithColor})");
                 break;
             case ConditionType.StatThresholdGate:
-                sb.Append($" (Requires {config.sourceStat} >= {config.thresholdValue})");
+                sb.Append($" (Requires {sourceStatWithColor} >= {thresholdValueWithColor})");
                 break;
         }
 
@@ -178,13 +199,13 @@ public class GenericAugmentEffect : AugmentEffect
         switch (config.durationType)
         {
             case EffectDuration.TemporaryBurst:
-                sb.Append($" for {config.durationInSeconds}s");
+                sb.Append($" for {durationInSecondsWithColor}s");
                 break;
             case EffectDuration.Stacking:
-                sb.Append($" (Stacks up to {config.maxStacks}x)");
+                sb.Append($" (Stacks up to {maxStacksWithColor}x)");
                 break;
             case EffectDuration.Decaying:
-                sb.Append($" (Decays by {config.decayRatePerSecond}/s)");
+                sb.Append($" (Decays by {decayRatePerSecondWithColor}/s)");
                 break;
         }
 

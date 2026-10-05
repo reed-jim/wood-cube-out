@@ -56,11 +56,21 @@ public class StatColorConfigSO : ScriptableObject
         };
     }
 
+    public Color GetColor(StatType type)
+    {
+        return ColorUtil.GetColorFromHex(GetHex(type));
+    }
+
     public string GetHex(StatType type)
     {
         BuildCache();
         if (hexCache.TryGetValue(type, out string hex)) return hex;
         return ColorUtility.ToHtmlStringRGB(fallbackColor);
+    }
+
+    public string GetHexWithHash(StatType type)
+    {
+        return $"#{GetHex(type)}";
     }
 
     public Sprite GetIcon(StatType type)

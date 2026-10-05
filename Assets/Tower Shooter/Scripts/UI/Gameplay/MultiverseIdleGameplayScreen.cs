@@ -65,6 +65,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         ResourceManager.changeResourceValueEvent -= OnResourceValueChanged;
     }
 
+    [ContextMenu("OpenAugmentSelection")]
     private void OpenAugmentSelection()
     {
         switchRouteEvent?.Invoke(ScreenRoute.AugmentSelection);

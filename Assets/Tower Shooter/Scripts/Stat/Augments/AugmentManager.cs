@@ -259,7 +259,12 @@ public class AugmentManager : Singleton<AugmentManager>
     #region Util
     public Color GetStatColor(StatType statType)
     {
-        return ColorUtil.GetColorFromHex(statColorConfigSO.GetHex(statType));
+        return statColorConfigSO.GetColor(statType);
+    }
+
+    public string GetStatColorHex(StatType statType)
+    {
+        return statColorConfigSO.GetHexWithHash(statType);
     }
     #endregion
 }
