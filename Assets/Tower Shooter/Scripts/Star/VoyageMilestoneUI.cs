@@ -44,6 +44,9 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
         startLocationImage.sprite = StarManager.Ins.currentStarPathConfig.picture;
         endLocationImage.sprite = StarManager.Ins.nextStarPathConfig.picture;
 
+        UIUtil.SetSizeKeepRatioY(startLocationImage, 600);
+        UIUtil.SetSizeKeepRatioY(endLocationImage, 600);
+
         progressFill.transform.SetAsLastSibling();
     }
 
