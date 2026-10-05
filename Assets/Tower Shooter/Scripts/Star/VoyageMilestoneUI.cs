@@ -38,8 +38,8 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
             milestones.Add(voyageMilestoneItemUI);
         }
 
-        startLocationNameText.text = voyageMilestoneConfig.startLocation;
-        endLocationNameText.text = voyageMilestoneConfig.endLocation;
+        startLocationNameText.text = StarManager.Ins.currentStarPathConfig.starName;
+        endLocationNameText.text = StarManager.Ins.nextStarPathConfig.starName;
 
         startLocationImage.sprite = StarManager.Ins.currentStarPathConfig.picture;
         endLocationImage.sprite = StarManager.Ins.nextStarPathConfig.picture;

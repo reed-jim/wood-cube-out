@@ -172,8 +172,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         if (point > 0)
         {
             augmentSelectionContainerThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
-            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
-            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnPrimary);
+            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
 
             augmentSelectionButtonEffect.TransitionIntensity(1);
 
@@ -185,8 +185,8 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         else
         {
             augmentSelectionContainerThemeable.ChangeRole(ThemeableUI.ElementRole.Secondary);
-            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
-            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            augmentSelectionIconThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
+            augmentSelectionTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
 
             augmentSelectionButtonEffect.TransitionIntensity(0);
 

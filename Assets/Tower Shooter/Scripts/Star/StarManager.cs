@@ -42,7 +42,7 @@ public class StarManager : Singleton<StarManager>
             nextStarPathConfig = starVoyageContainer.starPathConfigs[index + 1];
         }
 
-        return currentStarPathConfig;
+        return nextStarPathConfig;
     }
 
     public bool IsLastVoyage(int index)
