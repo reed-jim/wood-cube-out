@@ -11,13 +11,19 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
         _GlowColor ("Corona Glow Color", Color) = (0.8, 0.15, 0.02, 1.0)
         _StarRadius ("Star Radius Size", Range(0.1, 0.45)) = 0.28
 
+        [Header(Polar Caps)]
+        _PolarCapColor ("Polar Cap Color", Color) = (0.85, 0.95, 1.0, 1.0)
+        _PolarCapSize ("Polar Cap Size", Range(0.0, 1.0)) = 0.6
+
         [Header(Atmospheric Glow)]
         _AtmosphereColor ("Atmosphere Edge Glow Color", Color) = (0.2, 0.6, 1.0, 1.0)
         _AtmospherePower ("Atmosphere Glow Sharpness", Range(0.5, 10.0)) = 4.0
+        _PulseSpeed ("Atmosphere Pulse Speed", Range(0.0, 5.0)) = 1.5
 
-        [Header(Surface Motion)]
+        [Header(Surface Motion and Swirl)]
         _Speed ("Animation Speed", Range(0.05, 1.0)) = 0.2
         _RotationSpeed ("Planet Y-Rotation Speed", Range(-5.0, 5.0)) = 1.0
+        _EquatorialSwirl ("Equatorial Swirl Strength", Range(0.0, 1.5)) = 0.4
         _Turbulence ("Granulation Turbulence", Range(1.0, 10.0)) = 4.0
 
         [Header(Atmosphere and Flares)]
@@ -117,13 +123,18 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
                 float _StarRadius;
                 float _Speed;
                 float _RotationSpeed;
+                float _EquatorialSwirl;
                 float _Turbulence;
                 float _RimPower;
                 float _MinEdgeBrightness;
                 float _FlareIntensity;
 
+                float4 _PolarCapColor;
+                float _PolarCapSize;
+
                 float4 _AtmosphereColor;
                 float _AtmospherePower;
+                float _PulseSpeed;
 
                 float4 _GradientColor;
                 float _GradientStart;
@@ -212,9 +223,10 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
 
                 half3 finalColor = lerp(_GradientColor.rgb, background, gradient) * _BackgroundBrightness;
 
-                // 2. Continuous Radial Glow & Flares (Calculated smoothly across both inside and outside)
+                // 2. Dynamic Atmosphere Breathing & Flare calculations
+                float pulse = sin(_Time.y * _PulseSpeed) * 0.15 + 0.85; // subtle breathing wave
                 float radius = _StarRadius;
-                float glow = exp(-dist * 10.0 / radius) * 1.2;
+                float glow = exp(-dist * 10.0 / radius) * 1.2 * pulse;
 
                 float flareAngle = atan2(centeredUV.y, centeredUV.x);
                 float flareNoise = fbm(float2(flareAngle * 4.0, t * 1.5)) * _FlareIntensity;
@@ -222,8 +234,8 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
 
                 half3 coronaGlow = _GlowColor.rgb * (glow + flare);
 
-                // Add outer atmospheric fringe
-                float atmosFringe = exp(-max(0.0, dist - radius) * _AtmospherePower * 10.0);
+                // Outer atmospheric fringe with breathing pulse
+                float atmosFringe = exp(-max(0.0, dist - radius) * _AtmospherePower * 10.0) * pulse;
                 half3 atmosphereGlow = _AtmosphereColor.rgb * atmosFringe;
 
                 if (dist > radius)
@@ -238,8 +250,9 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
                     float z = sqrt(max(0.0, 1.0 - N * N));
                     float2 sphericalUV = centeredUV / (1.0 + z);
 
-                    // Y-Axis rotation
-                    float rotOffset = _Time.y * _RotationSpeed;
+                    // Equatorial Swirl: Latitudinal differential rotation
+                    float latitudinalSpeed = cos(sphericalUV.y * 3.14159) * _EquatorialSwirl + 1.0;
+                    float rotOffset = _Time.y * _RotationSpeed * latitudinalSpeed;
                     float2 rotatingUV = sphericalUV + float2(rotOffset, 0.0);
 
                     // Surface noise
@@ -249,12 +262,16 @@ Shader "UI/ProximaCentauriWithCosmicBackground"
 
                     half3 surfaceColor = lerp(_BaseColor.rgb, _HotSpotColor.rgb, pow(combinedNoise, 2.0));
 
-                    // Clamped Limb Darkening (prevents rim from darkening to black)
+                    // Polar Ice Caps / Biomes
+                    float poleFactor = smoothstep(1.0 - _PolarCapSize, 1.0, abs(sphericalUV.y * 2.0));
+                    surfaceColor = lerp(surfaceColor, _PolarCapColor.rgb, poleFactor * 0.85);
+
+                    // Clamped Limb Darkening
                     float limbDarkening = lerp(_MinEdgeBrightness, 1.0, pow(z, 1.0 / _RimPower));
                     surfaceColor *= limbDarkening;
 
-                    // Additive Fresnel & Corona Glow seamlessly over surface
-                    float fresnel = pow(1.0 - z, _AtmospherePower);
+                    // Additive Fresnel & Pulsing Corona Glow
+                    float fresnel = pow(1.0 - z, _AtmospherePower) * pulse;
                     surfaceColor += _AtmosphereColor.rgb * fresnel + coronaGlow;
 
                     // Smooth edge blending right at the radius border
