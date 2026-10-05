@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ReachStarPopup : BasePopup
 {
     public TMP_Text starName;
+    public Image starPicture;
     public Button goNextStarButton;
     public RectTransform rewardContainer;
     public RectTransform rewardAugmentContainer;
@@ -38,6 +39,9 @@ public class ReachStarPopup : BasePopup
         starPathConfig = StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex);
 
         starName.text = $"You've reached {starPathConfig.starName}";
+
+        starPicture.sprite = starPathConfig.picture;
+        UIUtil.SetSizeKeepRatioY(starPicture, container.sizeDelta.x);
 
         for (int i = 0; i < starPathConfig.rewards.Count; i++)
         {
