@@ -875,6 +875,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!114 &817468851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -970,6 +973,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaySound: 1
+  targetGraphic: {fileID: 0}
+  hoverMultiplier: 0.9
+  clickMultiplier: 0.75
 --- !u!1 &932280850
 GameObject:
   m_ObjectHideFlags: 0
@@ -1575,6 +1581,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8269539594740469910, guid: ae7d9568a3227c4428a512b4011e5c6e, type: 3}
     - target: {fileID: 2835213765105283550, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: saveSlotItemUI
+      value: 
+      objectReference: {fileID: 8269539594740469910, guid: 7a29515190d84fe4fbafe655a62e70a7, type: 3}
+    - target: {fileID: 2835213765105283550, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: stackingItemUI
       value: 
       objectReference: {fileID: 8860023425360979937, guid: 291e3da3d6e7a5845aface8d9e449f9b, type: 3}
@@ -1874,7 +1884,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveSlotManager
   currentSaveSlotData:
+    slotID: 
     slotName: 
+    lastModifiedDate: 
+    totalPlayTime: 0
+    currentLevel: 0
+    isEmpty: 1
 --- !u!1 &1677916390
 GameObject:
   m_ObjectHideFlags: 0

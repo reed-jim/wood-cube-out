@@ -32,6 +32,7 @@ public static class GameConstants
     public static string spaceEventItemUI = "spaceEventItemUI";
     public static string researchItemUI = "researchItemUI";
     public static string UIRectLine = "UIRectLine";
+    public static string saveSlotItemUI = "saveSlotItemUI";
 
     public static float nodeSpeedMultiplier = 0.02f;
 

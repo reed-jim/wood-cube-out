@@ -35,6 +35,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject spaceEventItemUI;
     [SerializeField] private GameObject researchItemUI;
     [SerializeField] private GameObject UIRectLine;
+    [SerializeField] private GameObject saveSlotItemUI;
 
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
@@ -182,6 +183,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<SpaceEventItemUI>(GameConstants.spaceEventItemUI, spaceEventItemUI, 20);
         RegisterPool<ResearchItemUI>(GameConstants.researchItemUI, researchItemUI, 20);
         RegisterPool<UIRectLine>(GameConstants.UIRectLine, UIRectLine, 20);
+        RegisterPool<SaveSlotItemUI>(GameConstants.saveSlotItemUI, saveSlotItemUI, 20);
         #endregion
 
         // RegisterPool<BaseChicken>(GameConstants.chicken, baseChicken, 1600);
