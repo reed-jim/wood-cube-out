@@ -39,7 +39,7 @@ public class NodeDetailAugmentItemUI : MonoBehaviour
 
         nameText.text = augment.augmentName;
         rarityText.text = $"{augment.augmentQuality}";
-        levelText.text = $"Lv{augmentData.level}";
+        levelText.text = $"{augmentData.augmentLevel}";
 
         if (expectedWidth > 0)
         {

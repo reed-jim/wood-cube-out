@@ -23,6 +23,7 @@ public class AugmentManager : Singleton<AugmentManager>
     public StatColorConfigSO statColorConfigSO;
 
     private Augment selectAugment;
+    private Dictionary<Augment, AugmentData> dataOfAugments = new Dictionary<Augment, AugmentData>();
 
     public static event Action applyAugmentEvent;
 
@@ -256,6 +257,38 @@ public class AugmentManager : Singleton<AugmentManager>
     }
     #endregion
 
+    #region Augment Level 
+    public float GetAugmentEfficiency(Augment augment)
+    {
+        return CurveManager.Ins.GetAugmentEfficiency((int)GetAugmentData(augment).augmentLevel);
+    }
+    #endregion  
+
+    #region Augment Data 
+    public void SetupAugmentData(Augment augment)
+    {
+        AugmentData augmentData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey($"AugmentData_{augment.id}"), new AugmentData());
+
+        dataOfAugments.Add(augment, augmentData);
+    }
+
+    public AugmentData GetAugmentData(Augment augment)
+    {
+        if (dataOfAugments.ContainsKey(augment))
+        {
+            return dataOfAugments[augment];
+        }
+        else
+        {
+            AugmentData augmentData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey($"AugmentData_{augment.id}"), new AugmentData());
+
+            dataOfAugments.Add(augment, augmentData);
+
+            return augmentData;
+        }
+    }
+    #endregion
+
     #region Util
     public Color GetStatColor(StatType statType)
     {
@@ -276,10 +309,10 @@ public class AugmentHistory
 
 public class AugmentData
 {
-    public int level;
+    public AugmentLevel augmentLevel;
 
     public AugmentData()
     {
-        level = 1;
+        augmentLevel = AugmentLevel.Orbital;
     }
 }

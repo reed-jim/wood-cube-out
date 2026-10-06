@@ -82,6 +82,13 @@ public class CurveManager : Singleton<CurveManager>
     [Header("Prestige")]
     public ProgressionConfig prestigeMaxChanceConfig = new ProgressionConfig();
 
+    [Header("Augment")]
+    public ProgressionConfig augmentEfficiencyConfig = new ProgressionConfig
+    {
+        baseValue = 1.0,      // 100% baseline efficiency
+        linearStep = 0.1      // +10% efficiency per upgrade step
+    };
+
     // ----------------------------------------------------------------------
     // Preserved Usage Functions (Updated with Idle Math)
     // ----------------------------------------------------------------------
@@ -210,6 +217,13 @@ public class CurveManager : Singleton<CurveManager>
     {
         return GetProgressionValue(prestigeMaxChanceConfig, time);
     }
+
+    #region Augment
+    public float GetAugmentEfficiency(int time)
+    {
+        return GetProgressionValue(augmentEfficiencyConfig, time);
+    }
+    #endregion
 
     // ----------------------------------------------------------------------
     // Idle Bulk Buying Helpers (O(1) Math)

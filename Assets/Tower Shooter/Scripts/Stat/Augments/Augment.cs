@@ -49,8 +49,9 @@ public class Augment : ScriptableObject
 
         foreach (var modData in statModifiers)
         {
-            // characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, 0, this));
-            characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, modData.value, 0));
+            float value = AugmentManager.Ins.GetAugmentEfficiency(this) * modData.value;
+
+            characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, value, 0));
         }
 
         foreach (var effect in dynamicEffects)

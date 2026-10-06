@@ -76,7 +76,8 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         foreach (var tStat in targets)
         {
             float sourceVal = GetStatValue(targetStats, config.sourceStat);
-            float calculatedVal = ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
+            float calculatedVal =
+                AugmentManager.Ins.GetAugmentEfficiency(augment) * ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
 
             ApplyOperationToTarget(tStat, calculatedVal);
 
