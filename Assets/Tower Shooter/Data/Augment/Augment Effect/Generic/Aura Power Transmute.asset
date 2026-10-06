@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26011e362bbf6574187136dadc81a081, type: 3}
+  m_Name: Aura Power Transmute
+  m_EditorClassIdentifier: Assembly-CSharp::GenericAugmentEffect
+  effectName: Aura Power Transmute
+  effectColor: {r: 0.78431374, g: 0.3529412, b: 1, a: 1}
+  descriptionTemplate: 
+  config:
+    trigger: 2
+    scope: 1
+    cycleFrequency: 9
+    sourceStat: 10
+    targetStat: 2
+    operation: 2
+    scalingFunction: 0
+    baseValue: 11.3
+    scalingFactor: 0.29
+    condition: 2
+    comparisonStat: 2
+    thresholdValue: 98.3
+    durationType: 0
+    durationInSeconds: 10
+    decayRatePerSecond: 0.5
+    maxStacks: 8
