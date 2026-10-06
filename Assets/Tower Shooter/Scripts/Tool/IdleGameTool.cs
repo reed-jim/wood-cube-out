@@ -8,6 +8,32 @@ public class IdleGameTool : EditorWindow
     private bool scalePosition = true;
     private bool scaleSizeDelta = true;
 
+    // Material JSON modification fields
+    private Material targetMaterial;
+    private TextAsset jsonFile;
+    private string rawJsonInput = "";
+
+    [System.Serializable]
+    public class ColorProperty
+    {
+        public string name;
+        public Color value;
+    }
+
+    [System.Serializable]
+    public class FloatProperty
+    {
+        public string name;
+        public float value;
+    }
+
+    [System.Serializable]
+    public class MaterialPropertiesData
+    {
+        public ColorProperty[] colors;
+        public FloatProperty[] floats;
+    }
+
     [MenuItem("Saferio/Tools/IdleGameTool")]
     public static void ShowWindow()
     {
@@ -33,6 +59,21 @@ public class IdleGameTool : EditorWindow
         if (GUILayout.Button("Scale Selected & Children"))
         {
             ScaleSelectedHierarchy();
+        }
+
+        EditorGUILayout.Space(15);
+        GUILayout.Label("Modify Material Properties from JSON", EditorStyles.boldLabel);
+        EditorGUILayout.Space(5);
+
+        targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), false);
+        jsonFile = (TextAsset)EditorGUILayout.ObjectField("JSON Asset (Optional)", jsonFile, typeof(TextAsset), false);
+
+        EditorGUILayout.LabelField("JSON String Input:");
+        rawJsonInput = EditorGUILayout.TextArea(rawJsonInput, GUILayout.Height(100));
+
+        if (GUILayout.Button("Apply Material Properties JSON"))
+        {
+            ApplyMaterialPropertiesFromJSON();
         }
     }
 
@@ -102,6 +143,71 @@ public class IdleGameTool : EditorWindow
         }
 
         Debug.Log($"Successfully scaled {modifiedCount} RectTransform(s) by factor of {scaleFactor}.");
+    }
+
+    private void ApplyMaterialPropertiesFromJSON()
+    {
+        if (targetMaterial == null)
+        {
+            EditorUtility.DisplayDialog("Missing Material", "Please assign a Target Material.", "OK");
+            return;
+        }
+
+        string jsonToParse = rawJsonInput;
+
+        if (jsonFile != null && !string.IsNullOrEmpty(jsonFile.text))
+        {
+            jsonToParse = jsonFile.text;
+        }
+
+        if (string.IsNullOrWhiteSpace(jsonToParse))
+        {
+            EditorUtility.DisplayDialog("Empty JSON", "Please paste a JSON string or assign a valid JSON TextAsset.", "OK");
+            return;
+        }
+
+        try
+        {
+            MaterialPropertiesData data = JsonUtility.FromJson<MaterialPropertiesData>(jsonToParse);
+
+            if (data == null)
+            {
+                EditorUtility.DisplayDialog("Parsing Error", "Could not parse JSON. Check format.", "OK");
+                return;
+            }
+
+            Undo.RegisterCompleteObjectUndo(targetMaterial, "Apply JSON to Material Properties");
+
+            if (data.colors != null)
+            {
+                foreach (var prop in data.colors)
+                {
+                    if (targetMaterial.HasProperty(prop.name))
+                    {
+                        targetMaterial.SetColor(prop.name, prop.value);
+                    }
+                }
+            }
+
+            if (data.floats != null)
+            {
+                foreach (var prop in data.floats)
+                {
+                    if (targetMaterial.HasProperty(prop.name))
+                    {
+                        targetMaterial.SetFloat(prop.name, prop.value);
+                    }
+                }
+            }
+
+            EditorUtility.SetDirty(targetMaterial);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"Successfully updated material properties on '{targetMaterial.name}'.");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Error parsing material JSON: {ex.Message}");
+        }
     }
 }
 #endif
