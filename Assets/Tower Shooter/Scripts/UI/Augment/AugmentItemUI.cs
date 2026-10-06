@@ -8,6 +8,7 @@ public class AugmentItemUIs : MonoBehaviour
     public TMP_Text title;
     public TMP_Text qualityText;
     public TMP_Text augmentLevelText;
+    public AugmentUIEffect augmentLevelEffect;
     public TMP_Text efficiencyText;
     public TMP_Text description;
     public Image qualityBorder;
@@ -44,6 +45,7 @@ public class AugmentItemUIs : MonoBehaviour
 
         title.text = augment.augmentName;
         augmentLevelText.text = $"{augmentLevel}";
+        augmentLevelEffect.SetLevel(augmentLevel);
         efficiencyText.text = $"Efficiency: {CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
         description.text = augment.BuildFullDescription(colorConfig);
         qualityText.text = $"{augment.augmentQuality}";
@@ -89,7 +91,9 @@ public class AugmentItemUIs : MonoBehaviour
         string currentEfficiency = AugmentManager.Ins.GetAugmentEfficiencyString(currentAugmentLevel);
         string nextEfficiency = AugmentManager.Ins.GetAugmentEfficiencyString(nextAugmentLevel);
 
-        augmentLevelText.text = $"{currentAugmentLevel} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextAugmentLevel}";
+        // augmentLevelText.text = $"{currentAugmentLevel} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextAugmentLevel}";
+        augmentLevelText.text = $"{nextAugmentLevel}";
+        augmentLevelEffect.SetLevel(nextAugmentLevel);
         efficiencyText.text = $"Efficiency: {currentEfficiency} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
     }
     #endregion
