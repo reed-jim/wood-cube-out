@@ -50,3 +50,14 @@ public enum EffectDuration
     Stacking,
     Decaying
 }
+
+public enum AugmentLevel
+{
+    Orbital,        // Around a planet
+    Planetary,      // Planet-scale
+    Stellar,        // Star-scale
+    Galactic,       // Galaxy-scale
+    Cosmic,         // Universe-scale
+    Dimensional,    // Beyond normal space
+    Transcendent    // Ultimate
+}

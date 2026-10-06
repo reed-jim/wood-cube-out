@@ -71,7 +71,65 @@ public class GenericAugmentEffect : AugmentEffect
         string autoText = GenerateAutoDescription();
         string effectColorHex = ColorUtil.ColorToHex(effectColor);
 
-        return $"<color={effectColorHex}>{effectName}:</color> {autoText}";
+        return $"<color={effectColorHex}>{GenerateAutoEffectName(config)}:</color> {autoText}";
+    }
+
+    public string GenerateAutoEffectName(GenericAugmentData config)
+    {
+        if (config == null) return "Unknown Effect";
+
+        // 1. Prefix derived from trigger context or scope
+        string prefix = config.scope switch
+        {
+            EffectScope.Global => "Global",
+            EffectScope.AdjacentNodes => "Aura",
+            _ => config.trigger switch
+            {
+                EffectTrigger.OnCrit => "Critical",
+                EffectTrigger.WhenIdle => "Idle",
+                EffectTrigger.EveryXCycles => "Cycling",
+                EffectTrigger.WhenStatCrossesThreshold => "Surge",
+                EffectTrigger.Permanently => "Enduring",
+                _ => config.durationType switch
+                {
+                    EffectDuration.TemporaryBurst => "Burst",
+                    EffectDuration.Stacking => "Stacking",
+                    EffectDuration.Decaying => "Fading",
+                    _ => ""
+                }
+            }
+        };
+
+        // 2. Action verb or adjective based on the mathematical operation
+        string action = config.operation switch
+        {
+            EffectOperation.Add => "Boost",
+            EffectOperation.Multiply => "Amplifier",
+            EffectOperation.Convert => "Transmute",
+            EffectOperation.Swap => "Exchange",
+            EffectOperation.SquareRoot => "Focus",
+            EffectOperation.Logarithm => "Scale",
+            EffectOperation.Copy => "Echo",
+            _ => "Effect"
+        };
+
+        // 3. Main noun identifying target stat
+        string statName = config.targetStat switch
+        {
+            StatType.Damage => "Power",
+            StatType.AttackSpeed => "Haste",
+            StatType.CritChance => "Precision",
+            StatType.CritMultiplier => "Ferocity",
+            _ => config.targetStat.ToString()
+        };
+
+        // Build the name up to 3 words max
+        if (string.IsNullOrEmpty(prefix))
+        {
+            return $"{statName} {action}";
+        }
+
+        return $"{prefix} {statName} {action}";
     }
 
     /// <summary>
