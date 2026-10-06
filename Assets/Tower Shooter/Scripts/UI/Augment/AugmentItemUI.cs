@@ -44,7 +44,7 @@ public class AugmentItemUIs : MonoBehaviour
 
         title.text = augment.augmentName;
         augmentLevelText.text = $"{augmentLevel}";
-        efficiencyText.text = $"{CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
+        efficiencyText.text = $"Efficiency: {CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
         description.text = augment.BuildFullDescription(colorConfig);
         qualityText.text = $"{augment.augmentQuality}";
 
@@ -90,7 +90,7 @@ public class AugmentItemUIs : MonoBehaviour
         string nextEfficiency = AugmentManager.Ins.GetAugmentEfficiencyString(nextAugmentLevel);
 
         augmentLevelText.text = $"{currentAugmentLevel} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextAugmentLevel}";
-        efficiencyText.text = $"{currentEfficiency} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
+        efficiencyText.text = $"Efficiency: {currentEfficiency} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
     }
     #endregion
 }
