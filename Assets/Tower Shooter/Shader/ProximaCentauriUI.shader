@@ -33,7 +33,6 @@ Shader "UI/EarthWithCosmicBackground"
         _MinEdgeBrightness ("Minimum Edge Brightness", Range(0.1, 1.0)) = 0.6
 
         [Header(Gradient Properties)]
-        _GradientColor ("Gradient Color", Color) = (0.02, 0.02, 0.08, 1.0)
         _GradientStart ("Gradient Start", Range(0,1)) = 0
         _GradientEnd ("Gradient End", Range(0,1)) = 1
         _GradientAngle ("Gradient Angle", Range(0,360)) = 0
@@ -138,7 +137,6 @@ Shader "UI/EarthWithCosmicBackground"
                 float4 _AtmosphereColor;
                 float _AtmospherePower;
 
-                float4 _GradientColor;
                 float _GradientStart;
                 float _GradientEnd;
                 float _GradientAngle;
@@ -223,17 +221,22 @@ Shader "UI/EarthWithCosmicBackground"
                 float gradient = saturate((gradientPosition - _GradientStart) / range);
                 gradient = smoothstep(0.0, 1.0, gradient);
 
-                half3 finalColor = lerp(_GradientColor.rgb, background, gradient) * _BackgroundBrightness;
+                // Alpha gradients from 0.0 (transparent) to 1.0 (opaque nebula)
+                float bgAlpha = gradient;
+                half3 finalColor = background * _BackgroundBrightness;
 
                 // 2. Atmosphere Fringe Outside
                 float radius = _StarRadius;
                 float atmosFringe = exp(-max(0.0, dist - radius) * _AtmospherePower * 12.0);
                 half3 atmosphereGlow = _AtmosphereColor.rgb * atmosFringe * 0.9;
 
+                float finalAlpha = bgAlpha;
+
                 if (dist > radius)
                 {
                     // Outside Earth
                     finalColor += atmosphereGlow;
+                    finalAlpha = saturate(bgAlpha + atmosFringe * 0.9);
                 }
                 else
                 {
@@ -283,9 +286,12 @@ Shader "UI/EarthWithCosmicBackground"
                     // Smooth edge blending right at the radius border
                     float earthMask = smoothstep(radius, radius - 0.005, dist);
                     finalColor = lerp(finalColor + atmosphereGlow, surfaceColor, earthMask);
+                    
+                    // Planet surface renders opaque, blending smoothly into outer alpha background
+                    finalAlpha = lerp(saturate(bgAlpha + atmosFringe * 0.9), 1.0, earthMask);
                 }
 
-                half4 result = half4(finalColor, 1.0) * input.color;
+                half4 result = half4(finalColor, finalAlpha) * input.color;
 
                 // UI Clipping
                 #if defined(UNITY_UI_CLIP_RECT)
