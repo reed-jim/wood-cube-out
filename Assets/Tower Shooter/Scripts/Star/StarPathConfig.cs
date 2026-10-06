@@ -10,6 +10,7 @@ public class StarPathConfig : ScriptableObject
     public double distanceInLightyear;
     public SpaceObjectType spaceObjectType;
     public Sprite picture;
+    public Material planetMaterial;
     public string description;
 
     [Header("Milstone")]

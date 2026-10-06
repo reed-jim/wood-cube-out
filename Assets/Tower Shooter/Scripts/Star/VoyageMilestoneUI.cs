@@ -41,11 +41,14 @@ public class VoyageMilestoneUI : Singleton<VoyageMilestoneUI>
         startLocationNameText.text = StarManager.Ins.currentStarPathConfig.starName;
         endLocationNameText.text = StarManager.Ins.nextStarPathConfig.starName;
 
-        startLocationImage.sprite = StarManager.Ins.currentStarPathConfig.picture;
-        endLocationImage.sprite = StarManager.Ins.nextStarPathConfig.picture;
+        startLocationImage.material = StarManager.Ins.currentStarPathConfig.planetMaterial;
+        endLocationImage.material = StarManager.Ins.nextStarPathConfig.planetMaterial;
 
-        UIUtil.SetSizeKeepRatioY(startLocationImage, 600);
-        UIUtil.SetSizeKeepRatioY(endLocationImage, 600);
+        // startLocationImage.sprite = StarManager.Ins.currentStarPathConfig.picture;
+        // endLocationImage.sprite = StarManager.Ins.nextStarPathConfig.picture;
+
+        // UIUtil.SetSizeKeepRatioY(startLocationImage, 600);
+        // UIUtil.SetSizeKeepRatioY(endLocationImage, 600);
 
         progressFill.transform.SetAsLastSibling();
     }
