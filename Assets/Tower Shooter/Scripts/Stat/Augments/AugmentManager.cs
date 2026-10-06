@@ -113,6 +113,16 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public void ApplyAugment(Augment augment, BaseCharacter nodeToApply = null)
     {
+        // Upgrade Augment
+        if (IsAugmentActive(augment))
+        {
+            AugmentData augmentData = GetAugmentData(augment);
+
+            augmentData.augmentLevel++;
+
+            SaveAugmentData(augment, augmentData);
+        }
+
         if (augment.isNeedCharacterToApply)
         {
             if (nodeToApply == null)
@@ -189,6 +199,11 @@ public class AugmentManager : Singleton<AugmentManager>
         return player.ownedAugments.Contains(augment);
     }
 
+    public bool IsAugmentActive(Augment augment)
+    {
+        return activeAugments.Contains(augment);
+    }
+
     public void AddPendingAugment(Augment augment)
     {
         pendingAugments.Add(augment);
@@ -210,10 +225,17 @@ public class AugmentManager : Singleton<AugmentManager>
         MultiverseIdleGameplayScreen.Ins.UpdateBuyAugmentCostText(cost);
     }
 
+    #region Save/Load
     public void SaveAugmentHistory()
     {
         DataUtility.Save($"{SaveSlotManager.Ins.currentSaveSlotData}_augmentHistory", augmentHistory);
     }
+
+    public void SaveAugmentData(Augment augment, AugmentData augmentData)
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey($"AugmentData_{augment.id}"), augmentData);
+    }
+    #endregion
 
     #region Augment Usage Tracker
     public void UpdatePowerGeneratedByAugment(Augment augment, float power)
@@ -257,12 +279,27 @@ public class AugmentManager : Singleton<AugmentManager>
     }
     #endregion
 
-    #region Augment Level 
+    #region Augment Level
+    public AugmentLevel GetAugmentLevel(Augment augment)
+    {
+        return GetAugmentData(augment).augmentLevel;
+    }
+
     public float GetAugmentEfficiency(Augment augment)
     {
         return CurveManager.Ins.GetAugmentEfficiency((int)GetAugmentData(augment).augmentLevel);
     }
-    #endregion  
+
+    public float GetAugmentEfficiency(AugmentLevel augmentLevel)
+    {
+        return CurveManager.Ins.GetAugmentEfficiency((int)augmentLevel);
+    }
+
+    public string GetAugmentEfficiencyString(AugmentLevel augmentLevel)
+    {
+        return CommonUtil.ToPercent(CurveManager.Ins.GetAugmentEfficiency((int)augmentLevel));
+    }
+    #endregion
 
     #region Augment Data 
     public void SetupAugmentData(Augment augment)

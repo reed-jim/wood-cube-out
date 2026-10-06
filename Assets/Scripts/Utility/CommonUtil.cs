@@ -12,6 +12,11 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    public static string ToPercent(float chance)
+    {
+        return $"{(int)(chance * 100)}%";
+    }
+
     public static void CopyList<T>(List<T> source, List<T> destination)
     {
         destination.Clear();

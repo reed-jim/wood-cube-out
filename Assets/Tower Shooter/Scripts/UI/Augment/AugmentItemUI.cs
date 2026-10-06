@@ -7,13 +7,14 @@ public class AugmentItemUIs : MonoBehaviour
 {
     public TMP_Text title;
     public TMP_Text qualityText;
+    public TMP_Text augmentLevelText;
+    public TMP_Text efficiencyText;
     public TMP_Text description;
     public Image qualityBorder;
     public Button showAugmentDetailButton;
 
-    public AugmentContainer augmentContainer;
-
     private Augment augment;
+    private AugmentLevel augmentLevel;
 
     [SerializeField] private StatColorConfigSO colorConfig;
 
@@ -39,7 +40,11 @@ public class AugmentItemUIs : MonoBehaviour
 
     private void SetupAugment(Augment augment)
     {
+        AugmentLevel augmentLevel = AugmentManager.Ins.GetAugmentLevel(augment);
+
         title.text = augment.augmentName;
+        augmentLevelText.text = $"{augmentLevel}";
+        efficiencyText.text = $"{CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
         description.text = augment.BuildFullDescription(colorConfig);
         qualityText.text = $"{augment.augmentQuality}";
 
@@ -47,6 +52,11 @@ public class AugmentItemUIs : MonoBehaviour
 
         qualityText.color = qualityColor;
         qualityBorder.color = qualityColor;
+
+        if (AugmentManager.Ins.IsAugmentActive(augment))
+        {
+            ShowUpgradeAugmentLevelUI(augmentLevel);
+        }
     }
 
     private void ShowAugmentDetail()
@@ -70,4 +80,17 @@ public class AugmentItemUIs : MonoBehaviour
 
         onAugmentSelected?.Invoke();
     }
+
+    #region Augment Level
+    private void ShowUpgradeAugmentLevelUI(AugmentLevel currentAugmentLevel)
+    {
+        AugmentLevel nextAugmentLevel = currentAugmentLevel + 1;
+
+        string currentEfficiency = AugmentManager.Ins.GetAugmentEfficiencyString(currentAugmentLevel);
+        string nextEfficiency = AugmentManager.Ins.GetAugmentEfficiencyString(nextAugmentLevel);
+
+        augmentLevelText.text = $"{currentAugmentLevel} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextAugmentLevel}";
+        efficiencyText.text = $"{currentEfficiency} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
+    }
+    #endregion
 }
