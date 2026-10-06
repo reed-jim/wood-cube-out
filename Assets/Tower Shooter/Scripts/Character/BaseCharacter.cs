@@ -90,6 +90,8 @@ public class BaseCharacter : MonoBehaviour
                 {
                     ownedAugments.Add(augment);
 
+                    AugmentManager.Ins.AddAugment(augment);
+
                     augment.Apply(serviceLocator.stats);
                 }
             }

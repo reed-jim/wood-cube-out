@@ -184,7 +184,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
     public void AddAugment(Augment augment)
     {
-        player.ownedAugments.Add(augment);
+        activeAugments.Add(augment);
     }
 
     public void RemoveAugment(Augment augment)
