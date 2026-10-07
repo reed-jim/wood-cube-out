@@ -142,6 +142,11 @@ public class UnlockAugmentUI : MonoBehaviour
     {
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("UnlockAugmentData"), unlockAugmentData);
     }
+
+    public void ResetUnlockAugmentData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("UnlockAugmentData"), new UnlockAugmentData());
+    }
     #endregion
 }
 

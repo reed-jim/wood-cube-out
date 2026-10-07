@@ -51,7 +51,7 @@ public class SpaceShip : MonoBehaviour
 
     void Start()
     {
-        LoadCurrentVoyage();
+        LoadVoyageData();
 
         StartCoroutine(PeriodicallySaveVoyageData());
     }
@@ -121,7 +121,7 @@ public class SpaceShip : MonoBehaviour
         // }
 
         remaningKm -= kmPerFrame;
-        
+
         progress = (float)(1 - remaningKm / totalKm);
 
         VoyageMilestoneUI.Ins.SetVoyageProgress(progress);
@@ -143,18 +143,9 @@ public class SpaceShip : MonoBehaviour
             Init();
         }
 
-        SaveCurrentVoyage();
+        SaveVoyageData();
 
         isFlying = true;
-    }
-
-    public void LoadCurrentVoyage()
-    {
-        voyageData = DataUtility.Load($"{SaveSlotManager.Ins.currentSaveSlotData}_voyageData", StarManager.Ins.GetFirstVoyage());
-
-        StarManager.Ins.SetStarPathConfig(voyageData.starPathConfigIndex);
-
-        Init();
     }
 
     private void Init()
@@ -172,12 +163,30 @@ public class SpaceShip : MonoBehaviour
         isFlying = true;
     }
 
-    public void SaveCurrentVoyage()
+    #region Save/Load
+    public void LoadVoyageData()
+    {
+        voyageData = DataUtility.Load($"{SaveSlotManager.Ins.currentSaveSlotData}_voyageData", StarManager.Ins.GetFirstVoyage());
+
+        StarManager.Ins.SetStarPathConfig(voyageData.starPathConfigIndex);
+
+        Init();
+    }
+
+    public void SaveVoyageData()
     {
         voyageData.remaningKm = remaningKm;
 
         DataUtility.Save($"{SaveSlotManager.Ins.currentSaveSlotData}_voyageData", voyageData);
     }
+
+    public void ResetVoyageData()
+    {
+        voyageData = StarManager.Ins.GetFirstVoyage();
+
+        SaveVoyageData();
+    }
+    #endregion
 
     public IEnumerator PeriodicallySaveVoyageData()
     {
@@ -187,7 +196,7 @@ public class SpaceShip : MonoBehaviour
         {
             yield return waitForSeconds;
 
-            SaveCurrentVoyage();
+            SaveVoyageData();
         }
     }
 }

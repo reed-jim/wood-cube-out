@@ -25,6 +25,11 @@ public class DataManager : Singleton<DataManager>
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey(GameConstants.gameData), gameData);
     }
 
+    public void ResetData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey(GameConstants.gameData), GetDefaultGameData());
+    }
+
     public GameData GetDefaultGameData()
     {
         GameData defaultGameData = new GameData();

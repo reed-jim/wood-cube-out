@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PrestigeManager : Singleton<PrestigeManager>
 {
@@ -63,6 +64,19 @@ public class PrestigeManager : Singleton<PrestigeManager>
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("prestigeData"), prestigeData);
     }
     #endregion
+
+    [ContextMenu("ResetGameProgress")]
+    private void ResetGameProgress()
+    {
+        DataManager.Ins.ResetData();
+        LeadershipManager.Ins.ResetLeadershipData();
+        ResearchManager.Ins.ResetResearchData();
+        OfflineIdleManager.Ins.ResetOfflineIdleData();
+
+        // SpaceShip.Ins.ResetVoyageData();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
 
 [Serializable]

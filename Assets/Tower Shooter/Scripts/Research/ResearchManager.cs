@@ -132,6 +132,11 @@ public class ResearchManager : Singleton<ResearchManager>
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("researchSaveData"), GetSaveData());
     }
 
+    public void ResetResearchData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("researchSaveData"), GetDefaultResearchData());
+    }
+
     public ResearchData GetDefaultResearchData()
     {
         return new ResearchData();

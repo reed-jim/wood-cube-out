@@ -551,6 +551,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("leadershipData"), leadershipData);
     }
 
+    public void ResetLeadershipData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("leadershipData"), GetDefaultLeadershipData());
+    }
+
     private LeadershipData GetDefaultLeadershipData()
     {
         LeadershipData defaultLeadershipData = new LeadershipData();
@@ -819,7 +824,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
             {
                 CharacterTrait characterTrait = characterTraitContainer.characterTraits[j];
 
-                if(characterTrait.id == id)
+                if (characterTrait.id == id)
                 {
                     traits.Add(characterTrait);
 

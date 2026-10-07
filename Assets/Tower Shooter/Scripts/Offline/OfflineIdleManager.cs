@@ -84,6 +84,11 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("offlineIdleData"), offlineIdleData);
     }
 
+    public void ResetOfflineIdleData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("offlineIdleData"), GetDefaultOfflineIdleData());
+    }
+
     private OfflineIdleData GetDefaultOfflineIdleData()
     {
         OfflineIdleData offlineIdleData = new OfflineIdleData();

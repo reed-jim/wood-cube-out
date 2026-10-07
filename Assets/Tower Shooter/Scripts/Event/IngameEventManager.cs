@@ -67,7 +67,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
 
         AddIngameEventData(characterDeathEventDataItem);
     }
-    
+
     public void RemoveEvent(IngameEventDataItem ingameEventDataItem)
     {
         ingameEventData.ingameEventDataItems.Remove(ingameEventDataItem);
@@ -84,6 +84,11 @@ public class IngameEventManager : Singleton<IngameEventManager>
     private void SaveIngameEventData()
     {
         DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("ingameEventData"), ingameEventData);
+    }
+
+    public void ResetIngameEventData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("ingameEventData"), GetDefaultIngameEventData());
     }
 
     private void AddIngameEventData(IngameEventDataItem ingameEventDataItem)
