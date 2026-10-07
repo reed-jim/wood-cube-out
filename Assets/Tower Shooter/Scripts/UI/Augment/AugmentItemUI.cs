@@ -9,6 +9,8 @@ public class AugmentItemUIs : MonoBehaviour
     public TMP_Text qualityText;
     public TMP_Text augmentLevelText;
     public AugmentUIEffect augmentLevelEffect;
+    public AugmentUIEffect nextAugmentLevelEffect;
+    public GameObject augmentLevelUpgradeArrow;
     public TMP_Text efficiencyText;
     public TMP_Text description;
     public Image qualityBorder;
@@ -45,10 +47,30 @@ public class AugmentItemUIs : MonoBehaviour
 
         title.text = augment.augmentName;
         augmentLevelText.text = $"{augmentLevel}";
-        augmentLevelEffect.SetLevel(augmentLevel);
         efficiencyText.text = $"Efficiency: {CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
         description.text = augment.BuildFullDescription(colorConfig);
         qualityText.text = $"{augment.augmentQuality}";
+
+        if (augmentLevel == AugmentLevel.Orbital)
+        {
+            augmentLevelUpgradeArrow.gameObject.SetActive(false);
+            nextAugmentLevelEffect.gameObject.SetActive(false);
+
+            augmentLevelUpgradeArrow.transform.localScale = Vector3.one;
+
+            augmentLevelEffect.SetLevel(augmentLevel);
+        }
+        else
+        {
+            augmentLevelUpgradeArrow.gameObject.SetActive(true);
+            nextAugmentLevelEffect.gameObject.SetActive(true);
+
+            augmentLevelUpgradeArrow.transform.localScale = 0.3f * Vector3.one;
+            nextAugmentLevelEffect.transform.localScale = 0.3f * Vector3.one;
+
+            augmentLevelEffect.SetLevel(augmentLevel - 1);
+            nextAugmentLevelEffect.SetLevel(augmentLevel);
+        }
 
         Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
 
