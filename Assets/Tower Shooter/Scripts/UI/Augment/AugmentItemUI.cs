@@ -112,8 +112,8 @@ public class AugmentItemUIs : MonoBehaviour
         augmentLevelUpgradeArrow.gameObject.SetActive(true);
         nextAugmentLevelEffect.gameObject.SetActive(true);
 
-        augmentLevelEffect.transform.localScale = 0.45f * Vector3.one;
-        nextAugmentLevelEffect.transform.localScale = 0.45f * Vector3.one;
+        augmentLevelEffect.transform.localScale = 0.5f * Vector3.one;
+        nextAugmentLevelEffect.transform.localScale = 0.5f * Vector3.one;
 
         augmentLevelEffect.SetLevel(augmentLevel);
         nextAugmentLevelEffect.SetLevel(nextAugmentLevel);

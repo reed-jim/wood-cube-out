@@ -40,8 +40,8 @@ public class ReachStarPopup : BasePopup
 
         starName.text = $"You've reached {starPathConfig.starName}";
 
-        starPicture.sprite = starPathConfig.picture;
-        UIUtil.SetSizeKeepRatioY(starPicture, container.sizeDelta.x);
+        // starPicture.sprite = starPathConfig.picture;
+        // UIUtil.SetSizeKeepRatioY(starPicture, container.sizeDelta.x);
 
         for (int i = 0; i < starPathConfig.rewards.Count; i++)
         {
