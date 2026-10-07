@@ -13,15 +13,19 @@ public class SaveSlotPanelUI : BasePopup
 
     private readonly List<SaveSlotItemUI> spawnedSlotItems = new List<SaveSlotItemUI>();
 
-    private void Awake()
+    protected override void RegisterMoreEvent()
     {
+        base.RegisterMoreEvent();
+
         SaveSlotManager.OnSaveSlotsUpdated += RefreshSlots;
         SaveSlotItemUI.onSelectSlotClicked += OnSlotSelected;
         SaveSlotItemUI.onDeleteSlotClicked += OnSlotDeleted;
     }
 
-    private void OnDestroy()
+    protected override void UnregisterMoreEvent()
     {
+        base.UnregisterMoreEvent();
+        
         SaveSlotManager.OnSaveSlotsUpdated -= RefreshSlots;
         SaveSlotItemUI.onSelectSlotClicked -= OnSlotSelected;
         SaveSlotItemUI.onDeleteSlotClicked -= OnSlotDeleted;
