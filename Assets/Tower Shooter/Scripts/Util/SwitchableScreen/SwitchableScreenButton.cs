@@ -9,6 +9,9 @@ public class SwitchableScreenButton : MonoBehaviour
     [SerializeField] private Button switchButton;
     [SerializeField] private List<ThemeableUI> themeableElements;
 
+    [Header("Lock State")]
+    [SerializeField] private CanvasGroup lockOverlay;
+
     [Header("Customize")]
     public SwitchableScreenType switchableScreenType;
 

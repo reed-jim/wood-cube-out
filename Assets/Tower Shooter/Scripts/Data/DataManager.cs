@@ -6,6 +6,13 @@ public class DataManager : Singleton<DataManager>
 {
     private GameData gameData;
 
+    #region Util
+    public UnlockFeatureData GetUnlockFeatureData()
+    {
+        return gameData.unlockFeatureData;
+    }
+    #endregion
+
     public GameData LoadData()
     {
         gameData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey(GameConstants.gameData), GetDefaultGameData());
@@ -88,4 +95,10 @@ public class CharacterStatsData
 {
     public bool isExist;
     public List<Stat> stats;
+}
+
+[Serializable]
+public class UnlockFeatureData
+{
+    public bool isResearchUnlocked;
 }

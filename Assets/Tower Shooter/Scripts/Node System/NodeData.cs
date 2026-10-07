@@ -18,4 +18,5 @@ public class GameData
 {
     public bool isExist;
     public List<NodeGroupData> nodeGroupDataItems;
+    public UnlockFeatureData unlockFeatureData;
 }
