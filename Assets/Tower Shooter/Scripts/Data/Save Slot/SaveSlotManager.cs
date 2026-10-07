@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
+[DefaultExecutionOrder(-1000)]
 public class SaveSlotManager : Singleton<SaveSlotManager>
 {
     private const int TOTAL_SLOTS = 3;
+    private const string CURRENT_SLOT_ID_KEY = "CurrentSaveSlotID";
+    private const string DEFAULT_SLOT_ID = "Slot_1";
 
-    // Existing field preserved from your code
     public SaveSlotData currentSaveSlotData;
 
     private readonly List<SaveSlotData> allSaveSlots = new List<SaveSlotData>();
     public IReadOnlyList<SaveSlotData> AllSaveSlots => allSaveSlots;
 
-    // Events matching ResearchManager style
     public static event Action OnSaveSlotsUpdated;
     public static event Action<SaveSlotData> OnSlotSelected;
 
@@ -38,11 +41,8 @@ public class SaveSlotManager : Singleton<SaveSlotManager>
             allSaveSlots.Add(slotData);
         }
 
-        // Initialize currentSaveSlotData if unassigned
-        if (currentSaveSlotData == null || string.IsNullOrEmpty(currentSaveSlotData.slotID))
-        {
-            currentSaveSlotData = allSaveSlots[0];
-        }
+        string savedSlotID = DataUtility.Load(CURRENT_SLOT_ID_KEY, DEFAULT_SLOT_ID);
+        currentSaveSlotData = FindSlot(savedSlotID) ?? allSaveSlots[0];
 
         OnSaveSlotsUpdated?.Invoke();
     }
@@ -51,20 +51,33 @@ public class SaveSlotManager : Singleton<SaveSlotManager>
     {
         if (slotData == null) return;
 
-        currentSaveSlotData = slotData;
+        string previousSlotID = currentSaveSlotData?.slotID;
+        bool wasEmpty = slotData.isEmpty;
 
-        if (slotData.isEmpty)
+        if (wasEmpty)
         {
             CreateNewSaveSlot(slotData.slotID, slotData.slotName);
         }
+        else
+        {
+            currentSaveSlotData = FindSlot(slotData.slotID) ?? slotData;
+        }
+
+        PersistSelectedSlot(currentSaveSlotData.slotID);
 
         OnSlotSelected?.Invoke(currentSaveSlotData);
         OnSaveSlotsUpdated?.Invoke();
+
+        bool isSameFilledSlot = !wasEmpty && previousSlotID == currentSaveSlotData.slotID;
+        if (!isSameFilledSlot)
+        {
+            RestartGame();
+        }
     }
 
     public void CreateNewSaveSlot(string slotID, string name)
     {
-        SaveSlotData targetSlot = allSaveSlots.Find(s => s.slotID == slotID);
+        SaveSlotData targetSlot = FindSlot(slotID);
         if (targetSlot == null) return;
 
         targetSlot.slotName = name;
@@ -81,7 +94,7 @@ public class SaveSlotManager : Singleton<SaveSlotManager>
 
     public void DeleteSlot(string slotID)
     {
-        SaveSlotData targetSlot = allSaveSlots.Find(s => s.slotID == slotID);
+        SaveSlotData targetSlot = FindSlot(slotID);
         if (targetSlot == null) return;
 
         SaveSlotData resetData = GetDefaultSlotData(slotID, targetSlot.slotName);
@@ -89,6 +102,11 @@ public class SaveSlotManager : Singleton<SaveSlotManager>
         allSaveSlots[index] = resetData;
 
         DataUtility.Save(GetSlotMetadataKey(slotID), resetData);
+
+        if (currentSaveSlotData != null && currentSaveSlotData.slotID == slotID)
+        {
+            currentSaveSlotData = resetData;
+        }
 
         OnSaveSlotsUpdated?.Invoke();
     }
@@ -105,14 +123,28 @@ public class SaveSlotManager : Singleton<SaveSlotManager>
 
     #region Save Key Helpers
 
-    // Preserves your original signature and format
     public string GetSaveKey(string name)
     {
         string prefix = (currentSaveSlotData != null && !string.IsNullOrEmpty(currentSaveSlotData.slotID))
             ? currentSaveSlotData.slotID
-            : "Slot_1";
+            : DEFAULT_SLOT_ID;
 
         return $"{prefix}_{name}";
+    }
+
+    private void PersistSelectedSlot(string slotID)
+    {
+        DataUtility.Save(CURRENT_SLOT_ID_KEY, slotID);
+    }
+
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private SaveSlotData FindSlot(string slotID)
+    {
+        return allSaveSlots.Find(s => s.slotID == slotID);
     }
 
     private string GetSlotMetadataKey(string slotID)
