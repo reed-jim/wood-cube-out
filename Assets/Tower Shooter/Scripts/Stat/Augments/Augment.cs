@@ -113,6 +113,11 @@ public class Augment : ScriptableObject
             sb.AppendLine($"<color=#{hex}>{valStr} {mod.statType}</color>");
         }
 
+        if (dynamicEffects.Count > 0)
+        {
+            sb.AppendLine("\n");
+        }
+
         // 2. Process dynamic effects descriptions
         foreach (var effect in dynamicEffects)
         {

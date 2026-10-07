@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -16,6 +17,10 @@ public class IdleGameTool : EditorWindow
 
     // Augment Effect Creation fields
     private string effectFolderPath = "Assets/Tower Shooter/Data/Augment/Effects";
+
+    // Augment Folder & Container Selection fields
+    private string augmentFolderPath = "Assets/Tower Shooter/Data/Augment";
+    private string augmentContainerPath = "Assets/Tower Shooter/Data/Augment/Augment Container.asset";
 
     [System.Serializable]
     public class ColorProperty
@@ -46,7 +51,30 @@ public class IdleGameTool : EditorWindow
 
     private void OnGUI()
     {
-        if (GUILayout.Button("AutoAssignIdForAugment"))
+        GUILayout.Label("Augment Auto-Assigner", EditorStyles.boldLabel);
+        EditorGUILayout.Space(5);
+
+        augmentFolderPath = EditorGUILayout.TextField("Augment Folder Path", augmentFolderPath);
+
+        if (GUILayout.Button("Select Augment Folder"))
+        {
+            string selectedPath = EditorUtility.OpenFolderPanel("Select Folder with Augments", "Assets", "");
+            if (!string.IsNullOrEmpty(selectedPath))
+            {
+                if (selectedPath.StartsWith(Application.dataPath))
+                {
+                    augmentFolderPath = "Assets" + selectedPath.Substring(Application.dataPath.Length);
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Invalid Folder", "Please select a folder inside the Assets directory.", "OK");
+                }
+            }
+        }
+
+        augmentContainerPath = EditorGUILayout.TextField("Container Asset Path", augmentContainerPath);
+
+        if (GUILayout.Button("Auto Assign Augments & IDs"))
         {
             AutoAssignIdForAugment();
         }
@@ -95,23 +123,58 @@ public class IdleGameTool : EditorWindow
 
     private void AutoAssignIdForAugment()
     {
-        const string path = "Assets/Tower Shooter/Data/Augment/Augment Container.asset";
+        AugmentContainer augmentContainer = AssetDatabase.LoadAssetAtPath<AugmentContainer>(augmentContainerPath);
 
-        AugmentContainer augmentContainer = AssetDatabase.LoadAssetAtPath<AugmentContainer>(path);
-
-        for (int i = 0; i < augmentContainer.augments.Count; i++)
+        if (augmentContainer == null)
         {
-            Augment augment = augmentContainer.augments[i];
+            EditorUtility.DisplayDialog("Error", $"AugmentContainer asset not found at path: {augmentContainerPath}", "OK");
+            return;
+        }
 
-            augment.id = i;
+        if (!AssetDatabase.IsValidFolder(augmentFolderPath))
+        {
+            EditorUtility.DisplayDialog("Error", $"Invalid folder path: {augmentFolderPath}", "OK");
+            return;
+        }
 
-            EditorUtility.SetDirty(augment);
+        // Find all Augment assets in the target folder
+        string[] guids = AssetDatabase.FindAssets("t:Augment", new[] { augmentFolderPath });
+
+        if (augmentContainer.augments == null)
+        {
+            augmentContainer.augments = new List<Augment>();
+        }
+        else
+        {
+            augmentContainer.augments.Clear();
+        }
+
+        Undo.RegisterCompleteObjectUndo(augmentContainer, "Auto Assign Augments to Container");
+
+        for (int i = 0; i < guids.Length; i++)
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
+            Augment augment = AssetDatabase.LoadAssetAtPath<Augment>(assetPath);
+
+            if (augment != null)
+            {
+                Undo.RegisterCompleteObjectUndo(augment, "Auto Assign ID");
+
+                // Assign sequential ID based on index
+                augment.id = i;
+                EditorUtility.SetDirty(augment);
+
+                // Add to AugmentContainer list
+                augmentContainer.augments.Add(augment);
+            }
         }
 
         EditorUtility.SetDirty(augmentContainer);
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+
+        Debug.Log($"Successfully auto-assigned {augmentContainer.augments.Count} Augment(s) to container and assigned IDs from 0 to {augmentContainer.augments.Count - 1}.");
     }
 
     private void CreateAndRandomizeGenericAugmentEffect()
