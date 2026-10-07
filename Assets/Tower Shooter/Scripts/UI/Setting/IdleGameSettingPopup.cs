@@ -21,6 +21,8 @@ public class IdleGameSettingPopup : BasePopup
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button discardButton;
 
+    [SerializeField] private Button saveSlotButton;
+
     private Resolution[] availableResolutions;
     private SettingsData currentSettings;  // Currently active & saved settings
     private SettingsData pendingSettings;  // Temporary settings waiting for confirmation
@@ -49,6 +51,8 @@ public class IdleGameSettingPopup : BasePopup
         {
             discardButton.onClick.AddListener(DiscardChanges);
         }
+
+        saveSlotButton.onClick.AddListener(OpenSaveSlotPopup);
     }
 
     private void Start()
@@ -275,4 +279,9 @@ public class IdleGameSettingPopup : BasePopup
     }
 
     #endregion
+
+    private void OpenSaveSlotPopup()
+    {
+        SwitchRoute(GameEnum.ScreenRoute.SaveSlot);
+    }
 }

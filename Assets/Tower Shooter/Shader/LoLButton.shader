@@ -12,7 +12,9 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
         _GlowSecondary ("Deep Cosmic Indigo Energy", Color) = (0.15, 0.05, 0.5, 1)
         
         [Header(Frame Settings)]
-        _BorderThickness ("Border Thickness", Range(0, 1)) = 0.04
+        _CornerRadius ("Corner Radius", Range(0.0, 0.5)) = 0.15
+        _AspectRatio ("Aspect Ratio (Width / Height)", Float) = 2.0
+        _BorderThickness ("Border Thickness", Range(0, 0.5)) = 0.04
         _BevelHardness ("Bevel Specular Sharpness", Range(1.0, 16.0)) = 6.0
         
         [Header(Energy Streaks Parallax Nebula)]
@@ -82,6 +84,8 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float4 _BorderColor;
                 float4 _GlowColor;
                 float4 _GlowSecondary;
+                float _CornerRadius;
+                float _AspectRatio;
                 float _BorderThickness;
                 float _BevelHardness;
                 float _StreakSpeed;
@@ -96,6 +100,16 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float _Hover;
                 float _Pressed;
             CBUFFER_END
+
+            // --- Rounded Box Signed Distance Function ---
+            // p: centered UV scaled by aspect ratio
+            // b: half-extents of the box
+            // r: corner radius
+            float sdRoundedBox(float2 p, float2 b, float r)
+            {
+                float2 q = abs(p) - b + r;
+                return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+            }
 
             // --- Noise & Hash Utility Functions ---
             float Hash11(float p)
@@ -146,9 +160,26 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float4 defaultTexColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) * input.color;
                 float time = _Time.y;
 
-                // 1. Frame Distance Field (Border Masking)
-                float2 distToEdge2D = min(uv, 1.0 - uv);
-                float distToEdge = min(distToEdge2D.x, distToEdge2D.y);
+                // --- Aspect Ratio Corrected Coordinates ---
+                float aspect = max(_AspectRatio, 0.0001);
+                
+                // Center space (-0.5 to 0.5) and scale width by aspect ratio
+                float2 centeredUV = (uv - 0.5) * float2(aspect, 1.0);
+                float2 boxHalfSize = float2(0.5 * aspect, 0.5);
+                
+                // Clamp radius to ensure it doesn't exceed half the shortest dimension
+                float maxRadius = min(boxHalfSize.x, boxHalfSize.y);
+                float radius = min(_CornerRadius, maxRadius);
+
+                // --- Distance Field Calculations ---
+                float distSDF = sdRoundedBox(centeredUV, boxHalfSize, radius);
+                
+                // Outer edge mask with anti-aliasing
+                float aa = fwidth(distSDF);
+                float outerAlpha = 1.0 - smoothstep(-aa, 0.0, distSDF);
+
+                // Distance inward from the border edge (0 at boundary, increases inwards)
+                float distToEdge = -distSDF;
                 float isBorder = step(distToEdge, _BorderThickness);
 
                 // 2. Base Void Body Gradient
@@ -193,7 +224,7 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 baseBody += innerGlow * (1.0 + _Hover * 1.2);
 
                 // 7. Celestial Gold Metallic Frame & 3D Bevel Specular
-                float borderNormalized = saturate(distToEdge / _BorderThickness);
+                float borderNormalized = saturate(distToEdge / max(_BorderThickness, 0.0001));
                 float bevelProfile = sin(borderNormalized * 3.14159);
                 float bevelSpec = pow(bevelProfile, _BevelHardness);
                 
@@ -224,11 +255,11 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 customEffectColor += _Hover * 0.08;
                 customEffectColor *= (1.0 - _Pressed * 0.2);
 
-                // 10. Final Intensity Blend Logic
-                // Smoothly interpolates between raw default texture (at 0) and custom effect (at 1)
+                // 10. Final Intensity Blend Logic & Alpha Cutout
                 float3 finalRGB = lerp(defaultTexColor.rgb, customEffectColor, _EffectIntensity);
+                float finalAlpha = defaultTexColor.a * outerAlpha;
 
-                return float4(finalRGB, defaultTexColor.a);
+                return float4(finalRGB, finalAlpha);
             }
             ENDHLSL
         }

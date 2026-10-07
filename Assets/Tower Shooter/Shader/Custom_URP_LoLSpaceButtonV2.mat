@@ -29,8 +29,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AspectRatio: 2
     - _BevelHardness: 1
-    - _BorderThickness: 0.15
+    - _BorderThickness: 0.03
+    - _ColorMask: 15
+    - _CornerRadius: 0.1
     - _EffectIntensity: 1
     - _Hover: 0
     - _NebulaSpeed: 0.15
@@ -40,12 +43,19 @@ Material:
     - _ShineWidth: 0.1
     - _StarBrightness: 1.5
     - _StarGridSize: 25
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
     - _StreakDensity: 6
     - _StreakIntensity: 0.6
     - _StreakSpeed: 0.6
+    - _UseUIAlphaClip: 0
     m_Colors:
     - _BodyColor: {r: 0.02, g: 0.01, b: 0.049999967, a: 1}
     - _BorderColor: {r: 0, g: 0.82, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 0.81960785, b: 1, a: 1}
     - _GlowSecondary: {r: 0.14999995, g: 0.049999967, b: 0.5, a: 1}
   m_BuildTextureStacks: []
