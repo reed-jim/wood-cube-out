@@ -7,6 +7,7 @@ public class AugmentItemUIs : MonoBehaviour
 {
     public TMP_Text title;
     public TMP_Text qualityText;
+    public TagItemUI qualityTag;
     // public TMP_Text augmentLevelText;
     public AugmentUIEffect augmentLevelEffect;
     public AugmentUIEffect nextAugmentLevelEffect;
@@ -65,6 +66,8 @@ public class AugmentItemUIs : MonoBehaviour
 
         qualityText.color = qualityColor;
         qualityBorder.color = qualityColor;
+
+        qualityTag.SetBorderColor(qualityColor);
 
         if (AugmentManager.Ins.IsAugmentActive(augment))
         {
