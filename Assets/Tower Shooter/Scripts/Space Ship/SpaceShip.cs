@@ -121,6 +121,7 @@ public class SpaceShip : MonoBehaviour
         // }
 
         remaningKm -= kmPerFrame;
+        
         progress = (float)(1 - remaningKm / totalKm);
 
         VoyageMilestoneUI.Ins.SetVoyageProgress(progress);
@@ -137,7 +138,7 @@ public class SpaceShip : MonoBehaviour
         else
         {
             voyageData.starPathConfigIndex++;
-            voyageData.remaningKm = GameConstants.KmPerLightYear * StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).distanceInLightyear;
+            voyageData.remaningKm = GameConstants.KmPerLightYear * CurveManager.Ins.GetVoyageDistance(voyageData.starPathConfigIndex);
 
             Init();
         }
@@ -151,6 +152,8 @@ public class SpaceShip : MonoBehaviour
     {
         voyageData = DataUtility.Load($"{SaveSlotManager.Ins.currentSaveSlotData}_voyageData", StarManager.Ins.GetFirstVoyage());
 
+        StarManager.Ins.SetStarPathConfig(voyageData.starPathConfigIndex);
+
         Init();
     }
 
@@ -158,7 +161,7 @@ public class SpaceShip : MonoBehaviour
     {
         float distance = end.position.x - start.position.x;
 
-        totalKm = GameConstants.KmPerLightYear * StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).distanceInLightyear;
+        totalKm = GameConstants.KmPerLightYear * CurveManager.Ins.GetVoyageDistance(voyageData.starPathConfigIndex);
         kmPerUnit = distance / totalKm;
         remaningKm = voyageData.remaningKm;
 

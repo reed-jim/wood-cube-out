@@ -25,9 +25,22 @@ public class StarManager : Singleton<StarManager>
 
         voyageData.starPathConfigIndex = 0;
 
-        voyageData.remaningKm = GameConstants.KmPerLightYear * GetVoyageConfig(voyageData.starPathConfigIndex).distanceInLightyear;
+        voyageData.remaningKm = GameConstants.KmPerLightYear * CurveManager.Ins.GetVoyageDistance(voyageData.starPathConfigIndex);
 
         return voyageData;
+    }
+
+    public void SetStarPathConfig(int index)
+    {
+        if (index < starVoyageContainer.starPathConfigs.Count)
+        {
+            currentStarPathConfig = starVoyageContainer.starPathConfigs[index];
+        }
+
+        if (index + 1 < starVoyageContainer.starPathConfigs.Count)
+        {
+            nextStarPathConfig = starVoyageContainer.starPathConfigs[index + 1];
+        }
     }
 
     public StarPathConfig GetVoyageConfig(int index)

@@ -89,6 +89,9 @@ public class CurveManager : Singleton<CurveManager>
         linearStep = 0.1      // +10% efficiency per upgrade step
     };
 
+    [Header("Voyage")]
+    public ProgressionConfig voyageDistanceConfig;
+
     // ----------------------------------------------------------------------
     // Preserved Usage Functions (Updated with Idle Math)
     // ----------------------------------------------------------------------
@@ -225,6 +228,13 @@ public class CurveManager : Singleton<CurveManager>
     }
     #endregion
 
+    #region Voyage
+    public double GetVoyageDistance(int time)
+    {
+        return GetProgressionValueDouble(voyageDistanceConfig, time);
+    }
+    #endregion
+
     // ----------------------------------------------------------------------
     // Idle Bulk Buying Helpers (O(1) Math)
     // ----------------------------------------------------------------------
@@ -234,6 +244,15 @@ public class CurveManager : Singleton<CurveManager>
 
         double cost = progressionConfig.baseValue * Math.Pow(progressionConfig.growthRate, upgradeTime);
         return (float)Math.Round(cost, 3);
+    }
+
+    public double GetProgressionValueDouble(ProgressionConfig progressionConfig, int upgradeTime)
+    {
+        if (upgradeTime <= 0) return progressionConfig.baseValue;
+
+        double cost = progressionConfig.baseValue * Math.Pow(progressionConfig.growthRate, upgradeTime);
+
+        return cost;
     }
 
     /// <summary>
