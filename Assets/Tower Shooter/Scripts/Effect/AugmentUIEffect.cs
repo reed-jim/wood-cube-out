@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class AugmentUIEffect : MonoBehaviour
 {
+    [Header("UI")]
+    [SerializeField] private TMP_Text nameText;
+
     [Header("Level Settings")]
     public AugmentLevel level = AugmentLevel.Orbital;
 
@@ -104,5 +108,7 @@ public class AugmentUIEffect : MonoBehaviour
         _materialInstance.SetFloat(SpeedID, animationSpeed);
         _materialInstance.SetFloat(CenterDarkeningID, centerDarkeningPower);
         _materialInstance.SetFloat(CenterRadiusID, centerDarkRadius);
+
+        nameText.text = $"{level}";
     }
 }

@@ -7,7 +7,7 @@ public class AugmentItemUIs : MonoBehaviour
 {
     public TMP_Text title;
     public TMP_Text qualityText;
-    public TMP_Text augmentLevelText;
+    // public TMP_Text augmentLevelText;
     public AugmentUIEffect augmentLevelEffect;
     public AugmentUIEffect nextAugmentLevelEffect;
     public GameObject augmentLevelUpgradeArrow;
@@ -46,7 +46,7 @@ public class AugmentItemUIs : MonoBehaviour
         AugmentLevel augmentLevel = AugmentManager.Ins.GetAugmentLevel(augment);
 
         title.text = augment.augmentName;
-        augmentLevelText.text = $"{augmentLevel}";
+        // augmentLevelText.text = $"{augmentLevel}";
         efficiencyText.text = $"Efficiency: {CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
         description.text = augment.BuildFullDescription(colorConfig);
         qualityText.text = $"{augment.augmentQuality}";
@@ -59,17 +59,6 @@ public class AugmentItemUIs : MonoBehaviour
             augmentLevelUpgradeArrow.transform.localScale = Vector3.one;
 
             augmentLevelEffect.SetLevel(augmentLevel);
-        }
-        else
-        {
-            augmentLevelUpgradeArrow.gameObject.SetActive(true);
-            nextAugmentLevelEffect.gameObject.SetActive(true);
-
-            augmentLevelUpgradeArrow.transform.localScale = 0.3f * Vector3.one;
-            nextAugmentLevelEffect.transform.localScale = 0.3f * Vector3.one;
-
-            augmentLevelEffect.SetLevel(augmentLevel - 1);
-            nextAugmentLevelEffect.SetLevel(augmentLevel);
         }
 
         Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
@@ -114,9 +103,17 @@ public class AugmentItemUIs : MonoBehaviour
         string nextEfficiency = AugmentManager.Ins.GetAugmentEfficiencyString(nextAugmentLevel);
 
         // augmentLevelText.text = $"{currentAugmentLevel} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextAugmentLevel}";
-        augmentLevelText.text = $"{nextAugmentLevel}";
-        augmentLevelEffect.SetLevel(nextAugmentLevel);
+        // augmentLevelText.text = $"{nextAugmentLevel}";
         efficiencyText.text = $"Efficiency: {currentEfficiency} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
+
+        augmentLevelUpgradeArrow.gameObject.SetActive(true);
+        nextAugmentLevelEffect.gameObject.SetActive(true);
+
+        augmentLevelEffect.transform.localScale = 0.4f * Vector3.one;
+        nextAugmentLevelEffect.transform.localScale = 0.4f * Vector3.one;
+
+        augmentLevelEffect.SetLevel(augmentLevel);
+        nextAugmentLevelEffect.SetLevel(nextAugmentLevel);
     }
     #endregion
 }

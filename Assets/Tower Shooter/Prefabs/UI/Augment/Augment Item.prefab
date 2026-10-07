@@ -188,7 +188,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1446566527202513022
 CanvasRenderer:
@@ -210,6 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 197b05ca69b85704cb04364b8e2d2079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AugmentUIEffect
+  nameText: {fileID: 1650236724866802999}
   level: 0
   cornerRadius: 0.15
   borderWidth: 0.04
@@ -283,7 +284,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5332154637455649314
 CanvasRenderer:
@@ -305,6 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 197b05ca69b85704cb04364b8e2d2079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AugmentUIEffect
+  nameText: {fileID: 4097494227960420761}
   level: 0
   cornerRadius: 0.15
   borderWidth: 0.04
@@ -862,7 +864,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AugmentItemUIs
   title: {fileID: 3768883654272087954}
   qualityText: {fileID: 7866568694661353011}
-  augmentLevelText: {fileID: 4097494227960420761}
   augmentLevelEffect: {fileID: 5445797273935650871}
   nextAugmentLevelEffect: {fileID: 123395770444002157}
   augmentLevelUpgradeArrow: {fileID: 6689296413324766284}
@@ -993,7 +994,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7864303188682697201
 CanvasRenderer:
@@ -1070,7 +1071,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 160}
-  m_SizeDelta: {x: 400, y: 100}
+  m_SizeDelta: {x: 440, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7611112131461411968
 MonoBehaviour:
@@ -1090,7 +1091,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 20
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
