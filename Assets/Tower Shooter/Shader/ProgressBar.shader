@@ -6,11 +6,11 @@ Shader "Custom/URP/ProgressBar"
         _MilestoneCount ("Milestone Count", Int) = 4
         
         [Header(Milestone Sizes)]
-        _StartEndRadius ("Start/End Milestone Radius", Range(0.05, 0.4)) = 0.20
-        _MidRadius ("Middle Milestone Radius", Range(0.05, 0.4)) = 0.12
+        _StartEndRadius ("Start/End Milestone Radius", Range(0.0, 0.4)) = 0.20
+        _MidRadius ("Middle Milestone Radius", Range(0.0, 0.4)) = 0.12
         
         [Header(Bar Dimensions)]
-        _BarHeight ("Bar Height", Range(0.02, 0.5)) = 0.08
+        _BarHeight ("Bar Height", Range(0.0, 0.5)) = 0.08
         _FillPadding ("Fill Internal Padding", Range(0.0, 0.1)) = 0.015
         
         [Header(Colors)]
