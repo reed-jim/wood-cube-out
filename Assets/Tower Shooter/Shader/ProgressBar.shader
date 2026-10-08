@@ -17,6 +17,12 @@ Shader "Custom/URP/ProgressBar"
         [HDR] _FillColor ("Fill Color", Color) = (0.0, 0.8, 1.0, 1.0)
         [HDR] _BgColor ("Background Color", Color) = (0.2, 0.2, 0.2, 1.0)
         [HDR] _MilestoneBgColor ("Milestone Unfilled Color", Color) = (0.3, 0.3, 0.3, 1.0)
+        
+        [Header(Secondary Animations)]
+        [HDR] _PulseColor ("Leading Edge Pulse Color", Color) = (1.0, 1.0, 1.0, 1.0)
+        _PulseWidth ("Edge Glow Width", Range(0.001, 0.1)) = 0.03
+        _SheenSpeed ("Sheen Animation Speed", Range(0.0, 5.0)) = 1.5
+        _SheenFrequency ("Sheen Density", Range(1.0, 50.0)) = 20.0
     }
 
     SubShader
@@ -64,9 +70,14 @@ Shader "Custom/URP/ProgressBar"
                 float4 _FillColor;
                 float4 _BgColor;
                 float4 _MilestoneBgColor;
+                
+                // New Properties for Animation
+                float4 _PulseColor;
+                float _PulseWidth;
+                float _SheenSpeed;
+                float _SheenFrequency;
             CBUFFER_END
 
-            // Max array buffer for up to 16 custom milestone positions
             float _MilestonePercents[16];
 
             float sdCircle(float2 p, float r)
@@ -94,59 +105,85 @@ Shader "Custom/URP/ProgressBar"
 
                 int count = clamp(_MilestoneCount, 2, 16);
                 float halfBar = _BarHeight * 0.5;
-
-                // Active horizontal path bound keeping Start/End circles fully inside texture rect
                 float activePathBound = 0.5 - _StartEndRadius;
 
                 // -------------------------------------------------------------
-                // 1. Unfilled Background Shape SDF
+                // 1. Shapes & SDF Setup
                 // -------------------------------------------------------------
-                // Connect track center exactly across active path bounds
                 float dTrack = sdBox(st, float2(activePathBound, halfBar));
-
                 float dMilestones = 1e5;
+                float milestonePulseRings = 0.0;
 
                 for (int i = 0; i < count; i++)
                 {
                     float percent = _MilestonePercents[i];
-
-                    // Map [0, 1] percent into [-activePathBound, activePathBound]
                     float posX = lerp(-activePathBound, activePathBound, saturate(percent));
-
                     bool isStartOrEnd = (i == 0 || i == count - 1);
                     float currentRadius = isStartOrEnd ? _StartEndRadius : _MidRadius;
 
-                    float dCircle = sdCircle(st - float2(posX, 0.0), currentRadius);
+                    float2 milestoneCenter = st - float2(posX, 0.0);
+                    float dCircle = sdCircle(milestoneCenter, currentRadius);
                     dMilestones = min(dMilestones, dCircle);
+
+                    // ---------------------------------------------------------
+                    // Secondary Anim 1: Reached Milestone Breathing Halo
+                    // ---------------------------------------------------------
+                    if (_Progress >= percent)
+                    {
+                        float pulseRadius = currentRadius + sin(_Time.y * 4.0 + i) * 0.015 + 0.015;
+                        float ringDist = abs(length(milestoneCenter) - pulseRadius);
+                        milestonePulseRings += smoothstep(0.015, 0.0, ringDist);
+                    }
                 }
 
                 float dFullShape = min(dTrack, dMilestones);
-
-                // Anti-aliasing screen width
                 float aa = fwidth(dFullShape);
 
                 // -------------------------------------------------------------
-                // 2. Masks & Padding
+                // 2. Base Masks
                 // -------------------------------------------------------------
                 float shapeMask = smoothstep(aa, -aa, dFullShape);
-
                 float dPaddedShape = dFullShape + _FillPadding;
                 float paddedMask = smoothstep(aa, -aa, dPaddedShape);
-
                 float milestoneMask = smoothstep(aa, -aa, dMilestones);
 
                 // -------------------------------------------------------------
-                // 3. Progress Fill Mask
+                // 3. Progress Fill Mask & Edge Calculation
                 // -------------------------------------------------------------
-                // Map progress bar edge from start circle left bound to current fill target
                 float progressX = lerp(-0.5, 0.5, saturate(_Progress));
                 float fillMask = smoothstep(progressX + aa, progressX - aa, st.x) * paddedMask;
 
                 // -------------------------------------------------------------
-                // 4. Color Output
+                // Secondary Anim 2: Leading Tip Glow / Energy Wave
+                // -------------------------------------------------------------
+                float distToEdge = abs(st.x - progressX);
+                float edgeGlow = smoothstep(_PulseWidth, 0.0, distToEdge) * paddedMask;
+                // Add rhythm to the leading pulse
+                edgeGlow *= (0.8 + 0.2 * sin(_Time.y * 8.0));
+
+                // -------------------------------------------------------------
+                // Secondary Anim 3: Moving Diagonal Sheen / Shimmer inside Fill
+                // -------------------------------------------------------------
+                float sheenPattern = sin((st.x + st.y) * _SheenFrequency - _Time.y * _SheenSpeed * 5.0);
+                sheenPattern = smoothstep(0.7, 1.0, sheenPattern) * 0.25;
+
+                // -------------------------------------------------------------
+                // 4. Color Compositing
                 // -------------------------------------------------------------
                 float4 unfilledColor = lerp(_BgColor, _MilestoneBgColor, milestoneMask);
-                float4 finalColor = lerp(unfilledColor, _FillColor, fillMask);
+                
+                // Fill Base + Sheen Effect
+                float4 animatedFillColor = _FillColor + sheenPattern;
+                
+                // Composite Base Fill
+                float4 finalColor = lerp(unfilledColor, animatedFillColor, fillMask);
+
+                // Add Leading Edge Glow
+                finalColor.rgb += _PulseColor.rgb * edgeGlow * fillMask;
+
+                // Add Active Milestone Ring Halos
+                finalColor.rgb += _PulseColor.rgb * milestonePulseRings * 0.5;
+
                 finalColor.a *= shapeMask;
 
                 return finalColor;
