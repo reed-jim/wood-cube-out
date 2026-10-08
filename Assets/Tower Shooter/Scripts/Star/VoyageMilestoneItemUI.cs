@@ -48,8 +48,12 @@ public class VoyageMilestoneItemUI : MonoBehaviour
             openStarDetailButton.interactable = false;
         }
 
-        position.x = Mathf.Lerp(-0.5f * voyageUIContainer.sizeDelta.x, 0.5f * voyageUIContainer.sizeDelta.x, voyageMilestone.percent);
+        // Fetch start/end radius fraction matching your shader material setting (e.g. 0.2f)
+        float startEndRadiusFrac = 0.2f;
+        float activeWidth = voyageUIContainer.sizeDelta.x * (1f - 2f * startEndRadiusFrac);
 
+        // Position UI milestones aligned to shader center nodes
+        position.x = Mathf.Lerp(-0.5f * activeWidth, 0.5f * activeWidth, voyageMilestone.percent);
         container.localPosition = position;
 
         reward.gameObject.SetActive(false);

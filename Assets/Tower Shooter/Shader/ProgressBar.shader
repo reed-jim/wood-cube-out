@@ -4,10 +4,16 @@ Shader "Custom/URP/ProgressBar"
     {
         _Progress ("Progress", Range(0.0, 1.0)) = 0.5
         _MilestoneCount ("Milestone Count", Int) = 4
-        _MilestoneRadius ("Milestone Radius", Range(0.05, 0.4)) = 0.25
-        _BarHeight ("Bar Height", Range(0.05, 0.5)) = 0.15
-        _FillPadding ("Fill Internal Padding", Range(0.0, 0.1)) = 0.02
         
+        [Header(Milestone Sizes)]
+        _StartEndRadius ("Start/End Milestone Radius", Range(0.05, 0.4)) = 0.20
+        _MidRadius ("Middle Milestone Radius", Range(0.05, 0.4)) = 0.12
+        
+        [Header(Bar Dimensions)]
+        _BarHeight ("Bar Height", Range(0.02, 0.5)) = 0.08
+        _FillPadding ("Fill Internal Padding", Range(0.0, 0.1)) = 0.015
+        
+        [Header(Colors)]
         [HDR] _FillColor ("Fill Color", Color) = (0.0, 0.8, 1.0, 1.0)
         [HDR] _BgColor ("Background Color", Color) = (0.2, 0.2, 0.2, 1.0)
         [HDR] _MilestoneBgColor ("Milestone Unfilled Color", Color) = (0.3, 0.3, 0.3, 1.0)
@@ -51,7 +57,8 @@ Shader "Custom/URP/ProgressBar"
             CBUFFER_START(UnityPerMaterial)
                 float _Progress;
                 int _MilestoneCount;
-                float _MilestoneRadius;
+                float _StartEndRadius;
+                float _MidRadius;
                 float _BarHeight;
                 float _FillPadding;
                 float4 _FillColor;
@@ -59,13 +66,14 @@ Shader "Custom/URP/ProgressBar"
                 float4 _MilestoneBgColor;
             CBUFFER_END
 
-            // Signed Distance Function (SDF) for a Circle
+            // Max array buffer for up to 16 custom milestone positions
+            float _MilestonePercents[16];
+
             float sdCircle(float2 p, float r)
             {
                 return length(p) - r;
             }
 
-            // Signed Distance Function (SDF) for a Box
             float sdBox(float2 p, float2 b)
             {
                 float2 d = abs(p) - b;
@@ -82,65 +90,64 @@ Shader "Custom/URP/ProgressBar"
 
             float4 frag(Varyings input) : SV_Target
             {
-                // Remap UV coordinates to centered coordinate space [-0.5, 0.5]
                 float2 st = input.uv - 0.5;
 
-                int count = max(_MilestoneCount, 2);
-                float radius = _MilestoneRadius;
+                int count = clamp(_MilestoneCount, 2, 16);
                 float halfBar = _BarHeight * 0.5;
 
-                // -------------------------------------------------------------
-                // 1. Calculate Unfilled Geometry Distances (SDF)
-                // -------------------------------------------------------------
-                // Horizontal track line distance
-                float trackXBound = 0.5 - radius;
-                float dTrack = sdBox(st, float2(trackXBound, halfBar));
+                // Active horizontal path bound keeping Start/End circles fully inside texture rect
+                float activePathBound = 0.5 - _StartEndRadius;
 
-                // Milestone circles distance
+                // -------------------------------------------------------------
+                // 1. Unfilled Background Shape SDF
+                // -------------------------------------------------------------
+                // Connect track center exactly across active path bounds
+                float dTrack = sdBox(st, float2(activePathBound, halfBar));
+
                 float dMilestones = 1e5;
+
                 for (int i = 0; i < count; i++)
                 {
-                    float t = (float)i / (float)(count - 1);
-                    float posX = lerp(-trackXBound, trackXBound, t);
-                    float dCircle = sdCircle(st - float2(posX, 0.0), radius);
+                    float percent = _MilestonePercents[i];
+
+                    // Map [0, 1] percent into [-activePathBound, activePathBound]
+                    float posX = lerp(-activePathBound, activePathBound, saturate(percent));
+
+                    bool isStartOrEnd = (i == 0 || i == count - 1);
+                    float currentRadius = isStartOrEnd ? _StartEndRadius : _MidRadius;
+
+                    float dCircle = sdCircle(st - float2(posX, 0.0), currentRadius);
                     dMilestones = min(dMilestones, dCircle);
                 }
 
-                // Combine track and milestone circles into one unified background shape
                 float dFullShape = min(dTrack, dMilestones);
 
-                // Anti-aliasing threshold based on screen pixel derivatives
+                // Anti-aliasing screen width
                 float aa = fwidth(dFullShape);
 
                 // -------------------------------------------------------------
-                // 2. Shape Masks & Padding
+                // 2. Masks & Padding
                 // -------------------------------------------------------------
-                // Base background shape mask
                 float shapeMask = smoothstep(aa, -aa, dFullShape);
 
-                // Padded interior shape for progress fill
                 float dPaddedShape = dFullShape + _FillPadding;
                 float paddedMask = smoothstep(aa, -aa, dPaddedShape);
 
-                // Distinguish between track background and milestone circles
                 float milestoneMask = smoothstep(aa, -aa, dMilestones);
 
                 // -------------------------------------------------------------
                 // 3. Progress Fill Mask
                 // -------------------------------------------------------------
-                // Progress boundary mapped along horizontal UV range [-0.5, 0.5]
+                // Map progress bar edge from start circle left bound to current fill target
                 float progressX = lerp(-0.5, 0.5, saturate(_Progress));
                 float fillMask = smoothstep(progressX + aa, progressX - aa, st.x) * paddedMask;
 
                 // -------------------------------------------------------------
-                // 4. Color Compositing
+                // 4. Color Output
                 // -------------------------------------------------------------
-                // Base background split: Milestone vs. Center Track
                 float4 unfilledColor = lerp(_BgColor, _MilestoneBgColor, milestoneMask);
-
-                // Composite fill color over background
                 float4 finalColor = lerp(unfilledColor, _FillColor, fillMask);
-                finalColor.a *= shapeMask; // Apply smooth alpha cutout for border edges
+                finalColor.a *= shapeMask;
 
                 return finalColor;
             }
