@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -482,7 +483,8 @@ public class IdleGameTool : EditorWindow
 
         try
         {
-            AugmentJsonData data = JsonUtility.FromJson<AugmentJsonData>(jsonToParse);
+            AugmentJsonData data = JsonConvert.DeserializeObject<AugmentJsonData>(jsonToParse);
+            
             if (data == null)
             {
                 EditorUtility.DisplayDialog("Parsing Error", "Could not parse Augment JSON.", "OK");
