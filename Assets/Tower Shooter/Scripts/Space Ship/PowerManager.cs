@@ -56,7 +56,8 @@ public class PowerManager : Singleton<PowerManager>
 
     public void ShowTotalPowerOutputPerSecond()
     {
-        string notificationString = $"Power Output: <color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(GetTotalPowerOutputPerSecond())}/s";
+        string notificationString =
+            $"Power Output: <color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(GetTotalPowerOutputPerSecond())} <sprite name=Damage>/s";
 
         IngameNotificationManager.Ins.ShowNotification(notificationString);
     }
