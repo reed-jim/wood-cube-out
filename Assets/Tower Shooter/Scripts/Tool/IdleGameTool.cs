@@ -77,26 +77,43 @@ public class IdleGameTool : EditorWindow
         public FloatProperty[] floats;
     }
 
-    // DTO for Creating Planet Material from JSON (Matches UI/URP/PlanetGlow Shader)
+    public enum PlanetTypeMode
+    {
+        Terrestrial = 0,
+        GasGiant = 1,
+        CrateredMoon = 2,
+        LavaVolcanic = 3
+    }
+
     [System.Serializable]
     public class PlanetBadgeMaterialData
     {
-        public string materialName = "NewPlanetAugmentBadgeMat";
-        
+        public string materialName = "NewPlanetMat";
+        public PlanetTypeMode planetType = PlanetTypeMode.Terrestrial;
+
         // Colors
-        public string oceanColorHex = "#0D3380";
-        public string landColorHex = "#1A9933";
+        public string baseColorHex = "#0D3380";
+        public string detailColorHex = "#1A9933";
+        public string secondaryColorHex = "#E6F2FF";
         public string atmosphereColorHex = "#33B3FF";
-        
-        // Settings
+        public string cloudColorHex = "#FFFFFFCC"; // Hex with Alpha
+        public string emissiveColorHex = "#FF4500";
+
+        // Terrain & Band Settings
         public float planetRadius = 0.38f;
         public float rotationSpeed = 0.2f;
-        public float continentScale = 3.5f;
-        
-        // Atmosphere Glow Border
+        public float noiseScale = 3.5f;
+        public float landThreshold = 0.5f;
+        public float bandStretch = 10.0f;
+        public float craterDensity = 6.0f;
+
+        // Clouds & Glow
+        public float cloudSpeed = 1.3f;
+        public float cloudDensity = 0.45f;
+        public float emissionPower = 0.0f;
         public float glowThickness = 0.08f;
         public float glowPower = 3.0f;
-        
+
         // Lighting
         public Vector4 lightDir = new Vector4(0.5f, 0.5f, 1.0f, 0.0f);
     }
@@ -353,79 +370,81 @@ public class IdleGameTool : EditorWindow
 
     private void CreatePlanetMaterialFromJSON()
     {
-        if (planetShader == null)
-        {
-            planetShader = Shader.Find("UI/URP/PlanetGlow");
-            if (planetShader == null)
-            {
-                EditorUtility.DisplayDialog("Shader Missing", "Could not find shader 'UI/URP/PlanetGlow'. Please assign it.", "OK");
-                return;
-            }
-        }
+        if (planetShader == null) planetShader = Shader.Find("UI/URP/PlanetGlow");
 
         string jsonToParse = rawCreateMaterialJsonInput;
         if (createMaterialJsonFile != null && !string.IsNullOrEmpty(createMaterialJsonFile.text))
-        {
             jsonToParse = createMaterialJsonFile.text;
-        }
 
-        if (string.IsNullOrWhiteSpace(jsonToParse))
-        {
-            EditorUtility.DisplayDialog("Empty JSON", "Please paste a JSON string or assign a Material JSON Asset.", "OK");
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(jsonToParse)) return;
 
         try
         {
             PlanetBadgeMaterialData data = JsonUtility.FromJson<PlanetBadgeMaterialData>(jsonToParse);
-            if (data == null)
-            {
-                EditorUtility.DisplayDialog("Parsing Error", "Could not parse JSON for Material creation.", "OK");
-                return;
-            }
-
-            string targetFolder = string.IsNullOrWhiteSpace(materialSaveFolder) ? "Assets" : materialSaveFolder.TrimEnd('/', '\\');
-            if (!AssetDatabase.IsValidFolder(targetFolder))
-            {
-                Directory.CreateDirectory(targetFolder);
-                AssetDatabase.Refresh();
-            }
-
             Material newMaterial = new Material(planetShader);
 
+            // Enable Planet Type Keyword
+            newMaterial.DisableKeyword("_PLANET_TYPE_TERRESTRIAL");
+            newMaterial.DisableKeyword("_PLANET_TYPE_GASGIANT");
+            newMaterial.DisableKeyword("_PLANET_TYPE_CRATEREDMOON");
+            newMaterial.DisableKeyword("_PLANET_TYPE_LAVAVOLCANIC");
+
+            switch (data.planetType)
+            {
+                case PlanetTypeMode.GasGiant:
+                    newMaterial.EnableKeyword("_PLANET_TYPE_GASGIANT");
+                    newMaterial.SetFloat("_PLANET_TYPE", 1);
+                    break;
+                case PlanetTypeMode.CrateredMoon:
+                    newMaterial.EnableKeyword("_PLANET_TYPE_CRATEREDMOON");
+                    newMaterial.SetFloat("_PLANET_TYPE", 2);
+                    break;
+                case PlanetTypeMode.LavaVolcanic:
+                    newMaterial.EnableKeyword("_PLANET_TYPE_LAVAVOLCANIC");
+                    newMaterial.SetFloat("_PLANET_TYPE", 3);
+                    break;
+                default:
+                    newMaterial.EnableKeyword("_PLANET_TYPE_TERRESTRIAL");
+                    newMaterial.SetFloat("_PLANET_TYPE", 0);
+                    break;
+            }
+
             // Set Colors
-            if (ColorUtility.TryParseHtmlString(data.oceanColorHex, out Color oceanCol))
-                newMaterial.SetColor("_OceanColor", oceanCol);
+            if (ColorUtility.TryParseHtmlString(data.baseColorHex, out Color baseCol)) newMaterial.SetColor("_BaseColor", baseCol);
+            if (ColorUtility.TryParseHtmlString(data.detailColorHex, out Color detailCol)) newMaterial.SetColor("_DetailColor", detailCol);
+            if (ColorUtility.TryParseHtmlString(data.secondaryColorHex, out Color secCol)) newMaterial.SetColor("_SecondaryColor", secCol);
+            if (ColorUtility.TryParseHtmlString(data.atmosphereColorHex, out Color atmCol)) newMaterial.SetColor("_AtmosphereColor", atmCol);
+            if (ColorUtility.TryParseHtmlString(data.cloudColorHex, out Color cloudCol)) newMaterial.SetColor("_CloudColor", cloudCol);
+            if (ColorUtility.TryParseHtmlString(data.emissiveColorHex, out Color emissCol)) newMaterial.SetColor("_EmissiveColor", emissCol);
 
-            if (ColorUtility.TryParseHtmlString(data.landColorHex, out Color landCol))
-                newMaterial.SetColor("_LandColor", landCol);
-
-            if (ColorUtility.TryParseHtmlString(data.atmosphereColorHex, out Color atmosphereCol))
-                newMaterial.SetColor("_AtmosphereColor", atmosphereCol);
-
-            // Set Planet & Glow Settings
+            // Set Float Properties
             newMaterial.SetFloat("_PlanetRadius", data.planetRadius);
             newMaterial.SetFloat("_RotationSpeed", data.rotationSpeed);
-            newMaterial.SetFloat("_ContinentScale", data.continentScale);
+            newMaterial.SetFloat("_NoiseScale", data.noiseScale);
+            newMaterial.SetFloat("_LandThreshold", data.landThreshold);
+            newMaterial.SetFloat("_BandStretch", data.bandStretch);
+            newMaterial.SetFloat("_CraterDensity", data.craterDensity);
+            newMaterial.SetFloat("_CloudSpeed", data.cloudSpeed);
+            newMaterial.SetFloat("_CloudDensity", data.cloudDensity);
+            newMaterial.SetFloat("_EmissionPower", data.emissionPower);
             newMaterial.SetFloat("_GlowThickness", data.glowThickness);
             newMaterial.SetFloat("_GlowPower", data.glowPower);
-
-            // Set Lighting
             newMaterial.SetVector("_LightDir", data.lightDir);
 
-            string assetName = string.IsNullOrWhiteSpace(data.materialName) ? "NewPlanetAugmentBadgeMat" : data.materialName;
+            string targetFolder = string.IsNullOrWhiteSpace(materialSaveFolder) ? "Assets" : materialSaveFolder.TrimEnd('/', '\\');
+            if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
+
+            string assetName = string.IsNullOrWhiteSpace(data.materialName) ? "NewPlanetMat" : data.materialName;
             string materialPath = AssetDatabase.GenerateUniqueAssetPath($"{targetFolder}/{assetName}.mat");
 
             AssetDatabase.CreateAsset(newMaterial, materialPath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-
             Selection.activeObject = newMaterial;
-            Debug.Log($"Successfully created Material '{assetName}' at '{materialPath}'.");
         }
         catch (System.Exception ex)
         {
-            Debug.LogError($"Error creating Material from JSON: {ex.Message}");
+            Debug.LogError($"Error: {ex.Message}");
         }
     }
 
