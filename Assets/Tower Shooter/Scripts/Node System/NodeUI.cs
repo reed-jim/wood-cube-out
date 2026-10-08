@@ -41,6 +41,7 @@ public class NodeUI : MonoBehaviour
     void Awake()
     {
         BaseCharacter.selectNodeEvent += OnNodeSelected;
+        BaseCharacter.selectNodeToApplyAugmentEvent += OnNodeSelectedToApplyAugment;
 
         selectButton.onClick.AddListener(Select);
     }
@@ -48,6 +49,7 @@ public class NodeUI : MonoBehaviour
     void OnDestroy()
     {
         BaseCharacter.selectNodeEvent -= OnNodeSelected;
+        BaseCharacter.selectNodeToApplyAugmentEvent -= OnNodeSelectedToApplyAugment;
     }
 
     #region Energy Path
@@ -91,10 +93,9 @@ public class NodeUI : MonoBehaviour
         {
             UpgradeNodeUI.Ins.SelectNode(serviceLocator.character);
 
-            serviceLocator.character.InvokeSelectNodeEvent();
-
             SaferioTween.Punch(container);
-            // SaferioTween.AlphaShow(highlight);
+
+            serviceLocator.character.InvokeSelectNodeEvent();
         }
         else if (IdleGameInputManager.inputMode == IdleGameInputMode.SelectNode)
         {
@@ -102,7 +103,7 @@ public class NodeUI : MonoBehaviour
 
             IdleGameInputManager.inputMode = IdleGameInputMode.Normal;
 
-            EndHighlight();
+            serviceLocator.character.InvokeSelectNodeToApplyAugmentEvent();
         }
     }
 
@@ -252,5 +253,13 @@ public class NodeUI : MonoBehaviour
         //         SaferioTween.AlphaHide(highlight);
         //     }
         // }
+    }
+
+    private void OnNodeSelectedToApplyAugment(BaseCharacter node)
+    {
+        if (highlight.gameObject.activeSelf)
+        {
+            EndHighlight();
+        }
     }
 }

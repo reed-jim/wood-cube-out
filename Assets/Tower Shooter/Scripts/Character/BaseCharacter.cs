@@ -56,6 +56,7 @@ public class BaseCharacter : MonoBehaviour
 
     public static event Action<BaseCharacter> cycleCompleteEvent;
     public static event Action<BaseCharacter> selectNodeEvent;
+    public static event Action<BaseCharacter> selectNodeToApplyAugmentEvent;
 
     void Awake()
     {
@@ -354,6 +355,11 @@ public class BaseCharacter : MonoBehaviour
     public void InvokeSelectNodeEvent()
     {
         selectNodeEvent?.Invoke(this);
+    }
+
+    public void InvokeSelectNodeToApplyAugmentEvent()
+    {
+        selectNodeToApplyAugmentEvent?.Invoke(this);
     }
 
     #region Util 
