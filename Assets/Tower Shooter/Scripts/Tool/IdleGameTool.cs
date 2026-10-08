@@ -6,6 +6,18 @@ using UnityEngine;
 
 public class IdleGameTool : EditorWindow
 {
+    // Scroll position
+    private Vector2 mainScrollPosition;
+
+    // Foldout visibility states
+    private bool showAugmentAssignerGroup = true;
+    private bool showAugmentCreatorGroup = true;
+    private bool showMaterialCreatorGroup = true;
+    private bool showEffectCreatorGroup = true;
+    private bool showHierarchyScalerGroup = true;
+    private bool showMaterialModifierGroup = true;
+
+    // Scale RectTransform fields
     private float scaleFactor = 1.0f;
     private bool scalePosition = true;
     private bool scaleSizeDelta = true;
@@ -14,6 +26,12 @@ public class IdleGameTool : EditorWindow
     private Material targetMaterial;
     private TextAsset jsonFile;
     private string rawJsonInput = "";
+
+    // Material Creation fields
+    private Shader planetShader;
+    private TextAsset createMaterialJsonFile;
+    private string rawCreateMaterialJsonInput = "";
+    private string materialSaveFolder = "Assets/Materials";
 
     // Augment JSON Creation fields
     private AugmentContainer customAugmentContainer;
@@ -59,6 +77,30 @@ public class IdleGameTool : EditorWindow
         public FloatProperty[] floats;
     }
 
+    // DTO for Creating Planet Material from JSON (Matches UI/URP/PlanetGlow Shader)
+    [System.Serializable]
+    public class PlanetBadgeMaterialData
+    {
+        public string materialName = "NewPlanetAugmentBadgeMat";
+        
+        // Colors
+        public string oceanColorHex = "#0D3380";
+        public string landColorHex = "#1A9933";
+        public string atmosphereColorHex = "#33B3FF";
+        
+        // Settings
+        public float planetRadius = 0.38f;
+        public float rotationSpeed = 0.2f;
+        public float continentScale = 3.5f;
+        
+        // Atmosphere Glow Border
+        public float glowThickness = 0.08f;
+        public float glowPower = 3.0f;
+        
+        // Lighting
+        public Vector4 lightDir = new Vector4(0.5f, 0.5f, 1.0f, 0.0f);
+    }
+
     // DTO for JSON import to create Augments
     [System.Serializable]
     public class AugmentJsonData
@@ -81,132 +123,309 @@ public class IdleGameTool : EditorWindow
         GetWindow<IdleGameTool>("IdleGameTool");
     }
 
+    private void OnEnable()
+    {
+        if (planetShader == null)
+        {
+            planetShader = Shader.Find("UI/URP/PlanetGlow");
+        }
+    }
+
     private void OnGUI()
     {
-        GUILayout.Label("Augment Auto-Assigner", EditorStyles.boldLabel);
-        EditorGUILayout.Space(5);
+        mainScrollPosition = EditorGUILayout.BeginScrollView(mainScrollPosition);
 
-        augmentFolderPath = EditorGUILayout.TextField("Augment Folder Path", augmentFolderPath);
+        EditorGUILayout.Space(8);
 
-        if (GUILayout.Button("Select Augment Folder"))
+        // -------------------------------------------------------------
+        // SECTION 1: Augment Auto-Assigner
+        // -------------------------------------------------------------
+        BeginCardSection("Augment Auto-Assigner", ref showAugmentAssignerGroup);
+        if (showAugmentAssignerGroup)
         {
-            string selectedPath = EditorUtility.OpenFolderPanel("Select Folder with Augments", "Assets", "");
-            if (!string.IsNullOrEmpty(selectedPath))
+            augmentFolderPath = EditorGUILayout.TextField("Augment Folder Path", augmentFolderPath);
+
+            if (GUILayout.Button("Browse Augment Folder", GUILayout.Height(22)))
             {
-                if (selectedPath.StartsWith(Application.dataPath))
+                string selectedPath = EditorUtility.OpenFolderPanel("Select Folder with Augments", "Assets", "");
+                if (!string.IsNullOrEmpty(selectedPath))
                 {
-                    augmentFolderPath = "Assets" + selectedPath.Substring(Application.dataPath.Length);
+                    if (selectedPath.StartsWith(Application.dataPath))
+                    {
+                        augmentFolderPath = "Assets" + selectedPath.Substring(Application.dataPath.Length);
+                    }
+                    else
+                    {
+                        EditorUtility.DisplayDialog("Invalid Folder", "Please select a folder inside the Assets directory.", "OK");
+                    }
                 }
-                else
+            }
+
+            EditorGUILayout.Space(4);
+            augmentContainerPath = EditorGUILayout.TextField("Container Asset Path", augmentContainerPath);
+
+            EditorGUILayout.Space(6);
+            GUI.backgroundColor = new Color(0.4f, 0.8f, 0.4f);
+            if (GUILayout.Button("Auto Assign Augments & IDs", GUILayout.Height(26)))
+            {
+                AutoAssignIdForAugment();
+            }
+            GUI.backgroundColor = Color.white;
+        }
+        EndCardSection();
+
+        // -------------------------------------------------------------
+        // SECTION 2: Read JSON to Create Augment
+        // -------------------------------------------------------------
+        BeginCardSection("Read JSON to Create Augment", ref showAugmentCreatorGroup);
+        if (showAugmentCreatorGroup)
+        {
+            customAugmentContainer = (AugmentContainer)EditorGUILayout.ObjectField("Target Container", customAugmentContainer, typeof(AugmentContainer), false);
+
+            EditorGUILayout.BeginHorizontal();
+            newAugmentSaveFolder = EditorGUILayout.TextField("Augment Save Folder", newAugmentSaveFolder);
+            if (GUILayout.Button("Browse", GUILayout.Width(65)))
+            {
+                string path = EditorUtility.OpenFolderPanel("Select Augment Save Folder", "Assets", "");
+                if (!string.IsNullOrEmpty(path) && path.StartsWith(Application.dataPath))
                 {
-                    EditorUtility.DisplayDialog("Invalid Folder", "Please select a folder inside the Assets directory.", "OK");
+                    newAugmentSaveFolder = "Assets" + path.Substring(Application.dataPath.Length);
                 }
             }
-        }
+            EditorGUILayout.EndHorizontal();
 
-        augmentContainerPath = EditorGUILayout.TextField("Container Asset Path", augmentContainerPath);
-
-        if (GUILayout.Button("Auto Assign Augments & IDs"))
-        {
-            AutoAssignIdForAugment();
-        }
-
-        EditorGUILayout.Space(10);
-        GUILayout.Label("Read JSON to Create Augment", EditorStyles.boldLabel);
-        EditorGUILayout.Space(5);
-
-        // 1. Input Augment Container
-        customAugmentContainer = (AugmentContainer)EditorGUILayout.ObjectField("Target Augment Container", customAugmentContainer, typeof(AugmentContainer), false);
-
-        // 2. Input Save Folder for Newly Created Augments
-        EditorGUILayout.BeginHorizontal();
-        newAugmentSaveFolder = EditorGUILayout.TextField("Augment Save Folder", newAugmentSaveFolder);
-        if (GUILayout.Button("Browse", GUILayout.Width(60)))
-        {
-            string path = EditorUtility.OpenFolderPanel("Select Augment Save Folder", "Assets", "");
-            if (!string.IsNullOrEmpty(path) && path.StartsWith(Application.dataPath))
+            EditorGUILayout.BeginHorizontal();
+            effectFolderPath = EditorGUILayout.TextField("Augment Effect Folder", effectFolderPath);
+            if (GUILayout.Button("Browse", GUILayout.Width(65)))
             {
-                newAugmentSaveFolder = "Assets" + path.Substring(Application.dataPath.Length);
+                string path = EditorUtility.OpenFolderPanel("Select Effect Folder", "Assets", "");
+                if (!string.IsNullOrEmpty(path) && path.StartsWith(Application.dataPath))
+                {
+                    effectFolderPath = "Assets" + path.Substring(Application.dataPath.Length);
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            List<AugmentEffect> availableEffects = GetAvailableEffectsFromFolder(effectFolderPath);
+            string[] effectOptions = new string[availableEffects.Count + 1];
+            effectOptions[0] = "-- None (Use JSON embedded effect) --";
+            for (int i = 0; i < availableEffects.Count; i++)
+            {
+                effectOptions[i + 1] = availableEffects[i].name;
+            }
+
+            selectedEffectIndex = EditorGUILayout.Popup("Pick Existing Effect", selectedEffectIndex, effectOptions);
+            if (selectedEffectIndex > availableEffects.Count) selectedEffectIndex = 0;
+
+            EditorGUILayout.Space(4);
+            augmentJsonFile = (TextAsset)EditorGUILayout.ObjectField("Augment JSON Asset", augmentJsonFile, typeof(TextAsset), false);
+
+            EditorGUILayout.LabelField("Augment Raw JSON Input:");
+            rawAugmentJsonInput = EditorGUILayout.TextArea(rawAugmentJsonInput, GUILayout.Height(70));
+
+            EditorGUILayout.Space(6);
+            GUI.backgroundColor = new Color(0.35f, 0.65f, 1.0f);
+            if (GUILayout.Button("Create Augment from JSON", GUILayout.Height(26)))
+            {
+                AugmentEffect pickedEffect = (selectedEffectIndex > 0 && selectedEffectIndex <= availableEffects.Count)
+                    ? availableEffects[selectedEffectIndex - 1]
+                    : null;
+
+                CreateAugmentFromJSON(pickedEffect);
+            }
+            GUI.backgroundColor = Color.white;
+        }
+        EndCardSection();
+
+        // -------------------------------------------------------------
+        // SECTION 3: Create New Material from JSON (Planet Badge)
+        // -------------------------------------------------------------
+        BeginCardSection("Create New Material from JSON (Planet Badge)", ref showMaterialCreatorGroup);
+        if (showMaterialCreatorGroup)
+        {
+            planetShader = (Shader)EditorGUILayout.ObjectField("Planet Shader", planetShader, typeof(Shader), false);
+
+            EditorGUILayout.BeginHorizontal();
+            materialSaveFolder = EditorGUILayout.TextField("Material Save Folder", materialSaveFolder);
+            if (GUILayout.Button("Browse", GUILayout.Width(65)))
+            {
+                string path = EditorUtility.OpenFolderPanel("Select Material Save Folder", "Assets", "");
+                if (!string.IsNullOrEmpty(path) && path.StartsWith(Application.dataPath))
+                {
+                    materialSaveFolder = "Assets" + path.Substring(Application.dataPath.Length);
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            createMaterialJsonFile = (TextAsset)EditorGUILayout.ObjectField("Material JSON Asset", createMaterialJsonFile, typeof(TextAsset), false);
+
+            EditorGUILayout.LabelField("Material Raw JSON Input:");
+            rawCreateMaterialJsonInput = EditorGUILayout.TextArea(rawCreateMaterialJsonInput, GUILayout.Height(70));
+
+            EditorGUILayout.Space(6);
+            GUI.backgroundColor = new Color(0.35f, 0.65f, 1.0f);
+            if (GUILayout.Button("Create Material from JSON", GUILayout.Height(26)))
+            {
+                CreatePlanetMaterialFromJSON();
+            }
+            GUI.backgroundColor = Color.white;
+        }
+        EndCardSection();
+
+        // -------------------------------------------------------------
+        // SECTION 4: Generic Augment Effect Creator
+        // -------------------------------------------------------------
+        BeginCardSection("Generic Augment Effect Creator", ref showEffectCreatorGroup);
+        if (showEffectCreatorGroup)
+        {
+            GUI.backgroundColor = new Color(0.9f, 0.6f, 0.3f);
+            if (GUILayout.Button("Create & Randomize New Generic Augment Effect", GUILayout.Height(26)))
+            {
+                CreateAndRandomizeGenericAugmentEffect();
+            }
+            GUI.backgroundColor = Color.white;
+        }
+        EndCardSection();
+
+        // -------------------------------------------------------------
+        // SECTION 5: Scale RectTransform Hierarchy
+        // -------------------------------------------------------------
+        BeginCardSection("Scale RectTransform Hierarchy", ref showHierarchyScalerGroup);
+        if (showHierarchyScalerGroup)
+        {
+            scaleFactor = EditorGUILayout.FloatField("Scale Factor", scaleFactor);
+            scalePosition = EditorGUILayout.Toggle("Scale Anchored Position", scalePosition);
+            scaleSizeDelta = EditorGUILayout.Toggle("Scale Size Delta", scaleSizeDelta);
+
+            EditorGUILayout.Space(6);
+            if (GUILayout.Button("Scale Selected & Children", GUILayout.Height(24)))
+            {
+                ScaleSelectedHierarchy();
             }
         }
-        EditorGUILayout.EndHorizontal();
+        EndCardSection();
 
-        // 3. Input Augment Effect Folder
-        EditorGUILayout.BeginHorizontal();
-        effectFolderPath = EditorGUILayout.TextField("Augment Effect Folder", effectFolderPath);
-        if (GUILayout.Button("Browse", GUILayout.Width(60)))
+        // -------------------------------------------------------------
+        // SECTION 6: Modify Material Properties from JSON
+        // -------------------------------------------------------------
+        BeginCardSection("Modify Material Properties from JSON", ref showMaterialModifierGroup);
+        if (showMaterialModifierGroup)
         {
-            string path = EditorUtility.OpenFolderPanel("Select Effect Folder", "Assets", "");
-            if (!string.IsNullOrEmpty(path) && path.StartsWith(Application.dataPath))
+            targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), false);
+            jsonFile = (TextAsset)EditorGUILayout.ObjectField("JSON Asset (Optional)", jsonFile, typeof(TextAsset), false);
+
+            EditorGUILayout.LabelField("JSON String Input:");
+            rawJsonInput = EditorGUILayout.TextArea(rawJsonInput, GUILayout.Height(80));
+
+            EditorGUILayout.Space(6);
+            if (GUILayout.Button("Apply Material Properties JSON", GUILayout.Height(24)))
             {
-                effectFolderPath = "Assets" + path.Substring(Application.dataPath.Length);
+                ApplyMaterialPropertiesFromJSON();
             }
         }
-        EditorGUILayout.EndHorizontal();
+        EndCardSection();
 
-        // Pick existing AugmentEffect from specified effect folder
-        List<AugmentEffect> availableEffects = GetAvailableEffectsFromFolder(effectFolderPath);
-        string[] effectOptions = new string[availableEffects.Count + 1];
-        effectOptions[0] = "-- None (Use JSON embedded effect if present) --";
-        for (int i = 0; i < availableEffects.Count; i++)
+        EditorGUILayout.Space(8);
+        EditorGUILayout.EndScrollView();
+    }
+
+    private void BeginCardSection(string title, ref bool foldoutState)
+    {
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        foldoutState = EditorGUILayout.Foldout(foldoutState, title, true, EditorStyles.foldoutHeader);
+        if (foldoutState)
         {
-            effectOptions[i + 1] = availableEffects[i].name;
+            EditorGUI.indentLevel++;
+            EditorGUILayout.Space(4);
+        }
+    }
+
+    private void EndCardSection()
+    {
+        if (EditorGUI.indentLevel > 0)
+        {
+            EditorGUI.indentLevel--;
+            EditorGUILayout.Space(4);
+        }
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.Space(6);
+    }
+
+    private void CreatePlanetMaterialFromJSON()
+    {
+        if (planetShader == null)
+        {
+            planetShader = Shader.Find("UI/URP/PlanetGlow");
+            if (planetShader == null)
+            {
+                EditorUtility.DisplayDialog("Shader Missing", "Could not find shader 'UI/URP/PlanetGlow'. Please assign it.", "OK");
+                return;
+            }
         }
 
-        selectedEffectIndex = EditorGUILayout.Popup("Pick Existing Effect", selectedEffectIndex, effectOptions);
-        if (selectedEffectIndex > availableEffects.Count) selectedEffectIndex = 0;
-
-        EditorGUILayout.Space(5);
-        augmentJsonFile = (TextAsset)EditorGUILayout.ObjectField("Augment JSON Asset", augmentJsonFile, typeof(TextAsset), false);
-        EditorGUILayout.LabelField("Augment Raw JSON Input:");
-        rawAugmentJsonInput = EditorGUILayout.TextArea(rawAugmentJsonInput, GUILayout.Height(80));
-
-        if (GUILayout.Button("Create Augment from JSON"))
+        string jsonToParse = rawCreateMaterialJsonInput;
+        if (createMaterialJsonFile != null && !string.IsNullOrEmpty(createMaterialJsonFile.text))
         {
-            AugmentEffect pickedEffect = (selectedEffectIndex > 0 && selectedEffectIndex <= availableEffects.Count)
-                ? availableEffects[selectedEffectIndex - 1]
-                : null;
-
-            CreateAugmentFromJSON(pickedEffect);
+            jsonToParse = createMaterialJsonFile.text;
         }
 
-        EditorGUILayout.Space(10);
-        GUILayout.Label("Generic Augment Effect Creator", EditorStyles.boldLabel);
-        EditorGUILayout.Space(5);
-
-        if (GUILayout.Button("Create & Randomize New Generic Augment Effect"))
+        if (string.IsNullOrWhiteSpace(jsonToParse))
         {
-            CreateAndRandomizeGenericAugmentEffect();
+            EditorUtility.DisplayDialog("Empty JSON", "Please paste a JSON string or assign a Material JSON Asset.", "OK");
+            return;
         }
 
-        EditorGUILayout.Space(10);
-        GUILayout.Label("Scale RectTransform Hierarchy", EditorStyles.boldLabel);
-        EditorGUILayout.Space(5);
-
-        scaleFactor = EditorGUILayout.FloatField("Scale Factor", scaleFactor);
-        scalePosition = EditorGUILayout.Toggle("Scale Anchored Position", scalePosition);
-        scaleSizeDelta = EditorGUILayout.Toggle("Scale Size Delta", scaleSizeDelta);
-
-        EditorGUILayout.Space(10);
-
-        if (GUILayout.Button("Scale Selected & Children"))
+        try
         {
-            ScaleSelectedHierarchy();
+            PlanetBadgeMaterialData data = JsonUtility.FromJson<PlanetBadgeMaterialData>(jsonToParse);
+            if (data == null)
+            {
+                EditorUtility.DisplayDialog("Parsing Error", "Could not parse JSON for Material creation.", "OK");
+                return;
+            }
+
+            string targetFolder = string.IsNullOrWhiteSpace(materialSaveFolder) ? "Assets" : materialSaveFolder.TrimEnd('/', '\\');
+            if (!AssetDatabase.IsValidFolder(targetFolder))
+            {
+                Directory.CreateDirectory(targetFolder);
+                AssetDatabase.Refresh();
+            }
+
+            Material newMaterial = new Material(planetShader);
+
+            // Set Colors
+            if (ColorUtility.TryParseHtmlString(data.oceanColorHex, out Color oceanCol))
+                newMaterial.SetColor("_OceanColor", oceanCol);
+
+            if (ColorUtility.TryParseHtmlString(data.landColorHex, out Color landCol))
+                newMaterial.SetColor("_LandColor", landCol);
+
+            if (ColorUtility.TryParseHtmlString(data.atmosphereColorHex, out Color atmosphereCol))
+                newMaterial.SetColor("_AtmosphereColor", atmosphereCol);
+
+            // Set Planet & Glow Settings
+            newMaterial.SetFloat("_PlanetRadius", data.planetRadius);
+            newMaterial.SetFloat("_RotationSpeed", data.rotationSpeed);
+            newMaterial.SetFloat("_ContinentScale", data.continentScale);
+            newMaterial.SetFloat("_GlowThickness", data.glowThickness);
+            newMaterial.SetFloat("_GlowPower", data.glowPower);
+
+            // Set Lighting
+            newMaterial.SetVector("_LightDir", data.lightDir);
+
+            string assetName = string.IsNullOrWhiteSpace(data.materialName) ? "NewPlanetAugmentBadgeMat" : data.materialName;
+            string materialPath = AssetDatabase.GenerateUniqueAssetPath($"{targetFolder}/{assetName}.mat");
+
+            AssetDatabase.CreateAsset(newMaterial, materialPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Selection.activeObject = newMaterial;
+            Debug.Log($"Successfully created Material '{assetName}' at '{materialPath}'.");
         }
-
-        EditorGUILayout.Space(15);
-        GUILayout.Label("Modify Material Properties from JSON", EditorStyles.boldLabel);
-        EditorGUILayout.Space(5);
-
-        targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), false);
-        jsonFile = (TextAsset)EditorGUILayout.ObjectField("JSON Asset (Optional)", jsonFile, typeof(TextAsset), false);
-
-        EditorGUILayout.LabelField("JSON String Input:");
-        rawJsonInput = EditorGUILayout.TextArea(rawJsonInput, GUILayout.Height(100));
-
-        if (GUILayout.Button("Apply Material Properties JSON"))
+        catch (System.Exception ex)
         {
-            ApplyMaterialPropertiesFromJSON();
+            Debug.LogError($"Error creating Material from JSON: {ex.Message}");
         }
     }
 
@@ -258,7 +477,6 @@ public class IdleGameTool : EditorWindow
                 AssetDatabase.Refresh();
             }
 
-            // Create new Augment ScriptableObject
             Augment newAugment = ScriptableObject.CreateInstance<Augment>();
             newAugment.augmentName = string.IsNullOrEmpty(data.augmentName) ? "New Augment" : data.augmentName;
             newAugment.augmentQuality = data.augmentQuality;
@@ -267,7 +485,6 @@ public class IdleGameTool : EditorWindow
             newAugment.isApplyImmediatelyAfterPick = data.isApplyImmediatelyAfterPick;
             newAugment.isForNodeGroup = data.isForNodeGroup;
 
-            // Enforce the 4 allowed stats for direct stat modifiers
             if (data.statModifiers != null)
             {
                 foreach (var mod in data.statModifiers)
@@ -283,12 +500,10 @@ public class IdleGameTool : EditorWindow
                 }
             }
 
-            // Priority 1: Attach picked existing effect from folder dropdown
             if (selectedEffect != null)
             {
                 newAugment.dynamicEffects.Add(selectedEffect);
             }
-            // Priority 2: Fallback to creating effect from embedded JSON config if present
             else if (data.effectConfig != null)
             {
                 data.effectConfig.sourceStat = ValidateStat(data.effectConfig.sourceStat);
@@ -321,7 +536,6 @@ public class IdleGameTool : EditorWindow
             string augmentPath = AssetDatabase.GenerateUniqueAssetPath($"{targetFolder}/{newAugment.augmentName}.asset");
             AssetDatabase.CreateAsset(newAugment, augmentPath);
 
-            // Register into target AugmentContainer if assigned
             if (customAugmentContainer != null)
             {
                 Undo.RegisterCompleteObjectUndo(customAugmentContainer, "Add New Augment to Container");
@@ -418,7 +632,6 @@ public class IdleGameTool : EditorWindow
             newEffect.effectColor = defaultColor;
         }
 
-        // Randomize restricted to the 4 allowed stats
         newEffect.config.trigger = GetRandomEnumValue<EffectTrigger>();
         newEffect.config.scope = GetRandomEnumValue<EffectScope>();
         newEffect.config.cycleFrequency = Random.Range(1, 10);
