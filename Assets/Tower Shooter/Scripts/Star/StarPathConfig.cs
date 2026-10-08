@@ -11,6 +11,7 @@ public class StarPathConfig : ScriptableObject
     public SpaceObjectType spaceObjectType;
     public Sprite picture;
     public Material planetMaterial;
+    public Material planetTagMaterial;
     public string description;
 
     [Header("Milstone")]
