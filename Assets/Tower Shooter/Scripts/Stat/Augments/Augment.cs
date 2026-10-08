@@ -18,7 +18,7 @@ public class Augment : ScriptableObject
     public int id;
     public string augmentName;
     [TextArea(2, 4)]
-    [SerializeField] private string customNotesTemplate; // Optional extra flavor/lore text
+    public string customNotesTemplate; // Optional extra flavor/lore text
 
     // Direct Stat Modifiers
     public List<StatModifierData> statModifiers = new List<StatModifierData>();

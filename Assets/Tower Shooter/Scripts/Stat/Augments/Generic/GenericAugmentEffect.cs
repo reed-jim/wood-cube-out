@@ -160,6 +160,12 @@ public class GenericAugmentEffect : AugmentEffect
         string maxStacksWithColor = $"<color={primaryHex}>{config.maxStacks}</color>";
         string decayRatePerSecondWithColor = $"<color={primaryHex}>{config.decayRatePerSecond}</color>";
 
+        string scalingFactorWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor}</color>";
+        string scalingFactorPercentWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor * 100f}%</color>";
+        string scalingFunctionWithColor = $"<color={primaryHex}>{config.scalingFunction}</color>";
+        string secondsSuffixWithColor = $"<color={primaryHex}>s</color>";
+        string perSecondSuffixWithColor = $"<color={primaryHex}>/s</color>";
+
         // 1. TRIGGER
         switch (config.trigger)
         {
@@ -219,12 +225,12 @@ public class GenericAugmentEffect : AugmentEffect
 
             if (config.scalingFactor != 0 && config.sourceStat != config.targetStat)
             {
-                string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" ({config.scalingFunction})" : "";
-                sb.Append($" + {config.scalingFactor * 100f}% of {config.sourceStat}{scalingTypeStr}");
+                string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" ({scalingFunctionWithColor})" : "";
+                sb.Append($" + {scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr}");
             }
             else if (config.scalingFactor != 0 && config.scalingFunction != ScalingFunction.Linear)
             {
-                sb.Append($" scaling {config.scalingFunction}ly by factor {config.scalingFactor}");
+                sb.Append($" scaling {scalingFunctionWithColor}ly by factor {scalingFactorWithColor}");
             }
         }
 
@@ -257,13 +263,13 @@ public class GenericAugmentEffect : AugmentEffect
         switch (config.durationType)
         {
             case EffectDuration.TemporaryBurst:
-                sb.Append($" for {durationInSecondsWithColor}s");
+                sb.Append($" for {durationInSecondsWithColor}{secondsSuffixWithColor}");
                 break;
             case EffectDuration.Stacking:
                 sb.Append($" (Stacks up to {maxStacksWithColor}x)");
                 break;
             case EffectDuration.Decaying:
-                sb.Append($" (Decays by {decayRatePerSecondWithColor}/s)");
+                sb.Append($" (Decays by {decayRatePerSecondWithColor}{perSecondSuffixWithColor})");
                 break;
         }
 

@@ -500,6 +500,7 @@ public class IdleGameTool : EditorWindow
 
             Augment newAugment = ScriptableObject.CreateInstance<Augment>();
             newAugment.augmentName = string.IsNullOrEmpty(data.augmentName) ? "New Augment" : data.augmentName;
+            newAugment.customNotesTemplate = data.customNotesTemplate;
             newAugment.augmentQuality = data.augmentQuality;
             newAugment.spaceObjectType = data.spaceObjectType;
             newAugment.isNeedCharacterToApply = data.isNeedCharacterToApply;
