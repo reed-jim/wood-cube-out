@@ -46,6 +46,12 @@ public class IdleGameTool : EditorWindow
     private string rawBatchAugmentJsonInput = "";
     private bool showBatchAugmentCreatorGroup = true;
 
+    // Batch StarPathConfig JSON Creation fields
+    private bool showBatchStarPathConfigCreatorGroup = true;
+    private TextAsset batchStarPathJsonFile;
+    private string rawBatchStarPathJsonInput = "";
+    private string batchStarPathSaveFolder = "Assets/Tower Shooter/Data/StarPath";
+
     // Effect Picker Dropdown selection index
     private int selectedEffectIndex = 0;
 
@@ -124,7 +130,7 @@ public class IdleGameTool : EditorWindow
         public Vector4 lightDir = new Vector4(0.5f, 0.5f, 1.0f, 0.0f);
     }
 
-    // DTO for JSON import to create Augments
+    // Data Transfer Object (DTO) for JSON import to create Augments
     [System.Serializable]
     public class AugmentJsonData
     {
@@ -138,6 +144,15 @@ public class IdleGameTool : EditorWindow
         public List<StatModifierData> statModifiers;
         public GenericAugmentData effectConfig; // Optional embedded effect data
         public string effectColorHex = "#C85AFF";
+    }
+
+    [System.Serializable]
+    public class StarPathConfigJsonData
+    {
+        public int id;
+        public string starName;
+        public SpaceObjectType spaceObjectType;
+        public string description;
     }
 
     [MenuItem("Saferio/Tools/IdleGameTool")]
@@ -369,6 +384,39 @@ public class IdleGameTool : EditorWindow
         }
         EndCardSection();
 
+        // -------------------------------------------------------------
+        // SECTION 7: Batch Create StarPathConfig from JSON Array
+        // -------------------------------------------------------------
+        BeginCardSection("Batch Create StarPathConfig from JSON", ref showBatchStarPathConfigCreatorGroup);
+        if (showBatchStarPathConfigCreatorGroup)
+        {
+            EditorGUILayout.BeginHorizontal();
+            batchStarPathSaveFolder = EditorGUILayout.TextField("Save Folder", batchStarPathSaveFolder);
+            if (GUILayout.Button("Browse", GUILayout.Width(65)))
+            {
+                string path = EditorUtility.OpenFolderPanel("Select Save Folder", "Assets", "");
+                if (!string.IsNullOrEmpty(path) && path.StartsWith(Application.dataPath))
+                {
+                    batchStarPathSaveFolder = "Assets" + path.Substring(Application.dataPath.Length);
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            batchStarPathJsonFile = (TextAsset)EditorGUILayout.ObjectField("JSON Asset (Array)", batchStarPathJsonFile, typeof(TextAsset), false);
+
+            EditorGUILayout.LabelField("Batch Raw JSON Input (Array):");
+            rawBatchStarPathJsonInput = EditorGUILayout.TextArea(rawBatchStarPathJsonInput, GUILayout.Height(100));
+
+            EditorGUILayout.Space(6);
+            GUI.backgroundColor = new Color(0.25f, 0.75f, 0.85f);
+            if (GUILayout.Button("Create Multiple StarPathConfigs from JSON Array", GUILayout.Height(28)))
+            {
+                CreateMultipleStarPathConfigsFromJSON();
+            }
+            GUI.backgroundColor = Color.white;
+        }
+        EndCardSection();
+
         EditorGUILayout.Space(8);
         EditorGUILayout.EndScrollView();
     }
@@ -473,6 +521,78 @@ public class IdleGameTool : EditorWindow
         {
             Debug.LogError($"Error: {ex.Message}");
         }
+    }
+
+    private void CreateMultipleStarPathConfigsFromJSON()
+    {
+        string jsonToParse = rawBatchStarPathJsonInput;
+        if (batchStarPathJsonFile != null && !string.IsNullOrEmpty(batchStarPathJsonFile.text))
+        {
+            jsonToParse = batchStarPathJsonFile.text;
+        }
+
+        if (string.IsNullOrWhiteSpace(jsonToParse))
+        {
+            EditorUtility.DisplayDialog("Empty JSON", "Please paste a JSON array string or assign a valid JSON TextAsset.", "OK");
+            return;
+        }
+
+        try
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+
+            List<StarPathConfigJsonData> configList = JsonConvert.DeserializeObject<List<StarPathConfigJsonData>>(jsonToParse, settings);
+
+            if (configList == null || configList.Count == 0)
+            {
+                EditorUtility.DisplayDialog("Parsing Error", "No valid StarPathConfig objects found in the JSON array.", "OK");
+                return;
+            }
+
+            int createdCount = 0;
+            foreach (var data in configList)
+            {
+                if (ProcessSingleStarPathConfigCreation(data))
+                {
+                    createdCount++;
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            EditorUtility.DisplayDialog("Success", $"Successfully created {createdCount} StarPathConfig asset(s).", "OK");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Error batch creating StarPathConfig assets from JSON: {ex.Message}");
+            EditorUtility.DisplayDialog("Batch Processing Error", ex.Message, "OK");
+        }
+    }
+
+    private bool ProcessSingleStarPathConfigCreation(StarPathConfigJsonData data)
+    {
+        if (data == null) return false;
+
+        string targetFolder = string.IsNullOrWhiteSpace(batchStarPathSaveFolder) ? "Assets" : batchStarPathSaveFolder.TrimEnd('/', '\\');
+        if (!AssetDatabase.IsValidFolder(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+            AssetDatabase.Refresh();
+        }
+
+        StarPathConfig config = ScriptableObject.CreateInstance<StarPathConfig>();
+        config.id = data.id;
+        config.starName = string.IsNullOrEmpty(data.starName) ? $"Star_{data.id}" : data.starName;
+        config.spaceObjectType = data.spaceObjectType;
+        config.description = data.description;
+
+        string assetName = string.IsNullOrEmpty(config.starName) ? $"StarPathConfig_{config.id}" : config.starName;
+        string assetPath = AssetDatabase.GenerateUniqueAssetPath($"{targetFolder}/{assetName}.asset");
+
+        AssetDatabase.CreateAsset(config, assetPath);
+        return true;
     }
 
     private List<AugmentEffect> GetAvailableEffectsFromFolder(string folderPath)

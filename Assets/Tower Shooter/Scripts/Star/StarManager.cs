@@ -7,7 +7,26 @@ public enum SpaceObjectType
     Neptune,
     InnerOortGate,
     OuterOortCloud,
-    ProximaCentauri
+    ProximaCentauri,
+    Moon,
+    TerrestrialPlanet,
+    GasGiant,
+    IceGiant,
+    DwarfPlanet,
+    YellowDwarfStar,
+    RedDwarfStar,
+    OrangeDwarfStar,
+    WhiteDwarfStar,
+    BlueGigantStar,
+    BlueSupergiantStar,
+    RedSupergiantStar,
+    NeutronStar,
+    BlackHole,
+    GlobularCluster,
+    SpiralGalaxy,
+    EllipticalGalaxy,
+    Quasar,
+    CosmicHorizon
 }
 
 public class StarManager : Singleton<StarManager>

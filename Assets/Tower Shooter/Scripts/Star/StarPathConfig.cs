@@ -7,7 +7,6 @@ public class StarPathConfig : ScriptableObject
 {
     public int id;
     public string starName;
-    public double distanceInLightyear;
     public SpaceObjectType spaceObjectType;
     public Sprite picture;
     public Material planetMaterial;
