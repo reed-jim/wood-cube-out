@@ -46,7 +46,7 @@ public class PowerManager : Singleton<PowerManager>
 
             // Calculate average DPS for this node
             float averageDamagePerHit = power * (1f + (critChance * (CritMultiplier - 1f)));
-            float nodeDps = averageDamagePerHit * cycleSpeed;
+            float nodeDps = averageDamagePerHit * cycleSpeed * GameConstants.nodeSpeedMultiplier;
 
             totalPowerOutput += nodeDps;
         }

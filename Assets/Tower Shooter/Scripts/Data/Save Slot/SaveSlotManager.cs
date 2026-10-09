@@ -43,7 +43,7 @@ public class SaveSlotManager : Singleton<SaveSlotManager>
 
         string savedSlotID = DataUtility.Load(CURRENT_SLOT_ID_KEY, DEFAULT_SLOT_ID);
         currentSaveSlotData = FindSlot(savedSlotID) ?? allSaveSlots[0];
-
+        
         OnSaveSlotsUpdated?.Invoke();
     }
 
@@ -159,7 +159,7 @@ public class SaveSlotManager : Singleton<SaveSlotManager>
             slotID = slotID,
             slotName = defaultName,
             isEmpty = true,
-            lastModifiedDate = string.Empty,
+            lastModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
             totalPlayTime = 0f,
             currentLevel = 1
         };
