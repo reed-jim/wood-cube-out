@@ -41,6 +41,11 @@ public class IdleGameTool : EditorWindow
     private TextAsset augmentJsonFile;
     private string rawAugmentJsonInput = "";
 
+    // Batch Augment Creation fields
+    private TextAsset batchAugmentJsonFile;
+    private string rawBatchAugmentJsonInput = "";
+    private bool showBatchAugmentCreatorGroup = true;
+
     // Effect Picker Dropdown selection index
     private int selectedEffectIndex = 0;
 
@@ -250,6 +255,27 @@ public class IdleGameTool : EditorWindow
                     : null;
 
                 CreateAugmentFromJSON(pickedEffect);
+            }
+            GUI.backgroundColor = Color.white;
+        }
+        EndCardSection();
+
+        // -------------------------------------------------------------
+        // SECTION 2B: Read Batch JSON to Create Multiple Augments
+        // -------------------------------------------------------------
+        BeginCardSection("Read Batch JSON to Create Augments", ref showBatchAugmentCreatorGroup);
+        if (showBatchAugmentCreatorGroup)
+        {
+            batchAugmentJsonFile = (TextAsset)EditorGUILayout.ObjectField("Batch JSON Asset", batchAugmentJsonFile, typeof(TextAsset), false);
+
+            EditorGUILayout.LabelField("Batch Raw JSON Input (JSON Array):");
+            rawBatchAugmentJsonInput = EditorGUILayout.TextArea(rawBatchAugmentJsonInput, GUILayout.Height(100));
+
+            EditorGUILayout.Space(6);
+            GUI.backgroundColor = new Color(0.25f, 0.75f, 0.85f);
+            if (GUILayout.Button("Create Multiple Augments from JSON Array", GUILayout.Height(28)))
+            {
+                CreateMultipleAugmentsFromJSON();
             }
             GUI.backgroundColor = Color.white;
         }
@@ -483,104 +509,152 @@ public class IdleGameTool : EditorWindow
 
         try
         {
-            AugmentJsonData data = JsonConvert.DeserializeObject<AugmentJsonData>(jsonToParse);
-            
-            if (data == null)
-            {
-                EditorUtility.DisplayDialog("Parsing Error", "Could not parse Augment JSON.", "OK");
-                return;
-            }
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            AugmentJsonData data = JsonConvert.DeserializeObject<AugmentJsonData>(jsonToParse, settings);
 
-            string targetFolder = string.IsNullOrWhiteSpace(newAugmentSaveFolder) ? "Assets" : newAugmentSaveFolder.TrimEnd('/', '\\');
-            if (!AssetDatabase.IsValidFolder(targetFolder))
-            {
-                Directory.CreateDirectory(targetFolder);
-                AssetDatabase.Refresh();
-            }
-
-            Augment newAugment = ScriptableObject.CreateInstance<Augment>();
-            newAugment.augmentName = string.IsNullOrEmpty(data.augmentName) ? "New Augment" : data.augmentName;
-            newAugment.customNotesTemplate = data.customNotesTemplate;
-            newAugment.augmentQuality = data.augmentQuality;
-            newAugment.spaceObjectType = data.spaceObjectType;
-            newAugment.isNeedCharacterToApply = data.isNeedCharacterToApply;
-            newAugment.isApplyImmediatelyAfterPick = data.isApplyImmediatelyAfterPick;
-            newAugment.isForNodeGroup = data.isForNodeGroup;
-
-            if (data.statModifiers != null)
-            {
-                foreach (var mod in data.statModifiers)
-                {
-                    if (System.Array.Exists(AllowedStats, s => s == mod.statType))
-                    {
-                        newAugment.statModifiers.Add(mod);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Stat '{mod.statType}' is not in the allowed 4 stats list. Skipping modifier.");
-                    }
-                }
-            }
-
-            if (selectedEffect != null)
-            {
-                newAugment.dynamicEffects.Add(selectedEffect);
-            }
-            else if (data.effectConfig != null)
-            {
-                data.effectConfig.sourceStat = ValidateStat(data.effectConfig.sourceStat);
-                data.effectConfig.targetStat = ValidateStat(data.effectConfig.targetStat);
-                data.effectConfig.comparisonStat = ValidateStat(data.effectConfig.comparisonStat);
-
-                string effFolderPath = string.IsNullOrWhiteSpace(effectFolderPath) ? targetFolder : effectFolderPath.TrimEnd('/', '\\');
-                if (!AssetDatabase.IsValidFolder(effFolderPath))
-                {
-                    Directory.CreateDirectory(effFolderPath);
-                    AssetDatabase.Refresh();
-                }
-
-                GenericAugmentEffect effectAsset = ScriptableObject.CreateInstance<GenericAugmentEffect>();
-                effectAsset.config = data.effectConfig;
-
-                if (ColorUtility.TryParseHtmlString(data.effectColorHex, out Color effColor))
-                {
-                    effectAsset.effectColor = effColor;
-                }
-
-                effectAsset.effectName = effectAsset.GenerateAutoEffectName(effectAsset.config);
-
-                string effectPath = AssetDatabase.GenerateUniqueAssetPath($"{effFolderPath}/{effectAsset.effectName}.asset");
-                AssetDatabase.CreateAsset(effectAsset, effectPath);
-
-                newAugment.dynamicEffects.Add(effectAsset);
-            }
-
-            string augmentPath = AssetDatabase.GenerateUniqueAssetPath($"{targetFolder}/{newAugment.augmentName}.asset");
-            AssetDatabase.CreateAsset(newAugment, augmentPath);
-
-            if (customAugmentContainer != null)
-            {
-                Undo.RegisterCompleteObjectUndo(customAugmentContainer, "Add New Augment to Container");
-                if (customAugmentContainer.augments == null)
-                {
-                    customAugmentContainer.augments = new List<Augment>();
-                }
-
-                newAugment.id = customAugmentContainer.augments.Count;
-                customAugmentContainer.augments.Add(newAugment);
-                EditorUtility.SetDirty(customAugmentContainer);
-            }
-
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            Selection.activeObject = newAugment;
-            Debug.Log($"Successfully created Augment asset '{newAugment.augmentName}' at '{augmentPath}'.");
+            ProcessSingleAugmentCreation(data, selectedEffect);
         }
         catch (System.Exception ex)
         {
             Debug.LogError($"Error creating Augment from JSON: {ex.Message}");
         }
+    }
+
+    private void CreateMultipleAugmentsFromJSON()
+    {
+        string jsonToParse = rawBatchAugmentJsonInput;
+        if (batchAugmentJsonFile != null && !string.IsNullOrEmpty(batchAugmentJsonFile.text))
+        {
+            jsonToParse = batchAugmentJsonFile.text;
+        }
+
+        if (string.IsNullOrWhiteSpace(jsonToParse))
+        {
+            EditorUtility.DisplayDialog("Empty JSON", "Please paste a JSON array string or assign a JSON TextAsset.", "OK");
+            return;
+        }
+
+        try
+        {
+            // Configure Newtonsoft JSON converter settings to handle Enum strings automatically
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+
+            List<AugmentJsonData> augmentList = JsonConvert.DeserializeObject<List<AugmentJsonData>>(jsonToParse, settings);
+
+            if (augmentList == null || augmentList.Count == 0)
+            {
+                EditorUtility.DisplayDialog("Parsing Error", "No valid Augment objects found in the JSON array.", "OK");
+                return;
+            }
+
+            int createdCount = 0;
+            foreach (var augmentData in augmentList)
+            {
+                if (ProcessSingleAugmentCreation(augmentData, null))
+                {
+                    createdCount++;
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            EditorUtility.DisplayDialog("Success", $"Successfully created {createdCount} Augment asset(s).", "OK");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Error batch creating Augments from JSON: {ex.Message}");
+            EditorUtility.DisplayDialog("Batch Processing Error", ex.Message, "OK");
+        }
+    }
+
+    private bool ProcessSingleAugmentCreation(AugmentJsonData data, AugmentEffect selectedEffect)
+    {
+        if (data == null) return false;
+
+        string targetFolder = string.IsNullOrWhiteSpace(newAugmentSaveFolder) ? "Assets" : newAugmentSaveFolder.TrimEnd('/', '\\');
+        if (!AssetDatabase.IsValidFolder(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+            AssetDatabase.Refresh();
+        }
+
+        Augment newAugment = ScriptableObject.CreateInstance<Augment>();
+        newAugment.augmentName = string.IsNullOrEmpty(data.augmentName) ? "New Augment" : data.augmentName;
+        newAugment.customNotesTemplate = data.customNotesTemplate;
+        newAugment.augmentQuality = data.augmentQuality;
+        newAugment.spaceObjectType = data.spaceObjectType;
+        newAugment.isNeedCharacterToApply = data.isNeedCharacterToApply;
+        newAugment.isApplyImmediatelyAfterPick = data.isApplyImmediatelyAfterPick;
+        newAugment.isForNodeGroup = data.isForNodeGroup;
+
+        if (data.statModifiers != null)
+        {
+            foreach (var mod in data.statModifiers)
+            {
+                if (System.Array.Exists(AllowedStats, s => s == mod.statType))
+                {
+                    newAugment.statModifiers.Add(mod);
+                }
+                else
+                {
+                    Debug.LogWarning($"Stat '{mod.statType}' in '{newAugment.augmentName}' is not in the allowed 4 stats list. Skipping modifier.");
+                }
+            }
+        }
+
+        if (selectedEffect != null)
+        {
+            newAugment.dynamicEffects.Add(selectedEffect);
+        }
+        else if (data.effectConfig != null)
+        {
+            data.effectConfig.sourceStat = ValidateStat(data.effectConfig.sourceStat);
+            data.effectConfig.targetStat = ValidateStat(data.effectConfig.targetStat);
+            data.effectConfig.comparisonStat = ValidateStat(data.effectConfig.comparisonStat);
+
+            string effFolderPath = string.IsNullOrWhiteSpace(effectFolderPath) ? targetFolder : effectFolderPath.TrimEnd('/', '\\');
+            if (!AssetDatabase.IsValidFolder(effFolderPath))
+            {
+                Directory.CreateDirectory(effFolderPath);
+                AssetDatabase.Refresh();
+            }
+
+            GenericAugmentEffect effectAsset = ScriptableObject.CreateInstance<GenericAugmentEffect>();
+            effectAsset.config = data.effectConfig;
+
+            if (ColorUtility.TryParseHtmlString(data.effectColorHex, out Color effColor))
+            {
+                effectAsset.effectColor = effColor;
+            }
+
+            effectAsset.effectName = effectAsset.GenerateAutoEffectName(effectAsset.config);
+
+            string effectPath = AssetDatabase.GenerateUniqueAssetPath($"{effFolderPath}/{effectAsset.effectName}.asset");
+            AssetDatabase.CreateAsset(effectAsset, effectPath);
+
+            newAugment.dynamicEffects.Add(effectAsset);
+        }
+
+        string augmentPath = AssetDatabase.GenerateUniqueAssetPath($"{targetFolder}/{newAugment.augmentName}.asset");
+        AssetDatabase.CreateAsset(newAugment, augmentPath);
+
+        if (customAugmentContainer != null)
+        {
+            Undo.RegisterCompleteObjectUndo(customAugmentContainer, "Add New Augment to Container");
+            if (customAugmentContainer.augments == null)
+            {
+                customAugmentContainer.augments = new List<Augment>();
+            }
+
+            newAugment.id = customAugmentContainer.augments.Count;
+            customAugmentContainer.augments.Add(newAugment);
+            EditorUtility.SetDirty(customAugmentContainer);
+        }
+
+        return true;
     }
 
     private void AutoAssignIdForAugment()
