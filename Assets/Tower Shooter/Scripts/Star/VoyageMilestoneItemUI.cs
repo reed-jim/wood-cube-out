@@ -49,8 +49,9 @@ public class VoyageMilestoneItemUI : MonoBehaviour
         }
 
         // Fetch start/end radius fraction matching your shader material setting (e.g. 0.2f)
-        float startEndRadiusFrac = 0.2f;
-        float activeWidth = voyageUIContainer.sizeDelta.x * (1f - 2f * startEndRadiusFrac);
+        // float startEndRadiusFrac = 0.2f;
+        // float activeWidth = voyageUIContainer.sizeDelta.x * (1f - 2f * startEndRadiusFrac);
+        float activeWidth = voyageUIContainer.sizeDelta.x;
 
         // Position UI milestones aligned to shader center nodes
         position.x = Mathf.Lerp(-0.5f * activeWidth, 0.5f * activeWidth, voyageMilestone.percent);
