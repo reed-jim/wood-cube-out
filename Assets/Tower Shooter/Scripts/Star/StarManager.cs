@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum SpaceObjectType
@@ -64,6 +65,8 @@ public class StarManager : Singleton<StarManager>
     public StarPathConfig currentStarPathConfig;
     public StarPathConfig nextStarPathConfig;
 
+    private Dictionary<int, StarPathConfig> starPathConfigIds = new Dictionary<int, StarPathConfig>();
+
     public VoyageData GetFirstVoyage()
     {
         VoyageData voyageData = new VoyageData();
@@ -77,27 +80,32 @@ public class StarManager : Singleton<StarManager>
 
     public void SetStarPathConfig(int index)
     {
-        if (index < starVoyageContainer.starPathConfigs.Count)
+        if (starPathConfigIds.Count == 0)
         {
-            currentStarPathConfig = starVoyageContainer.starPathConfigs[index];
+            BuildStarPathConfigIdLookup();
         }
 
-        if (index + 1 < starVoyageContainer.starPathConfigs.Count)
+        if (index < starPathConfigIds.Count)
         {
-            nextStarPathConfig = starVoyageContainer.starPathConfigs[index + 1];
+            currentStarPathConfig = starPathConfigIds[index];
+        }
+
+        if (index + 1 < starPathConfigIds.Count)
+        {
+            nextStarPathConfig = starPathConfigIds[index + 1];
         }
     }
 
     public StarPathConfig GetVoyageConfig(int index)
     {
-        if (index < starVoyageContainer.starPathConfigs.Count)
+        if (index < starPathConfigIds.Count)
         {
-            currentStarPathConfig = starVoyageContainer.starPathConfigs[index];
+            currentStarPathConfig = starPathConfigIds[index];
         }
 
-        if (index + 1 < starVoyageContainer.starPathConfigs.Count)
+        if (index + 1 < starPathConfigIds.Count)
         {
-            nextStarPathConfig = starVoyageContainer.starPathConfigs[index + 1];
+            nextStarPathConfig = starPathConfigIds[index + 1];
         }
 
         return nextStarPathConfig;
@@ -106,5 +114,16 @@ public class StarManager : Singleton<StarManager>
     public bool IsLastVoyage(int index)
     {
         return index == starVoyageContainer.starPathConfigs.Count - 1;
+    }
+
+    private void BuildStarPathConfigIdLookup()
+    {
+        for (int i = 0; i < starVoyageContainer.starPathConfigs.Count; i++)
+        {
+            StarPathConfig starPathConfig = starVoyageContainer.starPathConfigs[i];
+            int id = starPathConfig.id;
+
+            starPathConfigIds.Add(id, starPathConfig);
+        }
     }
 }
