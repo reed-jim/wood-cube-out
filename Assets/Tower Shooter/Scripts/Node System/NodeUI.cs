@@ -174,20 +174,22 @@ public class NodeUI : MonoBehaviour
 
         highlight.gameObject.SetActive(true);
 
-        highlightSequence = SaferioTween.ShowWithPunch(highlight.rectTransform, onCompleteAction: () =>
-        {
-            highlightTween = Tween.Alpha(highlight, 0, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
-        });
+        // highlightSequence = SaferioTween.ShowWithPunch(highlight.rectTransform, onCompleteAction: () =>
+        // {
+        //     highlightTween = Tween.Alpha(highlight, 0, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo);
+        // });
     }
 
     public void EndHighlight()
     {
-        if (highlightTween.isAlive)
-        {
-            highlightTween.Stop();
+        // if (highlightTween.isAlive)
+        // {
+        //     highlightTween.Stop();
 
-            SaferioTween.ScaleDownWithPunch(highlight.rectTransform);
-        }
+        //     SaferioTween.ScaleDownWithPunch(highlight.rectTransform);
+        // }
+
+        highlight.gameObject.SetActive(false);
 
         serviceLocator.character.SetToInitialParent();
     }
