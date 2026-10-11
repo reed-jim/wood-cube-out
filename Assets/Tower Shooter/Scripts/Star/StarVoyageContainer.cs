@@ -32,7 +32,6 @@ public class StarVoyageContainer : ScriptableObject
 [CustomEditor(typeof(StarVoyageContainer))]
 public class StarVoyageContainerEditor : Editor
 {
-    // Configure your folder paths here relative to Assets/
     private string planetMaterialFolder = "Assets/Materials/Planets";
     private string planetTagMaterialFolder = "Assets/Materials/PlanetTags";
 
@@ -54,12 +53,44 @@ public class StarVoyageContainerEditor : Editor
             AutoAssignMaterialsByOrder(container);
         }
 
+        if (GUILayout.Button("Increment IDs by 1"))
+        {
+            IncrementIds(container);
+        }
+
         EditorGUILayout.Space(5);
 
         if (GUILayout.Button("Export Names to JSON"))
         {
             ExportToJson(container);
         }
+    }
+
+    private void IncrementIds(StarVoyageContainer container)
+    {
+        if (container.starPathConfigs == null || container.starPathConfigs.Count == 0)
+        {
+            Debug.LogWarning("No StarPathConfigs found in the container.");
+            return;
+        }
+
+        int updatedCount = 0;
+
+        foreach (var config in container.starPathConfigs)
+        {
+            if (config == null) continue;
+
+            Undo.RecordObject(config, "Increment StarPath ID");
+            
+            // Increase ID by 1
+            config.id += 1;
+            updatedCount++;
+
+            EditorUtility.SetDirty(config);
+        }
+
+        AssetDatabase.SaveAssets();
+        Debug.Log($"Successfully incremented IDs by 1 for {updatedCount} StarPathConfig(s).");
     }
 
     private void AutoAssignMaterialsByOrder(StarVoyageContainer container)
@@ -70,7 +101,6 @@ public class StarVoyageContainerEditor : Editor
             return;
         }
 
-        // Load and order materials from folders
         List<Material> planetMaterials = LoadSortedMaterialsFromFolder(planetMaterialFolder);
         List<Material> planetTagMaterials = LoadSortedMaterialsFromFolder(planetTagMaterialFolder);
 
@@ -84,14 +114,12 @@ public class StarVoyageContainerEditor : Editor
 
             Undo.RecordObject(config, "Auto Assign Materials by Order");
 
-            // Assign Planet Material by index order if available
             if (i < planetMaterials.Count)
             {
                 config.planetMaterial = planetMaterials[i];
                 assignedPlanetMats++;
             }
 
-            // Assign Planet Tag Material by index order if available
             if (i < planetTagMaterials.Count)
             {
                 config.planetTagMaterial = planetTagMaterials[i];
@@ -118,7 +146,6 @@ public class StarVoyageContainerEditor : Editor
 
         string[] guids = AssetDatabase.FindAssets("t:Material", new[] { folderPath });
         
-        // Sort guids by asset path so the order is deterministic (alphabetical by file path/name)
         var sortedGuids = guids
             .Select(guid => new { Guid = guid, Path = AssetDatabase.GUIDToAssetPath(guid) })
             .OrderBy(x => x.Path)
