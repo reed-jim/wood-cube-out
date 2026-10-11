@@ -12,6 +12,21 @@ public class StarVoyageContainer : ScriptableObject
 {
     public List<StarPathConfig> starPathConfigs;
 
+    public StarPathConfig GetStarPathConfig(SpaceObjectType spaceObjectType)
+    {
+        for (int i = 0; i < starPathConfigs.Count; i++)
+        {
+            StarPathConfig starPathConfig = starPathConfigs[i];
+
+            if (starPathConfig.spaceObjectType == spaceObjectType)
+            {
+                return starPathConfig;
+            }
+        }
+
+        return null;
+    }
+
     public Material GetPlanetTagMaterial(SpaceObjectType spaceObjectType)
     {
         for (int i = 0; i < starPathConfigs.Count; i++)
@@ -21,6 +36,21 @@ public class StarVoyageContainer : ScriptableObject
             if (starPathConfig.spaceObjectType == spaceObjectType)
             {
                 return starPathConfig.planetTagMaterial;
+            }
+        }
+
+        return null;
+    }
+
+    public Sprite GetPlanetTagIcon(SpaceObjectType spaceObjectType)
+    {
+        for (int i = 0; i < starPathConfigs.Count; i++)
+        {
+            StarPathConfig starPathConfig = starPathConfigs[i];
+
+            if (starPathConfig.spaceObjectType == spaceObjectType)
+            {
+                return starPathConfig.picture;
             }
         }
 

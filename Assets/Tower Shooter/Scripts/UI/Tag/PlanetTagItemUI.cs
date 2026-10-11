@@ -13,7 +13,9 @@ public class PlanetTagItemUI : TagItemUI
 
     public void Init(SpaceObjectType spaceObjectType)
     {
-        planetIcon.material = starVoyageContainer.GetPlanetTagMaterial(spaceObjectType);
-        planetText.text = $"{spaceObjectType}";
+        StarPathConfig starPathConfig = starVoyageContainer.GetStarPathConfig(spaceObjectType);
+
+        planetIcon.sprite = starPathConfig.picture;
+        planetText.text = $"{starPathConfig.starName}";
     }
 }
