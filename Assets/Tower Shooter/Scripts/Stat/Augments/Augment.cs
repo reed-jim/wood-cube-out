@@ -115,7 +115,7 @@ public class Augment : ScriptableObject
 
         if (dynamicEffects.Count > 0)
         {
-            sb.AppendLine("\n");
+            sb.AppendLine();
         }
 
         // 2. Process dynamic effects descriptions
@@ -129,11 +129,11 @@ public class Augment : ScriptableObject
         }
 
         // 3. Process optional extra flavor text
-        if (!string.IsNullOrEmpty(customNotesTemplate))
-        {
-            if (sb.Length > 0) sb.AppendLine();
-            sb.Append(StatTextParser.ParseTemplate(customNotesTemplate, config));
-        }
+        // if (!string.IsNullOrEmpty(customNotesTemplate))
+        // {
+        //     if (sb.Length > 0) sb.AppendLine();
+        //     sb.Append($"\"{StatTextParser.ParseTemplate(customNotesTemplate, config)}\"");
+        // }
 
         return sb.ToString().TrimEnd();
     }
@@ -142,12 +142,18 @@ public class Augment : ScriptableObject
     {
         StringBuilder sb = new StringBuilder();
 
+        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+        sb.AppendLine($"Lv. <color={primaryHex}>{level}</color>");
+
+        sb.AppendLine();
+
         // 1. Process basic stat modifiers automatically
         GetStatModifiersDescriptionForUpLevelAugment(statModifiers, level, config, sb);
 
         if (dynamicEffects.Count > 0)
         {
-            sb.AppendLine("\n");
+            sb.AppendLine();
         }
 
         // 2. Process dynamic effects descriptions
@@ -161,11 +167,11 @@ public class Augment : ScriptableObject
         }
 
         // 3. Process optional extra flavor text
-        if (!string.IsNullOrEmpty(customNotesTemplate))
-        {
-            if (sb.Length > 0) sb.AppendLine();
-            sb.Append(StatTextParser.ParseTemplate(customNotesTemplate, config));
-        }
+        // if (!string.IsNullOrEmpty(customNotesTemplate))
+        // {
+        //     if (sb.Length > 0) sb.AppendLine();
+        //     sb.Append($"\"{StatTextParser.ParseTemplate(customNotesTemplate, config)}\"");
+        // }
 
         return sb.ToString().TrimEnd();
     }
