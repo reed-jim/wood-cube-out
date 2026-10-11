@@ -137,6 +137,68 @@ public class Augment : ScriptableObject
 
         return sb.ToString().TrimEnd();
     }
+
+    public string BuildFullDescriptionForUpLevelAugment(StatColorConfigSO config, AugmentLevel level)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // 1. Process basic stat modifiers automatically
+        GetStatModifiersDescriptionForUpLevelAugment(statModifiers, level, config, sb);
+
+        if (dynamicEffects.Count > 0)
+        {
+            sb.AppendLine("\n");
+        }
+
+        // 2. Process dynamic effects descriptions
+        foreach (var effect in dynamicEffects)
+        {
+            string effectDesc = effect.GetFormattedDescription(config);
+            if (!string.IsNullOrEmpty(effectDesc))
+            {
+                sb.AppendLine(effectDesc);
+            }
+        }
+
+        // 3. Process optional extra flavor text
+        if (!string.IsNullOrEmpty(customNotesTemplate))
+        {
+            if (sb.Length > 0) sb.AppendLine();
+            sb.Append(StatTextParser.ParseTemplate(customNotesTemplate, config));
+        }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>
+    /// Processes basic stat modifiers automatically, scaling values based on the augment level.
+    /// </summary>
+    public string GetStatModifiersDescriptionForUpLevelAugment(List<StatModifierData> statModifiers, AugmentLevel level, StatColorConfigSO config, StringBuilder sb)
+    {
+        if (statModifiers == null || statModifiers.Count == 0) return string.Empty;
+
+        // Calculate tier multiplier based on augment level progression
+        float prevLevelMultiplier = CurveManager.Ins.GetAugmentEfficiency((int)level - 1);
+        float levelMultiplier = CurveManager.Ins.GetAugmentEfficiency((int)level);
+
+        foreach (var mod in statModifiers)
+        {
+            string hex = config.GetHex(mod.statType);
+
+            // Scale modifier value by the tier multiplier
+            float scaledValue = levelMultiplier * mod.value;
+            bool isPositive = scaledValue >= 0;
+            // string sign = isPositive ? "+" : "";
+
+            string valStr = mod.modType == ModifierType.Flat
+                ? $"{scaledValue:F1}"
+                : $"{scaledValue * 100f:F0}%";
+
+            sb.AppendLine($"{prevLevelMultiplier * mod.value} > <color=#{hex}>{valStr} {mod.statType}</color>");
+        }
+
+        return sb.ToString();
+    }
 }
 
 [System.Serializable]

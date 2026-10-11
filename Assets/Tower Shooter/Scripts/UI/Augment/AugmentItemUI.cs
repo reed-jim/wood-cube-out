@@ -18,6 +18,7 @@ public class AugmentItemUIs : MonoBehaviour
     public TMP_Text description;
     public Image qualityBorder;
     public Button showAugmentDetailButton;
+    public Image upgradeHighlight;
 
     private Augment augment;
     private AugmentLevel augmentLevel;
@@ -47,22 +48,28 @@ public class AugmentItemUIs : MonoBehaviour
     private void SetupAugment(Augment augment)
     {
         AugmentLevel augmentLevel = AugmentManager.Ins.GetAugmentLevel(augment);
+        bool isUpLevelAugment = AugmentManager.Ins.IsAugmentActive(augment);
 
         title.text = augment.augmentName;
-        // augmentLevelText.text = $"{augmentLevel}";
         efficiencyText.text = $"Efficiency: {CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
-        description.text = augment.BuildFullDescription(colorConfig);
+
+        if(isUpLevelAugment)
+        {
+            description.text = augment.BuildFullDescriptionForUpLevelAugment(colorConfig, augmentLevel);
+        }
+        else
+        {
+            description.text = augment.BuildFullDescription(colorConfig);
+        }
+
         qualityText.text = $"{augment.augmentQuality}";
 
-        if (augmentLevel == AugmentLevel.Orbital)
-        {
-            augmentLevelUpgradeArrow.gameObject.SetActive(false);
-            nextAugmentLevelEffect.gameObject.SetActive(false);
+        augmentLevelUpgradeArrow.gameObject.SetActive(false);
+        nextAugmentLevelEffect.gameObject.SetActive(false);
 
-            augmentLevelUpgradeArrow.transform.localScale = Vector3.one;
+        augmentLevelUpgradeArrow.transform.localScale = Vector3.one;
 
-            augmentLevelEffect.SetLevel(augmentLevel);
-        }
+        augmentLevelEffect.SetLevel(augmentLevel);
 
         Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
 
@@ -72,7 +79,9 @@ public class AugmentItemUIs : MonoBehaviour
         qualityTag.SetBorderColor(qualityColor);
         planetTagItemUI.Init(augment.spaceObjectType);
 
-        if (AugmentManager.Ins.IsAugmentActive(augment))
+        upgradeHighlight.gameObject.SetActive(false);
+
+        if (isUpLevelAugment)
         {
             ShowUpgradeAugmentLevelUI(augmentLevel);
         }
@@ -112,14 +121,14 @@ public class AugmentItemUIs : MonoBehaviour
         // augmentLevelText.text = $"{nextAugmentLevel}";
         efficiencyText.text = $"Efficiency: {currentEfficiency} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
 
-        augmentLevelUpgradeArrow.gameObject.SetActive(true);
-        nextAugmentLevelEffect.gameObject.SetActive(true);
+        // augmentLevelUpgradeArrow.gameObject.SetActive(true);
+        // nextAugmentLevelEffect.gameObject.SetActive(true);
 
-        augmentLevelEffect.transform.localScale = 0.5f * Vector3.one;
-        nextAugmentLevelEffect.transform.localScale = 0.5f * Vector3.one;
+        // augmentLevelEffect.transform.localScale = 0.5f * Vector3.one;
+        // nextAugmentLevelEffect.transform.localScale = 0.5f * Vector3.one;
 
-        augmentLevelEffect.SetLevel(augmentLevel);
-        nextAugmentLevelEffect.SetLevel(nextAugmentLevel);
+        // augmentLevelEffect.SetLevel(augmentLevel);
+        // nextAugmentLevelEffect.SetLevel(nextAugmentLevel);
     }
     #endregion
 }
