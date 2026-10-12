@@ -226,6 +226,11 @@ public class CurveManager : Singleton<CurveManager>
     {
         return GetProgressionValue(augmentEfficiencyConfig, time);
     }
+
+    public float GetAugmentEfficiency(AugmentLevel augmentLevel)
+    {
+        return GetProgressionValue(augmentEfficiencyConfig, (int)augmentLevel);
+    }
     #endregion
 
     #region Voyage

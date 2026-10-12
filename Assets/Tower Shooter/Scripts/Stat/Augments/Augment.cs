@@ -106,7 +106,7 @@ public class Augment : ScriptableObject
             // }
 
             bool isFlat = mod.modType == ModifierType.Flat && !StatUtil.IsPercentStat(mod.statType);
-            
+
             string valStr = isFlat
                 ? $"{sign}{mod.value}"
                 : $"{sign}{mod.value * 100f}%";
@@ -136,6 +136,46 @@ public class Augment : ScriptableObject
         //     if (sb.Length > 0) sb.AppendLine();
         //     sb.Append($"\"{StatTextParser.ParseTemplate(customNotesTemplate, config)}\"");
         // }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    public string BuildFullDescriptionTooltip(StatColorConfigSO config)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // 1. Process basic stat modifiers automatically
+        foreach (var mod in statModifiers)
+        {
+            string hex = config.GetHex(mod.statType);
+
+            bool isPositive = mod.value >= 0;
+
+            string sign = isPositive ? "+" : "";
+
+            bool isFlat = mod.modType == ModifierType.Flat && !StatUtil.IsPercentStat(mod.statType);
+
+            string valStr = isFlat
+                ? $"{sign}{mod.value}"
+                : $"{sign}{mod.value * 100f}%";
+
+            sb.AppendLine($"<color=#{hex}>{valStr} {mod.statType}</color>");
+        }
+
+        if (dynamicEffects.Count > 0)
+        {
+            sb.AppendLine();
+        }
+
+        // 2. Process dynamic effects descriptions
+        foreach (var effect in dynamicEffects)
+        {
+            string effectDesc = effect.GetFormattedDescription(config);
+            if (!string.IsNullOrEmpty(effectDesc))
+            {
+                sb.AppendLine(effectDesc);
+            }
+        }
 
         return sb.ToString().TrimEnd();
     }

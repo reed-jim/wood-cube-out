@@ -74,6 +74,23 @@ public class GenericAugmentEffect : AugmentEffect
         return $"<color={effectColorHex}>{GenerateAutoEffectName(config)}:</color> {autoText}";
     }
 
+    public override string GetFormattedDescriptionTooltip(StatColorConfigSO configSO)
+    {
+        // If template exists, use the standard parser logic
+        if (!string.IsNullOrEmpty(descriptionTemplate))
+        {
+            return base.GetFormattedDescription(configSO);
+        }
+
+        // Auto-Generate description if descriptionTemplate is empty
+        if (config == null) return string.Empty;
+
+        string autoText = GenerateAutoDescriptionTooltip();
+        string effectColorHex = ColorUtil.ColorToHex(effectColor);
+
+        return $"<color={effectColorHex}>{GenerateAutoEffectName(config)}:</color> {autoText}";
+    }
+
     public string GenerateAutoEffectName(GenericAugmentData config)
     {
         if (config == null) return "Unknown Effect";
@@ -293,17 +310,7 @@ public class GenericAugmentEffect : AugmentEffect
         if (config == null) return string.Empty;
 
         // Calculate tier multiplier based on augment level progression
-        float tierMultiplier = level switch
-        {
-            AugmentLevel.Orbital => 1.0f,
-            AugmentLevel.Planetary => 1.5f,
-            AugmentLevel.Stellar => 2.5f,
-            AugmentLevel.Galactic => 4.0f,
-            AugmentLevel.Cosmic => 6.5f,
-            AugmentLevel.Dimensional => 10.0f,
-            AugmentLevel.Transcendent => 15.0f,
-            _ => 1.0f
-        };
+        float tierMultiplier = CurveManager.Ins.GetAugmentEfficiency(level);
 
         // Create a temporary modified config copy or scale values for preview/tooltip text
         float scaledBaseValue = config.baseValue * tierMultiplier;
@@ -456,6 +463,174 @@ public class GenericAugmentEffect : AugmentEffect
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Constructs a detailed multi-line breakdown automatically based on GenericAugmentData configuration 
+    /// tailored for wide, short tooltip layouts.
+    /// </summary>
+    private string GenerateAutoDescriptionTooltip()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        StatType sourceStat = config.sourceStat;
+        StatType targetStat = config.targetStat;
+        StatType comparisonStat = config.comparisonStat;
+
+        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+        string sourceStatColorHex = AugmentManager.Ins.GetStatColorHex(sourceStat);
+        string targetStatColorHex = AugmentManager.Ins.GetStatColorHex(targetStat);
+        string comparisonStatColorHex = AugmentManager.Ins.GetStatColorHex(comparisonStat);
+
+        string sourceStatWithColor = $"<color={sourceStatColorHex}>{sourceStat}</color>";
+        string targetStatWithColor = $"<color={targetStatColorHex}>{targetStat}</color>";
+        string comparisonStatWithColor = $"<color={comparisonStatColorHex}>{comparisonStat}</color>";
+
+        string baseValueWithColor = $"<color={targetStatColorHex}>{config.baseValue}</color>";
+        string thresholdValueWithColor = $"<color={comparisonStatColorHex}>{config.thresholdValue}</color>";
+
+        string cycleFrequencyWithColor = $"<color={primaryHex}>{config.cycleFrequency}</color>";
+        string durationInSecondsWithColor = $"<color={primaryHex}>{config.durationInSeconds}</color>";
+        string maxStacksWithColor = $"<color={primaryHex}>{config.maxStacks}</color>";
+        string decayRatePerSecondWithColor = $"<color={primaryHex}>{config.decayRatePerSecond}</color>";
+
+        string scalingFactorWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor}</color>";
+        string scalingFactorPercentWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor * 100f}%</color>";
+        string scalingFunctionWithColor = $"<color={primaryHex}>{config.scalingFunction}</color>";
+
+        // --- SECTION 1: TRIGGER & SCOPE ---
+        sb.Append($"<color={primaryHex}><b>Trigger:</b></color> ");
+        switch (config.trigger)
+        {
+            case EffectTrigger.OnCycleComplete:
+                sb.Append("On cycle complete");
+                break;
+            case EffectTrigger.OnCrit:
+                sb.Append("On landing a critical hit");
+                break;
+            case EffectTrigger.EveryXCycles:
+                sb.Append($"Every {cycleFrequencyWithColor} cycles");
+                break;
+            case EffectTrigger.WhenIdle:
+                sb.Append("While idle");
+                break;
+            case EffectTrigger.WhenStatCrossesThreshold:
+                sb.Append($"When {sourceStatWithColor} reaches {thresholdValueWithColor}");
+                break;
+            case EffectTrigger.Permanently:
+                sb.Append("Permanent passive");
+                break;
+            default:
+                sb.Append(config.trigger.ToString());
+                break;
+        }
+
+        // Append Scope context if applicable
+        switch (config.scope)
+        {
+            case EffectScope.AdjacentNodes:
+                sb.Append(" <color=#888888>|</color> Scope: <color=#FFFFFF>Adjacent Nodes (Aura)</color>");
+                break;
+            case EffectScope.Global:
+                sb.Append(" <color=#888888>|</color> Scope: <color=#FFFFFF>Global (All Nodes)</color>");
+                break;
+            default:
+                sb.Append(" <color=#888888>|</color> Scope: <color=#FFFFFF>Self</color>");
+                break;
+        }
+
+        sb.AppendLine();
+
+        // --- SECTION 2: EFFECT & OPERATION ---
+        sb.Append($"<color={primaryHex}><b>Effect:</b></color> ");
+        switch (config.operation)
+        {
+            case EffectOperation.Add:
+                sb.Append($"Increases {targetStatWithColor}");
+                break;
+            case EffectOperation.Multiply:
+                sb.Append($"Multiplies {targetStatWithColor}");
+                break;
+            case EffectOperation.Convert:
+                sb.Append($"Converts {sourceStatWithColor} into {targetStatWithColor}");
+                break;
+            case EffectOperation.Swap:
+                sb.Append($"Swaps {sourceStatWithColor} with {targetStatWithColor}");
+                break;
+            case EffectOperation.SquareRoot:
+                sb.Append($"Square-root scales {targetStatWithColor}");
+                break;
+            case EffectOperation.Logarithm:
+                sb.Append($"Logarithm scales {targetStatWithColor}");
+                break;
+            case EffectOperation.Copy:
+                sb.Append($"Copies {sourceStatWithColor} to {targetStatWithColor}");
+                break;
+        }
+
+        // Values & Scaling math details
+        if (config.operation != EffectOperation.Swap)
+        {
+            if (config.baseValue > 0)
+            {
+                sb.Append($" by {baseValueWithColor}");
+            }
+
+            if (config.scalingFactor != 0 && config.sourceStat != config.targetStat)
+            {
+                string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" [{scalingFunctionWithColor}]" : "";
+                sb.Append($" (+{scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr})");
+            }
+            else if (config.scalingFactor != 0 && config.scalingFunction != ScalingFunction.Linear)
+            {
+                sb.Append($" (Scaled {scalingFunctionWithColor}ly by {scalingFactorWithColor})");
+            }
+        }
+
+        sb.AppendLine();
+
+        // --- SECTION 3: CONDITIONS & LIFETIME (Optional details) ---
+        bool hasCondition = config.condition != ConditionType.AlwaysActive;
+        bool hasLifetime = config.durationType != EffectDuration.Permanent;
+
+        if (hasCondition || hasLifetime)
+        {
+            sb.Append($"<color={primaryHex}><b>Conditions:</b></color> ");
+
+            if (hasCondition)
+            {
+                switch (config.condition)
+                {
+                    case ConditionType.StatGreaterThanOther:
+                        sb.Append($"Requires {sourceStatWithColor} > {comparisonStatWithColor} ");
+                        break;
+                    case ConditionType.StatLessThanOther:
+                        sb.Append($"Requires {sourceStatWithColor} < {comparisonStatWithColor} ");
+                        break;
+                    case ConditionType.StatThresholdGate:
+                        sb.Append($"Requires {sourceStatWithColor} $\\ge$ {thresholdValueWithColor} ");
+                        break;
+                }
+            }
+
+            if (hasLifetime)
+            {
+                if (hasCondition) sb.Append("<color=#888888>| </color>");
+                switch (config.durationType)
+                {
+                    case EffectDuration.TemporaryBurst:
+                        sb.Append($"Duration: <color={primaryHex}>{config.durationInSeconds}s</color>");
+                        break;
+                    case EffectDuration.Stacking:
+                        sb.Append($"Max Stacks: {maxStacksWithColor}x");
+                        break;
+                    case EffectDuration.Decaying:
+                        sb.Append($"Decay: <color={primaryHex}>-{config.decayRatePerSecond}/s</color>");
+                        break;
+                }
+            }
+        }
+
+        return sb.ToString().TrimEnd();
+    }
     protected override (string Key, object Value)[] GetDescriptionTokens()
     {
         if (config == null) return System.Array.Empty<(string, object)>();

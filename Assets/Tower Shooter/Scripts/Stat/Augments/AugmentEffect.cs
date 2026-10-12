@@ -30,7 +30,7 @@ public abstract class AugmentEffect : ScriptableObject
 
     public virtual void SetAugment(CharacterStats target, Augment augment)
     {
-        
+
     }
 
     #region Node Group
@@ -51,13 +51,13 @@ public abstract class AugmentEffect : ScriptableObject
 
     public virtual void SetAugment(NodeGroup nodeGroup, Augment augment)
     {
-        
+
     }
     #endregion
 
     public virtual void ApplyGlobalEffect()
     {
-        
+
     }
 
     /// <summary>
@@ -76,6 +76,11 @@ public abstract class AugmentEffect : ScriptableObject
         string finalDescription = $"<color={effectColorHex}>{effectName}:</color> {effectDescription}";
 
         return finalDescription;
+    }
+
+    public virtual string GetFormattedDescriptionTooltip(StatColorConfigSO config)
+    {
+        return "";
     }
 
     /// <summary>
