@@ -302,162 +302,45 @@ public class GenericAugmentEffect : AugmentEffect
     }
 
     /// <summary>
-    /// Constructs a readable sentence automatically for a specific augment level, 
-    /// factoring in tier scaling multipliers.
+    /// Constructs a concise description focusing solely on the stat value change between levels (e.g., +10 -> +15).
     /// </summary>
     public string GenerateAutoDescriptionForUpLevelAugment(AugmentLevel level)
     {
         if (config == null) return string.Empty;
 
-        // Calculate tier multiplier based on augment level progression
+        // Calculate tier multipliers for the previous level and current level
+        float prevTierMultiplier = CurveManager.Ins.GetAugmentEfficiency(level - 1);
         float tierMultiplier = CurveManager.Ins.GetAugmentEfficiency(level);
 
-        // Create a temporary modified config copy or scale values for preview/tooltip text
+        // Compute values for both levels
+        float prevScaledBaseValue = config.baseValue * prevTierMultiplier;
         float scaledBaseValue = config.baseValue * tierMultiplier;
+
+        float prevScaledScalingFactor = config.scalingFactor * prevTierMultiplier;
         float scaledScalingFactor = config.scalingFactor * tierMultiplier;
 
         StringBuilder sb = new StringBuilder();
 
-        StatType sourceStat = config.sourceStat;
         StatType targetStat = config.targetStat;
-        StatType comparisonStat = config.comparisonStat;
-
-        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
-        string sourceStatColorHex = AugmentManager.Ins.GetStatColorHex(sourceStat);
         string targetStatColorHex = AugmentManager.Ins.GetStatColorHex(targetStat);
-        string comparisonStatColorHex = AugmentManager.Ins.GetStatColorHex(comparisonStat);
-
-        string sourceStatWithColor = $"<color={sourceStatColorHex}>{sourceStat}</color>";
         string targetStatWithColor = $"<color={targetStatColorHex}>{targetStat}</color>";
-        string comparisonStatWithColor = $"<color={comparisonStatColorHex}>{comparisonStat}</color>";
 
-        string baseValueWithColor = $"<color={targetStatColorHex}>{scaledBaseValue:F1}</color>";
-        string thresholdValueWithColor = $"<color={comparisonStatColorHex}>{config.thresholdValue}</color>";
-
-        string cycleFrequencyWithColor = $"<color={primaryHex}>{config.cycleFrequency}</color>";
-        string durationInSecondsWithColor = $"<color={primaryHex}>{config.durationInSeconds}</color>";
-        string maxStacksWithColor = $"<color={primaryHex}>{config.maxStacks}</color>";
-        string decayRatePerSecondWithColor = $"<color={primaryHex}>{config.decayRatePerSecond}</color>";
-
-        string scalingFactorWithColor = $"<color={sourceStatColorHex}>{scaledScalingFactor:F2}</color>";
-        string scalingFactorPercentWithColor = $"<color={sourceStatColorHex}>{scaledScalingFactor * 100f:F0}%</color>";
-        string scalingFunctionWithColor = $"<color={primaryHex}>{config.scalingFunction}</color>";
-        string secondsSuffixWithColor = $"<color={primaryHex}>s</color>";
-        string perSecondSuffixWithColor = $"<color={primaryHex}>/s</color>";
-
-        // 1. TRIGGER
-        switch (config.trigger)
+        // Focus strictly on the primary stat value transition
+        if (config.baseValue != 0)
         {
-            case EffectTrigger.OnCycleComplete:
-                sb.Append("On cycle complete, ");
-                break;
-            case EffectTrigger.OnCrit:
-                sb.Append("On landing a critical hit, ");
-                break;
-            case EffectTrigger.EveryXCycles:
-                sb.Append($"Every {cycleFrequencyWithColor} cycles, ");
-                break;
-            case EffectTrigger.WhenIdle:
-                sb.Append("While idle, ");
-                break;
-            case EffectTrigger.WhenStatCrossesThreshold:
-                sb.Append($"When {sourceStatWithColor} reaches {thresholdValueWithColor}, ");
-                break;
-            case EffectTrigger.Permanently:
-                sb.Append("Permanently ");
-                break;
+            string signPrev = prevScaledBaseValue >= 0 ? "+" : "";
+            string signNext = scaledBaseValue >= 0 ? "+" : "";
+            sb.Append($"{signPrev}{prevScaledBaseValue:F1} -> {signNext}{scaledBaseValue:F1} {targetStatWithColor}");
         }
-
-        // 2. OPERATION & TARGET STAT
-        switch (config.operation)
+        else if (config.scalingFactor != 0)
         {
-            case EffectOperation.Add:
-                sb.Append($"increases {targetStatWithColor}");
-                break;
-            case EffectOperation.Multiply:
-                sb.Append($"multiplies {targetStatWithColor}");
-                break;
-            case EffectOperation.Convert:
-                sb.Append($"converts {sourceStatWithColor} into {targetStatWithColor}");
-                break;
-            case EffectOperation.Swap:
-                sb.Append($"swaps {sourceStatWithColor} with {targetStatWithColor}");
-                break;
-            case EffectOperation.SquareRoot:
-                sb.Append($"applies square root scaling to {targetStatWithColor}");
-                break;
-            case EffectOperation.Logarithm:
-                sb.Append($"applies logarithmic scaling to {targetStatWithColor}");
-                break;
-            case EffectOperation.Copy:
-                sb.Append($"copies {sourceStatWithColor} to {targetStatWithColor}");
-                break;
+            string signPrev = prevScaledScalingFactor >= 0 ? "+" : "";
+            string signNext = scaledScalingFactor >= 0 ? "+" : "";
+            sb.Append($"{signPrev}{prevScaledScalingFactor * 100f:F0}% -> {signNext}{scaledScalingFactor * 100f:F0}% {targetStatWithColor}");
         }
-
-        // 3. MATH SCALING & VALUES (Using Tier-Scaled Values)
-        if (config.operation != EffectOperation.Swap)
+        else
         {
-            if (scaledBaseValue > 0)
-            {
-                sb.Append($" by {baseValueWithColor}");
-            }
-
-            if (scaledScalingFactor != 0 && config.sourceStat != config.targetStat)
-            {
-                string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" ({scalingFunctionWithColor})" : "";
-                sb.Append($" + {scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr}");
-            }
-            else if (scaledScalingFactor != 0 && config.scalingFunction != ScalingFunction.Linear)
-            {
-                sb.Append($" scaling {scalingFunctionWithColor}ly by factor {scalingFactorWithColor}");
-            }
-        }
-
-        // 4. SCOPE
-        switch (config.scope)
-        {
-            case EffectScope.AdjacentNodes:
-                sb.Append(" for adjacent nodes");
-                break;
-            case EffectScope.Global:
-                sb.Append(" globally for all nodes");
-                break;
-        }
-
-        // 5. CONDITIONALS
-        switch (config.condition)
-        {
-            case ConditionType.StatGreaterThanOther:
-                sb.Append($" (Requires {sourceStatWithColor} > {comparisonStatWithColor})");
-                break;
-            case ConditionType.StatLessThanOther:
-                sb.Append($" (Requires {sourceStatWithColor} < {comparisonStatWithColor})");
-                break;
-            case ConditionType.StatThresholdGate:
-                sb.Append($" (Requires {sourceStatWithColor} >= {thresholdValueWithColor})");
-                break;
-        }
-
-        // 6. DURATION & LIFETIME
-        switch (config.durationType)
-        {
-            case EffectDuration.TemporaryBurst:
-                sb.Append($" for {durationInSecondsWithColor}{secondsSuffixWithColor}");
-                break;
-            case EffectDuration.Stacking:
-                sb.Append($" (Stacks up to {maxStacksWithColor}x)");
-                break;
-            case EffectDuration.Decaying:
-                sb.Append($" (Decays by {decayRatePerSecondWithColor}{perSecondSuffixWithColor})");
-                break;
-        }
-
-        sb.Append(".");
-
-        // Capitalize first letter of sentence
-        if (sb.Length > 0)
-        {
-            sb[0] = char.ToUpper(sb[0]);
+            sb.Append($"{targetStatWithColor} Upgraded");
         }
 
         return sb.ToString();

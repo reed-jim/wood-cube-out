@@ -1,14 +1,22 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AugmentSelectionPopup : BasePopup
 {
-    public ObjectPoolingPageView listAugments;
+    [SerializeField] private Button rerollButton;
 
     public List<AugmentItemUIs> augmentItems;
 
     public AugmentContainer augmentContainer;
+
+    protected override void RegisterMoreEvent()
+    {
+        base.RegisterMoreEvent();
+
+        rerollButton.onClick.AddListener(Reroll);
+    }
 
     protected override void Show(Action onCompletedAction = null)
     {
@@ -30,5 +38,10 @@ public class AugmentSelectionPopup : BasePopup
     public List<Augment> GetRandomAugments()
     {
         return CommonUtil.GetRandomItems(augmentContainer.augments, 3);
+    }
+
+    private void Reroll()
+    {
+        Init();
     }
 }
