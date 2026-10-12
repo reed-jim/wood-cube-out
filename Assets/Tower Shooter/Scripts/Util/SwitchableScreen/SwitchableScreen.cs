@@ -6,10 +6,11 @@ public enum SwitchableScreenType
     Voyage,
     Leadership,
     IngameEvent,
-    Research
+    Research,
+    TutorialSelection
 }
 
-public class SwitchableScreen : MonoBehaviour
+public class SwitchableScreen : Singleton<SwitchableScreen>
 {
     [Header("UI")]
     [SerializeField] protected CanvasGroup canvasGroup;
@@ -19,8 +20,10 @@ public class SwitchableScreen : MonoBehaviour
     public SwitchableScreenType switchableScreenType;
     public bool isDisableGameObjectOnHiding = true;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         SwitchableScreenButton.switchScreenEvent += OnScreenSwitch;
     }
 
@@ -29,7 +32,7 @@ public class SwitchableScreen : MonoBehaviour
         SwitchableScreenButton.switchScreenEvent -= OnScreenSwitch;
     }
 
-    private void Show()
+    protected virtual void Show()
     {
         if (isDisableGameObjectOnHiding)
         {
@@ -45,7 +48,7 @@ public class SwitchableScreen : MonoBehaviour
         Tween.LocalPositionX(container, initialPositionX, duration: 0.3f);
     }
 
-    private void Hide()
+    protected virtual void Hide()
     {
         if (!canvasGroup.gameObject.activeSelf)
         {

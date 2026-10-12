@@ -39,6 +39,11 @@ public class BaseTutorial : MonoBehaviour
 
     }
 
+    public virtual void StartTutorial()
+    {
+
+    }
+
     protected void NextStep()
     {
         step++;

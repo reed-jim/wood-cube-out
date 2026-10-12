@@ -48,7 +48,12 @@ public class BasicTutorial : BaseTutorial
         onPrimaryHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.OnPrimary);
         onPrimaryContainerHex = DynamicThemeManager.Ins.GetHex(ThemeableUI.ElementRole.OnPrimaryContainer);
 
-        StartCoroutine(RunTutorial());
+        StartTutorial();
+    }
+
+    public override void StartTutorial()
+    {
+        StartCoroutine(ProgressingTutorial());
     }
 
     private void Step1()
@@ -92,7 +97,7 @@ public class BasicTutorial : BaseTutorial
         nextButtonTextThemeable.ChangeRole(ThemeableUI.ElementRole.OnSecondary);
     }
 
-    private IEnumerator RunTutorial()
+    private IEnumerator ProgressingTutorial()
     {
         while (step <= maxStep)
         {
