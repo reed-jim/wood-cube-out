@@ -10,7 +10,8 @@ public enum SwitchableScreenType
     TutorialSelection
 }
 
-public class SwitchableScreen : Singleton<SwitchableScreen>
+// 1. Non-generic base class handling core UI and switching behavior
+public class SwitchableScreen : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] protected CanvasGroup canvasGroup;
@@ -20,14 +21,12 @@ public class SwitchableScreen : Singleton<SwitchableScreen>
     public SwitchableScreenType switchableScreenType;
     public bool isDisableGameObjectOnHiding = true;
 
-    protected override void MoreActionOnAwake()
+    protected virtual void Awake()
     {
-        base.MoreActionOnAwake();
-
         SwitchableScreenButton.switchScreenEvent += OnScreenSwitch;
     }
 
-    void OnDestroy()
+    protected virtual void OnDestroy()
     {
         SwitchableScreenButton.switchScreenEvent -= OnScreenSwitch;
     }
@@ -65,9 +64,9 @@ public class SwitchableScreen : Singleton<SwitchableScreen>
         });
     }
 
-    private void OnScreenSwitch(SwitchableScreenType switchableScreenType)
+    private void OnScreenSwitch(SwitchableScreenType type)
     {
-        if (switchableScreenType == this.switchableScreenType)
+        if (type == switchableScreenType)
         {
             Show();
         }
@@ -75,5 +74,32 @@ public class SwitchableScreen : Singleton<SwitchableScreen>
         {
             Hide();
         }
+    }
+}
+
+// 2. Generic intermediate class that adds Singleton behavior to the screen
+public class SwitchableScreen<T> : SwitchableScreen where T : SwitchableScreen<T>
+{
+    public static T Ins { get; private set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (Ins != null && Ins != this)
+        {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+        else
+        {
+            Ins = this as T;
+        }
+
+        MoreActionOnAwake();
+    }
+
+    protected virtual void MoreActionOnAwake()
+    {
     }
 }

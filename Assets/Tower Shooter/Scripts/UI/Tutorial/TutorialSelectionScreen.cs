@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialSelectionScreen : SwitchableScreen
+public class TutorialSelectionScreen : SwitchableScreen<TutorialSelectionScreen>
 {
     [SerializeField] private ObjectPoolingPageView pageView;
 
