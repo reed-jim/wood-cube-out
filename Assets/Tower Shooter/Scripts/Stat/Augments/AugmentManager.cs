@@ -333,7 +333,7 @@ public class AugmentManager : Singleton<AugmentManager>
     #region Augment Tooltip
     public void ShowAugmentTooltip(AugmentItemUI augmentItemUI)
     {
-        augmentTooltip.transform.position = augmentItemUI.transform.position.AddX(400);
+        augmentTooltip.transform.localPosition = Vector3.zero;
 
         augmentTooltip.ShowAt(augmentItemUI);
     }

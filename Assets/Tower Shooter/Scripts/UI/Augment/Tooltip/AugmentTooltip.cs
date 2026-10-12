@@ -14,7 +14,6 @@ public class AugmentTooltip : MonoBehaviour
     public TMP_Text efficiencyText;
     public TMP_Text description;
     public Image qualityBorder;
-    public Button showAugmentDetailButton;
     public Image upgradeHighlight;
 
     [SerializeField] private StatColorConfigSO colorConfig;
