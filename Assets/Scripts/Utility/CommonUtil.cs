@@ -14,7 +14,7 @@ public static class CommonUtil
 {
     public static string ToPercent(float chance)
     {
-        return $"{(int)(chance * 100)}%";
+        return $"{FormatNumber((int)(chance * 100))}%";
     }
 
     public static void CopyList<T>(List<T> source, List<T> destination)
