@@ -155,7 +155,10 @@ public class SoundManager : MonoBehaviour
 
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLOSE_POPUP_SOUND);
 
-        sound.Play();
+        if(sound != null)
+        {
+            sound.Play();
+        }
     }
 
     public void PlaySoundScrewBoxDone()

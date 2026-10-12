@@ -42,7 +42,7 @@ public class SwitchableScreen : MonoBehaviour
 
         float initialPositionX = container.localPosition.x;
 
-        container.localPosition = new Vector3(-container.sizeDelta.x, 0);
+        container.localPosition = new Vector3(-container.sizeDelta.x, container.localPosition.y);
 
         Tween.LocalPositionX(container, initialPositionX, duration: 0.3f);
     }

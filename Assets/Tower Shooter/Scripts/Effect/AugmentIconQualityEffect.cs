@@ -19,6 +19,7 @@ public class AugmentIconQualityEffect : MonoBehaviour
     }
 
     private Image uiImage;
+    private Material _materialInstance;
     private static readonly int QualityProperty = Shader.PropertyToID("_Quality");
 
     private void Awake()
@@ -31,18 +32,21 @@ public class AugmentIconQualityEffect : MonoBehaviour
         ApplyQuality();
     }
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     private void OnValidate()
     {
         // Instantly updates in the Inspector when changing the dropdown
         ApplyQuality();
     }
-    #endif
+#endif
 
     private void Initialize()
     {
         if (uiImage == null)
             uiImage = GetComponent<Image>();
+
+        _materialInstance = new Material(uiImage.material);
+        uiImage.material = _materialInstance;
     }
 
     /// <summary>
@@ -76,6 +80,6 @@ public class AugmentIconQualityEffect : MonoBehaviour
         }
 
         // Directly set the quality property on the material instance
-        uiImage.material.SetInt(QualityProperty, (int)currentQuality);
+        _materialInstance.SetInt(QualityProperty, (int)currentQuality);
     }
 }
