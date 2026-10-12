@@ -1,4 +1,5 @@
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public enum SwitchableScreenType
@@ -54,13 +55,21 @@ public class SwitchableScreen : MonoBehaviour
             return;
         }
 
-        Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+        float initialPositionX = container.localPosition.x;
+
+        Tween.LocalPositionX(container, container.sizeDelta.x, duration: 0.3f)
         .OnComplete(() =>
         {
             if (isDisableGameObjectOnHiding)
             {
                 container.gameObject.SetActive(false);
             }
+            else
+            {
+                canvasGroup.alpha = 0;
+            }
+
+            container.localPosition = container.localPosition.ChangeX(initialPositionX);
         });
     }
 
