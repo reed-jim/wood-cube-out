@@ -25,7 +25,8 @@ public enum ScalingFunction
     Exponential,
     Logarithmic,
     SquareRoot,
-    Inverse
+    Inverse,
+    None
 }
 
 public enum ConditionType

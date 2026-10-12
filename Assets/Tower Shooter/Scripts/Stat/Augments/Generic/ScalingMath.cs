@@ -2,27 +2,30 @@ using UnityEngine;
 
 public static class ScalingMath
 {
-    public static float Evaluate(float baseVal, float input, ScalingFunction func, float factor)
+    public static float Evaluate(float currentValue, ScalingFunction func, float factor)
     {
         switch (func)
         {
+            case ScalingFunction.None:
+                return currentValue;
+
             case ScalingFunction.Linear:
-                return baseVal + (input * factor);
+                return currentValue + factor;
 
             case ScalingFunction.Exponential:
-                return baseVal * Mathf.Pow(factor <= 0 ? 1.1f : factor, input);
+                return Mathf.Pow(factor <= 0 ? 1.1f : factor, currentValue);
 
-            case ScalingFunction.Logarithmic:
-                return baseVal + (Mathf.Log(Mathf.Max(1f, input)) * factor);
+            // case ScalingFunction.Logarithmic:
+            //     return baseVal + (Mathf.Log(Mathf.Max(1f, input)) * factor);
 
-            case ScalingFunction.SquareRoot:
-                return baseVal + (Mathf.Sqrt(Mathf.Max(0f, input)) * factor);
+            // case ScalingFunction.SquareRoot:
+            //     return baseVal + (Mathf.Sqrt(Mathf.Max(0f, input)) * factor);
 
-            case ScalingFunction.Inverse:
-                return factor != 0 ? baseVal + (1f / (input * factor)) : baseVal;
+            // case ScalingFunction.Inverse:
+            //     return factor != 0 ? baseVal + (1f / (input * factor)) : baseVal;
 
             default:
-                return input;
+                return currentValue;
         }
     }
 

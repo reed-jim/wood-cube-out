@@ -27,6 +27,7 @@ public class UpgradeItemUI : MonoBehaviour
     {
         AugmentManager.applyAugmentEvent += OnAugmentApplied;
         ResourceManager.changeResourceValueEvent += OnResourceChanged;
+        GenericAugmentEffectRuntime.updateNodeStatEvent += UpdateNodeStat;
 
         upgradeButton.onClick.AddListener(Upgrade);
     }
@@ -35,6 +36,7 @@ public class UpgradeItemUI : MonoBehaviour
     {
         AugmentManager.applyAugmentEvent -= OnAugmentApplied;
         ResourceManager.changeResourceValueEvent -= OnResourceChanged;
+        GenericAugmentEffectRuntime.updateNodeStatEvent -= UpdateNodeStat;
     }
 
     public void Init(BaseCharacter node)
@@ -113,6 +115,14 @@ public class UpgradeItemUI : MonoBehaviour
         {
             cachedCoinValue = value;
 
+            UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+        }
+    }
+
+    private void UpdateNodeStat(BaseCharacter node)
+    {
+        if (node == this.node)
+        {
             UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
         }
     }

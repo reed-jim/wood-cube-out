@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
 
     // Active modifier stored so we can calculate stat deltas accurately
     private StatModifier activeModifier;
+
+    public static event Action<BaseCharacter> updateNodeStatEvent;
 
     public void Init(GenericAugmentData configData)
     {
@@ -77,9 +80,15 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         {
             float efficiency = AugmentManager.Ins.GetAugmentEfficiency(augment);
 
-            float sourceVal = GetStatValue(targetStats, config.sourceStat);
+            float currentModifyValue = config.baseValue;
+
+            if (activeModifier != null)
+            {
+                currentModifyValue = activeModifier.Value;
+            }
+
             float calculatedVal =
-                efficiency * ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
+                efficiency * ScalingMath.Evaluate(currentModifyValue, config.scalingFunction, config.scalingFactor);
 
             ApplyOperationToTarget(tStat, calculatedVal);
 
@@ -92,7 +101,12 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         float oldStatValue = GetStatValue(target, config.targetStat);
         float currentTargetVal = oldStatValue;
 
-        float resultVal = ScalingMath.ApplyOperation(config.operation, currentTargetVal, calculatedVal);
+        float resultVal = ScalingMath.ApplyOperation(config.operation, currentTargetVal, calculatedVal) - oldStatValue;
+
+        if (activeModifier != null)
+        {
+            resultVal += activeModifier.Value;
+        }
 
         if (config.operation == EffectOperation.Swap)
         {
@@ -286,6 +300,8 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
 
         activeModifier = new StatModifier(internalStatType, ModifierType.Flat, newValue);
         stats.AddModifier(activeModifier, isApplyAugmentEffect: false);
+
+        updateNodeStatEvent?.Invoke(stats.serviceLocator.character);
     }
 
     private void RevertEffect()
