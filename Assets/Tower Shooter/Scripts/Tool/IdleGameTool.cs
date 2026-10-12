@@ -4,6 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI; // Required for Graphic
 
 public class IdleGameTool : EditorWindow
 {
@@ -17,6 +18,7 @@ public class IdleGameTool : EditorWindow
     private bool showEffectCreatorGroup = true;
     private bool showHierarchyScalerGroup = true;
     private bool showMaterialModifierGroup = true;
+    private bool showButtonMaterialAssignerGroup = true; // Added foldout state for button material tool
 
     // Scale RectTransform fields
     private float scaleFactor = 1.0f;
@@ -27,6 +29,9 @@ public class IdleGameTool : EditorWindow
     private Material targetMaterial;
     private TextAsset jsonFile;
     private string rawJsonInput = "";
+
+    // Button Material Assigner fields
+    private Material buttonTargetMaterial; // Specific material slot for SaferioButton assignment
 
     // Material Creation fields
     private Shader planetShader;
@@ -174,6 +179,24 @@ public class IdleGameTool : EditorWindow
         mainScrollPosition = EditorGUILayout.BeginScrollView(mainScrollPosition);
 
         EditorGUILayout.Space(8);
+
+        // -------------------------------------------------------------
+        // SECTION: Apply Material to SaferioButtons (NEW)
+        // -------------------------------------------------------------
+        BeginCardSection("Apply Material to SaferioButtons", ref showButtonMaterialAssignerGroup);
+        if (showButtonMaterialAssignerGroup)
+        {
+            buttonTargetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", buttonTargetMaterial, typeof(Material), false);
+
+            EditorGUILayout.Space(4);
+            GUI.backgroundColor = new Color(0.4f, 0.7f, 1.0f);
+            if (GUILayout.Button("Apply Material to All SaferioButtons in Scene", GUILayout.Height(26)))
+            {
+                ApplyMaterialToAllSaferioButtonsInProject();
+            }
+            GUI.backgroundColor = Color.white;
+        }
+        EndCardSection();
 
         // -------------------------------------------------------------
         // SECTION 1: Augment Auto-Assigner
@@ -443,6 +466,65 @@ public class IdleGameTool : EditorWindow
         EditorGUILayout.Space(6);
     }
 
+    // Logic to assign material to all SaferioButtons in the active scene via Editor Window
+    private void ApplyMaterialToAllSaferioButtonsInProject()
+    {
+        if (buttonTargetMaterial == null)
+        {
+            EditorUtility.DisplayDialog("Error", "Please assign a Target Material first.", "OK");
+            return;
+        }
+
+        string[] guids = AssetDatabase.FindAssets("t:Prefab");
+        int modifiedPrefabsCount = 0;
+        int totalButtonsUpdated = 0;
+
+        try
+        {
+            for (int i = 0; i < guids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+
+                EditorUtility.DisplayProgressBar("Scanning Project Prefabs", $"Checking: {Path.GetFileName(path)}", (float)i / guids.Length);
+
+                GameObject prefabRoot = PrefabUtility.LoadPrefabContents(path);
+                if (prefabRoot == null) continue;
+
+                SaferioButton[] buttons = prefabRoot.GetComponentsInChildren<SaferioButton>(true);
+                bool prefabChanged = false;
+
+                foreach (var btn in buttons)
+                {
+                    Graphic g = btn.GetComponent<Graphic>();
+                    if (g != null)
+                    {
+                        g.material = buttonTargetMaterial;
+                        prefabChanged = true;
+                        totalButtonsUpdated++;
+                    }
+                }
+
+                if (prefabChanged)
+                {
+                    PrefabUtility.SaveAsPrefabAsset(prefabRoot, path);
+                    modifiedPrefabsCount++;
+                }
+
+                PrefabUtility.UnloadPrefabContents(prefabRoot);
+            }
+        }
+        finally
+        {
+            EditorUtility.ClearProgressBar();
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        Debug.Log($"Project-wide update complete: Updated {totalButtonsUpdated} button(s) across {modifiedPrefabsCount} prefab(s).");
+        EditorUtility.DisplayDialog("Success", $"Updated {totalButtonsUpdated} SaferioButton image(s) across {modifiedPrefabsCount} prefab(s) in the project.", "OK");
+    }
+
     private void CreatePlanetMaterialFromJSON()
     {
         if (planetShader == null) planetShader = Shader.Find("UI/URP/PlanetGlow");
@@ -657,7 +739,6 @@ public class IdleGameTool : EditorWindow
 
         try
         {
-            // Configure Newtonsoft JSON converter settings to handle Enum strings automatically
             var settings = new JsonSerializerSettings();
             settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
 
