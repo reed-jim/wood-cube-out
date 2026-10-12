@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ac3a40092f65a4eb8db82fd72748ed, type: 3}
+  m_Name: White Dwarf Degenerate Core
+  m_EditorClassIdentifier: Assembly-CSharp::Augment
+  id: 0
+  augmentName: White Dwarf Degenerate Core
+  customNotesTemplate: Draws extreme density power from the collapsed companion of
+    Sirius B.
+  statModifiers:
+  - statType: 2
+    modType: 300
+    value: 1.4
+  - statType: 14
+    modType: 200
+    value: 0.4
+  dynamicEffects:
+  - {fileID: 11400000, guid: cb10b1d5b4adb9f4590bb2a410fd0bf3, type: 2}
+  augmentQuality: 3
+  spaceObjectType: 19
+  isNeedCharacterToApply: 1
+  isApplyImmediatelyAfterPick: 1
+  isForNodeGroup: 0
+  isUnlocked: 0

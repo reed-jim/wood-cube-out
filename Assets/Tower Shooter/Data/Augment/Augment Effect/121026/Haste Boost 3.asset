@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26011e362bbf6574187136dadc81a081, type: 3}
+  m_Name: Haste Boost 3
+  m_EditorClassIdentifier: Assembly-CSharp::GenericAugmentEffect
+  effectName: Haste Boost
+  effectColor: {r: 0.5294118, g: 0.80784315, b: 0.92156863, a: 1}
+  descriptionTemplate: 
+  config:
+    trigger: 0
+    scope: 0
+    cycleFrequency: 2
+    sourceStat: 3
+    targetStat: 3
+    operation: 0
+    scalingFunction: 3
+    baseValue: 0.05
+    scalingFactor: 1
+    condition: 0
+    comparisonStat: 3
+    thresholdValue: 0
+    durationType: 0
+    durationInSeconds: 5
+    decayRatePerSecond: 1
+    maxStacks: 10

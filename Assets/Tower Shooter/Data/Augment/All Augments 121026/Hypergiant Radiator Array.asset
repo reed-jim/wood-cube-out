@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ac3a40092f65a4eb8db82fd72748ed, type: 3}
+  m_Name: Hypergiant Radiator Array
+  m_EditorClassIdentifier: Assembly-CSharp::Augment
+  id: 0
+  augmentName: Hypergiant Radiator Array
+  customNotesTemplate: Channels immense luminous output from hypergiant stellar matrices.
+  statModifiers:
+  - statType: 2
+    modType: 200
+    value: 0.32
+  - statType: 14
+    modType: 200
+    value: 0.28
+  dynamicEffects:
+  - {fileID: 11400000, guid: 319d10ba058dc614fa3d896aede84106, type: 2}
+  augmentQuality: 3
+  spaceObjectType: 45
+  isNeedCharacterToApply: 1
+  isApplyImmediatelyAfterPick: 1
+  isForNodeGroup: 0
+  isUnlocked: 0

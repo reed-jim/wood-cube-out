@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ac3a40092f65a4eb8db82fd72748ed, type: 3}
+  m_Name: Shield Hypergiant Titan Engine
+  m_EditorClassIdentifier: Assembly-CSharp::Augment
+  id: 0
+  augmentName: Shield Hypergiant Titan Engine
+  customNotesTemplate: Channels immense volume and stellar wind force from UY Scuti.
+  statModifiers:
+  - statType: 2
+    modType: 300
+    value: 1.55
+  - statType: 14
+    modType: 200
+    value: 0.45
+  dynamicEffects:
+  - {fileID: 11400000, guid: 5086600ac5a81c04bbe8bd05445807be, type: 2}
+  augmentQuality: 4
+  spaceObjectType: 48
+  isNeedCharacterToApply: 1
+  isApplyImmediatelyAfterPick: 1
+  isForNodeGroup: 0
+  isUnlocked: 0

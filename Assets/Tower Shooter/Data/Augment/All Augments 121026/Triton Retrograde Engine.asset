@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ac3a40092f65a4eb8db82fd72748ed, type: 3}
+  m_Name: Triton Retrograde Engine
+  m_EditorClassIdentifier: Assembly-CSharp::Augment
+  id: 0
+  augmentName: Triton Retrograde Engine
+  customNotesTemplate: Reverses orbital momentum to create anomalous attack speed
+    surges.
+  statModifiers:
+  - statType: 3
+    modType: 300
+    value: 1.2
+  dynamicEffects:
+  - {fileID: 11400000, guid: f3d5fabeb19ba4d4abdc01b33900832e, type: 2}
+  augmentQuality: 2
+  spaceObjectType: 8
+  isNeedCharacterToApply: 1
+  isApplyImmediatelyAfterPick: 1
+  isForNodeGroup: 0
+  isUnlocked: 0
