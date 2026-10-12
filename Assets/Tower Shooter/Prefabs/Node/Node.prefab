@@ -366,6 +366,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8689732169628076374}
+  - component: {fileID: 6198375104139016830}
   - component: {fileID: 7135091534957941676}
   m_Layer: 5
   m_Name: Augment Filter Container
@@ -393,6 +394,18 @@ RectTransform:
   m_AnchoredPosition: {x: -450, y: 130}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &6198375104139016830
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2280416519153596023}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &7135091534957941676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -945,6 +958,7 @@ MonoBehaviour:
   highlight: {fileID: 3433343903205745889}
   energyPath: {fileID: 8487678098941213317}
   augmentFilterContainer: {fileID: 8689732169628076374}
+  augmentFilterCanvasGroup: {fileID: 6198375104139016830}
   augmentLink: {fileID: 260011292704352820}
   filterAugmentItemScale: 0.5
 --- !u!1 &6900476230869989543

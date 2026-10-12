@@ -32,6 +32,7 @@ public class NodeUI : MonoBehaviour
 
     [Header("Filter")]
     public RectTransform augmentFilterContainer;
+    public CanvasGroup augmentFilterCanvasGroup;
     public Image augmentLink;
     public float filterAugmentItemScale;
     private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
@@ -221,16 +222,16 @@ public class NodeUI : MonoBehaviour
             nodeDetailAugmentItemUIs.Add(nodeDetailAugmentItemUI);
         }
 
-        SaferioTween.AlphaShow(augmentLink);
+        augmentFilterContainer.localScale = filterAugmentItemScale * Vector3.one;
 
-        SaferioTween.ScaleUpWithPunch(augmentFilterContainer, filterAugmentItemScale, onCompleteAction: onCompleteAction);
+        SaferioTween.AlphaShow(augmentLink);
+        SaferioTween.AlphaShow(augmentFilterCanvasGroup, onCompleteAction: onCompleteAction);
     }
 
     public void DisableAugmentFilter(Action onCompleteAction = null)
     {
         SaferioTween.AlphaHide(augmentLink);
-
-        SaferioTween.ScaleDownWithPunch(augmentFilterContainer, onCompleteAction: () =>
+        SaferioTween.AlphaHide(augmentFilterCanvasGroup, onCompleteAction: () =>
         {
             for (int i = 0; i < nodeDetailAugmentItemUIs.Count; i++)
             {
