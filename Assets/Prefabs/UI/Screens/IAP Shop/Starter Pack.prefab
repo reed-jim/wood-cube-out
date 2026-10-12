@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -239,6 +239,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -285,7 +286,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Starter Pack
-  parameter: 
   FallbackText: Starter Pack
 --- !u!1 &2818446319192175166
 GameObject:
@@ -423,10 +423,12 @@ MonoBehaviour:
   addHoleQuantityText: {fileID: 3354454989710561649}
   breakObjectQuantityText: {fileID: 1998562250383516605}
   clearHolesQuantityText: {fileID: 8857567082402322329}
+  clearOneColorQuantityText: {fileID: 0}
   priceText: {fileID: 8037861042689887521}
   timeCounterText: {fileID: 0}
   buyButton: {fileID: 6074139535173948530}
-  isContainRemoveAd: 0
+  isHideWhenRemoveAd: 0
+  isNonConsumable: 0
   _packageData: {fileID: 11400000, guid: c0abd2543dd5291489b839ed0b453c12, type: 2}
   isSalePack: 0
   packType: 0
@@ -692,6 +694,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -828,6 +831,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

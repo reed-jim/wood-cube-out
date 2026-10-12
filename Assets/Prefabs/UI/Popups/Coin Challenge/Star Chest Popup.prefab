@@ -357,6 +357,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -661,6 +662,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -707,7 +709,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Continue
-  parameter: 
   FallbackText: Claim
 --- !u!1 &3933672704995325829
 GameObject:
@@ -857,7 +858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1023,6 +1024,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1069,7 +1071,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Star Chest
-  parameter: 
   FallbackText: Shop
 --- !u!1 &5402605001432262254
 GameObject:
@@ -1175,6 +1176,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1221,7 +1223,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Collect stars to unlock the chest
-  parameter: 
   FallbackText: Claim
 --- !u!1 &6896140578120085241
 GameObject:
@@ -1536,6 +1537,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2593937485154228852, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 5590338991092041967, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -19.400024
@@ -1648,6 +1653,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6941302230488436879, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 7299723408374499787, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_IsActive
       value: 0

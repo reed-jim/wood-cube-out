@@ -29,21 +29,27 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AtmospherePower: 10
-    - _BorderSoftness: 0.2
-    - _BorderThickness: 0.374
+    - _AspectRatio: 3
+    - _AtmospherePower: 3.5
+    - _BorderThickness: 0.25
     - _ColorMask: 15
-    - _CornerRadius: 0.25
-    - _GlowAmount: 0.471
-    - _RimPower: 9.93
+    - _CornerRadius: 0.2
+    - _GlowAmount: 0
+    - _RimPower: 2
+    - _RippleIntensity: 0.3
+    - _RippleProgress: 0
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     m_Colors:
-    - _AtmosphereColor: {r: 0.3, g: 0.6, b: 1, a: 1}
+    - _AtmosphereColor: {r: 0.1, g: 0.4, b: 0.8, a: 1}
+    - _ButtonSize: {r: 300, g: 100, b: 0, a: 0}
+    - _ClickPositionOS: {r: 0, g: 0, b: 0, a: 0}
+    - _ClickUV: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 1, g: 0.8, b: 0.2, a: 1}
+    - _GlowColor: {r: 0.3, g: 0.8, b: 1, a: 1}
+    - _RippleColor: {r: 1, g: 1, b: 1, a: 0.19607843}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

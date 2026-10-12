@@ -52,7 +52,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TileSlot
   tile: {fileID: 0}
   tileSlotContainer: {fileID: 4337613929886133818}
+  rectTransform: {fileID: 0}
+  containerImage: {fileID: 0}
   isShelf: 0
+  isLocked: 0
 --- !u!222 &7570954934294584798
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -143,7 +146,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TileSlot
   tile: {fileID: 0}
   tileSlotContainer: {fileID: 4337613929886133818}
+  rectTransform: {fileID: 0}
+  containerImage: {fileID: 0}
   isShelf: 0
+  isLocked: 0
 --- !u!222 &7600647855733747176
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -285,6 +291,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -384,7 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 0.3820755, g: 0.74951506, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -535,7 +542,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TileSlot
   tile: {fileID: 0}
   tileSlotContainer: {fileID: 4337613929886133818}
+  rectTransform: {fileID: 0}
+  containerImage: {fileID: 0}
   isShelf: 0
+  isLocked: 0
 --- !u!222 &2101088972647994622
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -626,7 +636,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TileSlot
   tile: {fileID: 0}
   tileSlotContainer: {fileID: 4337613929886133818}
+  rectTransform: {fileID: 0}
+  containerImage: {fileID: 0}
   isShelf: 0
+  isLocked: 0
 --- !u!222 &3048717737752178779
 CanvasRenderer:
   m_ObjectHideFlags: 0

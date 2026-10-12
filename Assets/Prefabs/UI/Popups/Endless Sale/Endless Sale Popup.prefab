@@ -55,9 +55,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 5611920150841437189}
   closeButton: {fileID: 7733255507953352378}
+  detectClickOutsideButton: {fileID: 0}
   route: 36
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
+  isShowingInterAdOnInteract: 0
 --- !u!222 &6414708317197448670
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -498,6 +500,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -544,7 +547,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Shop
-  parameter: 
   FallbackText: Shop
 --- !u!1 &6896140578120085241
 GameObject:
@@ -1326,6 +1328,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2593937485154228852, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 5590338991092041967, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -19.400024
@@ -1438,6 +1444,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6941302230488436879, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 7299723408374499787, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_IsActive
       value: 0

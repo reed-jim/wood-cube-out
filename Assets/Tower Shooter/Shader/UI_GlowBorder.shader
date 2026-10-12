@@ -5,11 +5,18 @@ Shader "UI/URP/GlowBorder"
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
 
-        [Header(Glow Border Settings)]
-        [HDR] _GlowColor ("Glow Edge Color", Color) = (1, 1, 1, 1)
-        [HDR] _AtmosphereColor ("Atmosphere Color", Color) = (0.3, 0.6, 1.0, 1.0)
-        _GlowAmount ("Glow Transition Amount", Range(0, 1)) = 1.0
+        [Header(Normal Hover Glow)]
+        [HDR] _GlowColor ("Hover Edge Color", Color) = (0.3, 0.8, 1.0, 1.0)
+        [HDR] _AtmosphereColor ("Hover Atmosphere", Color) = (0.1, 0.4, 0.8, 1.0)
+        _GlowAmount ("Hover Intensity", Range(0, 1)) = 0.0
         
+        [Header(Material Design Ripple Effect)]
+        [HDR] _RippleColor ("Ripple Color", Color) = (1.0, 1.0, 1.0, 0.9)
+        _RippleProgress ("Ripple Progress", Range(0, 1)) = 0.0
+        _RippleIntensity ("Ripple Intensity Multiplier", Range(0, 5)) = 2.0
+        _ClickLocalPos ("Click Position (Local Rect Space)", Vector) = (0, 0, 0, 0)
+        _RectSize ("Button Size (Width, Height)", Vector) = (300, 100, 0, 0)
+
         [Header(Atmosphere Power)]
         _AtmospherePower ("Atmosphere Power", Range(0.1, 10.0)) = 3.5
         _RimPower ("Rim Intensity Multiplier", Range(1.0, 10.0)) = 2.0
@@ -73,6 +80,7 @@ Shader "UI/URP/GlowBorder"
                 float4 positionCS   : SV_POSITION;
                 float4 color        : COLOR;
                 float2 uv           : TEXCOORD0;
+                float3 positionOS   : TEXCOORD1;
             };
 
             TEXTURE2D(_MainTex);
@@ -84,13 +92,17 @@ Shader "UI/URP/GlowBorder"
                 float4 _GlowColor;
                 float4 _AtmosphereColor;
                 float _GlowAmount;
+                float4 _RippleColor;
+                float _RippleProgress;
+                float _RippleIntensity;
+                float4 _ClickLocalPos;
+                float4 _RectSize;
                 float _AtmospherePower;
                 float _RimPower;
                 float _BorderThickness;
                 float _CornerRadius;
             CBUFFER_END
 
-            // Signed Distance Function for Rounded Rect
             float sdRoundedBox(float2 p, float2 b, float r)
             {
                 float2 q = abs(p) - b + r;
@@ -103,38 +115,43 @@ Shader "UI/URP/GlowBorder"
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 output.uv = TRANSFORM_TEX(input.uv, _MainTex);
                 output.color = input.color * _Color;
+                output.positionOS = input.positionOS.xyz;
                 return output;
             }
 
             half4 frag(Varyings input) : SV_Target
             {
                 half4 mainTexColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv) * input.color;
-
-                // Center UV coords from -0.5 to 0.5
                 float2 centeredUV = input.uv - 0.5;
 
-                // 1. Outer Box Alpha Mask (Rounded Rect Clipping)
                 float outerDist = sdRoundedBox(centeredUV, float2(0.5, 0.5), _CornerRadius);
                 float maskAlpha = smoothstep(0.005, -0.005, outerDist);
 
-                // 2. Compute Exponential Atmosphere Glow Gradient
-                // Distance inwards from the outer border normalized by thickness
+                // Standard Hover Glow
                 float distFromEdge = saturate(-outerDist / max(_BorderThickness, 0.0001));
-                
-                // Inverse distance (1 at edge, 0 inside towards center)
                 float rimFactor = 1.0 - distFromEdge;
-                
-                // Exponential power falloff (recalculating atmosphere behavior)
                 float atmosphereGlow = pow(saturate(rimFactor), _AtmospherePower) * _RimPower;
-
-                // Blend rim border color (bright white/cyan edge) into atmosphere body color (blue)
                 half4 glowColorResult = lerp(_AtmosphereColor, _GlowColor, pow(saturate(rimFactor), 2.0));
+                half4 hoverOverlay = glowColorResult * atmosphereGlow * _GlowAmount;
 
-                // Final glow layer scaled by animated _GlowAmount transition
-                half4 glowOverlay = glowColorResult * atmosphereGlow * _GlowAmount;
+                // 9-Slice Safe Ripple Effect (Calculated via Local Object-Space Pixels)
+                // input.positionOS.xy gives local rect coordinates centered around (0,0)
+                float2 currentPixelPos = input.positionOS.xy;
+                float distFromClick = distance(currentPixelPos, _ClickLocalPos.xy);
 
-                // 3. Combine original texture with atmospheric glow
-                half4 finalColor = mainTexColor + glowOverlay;
+                // Max radius based on the diagonal distance of the whole button rectangle
+                float maxRadius = length(_RectSize.xy);
+                float currentRadius = _RippleProgress * maxRadius;
+
+                float rippleMask = step(0.001, _RippleProgress) * 
+                                 smoothstep(currentRadius + 40.0, currentRadius - 10.0, distFromClick) * 
+                                 smoothstep(currentRadius - 80.0, currentRadius, distFromClick) *
+                                 (1.0 - _RippleProgress);
+                
+                half4 rippleOverlay = _RippleColor * rippleMask * _RippleIntensity;
+
+                // Combine layers
+                half4 finalColor = mainTexColor + hoverOverlay + rippleOverlay;
                 finalColor.a = mainTexColor.a * maskAlpha;
 
                 return finalColor;

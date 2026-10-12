@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -291,6 +291,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -442,6 +443,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -712,10 +714,15 @@ MonoBehaviour:
   breakModeButtonRT: {fileID: 3308839793245109696}
   clearAllScrewPortsButtonRT: {fileID: 2260182569893516513}
   breakModeContainer: {fileID: 4691125696244298152}
+  breakModeContainerCanvasGroup: {fileID: 0}
+  localizedDescription: {fileID: 0}
+  enableAllAntBoxesTranslationName: 
+  clearOneColorTranslationName: 
   addMoreScrewPortButton: {fileID: 8247697082063482431}
   breakObjectButton: {fileID: 5964487923651808161}
   clearAllScrewPortsButton: {fileID: 6949206482115814016}
   clearOneColorButton: {fileID: 7397608623998489128}
+  increaseGrainCapacityButton: {fileID: 0}
   disableBreakObjectModeEarlyButton: {fileID: 978319659384097423}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   canvasSize: {fileID: 11400000, guid: cff3c506c9f63d645a923fa57c7a07c1, type: 2}
@@ -723,6 +730,12 @@ MonoBehaviour:
   userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
   screwBoxesObserver: {fileID: 11400000, guid: 4267c2c43005a7e4ab25c441ead4cb81, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
+  blackOverlay: {fileID: 0}
+  skeletonGraphic: {fileID: 0}
+  appearAnim: 
+  ideaAnim: 
+  slotName: 
+  boosterAttachments: []
   transitionTime: 0.4
   waitTimeBetweenClicks: 1
 --- !u!1001 &5186422114712707983

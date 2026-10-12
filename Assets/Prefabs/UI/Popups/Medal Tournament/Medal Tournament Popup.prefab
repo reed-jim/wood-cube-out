@@ -99,9 +99,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 5611920150841437189}
   closeButton: {fileID: 7733255507953352378}
+  detectClickOutsideButton: {fileID: 0}
   route: 40
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
+  isShowingInterAdOnInteract: 0
   popupCanvasGroup: {fileID: 9001182195133509965}
   rewardCanvasGroup: {fileID: 7637412091301495538}
   scrollView: {fileID: 1611059088572920891}
@@ -206,6 +208,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: a96c89560fe27444b87e1cd6aeba53ea, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -213,14 +218,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -231,6 +242,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!1 &1702716561896132512
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,6 +347,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -433,6 +447,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: a96c89560fe27444b87e1cd6aeba53ea, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -440,14 +457,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -458,6 +481,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!1 &1974002708462176579
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +738,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -759,7 +785,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Medal Tournament
-  parameter: 
   FallbackText: Shop
 --- !u!1 &5556431511497682455
 GameObject:
@@ -902,6 +927,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: b184a816cd271fe42837bc2e1900d145, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -909,14 +937,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -927,6 +961,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!1 &6896140578120085241
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,6 +1523,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 5d768045923d7b7489fff9411c907e7e, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -1494,14 +1533,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -1512,6 +1557,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!1001 &4242875910318208039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1536,6 +1583,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2593937485154228852, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 5590338991092041967, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -19.400024
@@ -1648,6 +1699,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6941302230488436879, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 7299723408374499787, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_IsActive
       value: 0

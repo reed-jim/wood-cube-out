@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -339,6 +339,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -550,6 +551,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -656,7 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -897,6 +899,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -943,7 +946,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Daily Reward
-  parameter: 
   FallbackText: Shop
 --- !u!1 &5799282452530624257
 GameObject:
@@ -1049,6 +1051,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1095,7 +1098,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Log in for 7 days to unlock a special chest
-  parameter: 
   FallbackText: Log in for 7 days to unlock a special chest!
 --- !u!1 &6510690046616666927
 GameObject:
@@ -1200,6 +1202,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1517,6 +1520,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1698,7 +1702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1863,6 +1867,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1904,6 +1909,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5611920150841437189}
     m_Modifications:
+    - target: {fileID: 1048370155258576490, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 2649473284044341830, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -2046,6 +2055,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5611920150841437189}
     m_Modifications:
+    - target: {fileID: 1048370155258576490, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 2649473284044341830, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -2180,6 +2193,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5611920150841437189}
     m_Modifications:
+    - target: {fileID: 1048370155258576490, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 2649473284044341830, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -2451,6 +2468,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -2
       objectReference: {fileID: 0}
+    - target: {fileID: 1048370155258576490, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 2358324280025739513, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 240
@@ -2737,6 +2758,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5611920150841437189}
     m_Modifications:
+    - target: {fileID: 1048370155258576490, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 2649473284044341830, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -2871,6 +2896,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2593937485154228852, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 5590338991092041967, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -19.400024
@@ -2983,6 +3012,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6941302230488436879, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 7299723408374499787, guid: 87f8ad5411450aa4ebd27420f0cb56ac, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -3013,6 +3046,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5611920150841437189}
     m_Modifications:
+    - target: {fileID: 1048370155258576490, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 2649473284044341830, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -3135,6 +3172,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5611920150841437189}
     m_Modifications:
+    - target: {fileID: 1048370155258576490, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
     - target: {fileID: 2776296885107418309, guid: 7d79cbc0847ef984598f0890aefe21b7, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

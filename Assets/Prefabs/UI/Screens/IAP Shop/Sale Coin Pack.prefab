@@ -185,10 +185,12 @@ MonoBehaviour:
   addHoleQuantityText: {fileID: 7737031768739755164}
   breakObjectQuantityText: {fileID: 8521383103932284204}
   clearHolesQuantityText: {fileID: 7269793559304988436}
+  clearOneColorQuantityText: {fileID: 0}
   priceText: {fileID: 6893308516649411625}
   timeCounterText: {fileID: 0}
   buyButton: {fileID: 3487073089424186159}
-  isContainRemoveAd: 0
+  isHideWhenRemoveAd: 0
+  isNonConsumable: 0
   _packageData: {fileID: 11400000, guid: 7433ad9585cc1314483fc120ddccdb02, type: 2}
   isSalePack: 1
   packType: 3
@@ -408,6 +410,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -501,7 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -829,6 +832,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -965,6 +969,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1102,6 +1107,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1148,7 +1154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Sale Coin
-  parameter: 
   FallbackText: Starter Pack
 --- !u!1001 &136639213516850112
 PrefabInstance:
