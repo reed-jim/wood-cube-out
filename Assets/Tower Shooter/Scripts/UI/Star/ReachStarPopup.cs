@@ -14,6 +14,7 @@ public class ReachStarPopup : BasePopup
 
     private VoyageData voyageData;
     private StarPathConfig starPathConfig;
+    private RewardItemUI rewardItemUI;
 
     public static event Action goNextStarEvent;
 
@@ -45,10 +46,14 @@ public class ReachStarPopup : BasePopup
         // UIUtil.SetSizeKeepRatioY(starPicture, container.sizeDelta.x);
 
         ResourceDataItem resourceDataItem = new ResourceDataItem(ResourceType.Coin, CurveManager.Ins.GetVoyageReward(voyageData.starPathConfigIndex));
-        RewardItemUI rewardItemUI = ObjectPoolingEverything.GetFromPool<RewardItemUI>(GameConstants.rewardItemUI);
 
-        rewardItemUI.transform.SetParent(rewardContainer);
-        rewardItemUI.transform.localScale = Vector3.one;
+        if (rewardItemUI == null)
+        {
+            rewardItemUI = ObjectPoolingEverything.GetFromPool<RewardItemUI>(GameConstants.rewardItemUI);
+
+            rewardItemUI.transform.SetParent(rewardContainer);
+            rewardItemUI.transform.localScale = Vector3.one;
+        }
 
         rewardItemUI.Init(resourceDataItem);
 
