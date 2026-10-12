@@ -34,7 +34,6 @@ public class PinchGesture : MonoBehaviour
         LevelLoader.startLevelEvent += OnLevelStarted;
         LevelLoader.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
-        LevelTutorial.enablePinchingEvent += EnablePinching;
 
         zoomSlider.onValueChanged.AddListener(OnZoomSliderValueChanged);
 
@@ -49,7 +48,6 @@ public class PinchGesture : MonoBehaviour
         LevelLoader.startLevelEvent -= OnLevelStarted;
         LevelLoader.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
-        LevelTutorial.enablePinchingEvent -= EnablePinching;
 
         CommonUtil.StopAllTweens(_tweens);
     }

@@ -100,8 +100,6 @@ namespace NamPhuThuy.GamePlay
 
             // StartCoroutine(QueueSpawningScrewBoxes());
             // StartCoroutine(HandlingOutsideScrews());
-
-            _isReducedDifficultyAfterRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD, true);
         }
 
         void OnDestroy()
@@ -136,10 +134,6 @@ namespace NamPhuThuy.GamePlay
             _screws = new List<BaseScrew>();
 
             _totalScrewObserved = 0;
-
-            currentLevelDifficultyConfig = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
-            currentLevelDifficultyConfig.ScrewPortFactionDifficultyModifier =
-                RemoteConfigController.GetIntConfig(FirebaseConfig.SCREW_PORT_FACTION_DIFFICULTY_MODIFIER, 0);
 
             _remainingSpawnScrewBoxCommands = 0;
             _isHandlingSpawningScrewBox = false;
@@ -654,37 +648,6 @@ namespace NamPhuThuy.GamePlay
             if (GamePersistentVariable.currentLevelMode != LevelMode.Normal)
             {
                 float progressPercent = GetLevelCompletePercent();
-
-                if (progressPercent > 1 - RemoteConfigController.GetFloatConfig(FirebaseConfig.specialLevelDifficultyMultiplier, 0.0f))
-                {
-                    GameFaction lockedFaction = GameFaction.None;
-
-                    if (_rustyScrewSpecialLevelManager != null)
-                    {
-                        lockedFaction = _rustyScrewSpecialLevelManager.LockedScrewFaction;
-                    }
-
-                    if (_lockScrewColorLevelManager != null)
-                    {
-                        lockedFaction = _lockScrewColorLevelManager.LockedScrewFaction;
-                    }
-
-                    if (_lockScrewBoxManager != null)
-                    {
-                        if (progressPercent <= 0.4f)
-                        {
-                            lockedFaction = _lockScrewBoxManager.LockedScrewFaction;
-                        }
-                    }
-
-                    if (lockedFaction != GameFaction.None)
-                    {
-                        if (shuffledDifficultyLevelByFaction[lockedFaction] < 900)
-                        {
-                            nextFaction = lockedFaction;
-                        }
-                    }
-                }
             }
 
             if (!isFound)
@@ -750,11 +713,6 @@ namespace NamPhuThuy.GamePlay
         {
             int adjustedLevel = currentDifficultyLevel + modifier;
             adjustedLevel = Mathf.Max(adjustedLevel, 0);
-
-            // FREE LEVELS
-            int minFreeLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_FREE_LEVEL, 20);
-            if (currentLevel.Value <= minFreeLevel)
-                adjustedLevel = 0;
 
             // HARD MODE
             if (GamePersistentVariable.isHardMode)

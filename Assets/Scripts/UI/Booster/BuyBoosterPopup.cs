@@ -205,17 +205,7 @@ public class BuyBoosterPopup : BasePopup
 
     private void GetWithAds()
     {
-        ActionWatchVideo actionWatchVideo;
 
-        switch (_boosterType)
-        {
-            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
-            default: actionWatchVideo = ActionWatchVideo.AddHole; break;
-        }
-
-        // GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()

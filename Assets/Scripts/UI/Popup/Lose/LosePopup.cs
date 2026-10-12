@@ -44,8 +44,6 @@ public class LosePopup : BasePopup
         skipLevelButton.onClick.AddListener(SkipLevel);
         returnHomeButton.onClick.AddListener(ReturnHome);
 
-        _isAllowedSkipLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_SKIP_LEVEL_BUTTON, true);
-
         if (!_isAllowedSkipLevel)
         {
             skipLevelButton.gameObject.SetActive(false);
@@ -110,17 +108,6 @@ public class LosePopup : BasePopup
         {
             return;
         }
-
-        if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
-        {
-            skipLevelButton.gameObject.SetActive(true);
-
-            GamePersistentVariable.isAllowedSkipLevel = true;
-        }
-        else
-        {
-            skipLevelButton.gameObject.SetActive(false);
-        }
         #endregion
 
         GamePersistentVariable.isLevelLost = true;
@@ -142,19 +129,6 @@ public class LosePopup : BasePopup
             SwitchRoute(ScreenRoute.LivesShop);
 
             return;
-        }
-
-        if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
-        {
-            // GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
-        }
-        else
-        {
-            replayLevelEvent?.Invoke();
-
-            SaferioTracking.TrackReplayLevel(currentLevel.Value);
-
-            Hide();
         }
 
         GamePersistentVariable.levelRetryTime++;

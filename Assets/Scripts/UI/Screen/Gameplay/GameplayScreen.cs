@@ -76,11 +76,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
         increaseGameSpeedButton.onClick.AddListener(IncreaseGameSpeed);
         decreaseGameSpeedButton.onClick.AddListener(DecreaseGameSpeed);
 
-        if (UserData.IsRemoveAds)
-        {
-            noAdsButton.gameObject.SetActive(false);
-        }
-
         if (!gameSetting.IsDebug)
         {
             openDebugPopupButton.gameObject.SetActive(false);
@@ -122,11 +117,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         SaferioTween.AlphaShow(mainUICanvasGroup);
         SaferioTween.AlphaShow(boosterUICanvasGroup);
-
-        if (UserData.IsRemoveAds)
-        {
-            noAdsPack.gameObject.SetActive(false);
-        }
     }
 
     public void HideUINearWinLevel(Action onCompleteAction)

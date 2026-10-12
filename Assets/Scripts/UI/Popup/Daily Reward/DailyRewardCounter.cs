@@ -25,7 +25,6 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     protected override void MoreActionInAwake()
     {
         DailyRewardItem.claimDailyRewardEvent += Refresh;
-        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         StartCoroutine(Counting());
     }
@@ -33,7 +32,6 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     protected override void MoreActionOnDestroy()
     {
         DailyRewardItem.claimDailyRewardEvent -= Refresh;
-        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }
 
     void OnEnable()

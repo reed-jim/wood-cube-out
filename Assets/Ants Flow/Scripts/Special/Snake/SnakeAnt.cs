@@ -36,8 +36,6 @@ namespace AntsFlow
                 GamePersistentVariable.numActiveAnt--;
             }));
 
-            GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
-
             isDroppingTile = true;
         }
 

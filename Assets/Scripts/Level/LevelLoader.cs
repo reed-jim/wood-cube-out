@@ -984,52 +984,11 @@ namespace NamPhuThuy.GamePlay
 
         private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
         {
-            // if (isLoopLevel)
-            // {
-            //     return false;
-            // }
-
-            bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, false);
-            int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
-
-            if (!remoteConfigIsShowBoosterSuggestion)
-            {
-                return false;
-            }
-
-            if (level <= 3 || level % numLevelShowBoosterSuggestion != 0)
-            {
-                return false;
-            }
-
             return true;
         }
 
         private bool IsShowDoubleScrewBoxesSuggestion(int level)
         {
-            bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION, false);
-            int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 1);
-
-            if (!remoteConfigIsShowBoosterSuggestion)
-            {
-                return false;
-            }
-
-            if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
-            {
-                return false;
-            }
-
-            if (level <= 3 || level % numLevelShowBoosterSuggestion != 0)
-            {
-                return false;
-            }
-
-            if (!GamePersistentVariable.isEnableRewardedAds)
-            {
-                return false;
-            }
-
             return true;
         }
 
@@ -1038,20 +997,6 @@ namespace NamPhuThuy.GamePlay
             bool isBoughtHotDeal = DataUtility.Load(GameConstants.IS_BOUGHT_HOT_DEAL, false);
 
             if (isBoughtHotDeal)
-            {
-                return false;
-            }
-
-            bool remoteConfigIsShowIAPSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_IAP_SUGGESTION, true);
-            int minLevelShow = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_LEVEL_SHOW_IAP_SUGGESTION, 10);
-            int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
-
-            if (!remoteConfigIsShowIAPSuggestion)
-            {
-                return false;
-            }
-
-            if (level < minLevelShow || level % numLevelShowBoosterSuggestion != 0)
             {
                 return false;
             }

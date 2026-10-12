@@ -220,9 +220,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
             {
                 removeAdPurchasedCompletedEvent?.Invoke();
-
-                UserData.IsRemoveAds = true;
-                GameController.Instance.useProfile.IsRemoveAds = true;
             }
             else
             {
@@ -254,9 +251,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         {
                             //GameController.Instance.admobAds.Hi();
                             // GameController.Instance.admobAds.DestroyBanner();
-
-                            UserData.IsRemoveAds = true;
-                            GameController.Instance.useProfile.IsRemoveAds = true;
                         }
 
                         if (productData.IsUnlockAllScrewBoxes)
@@ -280,7 +274,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
-                        AnalyticsController.AppsFlyerPurchaseEvent(e.purchasedProduct);
 
                         try
                         {
@@ -389,11 +382,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         // {
         //     UserData.IsRemoveAds = IsProductPurchased(removeAdsProductId);
         // }
-
-        if (UserData.IsRemoveAds)
-        {
-            removeAdsEvent?.Invoke();
-        }
     }
 }
 

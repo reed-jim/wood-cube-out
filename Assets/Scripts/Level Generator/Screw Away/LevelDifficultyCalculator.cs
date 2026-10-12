@@ -583,24 +583,6 @@ public static class LevelDifficultyCalculatorUltility
     {
         float WEIGHT_REPEAT_TEMPLATE = 0.8f;
         float WEIGHT_LEVEL_INDEX = 1 - WEIGHT_REPEAT_TEMPLATE;
-        float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0.0f);
-
-        try
-        {
-            LongTermUserDifficultyConfig longTermUserDifficultyConfig = GamePersistentVariable.longTermUserDifficultyConfig;
-
-            if (longTermUserDifficultyConfig.isEnable)
-            {
-                if (level >= longTermUserDifficultyConfig.minLevel)
-                {
-                    DIFFICULTY_MULTIPLIER = longTermUserDifficultyConfig.difficultyMultiplier;
-                }
-            }
-        }
-        catch (System.Exception)
-        {
-
-        }
 
         float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
 
@@ -610,47 +592,13 @@ public static class LevelDifficultyCalculatorUltility
 
         float[] weightForModules = new float[5] { 0.2f, 0.3f, 0.45f, 1f, 0.55f };
 
-        // REMOTE CONFIG
-        try
-        {
-            string remoteConfigWeightsString =
-            RemoteConfigController.GetStringConfig(FirebaseConfig.DIFFICULTY_WEIGHT_GROUP_OF_FIVE_LEVELS, "0.2f, 0.3f, 0.45f, 1f, 0.55f");
-
-            weightForModules = ConvertStringToFloatArray(remoteConfigWeightsString);
-        }
-        catch (System.Exception)
-        {
-
-        }
-
         int validLevel = Mathf.Max(level, 1) % PREDICTED_MAX_LEVEL;
-
-        float expectedDifficultyNormalized =
-            DIFFICULTY_MULTIPLIER *
-                (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(level, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)validLevel / PREDICTED_MAX_LEVEL));
-
-        // if (GamePersistentVariable.currentLevelMode != LevelMode.Normal)
-        // {
-        //     expectedDifficultyNormalized = RemoteConfigController.GetFloatConfig(FirebaseConfig.specialLevelDifficultyMultiplier, 0.0f);
-        // }
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
 
         for (int i = maxPhaseIndex; i >= 0; i--)
         {
             int phaseIndex = i;
-
-            float progress = expectedDifficultyNormalized / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
-
-            progress = Mathf.Clamp01(progress);
-
-            LevelPhase levelPhase = new LevelPhase(phaseIndex: 0, endProgress: 1 - progress);
-
-            generatedLevelPhases.Add(levelPhase);
-
-            levelPhase = new LevelPhase(phaseIndex, 1);
-
-            generatedLevelPhases.Add(levelPhase);
 
             break;
         }

@@ -57,7 +57,7 @@ public class IAPPackageUI : MonoBehaviour
 
     public void Setup(IAPPackageData data)
     {
-        if (isHideWhenRemoveAd && UserData.IsRemoveAds)
+        if (isHideWhenRemoveAd)
         {
             gameObject.SetActive(false);
 

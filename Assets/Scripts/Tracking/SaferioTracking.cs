@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using AppsFlyerSDK;
 using Firebase.Analytics;
 using UnityEngine;
 using static GameEnum;
@@ -318,25 +317,6 @@ public static class SaferioTracking
 
     public static void LogLevelComplete(int level)
     {
-        try
-        {
-            Dictionary<string, string> paramas = new Dictionary<string, string>();
-            paramas.Add("af_level", level.ToString());
-            AppsFlyer.sendEvent("af_level_achieved", paramas);
-        }
-        catch
-        {
 
-        }
-
-        try
-        {
-            Dictionary<string, string> paramas = new Dictionary<string, string>();
-            AppsFlyer.sendEvent(string.Format("level_{0}_unlock", level), paramas);
-        }
-        catch
-        {
-
-        }
     }
 }

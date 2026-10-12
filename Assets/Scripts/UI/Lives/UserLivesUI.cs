@@ -22,7 +22,6 @@ public class UserLivesUI : SaferioTweenBehaviour
     {
         ReplenishLifeManager.updateLivesReplenishTimeEvent += UpdateLivesReplenishTime;
         ReplenishLifeManager.updateLivesNumberEvent += UpdateLivesNumber;
-        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         if (openLivesShopPopupButton != null)
         {
@@ -34,7 +33,6 @@ public class UserLivesUI : SaferioTweenBehaviour
     {
         ReplenishLifeManager.updateLivesReplenishTimeEvent -= UpdateLivesReplenishTime;
         ReplenishLifeManager.updateLivesNumberEvent -= UpdateLivesNumber;
-        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }
 
     void Start()

@@ -106,10 +106,6 @@ public class WinPopup : BasePopup
 
         x5CoinButton.transform.localScale = Vector3.one;
 
-        // REMOTE CONFIG IS COLLECT COIN
-        _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, true);
-        _multiplierCoinWinLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MULTIPLIER_COIN_WIN_LEVEL, 2);
-
         // coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
         x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
 
@@ -151,10 +147,6 @@ public class WinPopup : BasePopup
 
         TrackLevelWin();
 
-        if (currentLevel.Value - UserData.NumLevelLoop >= LevelManager.Ins.LevelDataContainer.MaxLevel)
-        {
-            await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
-        }
         currentLevel.Value++;
         currentLevel.Save();
         DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
@@ -290,7 +282,6 @@ public class WinPopup : BasePopup
 
         SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
 
-        AdsDurationObserver.duration = 0;
         GamePersistentVariable.isAutoTestingLevel = false;
     }
 

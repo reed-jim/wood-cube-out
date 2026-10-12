@@ -48,13 +48,6 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
 
     public void Setup(IAPPackageData data)
     {
-        if (isContainRemoveAd && UserData.IsRemoveAds)
-        {
-            gameObject.SetActive(false);
-
-            return;
-        }
-
         if (coinQuantityText != null)
         {
             coinQuantityText.text = $"{data.CoinQuantity}";

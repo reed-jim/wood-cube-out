@@ -21,14 +21,12 @@ public class SaferioCloudStorageManager : MonoBehaviour
 
     void Awake()
     {
-        RemoteConfigController.remoteConfigReadyEvent += Init;
         BackupPopup.uploadGameDataEvent += UploadDataInMemory;
         BackupPopup.downloadGameDataEvent += DownloadFile;
     }
 
     void OnDestroy()
     {
-        RemoteConfigController.remoteConfigReadyEvent -= Init;
         BackupPopup.uploadGameDataEvent -= UploadDataInMemory;
         BackupPopup.downloadGameDataEvent -= DownloadFile;
     }

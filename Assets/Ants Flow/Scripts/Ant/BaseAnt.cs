@@ -118,8 +118,6 @@ namespace AntsFlow
 
                 SoundManager.Instance.PlaySoundCubeLand();
             }, 0.15f);
-
-            GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
         }
 
         private void Reset()
@@ -173,8 +171,6 @@ namespace AntsFlow
 
                 GamePersistentVariable.numActiveAnt--;
             }));
-
-            GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
 
             isDroppingTile = true;
         }

@@ -109,8 +109,6 @@ public class ScrewBox : MonoBehaviour
 
         _initialScale = transform.localScale;
         _initialSize = screwBoxSpriteRenderer.bounds.size;
-
-        _isPlayBoxCompleteFx = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_PLAY_BOX_COMPLETE_FX, true);
     }
 
     private async void OnScrewBoxCompleted(int instanceId)

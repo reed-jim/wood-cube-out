@@ -122,8 +122,6 @@ public class BaseChicken : MonoBehaviour
 
             SoundManager.Instance.PlaySoundChickenPeck();
         }, 0.15f);
-
-        GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.ChickenPeck, chickenPeck);
     }
 
     // void Awake()
@@ -490,7 +488,7 @@ public class BaseChicken : MonoBehaviour
 
         void PlaySoundAndFx(Vector3 position)
         {
-            GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.ChickenPeck);
+            
         }
 
         float GetUpdatingProgressDuration(int numGrainToEat)

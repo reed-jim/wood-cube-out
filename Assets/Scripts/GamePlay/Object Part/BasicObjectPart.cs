@@ -101,38 +101,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         partRigidbody.mass = 100;
 
-        // REMOTE CONFIG ENABLE JOINT
-        bool isEnableJoint = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_ENABLE_HINGE_JOINT, true);
-
-        if (!isEnableJoint)
-        {
-            HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
-
-            List<HingeJoint> toRemoveJoints = hingeJoints.ToList();
-
-            for (int i = 0; i < hingeJoints.Length; i++)
-            {
-                hingeJoints[i].breakForce = 0;
-            }
-
-            minJointToDisableKinematic = 0;
-
-            meshCollider.enabled = false;
-        }
-        else
-        {
-            if (meshCollider.convex)
-            {
-                minJointToDisableKinematic = 1;
-
-                meshCollider.isTrigger = false;
-            }
-            else
-            {
-                minJointToDisableKinematic = 0;
-            }
-        }
-
         _boundSize = GetComponent<MeshRenderer>().bounds.size;
 
         AutoAssignPhysicsMaterial();

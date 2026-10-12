@@ -85,7 +85,6 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.openStarChestPopupEvent += OpenStarChestPopup;
         GameEventManager.openLevelChestPopupEvent += OpenChestLevelPopup;
         GameEventManager.openCoinChallengePopupEvent += OpenCoinChallengePopup;
-        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         startGameButton.onClick.AddListener(StartGame);
         openRemoveAdPopupButton.onClick.AddListener(OpenRemoveAdPopup);
@@ -122,11 +121,6 @@ public class MenuScreen : MonoBehaviour
         _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
         topBarDivider.color = ColorUtil.WithAlpha(topBarDivider.color, 0);
 
-        if (UserData.IsRemoveAds)
-        {
-            openRemoveAdPopupButton.gameObject.SetActive(false);
-        }
-
         if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
         {
             openAllScrewBoxesForeverButton.gameObject.SetActive(false);
@@ -151,13 +145,6 @@ public class MenuScreen : MonoBehaviour
 
         PreventSpammingStartButton();
 
-        if (UserData.IsFirstTimeOpenApp)
-        {
-            await Task.Delay(1500);
-
-            StartGame();
-        }
-
         SetupEvent();
     }
 
@@ -179,7 +166,6 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.openStarChestPopupEvent -= OpenStarChestPopup;
         GameEventManager.openLevelChestPopupEvent -= OpenChestLevelPopup;
         GameEventManager.openCoinChallengePopupEvent -= OpenCoinChallengePopup;
-        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -553,13 +539,7 @@ public class MenuScreen : MonoBehaviour
 
     private void UpdateRemoveAdsState()
     {
-        if (UserData.IsRemoveAds)
-        {
-            openRemoveAdPopupButton.gameObject.SetActive(false);
 
-            // GameController.Instance.admobAds.HideBanner();
-            // GameController.Instance.admobAds.DestroyBanner();
-        }
     }
 
     private void ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(ScreenRoute screenRoute)

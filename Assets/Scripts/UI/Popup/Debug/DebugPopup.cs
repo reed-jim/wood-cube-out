@@ -60,28 +60,12 @@ public class DebugPopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        if (UserData.IsRemoveAds)
-        {
-            debugAdsText.text = "Enable Ads";
-        }
-        else
-        {
-            debugAdsText.text = "Disable Ads";
-        }
+
     }
 
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction);
-
-        if (GameController.Instance.useProfile.IsRemoveAds)
-        {
-            debugAdsText.text = "Enable Ads";
-        }
-        else
-        {
-            debugAdsText.text = "Disable Ads";
-        }
     }
 
     private void DebugPlayLevel()
@@ -136,20 +120,7 @@ public class DebugPopup : BasePopup
 
     private void DebugAdsButton()
     {
-        if (GameController.Instance.useProfile.IsRemoveAds)
-        {
-            UserData.IsRemoveAds = false;
-            GameController.Instance.useProfile.IsRemoveAds = false;
 
-            debugAdsText.text = "Disable Ads";
-        }
-        else
-        {
-            UserData.IsRemoveAds = true;
-            GameController.Instance.useProfile.IsRemoveAds = true;
-
-            debugAdsText.text = "Enable Ads";
-        }
     }
 
     private void HideDebug()

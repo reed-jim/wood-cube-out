@@ -175,19 +175,6 @@ public class RevivePopup : BasePopup
         {
             return;
         }
-
-        ActionWatchVideo actionWatchVideo;
-
-        switch (_currentBoosterOnRevive)
-        {
-            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
-            case BoosterType.UnlockScrewBox: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
-            default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
-        }
-
-        // GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()

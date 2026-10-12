@@ -24,7 +24,6 @@ public class ReplenishLifeManager : MonoBehaviour
         ReplayPopup.changeLivesNumberEvent += ChangeLivesNumber;
         LosePopup.changeLivesNumberEvent += ChangeLivesNumber;
         SceneManager.sceneLoaded += OnSceneChanged;
-        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
     }
 
     void Start()
@@ -63,7 +62,6 @@ public class ReplenishLifeManager : MonoBehaviour
         ReplayPopup.changeLivesNumberEvent -= ChangeLivesNumber;
         LosePopup.changeLivesNumberEvent -= ChangeLivesNumber;
         SceneManager.sceneLoaded -= OnSceneChanged;
-        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }
 
     void OnSceneChanged(Scene scene, LoadSceneMode loadSceneMode)

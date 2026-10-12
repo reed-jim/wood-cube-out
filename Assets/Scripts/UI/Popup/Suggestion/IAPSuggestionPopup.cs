@@ -56,64 +56,7 @@ public class IAPSuggestionPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        if (CommonUtil.GetParentActiveChildCount(transform.parent) > 1)
-        {
-            return;
-        }
-
-        int packageIndex = RemoteConfigController.GetIntConfig(FirebaseConfig.IAP_SUGGESTION_PACKAGE_INDEX, 1);
-
-        packageData = IAPDataContainer.ProductsData[packageIndex];
-
-        if (packageData == null)
-        {
-            return;
-        }
-
-        requestFetchIAPPrice?.Invoke();
-
-        int coinQuantity = packageData.CoinQuantity;
-
-        int[] boosterQuantites = new int[3] {
-            packageData.AddHoleBoosterQuantity,
-            packageData.BreakObjectBoosterQuantity,
-            packageData.ClearHolesBoosterQuantity
-        };
-
-        bool isRemoveAds = packageData.IsRemoveAd;
-
-        ShowRewards(coinQuantity, boosterQuantites, isRemoveAds);
-
-        // localizedTitle.text = packageData.ProductName;
-
-        // delay enable buttons
-        closeButton.interactable = false;
-        buyButton.interactable = false;
-        noThanksButton.interactable = false;
-
-        closeButton.transform.localScale = Vector3.zero;
-        buyButton.transform.localScale = Vector3.zero;
-        noThanksButton.transform.localScale = Vector3.zero;
-
-        timeText.text = $"{10}s";
-
-        base.Show(ShowButtons);
-
-        void ShowButtons()
-        {
-            _tweens.Add(Tween.Scale(closeButton.transform, 1, duration: 0.3f));
-            _tweens.Add(Tween.Scale(buyButton.transform, 1, duration: 0.3f));
-            _tweens.Add(Tween.Scale(noThanksButton.transform, 1, duration: 0.3f)
-                .OnComplete(() =>
-                {
-                    closeButton.interactable = true;
-                    buyButton.interactable = true;
-                    noThanksButton.interactable = true;
-
-                    _countingCoroutine = StartCoroutine(Counting());
-                })
-            );
-        }
+        
     }
 
     private IEnumerator Counting()
@@ -154,11 +97,6 @@ public class IAPSuggestionPopup : BasePopup
     private void ShowRewards(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
     {
         List<RectTransform> validResourceGroups = new List<RectTransform>();
-
-        if (isRemoveAd && !UserData.IsRemoveAds)
-        {
-            validResourceGroups.Add(resourceGroups[0]);
-        }
 
         if (coinQuantity > 0)
         {
