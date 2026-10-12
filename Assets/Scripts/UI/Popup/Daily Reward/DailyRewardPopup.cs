@@ -18,7 +18,6 @@ public class DailyRewardPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        ClaimRewardPopup.showClaimRewardPopupEvent += OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
         DailyRewardItem.enableClaimDailyRewardButtonsEvent += EnableClaimButtons;
 
@@ -36,7 +35,6 @@ public class DailyRewardPopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
-        ClaimRewardPopup.showClaimRewardPopupEvent -= OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
         DailyRewardItem.enableClaimDailyRewardButtonsEvent -= EnableClaimButtons;
     }

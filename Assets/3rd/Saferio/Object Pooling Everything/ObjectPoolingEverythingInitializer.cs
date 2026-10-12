@@ -237,7 +237,6 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX, looseScrewFxPrefab, 25);
         RegisterPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX, boxCompletedFxPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.SUPRISE_REWARD_FX, supriseRewardFxPrefab, 1);
-        RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
         RegisterPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED, lockedScrewBox, 2);
 
         RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 50);

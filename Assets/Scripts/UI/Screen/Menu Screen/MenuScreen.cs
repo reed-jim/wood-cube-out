@@ -82,9 +82,6 @@ public class MenuScreen : MonoBehaviour
         LivesShopPopup.startGameEvent += StartGame;
         SalePackIAPManager.suggestSalePackEvent += ShowSalePack;
         GameEventManager.suggestCoinChallengeEvent += OpenCoinChallengePopup;
-        StarChestProgressBar.openStarChestPopupEvent += OpenStarChestPopup;
-        LevelChestProgressBar.openLevelChestPopupEvent += OpenChestLevelPopup;
-        CoinChallengeProgressBar.openCoinChallengePopupEvent += OpenCoinChallengePopup;
         GameEventManager.openStarChestPopupEvent += OpenStarChestPopup;
         GameEventManager.openLevelChestPopupEvent += OpenChestLevelPopup;
         GameEventManager.openCoinChallengePopupEvent += OpenCoinChallengePopup;
@@ -179,9 +176,6 @@ public class MenuScreen : MonoBehaviour
         LivesShopPopup.startGameEvent -= StartGame;
         SalePackIAPManager.suggestSalePackEvent -= ShowSalePack;
         GameEventManager.suggestCoinChallengeEvent -= OpenCoinChallengePopup;
-        StarChestProgressBar.openStarChestPopupEvent -= OpenStarChestPopup;
-        LevelChestProgressBar.openLevelChestPopupEvent -= OpenChestLevelPopup;
-        CoinChallengeProgressBar.openCoinChallengePopupEvent -= OpenCoinChallengePopup;
         GameEventManager.openStarChestPopupEvent -= OpenStarChestPopup;
         GameEventManager.openLevelChestPopupEvent -= OpenChestLevelPopup;
         GameEventManager.openCoinChallengePopupEvent -= OpenCoinChallengePopup;

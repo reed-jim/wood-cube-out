@@ -92,7 +92,6 @@ namespace NamPhuThuy.GamePlay
             LosePopup.skipLevelEvent += NextLevel;
             BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
             LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
-            ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
 
             _tweens = new List<Tween>();
             _autoCenterLevelTweens = new List<Tween>();
@@ -126,7 +125,6 @@ namespace NamPhuThuy.GamePlay
             LosePopup.skipLevelEvent -= NextLevel;
             BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
             LoadLevelErrorScene.retryLoadLevelEvent -= LoadLevel;
-            ChooseDifficultyPopup.hardModeSuggestionClosedEvent -= OnHardModeSuggestionClosed;
 
             CommonUtil.StopAllTweens(_tweens);
             CommonUtil.StopAllTweens(_autoCenterLevelTweens);

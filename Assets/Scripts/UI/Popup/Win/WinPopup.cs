@@ -40,7 +40,6 @@ public class WinPopup : BasePopup
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private GoldPassDataContainer goldPassDataContainer;
-    [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private int numCoinNormal;
@@ -164,13 +163,6 @@ public class WinPopup : BasePopup
 
         _isAlreadyWatchRewardedAd = false;
 
-        #region GOLD PASS
-        // HandleGoldPass();
-        HandleCoinChallenge();
-        HandleStarChest();
-        HandleSpaceRace();
-        #endregion
-
         DataUtility.Save("num_level_play_in_day", DataUtility.Load("num_level_play_in_day", 0) + 1);
 
         // GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
@@ -226,18 +218,6 @@ public class WinPopup : BasePopup
         {
             starText.text = $"{(int)newVal}";
         }));
-
-        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
-
-        bool isUnlocked = currentLevel.Value >= 30;
-
-        if (isUnlocked && !coinChallengeData.IsCompleted())
-        {
-            _tweens.Add(Tween.Custom(0, GamePersistentVariable.coinChallengeItemGainedInLevel, duration: timeCollectCoin, onValueChange: newVal =>
-            {
-                goldPassKeyText.text = $"{(int)newVal}";
-            }));
-        }
     }
 
     private void Continue()
@@ -423,175 +403,6 @@ public class WinPopup : BasePopup
         }
 
         DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, GamePersistentVariable.goldPassData);
-    }
-    #endregion
-
-    #region COIN CHALLENGE
-    private void HandleCoinChallenge()
-    {
-        CoinChallengeData coinChallengeData = DataUtility.Load<CoinChallengeData>(GameConstants.COIN_CHALLENGE_DATA, null);
-
-        if (coinChallengeData == null)
-        {
-            coinChallengeData = new CoinChallengeData();
-            coinChallengeData.startTimestamp = CommonUtil.GetCurrentTimestamp();
-        }
-
-        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
-
-        bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
-
-        if (currentLevel.ValueUsingPureJson < 30 || !isAvailable)
-        {
-            return;
-        }
-
-        if (coinChallengeData.IsCompleted())
-        {
-            return;
-        }
-
-        int currentMilestone = coinChallengeData.CurrentMilestone;
-
-        coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] += GamePersistentVariable.coinChallengeItemGainedInLevel;
-        coinChallengeData.newGainedItem += GamePersistentVariable.coinChallengeItemGainedInLevel;
-
-        _isCoinChallengeClaimable = false;
-
-        if (coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] >= coinChallengeConfigContainer.RequiredItems[currentMilestone])
-        {
-            int overflowItem = coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] - coinChallengeConfigContainer.RequiredItems[currentMilestone];
-
-            if (coinChallengeData.CurrentMilestone < coinChallengeData.EventItemCollectedOfMilstones.Length)
-            {
-                coinChallengeData.CurrentMilestone++;
-                coinChallengeData.EventItemCollectedOfMilstones[coinChallengeData.CurrentMilestone] += overflowItem;
-            }
-            else
-            {
-                coinChallengeData.isCompleted = true;
-            }
-
-            _isCoinChallengeClaimable = true;
-        }
-
-        for (int i = 0; i < coinChallengeData.TotalMilestone; i++)
-        {
-            if (i < currentMilestone)
-            {
-                if (!coinChallengeData.IsMilestonesClaimed[i])
-                {
-                    _isCoinChallengeClaimable = true;
-
-                    break;
-                }
-            }
-        }
-
-        DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
-    }
-
-    private void HandleWeeklyChallenge()
-    {
-        WeeklyChallengeData challengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
-
-        challengeData.AddItemCurrentMilestone();
-
-        DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, challengeData);
-    }
-
-    private void HandleStarChest()
-    {
-        StarLevelData data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
-
-        data.starCollected += 3;
-        data.newGainedItem += 3;
-
-        DataUtility.Save(GameConstants.STAR_LEVEL_DATA, data);
-    }
-
-    private void HandleSpaceRace()
-    {
-        SpaceRaceData data = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
-
-        if (!data.isStarted)
-        {
-            return;
-        }
-
-        for (int i = 0; i < data.spaceRacePlayerGroup.Length; i++)
-        {
-            if (data.spaceRacePlayerGroup[i].isSelf)
-            {
-                data.spaceRacePlayerGroup[i].scoreSinceRaceBegin++;
-            }
-        }
-
-        DataUtility.Save(GameConstants.SPACE_RACE_DATA, data);
-    }
-
-    private bool HandleSuggestFeature()
-    {
-        if (currentLevel.Value == 30 && !DataUtility.Load("Is Coin Challenge Suggested", false))
-        {
-            ReturnHome();
-
-            return true;
-        }
-
-        StarLevelData starLevelData = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
-
-        if (starLevelData.starCollected >= GameConstants.REQUIRE_STAR)
-        {
-            ReturnHome();
-
-            return true;
-        }
-
-        if (currentLevel.Value % 10 == 0 && currentLevel.Value > 0)
-        {
-            ReturnHome();
-
-            return true;
-        }
-
-        if (_isCoinChallengeClaimable)
-        {
-            ReturnHome();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private void CheckEvent()
-    {
-        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
-
-        bool isUnlocked = currentLevel.Value >= 30;
-
-        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
-
-        bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
-
-        isAvailable = false;
-
-        if (isUnlocked && isAvailable && !coinChallengeData.IsCompleted())
-        {
-            eventItemGroup.gameObject.SetActive(true);
-
-            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-280);
-            starGroup.localPosition = coinGroup.localPosition.ChangeX(0);
-            eventItemGroup.localPosition = coinGroup.localPosition.ChangeX(280);
-        }
-        else
-        {
-            eventItemGroup.gameObject.SetActive(false);
-
-            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-140);
-            starGroup.localPosition = coinGroup.localPosition.ChangeX(140);
-        }
     }
     #endregion
 }

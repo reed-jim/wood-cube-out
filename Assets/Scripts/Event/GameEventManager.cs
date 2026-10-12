@@ -32,9 +32,6 @@ public class GameEventManager : MonoBehaviour
             Instance = this;
         }
 
-        StarChestProgressBar.openChestEvent += StartOpenChests;
-        LevelChestProgressBar.openChestEvent += StartOpenChests;
-        CoinChallengeProgressBar.openChestEvent += StartOpenChests;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         _tweens = new List<Tween>();
@@ -42,9 +39,6 @@ public class GameEventManager : MonoBehaviour
 
     void OnDestroy()
     {
-        StarChestProgressBar.openChestEvent -= StartOpenChests;
-        LevelChestProgressBar.openChestEvent -= StartOpenChests;
-        CoinChallengeProgressBar.openChestEvent -= StartOpenChests;
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
