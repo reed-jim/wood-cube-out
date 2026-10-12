@@ -1,6 +1,5 @@
 using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +10,7 @@ public class AugmentItemUIs : MonoBehaviour
     public TagItemUI qualityTag;
     public PlanetTagItemUI planetTagItemUI;
     // public TMP_Text augmentLevelText;
+    public AugmentIconQualityEffect augmentIconEffect;
     public AugmentUIEffect augmentLevelEffect;
     public AugmentUIEffect nextAugmentLevelEffect;
     public GameObject augmentLevelUpgradeArrow;
@@ -75,6 +75,7 @@ public class AugmentItemUIs : MonoBehaviour
 
         qualityText.color = qualityColor;
         qualityBorder.color = qualityColor;
+        augmentIconEffect.SetQuality(augment.augmentQuality);
 
         qualityTag.SetBorderColor(qualityColor);
         planetTagItemUI.Init(augment.spaceObjectType);

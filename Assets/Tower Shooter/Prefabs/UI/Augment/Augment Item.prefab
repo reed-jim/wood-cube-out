@@ -930,6 +930,7 @@ MonoBehaviour:
   qualityText: {fileID: 7866568694661353011}
   qualityTag: {fileID: 2170927162117345404}
   planetTagItemUI: {fileID: 1551782648228017966}
+  augmentIconEffect: {fileID: 4417823923676239693}
   augmentLevelEffect: {fileID: 5445797273935650871}
   nextAugmentLevelEffect: {fileID: 123395770444002157}
   augmentLevelUpgradeArrow: {fileID: 6689296413324766284}
@@ -1025,6 +1026,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
+  transitionSpeed: 15
+  rippleSpeed: 4
   isPlaySound: 1
 --- !u!1 &6689296413324766284
 GameObject:
@@ -1327,6 +1330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 914097724616676742}
   - component: {fileID: 4494911324006433510}
+  - component: {fileID: 4417823923676239693}
   - component: {fileID: 5489762231836723343}
   m_Layer: 5
   m_Name: Icon
@@ -1362,6 +1366,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8204233181726780670}
   m_CullTransparentMesh: 1
+--- !u!114 &4417823923676239693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8204233181726780670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0016fb29bdd58014f9bbcab524a573c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AugmentIconQualityEffect
+  currentQuality: 0
 --- !u!114 &5489762231836723343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1374,7 +1391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: cefd72d41f5957748aa87ef2ca293803, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1508,6 +1525,22 @@ PrefabInstance:
     - target: {fileID: 3266986405618675580, guid: 32f6a112621eabf4aba35499052fe149, type: 3}
       propertyPath: m_Name
       value: Planet Tag
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999830835403192399, guid: 32f6a112621eabf4aba35499052fe149, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999830835403192399, guid: 32f6a112621eabf4aba35499052fe149, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999830835403192399, guid: 32f6a112621eabf4aba35499052fe149, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999830835403192399, guid: 32f6a112621eabf4aba35499052fe149, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4365586571098227571, guid: 32f6a112621eabf4aba35499052fe149, type: 3}
       propertyPath: m_Pivot.x
