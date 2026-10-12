@@ -246,7 +246,7 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
     }
     #endregion
 
-    private void OnResourceValueChanged(ResourceType resourceType, float value)
+    private void OnResourceValueChanged(ResourceType resourceType, double value)
     {
         if (resourceType == ResourceType.AugmentPoint)
         {

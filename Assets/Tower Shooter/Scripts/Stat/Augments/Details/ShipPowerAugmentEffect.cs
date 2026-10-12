@@ -70,14 +70,14 @@ public class ShipPowerAugmentEffectRuntime : BaseAugmentEffectRuntime
     {
         BaseCharacter node = stats.serviceLocator.character;
 
-        float shipPower = ResourceManager.Ins.GetResourceValue(ResourceType.Coin);
+        double shipPower = ResourceManager.Ins.GetResourceValue(ResourceType.Coin);
 
         if (statModifier != null)
         {
             stats.RemoveModifier(statModifier);
         }
 
-        statModifier = new StatModifier(StatType.Damage, ModifierType.Flat, percentShipPower * shipPower);
+        statModifier = new StatModifier(StatType.Damage, ModifierType.Flat, (float)(percentShipPower * shipPower));
 
         float oldPowerValue = stats.GetStat(StatType.Damage).Value;
         float newPowerValue;

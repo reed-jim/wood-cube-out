@@ -21,7 +21,7 @@ public class UpgradeItemUI : MonoBehaviour
     public StatColorConfigSO statColorConfigSO;
 
     private Sequence shakeCoinTextSequence;
-    private float cachedCoinValue;
+    private double cachedCoinValue;
 
     void Awake()
     {
@@ -107,7 +107,7 @@ public class UpgradeItemUI : MonoBehaviour
         UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
     }
 
-    private void OnResourceChanged(ResourceType resourceType, float value)
+    private void OnResourceChanged(ResourceType resourceType, double value)
     {
         if (resourceType == ResourceType.Coin)
         {

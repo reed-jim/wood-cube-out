@@ -336,6 +336,23 @@ public class AugmentManager : Singleton<AugmentManager>
     {
         return statColorConfigSO.GetHexWithHash(statType);
     }
+
+    public List<Augment> GetUnlockedAugmentsForSpaceObjectType(SpaceObjectType spaceObjectType)
+    {
+        List<Augment> augments = new List<Augment>();
+
+        for (int i = 0; i < augmentContainer.augments.Count; i++)
+        {
+            Augment augment = augmentContainer.augments[i];
+
+            if (augment.spaceObjectType == spaceObjectType)
+            {
+                augments.Add(augment);
+            }
+        }
+
+        return augments;
+    }
     #endregion
 }
 

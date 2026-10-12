@@ -91,6 +91,7 @@ public class CurveManager : Singleton<CurveManager>
 
     [Header("Voyage")]
     public ProgressionConfig voyageDistanceConfig;
+    public ProgressionConfig voyageRewardConfig;
 
     // ----------------------------------------------------------------------
     // Preserved Usage Functions (Updated with Idle Math)
@@ -237,6 +238,11 @@ public class CurveManager : Singleton<CurveManager>
     public double GetVoyageDistance(int time)
     {
         return GetProgressionValueDouble(voyageDistanceConfig, time);
+    }
+
+    public double GetVoyageReward(int time)
+    {
+        return GetProgressionValueDouble(voyageRewardConfig, time);
     }
     #endregion
 

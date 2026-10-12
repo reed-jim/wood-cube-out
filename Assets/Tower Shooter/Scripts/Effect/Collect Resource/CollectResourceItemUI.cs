@@ -11,7 +11,7 @@ public class CollectResourceItemUI : MonoBehaviour
     [Header("Customize")]
     public float moveDuration;
 
-    public void Collect(float value, Sprite sprite, Vector3 startPosition, Vector3 endPosition, RectTransform resourceContainer, Transform target)
+    public void Collect(double value, Sprite sprite, Vector3 startPosition, Vector3 endPosition, RectTransform resourceContainer, Transform target)
     {
         icon.sprite = sprite;
 
@@ -43,7 +43,7 @@ public class CollectResourceItemUI : MonoBehaviour
 
             damageText.transform.SetParent(target);
 
-            damageText.ShowDamage(value, transform.position, isCritical: false, target: target, prefix: "+");
+            damageText.ShowDamage((float)value, transform.position, isCritical: false, target: target, prefix: "+");
         });
     }
 }

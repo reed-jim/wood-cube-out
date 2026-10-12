@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,25 +44,24 @@ public class ReachStarPopup : BasePopup
         // starPicture.sprite = starPathConfig.picture;
         // UIUtil.SetSizeKeepRatioY(starPicture, container.sizeDelta.x);
 
-        for (int i = 0; i < starPathConfig.rewards.Count; i++)
-        {
-            ResourceDataItem rewardData = starPathConfig.rewards[i];
-            RewardItemUI rewardItemUI = ObjectPoolingEverything.GetFromPool<RewardItemUI>(GameConstants.rewardItemUI);
+        ResourceDataItem resourceDataItem = new ResourceDataItem(ResourceType.Coin, CurveManager.Ins.GetVoyageReward(voyageData.starPathConfigIndex));
+        RewardItemUI rewardItemUI = ObjectPoolingEverything.GetFromPool<RewardItemUI>(GameConstants.rewardItemUI);
 
-            rewardItemUI.transform.SetParent(rewardContainer);
-            rewardItemUI.transform.localScale = Vector3.one;
+        rewardItemUI.transform.SetParent(rewardContainer);
+        rewardItemUI.transform.localScale = Vector3.one;
 
-            rewardItemUI.Init(rewardData);
-        }
+        rewardItemUI.Init(resourceDataItem);
 
-        for (int i = 0; i < starPathConfig.unlockedAugments.Count; i++)
+        List<Augment> unlockedAugments = AugmentManager.Ins.GetUnlockedAugmentsForSpaceObjectType(starPathConfig.spaceObjectType);
+
+        for (int i = 0; i < unlockedAugments.Count; i++)
         {
             NodeDetailAugmentItemUI augmentItemUIs = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
 
             augmentItemUIs.transform.SetParent(rewardAugmentContainer);
             augmentItemUIs.transform.localScale = Vector3.one;
 
-            augmentItemUIs.Init(starPathConfig.unlockedAugments[i]);
+            augmentItemUIs.Init(unlockedAugments[i]);
         }
 
         this.voyageData = voyageData;
@@ -69,12 +69,9 @@ public class ReachStarPopup : BasePopup
 
     private void GoNextStar()
     {
-        for (int i = 0; i < starPathConfig.rewards.Count; i++)
-        {
-            ResourceDataItem resourceDataItem = starPathConfig.rewards[i];
+        ResourceDataItem resourceDataItem = new ResourceDataItem(ResourceType.Coin, CurveManager.Ins.GetVoyageReward(voyageData.starPathConfigIndex));
 
-            ResourceManager.Ins.ChangeResource(resourceDataItem.resourceType, resourceDataItem.value);
-        }
+        ResourceManager.Ins.ChangeResource(resourceDataItem.resourceType, resourceDataItem.value);
 
         for (int i = 0; i < starPathConfig.unlockedAugments.Count; i++)
         {

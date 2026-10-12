@@ -21,7 +21,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
     private Dictionary<ResourceType, Sequence> resourceTextSequences = new Dictionary<ResourceType, Sequence>();
 
-    public static event Action<ResourceType, float> changeResourceValueEvent;
+    public static event Action<ResourceType, double> changeResourceValueEvent;
 
     protected override void MoreActionOnAwake()
     {
@@ -45,7 +45,7 @@ public class ResourceManager : Singleton<ResourceManager>
         }
     }
 
-    public float ChangeResource(ResourceType resourceType, float value)
+    public double ChangeResource(ResourceType resourceType, double value)
     {
         if (resources.ContainsKey(resourceType))
         {
@@ -79,14 +79,14 @@ public class ResourceManager : Singleton<ResourceManager>
 
         SaveResourceData();
 
-        float currentValue = resources[resourceType].value;
+        double currentValue = resources[resourceType].value;
 
         changeResourceValueEvent?.Invoke(resourceType, currentValue);
 
         return currentValue;
     }
 
-    public float DeductResource(ResourceType resourceType, float value)
+    public double DeductResource(ResourceType resourceType, double value)
     {
         return ChangeResource(resourceType, -value);
     }
@@ -132,7 +132,7 @@ public class ResourceManager : Singleton<ResourceManager>
         DataUtility.Save($"ResouceData {SaveSlotManager.Ins.currentSaveSlotData.slotName}", resourceData);
     }
 
-    public float GetResourceValue(ResourceType resourceType)
+    public double GetResourceValue(ResourceType resourceType)
     {
         if (!resources.ContainsKey(resourceType))
         {
@@ -148,7 +148,7 @@ public class ResourceData
 {
     public List<ResourceDataItem> resourceDataItems;
 
-    public void UpdateValue(ResourceType resourceType, float value)
+    public void UpdateValue(ResourceType resourceType, double value)
     {
         ResourceDataItem resourceDataItem;
 
@@ -171,9 +171,9 @@ public class ResourceData
 public class ResourceDataItem
 {
     public ResourceType resourceType;
-    public float value;
+    public double value;
 
-    public ResourceDataItem(ResourceType resourceType, float value)
+    public ResourceDataItem(ResourceType resourceType, double value)
     {
         this.resourceType = resourceType;
         this.value = value;

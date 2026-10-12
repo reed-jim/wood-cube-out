@@ -6,7 +6,7 @@ public class CollectResourceManager : Singleton<CollectResourceManager>
     public SerializableDictionary<ResourceType, Sprite> resourceIcons;
     public SerializableDictionary<ResourceType, RectTransform> resourceContainers;
 
-    public void Collect(ResourceType resourceType, float value, Vector3 startPosition)
+    public void Collect(ResourceType resourceType, double value, Vector3 startPosition)
     {
         CollectResourceItemUI collectResourceItemUI =
             ObjectPoolingEverything.GetFromPool<CollectResourceItemUI>(GameConstants.collectResourceItemUI);
