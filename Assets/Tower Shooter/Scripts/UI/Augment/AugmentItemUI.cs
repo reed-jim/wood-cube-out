@@ -53,7 +53,7 @@ public class AugmentItemUIs : MonoBehaviour
         title.text = augment.augmentName;
         efficiencyText.text = $"Efficiency: {CommonUtil.ToPercent(AugmentManager.Ins.GetAugmentEfficiency(augmentLevel))}";
 
-        if(isUpLevelAugment)
+        if (isUpLevelAugment)
         {
             description.text = augment.BuildFullDescriptionForUpLevelAugment(colorConfig, augmentLevel);
         }
@@ -119,7 +119,7 @@ public class AugmentItemUIs : MonoBehaviour
 
         // augmentLevelText.text = $"{currentAugmentLevel} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextAugmentLevel}";
         // augmentLevelText.text = $"{nextAugmentLevel}";
-        efficiencyText.text = $"Efficiency: {currentEfficiency} --> <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
+        efficiencyText.text = $"Efficiency: {currentEfficiency} > <color={DynamicThemeManager.Ins.PrimaryHex}>{nextEfficiency}";
 
         // augmentLevelUpgradeArrow.gameObject.SetActive(true);
         // nextAugmentLevelEffect.gameObject.SetActive(true);

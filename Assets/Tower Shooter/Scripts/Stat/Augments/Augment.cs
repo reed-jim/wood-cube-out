@@ -105,7 +105,9 @@ public class Augment : ScriptableObject
             //     valHex = ColorUtil.ColorToHex(DynamicThemeManager.Ins.CurrentTheme.error);
             // }
 
-            string valStr = mod.modType == ModifierType.Flat
+            bool isFlat = mod.modType == ModifierType.Flat && !StatUtil.IsPercentStat(mod.statType);
+            
+            string valStr = isFlat
                 ? $"{sign}{mod.value}"
                 : $"{sign}{mod.value * 100f}%";
 
@@ -184,23 +186,29 @@ public class Augment : ScriptableObject
         if (statModifiers == null || statModifiers.Count == 0) return string.Empty;
 
         // Calculate tier multiplier based on augment level progression
-        float prevLevelMultiplier = CurveManager.Ins.GetAugmentEfficiency((int)level - 1);
-        float levelMultiplier = CurveManager.Ins.GetAugmentEfficiency((int)level);
+        float currentLevelMultiplier = CurveManager.Ins.GetAugmentEfficiency((int)level);
+        float nextLevelMultiplier = CurveManager.Ins.GetAugmentEfficiency((int)level + 1);
 
         foreach (var mod in statModifiers)
         {
             string hex = config.GetHex(mod.statType);
 
             // Scale modifier value by the tier multiplier
-            float scaledValue = levelMultiplier * mod.value;
-            bool isPositive = scaledValue >= 0;
+            float currentValue = currentLevelMultiplier * mod.value;
+            float nextValue = nextLevelMultiplier * mod.value;
+            bool isPositive = nextValue >= 0;
             // string sign = isPositive ? "+" : "";
 
-            string valStr = mod.modType == ModifierType.Flat
-                ? $"{scaledValue:F1}"
-                : $"{scaledValue * 100f:F0}%";
+            bool isFlat = mod.modType == ModifierType.Flat && !StatUtil.IsPercentStat(mod.statType);
 
-            sb.AppendLine($"{prevLevelMultiplier * mod.value} > <color=#{hex}>{valStr} {mod.statType}</color>");
+            string currentValStr = isFlat
+                ? $"{currentValue:F1}"
+                : $"{currentValue * 100f:F0}%";
+            string nextValStr = isFlat
+                ? $"{nextValue:F1}"
+                : $"{nextValue * 100f:F0}%";
+
+            sb.AppendLine($"{currentValStr} > <color=#{hex}>{nextValStr} {mod.statType}</color>");
         }
 
         return sb.ToString();

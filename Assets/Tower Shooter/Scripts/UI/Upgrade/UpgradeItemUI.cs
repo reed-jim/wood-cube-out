@@ -15,7 +15,6 @@ public class UpgradeItemUI : MonoBehaviour
 
     [Header("Customize")]
     public StatType statType;
-    public bool isPercentStat;
 
     public BaseCharacter node;
 
@@ -78,7 +77,7 @@ public class UpgradeItemUI : MonoBehaviour
         statIcon.sprite = statColorConfigSO.GetIcon(statType);
         float delta = statUpgradeData.deltaValue;
 
-        if (isPercentStat)
+        if (StatUtil.IsPercentStat(statType))
         {
             upgradeText.text =
             $"{TextUtil.FormatFloat(statUpgradeData.currentValue * 100)}% (+{TextUtil.FormatFloat(delta * 100)}%)";
