@@ -7,7 +7,7 @@ public class AugmentSelectionPopup : BasePopup
 {
     [SerializeField] private Button rerollButton;
 
-    public List<AugmentItemUIs> augmentItems;
+    public List<AugmentItemUI> augmentItems;
 
     public AugmentContainer augmentContainer;
 

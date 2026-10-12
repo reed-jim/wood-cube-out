@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class AugmentManager : Singleton<AugmentManager>
@@ -14,6 +15,9 @@ public class AugmentManager : Singleton<AugmentManager>
 
     [Header("Augment Apply Effect")]
     public RectTransform augmentApplyEffectContainer;
+
+    [Header("Augment Tooltip")]
+    public AugmentTooltip augmentTooltip;
 
     public AugmentHistory augmentHistory;
     public float currentBuyAugmentCost;
@@ -323,6 +327,20 @@ public class AugmentManager : Singleton<AugmentManager>
 
             return augmentData;
         }
+    }
+    #endregion
+
+    #region Augment Tooltip
+    public void ShowAugmentTooltip(AugmentItemUI augmentItemUI)
+    {
+        augmentTooltip.transform.position = augmentItemUI.transform.position.AddX(400);
+
+        augmentTooltip.ShowAt(augmentItemUI);
+    }
+
+    public void HideAugmentTooltip()
+    {
+        augmentTooltip.Hide();
     }
     #endregion
 

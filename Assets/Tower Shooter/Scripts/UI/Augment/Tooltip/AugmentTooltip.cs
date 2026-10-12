@@ -1,6 +1,4 @@
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,29 +17,18 @@ public class AugmentTooltip : MonoBehaviour
     public Button showAugmentDetailButton;
     public Image upgradeHighlight;
 
-    private Augment augment;
-    private AugmentLevel augmentLevel;
-
     [SerializeField] private StatColorConfigSO colorConfig;
 
-    public static event Action<Augment> showAugmentDetailEvent;
-
-    private Action onAugmentSelected;
-
-    void Awake()
-    {
-        showAugmentDetailButton.onClick.AddListener(PickAugment);
-    }
-
-    public void Init(Augment augment, Action onAugmentSelected)
+    public void ShowAt(AugmentItemUI augmentItemUI)
     {
         gameObject.SetActive(true);
 
-        this.augment = augment;
+        SetupAugment(augmentItemUI.GetAugment());
+    }
 
-        SetupAugment(augment);
-
-        this.onAugmentSelected = onAugmentSelected;
+    public void Hide()
+    {
+        gameObject.SetActive(false);
     }
 
     private void SetupAugment(Augment augment)
@@ -114,28 +101,6 @@ public class AugmentTooltip : MonoBehaviour
             }
         }
         return aug.BuildFullDescriptionForUpLevelAugment(cfg, lvl);
-    }
-
-    private void ShowAugmentDetail()
-    {
-        showAugmentDetailEvent?.Invoke(augment);
-    }
-
-    public void PickAugment()
-    {
-        if (augment.isNeedCharacterToApply)
-        {
-            AugmentManager.Ins.PickNodeForAugment(augment);
-        }
-        else
-        {
-            foreach (var augmentEffect in augment.dynamicEffects)
-            {
-                augmentEffect.ApplyGlobalEffect();
-            }
-        }
-
-        onAugmentSelected?.Invoke();
     }
 
     #region Augment Level

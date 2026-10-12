@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class AugmentItemUIs : MonoBehaviour
+public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public TMP_Text title;
     public TMP_Text qualityText;
@@ -25,8 +27,10 @@ public class AugmentItemUIs : MonoBehaviour
 
     [SerializeField] private StatColorConfigSO colorConfig;
 
-    public static event Action<Augment> showAugmentDetailEvent;
+    [SerializeField] private float hoverDelay = 0.5f;
+    private Coroutine hoverCoroutine;
 
+    public static event Action<Augment> showAugmentDetailEvent;
     private Action onAugmentSelected;
 
     void Awake()
@@ -130,6 +134,46 @@ public class AugmentItemUIs : MonoBehaviour
 
         // augmentLevelEffect.SetLevel(augmentLevel);
         // nextAugmentLevelEffect.SetLevel(nextAugmentLevel);
+    }
+    #endregion
+
+    #region Hover to show tooltip
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // Stop any existing coroutine to prevent overlap
+        if (hoverCoroutine != null)
+        {
+            StopCoroutine(hoverCoroutine);
+        }
+
+        // Start waiting
+        hoverCoroutine = StartCoroutine(ShowDetailWithDelay());
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // Cancel the delay if the pointer exits early
+        if (hoverCoroutine != null)
+        {
+            StopCoroutine(hoverCoroutine);
+            hoverCoroutine = null;
+        }
+
+        AugmentManager.Ins.HideAugmentTooltip();
+    }
+
+    private IEnumerator ShowDetailWithDelay()
+    {
+        yield return new WaitForSeconds(hoverDelay);
+        AugmentManager.Ins.ShowAugmentTooltip(this);
+        hoverCoroutine = null;
+    }
+    #endregion
+
+    #region Util
+    public Augment GetAugment()
+    {
+        return augment;
     }
     #endregion
 }

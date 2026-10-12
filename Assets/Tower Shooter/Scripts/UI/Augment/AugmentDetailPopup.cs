@@ -20,7 +20,7 @@ public class AugmentDetailPopup : BasePopup
     {
         base.RegisterMoreEvent();
 
-        AugmentItemUIs.showAugmentDetailEvent += Init;
+        AugmentItemUI.showAugmentDetailEvent += Init;
         NodeDetailAugmentItemUI.showAugmentDetailEvent += Init;
     }
 
@@ -28,7 +28,7 @@ public class AugmentDetailPopup : BasePopup
     {
         base.UnregisterMoreEvent();
 
-        AugmentItemUIs.showAugmentDetailEvent -= Init;
+        AugmentItemUI.showAugmentDetailEvent -= Init;
         NodeDetailAugmentItemUI.showAugmentDetailEvent -= Init;
     }
 
