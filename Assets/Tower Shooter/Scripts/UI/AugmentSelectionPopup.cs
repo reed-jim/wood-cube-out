@@ -37,7 +37,19 @@ public class AugmentSelectionPopup : BasePopup
 
     public List<Augment> GetRandomAugments()
     {
-        return CommonUtil.GetRandomItems(augmentContainer.augments, 3);
+        List<Augment> validAugments = new List<Augment>();
+
+        for (int i = 0; i < augmentContainer.augments.Count; i++)
+        {
+            Augment augment = augmentContainer.augments[i];
+
+            if (augment.spaceObjectType <= StarManager.Ins.currentStarPathConfig.spaceObjectType)
+            {
+                validAugments.Add(augment);
+            }
+        }
+
+        return CommonUtil.GetRandomItems(validAugments, 3);
     }
 
     private void Reroll()

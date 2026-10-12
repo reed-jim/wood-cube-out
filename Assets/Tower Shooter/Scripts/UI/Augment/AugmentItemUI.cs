@@ -12,6 +12,7 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public TagItemUI qualityTag;
     public PlanetTagItemUI planetTagItemUI;
     // public TMP_Text augmentLevelText;
+    public Image augmentIcon;
     public AugmentIconQualityEffect augmentIconEffect;
     public AugmentUIEffect augmentLevelEffect;
     public AugmentUIEffect nextAugmentLevelEffect;
@@ -79,7 +80,8 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         qualityText.color = qualityColor;
         qualityBorder.color = qualityColor;
-        augmentIconEffect.SetQuality(augment.augmentQuality);
+        augmentIcon.color = qualityColor;
+        // augmentIconEffect.SetQuality(augment.augmentQuality);
 
         qualityTag.SetBorderColor(qualityColor);
         planetTagItemUI.Init(augment.spaceObjectType);

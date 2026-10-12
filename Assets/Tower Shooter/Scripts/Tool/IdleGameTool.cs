@@ -862,6 +862,13 @@ public class IdleGameTool : EditorWindow
     {
         AugmentContainer augmentContainer = AssetDatabase.LoadAssetAtPath<AugmentContainer>(augmentContainerPath);
 
+        for (int i = 0; i < augmentContainer.augments.Count; i++)
+        {
+            augmentContainer.augments[i].id = i;
+        }
+
+        return;
+
         if (augmentContainer == null)
         {
             EditorUtility.DisplayDialog("Error", $"AugmentContainer asset not found at path: {augmentContainerPath}", "OK");
