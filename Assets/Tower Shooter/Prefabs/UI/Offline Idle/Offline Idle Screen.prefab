@@ -786,6 +786,7 @@ MonoBehaviour:
   timeOfflineText: {fileID: 1960382372437150679}
   idleRewardMultiplierText: {fileID: 6929776614804795135}
   claimButton: {fileID: 3482063112666056491}
+  glitchTransition: {fileID: 1730945231287197747}
   upgradeMultiplierButton: {fileID: 7936697787303839552}
   upgradeMultiplierCost: {fileID: 4840976409278000338}
 --- !u!1 &3511277117570579838
@@ -1087,6 +1088,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7424448573744620797}
   - component: {fileID: 2940857333273202553}
+  - component: {fileID: 1730945231287197747}
   - component: {fileID: 7851827587230112057}
   - component: {fileID: 6214731710496654825}
   m_Layer: 5
@@ -1123,6 +1125,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4567938002214167208}
   m_CullTransparentMesh: 1
+--- !u!114 &1730945231287197747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4567938002214167208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3a31f78ef7d0e94dae9e44e2bcc7913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIGlitchTransition
+  duration: 0.8
 --- !u!114 &7851827587230112057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1148,7 +1163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 285f6a520c0e9d74abca795ad3f9a69d, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1682,6 +1697,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
+  rippleSpeed: 4
   isPlaySound: 1
 --- !u!1 &6676731448591431952
 GameObject:
@@ -1831,6 +1848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
+  rippleSpeed: 4
   isPlaySound: 1
 --- !u!1 &7708559790734479034
 GameObject:
