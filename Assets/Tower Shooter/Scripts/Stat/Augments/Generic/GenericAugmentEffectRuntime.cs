@@ -112,6 +112,11 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         float resultVal = ScalingMath.ApplyOperation(config.operation, currentTargetVal, calculatedVal);
         float valueForFlatAddModifier = resultVal - currentTargetVal;
 
+        if(activeModifier != null)
+        {
+            valueForFlatAddModifier += activeModifier.Value;
+        }
+
         if (config.operation == EffectOperation.Swap)
         {
             float tempVal = GetStatValue(target, config.sourceStat);
