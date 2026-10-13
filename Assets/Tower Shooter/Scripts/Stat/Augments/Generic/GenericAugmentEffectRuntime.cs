@@ -78,17 +78,9 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
 
         foreach (var tStat in targets)
         {
-            float efficiency = AugmentManager.Ins.GetAugmentEfficiency(augment);
-
-            float currentModifyValue = config.baseValue;
-
-            if (activeModifier != null)
-            {
-                currentModifyValue = activeModifier.Value;
-            }
-
+            float sourceVal = GetStatValue(targetStats, config.sourceStat);
             float calculatedVal =
-                efficiency * ScalingMath.Evaluate(currentModifyValue, config.scalingFunction, config.scalingFactor);
+                AugmentManager.Ins.GetAugmentEfficiency(augment) * ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
 
             ApplyOperationToTarget(tStat, calculatedVal);
 
