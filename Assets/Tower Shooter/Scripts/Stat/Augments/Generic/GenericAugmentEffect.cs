@@ -180,6 +180,7 @@ public class GenericAugmentEffect : AugmentEffect
         string scalingFactorWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor}</color>";
         string scalingFactorPercentWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor * 100f}%</color>";
         string scalingFunctionWithColor = $"<color={primaryHex}>{config.scalingFunction}</color>";
+        string scalingFunctionAdverbWithColor = $"<color={primaryHex}>{config.scalingFunction}ly</color>";
         string secondsSuffixWithColor = $"<color={primaryHex}>s</color>";
         string perSecondSuffixWithColor = $"<color={primaryHex}>/s</color>";
 
@@ -237,17 +238,23 @@ public class GenericAugmentEffect : AugmentEffect
         {
             if (config.baseValue > 0)
             {
-                sb.Append($" by {baseValueWithColor}");
+                sb.Append($" by [{baseValueWithColor}");
             }
 
-            if (config.scalingFactor != 0 && config.sourceStat != config.targetStat)
+            if (config.scalingFactor != 0)
             {
                 string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" ({scalingFunctionWithColor})" : "";
-                sb.Append($" + {scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr}");
-            }
-            else if (config.scalingFactor != 0 && config.scalingFunction != ScalingFunction.Linear)
-            {
-                sb.Append($" scaling {scalingFunctionWithColor}ly by factor {scalingFactorWithColor}");
+                sb.Append($" + {scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr}]");
+
+                // if (config.sourceStat != config.targetStat)
+                // {
+                //     string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" ({scalingFunctionWithColor})" : "";
+                //     sb.Append($" + {scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr}");
+                // }
+                // else
+                // {
+                //     sb.Append($" scaling {scalingFunctionAdverbWithColor} by factor {scalingFactorWithColor}");
+                // }
             }
         }
 
@@ -378,6 +385,7 @@ public class GenericAugmentEffect : AugmentEffect
         string scalingFactorWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor}</color>";
         string scalingFactorPercentWithColor = $"<color={sourceStatColorHex}>{config.scalingFactor * 100f}%</color>";
         string scalingFunctionWithColor = $"<color={primaryHex}>{config.scalingFunction}</color>";
+        string scalingFunctionAdverbWithColor = $"<color={primaryHex}>{config.scalingFunction}ly</color>";
 
         // --- SECTION 1: TRIGGER & SCOPE ---
         sb.Append($"<color={primaryHex}><b>Trigger:</b></color> ");
@@ -457,14 +465,17 @@ public class GenericAugmentEffect : AugmentEffect
                 sb.Append($" by {baseValueWithColor}");
             }
 
-            if (config.scalingFactor != 0 && config.sourceStat != config.targetStat)
+            if (config.scalingFactor != 0)
             {
-                string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" [{scalingFunctionWithColor}]" : "";
-                sb.Append($" (+{scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr})");
-            }
-            else if (config.scalingFactor != 0 && config.scalingFunction != ScalingFunction.Linear)
-            {
-                sb.Append($" (Scaled {scalingFunctionWithColor}ly by {scalingFactorWithColor})");
+                if (config.sourceStat != config.targetStat)
+                {
+                    string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" [{scalingFunctionWithColor}]" : "";
+                    sb.Append($" (+{scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr})");
+                }
+                else
+                {
+                    sb.Append($" (Scaled {scalingFunctionAdverbWithColor} by {scalingFactorWithColor})");
+                }
             }
         }
 
