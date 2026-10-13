@@ -324,6 +324,15 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
     #region Visual
     private void PlayVisualEffects(CharacterStats targetStats, float calculatedVal)
     {
+        NodeUI nodeUI = targetStats.serviceLocator.nodeUI;
+
+        string augmentIconId = AugmentScoringUtility.GetAugmentIconId(augment);
+
+        nodeUI.PlayEffectOnAugmentActivate(augment, augmentIconId);
+    }
+
+    private void PlayTextVisualEffects(CharacterStats targetStats, float calculatedVal)
+    {
         Vector3 targetPosition = targetStats.transform.position;
 
         // 1. Floating Text Popups

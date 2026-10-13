@@ -36,6 +36,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject researchItemUI;
     [SerializeField] private GameObject UIRectLine;
     [SerializeField] private GameObject saveSlotItemUI;
+    [SerializeField] private GameObject augmentIcon;
 
     [Header("Chicken Feed")]
     [SerializeField] private GameObject baseChicken;
@@ -124,6 +125,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ResearchItemUI>(GameConstants.researchItemUI, researchItemUI, 20);
         RegisterPool<UIRectLine>(GameConstants.UIRectLine, UIRectLine, 20);
         RegisterPool<SaveSlotItemUI>(GameConstants.saveSlotItemUI, saveSlotItemUI, 20);
+        RegisterPool<AugmentIcon>(GameConstants.augmentIcon, augmentIcon, 20);
         #endregion
 
         RegisterPool<AudioSource>(GameConstants.CLICK_SOUND, clickSoundPrefab, 2);

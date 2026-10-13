@@ -81,7 +81,7 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         qualityText.color = qualityColor;
         qualityBorder.color = qualityColor;
 
-        augmentIcon.SetupIcon(augment, qualityColor);
+        augmentIcon.SetupIcon(augment);
         // augmentIconEffect.SetQuality(augment.augmentQuality);
 
         qualityTag.SetBorderColor(qualityColor);

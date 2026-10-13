@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +11,51 @@ public class AugmentIcon : MonoBehaviour
 
     public List<AugmentIconConfig> augmentIconConfigs;
 
-    public void SetupIcon(Augment augment, Color qualityColor)
+    public string id;
+
+    private Sprite cachedAugmentIcon;
+    private Color cachedQualityColor;
+
+    private Sequence punchSequence;
+
+    public void SetupIcon(Augment augment)
+    {
+        Color qualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
+
+        icon.sprite = GetAugmentIcon(augment);
+
+        border.color = qualityColor;
+        icon.color = qualityColor;
+    }
+
+    public void PlayEffectOnAugmentActivated(Augment augment, string id)
+    {
+        if (cachedAugmentIcon == null)
+        {
+            cachedAugmentIcon = GetAugmentIcon(augment);
+            cachedQualityColor = ThemeManager.GetRarityColor(augment.augmentQuality);
+
+            icon.sprite = cachedAugmentIcon;
+
+            border.color = cachedQualityColor;
+            icon.color = cachedQualityColor;
+        }
+
+        if (!punchSequence.isAlive)
+        {
+            punchSequence = SaferioTween.Punch(transform);
+            punchSequence.Chain(Tween.Delay(1).OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+
+                cachedAugmentIcon = null;
+            }));
+        }
+
+        this.id = id;
+    }
+
+    private Sprite GetAugmentIcon(Augment augment)
     {
         StatType strongestStat = StatType.Damage;
 
@@ -57,14 +103,11 @@ public class AugmentIcon : MonoBehaviour
 
             if (augmentIconConfig.statType == strongestStat)
             {
-                icon.sprite = augmentIconConfig.icon;
-
-                break;
+                return augmentIconConfig.icon;
             }
         }
 
-        border.color = qualityColor;
-        icon.color = qualityColor;
+        return null;
     }
 }
 

@@ -103,4 +103,49 @@ public static class AugmentScoringUtility
 
         return scoreA.CompareTo(scoreB);
     }
+
+    public static string GetAugmentIconId(Augment augment)
+    {
+        StatType strongestStat = StatType.Damage;
+
+        float strongestStatValue = 0;
+
+        if (augment.dynamicEffects.Count == 0)
+        {
+            for (int i = 0; i < augment.statModifiers.Count; i++)
+            {
+                StatModifierData statModifierData = augment.statModifiers[i];
+
+                if (statModifierData.value > strongestStatValue)
+                {
+                    strongestStat = statModifierData.statType;
+                    strongestStatValue = statModifierData.value;
+                }
+            }
+        }
+        else
+        {
+            List<GenericAugmentEffect> genericAugmentEffects = new List<GenericAugmentEffect>();
+
+            for (int i = 0; i < augment.dynamicEffects.Count; i++)
+            {
+                AugmentEffect augmentEffect = augment.dynamicEffects[i];
+
+                if (augmentEffect is not GenericAugmentEffect)
+                {
+                    continue;
+                }
+
+                GenericAugmentEffect genericAugmentEffect = (GenericAugmentEffect)augment.dynamicEffects[i];
+
+                genericAugmentEffects.Add(genericAugmentEffect);
+            }
+
+            GenericAugmentEffect strongestAugmentEffect = AugmentScoringUtility.GetStrongestAugment(genericAugmentEffects);
+
+            strongestStat = strongestAugmentEffect.config.targetStat;
+        }
+
+        return $"{strongestStat}_{augment.augmentQuality}";
+    }
 }

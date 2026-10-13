@@ -35,6 +35,11 @@ public class NodeUI : MonoBehaviour
     public CanvasGroup augmentFilterCanvasGroup;
     public Image augmentLink;
     public float filterAugmentItemScale;
+
+    [Header("Augment Icon")]
+    public RectTransform augmentIconContainer;
+    private List<AugmentIcon> augmentIcons = new List<AugmentIcon>();
+
     private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
 
     public static event Action<string, string> showNotificationEvent;
@@ -244,6 +249,38 @@ public class NodeUI : MonoBehaviour
 
             onCompleteAction?.Invoke();
         });
+    }
+    #endregion
+
+    #region Augment Icon
+    public void AddAugmentIcon(AugmentIcon augmentIcon)
+    {
+        CommonUtil.SetParentAndResetScale(augmentIcon.transform, augmentFilterContainer);
+
+        augmentIcons.Add(augmentIcon);
+    }
+
+    public void PlayEffectOnAugmentActivate(Augment augment, string augmentIconId)
+    {
+        for (int i = 0; i < augmentIcons.Count; i++)
+        {
+            AugmentIcon augmentIcon = augmentIcons[i];
+
+            if (augmentIcon.id == augmentIconId)
+            {
+                augmentIcon.PlayEffectOnAugmentActivated(augment, augmentIconId);
+
+                AddAugmentIcon(augmentIcon);
+
+                return;
+            }
+        }
+
+        AugmentIcon newAugmentIcon = ObjectPoolingEverything.GetFromPool<AugmentIcon>(GameConstants.augmentIcon);
+
+        newAugmentIcon.PlayEffectOnAugmentActivated(augment, augmentIconId);
+
+        AddAugmentIcon(newAugmentIcon);
     }
     #endregion
 

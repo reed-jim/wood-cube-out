@@ -33,6 +33,7 @@ public static class GameConstants
     public static string researchItemUI = "researchItemUI";
     public static string UIRectLine = "UIRectLine";
     public static string saveSlotItemUI = "saveSlotItemUI";
+    public static string augmentIcon = "augmentIcon";
 
     public static float nodeSpeedMultiplier = 0.02f;
 
