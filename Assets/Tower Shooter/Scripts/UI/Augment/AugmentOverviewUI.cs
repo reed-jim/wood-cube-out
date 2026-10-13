@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class AugmentOverviewUI : BasePopup
@@ -7,8 +9,12 @@ public class AugmentOverviewUI : BasePopup
     public RectTransform augmentContainer;
     public RectTransform augmentSetContainer;
 
+    public TMP_Text powerOutputText;
+
     private List<NodeDetailAugmentItemUI> nodeDetailAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
     private List<AugmentSetItemUI> augmentSetItemUIs = new List<AugmentSetItemUI>();
+
+    private Coroutine updatingPowerOutputCoroutine;
 
     protected override void Show(Action onCompletedAction = null)
     {
@@ -56,6 +62,28 @@ public class AugmentOverviewUI : BasePopup
             augmentSetItemUI.Init(spaceObjectType);
 
             augmentSetItemUIs.Add(augmentSetItemUI);
+        }
+
+        if (updatingPowerOutputCoroutine != null)
+        {
+            StopCoroutine(updatingPowerOutputCoroutine);
+        }
+
+        StartCoroutine(UpdatingPowerOutput());
+    }
+
+    private IEnumerator UpdatingPowerOutput()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+
+        while (true)
+        {
+            float powerOutput = PowerManager.Ins.GetTotalPowerOutputPerSecond();
+
+            powerOutputText.text =
+                $"Power Output: <color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(powerOutput)} <sprite name=Damage>/s";
+
+            yield return waitForSeconds;
         }
     }
 }
