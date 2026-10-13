@@ -384,6 +384,12 @@ public class AugmentManager : Singleton<AugmentManager>
     {
         debugText.text = genericAugmentEffectToDebug.GetFormattedDescription(statColorConfigSO);
     }
+
+    [ContextMenu("Debug Generic Augment Effect Score")]
+    private void DebugGenericAugmentEffectScore()
+    {
+        Debug.Log($"DebugGenericAugmentEffectScore: {AugmentScoringUtility.CalculateOverpoweredScore(genericAugmentEffectToDebug.config)}");
+    }
     #endregion
 }
 

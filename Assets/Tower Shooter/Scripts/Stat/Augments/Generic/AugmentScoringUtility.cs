@@ -44,7 +44,7 @@ public static class AugmentScoringUtility
 
         // 2. Estimate scaling contribution (assuming a baseline source stat value of 100 for estimation)
         float estimatedSourceStat = 100f;
-        float scalingContribution = ScalingMath.Evaluate(0f, estimatedSourceStat, config.scalingFunction, config.scalingFactor);
+        float scalingContribution = ScalingMath.Evaluate(config.baseValue, estimatedSourceStat, config.scalingFunction, config.scalingFactor);
         score += Mathf.Abs(scalingContribution);
 
         // 3. Target Stat Weighting (adjust multipliers based on how critical the stat is)
