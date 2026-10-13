@@ -24,7 +24,7 @@ public class ReachStarPopup : BasePopup
     {
         base.RegisterMoreEvent();
 
-        SpaceShip.reachStarEvent += Init;
+        MilestoneFinishEffect.reachStarEvent += Init;
 
         goNextStarButton.onClick.AddListener(GoNextStar);
     }
@@ -33,7 +33,7 @@ public class ReachStarPopup : BasePopup
     {
         base.UnregisterMoreEvent();
 
-        SpaceShip.reachStarEvent -= Init;
+        MilestoneFinishEffect.reachStarEvent -= Init;
     }
 
     private void Init(VoyageData voyageData)

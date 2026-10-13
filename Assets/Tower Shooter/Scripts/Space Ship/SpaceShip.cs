@@ -27,6 +27,7 @@ public class SpaceShip : MonoBehaviour
 
     public TMP_Text speedText;
     public TMP_Text remaningKmText;
+    public MilestoneFinishEffect milestoneFinishEffect;
 
     public VoyageData voyageData;
 
@@ -81,7 +82,9 @@ public class SpaceShip : MonoBehaviour
 
             remaningKmText.text = $"You're at {starPathConfig.starName}";
 
-            reachStarEvent?.Invoke(voyageData);
+            milestoneFinishEffect.ReachMilestone(voyageData);
+
+            // reachStarEvent?.Invoke(voyageData);
 
             isFlying = false;
 
