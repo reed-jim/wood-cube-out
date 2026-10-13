@@ -52,6 +52,12 @@ public enum EffectDuration
     Decaying
 }
 
+public enum AugmentValueSource
+{
+    FlatValue,
+    SourceStat
+}
+
 public enum AugmentLevel
 {
     Orbital,        // Around a planet

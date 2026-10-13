@@ -15,6 +15,7 @@ public class GenericAugmentData
     public EffectOperation operation = EffectOperation.Add;
 
     [Header("Mathematical Scaling")]
+    public AugmentValueSource valueSource = AugmentValueSource.SourceStat; // Default to existing behavior
     public ScalingFunction scalingFunction = ScalingFunction.Linear;
     public float baseValue = 0f;
     public float scalingFactor = 1f;

@@ -8,6 +8,7 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
     private CharacterStats targetStats;
     private BaseCharacter node;
 
+    private int triggerTime = 0;
     private int cycleCounter = 0;
     private int currentStacks = 0;
     private float activeTimer = 0f;
@@ -78,14 +79,28 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
 
         foreach (var tStat in targets)
         {
-            float sourceVal = GetStatValue(targetStats, config.sourceStat);
-            float calculatedVal =
-                AugmentManager.Ins.GetAugmentEfficiency(augment) * ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
+            float calculatedVal;
+
+            if (config.valueSource == AugmentValueSource.FlatValue)
+            {
+                // Use the flat base value directly (multiplied by augment efficiency)
+                calculatedVal =
+                    AugmentManager.Ins.GetAugmentEfficiency(augment) * ScalingMath.Evaluate(config.baseValue, triggerTime, config.scalingFunction, config.scalingFactor);
+            }
+            else
+            {
+                // Original logic: evaluate using the source stat
+                float sourceVal = GetStatValue(targetStats, config.sourceStat);
+                calculatedVal =
+                    AugmentManager.Ins.GetAugmentEfficiency(augment) * ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
+            }
 
             ApplyOperationToTarget(tStat, calculatedVal);
 
             PlayVisualEffects(tStat, calculatedVal);
         }
+
+        triggerTime++;
     }
 
     private void ApplyOperationToTarget(CharacterStats target, float calculatedVal)
@@ -93,12 +108,9 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         float oldStatValue = GetStatValue(target, config.targetStat);
         float currentTargetVal = oldStatValue;
 
-        float resultVal = ScalingMath.ApplyOperation(config.operation, currentTargetVal, calculatedVal) - oldStatValue;
-
-        if (activeModifier != null)
-        {
-            resultVal += activeModifier.Value;
-        }
+        // now we have value applied the scaling function --> do operation between the value with target stat's current value
+        float resultVal = ScalingMath.ApplyOperation(config.operation, currentTargetVal, calculatedVal);
+        float valueForFlatAddModifier = resultVal - currentTargetVal;
 
         if (config.operation == EffectOperation.Swap)
         {
@@ -117,7 +129,7 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
             if (currentStacks < config.maxStacks)
             {
                 currentStacks++;
-                accumulatedValue += resultVal;
+                accumulatedValue += valueForFlatAddModifier;
                 SetStatValue(target, config.targetStat, accumulatedValue);
                 TrackUtilityDelta(target, oldStatValue, accumulatedValue);
             }
@@ -125,12 +137,12 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         else if (config.durationType == EffectDuration.TemporaryBurst)
         {
             activeTimer = config.durationInSeconds;
-            SetStatValue(target, config.targetStat, resultVal);
-            TrackUtilityDelta(target, oldStatValue, resultVal);
+            SetStatValue(target, config.targetStat, valueForFlatAddModifier);
+            TrackUtilityDelta(target, oldStatValue, valueForFlatAddModifier);
         }
         else
         {
-            SetStatValue(target, config.targetStat, resultVal);
+            SetStatValue(target, config.targetStat, valueForFlatAddModifier);
             float newStatValue = GetStatValue(target, config.targetStat);
             TrackUtilityDelta(target, oldStatValue, newStatValue);
         }
