@@ -91,14 +91,14 @@ public class OfflineIdleUI : MonoBehaviour
     {
         ResourceManager.Ins.ChangeResource(ResourceType.Coin, calculatedTotalPower);
 
-        CollectResourceManager.Ins.Collect(ResourceType.Coin, calculatedTotalPower, claimButton.transform.position);
-
         CommonUtil.DisableUIGlobally();
 
         glitchTransition.FixGlitch(onComplete: () =>
         {
             CommonUtil.EnableUIGlobally();
 
+            CollectResourceManager.Ins.Collect(ResourceType.Coin, calculatedTotalPower, claimButton.transform.position);
+            
             Hide();
         });
     }

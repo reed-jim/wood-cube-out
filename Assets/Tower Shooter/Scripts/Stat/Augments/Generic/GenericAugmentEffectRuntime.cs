@@ -97,7 +97,7 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
 
             ApplyOperationToTarget(tStat, calculatedVal);
 
-            PlayVisualEffects(tStat, calculatedVal);
+            PlayTextVisualEffects(tStat, calculatedVal);
         }
 
         triggerTime++;
@@ -352,7 +352,8 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
             config,
             calculatedVal,
             targetStats.transform.position,
-            targetStats.transform
+            targetStats.transform,
+            isMoveHalfway: true
         );
 
         // Call your Floating Text / Damage Number Manager here

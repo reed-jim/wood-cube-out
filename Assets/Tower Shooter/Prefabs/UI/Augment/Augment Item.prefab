@@ -786,7 +786,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5642333882492302588
 RectTransform:
   m_ObjectHideFlags: 0
@@ -941,7 +941,7 @@ MonoBehaviour:
   showAugmentDetailButton: {fileID: 972881381401660596}
   upgradeHighlight: {fileID: 6065422593857460092}
   colorConfig: {fileID: 11400000, guid: 0c6ac4bfe7dc28147a782fd773a38a63, type: 2}
-  hoverDelay: 1
+  hoverDelay: 0.5
 --- !u!114 &1604343257138255241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1444,11 +1444,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1218374909580166320, guid: 35489a3260b90ad49aa9d502c8962c23, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 190
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 1218374909580166320, guid: 35489a3260b90ad49aa9d502c8962c23, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 190
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 1218374909580166320, guid: 35489a3260b90ad49aa9d502c8962c23, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1501,6 +1501,14 @@ PrefabInstance:
     - target: {fileID: 7898262697552084424, guid: 35489a3260b90ad49aa9d502c8962c23, type: 3}
       propertyPath: m_Name
       value: Augment Icon
+      objectReference: {fileID: 0}
+    - target: {fileID: 8765063331471117321, guid: 35489a3260b90ad49aa9d502c8962c23, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 68
+      objectReference: {fileID: 0}
+    - target: {fileID: 8765063331471117321, guid: 35489a3260b90ad49aa9d502c8962c23, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 68
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

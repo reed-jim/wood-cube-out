@@ -133,11 +133,12 @@ public class DamageText : MonoBehaviour
     /// Displays a visual pop-up effect specifically when a Generic Augment executes on a node.
     /// </summary>
     public void ShowAugmentEffect(
-        GenericAugmentData augmentConfig, 
-        float value, 
-        Vector3 spawnPosition, 
-        Transform target, 
-        Color? customColorOverride = null, 
+        GenericAugmentData augmentConfig,
+        float value,
+        Vector3 spawnPosition,
+        Transform target,
+        bool isMoveHalfway = false,
+        Color? customColorOverride = null,
         Action<DamageText> onComplete = null)
     {
         IsActive = true;
@@ -164,7 +165,12 @@ public class DamageText : MonoBehaviour
 
         // Slight upward bounce float trajectory
         float xOffset = UnityEngine.Random.Range(-0.25f, 0.25f);
-        Vector3 targetPos = spawnPosition + new Vector3(xOffset, floatDistance * 0.85f, 0f);
+        Vector3 targetPos = spawnPosition + new Vector3(xOffset, floatDistance * 1f, 0f);
+
+        if (isMoveHalfway)
+        {
+            targetPos = spawnPosition + new Vector3(xOffset, floatDistance * 0.6f, 0f);
+        }
 
         transform.localScale = Vector3.zero;
         currentSequence = DOTween.Sequence();
