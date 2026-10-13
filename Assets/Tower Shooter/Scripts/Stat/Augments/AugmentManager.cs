@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Saferio.Util.SaferioTween;
+using TMPro;
 using UnityEngine;
 
 public class AugmentManager : Singleton<AugmentManager>
@@ -25,6 +26,10 @@ public class AugmentManager : Singleton<AugmentManager>
     [Header("SO")]
     public AugmentContainer augmentContainer;
     public StatColorConfigSO statColorConfigSO;
+
+    [Header("Debug")]
+    public TMP_Text debugText;
+    public GenericAugmentEffect genericAugmentEffectToDebug;
 
     private Augment selectAugment;
     private Dictionary<Augment, AugmentData> dataOfAugments = new Dictionary<Augment, AugmentData>();
@@ -370,6 +375,14 @@ public class AugmentManager : Singleton<AugmentManager>
         }
 
         return augments;
+    }
+    #endregion
+
+    #region Debug
+    [ContextMenu("Debug Augment Effect Description")]
+    private void DebugAugmentEffectDescription()
+    {
+        debugText.text = genericAugmentEffectToDebug.GetFormattedDescription(statColorConfigSO);
     }
     #endregion
 }

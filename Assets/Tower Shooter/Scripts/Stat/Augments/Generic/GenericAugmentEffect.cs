@@ -152,7 +152,7 @@ public class GenericAugmentEffect : AugmentEffect
     /// <summary>
     /// Constructs a readable sentence automatically based on GenericAugmentData configuration.
     /// </summary>
-    private string GenerateAutoDescription()
+    public string GenerateAutoDescription()
     {
         StringBuilder sb = new StringBuilder();
 
