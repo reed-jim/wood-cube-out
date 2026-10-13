@@ -59,11 +59,11 @@ public class UIGlitchTransition : MonoBehaviour
 
     // Recommended: Clean up the instantiated material when the object is destroyed 
     // to prevent memory leaks if Unity doesn't handle it automatically.
-    void OnDestroy()
-    {
-        if (glitchMaterial != null)
-        {
-            Destroy(glitchMaterial);
-        }
-    }
+    // void OnDestroy()
+    // {
+    //     if (glitchMaterial != null)
+    //     {
+    //         Destroy(glitchMaterial);
+    //     }
+    // }
 }

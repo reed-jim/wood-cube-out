@@ -13,7 +13,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     [Header("Transition Settings")]
     [SerializeField] private float transitionSpeed = 15f;
-    [SerializeField] private float rippleSpeed = 4f;
+    private float _rippleSpeed = 1f;
 
     [Header("Saferio Button Settings")]
     [SerializeField] private bool isPlaySound = true;
@@ -172,7 +172,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         while (currentRippleProgress < 1f)
         {
-            currentRippleProgress = Mathf.MoveTowards(currentRippleProgress, targetRippleProgress, Time.unscaledDeltaTime * rippleSpeed);
+            currentRippleProgress = Mathf.MoveTowards(currentRippleProgress, targetRippleProgress, Time.unscaledDeltaTime * _rippleSpeed);
             if (instanceMaterial != null)
             {
                 instanceMaterial.SetFloat(RippleProgressID, currentRippleProgress);

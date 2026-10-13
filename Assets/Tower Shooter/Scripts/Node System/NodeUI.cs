@@ -255,7 +255,7 @@ public class NodeUI : MonoBehaviour
     #region Augment Icon
     public void AddAugmentIcon(AugmentIcon augmentIcon)
     {
-        CommonUtil.SetParentAndResetScale(augmentIcon.transform, augmentFilterContainer);
+        CommonUtil.SetParentAndResetScale(augmentIcon.transform, augmentIconContainer);
 
         augmentIcons.Add(augmentIcon);
     }

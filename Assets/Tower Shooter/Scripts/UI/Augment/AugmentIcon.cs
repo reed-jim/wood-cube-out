@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -111,6 +112,7 @@ public class AugmentIcon : MonoBehaviour
     }
 }
 
+[Serializable]
 public class AugmentIconConfig
 {
     public StatType statType;

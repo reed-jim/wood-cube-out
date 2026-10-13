@@ -14,12 +14,12 @@ public static class CommonUtil
 {
     public static void EnableUIGlobally()
     {
-        UnityEngine.EventSystems.EventSystem.current.enabled = true;
+        // UnityEngine.EventSystems.EventSystem.current.enabled = true;
     }
 
     public static void DisableUIGlobally()
     {
-        UnityEngine.EventSystems.EventSystem.current.enabled = false;
+        // UnityEngine.EventSystems.EventSystem.current.enabled = false;
     }
 
     public static string ToPercent(float chance)

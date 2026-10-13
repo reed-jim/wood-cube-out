@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 4343625158884089233}
   - component: {fileID: 1425477856823304393}
   - component: {fileID: 8942064580317262595}
+  - component: {fileID: 4729589532374390162}
   - component: {fileID: 957767251629981305}
   - component: {fileID: 1158616409383816718}
   - component: {fileID: 6984798561647734153}
@@ -283,6 +284,18 @@ MonoBehaviour:
   rarityText: {fileID: 207272947054662617}
   levelText: {fileID: 583388308653054068}
   selectButton: {fileID: 1158616409383816718}
+--- !u!225 &4729589532374390162
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3281485461345131109}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &957767251629981305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,6 +382,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
+  transitionSpeed: 15
+  rippleSpeed: 4
   isPlaySound: 1
 --- !u!1 &4709151026602551857
 GameObject:
