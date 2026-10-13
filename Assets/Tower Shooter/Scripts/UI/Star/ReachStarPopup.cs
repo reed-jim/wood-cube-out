@@ -10,11 +10,13 @@ public class ReachStarPopup : BasePopup
     public Image starPicture;
     public Button goNextStarButton;
     public RectTransform rewardContainer;
-    public RectTransform rewardAugmentContainer;
+    public ScrollableLayoutGroup scrollableUnlockAugmentContainer;
 
     private VoyageData voyageData;
     private StarPathConfig starPathConfig;
     private RewardItemUI rewardItemUI;
+
+    private List<NodeDetailAugmentItemUI> unlockAugmentItemUIs = new List<NodeDetailAugmentItemUI>();
 
     public static event Action goNextStarEvent;
 
@@ -59,14 +61,19 @@ public class ReachStarPopup : BasePopup
 
         List<Augment> unlockedAugments = AugmentManager.Ins.GetUnlockedAugmentsForSpaceObjectType(starPathConfig.spaceObjectType);
 
+        CommonUtil.ReturnListToPool(unlockAugmentItemUIs, item => item.gameObject);
+
+        scrollableUnlockAugmentContainer.ClearAllItems();
+
         for (int i = 0; i < unlockedAugments.Count; i++)
         {
-            NodeDetailAugmentItemUI augmentItemUIs = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
+            NodeDetailAugmentItemUI augmentItemUI = ObjectPoolingEverything.GetFromPool<NodeDetailAugmentItemUI>(GameConstants.nodeDetailAugmentItemUI);
 
-            augmentItemUIs.transform.SetParent(rewardAugmentContainer);
-            augmentItemUIs.transform.localScale = Vector3.one;
+            scrollableUnlockAugmentContainer.AddItem(augmentItemUI.gameObject);
 
-            augmentItemUIs.Init(unlockedAugments[i]);
+            augmentItemUI.Init(unlockedAugments[i]);
+
+            unlockAugmentItemUIs.Add(augmentItemUI);
         }
 
         this.voyageData = voyageData;
