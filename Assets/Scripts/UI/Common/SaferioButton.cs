@@ -22,11 +22,10 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private bool isPlaySound = true;
 
     [Header("Long-Click Upgrade Settings")]
-    [SerializeField] private bool enableLongClick = true;
-    [SerializeField] private FullscreenEffectController fullscreenEffect;
+    [SerializeField] private bool isLongClickEnabled = false;
     [SerializeField] private float holdThreshold = 0.4f;      // Time required before it counts as a long-press
     [SerializeField] private float repeatInterval = 0.15f;    // Speed of repeating upgrades while holding
-    [SerializeField] private UnityEvent onLongClickUpgrade;   
+    [SerializeField] private UnityEvent onLongClickUpgrade;
 
     private Button _button;
     private Graphic uiGraphic;
@@ -98,7 +97,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void Update()
     {
-        if (!enableLongClick || !_button.interactable) return;
+        if (!isLongClickEnabled || !_button.interactable) return;
 
         if (isPointerDown)
         {
@@ -116,10 +115,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             if (hasReachedLongPressThreshold)
             {
                 float progress = Mathf.Clamp01((pointerDownTimer - holdThreshold) / 1.0f);
-                if (fullscreenEffect != null)
-                {
-                    fullscreenEffect.SetLongPressProgress(progress);
-                }
+                FullscreenEffectController.Ins.SetLongPressProgress(progress);
 
                 repeatTimer += Time.unscaledDeltaTime;
                 if (repeatTimer >= repeatInterval)
@@ -154,9 +150,9 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerUp(PointerEventData eventData)
     {
         // Only fire the special release effect if they actually held it long enough to trigger long-press mode
-        if (hasReachedLongPressThreshold && fullscreenEffect != null)
+        if (hasReachedLongPressThreshold)
         {
-            fullscreenEffect.PlayReleaseEffect();
+            FullscreenEffectController.Ins.PlayReleaseEffect();
         }
 
         ResetLongPressState();
@@ -179,9 +175,9 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             instanceMaterial.SetFloat(GlowAmountID, 0f);
         }
 
-        if (fullscreenEffect != null)
+        if (FullscreenEffectController.Ins != null)
         {
-            fullscreenEffect.SetLongPressProgress(0f);
+            FullscreenEffectController.Ins.SetLongPressProgress(0f);
         }
     }
 

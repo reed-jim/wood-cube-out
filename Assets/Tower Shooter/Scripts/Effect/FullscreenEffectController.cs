@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Graphic))]
-public class FullscreenEffectController : MonoBehaviour
+public class FullscreenEffectController : Singleton<FullscreenEffectController>
 {
     private Material instanceMaterial;
     private Graphic uiGraphic;
@@ -12,8 +12,10 @@ public class FullscreenEffectController : MonoBehaviour
     private static readonly int LongPressProgressID = Shader.PropertyToID("_LongPressProgress");
     private static readonly int GlitchTriggerID = Shader.PropertyToID("_GlitchTrigger");
 
-    private void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         uiGraphic = GetComponent<Graphic>();
         if (uiGraphic.material != null)
         {

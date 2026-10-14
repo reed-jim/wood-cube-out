@@ -16,8 +16,6 @@ public class BasePlayer : BaseCharacter
         Projectile projectile = ObjectPoolingEverything.GetFromPool<Projectile>(GameConstants.projectile);
 
         float flySpeed = stats.GetStat(StatType.FlySpeed).Value;
-
-        projectile.Launch(this, StarManager.Ins.Mars, transform.position, flySpeed);
     }
 
     private IEnumerator Shooting()

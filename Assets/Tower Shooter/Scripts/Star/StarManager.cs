@@ -58,8 +58,6 @@ public enum SpaceObjectType
 
 public class StarManager : Singleton<StarManager>
 {
-    public BaseCharacter Mars;
-
     public StarVoyageContainer starVoyageContainer;
 
     public StarPathConfig currentStarPathConfig;

@@ -143,6 +143,8 @@ public class SpaceShip : MonoBehaviour
             voyageData.starPathConfigIndex++;
             voyageData.remaningKm = GameConstants.KmPerLightYear * CurveManager.Ins.GetVoyageDistance(voyageData.starPathConfigIndex);
 
+            StarManager.Ins.SetStarPathConfig(voyageData.starPathConfigIndex);
+
             Init();
         }
 
