@@ -204,6 +204,14 @@ public class SpaceShip : MonoBehaviour
             SaveVoyageData();
         }
     }
+
+    #region Debug
+    [ContextMenu("FinishCurrentVoyageNow")]
+    public void FinishCurrentVoyageNow()
+    {
+        remaningKm = 1000;
+    }
+    #endregion
 }
 
 [Serializable]

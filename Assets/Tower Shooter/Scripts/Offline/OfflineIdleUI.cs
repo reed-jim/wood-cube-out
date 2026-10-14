@@ -13,6 +13,7 @@ public class OfflineIdleUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI idleRewardMultiplierText;
     [SerializeField] private Button claimButton;
     [SerializeField] private UIGlitchTransition glitchTransition;
+    [SerializeField] private Image overlay;
 
     [Header("Upgrade")]
     [SerializeField] private Button upgradeMultiplierButton;
@@ -71,6 +72,8 @@ public class OfflineIdleUI : MonoBehaviour
         glitchTransition.SetGlitchProgress(0);
 
         Tween.LocalPositionY(container, -70, duration: 0.3f);
+
+        Tween.Alpha(overlay, 0.95f, duration: 0.3f);
     }
 
     private void Hide()
@@ -78,8 +81,11 @@ public class OfflineIdleUI : MonoBehaviour
         Tween.LocalPositionY(container, -1.5f * container.sizeDelta.y, duration: 0.3f)
         .OnComplete(() =>
         {
+            overlay.gameObject.SetActive(false);
             container.gameObject.SetActive(false);
         });
+
+        Tween.Alpha(overlay, 0, duration: 0.3f);
     }
 
     private void OnClickClaim()
@@ -98,7 +104,7 @@ public class OfflineIdleUI : MonoBehaviour
             CommonUtil.EnableUIGlobally();
 
             CollectResourceManager.Ins.Collect(ResourceType.Coin, calculatedTotalPower, claimButton.transform.position);
-            
+
             Hide();
         });
     }

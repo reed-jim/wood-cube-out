@@ -12,6 +12,9 @@ public class MilestoneFinishEffect : MonoBehaviour
     private Vector3 arrowInitialPosition;
     private Tween arrowTween;
 
+    [Header("Landing")]
+    [SerializeField] private SpaceshipLandingEffect spaceshipLandingEffect;
+
     public Button clickButton;
 
     [Header("Shockwave Effect")]
@@ -41,6 +44,8 @@ public class MilestoneFinishEffect : MonoBehaviour
             shockwaveImage.material = materialInstance;
             materialInstance.SetFloat("_Progress", 0f);
         }
+
+        spaceshipLandingEffect.gameObject.SetActive(false);
     }
 
     // Call this when the player arrives at the milestone location
@@ -58,7 +63,7 @@ public class MilestoneFinishEffect : MonoBehaviour
 
     private void GoNextStar()
     {
-        gameObject.SetActive(false);
+        arrowCanvasGroup.gameObject.SetActive(false);
 
         if (arrowTween.isAlive)
         {
@@ -70,7 +75,14 @@ public class MilestoneFinishEffect : MonoBehaviour
             shockwaveTween.Stop();
         }
 
-        reachStarEvent?.Invoke(voyageData);
+        spaceshipLandingEffect.gameObject.SetActive(true);
+
+        spaceshipLandingEffect.StartLanding(onComplete: () =>
+        {
+            gameObject.SetActive(false);
+
+            reachStarEvent?.Invoke(voyageData);
+        });
     }
 
     #region Animations

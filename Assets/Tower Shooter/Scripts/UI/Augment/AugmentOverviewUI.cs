@@ -80,8 +80,10 @@ public class AugmentOverviewUI : BasePopup
         {
             float powerOutput = PowerManager.Ins.GetTotalPowerOutputPerSecond();
 
+            string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
             powerOutputText.text =
-                $"Power Output: <color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(powerOutput)} <sprite name=Damage>/s";
+                $"Power Output: <color={primaryHex}>{TextUtil.FormatFloat(powerOutput)} <sprite=0 color={primaryHex}>/s";
 
             yield return waitForSeconds;
         }

@@ -62,11 +62,11 @@ public class UIGlitchTransition : MonoBehaviour
         onComplete?.Invoke();
     }
 
-    void OnDestroy()
-    {
-        if (glitchMaterial != null)
-        {
-            Destroy(glitchMaterial);
-        }
-    }
+    // void OnDestroy()
+    // {
+    //     if (glitchMaterial != null)
+    //     {
+    //         Destroy(glitchMaterial);
+    //     }
+    // }
 }
