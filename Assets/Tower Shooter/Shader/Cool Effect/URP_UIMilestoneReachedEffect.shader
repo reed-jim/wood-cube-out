@@ -3,7 +3,7 @@ Shader "Custom/URP_UIMilestoneCustomRipple"
     Properties
     {
         _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Base Color", Color) = (0.5, 0.5, 0.5, 1)
+        _Color ("Base Color", Color) = (1.0, 0.701, 0.0, 1) // FFB300
         _SuccessColor ("Success/Prompt Color", Color) = (1, 0.84, 0, 1) // Gold
         _UnlockProgress ("Unlock Progress (0 to 1)", Range(0,1)) = 0
         _Thickness ("Ring Thickness", Range(0.01, 0.3)) = 0.08
@@ -50,7 +50,7 @@ Shader "Custom/URP_UIMilestoneCustomRipple"
             {
                 float4 positionCS   : SV_POSITION;
                 float2 uv           : TEXCOORD0;
-                float4 color        : COLOR;
+                float2 color        : COLOR;
             };
 
             CBUFFER_START(UnityPerMaterial)
@@ -79,53 +79,53 @@ Shader "Custom/URP_UIMilestoneCustomRipple"
                 float2 uv = input.uv - 0.5;
                 float dist = length(uv);
 
-                // 1. Base milestone ring boundary (driven by _BaseRadius & _Thickness)
+                // Smooth transition factors
+                float unlockFactor = saturate(_UnlockProgress * 1.05);
+                float invUnlock = 1.0 - unlockFactor;
+
+                // 1. Base milestone ring boundary (fades out with bright additive retention)
                 float outerRadius = _BaseRadius;
                 float innerRadius = outerRadius - _Thickness;
-                float ring = smoothstep(innerRadius, innerRadius + 0.01, dist) * 
-                             (1.0 - smoothstep(outerRadius - 0.01, outerRadius, dist));
+                float baseRing = smoothstep(innerRadius, innerRadius + 0.01, dist) * 
+                                 (1.0 - smoothstep(outerRadius - 0.01, outerRadius, dist)) * 
+                                 invUnlock;
 
-                // State checks
-                float isUnlocked = step(0.99, _UnlockProgress);
-                float isAnimating = step(_UnlockProgress, 0.99) * step(0.01, _UnlockProgress);
-
-                // 2. One-time Success Burst
+                // 2. Success Burst Wave
                 float shockwaveRadius = _UnlockProgress * 0.7;
                 float shockwave = smoothstep(shockwaveRadius - 0.04, shockwaveRadius, dist) * 
                                   (1.0 - smoothstep(shockwaveRadius, shockwaveRadius + 0.04, dist)) * 
-                                  (1.0 - _UnlockProgress) * isAnimating;
+                                  (1.0 - _UnlockProgress) * step(_UnlockProgress, 0.99);
 
-                float centerFlash = (1.0 - smoothstep(0.0, outerRadius, dist)) * (1.0 - _UnlockProgress) * 0.8 * isAnimating;
+                float centerFlash = (1.0 - smoothstep(0.0, outerRadius, dist)) * (1.0 - _UnlockProgress) * 0.8 * step(_UnlockProgress, 0.99);
 
-                // 3. Final Idle State: Solid Core + Breathing Outer Glow Ring
+                // 3. Final Idle State with Bright Additive Morphing
                 float edgeSmooth = 0.01;
                 
-                // Solid white/success core circle
-                float solidCore = 1.0 - smoothstep(_IdleCoreRadius - edgeSmooth, _IdleCoreRadius + edgeSmooth, dist);
+                float currentCoreRadius = lerp(_BaseRadius * 0.5, _IdleCoreRadius, smoothstep(0.5, 1.0, _UnlockProgress));
+                float solidCore = (1.0 - smoothstep(currentCoreRadius - edgeSmooth, currentCoreRadius + edgeSmooth, dist)) * smoothstep(0.4, 0.85, _UnlockProgress);
 
-                // Animated pulsing aura around the core
                 float pulse = sin(_Time.y * _PulseSpeed) * 0.5 + 0.5;
-                float currentGlow = _GlowIntensity * (0.6 + 0.4 * pulse);
+                float currentGlow = _GlowIntensity * pulse * smoothstep(0.6, 1.0, _UnlockProgress);
                 
-                float outerGlow = smoothstep(_IdleCoreRadius + _GlowFalloff, _IdleCoreRadius, dist) 
-                                * smoothstep(_IdleCoreRadius - 0.05, _IdleCoreRadius, dist) 
+                float outerGlow = smoothstep(currentCoreRadius + _GlowFalloff, currentCoreRadius, dist) 
+                                * smoothstep(currentCoreRadius - 0.02, currentCoreRadius, dist) 
                                 * currentGlow;
 
-                // Combine visual components for the unlocked idle state
-                float idleVisual = (solidCore + outerGlow) * isUnlocked;
+                // Combined bright visual components using additive addition instead of dark clamping
+                float idleVisual = solidCore + outerGlow;
 
-                // Color mixing: Core remains bright/white, outer aura matches success tint
-                float3 baseIdleColor = lerp(float3(1, 1, 1), _SuccessColor.rgb, outerGlow / max(currentGlow, 0.001));
-                float3 activeColor = lerp(_Color.rgb, baseIdleColor, isUnlocked);
+                // Luminous color grading transition starting from the FFB300 base color
+                float3 baseIdleColor = lerp(_Color.rgb, _SuccessColor.rgb, saturate(outerGlow / max(currentGlow, 0.001)));
+                float3 activeColor = lerp(_Color.rgb, baseIdleColor, smoothstep(0.5, 1.0, _UnlockProgress));
 
-                // Burst intensity boost during animation
-                float finalIntensity = 1.0 + (shockwave * 5.0) + (centerFlash * 3.0);
+                // Bright intensity composition during transition
+                float finalIntensity = 1.0 + (shockwave * 6.0) + (centerFlash * 4.0);
 
-                // Final color and alpha blending
-                float3 finalColor = activeColor * ((ring * finalIntensity) + idleVisual);
-                float finalAlpha = saturate(ring + shockwave + centerFlash + idleVisual) * _Color.a;
+                // Additive combination to prevent dark rings
+                float3 finalColor = (_Color.rgb * baseRing * finalIntensity) + (activeColor * idleVisual);
+                float finalAlpha = saturate(baseRing + shockwave + centerFlash + idleVisual) * _Color.a;
                 
-                // Edge guard to prevent clipping bleeding at sprite quad edges
+                // Edge guard to prevent quad bleeding
                 float boundaryMask = 1.0 - smoothstep(0.46, 0.49, dist);
                 finalAlpha *= boundaryMask;
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -20,6 +21,13 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [Header("Saferio Button Settings")]
     [SerializeField] private bool isPlaySound = true;
 
+    [Header("Long-Click Upgrade Settings")]
+    [SerializeField] private bool enableLongClick = true;
+    [SerializeField] private FullscreenEffectController fullscreenEffect;
+    [SerializeField] private float holdThreshold = 0.4f;      // Time required before it counts as a long-press
+    [SerializeField] private float repeatInterval = 0.15f;    // Speed of repeating upgrades while holding
+    [SerializeField] private UnityEvent onLongClickUpgrade;   
+
     private Button _button;
     private Graphic uiGraphic;
     private RectTransform rectTransform;
@@ -29,6 +37,12 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private float currentGlow = 0f;
     private float targetGlow = 0f;
     private Vector3 originalScale;
+
+    // Threshold & long-press tracking
+    private bool isPointerDown = false;
+    private bool hasReachedLongPressThreshold = false;
+    private float pointerDownTimer = 0f;
+    private float repeatTimer = 0f;
 
     private Sequence _sequence;
     private List<Tween> _tweens;
@@ -62,14 +76,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void OnEnable()
     {
-        currentGlow = 0f;
-        targetGlow = 0f;
-        rectTransform.localScale = originalScale;
-
-        if (instanceMaterial != null)
-        {
-            instanceMaterial.SetFloat(GlowAmountID, 0f);
-        }
+        ResetLongPressState();
     }
 
     private void OnDestroy()
@@ -89,6 +96,41 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
+    private void Update()
+    {
+        if (!enableLongClick || !_button.interactable) return;
+
+        if (isPointerDown)
+        {
+            pointerDownTimer += Time.unscaledDeltaTime;
+
+            // Check if user has held long enough to cross the threshold
+            if (!hasReachedLongPressThreshold && pointerDownTimer >= holdThreshold)
+            {
+                hasReachedLongPressThreshold = true;
+                repeatTimer = 0f;
+                TriggerUpgradeAction(); // First tick upon reaching threshold
+            }
+
+            // Map progress dynamically for shader visualization once threshold tracking starts
+            if (hasReachedLongPressThreshold)
+            {
+                float progress = Mathf.Clamp01((pointerDownTimer - holdThreshold) / 1.0f);
+                if (fullscreenEffect != null)
+                {
+                    fullscreenEffect.SetLongPressProgress(progress);
+                }
+
+                repeatTimer += Time.unscaledDeltaTime;
+                if (repeatTimer >= repeatInterval)
+                {
+                    repeatTimer = 0f;
+                    TriggerUpgradeAction();
+                }
+            }
+        }
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         targetGlow = 1f;
@@ -103,12 +145,51 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        isPointerDown = true;
+        pointerDownTimer = 0f;
+        hasReachedLongPressThreshold = false;
         targetGlow = 1f;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        targetGlow = eventData.hovered.Contains(gameObject) ? 1f : 0f;
+        // Only fire the special release effect if they actually held it long enough to trigger long-press mode
+        if (hasReachedLongPressThreshold && fullscreenEffect != null)
+        {
+            fullscreenEffect.PlayReleaseEffect();
+        }
+
+        ResetLongPressState();
+        targetGlow = eventData.hovered != null && eventData.hovered.Contains(gameObject) ? 1f : 0f;
+        StartGlowTransition();
+    }
+
+    private void ResetLongPressState()
+    {
+        isPointerDown = false;
+        hasReachedLongPressThreshold = false;
+        pointerDownTimer = 0f;
+        repeatTimer = 0f;
+        currentGlow = 0f;
+        targetGlow = 0f;
+        rectTransform.localScale = originalScale;
+
+        if (instanceMaterial != null)
+        {
+            instanceMaterial.SetFloat(GlowAmountID, 0f);
+        }
+
+        if (fullscreenEffect != null)
+        {
+            fullscreenEffect.SetLongPressProgress(0f);
+        }
+    }
+
+    private void TriggerUpgradeAction()
+    {
+        PlaySoundOnClick();
+        PlayPunchEffect();
+        onLongClickUpgrade?.Invoke();
     }
 
     private void StartGlowTransition()
@@ -140,7 +221,6 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void PlayPunchEffect()
     {
-        // Smooth scale punch using PrimeTween
         if (_sequence.isAlive)
         {
             _sequence.Stop();
@@ -174,12 +254,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void OnOtherButtonClicked(int instanceId)
     {
-        if (instanceId == gameObject.GetInstanceID())
-        {
-            return;
-        }
-
-        if (!_button.interactable)
+        if (instanceId == gameObject.GetInstanceID() || !_button.interactable)
         {
             return;
         }

@@ -29,13 +29,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _RippleRadius: 0.5
+    - _BaseRadius: 0.3
+    - _GlowFalloff: 0.2
+    - _GlowIntensity: 0.5
+    - _IdleCoreRadius: 0.3
+    - _IdleNodeRadius: 0.4
+    - _PulseSpeed: 4
+    - _RippleRadius: 0.2
     - _RippleSpeed: 1
     - _RippleWidth: 0.08
     - _Thickness: 0.5
     - _UnlockProgress: 1
     m_Colors:
     - _Color: {r: 1, g: 0.7019608, b: 0, a: 1}
-    - _SuccessColor: {r: 0, g: 0.8196079, b: 1, a: 1}
+    - _SuccessColor: {r: 1, g: 0.7019608, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
