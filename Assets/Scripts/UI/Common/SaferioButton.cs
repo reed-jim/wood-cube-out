@@ -13,7 +13,9 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     [Header("Transition Settings")]
     [SerializeField] private float transitionSpeed = 15f;
-    private float _rippleSpeed = 1f;
+
+    private float punchScaleAmount = 0.05f;
+    private float punchDuration = 0.3f;
 
     [Header("Saferio Button Settings")]
     [SerializeField] private bool isPlaySound = true;
@@ -23,22 +25,15 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private RectTransform rectTransform;
     private Material instanceMaterial;
     private Coroutine glowTransitionCoroutine;
-    private Coroutine rippleCoroutine;
 
     private float currentGlow = 0f;
     private float targetGlow = 0f;
-
-    private float currentRippleProgress = 0f;
-    private float targetRippleProgress = 0f;
+    private Vector3 originalScale;
 
     private Sequence _sequence;
     private List<Tween> _tweens;
-    private bool _isAnimating;
 
     private static readonly int GlowAmountID = Shader.PropertyToID("_GlowAmount");
-    private static readonly int RippleProgressID = Shader.PropertyToID("_RippleProgress");
-    private static readonly int ClickLocalPosID = Shader.PropertyToID("_ClickLocalPos");
-    private static readonly int RectSizeID = Shader.PropertyToID("_RectSize");
 
     public static event Action<int> preventMultiClickEvent;
 
@@ -50,6 +45,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _button = GetComponent<Button>();
         uiGraphic = GetComponent<Graphic>();
         rectTransform = GetComponent<RectTransform>();
+        originalScale = rectTransform.localScale;
 
         if (uiGraphic.material != null)
         {
@@ -59,6 +55,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         _button.onClick.AddListener(PreventMultiButtonClickConcurrently);
         _button.onClick.AddListener(PlaySoundOnClick);
+        _button.onClick.AddListener(PlayPunchEffect);
 
         SetDisabledColor();
     }
@@ -67,13 +64,11 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         currentGlow = 0f;
         targetGlow = 0f;
-        currentRippleProgress = 0f;
-        targetRippleProgress = 0f;
+        rectTransform.localScale = originalScale;
 
         if (instanceMaterial != null)
         {
             instanceMaterial.SetFloat(GlowAmountID, 0f);
-            instanceMaterial.SetFloat(RippleProgressID, 0f);
         }
     }
 
@@ -109,22 +104,6 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerDown(PointerEventData eventData)
     {
         targetGlow = 1f;
-
-        // Pass local click position and rect dimensions to the shader
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, eventData.position, eventData.pressEventCamera, out Vector2 localPoint))
-        {
-            Vector2 rectSize = rectTransform.rect.size;
-
-            if (instanceMaterial != null)
-            {
-                instanceMaterial.SetVector(ClickLocalPosID, new Vector4(localPoint.x, localPoint.y, 0, 0));
-                instanceMaterial.SetVector(RectSizeID, new Vector4(rectSize.x, rectSize.y, 0, 0));
-            }
-        }
-
-        currentRippleProgress = 0f;
-        targetRippleProgress = 1f;
-        StartRippleTransition();
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -139,15 +118,6 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             StopCoroutine(glowTransitionCoroutine);
         }
         glowTransitionCoroutine = StartCoroutine(AnimateGlowState());
-    }
-
-    private void StartRippleTransition()
-    {
-        if (rippleCoroutine != null)
-        {
-            StopCoroutine(rippleCoroutine);
-        }
-        rippleCoroutine = StartCoroutine(AnimateRippleState());
     }
 
     private IEnumerator AnimateGlowState()
@@ -168,23 +138,18 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
-    private IEnumerator AnimateRippleState()
+    private void PlayPunchEffect()
     {
-        while (currentRippleProgress < 1f)
+        // Smooth scale punch using PrimeTween
+        if (_sequence.isAlive)
         {
-            currentRippleProgress = Mathf.MoveTowards(currentRippleProgress, targetRippleProgress, Time.unscaledDeltaTime * _rippleSpeed);
-            if (instanceMaterial != null)
-            {
-                instanceMaterial.SetFloat(RippleProgressID, currentRippleProgress);
-            }
-            yield return null;
+            _sequence.Stop();
         }
 
-        currentRippleProgress = 0f;
-        if (instanceMaterial != null)
-        {
-            instanceMaterial.SetFloat(RippleProgressID, 0f);
-        }
+        Vector3 punchTarget = originalScale * (1f - punchScaleAmount);
+        _sequence = Sequence.Create()
+            .Group(Tween.Scale(rectTransform, punchTarget, punchDuration * 0.5f))
+            .Chain(Tween.Scale(rectTransform, originalScale, punchDuration * 0.5f));
     }
 
     private void SetDisabledColor()
