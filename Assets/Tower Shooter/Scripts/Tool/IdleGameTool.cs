@@ -865,13 +865,13 @@ public class IdleGameTool : EditorWindow
         for (int i = 0; i < augmentContainer.augments.Count; i++)
         {
             augmentContainer.augments[i].id = i;
-        }
 
-        EditorUtility.SetDirty(augmentContainer);
+            EditorUtility.SetDirty(augmentContainer.augments[i]);
+        }
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        
+
         return;
 
         if (augmentContainer == null)
