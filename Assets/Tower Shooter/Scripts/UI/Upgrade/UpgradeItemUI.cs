@@ -92,15 +92,19 @@ public class UpgradeItemUI : MonoBehaviour
 
         if (cachedCoinValue >= statUpgradeData.coinRequired)
         {
-            coinText.text = $"<color={DynamicThemeManager.Ins.PrimaryHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+            string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
 
-            costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            coinText.text = $"<color={primaryHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)} <sprite=0 color={primaryHex}>";
+
+            // costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
         }
         else
         {
-            coinText.text = $"<color={DynamicThemeManager.Ins.ErrorHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)}";
+            string errorHex = DynamicThemeManager.Ins.ErrorHex;
 
-            costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Error);
+            coinText.text = $"<color={errorHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)} <sprite=0 color={errorHex}>";
+
+            // costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Error);
         }
     }
 
