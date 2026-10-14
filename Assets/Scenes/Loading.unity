@@ -814,8 +814,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transitionSpeed: 15
-  rippleSpeed: 4
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &817468851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -911,8 +916,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transitionSpeed: 15
-  rippleSpeed: 4
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &932280850
 GameObject:
   m_ObjectHideFlags: 0

@@ -101,7 +101,7 @@ public class TextureAtlasCreatorWindow : EditorWindow
                     Texture2D tex =
                         obj as Texture2D;
 
-
+                    // Only add if it's a valid texture and not already in the list
                     if (tex != null &&
                        !textures.Contains(tex))
                     {
@@ -109,12 +109,7 @@ public class TextureAtlasCreatorWindow : EditorWindow
                     }
                 }
 
-
-                textures =
-                    textures
-                    .OrderBy(x => x.name)
-                    .ToList();
-
+                // Removed .OrderBy(x => x.name) so textures keep their drop order
 
                 Repaint();
             }

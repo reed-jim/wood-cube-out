@@ -33,6 +33,7 @@ public class OfflineIdleUI : MonoBehaviour
 
         // Hide UI by default on start
         container.gameObject.SetActive(false);
+        overlay.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
