@@ -1629,7 +1629,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 825d5071fe10050419a06d84eb6387fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarManager
-  Mars: {fileID: 0}
   starVoyageContainer: {fileID: 11400000, guid: fb79bb1f2cf929a4799c9c20d385f523, type: 2}
   currentStarPathConfig: {fileID: 0}
   nextStarPathConfig: {fileID: 0}
@@ -27193,44 +27192,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1838861011}
   m_CullTransparentMesh: 1
---- !u!21 &1839344872
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/AugmentQualityShader
-  m_Shader: {fileID: 4800000, guid: 4b693aec6dc08104f9ec8d663f31322e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Quality: 0
-    - _Stencil: 0
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    m_Colors: []
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &1869435221
 GameObject:
   m_ObjectHideFlags: 0
@@ -27417,44 +27378,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cae136d7111614242aa479b82dd477b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IdleGameInputManager
---- !u!21 &1879258458
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/AugmentQualityShader
-  m_Shader: {fileID: 4800000, guid: 4b693aec6dc08104f9ec8d663f31322e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Quality: 0
-    - _Stencil: 0
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    m_Colors: []
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &1887361715
 GameObject:
   m_ObjectHideFlags: 0
@@ -28011,14 +27934,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 643191234}
     m_Modifications:
-    - target: {fileID: 584155582328534959, guid: 557a8b05960cb0b4a9bdda279aca1120, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 1879258458}
-    - target: {fileID: 1929092926083049843, guid: 557a8b05960cb0b4a9bdda279aca1120, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 2141936685}
     - target: {fileID: 3113824652823305248, guid: 557a8b05960cb0b4a9bdda279aca1120, type: 3}
       propertyPath: m_Name
       value: Augment Selection Popup
@@ -28027,10 +27942,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8273816485476183561, guid: 557a8b05960cb0b4a9bdda279aca1120, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 1839344872}
     - target: {fileID: 8684835883523114881, guid: 557a8b05960cb0b4a9bdda279aca1120, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -34985,44 +34896,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!21 &2141936685
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/AugmentQualityShader
-  m_Shader: {fileID: 4800000, guid: 4b693aec6dc08104f9ec8d663f31322e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Quality: 0
-    - _Stencil: 0
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    m_Colors: []
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &2144443011
 GameObject:
   m_ObjectHideFlags: 0
