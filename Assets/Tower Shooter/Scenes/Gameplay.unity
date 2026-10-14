@@ -2317,6 +2317,58 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &241754427
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 241754428}
+  - component: {fileID: 241754429}
+  m_Layer: 0
+  m_Name: Feature Unlock Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &241754428
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241754427}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1920970497}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &241754429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241754427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b79b7070d6308d44aa3ed8ee9ff65c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FeatureUnlockManager
+  defaultFeatureLockStateData:
+    featureLockStateDataItems:
+    - featureType: 0
+      spaceObjectTypeToUnlock: 3
+      isUnlocked: 0
+    - featureType: 1
+      spaceObjectTypeToUnlock: 11
+      isUnlocked: 0
 --- !u!114 &250130704 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 372219486680410038, guid: 5203f4ea188a7b94599690c392aa2da5, type: 3}
@@ -9393,11 +9445,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711ce28cb5ae7e74e8a7c63620f590de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
+  id: 
   switchButton: {fileID: 449118458}
   themeableElements:
   - {fileID: 562506659}
   - {fileID: 1277702140}
   lockOverlay: {fileID: 0}
+  featureType: 0
   switchableScreenType: 0
 --- !u!1 &449398698
 GameObject:
@@ -16399,11 +16453,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711ce28cb5ae7e74e8a7c63620f590de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
+  id: 
   switchButton: {fileID: 647468300}
   themeableElements:
   - {fileID: 1004709808}
   - {fileID: 1048904822}
   lockOverlay: {fileID: 0}
+  featureType: 0
   switchableScreenType: 2
 --- !u!1 &653106928
 GameObject:
@@ -24607,6 +24663,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: db403bfa570007c47bbd3c0e177ccee3, type: 3}
     - target: {fileID: 4112996086147737514, guid: c4138dd198b7417429609a5408a9c71d, type: 3}
+      propertyPath: featureType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112996086147737514, guid: c4138dd198b7417429609a5408a9c71d, type: 3}
       propertyPath: switchableScreenType
       value: 3
       objectReference: {fileID: 0}
@@ -26239,11 +26299,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711ce28cb5ae7e74e8a7c63620f590de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
+  id: 
   switchButton: {fileID: 1730519638}
   themeableElements:
   - {fileID: 1205074759}
   - {fileID: 382750060}
   lockOverlay: {fileID: 0}
+  featureType: 0
   switchableScreenType: 4
 --- !u!222 &1730519642
 CanvasRenderer:
@@ -27653,6 +27715,7 @@ Transform:
   - {fileID: 671587246}
   - {fileID: 694690533}
   - {fileID: 993975951}
+  - {fileID: 241754428}
   - {fileID: 448780276}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

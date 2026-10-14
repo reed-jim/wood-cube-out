@@ -1,0 +1,91 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum FeatureType
+{
+    Leadership,
+    Research
+}
+
+public class FeatureUnlockManager : Singleton<FeatureUnlockManager>
+{
+    [SerializeField] FeatureLockStateData defaultFeatureLockStateData;
+
+    private FeatureLockStateData featureLockStateData;
+
+    public static event Action loadFeatureLockStateDataEvent;
+
+    void Start()
+    {
+        LoadFeatureLockStateData();
+    }
+
+    public bool IsFeatureUnlocked(FeatureType featureType)
+    {
+        for (int i = 0; i < featureLockStateData.featureLockStateDataItems.Count; i++)
+        {
+            FeatureLockStateDataItem featureLockStateDataItem = featureLockStateData.featureLockStateDataItems[i];
+
+            if (featureLockStateDataItem.featureType == featureType)
+            {
+                return featureLockStateDataItem.isUnlocked;
+            }
+        }
+
+        return false;
+    }
+
+    public SpaceObjectType GetSpaceObjectTypeToUnlock(FeatureType featureType)
+    {
+        for (int i = 0; i < featureLockStateData.featureLockStateDataItems.Count; i++)
+        {
+            FeatureLockStateDataItem featureLockStateDataItem = featureLockStateData.featureLockStateDataItems[i];
+
+            if (featureLockStateDataItem.featureType == featureType)
+            {
+                return featureLockStateDataItem.spaceObjectTypeToUnlock;
+            }
+        }
+
+        return SpaceObjectType.Earth;
+    }
+
+    #region Save/Load
+    private void LoadFeatureLockStateData()
+    {
+        featureLockStateData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey($"featureLockStateData"), defaultFeatureLockStateData);
+
+        loadFeatureLockStateDataEvent?.Invoke();
+    }
+
+    private void SaveFeatureLockStateData()
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey($"featureLockStateData"), featureLockStateData);
+    }
+
+    private bool IsSwitchableScreenTypeUnlocked(SwitchableScreenType switchableScreenType)
+    {
+        return DataUtility.Load(SaveSlotManager.Ins.GetSaveKey($"{switchableScreenType}"), false);
+    }
+
+    private void SaveSwitchableScreenTypeUnlock(SwitchableScreenType switchableScreenType)
+    {
+        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey($"{switchableScreenType}"), true);
+    }
+    #endregion
+}
+
+[Serializable]
+public class FeatureLockStateData
+{
+    public List<FeatureLockStateDataItem> featureLockStateDataItems;
+}
+
+[Serializable]
+public class FeatureLockStateDataItem
+{
+    public FeatureType featureType;
+    public SpaceObjectType spaceObjectTypeToUnlock;
+    public bool isUnlocked;
+}

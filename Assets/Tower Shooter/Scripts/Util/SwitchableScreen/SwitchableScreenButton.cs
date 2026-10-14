@@ -5,21 +5,28 @@ using UnityEngine.UI;
 
 public class SwitchableScreenButton : MonoBehaviour
 {
+    [Header("Identifier")]
+    [SerializeField] private string id;
+
     [Header("UI")]
     [SerializeField] private Button switchButton;
     [SerializeField] private List<ThemeableUI> themeableElements;
 
     [Header("Lock State")]
     [SerializeField] private CanvasGroup lockOverlay;
+    [SerializeField] private FeatureType featureType;
 
     [Header("Customize")]
     public SwitchableScreenType switchableScreenType;
+
+    private bool isUnlocked;
 
     public static event Action<SwitchableScreenType> switchScreenEvent;
 
     void Awake()
     {
         switchScreenEvent += OnScreenSwitch;
+        FeatureUnlockManager.loadFeatureLockStateDataEvent += OnLoadFeatureLockStateData;
 
         switchButton.onClick.AddListener(SwitchScreen);
     }
@@ -27,6 +34,7 @@ public class SwitchableScreenButton : MonoBehaviour
     void OnDestroy()
     {
         switchScreenEvent -= OnScreenSwitch;
+        FeatureUnlockManager.loadFeatureLockStateDataEvent -= OnLoadFeatureLockStateData;
     }
 
     private void SwitchScreen()
@@ -56,13 +64,29 @@ public class SwitchableScreenButton : MonoBehaviour
         }
     }
 
+    private void OnLoadFeatureLockStateData()
+    {
+        if (lockOverlay != null)
+        {
+            isUnlocked = FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType);
+
+            lockOverlay.gameObject.SetActive(!isUnlocked);
+        }
+        else
+        {
+            isUnlocked = true;
+        }
+    }
+
     protected virtual bool IsUnlock()
     {
-        return true;
+        return isUnlocked;
     }
 
     protected virtual string GetLockDescription()
     {
-        return "";
+        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+        return $"Reach <color={primaryHex}>{FeatureUnlockManager.Ins.GetSpaceObjectTypeToUnlock(featureType)}</color> to unlock this feature!";
     }
 }
