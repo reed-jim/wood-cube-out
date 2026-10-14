@@ -1,4 +1,4 @@
-Shader "Custom/URP/IdleRewardStainedGlassRounded"
+Shader "Custom/URP/IdleRewardStainedGlassExactTint"
 {
     Properties
     {
@@ -18,8 +18,10 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
         _CornerRadius ("Corner Radius", Range(0.0, 0.5)) = 0.1
         _CornerSmoothness ("Corner Smoothness", Range(0.001, 0.05)) = 0.005
 
-        [Header(Transition Control)]
+        [Header(Two Stage Transition)]
         _Transition ("Transition Progress", Range(0, 1)) = 0.0
+        [HDR] _InterimColor ("Interim Solid Color", Color) = (0.1, 0.08, 0.2, 1.0)
+        _SweepSoftness ("Sweep Edge Softness", Range(0.01, 0.3)) = 0.1
     }
 
     SubShader
@@ -72,6 +74,7 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
                 float4 _MainTex_ST;
                 float4 _EdgeColor;
                 float4 _GlassTint;
+                float4 _InterimColor;
                 float _CellSize;
                 float _RefractionStrength;
                 float _EdgeWidth;
@@ -79,6 +82,7 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
                 float _CornerRadius;
                 float _CornerSmoothness;
                 float _Transition;
+                float _SweepSoftness;
             CBUFFER_END
 
             float2 Hash22(float2 p)
@@ -130,7 +134,6 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
                 return output;
             }
 
-            // Corrected Rounded Box SDF using UI Rect aspect ratio
             float RoundedBoxSDF(float2 p, float2 b, float r)
             {
                 float2 q = abs(p) - b + r;
@@ -145,25 +148,18 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
                 // -------------------------------------------------------------
                 // 1. Aspect-Ratio Corrected Rounded Corners
                 // -------------------------------------------------------------
-                // Calculate UI Image aspect ratio from screen pixel size or derivative scales
-                // Alternatively, we derive aspect ratio using screen width/height mapping or DDX/DDY.
-                // Using ddx/ddy ensures it maps precisely to whatever RectTransform size the Image has.
                 float2 duvdx = ddx(uv);
                 float2 duvdy = ddy(uv);
                 float pixelWidth = length(duvdx);
                 float pixelHeight = length(duvdy);
-                
-                // Get the local aspect ratio of the UI element rect
                 float rectAspect = (pixelHeight > 0.0 && pixelWidth > 0.0) ? (pixelHeight / pixelWidth) : 1.0;
 
-                // Center UVs and normalize based on rect dimensions
                 float2 centeredUV = (uv - 0.5);
                 if (rectAspect > 1.0)
                     centeredUV.x *= rectAspect;
                 else
                     centeredUV.y /= rectAspect;
 
-                // Box dimensions matching the scaled space (-0.5 to 0.5 box)
                 float2 boxSize = float2(0.5, 0.5);
                 if (rectAspect > 1.0) boxSize.x *= rectAspect;
                 else boxSize.y /= rectAspect;
@@ -175,7 +171,7 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
                     return float4(0, 0, 0, 0);
 
                 // -------------------------------------------------------------
-                // 2. Voronoi Crystal Cell Calculation
+                // 2. Voronoi Crystal Cell Calculation & Refraction
                 // -------------------------------------------------------------
                 float screenAspect = _ScreenParams.x / _ScreenParams.y;
                 float2 scaledUV = uv * float2(screenAspect, 1.0) * _CellSize;
@@ -183,10 +179,7 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
                 float2 voronoiDist = Voronoi(scaledUV);
                 float crystalEdge = voronoiDist.y - voronoiDist.x;
 
-                // -------------------------------------------------------------
-                // 3. Chromatic Dispersion & Refraction
-                // -------------------------------------------------------------
-                float2 randomOffset = (Hash22(floor(scaledUV)) - 0.5) * _RefractionStrength * (1.0 - _Transition);
+                float2 randomOffset = (Hash22(floor(scaledUV)) - 0.5) * _RefractionStrength * (1.0 - saturate(_Transition * 2.0));
                 
                 float r = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + randomOffset + float2(0.002, 0)).r;
                 float g = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + randomOffset).g;
@@ -197,21 +190,41 @@ Shader "Custom/URP/IdleRewardStainedGlassRounded"
                 float cellID = Hash22(floor(scaledUV)).x;
                 float4 cellTint = lerp(_GlassTint, _GlassTint * 1.3, cellID);
                 float4 glassColor = refractedBG * cellTint;
-
-                float leadMask = smoothstep(0.0, _EdgeWidth, crystalEdge);
-                float4 finalGlass = lerp(_EdgeColor, glassColor, leadMask);
+                float4 voronoiEffect = lerp(_EdgeColor, glassColor, smoothstep(0.0, _EdgeWidth, crystalEdge));
 
                 // -------------------------------------------------------------
-                // 4. Geometric Shard Shatter Transition
+                // 3. Two-Stage Transition Logic (Exact Image Tint Reveal)
                 // -------------------------------------------------------------
-                float shardDissolveThreshold = _Transition * 1.3;
-                if (cellID < shardDissolveThreshold)
+                // Sample texture and explicitly multiply by input.color (the UI Image's Color property tint)
+                float4 exactTintedImage = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv) * input.color;
+                float4 baseColor = voronoiEffect;
+
+                if (_Transition > 0.0)
                 {
-                    float4 pureImage = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv) * input.color;
-                    return float4(pureImage.rgb, pureImage.a * cornerMask);
+                    // Phase 1: Voronoi Shards Dissolve (0.0 -> 0.5) into the solid interim color
+                    float phase1Progress = saturate(_Transition * 2.0);
+                    float cellDissolveThreshold = phase1Progress * 1.3;
+                    
+                    baseColor = lerp(voronoiEffect, _InterimColor, step(cellID, cellDissolveThreshold));
+
+                    // Phase 2: Sweep to Exact Image Tint (0.5 -> 1.0)
+                    if (_Transition > 0.5)
+                    {
+                        float phase2Progress = saturate((_Transition - 0.5) * 2.0);
+                        
+                        // Diagonal sweep coordinate (top-left to bottom-right)
+                        float sweepCoord = uv.x + uv.y;
+                        float sweepThreshold = lerp(-0.2, 2.2, phase2Progress);
+
+                        float sweepMask = smoothstep(sweepThreshold - _SweepSoftness, sweepThreshold, sweepCoord);
+                        
+                        // Behind the sweep line = exact tinted image. Ahead of the sweep line = solid interim color.
+                        baseColor = lerp(exactTintedImage, baseColor, sweepMask);
+                    }
                 }
 
-                return finalGlass * (input.color * cornerMask);
+                // Return final color multiplied by corner mask (ignoring extra input.color modulation on the outer wrapper to avoid double-tinting the sweep state)
+                return baseColor * cornerMask;
             }
             ENDHLSL
         }
