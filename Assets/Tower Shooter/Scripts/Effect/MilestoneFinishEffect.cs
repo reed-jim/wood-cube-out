@@ -94,7 +94,7 @@ public class MilestoneFinishEffect : MonoBehaviour
 
         Tween.Alpha(arrowCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
         {
-            arrowTween = Tween.LocalPositionX(arrow, arrowInitialPosition.x - 40, duration: 1, cycles: -1, cycleMode: CycleMode.Yoyo);
+            arrowTween = Tween.LocalPositionY(arrow, arrowInitialPosition.y + 40, duration: 0.6f, cycles: -1, cycleMode: CycleMode.Yoyo, ease: Ease.Linear);
             clickButton.interactable = true;
         });
     }
