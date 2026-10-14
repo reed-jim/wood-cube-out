@@ -96,6 +96,10 @@ public class UnlockAugmentUI : MonoBehaviour
 
             continueButton.interactable = true;
         });
+
+        unlockAugmentData.isUnlocked = true;
+
+        SaveUnlockAugmentData();
     }
 
     private void ContinueButton()
@@ -121,10 +125,6 @@ public class UnlockAugmentUI : MonoBehaviour
         });
 
         continueButton.interactable = false;
-
-        unlockAugmentData.isUnlocked = true;
-
-        SaveUnlockAugmentData();
     }
 
     private void OnGoNextStarEvent()

@@ -1,40 +1,31 @@
-Shader "URP/UI/TiktokGlitch"
+Shader "Custom/URP/IdleRewardStainedGlass"
 {
     Properties
     {
         _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Progress ("Transition Progress (0=Glitch, 1=Normal)", Range(0, 1)) = 0.0
-        _GlitchIntensity ("Glitch Intensity", Range(0, 1)) = 0.5
-        _Speed ("Glitch Speed", Float) = 10.0
         
-        // UI Mask / Canvas Required Properties
-        _StencilComp ("Stencil Comparison", Float) = 8
-        _Stencil ("Stencil ID", Float) = 0
-        _StencilOp ("Stencil Operation", Float) = 0
-        _StencilWriteMask ("Stencil Write Mask", Float) = 255
-        _StencilReadMask ("Stencil Read Mask", Float) = 255
-        _ColorMask ("Color Mask", Float) = 15
-        [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+        [Header(Crystal Voronoi Settings)]
+        _CellSize ("Crystal Cell Size", Range(5.0, 50.0)) = 18.0
+        _RefractionStrength ("Refraction Distortion", Range(0.0, 0.05)) = 0.015
+        _EdgeWidth ("Lead Line Width", Range(0.01, 0.1)) = 0.03
+        _EdgeColor ("Lead Line Color", Color) = (0.05, 0.03, 0.02, 1.0)
+        
+        [Header(Glass Tint Sparkle)]
+        _GlassTint ("Stained Glass Tint", Color) = (0.9, 0.7, 0.2, 0.6)
+        _Speed ("Crystal Shimmer Speed", Float) = 0.5
+
+        [Header(Transition Control)]
+        _Transition ("Transition Progress", Range(0, 1)) = 0.0
     }
 
     SubShader
     {
-        Tags
-        {
-            "Queue"="Transparent"
-            "IgnoreProjector"="True"
-            "RenderType"="Transparent"
-            "PreviewType"="Plane"
+        Tags 
+        { 
+            "Queue"="Transparent" 
+            "IgnoreProjector"="True" 
+            "RenderType"="Transparent" 
             "CanUseSpriteAtlas"="True"
-        }
-
-        Stencil
-        {
-            Ref [_Stencil]
-            Comp [_StencilComp]
-            Pass [_StencilOp]
-            ReadMask [_StencilReadMask]
-            WriteMask [_StencilWriteMask]
         }
 
         Cull Off
@@ -42,123 +33,151 @@ Shader "URP/UI/TiktokGlitch"
         ZWrite Off
         ZTest [unity_GUIZTestMode]
         Blend SrcAlpha OneMinusSrcAlpha
-        ColorMask [_ColorMask]
 
         Pass
         {
-            Name "UI_GlitchPass"
-
+            Name "Default"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 2.0
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.HLSL"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            struct appdata
+            struct Attributes
             {
-                float4 vertex   : POSITION;
-                float4 color    : COLOR;
-                float2 uv       : TEXCOORD0;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
+                float4 positionOS   : POSITION;
+                float4 color        : COLOR;
+                float2 uv           : TEXCOORD0;
             };
 
-            struct v2f
+            struct Varyings
             {
-                float4 vertex   : SV_POSITION;
-                float4 color    : COLOR;
-                float2 uv       : TEXCOORD0;
-                float4 worldPosition : TEXCOORD1;
-                UNITY_VERTEX_OUTPUT_STEREO
+                float4 positionCS   : SV_POSITION;
+                float4 color        : COLOR;
+                float2 uv           : TEXCOORD0;
+                float4 screenPos    : TEXCOORD1;
             };
 
-            Texture2D _MainTex;
-            SamplerState sampler_MainTex;
-            
-            float _Progress;
-            float _GlitchIntensity;
-            float _Speed;
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
 
-            float random(float2 st)
+            TEXTURE2D(_CameraOpaqueTexture);
+            SAMPLER(sampler_CameraOpaqueTexture);
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _MainTex_ST;
+                float4 _EdgeColor;
+                float4 _GlassTint;
+                float _CellSize;
+                float _RefractionStrength;
+                float _EdgeWidth;
+                float _Speed;
+                float _Transition;
+            CBUFFER_END
+
+            // Standard 2D Hash function for Voronoi point generation
+            float2 Hash22(float2 p)
             {
-                return frac(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453123);
+                p = float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)));
+                return frac(sin(p) * 43758.5453123);
             }
 
-            v2f vert(appdata v)
+            // Voronoi Cellular Noise returning distance to closest and second closest cell (for lead lines)
+            float2 Voronoi(float2 uv)
             {
-                v2f o;
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                
-                o.worldPosition = v.vertex;
-                o.vertex = TransformObjectToHClip(v.vertex.xyz);
-                o.uv = v.uv;
-                o.color = v.color;
-                return o;
+                float2 n = floor(uv);
+                float2 f = frac(uv);
+
+                float m1 = 8.0;
+                float m2 = 8.0;
+
+                [unroll]
+                for (int y = -1; y <= 1; y++)
+                {
+                    [unroll]
+                    for (int x = -1; x <= 1; x++)
+                    {
+                        float2 g = float2(float(x), float(y));
+                        float2 o = Hash22(n + g);
+                        
+                        // Animate crystal node points slightly over time
+                        o = 0.5 + 0.5 * sin(_Time.y * _Speed + o * 6.2831);
+                        
+                        float2 r = g + o - f;
+                        float d = dot(r, r);
+
+                        if (d < m1)
+                        {
+                            m2 = m1;
+                            m1 = d;
+                        }
+                        else if (d < m2)
+                        {
+                            m2 = d;
+                        }
+                    }
+                }
+                return float2(sqrt(m1), sqrt(m2));
             }
 
-            float4 frag(v2f i) : SV_Target
+            Varyings vert(Attributes input)
             {
-                float2 uv = i.uv;
-                float time = _Time.y * _Speed;
+                Varyings output;
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+                output.color = input.color;
+                output.screenPos = ComputeScreenPos(output.positionCS);
+                return output;
+            }
 
-                // Effective glitch fades out completely as _Progress goes from 0 -> 1
-                float glitchWeight = _GlitchIntensity * (1.0 - _Progress);
+            float4 frag(Varyings input) : SV_Target
+            {
+                float2 uv = input.uv;
+                float2 screenUV = input.screenPos.xy / input.screenPos.w;
 
-                // --- 1. GLITCH EFFECT (Slices & RGB Split) ---
-                float sliceID = floor(uv.y * 20.0);
-                float sliceNoise = random(float2(sliceID, floor(time)));
+                // Adjust for non-square UI dimensions
+                float screenAspect = _ScreenParams.x / _ScreenParams.y;
+                float2 scaledUV = uv * float2(screenAspect, 1.0) * _CellSize;
+
+                // -------------------------------------------------------------
+                // 1. Voronoi Crystal Cell Calculation
+                // -------------------------------------------------------------
+                float2 voronoiDist = Voronoi(scaledUV);
+                float crystalEdge = voronoiDist.y - voronoiDist.x; // Distance to cell border
+
+                // -------------------------------------------------------------
+                // 2. Chromatic Dispersion & Background Refraction
+                // -------------------------------------------------------------
+                float2 randomOffset = (Hash22(floor(scaledUV)) - 0.5) * _RefractionStrength * (1.0 - _Transition);
                 
-                if (sliceNoise < glitchWeight * 0.4)
+                // Sample RGB channels separately through the crystal glass refraction
+                float r = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + randomOffset + float2(0.002, 0)).r;
+                float g = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + randomOffset).g;
+                float b = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + randomOffset - float2(0.002, 0)).b;
+                
+                float4 refractedBG = float4(r, g, b, 1.0);
+
+                // Tint glass and add color variation per cell
+                float cellID = Hash22(floor(scaledUV)).x;
+                float4 cellTint = lerp(_GlassTint, _GlassTint * 1.3, cellID);
+                float4 glassColor = refractedBG * cellTint;
+
+                // Render dark lead lines (stained glass borders)
+                float leadMask = smoothstep(0.0, _EdgeWidth, crystalEdge);
+                float4 finalGlass = lerp(_EdgeColor, glassColor, leadMask);
+
+                // -------------------------------------------------------------
+                // 3. Geometric Shard Shatter Transition
+                // -------------------------------------------------------------
+                // Each crystal cell dissolves outward based on its unique hash ID and transition progress
+                float shardDissolveThreshold = _Transition * 1.3;
+                if (cellID < shardDissolveThreshold)
                 {
-                    float shift = (random(float2(time, sliceID)) - 0.5) * glitchWeight * 0.5;
-                    uv.x += shift;
+                    float4 pureImage = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv) * input.color;
+                    return pureImage;
                 }
 
-                // RGB Split
-                float rgbSplit = glitchWeight * 0.05 * random(float2(time, 1.0));
-
-                float r = _MainTex.Sample(sampler_MainTex, uv + float2(rgbSplit, 0.0)).r;
-                float g = _MainTex.Sample(sampler_MainTex, uv).g;
-                float b = _MainTex.Sample(sampler_MainTex, uv - float2(rgbSplit, 0.0)).b;
-                float a = _MainTex.Sample(sampler_MainTex, uv).a;
-
-                float4 glitchColor = float4(r, g, b, a);
-
-                // Subtle Scanline during glitch
-                float scanline = sin(uv.y * 200.0 + time * 10.0) * 0.08 * glitchWeight;
-                glitchColor.rgb -= scanline;
-
-                // --- 2. CLEAN NORMAL SAMPLE ---
-                float4 cleanColor = _MainTex.Sample(sampler_MainTex, i.uv);
-
-                // Blend from glitch to normal state
-                float4 finalColor = lerp(glitchColor, cleanColor, _Progress);
-
-                // --- 3. "WOW, IT'S FIXED!" FINISH EFFECT ---
-                // Triggers when _Progress passes 0.75 towards 1.0
-                float fixFactor = saturate((_Progress - 0.75) / 0.25);
-
-                if (fixFactor > 0.0)
-                {
-                    // A. Global Restore Light Burst (Flash)
-                    float burst = sin(fixFactor * 3.14159) * 0.4;
-                    
-                    // B. Clean Cyan / Blue Tech Glow Tint
-                    float3 techGlow = float3(0.2, 0.8, 1.0) * burst;
-
-                    // C. Scanning Restore Line moving top to bottom
-                    float linePos = 1.0 - fixFactor; // Sweeps down from 1 to 0
-                    float scanLine = smoothstep(0.04, 0.0, abs(i.uv.y - linePos));
-                    float3 scanLineColor = float3(0.5, 1.0, 1.0) * scanLine * 0.8;
-
-                    finalColor.rgb += techGlow + scanLineColor;
-                }
-
-                // Apply Canvas UI Vertex Color Tinting
-                finalColor *= i.color;
-
-                return finalColor;
+                return finalGlass * input.color;
             }
             ENDHLSL
         }

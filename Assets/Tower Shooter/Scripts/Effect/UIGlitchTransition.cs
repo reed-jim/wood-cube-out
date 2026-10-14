@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIGlitchTransition : MonoBehaviour
 {
     private Material glitchMaterial;
-    [SerializeField] private float duration = 0.8f; // Speed of the fix animation
+    [SerializeField] private float duration = 0.8f; // Speed of the transition animation
 
     void Awake()
     {
@@ -19,7 +19,7 @@ public class UIGlitchTransition : MonoBehaviour
         }
     }
 
-    // Call this method when the glitch gets fixed, passing an optional onComplete callback
+    // Call this method when closing the reward popup, passing an optional onComplete callback
     public void FixGlitch(Action onComplete = null)
     {
         StartCoroutine(AnimateFix(onComplete));
@@ -27,7 +27,10 @@ public class UIGlitchTransition : MonoBehaviour
 
     public void SetGlitchProgress(float value)
     {
-        glitchMaterial.SetFloat("_Progress", value);
+        if (glitchMaterial != null)
+        {
+            glitchMaterial.SetFloat("_Transition", value);
+        }
     }
 
     private IEnumerator AnimateFix(Action onComplete)
@@ -39,10 +42,12 @@ public class UIGlitchTransition : MonoBehaviour
             elapsed += Time.deltaTime;
             float progress = Mathf.Clamp01(elapsed / duration);
 
-            // Set the shader property
+            // Use SmoothStep for a nice easing feel on the shatter transition
+            float curvedProgress = Mathf.SmoothStep(0f, 1f, progress);
+
             if (glitchMaterial != null)
             {
-                glitchMaterial.SetFloat("_Progress", progress);
+                glitchMaterial.SetFloat("_Transition", curvedProgress);
             }
 
             yield return null;
@@ -50,20 +55,18 @@ public class UIGlitchTransition : MonoBehaviour
 
         if (glitchMaterial != null)
         {
-            glitchMaterial.SetFloat("_Progress", 1.0f);
+            glitchMaterial.SetFloat("_Transition", 1.0f);
         }
 
-        // Invoke the callback once the animation finishes
+        // Invoke the callback once the animation finishes (e.g. to gameObject.SetActive(false))
         onComplete?.Invoke();
     }
 
-    // Recommended: Clean up the instantiated material when the object is destroyed 
-    // to prevent memory leaks if Unity doesn't handle it automatically.
-    // void OnDestroy()
-    // {
-    //     if (glitchMaterial != null)
-    //     {
-    //         Destroy(glitchMaterial);
-    //     }
-    // }
+    void OnDestroy()
+    {
+        if (glitchMaterial != null)
+        {
+            Destroy(glitchMaterial);
+        }
+    }
 }
