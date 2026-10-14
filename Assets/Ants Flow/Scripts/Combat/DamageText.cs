@@ -151,15 +151,15 @@ public class DamageText : MonoBehaviour
         // Hide damage crit icon for generic stat popups
         if (critIcon != null) critIcon.gameObject.SetActive(false);
 
-        // 1. Format text based on operation type
-        string formattedText = FormatAugmentText(augmentConfig, value);
-        damageText.text = formattedText;
-        damageText.rectTransform.sizeDelta = new Vector2(damageText.preferredWidth, damageText.preferredHeight);
-
-        // 2. Determine color by target stat or operation override
+        // 1. Determine color by target stat or operation override
         Color textColor = customColorOverride ?? GetAugmentStatColor(augmentConfig);
         damageText.color = textColor;
         damageText.alpha = 1f;
+
+        // 2. Format text based on operation type
+        string formattedText = FormatAugmentText(augmentConfig, value, textColor);
+        damageText.text = formattedText;
+        damageText.rectTransform.sizeDelta = new Vector2(damageText.preferredWidth, damageText.preferredHeight);
 
         transform.position = spawnPosition;
 
@@ -207,24 +207,29 @@ public class DamageText : MonoBehaviour
     }
 
     // Format display string based on Augment Operation & Target Stat
-    private string FormatAugmentText(GenericAugmentData config, float value)
+    private string FormatAugmentText(GenericAugmentData config, float value, Color color)
     {
         if (config == null) return $"+{TextUtil.FormatFloat(value)}";
+
+        string hex = ColorUtil.ColorToHex(color);
+
+        string sourceStatSpriteTag = $"<sprite name=\"{config.sourceStat}\" color={hex}>";
+        string targetStatSpriteTag = $"<sprite name=\"{config.targetStat}\" color={hex}>";
 
         switch (config.operation)
         {
             case EffectOperation.Swap:
-                return $"SWAP [{config.sourceStat} ↔ {config.targetStat}]";
+                return $"SWAP [{sourceStatSpriteTag} ↔ {targetStatSpriteTag}]";
 
             case EffectOperation.Multiply:
-                return $"x{value:F1} {config.targetStat}";
+                return $"x{value:F1} {targetStatSpriteTag}";
 
             case EffectOperation.Convert:
-                return $"CONVERT! +{TextUtil.FormatFloat(value)} {config.targetStat}";
+                return $"CONVERT! +{TextUtil.FormatFloat(value)} {targetStatSpriteTag}";
 
             default:
                 string sign = value >= 0 ? "+" : "";
-                return $"{sign}{TextUtil.FormatFloat(value)} {config.targetStat}";
+                return $"{sign}{TextUtil.FormatFloat(value)} {targetStatSpriteTag}";
         }
     }
 
