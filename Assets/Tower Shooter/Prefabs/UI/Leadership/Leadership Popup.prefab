@@ -299,7 +299,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &346026433972574050
 GameObject:
   m_ObjectHideFlags: 0
@@ -804,7 +811,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &867341983372444456
 GameObject:
   m_ObjectHideFlags: 0
@@ -1505,7 +1519,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 120, y: 110}
+  m_AnchoredPosition: {x: 120, y: 160}
   m_SizeDelta: {x: 204, y: 404}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3130840669376451931
@@ -2630,7 +2644,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -120, y: 110}
+  m_AnchoredPosition: {x: -120, y: 160}
   m_SizeDelta: {x: 204, y: 404}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4733435015992003736
@@ -2832,7 +2846,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4916076204246180671
 GameObject:
   m_ObjectHideFlags: 0
@@ -3478,7 +3499,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5795696643557113286
 GameObject:
   m_ObjectHideFlags: 0
@@ -3818,7 +3846,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6232860725229578948
 GameObject:
   m_ObjectHideFlags: 0
@@ -4057,7 +4092,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6357771189333840116
 GameObject:
   m_ObjectHideFlags: 0
@@ -4206,7 +4248,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6506564346724002886
 GameObject:
   m_ObjectHideFlags: 0
@@ -5428,7 +5477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5551559419601704949, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 80
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 5551559419601704949, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5698,7 +5747,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5551559419601704949, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 140
+      value: 220
       objectReference: {fileID: 0}
     - target: {fileID: 5551559419601704949, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5863,7 +5912,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5551559419601704949, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 80
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 5551559419601704949, guid: b6b6a3ffc8d72724ab4e36c042f4206b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

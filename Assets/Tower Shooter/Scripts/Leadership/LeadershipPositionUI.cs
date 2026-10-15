@@ -85,13 +85,20 @@ public class LeadershipPositionUI : MonoBehaviour
     {
         if (leadershipCharacterUI == null)
         {
-            if (leadershipPosition == LeadershipPosition.Captain)
+            if (LeadershipManager.Ins.IsThereAnyCandidate())
             {
-                LeadershipManager.Ins.ShowElection();
+                if (leadershipPosition == LeadershipPosition.Captain)
+                {
+                    LeadershipManager.Ins.ShowElection();
+                }
+                else
+                {
+                    LeadershipManager.Ins.SelectLeadershipPosition(this);
+                }
             }
             else
             {
-                LeadershipManager.Ins.SelectLeadershipPosition(this);
+                IngameNotificationManager.Ins.ShowNotification($"There is no candidates!");
             }
         }
         else

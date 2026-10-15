@@ -121,6 +121,7 @@ public class IdleTimeManager : Singleton<IdleTimeManager>
         gameTimeData.currentDay = 1;
         gameTimeData.currentMonth = 1;
         gameTimeData.currentYear = 2026;
+        gameTimeData.nextElectionYear = 2030;
 
         return gameTimeData;
     }

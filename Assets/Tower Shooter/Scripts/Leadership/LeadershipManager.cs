@@ -509,7 +509,14 @@ public class LeadershipManager : Singleton<LeadershipManager>
     #region Election
     public void ShowElection()
     {
-        electionPopup.Show();
+        if (IsThereAnyCandidate())
+        {
+            electionPopup.Show();
+        }
+        else
+        {
+            IngameNotificationManager.Ins.ShowNotification($"There is no candidates!");
+        }
     }
 
     public void ForceStartElection()
@@ -810,6 +817,11 @@ public class LeadershipManager : Singleton<LeadershipManager>
         }
 
         return currentCharacter;
+    }
+
+    public bool IsThereAnyCandidate()
+    {
+        return leadershipData.leadershipCharacterDataItems.Count > 0;
     }
 
     public List<CharacterTrait> GetCharacterTraits(List<int> traitIds)
