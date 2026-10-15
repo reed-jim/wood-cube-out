@@ -161,7 +161,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &606283595452654621
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,7 +330,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1054796719188907284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,6 +1154,7 @@ MonoBehaviour:
   cloneLockCanvasGroup: {fileID: 1374438362957994563}
   lockCanvasGroupRT: {fileID: 8078328501717585859}
   overlay: {fileID: 4026894686686227216}
+  preventClickButton: {fileID: 6739123281609843205}
   descriptionText: {fileID: 193236288111417786}
   continueButton: {fileID: 2233027162533073544}
   fx: {fileID: 3263675504249640156}
@@ -1823,7 +1838,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6210915452827650323
 GameObject:
   m_ObjectHideFlags: 0

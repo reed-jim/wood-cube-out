@@ -15,6 +15,7 @@ public class UnlockAugmentUI : MonoBehaviour
     public CanvasGroup cloneLockCanvasGroup;
     public RectTransform lockCanvasGroupRT;
     public Image overlay;
+    public Button preventClickButton;
 
     public TMP_Text descriptionText;
     public Button continueButton;
@@ -26,6 +27,7 @@ public class UnlockAugmentUI : MonoBehaviour
     {
         ReachStarPopup.goNextStarEvent += OnGoNextStarEvent;
 
+        preventClickButton.onClick.AddListener(PreventClick);
         continueButton.onClick.AddListener(ContinueButton);
 
         LoadUnlockAugmentData();
@@ -125,6 +127,13 @@ public class UnlockAugmentUI : MonoBehaviour
         });
 
         continueButton.interactable = false;
+    }
+
+    private void PreventClick()
+    {
+        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+        IngameNotificationManager.Ins.ShowNotification($"Reach <color={primaryHex}>The Moon</color> to unlock");
     }
 
     private void OnGoNextStarEvent()
