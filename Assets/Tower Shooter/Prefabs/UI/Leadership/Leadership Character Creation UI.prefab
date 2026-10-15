@@ -340,7 +340,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2778786090664411828}
   - component: {fileID: 1301818119059975835}
-  - component: {fileID: 3698052182474766049}
   - component: {fileID: 8945365929363891074}
   - component: {fileID: 3358190099595618326}
   - component: {fileID: 4056860510408124507}
@@ -379,7 +378,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356003681637372429}
   m_CullTransparentMesh: 1
---- !u!114 &3698052182474766049
+--- !u!114 &8945365929363891074
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -388,24 +387,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 356003681637372429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
---- !u!114 &8945365929363891074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 356003681637372429}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
-  m_Color: {r: 0.10980393, g: 0.10980393, b: 0.10980393, a: 1}
+  m_Color: {r: 0.10980393, g: 0.10980393, b: 0.10980393, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -478,7 +464,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &385729634878823530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1764,7 +1757,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1740548621176581065
 GameObject:
   m_ObjectHideFlags: 0
@@ -2254,7 +2254,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2385263550093148071
 GameObject:
   m_ObjectHideFlags: 0
@@ -3119,7 +3126,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3113824652823305248
 GameObject:
   m_ObjectHideFlags: 0
@@ -4440,7 +4454,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4435752684828132801
 GameObject:
   m_ObjectHideFlags: 0
@@ -4713,7 +4734,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5148866022970119598
 GameObject:
   m_ObjectHideFlags: 0
@@ -5731,7 +5759,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6379860514717951938
 GameObject:
   m_ObjectHideFlags: 0
@@ -7683,7 +7718,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionSpeed: 15
   isPlaySound: 1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &9204255536901890495
 GameObject:
   m_ObjectHideFlags: 0

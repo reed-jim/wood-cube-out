@@ -1,5 +1,6 @@
 using System;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI; // Required for Image
@@ -61,6 +62,8 @@ public class NotificationBadge : MonoBehaviour
     {
         descriptionText.text = description;
 
+        TryClearTMPSubmesh();
+
         if (hideTween.isAlive)
         {
             hideTween.Stop();
@@ -79,6 +82,8 @@ public class NotificationBadge : MonoBehaviour
             {
                 PlayEffect(effectDuration);
             }
+
+            SaferioTween.Punch(descriptionText.transform, effectScale: 1.02f, duration: 0.15f);
         });
 
         hideTween = Tween.Delay(existDuration).OnComplete(() =>
@@ -143,5 +148,17 @@ public class NotificationBadge : MonoBehaviour
     public void UpdateDescription(string description)
     {
         descriptionText.text = description;
+
+        TryClearTMPSubmesh();
+    }
+
+    private void TryClearTMPSubmesh()
+    {
+        TMP_SubMeshUI[] submeshes = descriptionText.GetComponentsInChildren<TMP_SubMeshUI>();
+
+        foreach (var submesh in submeshes)
+        {
+            DestroyImmediate(submesh.gameObject);
+        }
     }
 }

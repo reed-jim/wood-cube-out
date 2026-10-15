@@ -150,7 +150,11 @@ public class LeadershipCharacterCreationUI : BasePopup
 
         if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= cost)
         {
-            showConfirmPopupEvent?.Invoke($"Are you sure to spend {cost} to create this character", () => CreateCharacter());
+            string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+            string message = $"Are you sure to spend <color={primaryHex}>{cost}</color> <sprite=0 color={primaryHex}> to create this character";
+
+            showConfirmPopupEvent?.Invoke(message, () => CreateCharacter());
         }
         else
         {

@@ -515,7 +515,7 @@ public class LeadershipManager : Singleton<LeadershipManager>
         }
         else
         {
-            IngameNotificationManager.Ins.ShowNotification($"There is no candidates!");
+            IngameNotificationManager.Ins.ShowNotification($"There is no candidate!");
         }
     }
 
@@ -615,17 +615,24 @@ public class LeadershipManager : Singleton<LeadershipManager>
     #region Remove
     private void EnterRemoveCharacterMode()
     {
-        removeCharacterOverlayCanvasGroup.interactable = false;
-
-        SaferioTween.AlphaShow(removeCharacterOverlayCanvasGroup, onCompleteAction: () =>
+        if (IsThereAnyCandidate())
         {
-            removeCharacterOverlayCanvasGroup.interactable = true;
-        });
+            removeCharacterOverlayCanvasGroup.interactable = false;
 
-        confirmRemoveCharacterButtonCanvasGroup.alpha = 0.2f;
-        confirmRemoveCharacterButtonCanvasGroup.interactable = false;
+            SaferioTween.AlphaShow(removeCharacterOverlayCanvasGroup, onCompleteAction: () =>
+            {
+                removeCharacterOverlayCanvasGroup.interactable = true;
+            });
 
-        IdleGameInputManager.inputMode = IdleGameInputMode.RemoveLeadershipCharacter;
+            confirmRemoveCharacterButtonCanvasGroup.alpha = 0.2f;
+            confirmRemoveCharacterButtonCanvasGroup.interactable = false;
+
+            IdleGameInputManager.inputMode = IdleGameInputMode.RemoveLeadershipCharacter;
+        }
+        else
+        {
+            IngameNotificationManager.Ins.ShowNotification($"There is no candidate to remove!");
+        }
     }
 
     private void ExitRemoveCharacterMode()

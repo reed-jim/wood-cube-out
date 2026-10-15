@@ -98,7 +98,7 @@ public class LeadershipPositionUI : MonoBehaviour
             }
             else
             {
-                IngameNotificationManager.Ins.ShowNotification($"There is no candidates!");
+                IngameNotificationManager.Ins.ShowNotification($"There is no candidate to assign!");
             }
         }
         else
