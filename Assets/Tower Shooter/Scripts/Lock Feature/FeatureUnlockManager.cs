@@ -51,6 +51,35 @@ public class FeatureUnlockManager : Singleton<FeatureUnlockManager>
         return SpaceObjectType.Earth;
     }
 
+    public void UnlockFeature(FeatureType featureType)
+    {
+        for (int i = 0; i < featureLockStateData.featureLockStateDataItems.Count; i++)
+        {
+            FeatureLockStateDataItem featureLockStateDataItem = featureLockStateData.featureLockStateDataItems[i];
+
+            if (featureLockStateDataItem.featureType == featureType)
+            {
+                featureLockStateDataItem.isUnlocked = true;
+
+                break;
+            }
+        }
+
+        SaveFeatureLockStateData();
+    }
+
+    public void UnlockAllFeature()
+    {
+        for (int i = 0; i < featureLockStateData.featureLockStateDataItems.Count; i++)
+        {
+            FeatureLockStateDataItem featureLockStateDataItem = featureLockStateData.featureLockStateDataItems[i];
+
+            featureLockStateDataItem.isUnlocked = true;
+        }
+
+        SaveFeatureLockStateData();
+    }
+
     #region Save/Load
     private void LoadFeatureLockStateData()
     {

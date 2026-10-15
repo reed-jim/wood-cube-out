@@ -99,9 +99,7 @@ public class UnlockAugmentUI : MonoBehaviour
             continueButton.interactable = true;
         });
 
-        unlockAugmentData.isUnlocked = true;
-
-        SaveUnlockAugmentData();
+        ChangeDataToUnlockState();
     }
 
     private void ContinueButton()
@@ -134,6 +132,13 @@ public class UnlockAugmentUI : MonoBehaviour
         string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
 
         IngameNotificationManager.Ins.ShowNotification($"Reach <color={primaryHex}>The Moon</color> to unlock");
+    }
+
+    public void ChangeDataToUnlockState()
+    {
+        unlockAugmentData.isUnlocked = true;
+
+        SaveUnlockAugmentData();
     }
 
     private void OnGoNextStarEvent()
