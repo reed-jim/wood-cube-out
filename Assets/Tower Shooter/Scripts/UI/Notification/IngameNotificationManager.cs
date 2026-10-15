@@ -18,7 +18,7 @@ public class IngameNotificationManager : Singleton<IngameNotificationManager>
         notificationBadge.ShowNotification(title, description);
     }
 
-    public void ShowNotification(string description)
+    public void ShowNotification(string description, bool isPlayEffect = false)
     {
         if (isCurrentNotificationBadgeActive)
         {
@@ -32,7 +32,7 @@ public class IngameNotificationManager : Singleton<IngameNotificationManager>
         lastNotificationBadge.transform.SetParent(notificationBadgeContainer);
         lastNotificationBadge.transform.localPosition = new Vector3(0, 400);
 
-        lastNotificationBadge.ShowNotification(description, onStartHidden: OnNotificationBadgeHidden);
+        lastNotificationBadge.ShowNotification(description, onStartHidden: OnNotificationBadgeHidden, playEffect: isPlayEffect);
 
         isCurrentNotificationBadgeActive = true;
     }

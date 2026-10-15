@@ -61,7 +61,7 @@ public class PowerManager : Singleton<PowerManager>
         string notificationString =
             $"Power Output: <color={primaryHex}>{TextUtil.FormatFloat(GetTotalPowerOutputPerSecond())} <sprite=0 color={primaryHex}>/s";
 
-        IngameNotificationManager.Ins.ShowNotification(notificationString);
+        IngameNotificationManager.Ins.ShowNotification(notificationString, isPlayEffect: true);
     }
 
     public float GetSpaceShipSpeed()
