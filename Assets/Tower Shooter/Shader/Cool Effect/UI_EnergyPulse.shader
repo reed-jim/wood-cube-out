@@ -1,27 +1,28 @@
-Shader "Custom/URP_UI_VerticalShockwaveEmberBlend"
+Shader "Custom/URP_UI_UltraSmoothImpactShockwave"
 {
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Base Color", Color) = (0.1, 0.12, 0.18, 1)
+        _Color ("Tint Color", Color) = (1, 1, 1, 1)
         
         [Header(Transition Controls)]
-        _Progress ("Shockwave Progress", Range(0, 1)) = 0.0
+        _Progress ("Trigger Progress (0 to 1)", Range(0, 1)) = 0.0
 
-        [Header(Shockwave Fire Settings)]
-        _WaveColor ("Wave Color", Color) = (0, 0.9, 1, 1)
-        _FireColor ("Fire Trail Color", Color) = (1, 0.4, 0.1, 1)
-        _EmberAshColor ("Ember Cooling Color", Color) = (0.2, 0.08, 0.05, 1)
-        _BorderPulseColor ("Border Pulse Color", Color) = (0, 1, 1, 1)
+        [Header(Banner Colors)]
+        _StartColor ("Banner Idle Color (Progress 0)", Color) = (0.08, 0.1, 0.18, 1)
+        _SurgeColor ("Surge Peak Color", Color) = (0.0, 0.5, 0.9, 1)
+
+        [Header(Ultra Smooth Impact Shockwave Settings)]
+        _ImpactCoreColor ("Impact Core Color", Color) = (1.0, 0.98, 0.75, 1) // Soft Warm Impact Glow
+        _LightningColor ("Energy Arc Color", Color) = (0.3, 0.85, 1.0, 1)   // Smooth Cyan Blue
         
-        _WaveWidth ("Wave Width (Pixels)", Float) = 6.0
-        _WaveIntensity ("Wave Brightness", Float) = 4.0
-        _FireDuration ("Fire Residual Life (0-1)", Range(0.05, 0.8)) = 0.3
-        _BorderWidth ("Border Energy Width (Pixels)", Float) = 4.0
+        _WaveWidth ("Shockwave Width", Float) = 70.0
+        _WaveIntensity ("Shockwave Brightness", Float) = 6.5
+        _DisintegrationSpeed ("Dissolve Span", Range(0.1, 1.0)) = 0.7
 
-        [Header(Rounded Corner Settings)]
-        _CornerRadius ("Corner Radius (Pixels)", Float) = 16.0
-        _RectSize ("Image Size (Width, Height)", Vector) = (200, 100, 0, 0)
+        [Header(Rounded Corner Settings (For 960x160))]
+        _CornerRadius ("Corner Radius (Pixels)", Float) = 60.0
+        _RectSize ("Image Size (Width, Height)", Vector) = (960, 160, 0, 0)
     }
 
     SubShader
@@ -42,7 +43,7 @@ Shader "Custom/URP_UI_VerticalShockwaveEmberBlend"
 
         Pass
         {
-            Name "UI_VerticalShockwaveEmberBlendPass"
+            Name "URP_UI_UltraSmoothImpactShockwavePass"
 
             HLSLPROGRAM
             #pragma vertex vert
@@ -69,15 +70,14 @@ Shader "Custom/URP_UI_VerticalShockwaveEmberBlend"
             float4 _Color;
             float _Progress;
 
-            float4 _WaveColor;
-            float4 _FireColor;
-            float4 _EmberAshColor;
-            float4 _BorderPulseColor;
+            float4 _StartColor;
+            float4 _SurgeColor;
+            float4 _ImpactCoreColor;
+            float4 _LightningColor;
             
             float _WaveWidth;
             float _WaveIntensity;
-            float _FireDuration;
-            float _BorderWidth;
+            float _DisintegrationSpeed;
 
             float _CornerRadius;
             float4 _RectSize;
@@ -100,65 +100,105 @@ Shader "Custom/URP_UI_VerticalShockwaveEmberBlend"
                 return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - radius;
             }
 
+            float Hash21(float2 p)
+            {
+                p = frac(p * float2(123.34, 456.21));
+                p += dot(p, p + 34.45);
+                return frac(p.x * p.y);
+            }
+
+            float SmoothNoise(float2 uv)
+            {
+                float2 i = floor(uv);
+                float2 f = frac(uv);
+                float a = Hash21(i);
+                float b = Hash21(i + float2(1.0, 0.0));
+                float c = Hash21(i + float2(0.0, 1.0));
+                float d = Hash21(i + float2(1.0, 1.0));
+                float2 u = f * f * (3.0 - 2.0 * f);
+                return lerp(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+            }
+
             float4 frag(v2f i) : SV_Target
             {
-                // 1. Aspect-Correct Pixel Positions from Center
-                float2 pixelPos = (i.uv - 0.5) * _RectSize.xy;
+                // Ultra-smooth, silky screen drift/shake
+                float impactShake = sin(_Time.y * 55.0) * step(0.01, _Progress) * step(_Progress, 0.95) * 0.0015;
+                float2 jitteredUV = i.uv + float2(impactShake, impactShake * 0.4);
+
+                float2 pixelPos = (jitteredUV - 0.5) * _RectSize.xy;
                 float2 halfSize = _RectSize.xy * 0.5;
 
-                // Rounded Corners & Outer Edge Mask
                 float distToEdge = RoundedBoxSDF(pixelPos, halfSize, _CornerRadius);
-                float cornerAlpha = 1.0 - smoothstep(-1.0, 1.0, distToEdge);
+                float cornerAlpha = 1.0 - smoothstep(-1.5, 1.5, distToEdge);
                 
                 if (cornerAlpha <= 0.0)
                     discard;
 
-                float4 baseColor = i.color;
-
                 if (_Progress <= 0.0)
-                    return float4(baseColor.rgb, baseColor.a * cornerAlpha);
+                {
+                    float4 startOutput = i.color * _StartColor;
+                    return float4(startOutput.rgb, startOutput.a * cornerAlpha);
+                }
 
-                // 2. Aspect-Correct Coordinates & Waves
-                float maxRadius = halfSize.x;
-                float currentWaveRadiusPixels = _Progress * maxRadius;
-                float pixelDistFromCenterX = abs(pixelPos.x);
+                // 1. Silky Smooth 600x100 Filled Impact Crater
+                float2 craterHalfSize = float2(300.0, 50.0); 
+                float craterSDF = RoundedBoxSDF(pixelPos, craterHalfSize, 25.0);
+                float solidCraterFill = 1.0 - smoothstep(-30.0, 50.0, craterSDF);
 
-                float hasBeenSwept = step(pixelDistFromCenterX, currentWaveRadiusPixels);
-                float distToWaveFront = abs(pixelDistFromCenterX - currentWaveRadiusPixels);
-                float waveFrontMask = smoothstep(_WaveWidth, 0.0, distToWaveFront);
+                // 2. Extra Smooth Circular Shockwave Ring
+                float maxRadius = length(halfSize);
+                float currentWaveRadius = _Progress * maxRadius * 1.5;
+                float pixelDistFromCenter = length(pixelPos);
 
-                // 3. Smooth Fire-to-Ash Cooling Decay (Removes the hard line)
-                float timeSincePassedPixels = currentWaveRadiusPixels - pixelDistFromCenterX;
-                float fireWindowPixels = _FireDuration * maxRadius;
+                // Soft inner/outer sweep interpolation
+                float hasBeenSwept = smoothstep(currentWaveRadius - 15.0, currentWaveRadius + 15.0, pixelDistFromCenter);
+                hasBeenSwept = 1.0 - hasBeenSwept;
+
+                float distToWaveFront = abs(pixelDistFromCenter - currentWaveRadius);
+                float shockwaveMask = smoothstep(_WaveWidth, 0.0, distToWaveFront);
+                float coreMask = smoothstep(_WaveWidth * 0.5, 0.0, distToWaveFront);
+
+                // 3. Blended Organic Dissolve Noise
+                float noise1 = SmoothNoise(pixelPos * 0.04 + float2(_Time.y * 6.0, 0.0));
+                float noise2 = SmoothNoise(pixelPos * 0.12 - float2(0.0, _Time.y * 10.0));
+                float combinedNoise = lerp(noise1, noise2, 0.5);
+
+                float timeSincePassed = currentWaveRadius - pixelDistFromCenter;
+                float dissolveSpan = _DisintegrationSpeed * maxRadius;
+
+                // 4. Silky Color Blending
+                float3 idleRGB = (i.color * _StartColor).rgb;
+                float3 bannerBody = lerp(idleRGB, _SurgeColor.rgb * 1.3, hasBeenSwept * 0.6);
                 
-                // Normalized life ratio of the fire trail (0 at wave front, 1 at the tail end)
-                float fireDecay = saturate(timeSincePassedPixels / fireWindowPixels);
-                float activeFireFactor = (1.0 - fireDecay) * hasBeenSwept;
+                // Buttery smooth impact bloom fading out gracefully
+                float impactFade = 1.0 - smoothstep(0.0, 0.75, _Progress);
+                float3 solidImpactBurst = _ImpactCoreColor.rgb * solidCraterFill * impactFade * 3.5;
 
-                // Organic cooling noise so the ash dissolves smoothly instead of a flat wall
-                float coolNoise = sin(pixelPos.y * 0.15 + pixelPos.x * 0.1 + _Time.y * 3.0) * 0.5 + 0.5;
+                float3 shockwaveEffect = (_ImpactCoreColor.rgb * coreMask * _WaveIntensity) + 
+                                         (_LightningColor.rgb * shockwaveMask * 2.2) +
+                                         (_LightningColor.rgb * combinedNoise * hasBeenSwept * 2.5) + 
+                                         solidImpactBurst;
+
+                float3 finalRGB = bannerBody + shockwaveEffect;
+
+                // 5. Ultra-Smooth Dissolve to Absolute Pure Transparent
+                float dissolveDriver = smoothstep(0.0, 1.0, _Progress) * 1.4;
+                float dissolveThreshold = combinedNoise - dissolveDriver;
                 
-                // Smooth falloff curve for the trailing edge
-                float trailFade = smoothstep(1.0, 0.2, fireDecay) * hasBeenSwept;
+                // Wide, soft alpha mask smoothing out any jagged edges
+                float alphaMask = 1.0 - (hasBeenSwept * (1.0 - smoothstep(0.0, 0.3, dissolveThreshold)));
 
-                // 4. Energy Border Pulse
-                float borderDist = abs(distToEdge);
-                float borderMask = smoothstep(_BorderWidth, 0.0, borderDist) * hasBeenSwept;
-                float borderPulse = sin(_Time.y * 15.0 - pixelPos.x * 0.1) * 0.5 + 0.5;
-                float3 borderEffect = _BorderPulseColor.rgb * borderMask * (borderPulse * 2.0 + 1.0);
+                if (hasBeenSwept > 0.5 && timeSincePassed > dissolveSpan * 0.4)
+                {
+                    alphaMask = 0.0;
+                }
 
-                // 5. Color Blending: Base -> Cooling Ash -> Bright Fire -> Leading Shockwave
-                float3 waveEffect = _WaveColor.rgb * waveFrontMask * _WaveIntensity;
-                
-                // Blend from bright fire color down to a warm cooling ash/ember tone before merging with base color
-                float3 fireTrailColor = lerp(_FireColor.rgb, _EmberAshColor.rgb, fireDecay);
-                float3 burnedArea = fireTrailColor * activeFireFactor * (coolNoise * 0.5 + 0.7);
+                float finalAlpha = (i.color * _StartColor).a * cornerAlpha * alphaMask;
 
-                // Smoothly fade the alpha of the trail so it melts back into the badge's original texture/color
-                float finalAlpha = baseColor.a * cornerAlpha;
-                
-                // Combine layers
-                float3 finalRGB = lerp(baseColor.rgb, burnedArea + borderEffect, trailFade) + waveEffect;
+                if (_Progress >= 0.98)
+                {
+                    finalAlpha = 0.0;
+                }
 
                 return float4(finalRGB, finalAlpha);
             }

@@ -68,7 +68,12 @@ public class NotificationBadge : MonoBehaviour
 
         effectImage.gameObject.SetActive(false);
 
-        scaleTransition.Show(onCompletedAction: () =>
+        if (playEffect)
+        {
+            ResetEffect();
+        }
+
+        Show(onComplete: () =>
         {
             if (playEffect)
             {
@@ -78,9 +83,42 @@ public class NotificationBadge : MonoBehaviour
 
         hideTween = Tween.Delay(existDuration).OnComplete(() =>
         {
-            scaleTransition.Hide();
+            Hide();
             onStartHidden?.Invoke();
         });
+    }
+
+    private void Show(Action onComplete)
+    {
+        canvasGroup.alpha = 0;
+        descriptionText.color = ColorUtil.WithAlpha(descriptionText.color, 0);
+
+        Tween.Alpha(canvasGroup, 1, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            descriptionText.color = ColorUtil.WithAlpha(descriptionText.color, 1);
+
+            descriptionText.transform.localScale = 1.5f * Vector3.one;
+
+            Tween.Scale(descriptionText.transform, 1, duration: 0.2f).OnComplete(onComplete);
+        });
+    }
+
+    private void Hide()
+    {
+        Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            gameObject.SetActive(false);
+        });
+    }
+
+    private void ResetEffect()
+    {
+        effectImage.gameObject.SetActive(true);
+
+        // Reset progress to 0
+        effectImage.material.SetFloat("_Progress", 0f);
     }
 
     private void PlayEffect(float duration)
