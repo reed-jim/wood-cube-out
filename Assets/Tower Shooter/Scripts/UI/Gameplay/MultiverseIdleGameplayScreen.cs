@@ -66,6 +66,23 @@ public class MultiverseIdleGameplayScreen : Singleton<MultiverseIdleGameplayScre
         ResourceManager.changeResourceValueEvent -= OnResourceValueChanged;
     }
 
+    void Start()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        if (ResourceManager.Ins.GetResourceValue(ResourceType.AugmentPoint) > 0)
+        {
+            augmentSelectionButtonEffect.SetIntensityInstant(1);
+        }
+        else
+        {
+            augmentSelectionButtonEffect.SetIntensityInstant(0);
+        }
+    }
+
     [ContextMenu("OpenAugmentSelection")]
     private void OpenAugmentSelection()
     {

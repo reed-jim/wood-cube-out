@@ -33,22 +33,42 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
         _ShineAngle ("Sweep Angle Offset", Range(-1.0, 1.0)) = 0.35
         
         [Header(Interactive States)]
-        _Hover ("Hover Interpolator", Range(0.0, 1.0)) = 0.0
-        _Pressed ("Press Interpolator", Range(0.0, 1.0)) = 0.0
+        _GlowAmount ("Hover Intensity", Range(0, 1)) = 0.0
+
+        [HideInInspector] _StencilComp ("Stencil Comparison", Float) = 8
+        [HideInInspector] _Stencil ("Stencil ID", Float) = 0
+        [HideInInspector] _StencilOp ("Stencil Operation", Float) = 0
+        [HideInInspector] _StencilWriteMask ("Stencil Write Mask", Float) = 255
+        [HideInInspector] _StencilReadMask ("Stencil Read Mask", Float) = 255
+        [HideInInspector] _ColorMask ("Color Mask", Float) = 15
     }
 
     SubShader
     {
         Tags 
         { 
-            "RenderType" = "Transparent" 
             "Queue" = "Transparent" 
+            "IgnoreProjector" = "True"
+            "RenderType" = "Transparent" 
+            "PreviewType" = "Plane"
+            "CanUseSpriteAtlas" = "True"
             "RenderPipeline" = "UniversalPipeline" 
+        }
+
+        Stencil
+        {
+            Ref [_Stencil]
+            Comp [_StencilComp]
+            Pass [_StencilOp]
+            ReadMask [_StencilReadMask]
+            WriteMask [_StencilWriteMask]
         }
 
         Blend SrcAlpha OneMinusSrcAlpha
         ZWrite Off
         Cull Off
+        ZTest [unity_GUIZTestMode]
+        ColorMask [_ColorMask]
 
         Pass
         {
@@ -97,21 +117,15 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float _ShineSpeed;
                 float _ShineWidth;
                 float _ShineAngle;
-                float _Hover;
-                float _Pressed;
+                float _GlowAmount;
             CBUFFER_END
 
-            // --- Rounded Box Signed Distance Function ---
-            // p: centered UV scaled by aspect ratio
-            // b: half-extents of the box
-            // r: corner radius
             float sdRoundedBox(float2 p, float2 b, float r)
             {
                 float2 q = abs(p) - b + r;
                 return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
             }
 
-            // --- Noise & Hash Utility Functions ---
             float Hash11(float p)
             {
                 p = frac(p * 0.1031);
@@ -134,7 +148,6 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 return lerp(Hash11(i), Hash11(i + 1.0), u);
             }
 
-            // 4-Point Specular Star Flare
             float StarFlare(float2 uv, float size)
             {
                 float d = length(uv);
@@ -160,41 +173,32 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float4 defaultTexColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) * input.color;
                 float time = _Time.y;
 
-                // --- Aspect Ratio Corrected Coordinates ---
+                float hover = _GlowAmount;
+
                 float aspect = max(_AspectRatio, 0.0001);
-                
-                // Center space (-0.5 to 0.5) and scale width by aspect ratio
                 float2 centeredUV = (uv - 0.5) * float2(aspect, 1.0);
                 float2 boxHalfSize = float2(0.5 * aspect, 0.5);
                 
-                // Clamp radius to ensure it doesn't exceed half the shortest dimension
                 float maxRadius = min(boxHalfSize.x, boxHalfSize.y);
                 float radius = min(_CornerRadius, maxRadius);
 
-                // --- Distance Field Calculations ---
                 float distSDF = sdRoundedBox(centeredUV, boxHalfSize, radius);
-                
-                // Outer edge mask with anti-aliasing
                 float aa = fwidth(distSDF);
                 float outerAlpha = 1.0 - smoothstep(-aa, 0.0, distSDF);
 
-                // Distance inward from the border edge (0 at boundary, increases inwards)
                 float distToEdge = -distSDF;
                 float isBorder = step(distToEdge, _BorderThickness);
 
-                // 2. Base Void Body Gradient
                 float centerDist = length(uv - 0.5);
                 float3 baseBody = lerp(_BodyColor.rgb * 1.6, _BodyColor.rgb * 0.3, centerDist * 1.5);
 
-                // 3. Dual-Layer Parallax Cosmic Nebula Drift
                 float2 nebulaUV1 = uv + float2(time * _NebulaSpeed * 0.2, time * _NebulaSpeed * 0.1);
                 float2 nebulaUV2 = uv * 1.5 - float2(time * _NebulaSpeed * 0.15, -time * _NebulaSpeed * 0.25);
                 float nebulaLayer1 = ValueNoise1D(nebulaUV1.x * 12.0 + nebulaUV1.y * 12.0);
                 float nebulaLayer2 = ValueNoise1D(nebulaUV2.x * 14.0 - nebulaUV2.y * 10.0);
                 float3 cosmicCloud = lerp(_GlowSecondary.rgb, _GlowColor.rgb, nebulaLayer1 * nebulaLayer2);
-                baseBody += cosmicCloud * 0.3 * (1.0 + _Hover * 0.6);
+                baseBody += cosmicCloud * 0.3 * (1.0 + hover * 0.6);
 
-                // 4. Horizontal Animated Energy Streaks
                 float streakUV = (uv.y + uv.x * 0.1) * _StreakDensity;
                 float streakNoise = ValueNoise1D(streakUV + time * _StreakSpeed);
                 float horizontalMask = smoothstep(0.45, 0.0, abs(uv.y - 0.5));
@@ -202,28 +206,25 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float3 streakColor = lerp(_GlowSecondary.rgb, _GlowColor.rgb, streakNoise);
                 baseBody += streakColor * energyFlow;
 
-                // 5. Twinkling Procedural Starfield Grid
                 float2 starGrid = floor(uv * _StarGridSize);
                 float2 starLocalUV = frac(uv * _StarGridSize) - 0.5;
                 float2 starOffset = Hash22(starGrid) - 0.5;
                 float2 starPos = starLocalUV - starOffset * 0.6;
 
                 float twinkle = sin(time * 5.0 + starGrid.x * 13.0 + starGrid.y * 7.0) * 0.5 + 0.5;
-                float star = StarFlare(starPos, 0.025 * twinkle * (1.0 + _Hover * 0.8));
+                float star = StarFlare(starPos, 0.025 * twinkle * (1.0 + hover * 0.8));
                 baseBody += lerp(_BorderColor.rgb, float3(1,1,1), 0.5) * star * _StarBrightness;
 
-                // 6. Breathing Inner Glow (Indigo to Electric Neon Purple)
                 float glowDepth = saturate((_BorderThickness * 3.5 - distToEdge) / (_BorderThickness * 3.5));
                 glowDepth = pow(glowDepth, 2.5);
 
                 float slowPulse = sin(time * 2.0) * 0.2 + 0.8;
                 float fastShimmer = sin(time * 8.0 + uv.x * 10.0) * 0.15 + 0.85;
-                float pulseCombined = lerp(slowPulse, fastShimmer, _Hover);
+                float pulseCombined = lerp(slowPulse, fastShimmer, hover);
 
                 float3 innerGlow = lerp(_GlowSecondary.rgb, _GlowColor.rgb, glowDepth) * glowDepth * pulseCombined * 1.5;
-                baseBody += innerGlow * (1.0 + _Hover * 1.2);
+                baseBody += innerGlow * (1.0 + hover * 1.2);
 
-                // 7. Celestial Gold Metallic Frame & 3D Bevel Specular
                 float borderNormalized = saturate(distToEdge / max(_BorderThickness, 0.0001));
                 float bevelProfile = sin(borderNormalized * 3.14159);
                 float bevelSpec = pow(bevelProfile, _BevelHardness);
@@ -231,14 +232,10 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float borderLight = saturate((1.0 - uv.y) * 0.6 + (1.0 - uv.x) * 0.4);
                 float3 goldBorder = _BorderColor.rgb * (0.4 + 0.8 * borderLight + bevelSpec * 0.9);
 
-                // Frame interaction reaction
-                goldBorder += _GlowColor.rgb * _Hover * 0.35;
-                goldBorder *= (1.0 - _Pressed * 0.3);
+                goldBorder += _GlowColor.rgb * hover * 0.35;
 
-                // Combine Border & Inner Body
                 float3 customEffectColor = lerp(baseBody, goldBorder, isBorder);
 
-                // 8. Sweeping Starlight Reflection Pass
                 float sweepPos = frac(time * _ShineSpeed) * 3.0 - 1.0;
                 float sweepCoord = uv.x + uv.y * _ShineAngle;
                 
@@ -246,16 +243,12 @@ Shader "Custom/URP/LoLSpaceButtonComplete"
                 float sharpBeam = smoothstep(_ShineWidth, 0.0, beamDist);
                 float softBloom = smoothstep(_ShineWidth * 3.0, 0.0, beamDist) * 0.4;
                 
-                float totalSweep = (sharpBeam + softBloom) * (0.4 + _Hover * 0.8);
+                float totalSweep = (sharpBeam + softBloom) * (0.4 + hover * 0.8);
                 float3 sweepColor = lerp(_BorderColor.rgb, float3(1.0, 1.0, 1.0), sharpBeam);
                 
                 customEffectColor += sweepColor * totalSweep;
+                customEffectColor += hover * 0.08;
 
-                // 9. Interactive State Modifiers
-                customEffectColor += _Hover * 0.08;
-                customEffectColor *= (1.0 - _Pressed * 0.2);
-
-                // 10. Final Intensity Blend Logic & Alpha Cutout
                 float3 finalRGB = lerp(defaultTexColor.rgb, customEffectColor, _EffectIntensity);
                 float finalAlpha = defaultTexColor.a * outerAlpha;
 

@@ -14,16 +14,22 @@ public class CosmicButtonController : MonoBehaviour
     // Matches the shader property name
     private static readonly int EffectIntensityID = Shader.PropertyToID("_EffectIntensity");
 
-    private void Awake()
-    {
-        _image = GetComponent<Image>();
+    // private void Awake()
+    // {
+    //     _image = GetComponent<Image>();
 
-        // Instantiate material to avoid modifying the asset on disk
-        if (_image.material != null)
-        {
-            _materialInstance = new Material(_image.material);
-            _image.material = _materialInstance;
-        }
+    //     // Instantiate material to avoid modifying the asset on disk
+    //     if (_image.material != null)
+    //     {
+    //         _materialInstance = new Material(_image.material);
+    //         _image.material = _materialInstance;
+    //     }
+    // }
+
+    // do not create another material because SaferioButton have already created one
+    void Start()
+    {
+        EnsureMaterialInstance();
     }
 
     /// <summary>
@@ -33,6 +39,8 @@ public class CosmicButtonController : MonoBehaviour
     {
         if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
 
+        EnsureMaterialInstance();
+        
         targetIntensity = Mathf.Clamp01(targetIntensity);
         _materialInstance.SetFloat(EffectIntensityID, targetIntensity);
     }
@@ -48,6 +56,8 @@ public class CosmicButtonController : MonoBehaviour
 
     private IEnumerator AnimateIntensity(float target)
     {
+        EnsureMaterialInstance();
+
         target = Mathf.Clamp01(target);
         float start = _materialInstance.GetFloat(EffectIntensityID);
         float time = 0f;
@@ -69,6 +79,16 @@ public class CosmicButtonController : MonoBehaviour
         if (_materialInstance != null)
         {
             Destroy(_materialInstance);
+        }
+    }
+
+    private void EnsureMaterialInstance()
+    {
+        if (_materialInstance == null)
+        {
+            _image = GetComponent<Image>();
+
+            _materialInstance = _image.material;
         }
     }
 }
