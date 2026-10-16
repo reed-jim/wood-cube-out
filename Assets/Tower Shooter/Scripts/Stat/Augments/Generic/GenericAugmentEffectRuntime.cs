@@ -27,6 +27,11 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         {
             node = targetStats.serviceLocator.character;
         }
+    }
+
+    public override void SetAugment(Augment augment)
+    {
+        base.SetAugment(augment);
 
         if (config.trigger == EffectTrigger.Once)
         {
