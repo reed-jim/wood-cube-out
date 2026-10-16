@@ -119,7 +119,7 @@ MonoBehaviour:
   - {fileID: 3069183004801922028}
   - {fileID: 4055834571672169776}
   - {fileID: 4792091842236675222}
-  augmentContainer: {fileID: 11400000, guid: 2532f365cf6358c4e9cba0d91864d6d1, type: 2}
+  augmentContainer: {fileID: 11400000, guid: 4e1111884d23fa945a02fe0bb6d5803e, type: 2}
 --- !u!114 &2878686236699059345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,6 +397,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 0
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4310215179309070117
 GameObject:
   m_ObjectHideFlags: 0
@@ -965,6 +977,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 0
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1225360545801071633
 PrefabInstance:
   m_ObjectHideFlags: 0

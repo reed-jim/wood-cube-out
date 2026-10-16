@@ -107,7 +107,7 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         float resultVal = ScalingMath.ApplyOperation(config.operation, currentTargetVal, calculatedVal);
         float valueForFlatAddModifier = resultVal - currentTargetVal;
 
-        if(activeModifier != null)
+        if (activeModifier != null)
         {
             valueForFlatAddModifier += activeModifier.Value;
         }
@@ -205,7 +205,8 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
         {
             case ConditionType.StatGreaterThanOther: return statA > statB;
             case ConditionType.StatLessThanOther: return statA < statB;
-            case ConditionType.StatThresholdGate: return statA >= config.thresholdValue;
+            case ConditionType.StatGreaterThan: return statB > config.thresholdValue;
+            case ConditionType.StatLessThan: return statB < config.thresholdValue;
             default: return true;
         }
     }

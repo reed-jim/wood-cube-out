@@ -33,7 +33,8 @@ public enum ConditionType
     AlwaysActive,
     StatGreaterThanOther,
     StatLessThanOther,
-    StatThresholdGate
+    StatGreaterThan,
+    StatLessThan
 }
 
 public enum EffectScope

@@ -234,13 +234,13 @@ public class GenericAugmentEffect : AugmentEffect
         {
             if (config.baseValue > 0)
             {
-                sb.Append($" by [{baseValueWithColor}");
+                sb.Append($" by {baseValueWithColor}");
             }
 
             if (config.scalingFactor != 0)
             {
                 string scalingTypeStr = config.scalingFunction != ScalingFunction.Linear ? $" ({scalingFunctionWithColor})" : "";
-                sb.Append($" + {scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr}]");
+                sb.Append($" + {scalingFactorPercentWithColor} of {sourceStatWithColor}{scalingTypeStr}");
 
                 // if (config.sourceStat != config.targetStat)
                 // {
@@ -274,8 +274,11 @@ public class GenericAugmentEffect : AugmentEffect
             case ConditionType.StatLessThanOther:
                 sb.Append($" (Requires {sourceStatWithColor} < {comparisonStatWithColor})");
                 break;
-            case ConditionType.StatThresholdGate:
-                sb.Append($" (Requires {sourceStatWithColor} >= {thresholdValueWithColor})");
+            case ConditionType.StatGreaterThan:
+                sb.Append($" (Requires {comparisonStatWithColor} > {thresholdValueWithColor})");
+                break;
+            case ConditionType.StatLessThan:
+                sb.Append($" (Requires {comparisonStatWithColor} < {thresholdValueWithColor})");
                 break;
         }
 
@@ -492,8 +495,11 @@ public class GenericAugmentEffect : AugmentEffect
                     case ConditionType.StatLessThanOther:
                         sb.Append($"Requires {sourceStatWithColor} < {comparisonStatWithColor} ");
                         break;
-                    case ConditionType.StatThresholdGate:
-                        sb.Append($"Requires {sourceStatWithColor} $\\ge$ {thresholdValueWithColor} ");
+                    case ConditionType.StatGreaterThan:
+                        sb.Append($" (Requires {comparisonStatWithColor} > {thresholdValueWithColor})");
+                        break;
+                    case ConditionType.StatLessThan:
+                        sb.Append($" (Requires {comparisonStatWithColor} < {thresholdValueWithColor})");
                         break;
                 }
             }
