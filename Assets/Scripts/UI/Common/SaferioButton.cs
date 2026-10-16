@@ -27,6 +27,11 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private Color hoverTextColor = new Color(0.8f, 0.8f, 0.8f, 1f); // Color when hovered if glow is off
     [SerializeField] private Graphic customGraphic;
 
+    [Header("Material Customization")]
+    [SerializeField] private bool customizeMaterialProperties = false;
+    [SerializeField, Range(0.01f, 0.5f)] private float customGlowRange = 0.25f;
+    [SerializeField, Range(0.0f, 0.5f)] private float customCornerRadius = 0.1f;
+
     [Header("Long-Click Upgrade Settings")]
     [SerializeField] private bool isLongClickEnabled = false;
     [SerializeField] private float holdThreshold = 0.4f;      // Time required before it counts as a long-press
@@ -54,6 +59,8 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private List<Tween> _tweens;
 
     private static readonly int GlowAmountID = Shader.PropertyToID("_GlowAmount");
+    private static readonly int BorderThicknessID = Shader.PropertyToID("_BorderThickness");
+    private static readonly int CornerRadiusID = Shader.PropertyToID("_CornerRadius");
 
     public static event Action<int> preventMultiClickEvent;
 
@@ -71,6 +78,12 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             instanceMaterial = new Material(uiGraphic.material);
             uiGraphic.material = instanceMaterial;
+
+            if (customizeMaterialProperties)
+            {
+                instanceMaterial.SetFloat(BorderThicknessID, customGlowRange);
+                instanceMaterial.SetFloat(CornerRadiusID, customCornerRadius);
+            }
         }
         else
         {
@@ -181,6 +194,12 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (useMaterialGlow && instanceMaterial != null)
         {
             instanceMaterial.SetFloat(GlowAmountID, 0f);
+
+            if (customizeMaterialProperties)
+            {
+                instanceMaterial.SetFloat(BorderThicknessID, customGlowRange);
+                instanceMaterial.SetFloat(CornerRadiusID, customCornerRadius);
+            }
         }
         else if (uiGraphic != null)
         {

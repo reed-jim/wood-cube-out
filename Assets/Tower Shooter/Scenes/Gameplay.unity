@@ -2273,6 +2273,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -2572,6 +2575,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -2815,7 +2821,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2, y: 100}
+  m_SizeDelta: {x: 2, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &294049660
 MonoBehaviour:
@@ -9127,6 +9133,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -9287,6 +9296,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 1
+  customGlowRange: 0.03
+  customCornerRadius: 0
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -9545,6 +9557,9 @@ MonoBehaviour:
   useMaterialGlow: 0
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 1277702139}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -10708,7 +10723,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Augment Overview
+  m_text: Overview
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 66b21871a9f758b428c1bb28ab3e7de9, type: 2}
   m_sharedMaterial: {fileID: 4282172235807570371, guid: 66b21871a9f758b428c1bb28ab3e7de9, type: 2}
@@ -11241,6 +11256,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -16544,6 +16562,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -18229,6 +18250,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -19825,7 +19849,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2, y: 100}
+  m_SizeDelta: {x: 2, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1002711624
 MonoBehaviour:
@@ -21733,7 +21757,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2, y: 100}
+  m_SizeDelta: {x: 2, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1184646123
 MonoBehaviour:
@@ -21748,7 +21772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+  m_Color: {r: 0.40000004, g: 0.40000004, b: 0.40000004, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -23557,6 +23581,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -25560,7 +25587,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8355409327040163026, guid: c4138dd198b7417429609a5408a9c71d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 180
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 8355409327040163026, guid: c4138dd198b7417429609a5408a9c71d, type: 3}
       propertyPath: m_SizeDelta.y
@@ -25701,6 +25728,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -26470,6 +26500,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Notification Dot
       objectReference: {fileID: 0}
+    - target: {fileID: 2528592071248857104, guid: 21fbc28a6d871f349a2f1ccf39a13d4d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -26604,6 +26638,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -27130,6 +27167,9 @@ MonoBehaviour:
   useMaterialGlow: 0
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 1205074758}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -27579,7 +27619,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2, y: 100}
+  m_SizeDelta: {x: 2, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1801979205
 MonoBehaviour:
@@ -27690,6 +27730,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -28973,6 +29016,9 @@ MonoBehaviour:
   useMaterialGlow: 1
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -36201,7 +36247,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8355409327040163026, guid: c4138dd198b7417429609a5408a9c71d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 180
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 8355409327040163026, guid: c4138dd198b7417429609a5408a9c71d, type: 3}
       propertyPath: m_SizeDelta.y
