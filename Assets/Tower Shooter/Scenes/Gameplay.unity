@@ -2270,6 +2270,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -2566,6 +2569,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -9118,6 +9124,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -9229,7 +9238,7 @@ GameObject:
   m_Component:
   - component: {fileID: 408175357}
   - component: {fileID: 408175362}
-  - component: {fileID: 408175361}
+  - component: {fileID: 408175363}
   - component: {fileID: 408175360}
   - component: {fileID: 408175359}
   - component: {fileID: 408175358}
@@ -9259,7 +9268,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 100}
+  m_SizeDelta: {x: 200, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &408175358
 MonoBehaviour:
@@ -9275,6 +9284,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -9332,12 +9344,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 408175356}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: e0a8dbb2493f4a34fa3be741ded7c371, type: 2}
   m_Color: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -9345,7 +9357,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 953de0a59c3f3c7498ecb7496a450d69, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9355,7 +9367,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &408175361
+--- !u!222 &408175362
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408175356}
+  m_CullTransparentMesh: 1
+--- !u!114 &408175363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9367,15 +9387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 4
---- !u!222 &408175362
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408175356}
-  m_CullTransparentMesh: 1
+  role: 17
 --- !u!1 &430829000
 GameObject:
   m_ObjectHideFlags: 0
@@ -9530,6 +9542,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 0
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 1277702139}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -11223,6 +11238,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -16523,6 +16541,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -18205,6 +18226,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -23530,6 +23554,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -25671,6 +25698,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -26418,11 +26448,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016554278277595098, guid: 21fbc28a6d871f349a2f1ccf39a13d4d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -20
+      value: -26
       objectReference: {fileID: 0}
     - target: {fileID: 1016554278277595098, guid: 21fbc28a6d871f349a2f1ccf39a13d4d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -24
+      value: -34
       objectReference: {fileID: 0}
     - target: {fileID: 1016554278277595098, guid: 21fbc28a6d871f349a2f1ccf39a13d4d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -26571,6 +26601,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -27094,6 +27127,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 0
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 1205074758}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -27651,6 +27687,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -28931,6 +28970,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   transitionSpeed: 15
   isPlaySound: 1
+  useMaterialGlow: 1
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
   isLongClickEnabled: 0
   holdThreshold: 0.4
   repeatInterval: 0.15
@@ -30586,7 +30628,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 3
-  m_Spacing: 20
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0

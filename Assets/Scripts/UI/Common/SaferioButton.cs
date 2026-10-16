@@ -21,6 +21,12 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [Header("Saferio Button Settings")]
     [SerializeField] private bool isPlaySound = true;
 
+    [Header("Visual Style Settings")]
+    [Tooltip("Check this if your Graphic uses a custom material with _GlowAmount. Uncheck for standard text or image buttons.")]
+    [SerializeField] private bool useMaterialGlow = true;
+    [SerializeField] private Color hoverTextColor = new Color(0.8f, 0.8f, 0.8f, 1f); // Color when hovered if glow is off
+    [SerializeField] private Graphic customGraphic;
+
     [Header("Long-Click Upgrade Settings")]
     [SerializeField] private bool isLongClickEnabled = false;
     [SerializeField] private float holdThreshold = 0.4f;      // Time required before it counts as a long-press
@@ -36,6 +42,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private float currentGlow = 0f;
     private float targetGlow = 0f;
     private Vector3 originalScale;
+    private Color originalColor;
 
     // Threshold & long-press tracking
     private bool isPointerDown = false;
@@ -60,10 +67,14 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         rectTransform = GetComponent<RectTransform>();
         originalScale = rectTransform.localScale;
 
-        if (uiGraphic.material != null)
+        if (useMaterialGlow && uiGraphic.material != null)
         {
             instanceMaterial = new Material(uiGraphic.material);
             uiGraphic.material = instanceMaterial;
+        }
+        else
+        {
+            useMaterialGlow = false;
         }
 
         _button.onClick.AddListener(PreventMultiButtonClickConcurrently);
@@ -103,15 +114,13 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             pointerDownTimer += Time.unscaledDeltaTime;
 
-            // Check if user has held long enough to cross the threshold
             if (!hasReachedLongPressThreshold && pointerDownTimer >= holdThreshold)
             {
                 hasReachedLongPressThreshold = true;
                 repeatTimer = 0f;
-                TriggerUpgradeAction(); // First tick upon reaching threshold
+                TriggerUpgradeAction();
             }
 
-            // Map progress dynamically for shader visualization once threshold tracking starts
             if (hasReachedLongPressThreshold)
             {
                 float progress = Mathf.Clamp01((pointerDownTimer - holdThreshold) / 1.0f);
@@ -149,7 +158,6 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        // Only fire the special release effect if they actually held it long enough to trigger long-press mode
         if (hasReachedLongPressThreshold)
         {
             FullscreenEffectController.Ins.PlayReleaseEffect();
@@ -170,9 +178,13 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         targetGlow = 0f;
         rectTransform.localScale = originalScale;
 
-        if (instanceMaterial != null)
+        if (useMaterialGlow && instanceMaterial != null)
         {
             instanceMaterial.SetFloat(GlowAmountID, 0f);
+        }
+        else if (uiGraphic != null)
+        {
+            uiGraphic.color = originalColor;
         }
 
         if (FullscreenEffectController.Ins != null)
@@ -194,24 +206,42 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             StopCoroutine(glowTransitionCoroutine);
         }
-        glowTransitionCoroutine = StartCoroutine(AnimateGlowState());
+        glowTransitionCoroutine = StartCoroutine(AnimateVisualState());
     }
 
-    private IEnumerator AnimateGlowState()
+    private IEnumerator AnimateVisualState()
     {
+        // for icon and text only button
+        if (!useMaterialGlow && targetGlow == 1)
+        {
+            originalColor = customGraphic.color;
+            hoverTextColor = 1.3f * originalColor;
+        }
+
         while (Mathf.Abs(currentGlow - targetGlow) > 0.001f)
         {
             currentGlow = Mathf.MoveTowards(currentGlow, targetGlow, Time.unscaledDeltaTime * transitionSpeed);
-            if (instanceMaterial != null)
+
+            if (useMaterialGlow && instanceMaterial != null)
             {
                 instanceMaterial.SetFloat(GlowAmountID, currentGlow);
             }
+            else if (customGraphic != null)
+            {
+                customGraphic.color = Color.Lerp(originalColor, hoverTextColor, currentGlow);
+            }
+
             yield return null;
         }
         currentGlow = targetGlow;
-        if (instanceMaterial != null)
+
+        if (useMaterialGlow && instanceMaterial != null)
         {
             instanceMaterial.SetFloat(GlowAmountID, currentGlow);
+        }
+        else if (customGraphic != null)
+        {
+            customGraphic.color = Color.Lerp(originalColor, hoverTextColor, currentGlow);
         }
     }
 
