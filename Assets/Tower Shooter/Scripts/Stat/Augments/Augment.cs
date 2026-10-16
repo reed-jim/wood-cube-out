@@ -121,13 +121,22 @@ public class Augment : ScriptableObject
         }
 
         // 2. Process dynamic effects descriptions
+        int index = 0;
+
         foreach (var effect in dynamicEffects)
         {
             string effectDesc = effect.GetFormattedDescription(config);
             if (!string.IsNullOrEmpty(effectDesc))
             {
+                if (index > 0)
+                {
+                    sb.AppendLine();
+                }
+
                 sb.AppendLine(effectDesc);
             }
+
+            index++;
         }
 
         // 3. Process optional extra flavor text
@@ -168,13 +177,22 @@ public class Augment : ScriptableObject
         }
 
         // 2. Process dynamic effects descriptions
+        int index = 0;
+
         foreach (var effect in dynamicEffects)
         {
             string effectDesc = effect.GetFormattedDescription(config);
             if (!string.IsNullOrEmpty(effectDesc))
             {
+                if (index > 0)
+                {
+                    sb.AppendLine();
+                }
+
                 sb.AppendLine(effectDesc);
             }
+
+            index++;
         }
 
         return sb.ToString().TrimEnd();
@@ -199,13 +217,22 @@ public class Augment : ScriptableObject
         }
 
         // 2. Process dynamic effects descriptions
+        int index = 0;
+
         foreach (var effect in dynamicEffects)
         {
             string effectDesc = effect.GetFormattedDescription(config);
             if (!string.IsNullOrEmpty(effectDesc))
             {
+                if (index > 0)
+                {
+                    sb.AppendLine();
+                }
+
                 sb.AppendLine(effectDesc);
             }
+
+            index++;
         }
 
         // 3. Process optional extra flavor text

@@ -71,6 +71,10 @@ public class GenericAugmentEffect : AugmentEffect
         string autoText = GenerateAutoDescription();
         string effectColorHex = ColorUtil.ColorToHex(effectColor);
 
+        // without effect name
+        return autoText;
+
+        // with effect name
         return $"<color={effectColorHex}>{GenerateAutoEffectName(config)}:</color> {autoText}";
     }
 
@@ -183,23 +187,20 @@ public class GenericAugmentEffect : AugmentEffect
         string secondsSuffixWithColor = $"<color={primaryHex}>s</color>";
         string perSecondSuffixWithColor = $"<color={primaryHex}>/s</color>";
 
-        // 1. TRIGGER
-        switch (config.trigger)
+        // 5. CONDITIONALS
+        switch (config.condition)
         {
-            case EffectTrigger.OnCycleComplete:
-                sb.Append("On cycle complete, ");
+            case ConditionType.StatGreaterThanOther:
+                sb.Append($"When {sourceStatWithColor} > {comparisonStatWithColor}, ");
                 break;
-            case EffectTrigger.OnCrit:
-                sb.Append("On landing a critical hit, ");
+            case ConditionType.StatLessThanOther:
+                sb.Append($"When {sourceStatWithColor} < {comparisonStatWithColor}, ");
                 break;
-            case EffectTrigger.EveryXCycles:
-                sb.Append($"Every {cycleFrequencyWithColor} cycles, ");
+            case ConditionType.StatGreaterThan:
+                sb.Append($"When {comparisonStatWithColor} > {thresholdValueWithColor}, ");
                 break;
-            case EffectTrigger.WhenStatCrossesThreshold:
-                sb.Append($"When {sourceStatWithColor} reaches {thresholdValueWithColor}, ");
-                break;
-            case EffectTrigger.Once:
-                sb.Append("Once ");
+            case ConditionType.StatLessThan:
+                sb.Append($"When {comparisonStatWithColor} < {thresholdValueWithColor}, ");
                 break;
         }
 
@@ -265,20 +266,23 @@ public class GenericAugmentEffect : AugmentEffect
                 break;
         }
 
-        // 5. CONDITIONALS
-        switch (config.condition)
+        // 1. TRIGGER
+        switch (config.trigger)
         {
-            case ConditionType.StatGreaterThanOther:
-                sb.Append($" (Requires {sourceStatWithColor} > {comparisonStatWithColor})");
+            case EffectTrigger.OnCycleComplete:
+                sb.Append(" on cycle complete");
                 break;
-            case ConditionType.StatLessThanOther:
-                sb.Append($" (Requires {sourceStatWithColor} < {comparisonStatWithColor})");
+            case EffectTrigger.OnCrit:
+                sb.Append(" on landing a critical hit");
                 break;
-            case ConditionType.StatGreaterThan:
-                sb.Append($" (Requires {comparisonStatWithColor} > {thresholdValueWithColor})");
+            case EffectTrigger.EveryXCycles:
+                sb.Append($" every {cycleFrequencyWithColor} cycles");
                 break;
-            case ConditionType.StatLessThan:
-                sb.Append($" (Requires {comparisonStatWithColor} < {thresholdValueWithColor})");
+            case EffectTrigger.WhenStatCrossesThreshold:
+                sb.Append($" when {sourceStatWithColor} reaches {thresholdValueWithColor}");
+                break;
+            case EffectTrigger.Once:
+                sb.Append(" once");
                 break;
         }
 
@@ -524,6 +528,7 @@ public class GenericAugmentEffect : AugmentEffect
 
         return sb.ToString().TrimEnd();
     }
+
     protected override (string Key, object Value)[] GetDescriptionTokens()
     {
         if (config == null) return System.Array.Empty<(string, object)>();
