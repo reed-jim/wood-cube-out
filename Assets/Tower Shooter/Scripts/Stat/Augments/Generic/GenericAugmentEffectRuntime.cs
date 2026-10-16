@@ -28,7 +28,7 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
             node = targetStats.serviceLocator.character;
         }
 
-        if (config.trigger == EffectTrigger.Permanently)
+        if (config.trigger == EffectTrigger.Once)
         {
             ExecuteEffect();
         }
@@ -37,11 +37,6 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
     private void Update()
     {
         if (config == null) return;
-
-        if (config.trigger == EffectTrigger.WhenIdle && node != null && node.isIdle)
-        {
-            ExecuteEffect();
-        }
 
         if (config.trigger == EffectTrigger.WhenStatCrossesThreshold)
         {

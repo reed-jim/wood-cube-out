@@ -3,8 +3,7 @@ public enum EffectTrigger
     OnCycleComplete,
     OnCrit,
     EveryXCycles,
-    Permanently,
-    WhenIdle,
+    Once,
     WhenStatCrossesThreshold
 }
 

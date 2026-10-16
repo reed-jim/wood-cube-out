@@ -103,10 +103,9 @@ public class GenericAugmentEffect : AugmentEffect
             _ => config.trigger switch
             {
                 EffectTrigger.OnCrit => "Critical",
-                EffectTrigger.WhenIdle => "Idle",
                 EffectTrigger.EveryXCycles => "Cycling",
                 EffectTrigger.WhenStatCrossesThreshold => "Surge",
-                EffectTrigger.Permanently => "Enduring",
+                EffectTrigger.Once => "Once",
                 _ => config.durationType switch
                 {
                     EffectDuration.TemporaryBurst => "Burst",
@@ -196,14 +195,11 @@ public class GenericAugmentEffect : AugmentEffect
             case EffectTrigger.EveryXCycles:
                 sb.Append($"Every {cycleFrequencyWithColor} cycles, ");
                 break;
-            case EffectTrigger.WhenIdle:
-                sb.Append("While idle, ");
-                break;
             case EffectTrigger.WhenStatCrossesThreshold:
                 sb.Append($"When {sourceStatWithColor} reaches {thresholdValueWithColor}, ");
                 break;
-            case EffectTrigger.Permanently:
-                sb.Append("Permanently ");
+            case EffectTrigger.Once:
+                sb.Append("Once ");
                 break;
         }
 
@@ -400,14 +396,11 @@ public class GenericAugmentEffect : AugmentEffect
             case EffectTrigger.EveryXCycles:
                 sb.Append($"Every {cycleFrequencyWithColor} cycles");
                 break;
-            case EffectTrigger.WhenIdle:
-                sb.Append("While idle");
-                break;
             case EffectTrigger.WhenStatCrossesThreshold:
                 sb.Append($"When {sourceStatWithColor} reaches {thresholdValueWithColor}");
                 break;
-            case EffectTrigger.Permanently:
-                sb.Append("Permanent passive");
+            case EffectTrigger.Once:
+                sb.Append("Once");
                 break;
             default:
                 sb.Append(config.trigger.ToString());
