@@ -79,13 +79,13 @@ public class UpgradeManager : Singleton<UpgradeManager>
             StatModifier oldStatModifier = node.upgrades.First(item => item.Type == statType);
 
             upgradeTime = oldStatModifier.UpgradeTime + 1;
-            currentValue = currentStatValue;
         }
         else
         {
             upgradeTime = 1;
-            currentValue = baseStatValue;
         }
+
+        currentValue = currentStatValue;
 
         // newValue = CurveManager.Ins.GetNextStatValue(statType, upgradeTime);
         // newValue = CommonUtil.RoundToDecimalPlaces(newValue, 3);

@@ -41,7 +41,9 @@ public class UpgradeItemUI : MonoBehaviour
 
     public void Init(BaseCharacter node)
     {
-        UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+        StatUpgradeData statUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
+
+        UpdateText(statUpgradeData);
 
         this.node = node;
     }

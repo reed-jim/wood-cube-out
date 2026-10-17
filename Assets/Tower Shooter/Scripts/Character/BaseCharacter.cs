@@ -246,6 +246,8 @@ public class BaseCharacter : MonoBehaviour
 
                     yield return progressTween.ToYieldInstruction();
 
+                    basePower = stats.GetStat(StatType.Damage).Value;
+
                     float power = basePower;
                     float criticalChance = stats.GetStat(StatType.CritChance).Value;
                     float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
