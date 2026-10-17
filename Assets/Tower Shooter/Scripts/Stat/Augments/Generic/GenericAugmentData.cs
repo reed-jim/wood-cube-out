@@ -12,6 +12,7 @@ public class GenericAugmentData
     [Header("Stats Logic")]
     public StatType sourceStat = StatType.Damage;
     public StatType targetStat = StatType.Damage;
+    public float sourceStatValueRatio = 0;
     public EffectOperation operation = EffectOperation.Add;
 
     [Header("Mathematical Scaling")]

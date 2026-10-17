@@ -102,7 +102,7 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
             else
             {
                 // Original logic: evaluate using the source stat
-                float sourceVal = GetStatValue(targetStats, config.sourceStat);
+                float sourceVal = config.sourceStatValueRatio * GetStatValue(targetStats, config.sourceStat);
                 calculatedVal =
                     AugmentManager.Ins.GetAugmentEfficiency(augment) * ScalingMath.Evaluate(config.baseValue, sourceVal, config.scalingFunction, config.scalingFactor);
             }
