@@ -173,6 +173,7 @@ public class GenericAugmentEffect : AugmentEffect
         string comparisonStatWithColor = $"<color={comparisonStatColorHex}>{comparisonStat}</color>";
 
         string baseValueWithColor = $"<color={targetStatColorHex}>{config.baseValue}</color>";
+        string percentValueWithColor = $"<color={targetStatColorHex}>{config.baseValue * 100}%</color>";
         string thresholdValueWithColor = $"<color={comparisonStatColorHex}>{config.thresholdValue}</color>";
 
         string cycleFrequencyWithColor = $"<color={primaryHex}>{config.cycleFrequency}</color>";
@@ -235,7 +236,14 @@ public class GenericAugmentEffect : AugmentEffect
         {
             if (config.baseValue > 0)
             {
-                sb.Append($" by {baseValueWithColor}");
+                if (config.valueSource == AugmentValueSource.FlatValue)
+                {
+                    sb.Append($" by {baseValueWithColor}");
+                }
+                else if (config.valueSource == AugmentValueSource.SourceStat)
+                {
+                    sb.Append($" equal to {percentValueWithColor} of {sourceStatWithColor}");
+                }
             }
 
             if (config.scalingFactor != 0)
