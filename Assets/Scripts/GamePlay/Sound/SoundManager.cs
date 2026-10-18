@@ -7,7 +7,6 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
 
     [SerializeField] private AudioSource backgroundMusic;
-    [SerializeField] private AudioSource chickenSound;
     [SerializeField] private AudioSource grainInTroughSound;
 
     [SerializeField] private GameSetting gameSetting;
@@ -77,25 +76,6 @@ public class SoundManager : MonoBehaviour
     public void EnableGameSound(bool isEnable)
     {
         _isEnableGameSound = isEnable;
-
-        if (isEnable)
-        {
-            ResumeGrainInTroughSound();
-
-            if (isPlayingChickenSound)
-            {
-                PlayChickenSound();
-            }
-        }
-        else
-        {
-            StopGrainInTroughSound();
-
-            if (isPlayingChickenSound)
-            {
-                chickenSound.Stop();
-            }
-        }
     }
 
     public void PlaySoundLoosenScrew()
@@ -438,16 +418,12 @@ public class SoundManager : MonoBehaviour
     {
         if (_isEnableGameSound)
         {
-            chickenSound.Play();
-
             isPlayingChickenSound = true;
         }
     }
 
     public void StopChickenSound()
     {
-        chickenSound.Stop();
-
         isPlayingChickenSound = false;
     }
 

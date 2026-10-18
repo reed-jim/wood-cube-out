@@ -8,7 +8,6 @@ using Unity.Mathematics;
 public class DamageText : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageText;
-    [SerializeField] private Image critIcon;
 
     [Header("Theme")]
     [SerializeField] private Material lightTextBorderMaterial;
@@ -78,12 +77,9 @@ public class DamageText : MonoBehaviour
 
         if (isCritical)
         {
-            critIcon.gameObject.SetActive(true);
-            critIcon.color = critColor;
-        }
-        else
-        {
-            critIcon.gameObject.SetActive(false);
+            string critColorHex = ColorUtil.ColorToHex(critColor);
+
+            damageText.text = $"<sprite=3 color={critColorHex}></>{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
         }
 
         transform.position = spawnPosition;
@@ -149,7 +145,6 @@ public class DamageText : MonoBehaviour
         KillTweens();
 
         // Hide damage crit icon for generic stat popups
-        if (critIcon != null) critIcon.gameObject.SetActive(false);
 
         // 1. Determine color by target stat or operation override
         Color textColor = customColorOverride ?? GetAugmentStatColor(augmentConfig);
