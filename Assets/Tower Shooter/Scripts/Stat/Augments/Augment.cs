@@ -112,7 +112,7 @@ public class Augment : ScriptableObject
                 : $"{sign}{mod.value * 100f}%";
 
             // sb.AppendLine($"<color=#{valHex}>{valStr}</color> <color=#{hex}>{mod.statType}</color>");
-            sb.AppendLine($"<color=#{hex}>{valStr} {mod.statType}</color>");
+            sb.AppendLine($"<size=130%><color=#{hex}>{valStr} {mod.statType}</color></size>");
         }
 
         if (dynamicEffects.Count > 0)

@@ -13,7 +13,7 @@ Shader "Custom/URP_SaferioRoundedGlowButton"
         
         // Rounded Rect & Glow parameters
         _CornerRadius ("Corner Radius", Range(0.0, 0.2)) = 0.08
-        _GlowIntensity ("Glow Intensity", Range(0.0, 5.0)) = 2.0
+        _GlowIntensity ("Glow Intensity", Range(0.0, 10)) = 2.0
         _PulseSpeed ("Pulse Speed", Range(0.0, 10.0)) = 3.0
         
         // Stencil properties for Unity UI
