@@ -142,35 +142,60 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     #endregion
 
     #region Hover to show tooltip
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        // Stop any existing coroutine to prevent overlap
-        if (hoverCoroutine != null)
-        {
-            StopCoroutine(hoverCoroutine);
-        }
+    private static AugmentItemUI currentlyHoveredItem;
+    private static float hideTimer;
+    private static bool isWaitingToHide;
 
-        // Start waiting
-        hoverCoroutine = StartCoroutine(ShowDetailWithDelay());
+    void Update()
+    {
+        // Handle the global hide grace period via Update to avoid Coroutine stop warnings
+        if (isWaitingToHide)
+        {
+            hideTimer -= Time.unscaledDeltaTime;
+            if (hideTimer <= 0f)
+            {
+                isWaitingToHide = false;
+                if (currentlyHoveredItem == this)
+                {
+                    AugmentManager.Ins.HideAugmentTooltip();
+                    currentlyHoveredItem = null;
+                }
+            }
+        }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        // Cancel the delay if the pointer exits early
+        // Cancel any pending hide countdown because we entered an item
+        isWaitingToHide = false;
+        currentlyHoveredItem = this;
+
+        // Cancel any local show delay if it was running
         if (hoverCoroutine != null)
         {
             StopCoroutine(hoverCoroutine);
             hoverCoroutine = null;
         }
 
-        AugmentManager.Ins.HideAugmentTooltip();
+        // SHOW IMMEDIATELY
+        AugmentManager.Ins.ShowAugmentTooltip(this);
     }
 
-    private IEnumerator ShowDetailWithDelay()
+    public void OnPointerExit(PointerEventData eventData)
     {
-        yield return new WaitForSeconds(hoverDelay);
-        AugmentManager.Ins.ShowAugmentTooltip(this);
-        hoverCoroutine = null;
+        // Cancel local show delay if exiting early
+        if (hoverCoroutine != null)
+        {
+            StopCoroutine(hoverCoroutine);
+            hoverCoroutine = null;
+        }
+
+        // Only start the hide countdown if this is still the active item
+        if (currentlyHoveredItem == this)
+        {
+            hideTimer = 0.15f; // Grace period duration
+            isWaitingToHide = true;
+        }
     }
     #endregion
 
