@@ -24,6 +24,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [Header("Visual Style Settings")]
     [Tooltip("Check this if your Graphic uses a custom material with _GlowAmount. Uncheck for standard text or image buttons.")]
     [SerializeField] private bool useMaterialGlow = true;
+    [SerializeField] private bool isUseCustomGraphic;
     [SerializeField] private Color hoverTextColor = new Color(0.8f, 0.8f, 0.8f, 1f); // Color when hovered if glow is off
     [SerializeField] private Graphic customGraphic;
 
@@ -70,7 +71,16 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         _tweens = new List<Tween>();
         _button = GetComponent<Button>();
-        uiGraphic = GetComponent<Graphic>();
+
+        if (isUseCustomGraphic)
+        {
+            uiGraphic = customGraphic;
+        }
+        else
+        {
+            uiGraphic = GetComponent<Graphic>();
+        }
+
         rectTransform = GetComponent<RectTransform>();
         originalScale = rectTransform.localScale;
 

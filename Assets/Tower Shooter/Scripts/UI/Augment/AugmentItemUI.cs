@@ -24,10 +24,11 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Image upgradeHighlight;
 
     private Augment augment;
-    private AugmentLevel augmentLevel;
 
+    [Header("SO")]
     [SerializeField] private StatColorConfigSO colorConfig;
 
+    [Header("Tooltip")]
     [SerializeField] private float hoverDelay = 0.5f;
     private Coroutine hoverCoroutine;
 
