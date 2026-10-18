@@ -291,13 +291,7 @@ public class BaseCharacter : MonoBehaviour
 
                     currentCycle++;
 
-                    #region Energy Cube
-                    // EnergyCube energyCube = ObjectPoolingEverything.GetFromPool<EnergyCube>(GameConstants.energyCube);
-
-                    // energyCube.transform.SetParent(transform);
-                    // energyCube.transform.localPosition = Vector3.zero;
-                    // energyCube.Move(energyPoints);
-                    #endregion
+                    SoundManager.Instance.PlayCycleComplete();
 
                     cycleCompleteEvent?.Invoke(this);
                 }

@@ -50,6 +50,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     [Header("Sounds")]
     [SerializeField] private GameObject clickSoundPrefab;
+    [SerializeField] private GameObject cycleCompleteSound;
 
     [Header("VFXs")]
     [SerializeField] private GameObject looseScrewFxPrefab;
@@ -129,6 +130,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         #endregion
 
         RegisterPool<AudioSource>(GameConstants.CLICK_SOUND, clickSoundPrefab, 2);
+        RegisterPool<AudioSource>(GameConstants.cycleCompleteSound, cycleCompleteSound, 2);
 
         RegisterPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX, looseScrewFxPrefab, 25);
         RegisterPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX, boxCompletedFxPrefab, 5);

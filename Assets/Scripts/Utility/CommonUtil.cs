@@ -7,11 +7,27 @@ using System.Reflection;
 using DG.Tweening;
 using Dreamteck.Utilities;
 using PrimeTween;
+using TMPro;
 using UnityEngine;
 using static GameEnum;
 
 public static class CommonUtil
 {
+    public static void TryClearTMPSubmesh(TMP_Text text)
+    {
+        if(text.transform.childCount == 0)
+        {
+            return;
+        }
+        
+        TMP_SubMeshUI[] submeshes = text.GetComponentsInChildren<TMP_SubMeshUI>();
+
+        foreach (var submesh in submeshes)
+        {
+            submesh.gameObject.SetActive(false);
+        }
+    }
+
     public static void EnableUIGlobally()
     {
         // UnityEngine.EventSystems.EventSystem.current.enabled = true;

@@ -78,6 +78,13 @@ public class SoundManager : MonoBehaviour
         _isEnableGameSound = isEnable;
     }
 
+    #region Idle Spaceship
+    public void PlayCycleComplete()
+    {
+        PlaySound(GameConstants.cycleCompleteSound);
+    }
+    #endregion
+
     public void PlaySoundLoosenScrew()
     {
         if (!_isEnableGameSound)
@@ -135,7 +142,7 @@ public class SoundManager : MonoBehaviour
 
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLOSE_POPUP_SOUND);
 
-        if(sound != null)
+        if (sound != null)
         {
             sound.Play();
         }

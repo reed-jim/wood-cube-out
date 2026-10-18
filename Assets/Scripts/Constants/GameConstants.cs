@@ -35,6 +35,10 @@ public static class GameConstants
     public static string saveSlotItemUI = "saveSlotItemUI";
     public static string augmentIcon = "augmentIcon";
 
+
+    public static string cycleCompleteSound = "cycleCompleteSound";
+
+
     public static float nodeSpeedMultiplier = 0.02f;
 
 

@@ -71,7 +71,7 @@ public class DamageText : MonoBehaviour
         KillTweens();
 
         damageText.text = $"{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
-        damageText.rectTransform.sizeDelta = new Vector2(damageText.preferredWidth, damageText.preferredHeight);
+        damageText.rectTransform.sizeDelta = new Vector2(1.5f * damageText.preferredWidth, damageText.preferredHeight);
         damageText.color = isCritical ? critColor : normalColor;
         damageText.alpha = 1f;
 
@@ -79,7 +79,7 @@ public class DamageText : MonoBehaviour
         {
             string critColorHex = ColorUtil.ColorToHex(critColor);
 
-            damageText.text = $"<sprite=3 color={critColorHex}></>{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
+            damageText.text = $"<sprite=3 color={critColorHex}>{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
         }
 
         transform.position = spawnPosition;
@@ -154,6 +154,7 @@ public class DamageText : MonoBehaviour
         // 2. Format text based on operation type
         string formattedText = FormatAugmentText(augmentConfig, value, textColor);
         damageText.text = formattedText;
+        CommonUtil.TryClearTMPSubmesh(damageText);
         damageText.rectTransform.sizeDelta = new Vector2(damageText.preferredWidth, damageText.preferredHeight);
 
         transform.position = spawnPosition;
