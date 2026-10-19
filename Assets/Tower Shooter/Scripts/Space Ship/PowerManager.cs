@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 
@@ -9,12 +10,48 @@ public class PowerManager : Singleton<PowerManager>
 
     [Header("UI")]
     public TMP_Text totalPowerText;
+    public TMP_Text powerOutputPerSecondText;
 
-    private float totalPowerOutput;
+    [Header("Text Anim")]
+    [SerializeField] private float targetScale = 1.15f;
+    [SerializeField] private float duration = 0.8f;
+
+    // private float totalPowerOutput;
+    private float powerOutputPerSecond;
+    private string primaryHex;
+    private Tween pulseTween;
+
+    private float updateTimer = 0f;
+    private const float updateInterval = 1f / 24; // Update once per second
+
+    void Start()
+    {
+        pulseTween = Tween.ShakeScale(
+            target: totalPowerText.transform,
+            strength: 0.05f * Vector3.one,
+            duration: duration,
+            cycles: -1
+        );
+    }
+
+    void Update()
+    {
+        updateTimer += Time.deltaTime;
+
+        if (updateTimer >= updateInterval)
+        {
+            updateTimer = 0f;
+
+            double value = ResourceManager.Ins.ChangeResource(ResourceType.Coin, powerOutputPerSecond * updateInterval);
+
+            totalPowerText.text = $"{CommonUtil.FormatNumber(value)}";
+            powerOutputPerSecondText.text = $"{CommonUtil.FormatNumber(powerOutputPerSecond)}<sprite=0 color={primaryHex}>/s";
+        }
+    }
 
     public void AddPower(float power)
     {
-        ResourceManager.Ins.ChangeResource(ResourceType.Coin, power);
+        // ResourceManager.Ins.ChangeResource(ResourceType.Coin, power);
     }
 
     public void UpdateUI()
@@ -26,7 +63,7 @@ public class PowerManager : Singleton<PowerManager>
     {
         List<BaseCharacter> nodes = NodeManager.Ins.nodes;
 
-        totalPowerOutput = 0;
+        powerOutputPerSecond = 0;
 
         for (int i = 0; i < nodes.Count; i++)
         {
@@ -48,15 +85,15 @@ public class PowerManager : Singleton<PowerManager>
             float averageDamagePerHit = power * (1f + (critChance * (CritMultiplier - 1f)));
             float nodeDps = averageDamagePerHit * cycleSpeed * GameConstants.nodeSpeedMultiplier;
 
-            totalPowerOutput += nodeDps;
+            powerOutputPerSecond += nodeDps;
         }
 
-        return totalPowerOutput;
+        return powerOutputPerSecond;
     }
 
     public void ShowTotalPowerOutputPerSecond()
     {
-        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+        primaryHex = DynamicThemeManager.Ins.PrimaryHex;
 
         string notificationString =
             $"Power Output: <color={primaryHex}>{TextUtil.FormatFloat(GetTotalPowerOutputPerSecond())} <sprite=0 color={primaryHex}>/s";

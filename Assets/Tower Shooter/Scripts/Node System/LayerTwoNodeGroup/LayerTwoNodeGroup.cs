@@ -15,7 +15,10 @@ public class LayerTwoNodeGroup : MonoBehaviour
     void Awake()
     {
         LoadLayerTwoNodeGroupData();
+    }
 
+    void Start()
+    {
         Init();
     }
 
