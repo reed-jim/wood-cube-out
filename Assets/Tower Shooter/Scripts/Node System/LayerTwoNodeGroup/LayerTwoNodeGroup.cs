@@ -19,11 +19,11 @@ public class LayerTwoNodeGroup : MonoBehaviour
     {
         if (timer > interval)
         {
-            CharacterStats characterStats = serviceLocator.characterStats;
+            LayerTwoNodeGroupStats layerTwoStats = serviceLocator.layerTwoStats;
 
-            float speed = characterStats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
-            float criticalChance = characterStats.GetStat(StatType.CritChance).Value;
-            float criticalMultiplier = characterStats.GetStat(StatType.CritMultiplier).Value;
+            float speed = layerTwoStats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
+            float criticalChance = layerTwoStats.GetStat(StatType.CritChance).Value;
+            float criticalMultiplier = layerTwoStats.GetStat(StatType.CritMultiplier).Value;
 
             // complete a cycle
             if (interval > 0)
