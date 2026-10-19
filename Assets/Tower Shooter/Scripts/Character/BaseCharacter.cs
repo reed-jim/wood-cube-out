@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,10 @@ public class BaseCharacter : MonoBehaviour
     public bool isJustCrit;
     public bool isGuaranteedCrit;
     public NodeGroup nodeGroup;
+
+    [Header("Effect")]
+    public Image smoothTransitionAfterCycleComplete;
+    private Tween smoothTransitionAfterCycleCompleteTween;
 
     private Transform initialParent;
     private int siblingIndex;
@@ -293,6 +298,7 @@ public class BaseCharacter : MonoBehaviour
 
                     currentCycle++;
 
+                    SmoothTransitionAfterCycleComplete();
                     SoundManager.Instance.PlayCycleComplete();
 
                     cycleCompleteEvent?.Invoke(this);
@@ -328,6 +334,8 @@ public class BaseCharacter : MonoBehaviour
 
     private void ShowGeneratedPowerText(float power, bool isCritical, Vector3 position, Transform parent)
     {
+        return;
+
         DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
 
         damageText.transform.SetParent(parent);
@@ -359,6 +367,26 @@ public class BaseCharacter : MonoBehaviour
     {
         selectNodeToApplyAugmentEvent?.Invoke(this);
     }
+
+    #region Effect
+    private void SmoothTransitionAfterCycleComplete()
+    {
+        if (!smoothTransitionAfterCycleCompleteTween.isAlive)
+        {
+            smoothTransitionAfterCycleComplete.gameObject.SetActive(true);
+
+            smoothTransitionAfterCycleComplete.fillAmount = 1;
+
+            smoothTransitionAfterCycleCompleteTween = Tween.Custom(1, 0, duration: 0.15f, newVal =>
+            {
+                smoothTransitionAfterCycleComplete.fillAmount = newVal;
+            }).OnComplete(() =>
+            {
+                smoothTransitionAfterCycleComplete.gameObject.SetActive(false);
+            });
+        }
+    }
+    #endregion
 
     #region Util 
     public void SetToInitialParent()

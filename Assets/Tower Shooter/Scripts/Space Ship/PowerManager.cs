@@ -16,9 +16,15 @@ public class PowerManager : Singleton<PowerManager>
     [SerializeField] private float targetScale = 1.15f;
     [SerializeField] private float duration = 0.8f;
 
+    private Vector3 originalScale;
+    private float shakeIntensity = 0f;
+    private float shakeTimer = 0f;
+    private double previousTotalValue = -1;
+
     // private float totalPowerOutput;
     private float powerOutputPerSecond;
     private string primaryHex;
+    private string onPrimaryHex;
     private Tween pulseTween;
 
     private float updateTimer = 0f;
@@ -38,14 +44,11 @@ public class PowerManager : Singleton<PowerManager>
 
     void Start()
     {
-        pulseTween = Tween.ShakeScale(
-            target: totalPowerText.transform,
-            strength: 0.1f * Vector3.one,
-            duration: duration,
-            cycles: -1
-        );
+        // Cache the original scale of the text so we can return to it
+        originalScale = totalPowerText.transform.localScale;
 
         primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+        onPrimaryHex = DynamicThemeManager.Ins.OnPrimaryHex;
     }
 
     void Update()
@@ -56,10 +59,43 @@ public class PowerManager : Singleton<PowerManager>
         {
             updateTimer = 0f;
 
-            double value = ResourceManager.Ins.ChangeResource(ResourceType.Coin, powerOutputPerSecond * updateInterval);
+            double deltaChange = powerOutputPerSecond * updateInterval;
+            double value = ResourceManager.Ins.ChangeResource(ResourceType.Coin, deltaChange);
 
-            totalPowerText.text = $"{CommonUtil.FormatNumber(value)}";
-            powerOutputPerSecondText.text = $"{CommonUtil.FormatNumber(powerOutputPerSecond)}<sprite=0 color={primaryHex}>/s";
+            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{CommonUtil.FormatNumber(value)}";
+            powerOutputPerSecondText.text = $"+{CommonUtil.FormatNumber(powerOutputPerSecond)}<sprite=0 color={primaryHex}>/s";
+
+            // --- Percentage-Based Shake Logic ---
+            if (previousTotalValue > 0)
+            {
+                // Calculate percent change (e.g., 10 / 10000 = 0.001, which is 0.1%)
+                double percentChange = deltaChange / previousTotalValue;
+
+                // Minimum percent threshold to trigger shake (e.g., 0.005 = 0.5%)
+                double minPercentThreshold = 0.005;
+
+                if (percentChange >= minPercentThreshold)
+                {
+                    // Scale intensity based on the percentage change (capped so it doesn't get out of hand)
+                    shakeIntensity = Mathf.Min((float)percentChange * 2f, 0.3f);
+                    shakeTimer = 0.15f; // Duration of the shake effect
+                }
+            }
+
+            previousTotalValue = value;
+        }
+
+        // Process the shake effect every frame if active
+        if (shakeTimer > 0f)
+        {
+            shakeTimer -= Time.deltaTime;
+
+            float scaleOffset = UnityEngine.Random.Range(-shakeIntensity, shakeIntensity);
+            totalPowerText.transform.localScale = originalScale + Vector3.one * scaleOffset;
+        }
+        else
+        {
+            totalPowerText.transform.localScale = originalScale;
         }
     }
 
