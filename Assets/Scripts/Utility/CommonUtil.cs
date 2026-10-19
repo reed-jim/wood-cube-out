@@ -15,11 +15,11 @@ public static class CommonUtil
 {
     public static void TryClearTMPSubmesh(TMP_Text text)
     {
-        if(text.transform.childCount == 0)
+        if (text.transform.childCount == 0)
         {
             return;
         }
-        
+
         TMP_SubMeshUI[] submeshes = text.GetComponentsInChildren<TMP_SubMeshUI>();
 
         foreach (var submesh in submeshes)
@@ -67,7 +67,7 @@ public static class CommonUtil
             return "Infinity";
 
         if (value < 1000)
-            return value.ToString("0.##");
+            return value.ToString("0.00");
 
         int suffixIndex = 0;
 
@@ -77,7 +77,7 @@ public static class CommonUtil
             suffixIndex++;
         }
 
-        return value.ToString("0.##") + Suffixes[suffixIndex];
+        return value.ToString("0.00") + Suffixes[suffixIndex];
     }
 
     public static string GetOrdinal(int number)
