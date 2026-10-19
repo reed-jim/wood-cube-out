@@ -229,6 +229,8 @@ public class BasePopup : MonoBehaviour
         _isShown = true;
         _isInTransition = true;
 
+        GamePersistentVariable.isPopupShowing = true;
+
         enableSwipingScreenEvent?.Invoke(false);
 
         void OnTransitionCompleted()
@@ -287,6 +289,8 @@ public class BasePopup : MonoBehaviour
 
         _isShown = false;
         _isInTransition = true;
+
+        GamePersistentVariable.isPopupShowing = false;
 
         AfterHide();
 

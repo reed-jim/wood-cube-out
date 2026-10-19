@@ -81,6 +81,11 @@ public class SoundManager : MonoBehaviour
     #region Idle Spaceship
     public void PlayCycleComplete()
     {
+        if (GamePersistentVariable.isPopupShowing)
+        {
+            return;
+        }
+
         PlaySound(GameConstants.cycleCompleteSound);
     }
     #endregion

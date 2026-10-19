@@ -10,6 +10,10 @@ public enum CloudStorageRequest
 
 public static class GamePersistentVariable
 {
+    #region Idle Spaceship
+    public static bool isPopupShowing;
+    #endregion
+
     #region Chicken Flow
     public static int bucketOrder;
     public static int numEatingChicken;
