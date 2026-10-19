@@ -67,6 +67,21 @@ public class Stat
         return Value;
     }
 
+    public StatModifier GetModifierFromSource(StatModifierSource statModifierSource)
+    {
+        for (int i = 0; i < modifiers.Count; i++)
+        {
+            StatModifier statModifier = modifiers[i];
+
+            if (statModifier.statModifierSource == statModifierSource)
+            {
+                return statModifier;
+            }
+        }
+
+        return null;
+    }
+
     public List<StatModifier> GetAllModifiersFromSource(StatModifierSource statModifierSource)
     {
         List<StatModifier> statModifiers = new List<StatModifier>();

@@ -9,6 +9,7 @@ public class CharacterServiceLocator : MonoBehaviour
     public DamageOverTimeReceiver damageOverTimeReceiver;
     public LazyHealthBar lazyHealthBar;
     public StackingUI stackingUI;
+    public RecycleModule recycleModule;
 
     #region Augment Runtime
     [Header("Augment Runtime")]

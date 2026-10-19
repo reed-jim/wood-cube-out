@@ -36,7 +36,8 @@ public enum StatModifierSource
     LeadershipPosition,
     SpaceEvent,
     Research,
-    Upgrade
+    Upgrade,
+    RecycleModule
 }
 
 [Serializable]

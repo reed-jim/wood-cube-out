@@ -286,6 +286,8 @@ public class BaseCharacter : MonoBehaviour
                     lastPowerGenerated = power;
                     isJustCrit = isCritical;
 
+                    serviceLocator.recycleModule.Recycle(lastPowerGenerated);
+
                     ApplyAugmentEffectsOnCycleCompletion();
                     nodeGroup?.ApplyEffectWhenAnyNodeInGroupCompletesCycle(this);
 

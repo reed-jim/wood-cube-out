@@ -803,6 +803,7 @@ GameObject:
   - component: {fileID: 614917598609676925}
   - component: {fileID: 898206287609554678}
   - component: {fileID: 3217980460636716129}
+  - component: {fileID: 6691453244471386433}
   m_Layer: 5
   m_Name: Node
   m_TagString: Untagged
@@ -895,6 +896,7 @@ MonoBehaviour:
   damageOverTimeReceiver: {fileID: 0}
   lazyHealthBar: {fileID: 0}
   stackingUI: {fileID: 0}
+  recycleModule: {fileID: 6691453244471386433}
   powerIncreaseOnSpeedAugmentEffectRuntime: {fileID: 0}
   timeCapsuleAugmentEffectRuntime: {fileID: 0}
   overheatAugmentEffectRuntime: {fileID: 0}
@@ -963,6 +965,19 @@ MonoBehaviour:
   augmentLink: {fileID: 260011292704352820}
   filterAugmentItemScale: 0.5
   augmentIconContainer: {fileID: 7282455449662575886}
+--- !u!114 &6691453244471386433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6663510762302426158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f096d428a3210448159775bf3a14bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RecycleModule
+  serviceLocator: {fileID: 614917598609676925}
 --- !u!1 &6900476230869989543
 GameObject:
   m_ObjectHideFlags: 0

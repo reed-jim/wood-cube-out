@@ -74,6 +74,18 @@ public class CharacterStats : MonoBehaviour
         return newValue;
     }
 
+    public StatModifier GetModifierFromSource(StatType targetStatType, StatModifierSource source)
+    {
+        List<StatModifier> statModifiers = new List<StatModifier>();
+
+        foreach (var statType in statDict.Keys)
+        {
+            statModifiers.AddRange(GetStat(statType).GetAllModifiersFromSource(source));
+        }
+
+        return GetStat(targetStatType).GetModifierFromSource(source);
+    }
+
     public List<StatModifier> GetAllModifiersFromSource(StatModifierSource source)
     {
         List<StatModifier> statModifiers = new List<StatModifier>();
