@@ -82,9 +82,12 @@ public class Augment : ScriptableObject
         return true;
     }
 
-    public string BuildFullDescription(StatColorConfigSO config)
+    public string BuildFullDescription(StatColorConfigSO config, bool isHover = false)
     {
         StringBuilder sb = new StringBuilder();
+
+        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+        string scaleOnStarIcon = $"<sprite=0 color={primaryHex}>";
 
         // 1. Process basic stat modifiers automatically
         foreach (var mod in statModifiers)
@@ -103,7 +106,14 @@ public class Augment : ScriptableObject
                 ? $"{sign}{scaledValue}"
                 : $"{sign}{scaledValue * 100f}%";
 
-            sb.AppendLine($"<size=130%><color=#{hex}>{valStr} {mod.statType}</color></size>");
+            if (isHover)
+            {
+                sb.AppendLine($"<size=130%><color=#{hex}>{valStr} {mod.statType}</color> ({mod.value} - {scaledValue}{scaleOnStarIcon})</size>");
+            }
+            else
+            {
+                sb.AppendLine($"<size=130%><color=#{hex}>{valStr} {mod.statType}</color> ({scaleOnStarIcon})</size>");
+            }
         }
 
         if (dynamicEffects.Count > 0)

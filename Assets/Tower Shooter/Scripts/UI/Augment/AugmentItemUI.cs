@@ -65,7 +65,7 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         else
         {
-            description.text = augment.BuildFullDescription(colorConfig);
+            ShowDescriptionTextNormally();
         }
 
         qualityText.text = $"{augment.augmentQuality}";
@@ -94,6 +94,16 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             ShowUpgradeAugmentLevelUI(augmentLevel);
         }
+    }
+
+    private void ShowDescriptionTextNormally()
+    {
+        description.text = augment.BuildFullDescription(colorConfig, isHover: false);
+    }
+
+    private void ShowDescriptionTextOnHover()
+    {
+        description.text = augment.BuildFullDescription(colorConfig, isHover: true);
     }
 
     private void ShowAugmentDetail()
@@ -158,6 +168,9 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 if (currentlyHoveredItem == this)
                 {
                     AugmentManager.Ins.HideAugmentTooltip();
+
+                    ShowDescriptionTextNormally();
+
                     currentlyHoveredItem = null;
                 }
             }
@@ -179,6 +192,8 @@ public class AugmentItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         // SHOW IMMEDIATELY
         AugmentManager.Ins.ShowAugmentTooltip(this);
+
+        ShowDescriptionTextOnHover();
     }
 
     public void OnPointerExit(PointerEventData eventData)
