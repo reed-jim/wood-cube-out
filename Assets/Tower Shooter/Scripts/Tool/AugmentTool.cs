@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -437,3 +438,4 @@ public class AugmentTool : EditorWindow
         _ => Color.white
     };
 }
+#endif

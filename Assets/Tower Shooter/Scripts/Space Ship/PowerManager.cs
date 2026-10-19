@@ -28,7 +28,7 @@ public class PowerManager : Singleton<PowerManager>
     private Tween pulseTween;
 
     private float updateTimer = 0f;
-    private const float updateInterval = 1f / 24; // Update once per second
+    private const float updateInterval = 1f / 6; // Update once per second
 
     protected override void MoreActionOnAwake()
     {

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -190,3 +191,4 @@ public class MaterialCreatorWindow : EditorWindow
         public float a;
     }
 }
+#endif

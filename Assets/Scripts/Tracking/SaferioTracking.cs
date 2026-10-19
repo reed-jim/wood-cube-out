@@ -133,18 +133,6 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackIAPCompleteEventAppsflyer(string revenue)
-    {
-#if !UNITY_EDITOR
-        Dictionary<string, string> eventValues = new Dictionary<string, string>();
-        eventValues.Add(AFInAppEvents.CURRENCY, "USD");
-        eventValues.Add(AFInAppEvents.REVENUE, revenue);
-        eventValues.Add("af_quantity", "1");
-
-        AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
-#endif
-    }
-
     public static void TrackInvalidIAPEvent(string reason)
     {
 #if !UNITY_EDITOR
@@ -289,28 +277,10 @@ public static class SaferioTracking
             new Parameter("play_mode", "normal"),
             new Parameter("level", level.ToString()),
             new Parameter("success", isSuccess.ToString()),
-            new Parameter("reason", reason),
-            new Parameter("ad_duration", AdsDurationObserver.duration)
+            new Parameter("reason", reason)
         };
 
         FirebaseAnalytics.LogEvent("level_end", parameters);
-#endif
-    }
-
-    public static void TrackIAPEventCostCenter(int level, double value, string currency, string productId)
-    {
-#if !UNITY_EDITOR
-        Parameter[] parameters =
-        {
-            new Parameter("play_mode", "normal"),
-            new Parameter("level", level.ToString()),
-            new Parameter("value", value),
-            new Parameter("currency", currency),
-            new Parameter("product_id", productId),
-            new Parameter("iap_location", GamePersistentVariable.IAPLocation)
-        };
-
-        FirebaseAnalytics.LogEvent("iap_sdk", parameters);
 #endif
     }
     #endregion

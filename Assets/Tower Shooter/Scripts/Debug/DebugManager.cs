@@ -8,6 +8,7 @@ public class DebugManager : Singleton<DebugManager>
     public UnlockAugmentUI unlockAugmentUI;
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(DebugManager))]
 public class DebugManagerEditor : Editor
 {
@@ -97,3 +98,4 @@ public class DebugManagerEditor : Editor
         debugManager.unlockAugmentUI.ChangeDataToUnlockState();
     }
 }
+#endif
