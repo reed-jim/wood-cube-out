@@ -60,21 +60,24 @@ public class ResourceManager : Singleton<ResourceManager>
 
         if (resourceTexts.ContainsKey(resourceType))
         {
-            resourceTexts[resourceType].text = $"{CommonUtil.FormatNumber(resources[resourceType].value)}";
+            if (resourceType != ResourceType.Coin)
+            {
+                resourceTexts[resourceType].text = $"{CommonUtil.FormatNumber(resources[resourceType].value)}";
 
-            // if (resourceTextSequences.ContainsKey(resourceType))
-            // {
-            //     if (resourceTextSequences[resourceType].isAlive)
-            //     {
-            //         resourceTextSequences[resourceType].Stop();
-            //     }
+                if (resourceTextSequences.ContainsKey(resourceType))
+                {
+                    if (resourceTextSequences[resourceType].isAlive)
+                    {
+                        resourceTextSequences[resourceType].Stop();
+                    }
 
-            //     resourceTextSequences[resourceType] = SaferioTween.Punch(resourceTexts[resourceType].transform);
-            // }
-            // else
-            // {
-            //     resourceTextSequences.Add(resourceType, SaferioTween.Punch(resourceTexts[resourceType].transform));
-            // }
+                    resourceTextSequences[resourceType] = SaferioTween.Punch(resourceTexts[resourceType].transform);
+                }
+                else
+                {
+                    resourceTextSequences.Add(resourceType, SaferioTween.Punch(resourceTexts[resourceType].transform));
+                }
+            }
         }
 
         SaveResourceData();

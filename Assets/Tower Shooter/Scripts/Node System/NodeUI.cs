@@ -13,6 +13,7 @@ public class NodeUI : MonoBehaviour
     [Header("UI")]
     public RectTransform container;
     public Image circleProgress;
+    public Image lazyFill;
     public Image lockIcon;
     public TMP_Text powerText;
     public Button selectButton;
@@ -198,6 +199,21 @@ public class NodeUI : MonoBehaviour
         highlight.gameObject.SetActive(false);
 
         serviceLocator.character.SetToInitialParent();
+    }
+
+    public void RevertTheCircleFill(Action onComplete)
+    {
+        circleProgress.fillClockwise = !circleProgress.fillClockwise;
+
+        Tween.Custom(1, 0, duration: 0.3f, newVal =>
+        {
+            circleProgress.fillAmount = newVal;
+        }).OnComplete(() =>
+        {
+            circleProgress.fillClockwise = !circleProgress.fillClockwise;
+
+            onComplete?.Invoke();
+        });
     }
 
     #region Filter
