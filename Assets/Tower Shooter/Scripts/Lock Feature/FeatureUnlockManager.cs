@@ -5,7 +5,10 @@ using UnityEngine;
 public enum FeatureType
 {
     Leadership,
-    Research
+    Research,
+    CritChanceUpgrade,
+    CritMultiplierUpgrade,
+    None
 }
 
 public class FeatureUnlockManager : Singleton<FeatureUnlockManager>
@@ -21,17 +24,28 @@ public class FeatureUnlockManager : Singleton<FeatureUnlockManager>
         LoadFeatureLockStateData();
     }
 
-    public bool IsFeatureUnlocked(FeatureType featureType)
+    public bool IsFeatureUnlocked(FeatureType featureType, out SpaceObjectType spaceObjectTypeToUnlock)
     {
+        if (featureLockStateData == null)
+        {
+            spaceObjectTypeToUnlock = SpaceObjectType.Earth;
+
+            return false;
+        }
+
         for (int i = 0; i < featureLockStateData.featureLockStateDataItems.Count; i++)
         {
             FeatureLockStateDataItem featureLockStateDataItem = featureLockStateData.featureLockStateDataItems[i];
 
             if (featureLockStateDataItem.featureType == featureType)
             {
+                spaceObjectTypeToUnlock = featureLockStateDataItem.spaceObjectTypeToUnlock;
+
                 return featureLockStateDataItem.isUnlocked;
             }
         }
+
+        spaceObjectTypeToUnlock = SpaceObjectType.Earth;
 
         return false;
     }

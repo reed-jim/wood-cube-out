@@ -11,7 +11,10 @@ public class UpgradeItemUI : MonoBehaviour
     public Image statIcon;
     public Button upgradeButton;
 
-    public ThemeableUI costIconThemeable;
+    [Header("Lock")]
+    public CanvasGroup lockOverlay;
+    public FeatureType featureType;
+    public SpaceObjectType spaceObjectTypeToUnlock;
 
     [Header("Customize")]
     public StatType statType;
@@ -22,12 +25,14 @@ public class UpgradeItemUI : MonoBehaviour
 
     private Sequence shakeCoinTextSequence;
     private double cachedCoinValue;
+    private bool isLocked;
 
     void Awake()
     {
         AugmentManager.applyAugmentEvent += OnAugmentApplied;
         ResourceManager.changeResourceValueEvent += OnResourceChanged;
         GenericAugmentEffectRuntime.updateNodeStatEvent += UpdateNodeStat;
+        FeatureUnlockManager.loadFeatureLockStateDataEvent += OnLoadFeatureLockStateData;
 
         upgradeButton.onClick.AddListener(Upgrade);
     }
@@ -37,10 +42,22 @@ public class UpgradeItemUI : MonoBehaviour
         AugmentManager.applyAugmentEvent -= OnAugmentApplied;
         ResourceManager.changeResourceValueEvent -= OnResourceChanged;
         GenericAugmentEffectRuntime.updateNodeStatEvent -= UpdateNodeStat;
+        FeatureUnlockManager.loadFeatureLockStateDataEvent -= OnLoadFeatureLockStateData;
     }
 
     public void Init(BaseCharacter node)
     {
+        if (FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType, out spaceObjectTypeToUnlock))
+        {
+            Unlock();
+        }
+        else
+        {
+            Lock();
+
+            return;
+        }
+
         StatUpgradeData statUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
 
         UpdateText(statUpgradeData);
@@ -51,6 +68,15 @@ public class UpgradeItemUI : MonoBehaviour
     [ContextMenu("Upgrade")]
     public void Upgrade()
     {
+        if (isLocked)
+        {
+            string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+            IngameNotificationManager.Ins.ShowNotification($"Reach <color={primaryHex}>{spaceObjectTypeToUnlock}</color> to upgrade this stat!");
+
+            return;
+        }
+
         StatUpgradeData statUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
 
         if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= statUpgradeData.coinRequired)
@@ -110,18 +136,58 @@ public class UpgradeItemUI : MonoBehaviour
         }
     }
 
+    #region Lock
+    private void Lock()
+    {
+        lockOverlay.gameObject.SetActive(true);
+
+        isLocked = true;
+    }
+
+    private void Unlock()
+    {
+        lockOverlay.gameObject.SetActive(false);
+
+        isLocked = false;
+    }
+    #endregion
+
     private void OnAugmentApplied()
     {
+        if(isLocked)
+        {
+            return;
+        }
+        
         UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
     }
 
     private void OnResourceChanged(ResourceType resourceType, double value)
     {
+        if(isLocked)
+        {
+            return;
+        }
+
         if (resourceType == ResourceType.Coin)
         {
             cachedCoinValue = value;
 
             UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+        }
+    }
+
+    private void OnLoadFeatureLockStateData()
+    {
+        if (FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType, out spaceObjectTypeToUnlock))
+        {
+            Unlock();
+        }
+        else
+        {
+            Lock();
+
+            return;
         }
     }
 

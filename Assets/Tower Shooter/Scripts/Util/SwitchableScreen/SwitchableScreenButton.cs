@@ -20,6 +20,7 @@ public class SwitchableScreenButton : MonoBehaviour
     public SwitchableScreenType switchableScreenType;
 
     private bool isUnlocked;
+    private SpaceObjectType spaceObjectTypeToUnlock;
 
     public static event Action<SwitchableScreenType> switchScreenEvent;
 
@@ -68,7 +69,7 @@ public class SwitchableScreenButton : MonoBehaviour
     {
         if (lockOverlay != null)
         {
-            isUnlocked = FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType);
+            isUnlocked = FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType, out spaceObjectTypeToUnlock);
 
             lockOverlay.gameObject.SetActive(!isUnlocked);
         }
@@ -87,6 +88,6 @@ public class SwitchableScreenButton : MonoBehaviour
     {
         string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
 
-        return $"Reach <color={primaryHex}>{FeatureUnlockManager.Ins.GetSpaceObjectTypeToUnlock(featureType)}</color> to unlock this feature!";
+        return $"Reach <color={primaryHex}>{spaceObjectTypeToUnlock}</color> to unlock this feature!";
     }
 }
