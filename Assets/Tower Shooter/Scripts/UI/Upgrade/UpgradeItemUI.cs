@@ -47,6 +47,8 @@ public class UpgradeItemUI : MonoBehaviour
 
     public void Init(BaseCharacter node)
     {
+        this.node = node;
+
         if (FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType, out spaceObjectTypeToUnlock))
         {
             Unlock();
@@ -61,8 +63,6 @@ public class UpgradeItemUI : MonoBehaviour
         StatUpgradeData statUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
 
         UpdateText(statUpgradeData);
-
-        this.node = node;
     }
 
     [ContextMenu("Upgrade")]
