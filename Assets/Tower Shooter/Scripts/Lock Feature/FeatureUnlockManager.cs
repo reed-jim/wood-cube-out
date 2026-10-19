@@ -8,7 +8,8 @@ public enum FeatureType
     Research,
     CritChanceUpgrade,
     CritMultiplierUpgrade,
-    None
+    None,
+    LayerTwo
 }
 
 public class FeatureUnlockManager : Singleton<FeatureUnlockManager>

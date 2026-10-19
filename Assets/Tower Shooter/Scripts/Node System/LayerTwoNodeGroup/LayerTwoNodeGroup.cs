@@ -7,16 +7,41 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
     private float timer;
     private float interval;
+    private bool isUnlocked;
+    private SpaceObjectType spaceObjectTypeToUnlock;
 
     private LayerTwoNodeGroupData layerTwoNodeGroupData;
 
     void Awake()
     {
         LoadLayerTwoNodeGroupData();
+
+        Init();
+    }
+
+    private void Init()
+    {
+        serviceLocator.layerTwoStats.LoadStats();
+
+        isUnlocked = FeatureUnlockManager.Ins.IsFeatureUnlocked(FeatureType.LayerTwo, out spaceObjectTypeToUnlock);
+
+        if (isUnlocked)
+        {
+            serviceLocator.layerTwoNodeGroupUI.Unlock();
+        }
+        else
+        {
+            serviceLocator.layerTwoNodeGroupUI.Lock();
+        }
     }
 
     void Update()
     {
+        if (!isUnlocked)
+        {
+            return;
+        }
+
         if (timer > interval)
         {
             LayerTwoNodeGroupStats layerTwoStats = serviceLocator.layerTwoStats;
@@ -34,6 +59,8 @@ public class LayerTwoNodeGroup : MonoBehaviour
             }
 
             interval = 1f / speed;
+
+            timer = 0;
         }
         else
         {
@@ -61,6 +88,16 @@ public class LayerTwoNodeGroup : MonoBehaviour
     public double GetGlobalMultiplier()
     {
         return CurveManager.Ins.GetLayerTwoGlobalMultiplier(layerTwoNodeGroupData.cycleComplete);
+    }
+
+    public bool IsUnlocked()
+    {
+        return isUnlocked;
+    }
+
+    public SpaceObjectType GetSpaceObjectTypeToUnlock()
+    {
+        return spaceObjectTypeToUnlock;
     }
     #endregion
 }
