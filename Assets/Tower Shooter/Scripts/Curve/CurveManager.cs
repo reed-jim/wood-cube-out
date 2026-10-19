@@ -95,6 +95,9 @@ public class CurveManager : Singleton<CurveManager>
     public ProgressionConfig voyageDistanceConfig;
     public ProgressionConfig voyageRewardConfig;
 
+    [Header("Layer Two")]
+    public ProgressionConfig LayerTwoGlobalMultiplierConfig;
+
     // ----------------------------------------------------------------------
     // Preserved Usage Functions (Updated with Idle Math)
     // ----------------------------------------------------------------------
@@ -250,6 +253,13 @@ public class CurveManager : Singleton<CurveManager>
     public double GetVoyageReward(int time)
     {
         return GetProgressionValueDouble(voyageRewardConfig, time);
+    }
+    #endregion
+
+    #region Layer Two
+    public double GetLayerTwoGlobalMultiplier(int time)
+    {
+        return GetProgressionValueDouble(LayerTwoGlobalMultiplierConfig, time);
     }
     #endregion
 

@@ -114,6 +114,11 @@ public static class DataUtility
         Save(GameConstants.SAVE_FILE_NAME, key, data);
     }
 
+    public static void SaveToCurrentSaveSlot<T>(string key, T data)
+    {
+        Save(GameConstants.SAVE_FILE_NAME, SaveSlotManager.Ins.GetSaveKey(key), data);
+    }
+
     public async static Task SaveAsync<T>(string fileName, string key, T data)
     {
         Save(fileName, key, data);
@@ -197,6 +202,11 @@ public static class DataUtility
     public static T Load<T>(string key, T defaultValue)
     {
         return Load(GameConstants.SAVE_FILE_NAME, key, defaultValue);
+    }
+
+    public static T LoadCurrentSaveSlot<T>(string key, T defaultValue)
+    {
+        return Load(GameConstants.SAVE_FILE_NAME, SaveSlotManager.Ins.GetSaveKey(key), defaultValue);
     }
 
     public static async Task<T> LoadAsync<T>(string fileName, string key, T defaultValue)
