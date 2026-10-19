@@ -89,6 +89,8 @@ public class CurveManager : Singleton<CurveManager>
         linearStep = 0.1      // +10% efficiency per upgrade step
     };
 
+    public ProgressionConfig augmentMultiplierConfig = new ProgressionConfig();
+
     [Header("Voyage")]
     public ProgressionConfig voyageDistanceConfig;
     public ProgressionConfig voyageRewardConfig;
@@ -231,6 +233,11 @@ public class CurveManager : Singleton<CurveManager>
     public float GetAugmentEfficiency(AugmentLevel augmentLevel)
     {
         return GetProgressionValue(augmentEfficiencyConfig, (int)augmentLevel);
+    }
+
+    public float GetAugmentMultiplier(int starIndex)
+    {
+        return GetProgressionValue(augmentMultiplierConfig, starIndex);
     }
     #endregion
 

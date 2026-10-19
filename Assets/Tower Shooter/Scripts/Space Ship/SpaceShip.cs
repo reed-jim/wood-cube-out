@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using static GameEnum;
 
-public class SpaceShip : MonoBehaviour
+public class SpaceShip : Singleton<SpaceShip>
 {
     public Transform start;
     public Transform end;
@@ -38,8 +38,10 @@ public class SpaceShip : MonoBehaviour
 
     public static event Action<VoyageData> reachStarEvent;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         ReachStarPopup.goNextStarEvent += StartNewVoyage;
 
         InversedLightSpeedKmPerSecond = 1 / LightSpeedKmPerSecond;
@@ -191,7 +193,6 @@ public class SpaceShip : MonoBehaviour
 
         SaveVoyageData();
     }
-    #endregion
 
     public IEnumerator PeriodicallySaveVoyageData()
     {
@@ -204,6 +205,14 @@ public class SpaceShip : MonoBehaviour
             SaveVoyageData();
         }
     }
+    #endregion
+
+    #region Util
+    public int GetCurrentStarIndex()
+    {
+        return voyageData.starPathConfigIndex;
+    }
+    #endregion
 
     #region Debug
     [ContextMenu("FinishCurrentVoyageNow")]

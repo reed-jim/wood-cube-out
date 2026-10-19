@@ -50,8 +50,9 @@ public class Augment : ScriptableObject
         foreach (var modData in statModifiers)
         {
             float value = AugmentManager.Ins.GetAugmentEfficiency(this) * modData.value;
+            float scaledValue = AugmentManager.Ins.GetAugmentMultiplierBasedOnCurrentStar() * value;
 
-            characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, value, 0));
+            characterStats.AddModifier(new StatModifier(modData.statType, modData.modType, scaledValue, 0));
         }
 
         foreach (var effect in dynamicEffects)
@@ -89,29 +90,19 @@ public class Augment : ScriptableObject
         foreach (var mod in statModifiers)
         {
             string hex = config.GetHex(mod.statType);
-            string valHex = config.GetValueHex();
-            // string valHex;
 
             bool isPositive = mod.value >= 0;
 
             string sign = isPositive ? "+" : "";
 
-            // if (isPositive)
-            // {
-            //     valHex = ColorUtil.ColorToHex(DynamicThemeManager.Ins.CurrentTheme.success);
-            // }
-            // else
-            // {
-            //     valHex = ColorUtil.ColorToHex(DynamicThemeManager.Ins.CurrentTheme.error);
-            // }
-
             bool isFlat = mod.modType == ModifierType.Flat && !StatUtil.IsPercentStat(mod.statType);
 
-            string valStr = isFlat
-                ? $"{sign}{mod.value}"
-                : $"{sign}{mod.value * 100f}%";
+            float scaledValue = AugmentManager.Ins.GetAugmentMultiplierBasedOnCurrentStar() * mod.value;
 
-            // sb.AppendLine($"<color=#{valHex}>{valStr}</color> <color=#{hex}>{mod.statType}</color>");
+            string valStr = isFlat
+                ? $"{sign}{scaledValue}"
+                : $"{sign}{scaledValue * 100f}%";
+
             sb.AppendLine($"<size=130%><color=#{hex}>{valStr} {mod.statType}</color></size>");
         }
 

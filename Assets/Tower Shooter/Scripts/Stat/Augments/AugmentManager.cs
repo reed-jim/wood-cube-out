@@ -347,6 +347,15 @@ public class AugmentManager : Singleton<AugmentManager>
     }
     #endregion
 
+    #region Augment scale on current star
+    public float GetAugmentMultiplierBasedOnCurrentStar()
+    {
+        int starIndex = SpaceShip.Ins.GetCurrentStarIndex();
+        
+        return CurveManager.Ins.GetAugmentMultiplier(starIndex);
+    }
+    #endregion
+
     #region Util
     public Color GetStatColor(StatType statType)
     {
