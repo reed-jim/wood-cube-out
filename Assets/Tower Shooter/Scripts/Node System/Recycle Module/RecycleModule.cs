@@ -22,5 +22,7 @@ public class RecycleModule : MonoBehaviour
         }
 
         characterStats.AddModifier(statModifier);
+
+        PowerManager.Ins.GetTotalPowerOutputPerSecond();
     }
 }

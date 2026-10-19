@@ -7,6 +7,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
     private float timer;
     private float interval;
+    private bool isInitDone;
     private bool isUnlocked;
     private SpaceObjectType spaceObjectTypeToUnlock;
 
@@ -14,12 +15,14 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
     void Awake()
     {
+        FeatureUnlockManager.loadFeatureLockStateDataEvent += OnLoadFeatureLockStateData;
+
         LoadLayerTwoNodeGroupData();
     }
 
-    void Start()
+    void OnDestroy()
     {
-        Init();
+        FeatureUnlockManager.loadFeatureLockStateDataEvent -= OnLoadFeatureLockStateData;
     }
 
     private void Init()
@@ -36,11 +39,13 @@ public class LayerTwoNodeGroup : MonoBehaviour
         {
             serviceLocator.layerTwoNodeGroupUI.Lock();
         }
+
+        isInitDone = true;
     }
 
     void Update()
     {
-        if (!isUnlocked)
+        if (!isInitDone || !isUnlocked)
         {
             return;
         }
@@ -73,6 +78,11 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
             serviceLocator.layerTwoNodeGroupUI.SetProgress(progress);
         }
+    }
+
+    private void OnLoadFeatureLockStateData()
+    {
+        Init();
     }
 
     #region Save/Load   

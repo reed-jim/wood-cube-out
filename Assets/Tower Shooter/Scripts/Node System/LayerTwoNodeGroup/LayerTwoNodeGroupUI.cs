@@ -44,7 +44,10 @@ public class LayerTwoNodeGroupUI : MonoBehaviour
         }
         else
         {
-            IngameNotificationManager.Ins.ShowNotification($"Reach {serviceLocator.layerTwoNodeGroup.GetSpaceObjectTypeToUnlock()} to unlock this!");
+            string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+            IngameNotificationManager.Ins.
+                ShowNotification($"Reach <color={primaryHex}>{serviceLocator.layerTwoNodeGroup.GetSpaceObjectTypeToUnlock()}</color> to unlock this!");
         }
     }
 

@@ -24,14 +24,28 @@ public class PowerManager : Singleton<PowerManager>
     private float updateTimer = 0f;
     private const float updateInterval = 1f / 24; // Update once per second
 
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        NodeManager.nodeManagerInitEvent += OnNodeManagerInit;
+    }
+
+    void OnDestroy()
+    {
+        NodeManager.nodeManagerInitEvent -= OnNodeManagerInit;
+    }
+
     void Start()
     {
         pulseTween = Tween.ShakeScale(
             target: totalPowerText.transform,
-            strength: 0.05f * Vector3.one,
+            strength: 0.1f * Vector3.one,
             duration: duration,
             cycles: -1
         );
+
+        primaryHex = DynamicThemeManager.Ins.PrimaryHex;
     }
 
     void Update()
@@ -93,8 +107,6 @@ public class PowerManager : Singleton<PowerManager>
 
     public void ShowTotalPowerOutputPerSecond()
     {
-        primaryHex = DynamicThemeManager.Ins.PrimaryHex;
-
         string notificationString =
             $"Power Output: <color={primaryHex}>{TextUtil.FormatFloat(GetTotalPowerOutputPerSecond())} <sprite=0 color={primaryHex}>/s";
 
@@ -113,5 +125,10 @@ public class PowerManager : Singleton<PowerManager>
         }
 
         return spaceShipSpeedMultiplier * totalSpeed;
+    }
+
+    private void OnNodeManagerInit()
+    {
+        GetTotalPowerOutputPerSecond();
     }
 }
