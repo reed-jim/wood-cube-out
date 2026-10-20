@@ -64,7 +64,7 @@ public class NodeEffectController : MonoBehaviour
 
     void Update()
     {
-        SetSpeed(serviceLocator.stats.GetStat(StatType.AttackSpeed).Value);
+        SetSpeed(serviceLocator.stats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier);
 
         // if (materialInstance == null) return;
 

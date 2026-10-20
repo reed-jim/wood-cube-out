@@ -61,8 +61,10 @@ public class PowerManager : Singleton<PowerManager>
             double deltaChange = powerOutputPerSecond * updateInterval;
             double value = ResourceManager.Ins.ChangeResource(ResourceType.Coin, deltaChange);
 
-            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{CommonUtil.FormatNumber(value)}";
-            powerOutputPerSecondText.text = $"+{CommonUtil.FormatNumber(powerOutputPerSecond)}<sprite=0 color={primaryHex}>/s";
+            string powerOutputPerSecondString = $"+{CommonUtil.FormatNumber(powerOutputPerSecond)}/s";
+
+            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{CommonUtil.FormatNumber(value)} ({powerOutputPerSecondString})";
+            // powerOutputPerSecondText.text = $"+{CommonUtil.FormatNumber(powerOutputPerSecond)}<sprite=0 color={primaryHex}>/s";
 
             // --- Percentage-Based Shake Logic ---
             if (previousTotalValue > 0)
