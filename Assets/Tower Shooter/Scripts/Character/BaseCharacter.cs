@@ -33,6 +33,9 @@ public class BaseCharacter : MonoBehaviour
     private Transform initialParent;
     private int siblingIndex;
 
+    [Header("Effect")]
+    public NodeEffectController nodeEffectController;
+
     [Header("Energy Path")]
     public List<Vector2> energyPoints;
 
@@ -241,6 +244,9 @@ public class BaseCharacter : MonoBehaviour
                     Tween progressTween = Tween.Custom(0f, 1f, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
                     {
                         circleProgress.fillAmount = newVal;
+
+                        nodeEffectController.SetProgress(newVal);
+
                         UpdateShaderProperties(newVal, highSpeedVisualFactor, Time.time * speed);
                     });
 
@@ -307,6 +313,8 @@ public class BaseCharacter : MonoBehaviour
 
     private void UpdateShaderProperties(float fillAmount, float highSpeedAmount, float rotation)
     {
+        return;
+
         if (instanceMaterial == null) return;
 
         instanceMaterial.SetFloat(FillAmountID, fillAmount);

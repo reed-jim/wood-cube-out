@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class NodeEffectController : MonoBehaviour
 {
+    [Header("UI")]
+    [SerializeField] private Image uiImage;
+
     [Header("Live Drive Parameters")]
     [Range(0f, 1f)]
     [SerializeField] private float progress = 0.0f;
@@ -25,7 +28,7 @@ public class NodeEffectController : MonoBehaviour
     public bool bottomRightNodeUnlocked = false;
 
     private Material materialInstance;
-    
+
     // Internal smoothing velocities
     private float progressVelocity;
     private float speedVelocity;
@@ -40,7 +43,6 @@ public class NodeEffectController : MonoBehaviour
 
     void Awake()
     {
-        Image uiImage = GetComponent<Image>();
         if (uiImage != null && uiImage.material != null)
         {
             materialInstance = new Material(uiImage.material);
