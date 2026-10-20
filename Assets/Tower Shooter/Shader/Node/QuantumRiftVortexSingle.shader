@@ -48,7 +48,8 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
         Lighting Off
         ZWrite Off
         ZTest [unity_GUIZTestMode]
-        Blend SrcAlpha OneMinusSrcAlpha
+        // Premultiplied Alpha Blending to completely eliminate dark halos
+        Blend One OneMinusSrcAlpha
         ColorMask [_ColorMask]
 
         Pass
@@ -103,71 +104,70 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 return output;
             }
 
-            void evaluateTier(int tier, float2 st, float dist, float angle, float autoRotation, out float pattern, out float3 tierColor)
+            void evaluateTier(int tier, float2 st, float dist, float angle, float autoRotation, float3 baseColor, float3 rimColor, out float pattern, out float3 tierColor)
             {
                 pattern = 0.0;
-                tierColor = _Color.rgb;
+                tierColor = baseColor;
 
                 if (tier == 0) 
                 {
                     pattern = sin(angle * 2.0 + dist * _Layers - autoRotation) * 0.5 + 0.5;
-                    tierColor = _Color.rgb;
+                    tierColor = baseColor * 1.5;
                 } 
                 else if (tier == 1) 
                 {
                     pattern = sin(angle * 4.0 - dist * (_Layers * 1.5) + autoRotation * 1.2) * 0.5 + 0.5;
-                    tierColor = float3(0.1, 0.9, 0.5);
+                    tierColor = lerp(baseColor, float3(0.0, 1.8, 0.8), 0.6);
                 } 
                 else if (tier == 2) 
                 {
                     float s = cos(angle * 3.0) * sin(dist * 20.0 - autoRotation);
                     pattern = s * 0.5 + 0.5;
-                    tierColor = float3(0.9, 0.3, 1.0);
+                    tierColor = lerp(rimColor, float3(2.0, 0.2, 1.8), 0.7);
                 } 
                 else if (tier == 3) 
                 {
                     float s1 = sin(angle * 4.0 + autoRotation);
                     float c1 = cos(angle * 4.0 - autoRotation);
                     pattern = saturate(abs(s1 * c1) * sin(dist * 25.0) * 2.0);
-                    tierColor = float3(1.0, 0.5, 0.1);
+                    tierColor = lerp(baseColor, float3(2.5, 1.0, 0.2), 0.7);
                 } 
                 else if (tier == 4) 
                 {
                     pattern = sin(dist * 40.0 - autoRotation * 2.0) * 0.5 + 0.5;
-                    tierColor = float3(0.0, 1.0, 0.9);
+                    tierColor = lerp(rimColor, float3(0.0, 2.2, 2.5), 0.8);
                 } 
                 else if (tier == 5) 
                 {
                     pattern = abs(sin(angle * 8.0 + autoRotation * 1.5));
-                    tierColor = float3(1.0, 0.1, 0.3);
+                    tierColor = float3(2.5, 0.2, 0.6);
                 } 
                 else if (tier == 6) 
                 {
                     float hex = sin(angle * 6.0 - dist * 30.0 + autoRotation) * cos(dist * 15.0);
                     pattern = hex * 0.5 + 0.5;
-                    tierColor = float3(0.5, 0.2, 1.0);
+                    tierColor = lerp(baseColor, float3(1.0, 0.3, 2.5), 0.7);
                 } 
                 else if (tier == 7) 
                 {
                     pattern = sin(angle * 10.0 + sin(dist * 20.0) * 5.0 - autoRotation * 2.0) * 0.5 + 0.5;
-                    tierColor = float3(0.9, 0.9, 0.1);
+                    tierColor = float3(2.2, 2.2, 0.2);
                 } 
                 else if (tier == 8) 
                 {
                     pattern = pow(abs(sin(angle * 5.0 - dist * 40.0 + autoRotation * 3.0)), 0.5);
-                    tierColor = float3(0.1, 1.0, 1.0);
+                    tierColor = float3(0.2, 2.5, 2.5);
                 } 
                 else 
                 {
                     float sing = sin(angle * 12.0 * dist * 15.0 - autoRotation * 5.0) * 0.5 + 0.5;
                     pattern = pow(sing, 2.0);
-                    tierColor = float3(2.0, 2.0, 2.5);
+                    tierColor = float3(3.0, 3.0, 3.5);
                 }
             }
 
             half4 frag(Varyings input) : SV_Target
             {
-                // Pure unwarped center coordinates for UI bounds checking
                 float2 st = input.uv - 0.5;
                 float centerDist = length(st);
                 
@@ -183,19 +183,18 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 // --- AUTO ROTATION ---
                 float autoRotation = _Time.y * _CycleSpeed * TWO_PI * (1.0 + pNorm * 5.0);
 
-                // --- DOMAIN WARPING (Applied only to internal pattern calculation) ---
-                float warpMag = pExp * 0.3;
-                float warpWave = sin(length(st * 20.0) - autoRotation * 2.0) * warpMag;
+                // --- DOMAIN WARPING ---
+                float warpMag = pExp * 0.15;
+                float warpWave = sin(length(st * 15.0) - autoRotation * 2.0) * warpMag;
                 float2 warpedSt = st + (st * warpWave);
 
                 float warpedDist = length(warpedSt);
                 float angle = atan2(warpedSt.y, warpedSt.x);
 
-                // --- EVALUATE ADJACENT TIERS & SMOOTHLY BLEND ---
                 float patA, patB;
                 float3 colA, colB;
-                evaluateTier(tierA, warpedSt, warpedDist, angle, autoRotation, patA, colA);
-                evaluateTier(tierB, warpedSt, warpedDist, angle, autoRotation, patB, colB);
+                evaluateTier(tierA, warpedSt, warpedDist, angle, autoRotation, _Color.rgb, _RimColor.rgb, patA, colA);
+                evaluateTier(tierB, warpedSt, warpedDist, angle, autoRotation, _Color.rgb, _RimColor.rgb, patB, colB);
 
                 float pattern = lerp(patA, patB, tierMix);
                 float3 tierColor = lerp(colA, colB, tierMix);
@@ -203,10 +202,11 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float coreVoid = smoothstep(_EventHorizon - 0.03, _EventHorizon + 0.08, warpedDist);
                 float photonRim = smoothstep(0.03, 0.0, abs(warpedDist - _EventHorizon));
 
-                // --- 1. NORMAL VORTEX STATE ---
-                float3 vortexColor = lerp(tierColor * 0.2, tierColor * 2.0, pattern);
-                vortexColor *= (1.0 - coreVoid) * (1.0 + pNorm * 3.0);
-                vortexColor += _RimColor.rgb * photonRim * 4.0;
+                // --- 1. NORMAL VORTEX STATE (High Vividness & Contrast) ---
+                float highContrastPattern = pow(saturate(pattern), 1.8);
+                float3 vortexColor = lerp(_RimColor.rgb * 0.2, tierColor * 3.5, highContrastPattern);
+                vortexColor *= (1.0 - coreVoid * 0.6) * (1.0 + pNorm * 4.0);
+                vortexColor += _RimColor.rgb * photonRim * 8.0;
 
                 // --- 2. HIGH-SPEED HYPER-DRIVE STATE ---
                 float tunnelFreq = 60.0 + (pNorm * 100.0);
@@ -214,16 +214,18 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float starRays = pow(saturate(sin(angle * 16.0 + autoRotation)), 6.0);
                 
                 float whiteHotCore = smoothstep(0.35, 0.0, warpedDist);
-                float3 hyperColor = lerp(_RimColor.rgb, float3(2.5, 2.5, 2.5), hyperspaceTunnel + starRays);
-                hyperColor += hyperColor * (3.0 + whiteHotCore * 8.0);
+                float3 hyperColor = lerp(_RimColor.rgb, float3(3.0, 3.0, 3.5), hyperspaceTunnel + starRays);
+                hyperColor += hyperColor * (4.0 + whiteHotCore * 10.0);
 
                 // --- 3. BLEND STATES ---
                 float3 finalColor = lerp(vortexColor, hyperColor, saturate(_HighSpeedTransition));
                 
-                // --- ROBUST UNWARPED EDGE FADE (Guarantees zero sharp border cuts) ---
-                // Fades smoothly from radius 0.48 down to 0.38 to ensure clean boundaries inside the UI Image square bounds (0.5 max)
-                float edgeFade = smoothstep(0.48, 0.38, centerDist);
-                float alpha = edgeFade * saturate(pattern * 1.5 + photonRim * 2.0 + (1.0 - coreVoid) * 0.5);
+                // --- CLEAN CIRCULAR MASK ---
+                float circularMask = smoothstep(0.48, 0.38, centerDist);
+                float alpha = circularMask * saturate(pattern * 0.8 + photonRim * 2.0 + 0.5);
+
+                // --- PREMULTIPLY COLOR WITH ALPHA ---
+                finalColor *= alpha;
 
                 half4 col = half4(finalColor, alpha);
 
