@@ -47,29 +47,37 @@ public class DataManager : Singleton<DataManager>
 
         defaultNodeGroup.nodeDataItems = new List<NodeData>();
 
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                NodeData nodeData = new NodeData();
+        NodeData nodeData = new NodeData();
 
-                if (i == 0 && j == 0)
-                {
-                    nodeData.isUnlocked = true;
-                }
-                else
-                {
-                    nodeData.isUnlocked = false;
-                }
+        nodeData.isUnlocked = true;
+        nodeData.recycleModuleRate = 0.001f;
+        nodeData.powerTierGrowthFactor = 1.1f;
 
-                nodeData.coordinate = new Vector2Int(j, i);
+        defaultNodeGroup.nodeDataItems.Add(nodeData);
 
-                nodeData.recycleModuleRate = 0.001f;
-                nodeData.powerTierGrowthFactor = 1.1f;
+        // for (int i = -1; i <= 1; i++)
+        // {
+        //     for (int j = -1; j <= 1; j++)
+        //     {
+        //         NodeData nodeData = new NodeData();
 
-                defaultNodeGroup.nodeDataItems.Add(nodeData);
-            }
-        }
+        //         if (i == 0 && j == 0)
+        //         {
+        //             nodeData.isUnlocked = true;
+        //         }
+        //         else
+        //         {
+        //             nodeData.isUnlocked = false;
+        //         }
+
+        //         nodeData.coordinate = new Vector2Int(j, i);
+
+        //         nodeData.recycleModuleRate = 0.001f;
+        //         nodeData.powerTierGrowthFactor = 1.1f;
+
+        //         defaultNodeGroup.nodeDataItems.Add(nodeData);
+        //     }
+        // }
 
         defaultGameData.nodeGroupDataItems.Add(defaultNodeGroup);
 

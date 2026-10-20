@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class NodeEffectController : MonoBehaviour
 {
+    [SerializeField] private CharacterServiceLocator serviceLocator;
+
     [Header("UI")]
     [SerializeField] private Image uiImage;
 
@@ -62,40 +64,42 @@ public class NodeEffectController : MonoBehaviour
 
     void Update()
     {
-        if (materialInstance == null) return;
+        SetSpeed(serviceLocator.stats.GetStat(StatType.AttackSpeed).Value);
 
-        // 1. Handle Smooth Transitions
-        if (smoothTransitions)
-        {
-            progress = Mathf.SmoothDamp(progress, targetProgress, ref progressVelocity, transitionSmoothTime);
-            vortexSpeed = Mathf.SmoothDamp(vortexSpeed, targetSpeed, ref speedVelocity, transitionSmoothTime);
-        }
-        else
-        {
-            progress = targetProgress;
-            vortexSpeed = targetSpeed;
-        }
+        // if (materialInstance == null) return;
 
-        // 2. Only update Progress if it changed (using an epsilon threshold to avoid float jitter)
-        if (Mathf.Abs(progress - lastAppliedProgress) > 0.0001f)
-        {
-            materialInstance.SetFloat("_Progress", progress);
-            lastAppliedProgress = progress;
-        }
+        // // 1. Handle Smooth Transitions
+        // if (smoothTransitions)
+        // {
+        //     progress = Mathf.SmoothDamp(progress, targetProgress, ref progressVelocity, transitionSmoothTime);
+        //     vortexSpeed = Mathf.SmoothDamp(vortexSpeed, targetSpeed, ref speedVelocity, transitionSmoothTime);
+        // }
+        // else
+        // {
+        //     progress = targetProgress;
+        //     vortexSpeed = targetSpeed;
+        // }
 
-        // 3. Only update Spin Speed if it changed
-        if (Mathf.Abs(vortexSpeed - lastAppliedSpeed) > 0.001f)
-        {
-            materialInstance.SetFloat("_VortexSpeed", vortexSpeed);
-            lastAppliedSpeed = vortexSpeed;
-        }
+        // // 2. Only update Progress if it changed (using an epsilon threshold to avoid float jitter)
+        // if (Mathf.Abs(progress - lastAppliedProgress) > 0.0001f)
+        // {
+        //     materialInstance.SetFloat("_Progress", progress);
+        //     lastAppliedProgress = progress;
+        // }
 
-        // 4. Only update Node States if a node has been modified
-        if (nodesDirty)
-        {
-            ApplyNodeStates();
-            nodesDirty = false;
-        }
+        // // 3. Only update Spin Speed if it changed
+        // if (Mathf.Abs(vortexSpeed - lastAppliedSpeed) > 0.001f)
+        // {
+        //     materialInstance.SetFloat("_VortexSpeed", vortexSpeed);
+        //     lastAppliedSpeed = vortexSpeed;
+        // }
+
+        // // 4. Only update Node States if a node has been modified
+        // if (nodesDirty)
+        // {
+        //     ApplyNodeStates();
+        //     nodesDirty = false;
+        // }
     }
 
     private void ApplyNodeStates()
@@ -138,6 +142,16 @@ public class NodeEffectController : MonoBehaviour
     {
         targetProgress = Mathf.Clamp01(newProgress);
         if (!smoothTransitions) progress = targetProgress;
+    }
+
+    public void SetPower(float power)
+    {
+        materialInstance.SetFloat("_Power", power);
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        materialInstance.SetFloat("_CycleSpeed", newSpeed);
     }
 
     public void SetSpinSpeed(float newSpeed)

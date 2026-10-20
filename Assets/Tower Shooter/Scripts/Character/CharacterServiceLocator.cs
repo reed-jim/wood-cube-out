@@ -10,6 +10,7 @@ public class CharacterServiceLocator : MonoBehaviour
     public LazyHealthBar lazyHealthBar;
     public StackingUI stackingUI;
     public RecycleModule recycleModule;
+    public NodeEffectController nodeEffectController;
 
     #region Augment Runtime
     [Header("Augment Runtime")]

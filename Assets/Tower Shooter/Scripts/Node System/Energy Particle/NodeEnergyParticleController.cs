@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,8 +6,11 @@ public class NodeEnergyParticleController : Singleton<NodeEnergyParticleControll
 {
     [Header("UI")]
     [SerializeField] private Image uiImage;
+    [SerializeField] private TMP_Text multiplierText;
 
     private Material materialInstance;
+
+    private string primaryHex;
 
     // Cache the shader property ID for performance
     private static readonly int PowerProp = Shader.PropertyToID("_Power");
@@ -41,5 +45,12 @@ public class NodeEnergyParticleController : Singleton<NodeEnergyParticleControll
     public void SetPower(float power)
     {
         materialInstance.SetFloat(PowerProp, power);
+    }
+
+    public void SetMultiplier(double multiplier)
+    {
+        primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+        multiplierText.text = $"x{CommonUtil.FormatNumber(multiplier)} <sprite=0 color={primaryHex}>/s";
     }
 }

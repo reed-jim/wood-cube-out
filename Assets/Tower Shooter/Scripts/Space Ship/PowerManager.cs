@@ -143,9 +143,15 @@ public class PowerManager : Singleton<PowerManager>
 
         double nodePower = mainNode.serviceLocator.stats.GetStat(StatType.Damage).Value;
 
-        powerOutputPerSecond *= GetPowerMultiplierBasedOnTier(mainNode, GetPowerTier(nodePower));
+        double powerMultiplier = GetPowerMultiplierBasedOnTier(mainNode, GetPowerTier(nodePower));
 
-        NodeEnergyParticleController.Ins.SetPower(GetPowerProgressForShader(nodePower));
+        powerOutputPerSecond *= powerMultiplier;
+
+        float powerProgressForShader = GetPowerProgressForShader(nodePower);
+
+        mainNode.serviceLocator.nodeEffectController.SetPower(powerProgressForShader);
+        NodeEnergyParticleController.Ins.SetPower(powerProgressForShader);
+        NodeEnergyParticleController.Ins.SetMultiplier(powerMultiplier);
 
         return powerOutputPerSecond;
     }
