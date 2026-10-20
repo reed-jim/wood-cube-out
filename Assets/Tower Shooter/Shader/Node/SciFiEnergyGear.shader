@@ -1,16 +1,31 @@
-Shader "UI/Custom/SingularityGear"
+Shader "UI/Custom/SingularityGearGrid"
 {
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Primary Energy Color", Color) = (0.1, 0.7, 1.0, 1.0)
         _AccentColor ("Accretion Color", Color) = (1.0, 0.2, 0.5, 1.0)
+        _LockedColor ("Locked Node Color", Color) = (0.2, 0.2, 0.25, 0.5)
         
+        [Header(Grid Control)]
+        _Progress ("Animation Progress", Range(0.0, 1.0)) = 0.0
+        _Rotations ("Total Center Rotations", Float) = 2.0
+        
+        [Header(Node Unlock States)]
+        _Node_0_0 ("Top-Left Corner", Range(0,1)) = 0
+        _Node_1_0 ("Top Cardinal", Range(0,1)) = 0
+        _Node_2_0 ("Top-Right Corner", Range(0,1)) = 0
+        _Node_0_1 ("Left Cardinal", Range(0,1)) = 0
+        _Node_1_1 ("Center Node (Driver)", Range(0,1)) = 1
+        _Node_2_1 ("Right Cardinal", Range(0,1)) = 0
+        _Node_0_2 ("Bottom-Left Corner", Range(0,1)) = 0
+        _Node_1_2 ("Bottom Cardinal", Range(0,1)) = 0
+        _Node_2_2 ("Bottom-Right Corner", Range(0,1)) = 0
+
         [Header(Singularity Dynamics)]
         _NodeCount ("Quantum Nodes", Range(3, 12)) = 6
         _WarpIntensity ("Spacetime Distortion", Range(0.0, 2.0)) = 0.8
         _EventHorizon ("Black Hole Horizon", Range(0.05, 0.3)) = 0.15
-        _PhaseSpeed ("Phase Shift Speed", Float) = 2.0
         
         // Stencil / UI Canvas properties
         _StencilComp ("Stencil Comparison", Float) = 8
@@ -52,14 +67,13 @@ Shader "UI/Custom/SingularityGear"
 
         Pass
         {
-            Name "UI_SingularityGear"
+            Name "UI_SingularityGearGrid"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma target 3.0
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
             #pragma shader_feature_local _USEUIALPHACLIP_ON
 
             struct Attributes
@@ -81,10 +95,15 @@ Shader "UI/Custom/SingularityGear"
             CBUFFER_START(UnityPerMaterial)
                 float4 _Color;
                 float4 _AccentColor;
+                float4 _LockedColor;
+                float _Progress;
+                float _Rotations;
+                float _Node_0_0, _Node_1_0, _Node_2_0;
+                float _Node_0_1, _Node_1_1, _Node_2_1;
+                float _Node_0_2, _Node_1_2, _Node_2_2;
                 float _NodeCount;
                 float _WarpIntensity;
                 float _EventHorizon;
-                float _PhaseSpeed;
             CBUFFER_END
 
             #define PI 3.14159265359
@@ -102,79 +121,111 @@ Shader "UI/Custom/SingularityGear"
                 return output;
             }
 
-            // Smooth procedural min for fluid energy blending
-            float smin(float a, float b, float k)
+            half4 renderGear(float2 st, float angleOffset, float rotationDirection, float isUnlocked)
             {
-                float h = saturate(0.5 + 0.5 * (b - a) / k);
-                return lerp(b, a, h) - k * h * (1.0 - h);
+                float dist = length(st);
+                float angle = atan2(st.y, st.x);
+
+                // If locked, freeze rotation progress and render dormant state
+                float activeProgress = isUnlocked > 0.5 ? _Progress : 0.0;
+                float totalRotation = (activeProgress * _Rotations * TWO_PI * rotationDirection) + angleOffset;
+                
+                // 1. Spacetime Distortion
+                float warpFactor = pow(saturate(1.0 - dist), 3.0) * _WarpIntensity;
+                float distortedAngle = angle + warpFactor * sin(totalRotation);
+
+                // 2. Quantum Nodes / Teeth Field
+                float tier1Angle = distortedAngle + totalRotation * 0.5;
+                float tier2Angle = distortedAngle - totalRotation * 0.8;
+                float nodes1 = cos(tier1Angle * _NodeCount);
+                float nodes2 = sin(tier2Angle * (_NodeCount * 0.5));
+                float energyField = lerp(nodes1, nodes2, 0.5);
+                
+                float gearBoundary = 0.35 + energyField * 0.08 * sin(totalRotation * 2.0 + dist * 10.0);
+                float teethAlpha = smoothstep(gearBoundary + 0.02, gearBoundary - 0.01, dist);
+
+                // 3. Event Horizon & Photon Ring
+                float horizonMask = smoothstep(_EventHorizon - 0.01, _EventHorizon + 0.01, dist);
+                float photonRing = smoothstep(0.02, 0.0, abs(dist - _EventHorizon));
+
+                // 4. Accretion Rays
+                float rays = sin(angle * _NodeCount * 2.0 + totalRotation * 3.0) * 0.5 + 0.5;
+                float pulseRings = frac(dist * 8.0 - totalRotation * 0.5);
+                float accretionGlow = rays * (1.0 - pulseRings) * step(dist, gearBoundary);
+
+                // 5. Coloring & State Handling
+                float3 finalColor = float3(0,0,0);
+                float alpha = 0;
+
+                if (isUnlocked > 0.5)
+                {
+                    // Unlocked Active State
+                    float3 primaryCol = _Color.rgb;
+                    float3 accentCol = _AccentColor.rgb;
+
+                    finalColor += lerp(primaryCol, accentCol, energyField * 0.5 + 0.5) * teethAlpha;
+                    finalColor += accentCol * photonRing * 2.5;
+                    finalColor += primaryCol * accretionGlow * 0.7;
+                    finalColor *= horizonMask;
+                    alpha = saturate((teethAlpha + photonRing) * horizonMask);
+                }
+                else
+                {
+                    // Locked Standby State (Dim outline, inactive core)
+                    float dormantOutline = smoothstep(0.36, 0.34, dist) * smoothstep(_EventHorizon, _EventHorizon + 0.02, dist);
+                    finalColor = _LockedColor.rgb * dormantOutline;
+                    alpha = dormantOutline * _LockedColor.a;
+                }
+
+                return half4(finalColor, alpha);
             }
 
             half4 frag(Varyings input) : SV_Target
             {
-                // Re-center UV to [-0.5, 0.5]
-                float2 st = input.uv - 0.5;
-                float dist = length(st);
-                float angle = atan2(st.y, st.x);
+                // Scale UV into 3x3 grid cells [0, 3)
+                float2 gridUV = input.uv * 3.0;
+                float2 cellID = floor(gridUV); // Grid coordinates (0 to 2)
+                float2 localUV = frac(gridUV) - 0.5; // Local cell space [-0.5, 0.5]
 
-                // --- 1. Non-Euclidean Gravitational UV Warp ---
-                // Warps the coordinate space inward as it approaches the center
-                float warpFactor = pow(saturate(1.0 - dist), 3.0) * _WarpIntensity;
-                float distortedAngle = angle + warpFactor * sin(_Time.y * _PhaseSpeed);
+                int cx = int(cellID.x);
+                int cy = int(cellID.y);
 
-                // --- 2. Quantized Phase-Shifted "Teeth" Nodes ---
-                // Creates energy tendrils that rotate at varying speeds depending on radius
-                float tier1Angle = distortedAngle + _Time.y * _PhaseSpeed * 0.5;
-                float tier2Angle = distortedAngle - _Time.y * _PhaseSpeed * 0.8;
+                // Clamp grid bounds
+                if (cx < 0 || cx > 2 || cy < 0 || cy > 2)
+                    return half4(0,0,0,0);
 
-                float nodes1 = cos(tier1Angle * _NodeCount);
-                float nodes2 = sin(tier2Angle * (_NodeCount * 0.5));
+                // Determine rotation direction based on checkerboard rule
+                float rotationDir = 1.0;
+                if (cx == 1 && cy == 1) rotationDir = 1.0;
+                else if ((cx + cy) % 2 == 1) rotationDir = -1.0;
+                else rotationDir = 1.0;
 
-                // Form spatial field for energy teeth
-                float energyField = lerp(nodes1, nodes2, 0.5);
-                
-                // Construct gear boundary using non-linear math
-                float gearBoundary = 0.35 + energyField * 0.08 * sin(_Time.y * 2.0 + dist * 10.0);
-                
-                // Mask for the gear teeth
-                float teethAlpha = smoothstep(gearBoundary + 0.02, gearBoundary - 0.01, dist);
+                // Lookup unlock state for this specific cell coordinate
+                float isUnlocked = 0.0;
+                if      (cx == 0 && cy == 0) isUnlocked = _Node_0_0;
+                else if (cx == 1 && cy == 0) isUnlocked = _Node_1_0;
+                else if (cx == 2 && cy == 0) isUnlocked = _Node_2_0;
+                else if (cx == 0 && cy == 1) isUnlocked = _Node_0_1;
+                else if (cx == 1 && cy == 1) isUnlocked = _Node_1_1;
+                else if (cx == 2 && cy == 1) isUnlocked = _Node_2_1;
+                else if (cx == 0 && cy == 2) isUnlocked = _Node_0_2;
+                else if (cx == 1 && cy == 2) isUnlocked = _Node_1_2;
+                else if (cx == 2 && cy == 2) isUnlocked = _Node_2_2;
 
-                // --- 3. Event Horizon (Black Hole Center) ---
-                // Sharp cut-out at the center with a light-bending edge
-                float horizonMask = smoothstep(_EventHorizon - 0.01, _EventHorizon + 0.01, dist);
-                float photonRing = smoothstep(0.02, 0.0, abs(dist - _EventHorizon));
+                half4 gearCol = renderGear(localUV, 0.0, rotationDir, isUnlocked);
 
-                // --- 4. Accretion Pulse Rays ---
-                float rays = sin(angle * _NodeCount * 2.0 + _Time.y * 3.0) * 0.5 + 0.5;
-                float pulseRings = frac(dist * 8.0 - _Time.y * 0.5);
-                float accretionGlow = rays * (1.0 - pulseRings) * step(dist, gearBoundary);
+                // Discard outside individual gear radius
+                float cellDist = length(localUV);
+                if (cellDist > 0.48) gearCol = half4(0,0,0,0);
 
-                // --- 5. Color Compositing ---
-                float3 primaryCol = _Color.rgb * input.color.rgb;
-                float3 accentCol = _AccentColor.rgb;
-
-                float3 finalColor = float3(0,0,0);
-
-                // Main body with chromatic core shift
-                finalColor += lerp(primaryCol, accentCol, energyField * 0.5 + 0.5) * teethAlpha;
-                
-                // Add photon ring bloom at black hole edge
-                finalColor += accentCol * photonRing * 2.5;
-
-                // Add accretion ray highlights
-                finalColor += primaryCol * accretionGlow * 0.7;
-
-                // Black hole mask (absorbs all inner light)
-                finalColor *= horizonMask;
-
-                // --- 6. Final Transparency & Canvas Clipping ---
-                float alpha = saturate((teethAlpha + photonRing) * horizonMask);
-                alpha *= input.color.a;
+                gearCol.rgb *= input.color.rgb;
+                gearCol.a *= input.color.a;
 
                 #ifdef _USEUIALPHACLIP_ON
-                clip(alpha - 0.001);
+                clip(gearCol.a - 0.001);
                 #endif
 
-                return half4(finalColor, alpha);
+                return gearCol;
             }
             ENDHLSL
         }
