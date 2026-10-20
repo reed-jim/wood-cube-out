@@ -34,6 +34,7 @@ public class PowerManager : Singleton<PowerManager>
     private float shakeIntensity = 0f;
     private float shakeTimer = 0f;
     private double previousTotalValue = -1;
+    private string previousDisplayText = "";
 
     private double powerOutputPerSecond;
     private string primaryHex;
@@ -41,7 +42,7 @@ public class PowerManager : Singleton<PowerManager>
     private string primaryContainerHex;
 
     private float updateTimer = 0f;
-    private const float updateInterval = 1f / 3; // Update once per second
+    private const float updateInterval = 1f / 5; // Update once per second
 
     protected override void MoreActionOnAwake()
     {
@@ -69,9 +70,6 @@ public class PowerManager : Singleton<PowerManager>
     {
         updateTimer += Time.deltaTime;
 
-        // Cache the previous value before we check for changes
-        double oldDisplayValue = previousTotalValue;
-
         if (updateTimer >= updateInterval)
         {
             updateTimer = 0f;
@@ -79,34 +77,39 @@ public class PowerManager : Singleton<PowerManager>
             double deltaChange = powerOutputPerSecond * updateInterval;
             double value = ResourceManager.Ins.ChangeResource(ResourceType.Coin, deltaChange);
 
-            string powerOutputPerSecondString = $"+{CommonUtil.FormatNumber(powerOutputPerSecond)}/s";
-            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{CommonUtil.FormatNumber(value)} <color={primaryContainerHex}>({powerOutputPerSecondString})";
+            string powerOutputPerSecondString = $"<size=75%>+{CommonUtil.FormatNumber(powerOutputPerSecond)}/s</size>";
 
+            // Build the current formatted text representation
+            string currentDisplayText = CommonUtil.FormatNumber(value);
+            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{currentDisplayText} ({powerOutputPerSecondString})";
+
+            // --- Visual-Change Check ---
+            // Only trigger feedback if the formatted string on screen actually changed!
+            if (!string.IsNullOrEmpty(previousDisplayText) && currentDisplayText != previousDisplayText)
+            {
+                // Optional: You can still calculate a rough percent change for strength if needed, 
+                // or use a steady pop since we know a digit/suffix just flipped.
+                double absoluteChange = value - previousTotalValue;
+                double percentChange = previousTotalValue > 0 ? absoluteChange / previousTotalValue : 0.01;
+                float punchStrength = Mathf.Clamp((float)(percentChange * 15f), 0.05f, 0.1f);
+
+                // Stop any active tween immediately
+                textTween.Stop();
+
+                // 1. Instantly pop to the expanded scale the exact frame the text changes
+                totalPowerText.transform.localScale = originalScale + Vector3.one * punchStrength;
+
+                // 2. Tween back down smoothly to the original scale
+                textTween = Tween.Scale(
+                    target: totalPowerText.transform,
+                    endValue: originalScale,
+                    duration: 2 * updateInterval,
+                    ease: Ease.OutBack
+                );
+            }
+
+            previousDisplayText = currentDisplayText;
             previousTotalValue = value;
-        }
-
-        // --- Immediate Scale Feedback on Value Change ---
-        // If you want it to trigger the exact frame the resource/value changes:
-        if (previousTotalValue > 0 && previousTotalValue != oldDisplayValue)
-        {
-            double absoluteChange = previousTotalValue - oldDisplayValue;
-            double percentChange = absoluteChange / previousTotalValue;
-
-            // Calculate strength based on delta magnitude
-            float punchStrength = Mathf.Clamp((float)(percentChange * 30f), 0.0f, 0.15f);
-
-            // Stop any active tween immediately
-            textTween.Stop();
-
-            // 1. Instantly pop to the expanded scale the exact frame it changes
-            totalPowerText.transform.localScale = originalScale + Vector3.one * punchStrength;
-
-            // 2. Tween back down smoothly to the original scale
-            textTween = Tween.Scale(
-                target: totalPowerText.transform,
-                endValue: originalScale,
-                duration: updateInterval
-            );
         }
     }
 
