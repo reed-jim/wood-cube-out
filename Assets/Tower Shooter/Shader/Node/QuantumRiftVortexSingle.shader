@@ -171,7 +171,10 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float2 st = input.uv - 0.5;
                 float centerDist = length(st);
                 
-                float powerTierVal = saturate(_Power / 100.0) * 9.0;
+                // Tier mapping with 100-power safety check
+                float normalizedPower = min(_Power / 100.0, 0.9999);
+                float powerTierVal = normalizedPower * 9.0;
+                
                 int tierA = clamp(int(floor(powerTierVal)), 0, 8);
                 int tierB = min(tierA + 1, 9);
                 float tierMix = frac(powerTierVal);
@@ -180,8 +183,8 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float pNorm = saturate(_Power / 100.0);
                 float pExp = pow(pNorm, 4.0);
 
-                // --- AUTO ROTATION ---
-                float autoRotation = _Time.y * _CycleSpeed * TWO_PI * (1.0 + pNorm * 5.0);
+                // --- CONSTANT ANIMATION SPEED (Decoupled from power tier scaling) ---
+                float autoRotation = _Time.y * _CycleSpeed * TWO_PI;
 
                 // --- DOMAIN WARPING ---
                 float warpMag = pExp * 0.15;
@@ -202,20 +205,23 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float coreVoid = smoothstep(_EventHorizon - 0.03, _EventHorizon + 0.08, warpedDist);
                 float photonRim = smoothstep(0.03, 0.0, abs(warpedDist - _EventHorizon));
 
-                // --- 1. NORMAL VORTEX STATE (High Vividness & Contrast) ---
+                // --- 1. NORMAL VORTEX STATE ---
                 float highContrastPattern = pow(saturate(pattern), 1.8);
                 float3 vortexColor = lerp(_RimColor.rgb * 0.2, tierColor * 3.5, highContrastPattern);
-                vortexColor *= (1.0 - coreVoid * 0.6) * (1.0 + pNorm * 4.0);
+                vortexColor *= (1.0 - coreVoid * 0.98) * (1.0 + pNorm * 4.0);
                 vortexColor += _RimColor.rgb * photonRim * 8.0;
 
-                // --- 2. HIGH-SPEED HYPER-DRIVE STATE ---
-                float tunnelFreq = 60.0 + (pNorm * 100.0);
-                float hyperspaceTunnel = pow(abs(sin(warpedDist * tunnelFreq - autoRotation * 3.0)), 2.0);
-                float starRays = pow(saturate(sin(angle * 16.0 + autoRotation)), 6.0);
+                // --- 2. TOTALLY UNIQUE HIGH-SPEED WARP TUNNEL STATE ---
+                float warpSpeed = _Time.y * 15.0;
+                float radialStreaks = pow(abs(sin(angle * 24.0)), 8.0);
+                float tunnelRings = abs(sin(centerDist * 50.0 + warpSpeed));
+                float hyperPattern = saturate(radialStreaks * tunnelRings * 2.0);
                 
-                float whiteHotCore = smoothstep(0.35, 0.0, warpedDist);
-                float3 hyperColor = lerp(_RimColor.rgb, float3(3.0, 3.0, 3.5), hyperspaceTunnel + starRays);
-                hyperColor += hyperColor * (4.0 + whiteHotCore * 10.0);
+                float3 hyperColor = lerp(_Color.rgb, _RimColor.rgb, sin(centerDist * 30.0 - warpSpeed) * 0.5 + 0.5);
+                hyperColor *= hyperPattern * 5.0;
+                
+                float hyperCore = smoothstep(0.4, 0.0, centerDist);
+                hyperColor += _RimColor.rgb * hyperCore * 4.0;
 
                 // --- 3. BLEND STATES ---
                 float3 finalColor = lerp(vortexColor, hyperColor, saturate(_HighSpeedTransition));
