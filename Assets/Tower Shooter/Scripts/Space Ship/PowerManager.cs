@@ -141,11 +141,11 @@ public class PowerManager : Singleton<PowerManager>
             powerOutputPerSecond += nodeDps;
         }
 
-        double currentTotalPower = ResourceManager.Ins.GetResourceValue(ResourceType.Coin);
+        double nodePower = mainNode.serviceLocator.stats.GetStat(StatType.Damage).Value;
 
-        powerOutputPerSecond *= GetPowerMultiplierBasedOnTier(mainNode, GetPowerTier(currentTotalPower));
+        powerOutputPerSecond *= GetPowerMultiplierBasedOnTier(mainNode, GetPowerTier(nodePower));
 
-        NodeEnergyParticleController.Ins.SetPower(GetPowerProgressForShader(currentTotalPower));
+        NodeEnergyParticleController.Ins.SetPower(GetPowerProgressForShader(nodePower));
 
         return powerOutputPerSecond;
     }
