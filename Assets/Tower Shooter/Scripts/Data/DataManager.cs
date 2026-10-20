@@ -65,6 +65,7 @@ public class DataManager : Singleton<DataManager>
                 nodeData.coordinate = new Vector2Int(j, i);
 
                 nodeData.recycleModuleRate = 0.001f;
+                nodeData.powerTierGrowthFactor = 1.1f;
 
                 defaultNodeGroup.nodeDataItems.Add(nodeData);
             }

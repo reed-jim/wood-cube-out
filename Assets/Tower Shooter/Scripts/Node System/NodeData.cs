@@ -6,6 +6,7 @@ public class NodeData
     public Vector2Int coordinate;
     public bool isUnlocked;
     public float recycleModuleRate;
+    public float powerTierGrowthFactor;
 
     public List<int> activeAugmentsIds;
 }

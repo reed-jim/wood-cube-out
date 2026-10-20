@@ -59,7 +59,7 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
         }
         else
         {
-            float powerPerSecond = PowerManager.Ins.GetTotalPowerOutputPerSecond();
+            double powerPerSecond = PowerManager.Ins.GetTotalPowerOutputPerSecond();
 
             // Calculate elapsed time in seconds since the player was last online
             long currentTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -69,13 +69,13 @@ public class OfflineIdleManager : Singleton<OfflineIdleManager>
             if (timePassedInSeconds < 0) timePassedInSeconds = 0;
 
             // Total power generated over the offline period
-            float totalPower = powerPerSecond * timePassedInSeconds * offlineIdleData.idleRewardMultiplier;
+            double totalPower = powerPerSecond * timePassedInSeconds * offlineIdleData.idleRewardMultiplier;
 
             // Update timestamp for future saves
             offlineIdleData.lastOnlineTimestamp = currentTimestamp;
             SaveOfflineIdleData();
 
-            offlineIdleUI.ShowRewards(totalPower, (int)timePassedInSeconds, offlineIdleData.idleRewardMultiplier);
+            offlineIdleUI.ShowRewards((float)totalPower, (int)timePassedInSeconds, offlineIdleData.idleRewardMultiplier);
         }
     }
 

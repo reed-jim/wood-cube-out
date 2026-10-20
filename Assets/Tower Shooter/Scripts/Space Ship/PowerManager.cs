@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PrimeTween;
 using TMPro;
@@ -21,11 +22,9 @@ public class PowerManager : Singleton<PowerManager>
     private float shakeTimer = 0f;
     private double previousTotalValue = -1;
 
-    // private float totalPowerOutput;
-    private float powerOutputPerSecond;
+    private double powerOutputPerSecond;
     private string primaryHex;
     private string onPrimaryHex;
-    private Tween pulseTween;
 
     private float updateTimer = 0f;
     private const float updateInterval = 1f / 6; // Update once per second
@@ -109,11 +108,13 @@ public class PowerManager : Singleton<PowerManager>
         totalPowerText.text = $"{ResourceManager.Ins.GetResourceValue(ResourceType.Coin):F2}";
     }
 
-    public float GetTotalPowerOutputPerSecond()
+    public double GetTotalPowerOutputPerSecond()
     {
         List<BaseCharacter> nodes = NodeManager.Ins.nodes;
 
         powerOutputPerSecond = 0;
+
+        BaseCharacter mainNode = null;
 
         for (int i = 0; i < nodes.Count; i++)
         {
@@ -123,6 +124,8 @@ public class PowerManager : Singleton<PowerManager>
             {
                 continue;
             }
+
+            mainNode = node;
 
             CharacterStats stats = nodes[i].serviceLocator.stats;
 
@@ -138,13 +141,19 @@ public class PowerManager : Singleton<PowerManager>
             powerOutputPerSecond += nodeDps;
         }
 
+        double currentTotalPower = ResourceManager.Ins.GetResourceValue(ResourceType.Coin);
+
+        powerOutputPerSecond *= GetPowerMultiplierBasedOnTier(mainNode, GetPowerTier(currentTotalPower));
+
+        NodeEnergyParticleController.Ins.SetPower(GetPowerProgressForShader(currentTotalPower));
+
         return powerOutputPerSecond;
     }
 
     public void ShowTotalPowerOutputPerSecond()
     {
         string notificationString =
-            $"Power Output: <color={primaryHex}>{TextUtil.FormatFloat(GetTotalPowerOutputPerSecond())} <sprite=0 color={primaryHex}>/s";
+            $"Power Output: <color={primaryHex}>{CommonUtil.FormatNumber(GetTotalPowerOutputPerSecond())} <sprite=0 color={primaryHex}>/s";
 
         IngameNotificationManager.Ins.ShowNotification(notificationString, isPlayEffect: true);
     }
@@ -167,4 +176,29 @@ public class PowerManager : Singleton<PowerManager>
     {
         GetTotalPowerOutputPerSecond();
     }
+
+    #region Util
+    public static int GetPowerTier(double power)
+    {
+        if (double.IsNaN(power) || power < 10)
+            return 0;
+
+        if (double.IsPositiveInfinity(power))
+            return 10;
+
+        int tier = (int)(Math.Log10(power) / 2);
+
+        return Math.Clamp(tier, 1, 10);
+    }
+
+    public static int GetPowerProgressForShader(double power)
+    {
+        return 10 * GetPowerTier(power);
+    }
+
+    public double GetPowerMultiplierBasedOnTier(BaseCharacter node, int tier)
+    {
+        return Math.Pow(node.nodeData.powerTierGrowthFactor, tier);
+    }
+    #endregion
 }
