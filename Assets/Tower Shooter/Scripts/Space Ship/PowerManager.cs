@@ -77,7 +77,7 @@ public class PowerManager : Singleton<PowerManager>
             double deltaChange = powerOutputPerSecond * updateInterval;
             double value = ResourceManager.Ins.ChangeResource(ResourceType.Coin, deltaChange);
 
-            string powerOutputPerSecondString = $"<size=75%>+{CommonUtil.FormatNumber(powerOutputPerSecond)}/s</size>";
+            string powerOutputPerSecondString = $"<size=60%>+{CommonUtil.FormatNumber(powerOutputPerSecond)}/s</size>";
 
             // Build the current formatted text representation
             string currentDisplayText = CommonUtil.FormatNumber(value);
@@ -157,8 +157,11 @@ public class PowerManager : Singleton<PowerManager>
         }
 
         double nodePower = mainNode.serviceLocator.stats.GetStat(StatType.Damage).Value;
+        int powerTier = GetPowerTier(nodePower);
+        double requiredPowerForNextTier = GetMinPowerForTier(powerTier + 1);
 
-        double powerMultiplier = GetPowerMultiplierBasedOnTier(mainNode, GetPowerTier(nodePower));
+        double powerMultiplier = GetPowerMultiplierBasedOnTier(mainNode, powerTier);
+        double nextPowerMultiplier = GetPowerMultiplierBasedOnTier(mainNode, powerTier + 1);
 
         powerOutputPerSecond *= powerMultiplier;
 
@@ -166,7 +169,7 @@ public class PowerManager : Singleton<PowerManager>
 
         mainNode.serviceLocator.nodeEffectController.SetPower(powerProgressForShader);
         NodeEnergyParticleController.Ins.SetPower(powerProgressForShader);
-        NodeEnergyParticleController.Ins.SetMultiplier(powerMultiplier);
+        NodeEnergyParticleController.Ins.SetMultiplier(powerMultiplier, nextPowerMultiplier, requiredPowerForNextTier);
 
         return powerOutputPerSecond;
     }
@@ -210,6 +213,14 @@ public class PowerManager : Singleton<PowerManager>
         int tier = (int)(Math.Log10(power) / 2);
 
         return Math.Clamp(tier, 1, 10);
+    }
+
+    public static double GetMinPowerForTier(int tier)
+    {
+        if (tier <= 0)
+            return 0;
+
+        return Math.Pow(10, tier * 2);
     }
 
     public static int GetPowerProgressForShader(double power)

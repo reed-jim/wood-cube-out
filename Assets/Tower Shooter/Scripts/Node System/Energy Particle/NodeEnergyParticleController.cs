@@ -7,10 +7,12 @@ public class NodeEnergyParticleController : Singleton<NodeEnergyParticleControll
     [Header("UI")]
     [SerializeField] private Image uiImage;
     [SerializeField] private TMP_Text multiplierText;
+    [SerializeField] private TMP_Text requiredPowerForNextTierText;
 
     private Material materialInstance;
 
     private string primaryHex;
+    private string onSurfaceHex;
 
     // Cache the shader property ID for performance
     private static readonly int PowerProp = Shader.PropertyToID("_Power");
@@ -47,10 +49,18 @@ public class NodeEnergyParticleController : Singleton<NodeEnergyParticleControll
         materialInstance.SetFloat(PowerProp, power);
     }
 
-    public void SetMultiplier(double multiplier)
+    public void SetMultiplier(double multiplier, double nextMultiplier, double requiredPowerForNextTier)
     {
         primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+        onSurfaceHex = DynamicThemeManager.Ins.OnSurfaceHex;
 
-        multiplierText.text = $"x{CommonUtil.FormatNumber(multiplier)} <sprite=0 color={primaryHex}>/s";
+        string unitStringPrimary = $"<sprite=0 color={primaryHex}>/s";
+        string unitStringOnSurface = $"<sprite=0 color={onSurfaceHex}>/s";
+
+        multiplierText.text =
+            $"<color={onSurfaceHex}>{unitStringOnSurface} x{CommonUtil.FormatNumber(multiplier)}" +
+            $" --> <color={primaryHex}>x{CommonUtil.FormatNumber(nextMultiplier)}";
+
+        requiredPowerForNextTierText.text = $"Reach <color={primaryHex}>{CommonUtil.FormatNumber(requiredPowerForNextTier)} <sprite=0 color={primaryHex}></color> to upgrade";
     }
 }
