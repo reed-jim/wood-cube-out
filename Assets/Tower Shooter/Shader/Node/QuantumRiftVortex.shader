@@ -128,7 +128,7 @@ Shader "UI/Custom/QuantumRiftVortexGrid"
                 float hyperBlend = smoothstep(50.0, 65.0, _VortexSpeed);
 
                 // Time angle accumulated via progress and spin speed
-                float timeVal = activeProgress * _VortexSpeed * TWO_PI * rotationDirection;
+                float timeVal = _Time.y * _VortexSpeed * TWO_PI * rotationDirection * activeProgress;
 
                 float3 finalColor = float3(0,0,0);
                 float alpha = 0;
