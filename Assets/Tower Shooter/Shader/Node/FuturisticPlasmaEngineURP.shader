@@ -1,10 +1,16 @@
-Shader "UI/FuturisticPlasmaEngineURP"
+Shader "UI/FuturisticPlasmaEngineDirectURP"
 {
     Properties
     {
         _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
         _Progress ("Engine Cycle Progress", Range(0, 1)) = 0.0
+        _Overdrive ("High Speed Overdrive State", Range(0, 1)) = 0.0
+        
+        // Customization properties for powerful visual tuning
+        _CoreIntensity ("Core Intensity", Range(0.5, 3.0)) = 1.5
+        _PlasmaColor ("Plasma Color", Color) = (0.0, 0.85, 1.0, 1.0)
+        _CoreColor ("Core Color", Color) = (0.8, 0.2, 1.0, 1.0)
 
         // Required UI properties for Stencil and Mask support
         _StencilComp ("Stencil Comparison", Float) = 8
@@ -70,36 +76,14 @@ Shader "UI/FuturisticPlasmaEngineURP"
                 float4 worldPosition : TEXCOORD1;
             };
 
-            // Properties
             float4 _Color;
             float _Progress;
+            float _Overdrive;
+            float _CoreIntensity;
+            float4 _PlasmaColor;
+            float4 _CoreColor;
 
             #define PI 3.14159265359
-
-            // Hash / Random helpers
-            float random(float2 st)
-            {
-                return frac(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453123);
-            }
-
-            // Distance field helpers
-            float sdCircle(float2 p, float r)
-            {
-                return length(p) - r;
-            }
-
-            float sdBox(float2 p, float2 b)
-            {
-                float2 d = abs(p) - b;
-                return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
-            }
-
-            float sdSegment(float2 p, float2 a, float2 b)
-            {
-                float2 pa = p - a, ba = b - a;
-                float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-                return length(pa - ba * h);
-            }
 
             v2f vert(appdata_t v)
             {
@@ -113,111 +97,96 @@ Shader "UI/FuturisticPlasmaEngineURP"
 
             float4 frag(v2f IN) : SV_Target
             {
-                // Correct aspect ratio so shapes are not stretched
-                float2 uv = IN.uv;
-                float2 p = (uv - 0.5) * float2(2.0 * 1.7777, 2.0); // Center at (0,0)
+                float2 p = (IN.uv - 0.5) * 2.0;
+                float r = length(p);
+                float angle = atan2(p.y, p.x);
 
-                // Phase remapping from _Progress
-                float pIngress   = saturate((_Progress - 0.00) / 0.15);
-                float pIgnition  = saturate((_Progress - 0.15) / 0.20);
-                float pAccel     = saturate((_Progress - 0.35) / 0.25);
-                float pPlume     = saturate((_Progress - 0.60) / 0.25);
-                float pStable    = saturate((_Progress - 0.85) / 0.15);
-
-                // Loop smoothing factor for continuous wrapping
-                float loopFade = 1.0 - smoothstep(0.85, 1.0, _Progress) * (1.0 - smoothstep(0.0, 0.1, _Progress));
-
-                // Color palettes
-                float3 colIntake = float3(0.2, 0.8, 1.0);
-                float3 colCore = float3(0.1, 0.9, 1.0);
-                float3 colPlasma = float3(0.4, 0.2, 1.0);
-                float3 colExhaust = float3(0.0, 0.6, 1.0);
                 float3 colWhite = float3(1.0, 1.0, 1.0);
+                float3 colGold = float3(1.0, 0.5, 0.1);
 
-                float finalAlpha = 0.0;
                 float3 finalColor = float3(0, 0, 0);
+                float finalAlpha = 0.0;
 
-                // ----------------------------------------------------
-                // 1. PROPELLANT INTAKE
-                // ----------------------------------------------------
-                if (pIngress > 0.0)
+                // ====================================================
+                // STATE A: NORMAL HIGH-IMPACT CYCLE PROGRESSION
+                // ====================================================
+                if (_Overdrive < 0.5)
                 {
-                    float intakeMask = smoothstep(-1.2, -0.6, p.x) * (1.0 - smoothstep(-0.6, -0.5, p.x));
-                    intakeMask *= smoothstep(0.4, 0.1, abs(p.y));
-                    
-                    float streamWave = sin(p.x * 15.0 - _Progress * 40.0);
-                    float particles = step(0.7, frac(p.x * 10.0 - _Progress * 15.0)) * intakeMask;
-                    
-                    float3 intakeCol = colIntake * (particles * 2.0 + abs(streamWave) * 0.5) * pIngress;
-                    finalColor += intakeCol;
-                    finalAlpha += (intakeMask * 0.3 + particles * 0.7) * pIngress;
-                }
+                    float pIntake  = saturate(_Progress / 0.25);
+                    float pCharge  = saturate((_Progress - 0.25) / 0.45);
+                    float pBurst   = saturate((_Progress - 0.7) / 0.3);
 
-                // ----------------------------------------------------
-                // 2. REAR ENERGY CHAMBER & CORE
-                // ----------------------------------------------------
-                float2 chamberCenter = float2(-0.4, 0.0);
-                float dChamber = length(p - chamberCenter);
-                
-                if (pIgnition > 0.0)
-                {
-                    float ringPattern = sin(dChamber * 30.0 - _Progress * 10.0);
-                    float ringMask = smoothstep(0.4, 0.38, dChamber) * smoothstep(0.15, 0.18, dChamber);
-                    
-                    float coreGlow = 1.0 - smoothstep(0.0, 0.3, dChamber);
-                    float pulsatingCore = coreGlow * (0.8 + 0.2 * sin(_Progress * 30.0));
-
-                    float3 chamberCol = lerp(colPlasma, colCore, pulsatingCore) * pIgnition;
-                    chamberCol += colWhite * max(0.0, ringPattern) * ringMask * pIgnition * 1.5;
-
-                    finalColor += chamberCol;
-                    finalAlpha += (coreGlow + ringMask * 0.5) * pIgnition;
-                }
-
-                // ----------------------------------------------------
-                // 3 & 4. MAGNETIC CONTAINMENT FIELD & ACCELERATION CHANNEL
-                // ----------------------------------------------------
-                if (pAccel > 0.0)
-                {
-                    float2 fieldP = p - float2(-0.1, 0.0);
-                    float ellipseDist = length(fieldP * float2(0.8, 2.2));
-                    float fieldArc = smoothstep(0.52, 0.5, ellipseDist) * smoothstep(0.46, 0.48, ellipseDist);
-                    
-                    float angle = atan2(fieldP.y, fieldP.x);
-                    float fieldPulse = sin(angle * 6.0 + _Progress * 25.0);
-                    
-                    float nozzleUpper = 0.35 * (1.0 - 0.5 * max(0.0, p.x / 0.8));
-                    float nozzleMask = step(abs(p.y), nozzleUpper) * step(0.0, p.x) * step(p.x, 0.8);
-                    
-                    float3 fieldCol = colPlasma * (fieldArc * (0.5 + 0.5 * fieldPulse) * 2.0 + nozzleMask * 1.5) * pAccel;
-                    finalColor += fieldCol;
-                    finalAlpha += (fieldArc * 0.6 + nozzleMask * 0.4) * pAccel;
-                }
-
-                // ----------------------------------------------------
-                // 5 & 6. EXHAUST PLUME & STABLE OPERATION
-                // ----------------------------------------------------
-                if (pPlume > 0.0)
-                {
-                    float xDist = p.x - 0.4;
-                    if (xDist > 0.0)
+                    // 1. High-velocity multi-tier intake vortex
+                    if (_Progress < 0.7)
                     {
-                        float halfWidth = 0.25 + xDist * 0.35;
-                        float plumeMask = smoothstep(halfWidth, 0.0, abs(p.y)) * smoothstep(1.5, 0.3, xDist);
-                        
-                        float streak = sin(p.y * 20.0 - xDist * 12.0 + _Progress * 50.0);
-                        float particleSpark = step(0.8, random(floor(p * 20.0) + _Progress * 5.0)) * plumeMask;
+                        float ringDist = abs(r - 0.72);
+                        float ringMask = smoothstep(0.1, 0.0, ringDist) * smoothstep(1.0, 0.15, r);
+                        float spiral = sin(angle * 14.0 + r * 22.0 - _Progress * 45.0);
+                        float secondarySpiral = cos(angle * 8.0 - r * 15.0 + _Progress * 30.0);
+                        float intakeGlow = ringMask * max(0.0, spiral + secondarySpiral * 0.5) * pIntake;
 
-                        float3 plumeCol = lerp(colExhaust, colWhite, smoothstep(0.0, 0.8, xDist)) * pPlume;
-                        plumeCol += colCore * abs(streak) * plumeMask * 1.2;
-                        plumeCol += colWhite * particleSpark * 2.0;
+                        finalColor += _PlasmaColor.rgb * intakeGlow * 2.5 * _CoreIntensity;
+                        finalAlpha += intakeGlow * 0.8;
+                    }
 
-                        float alphaContribution = plumeMask * pPlume * (0.8 + 0.2 * pStable);
-                        finalColor += plumeCol;
-                        finalAlpha += alphaContribution;
+                    // 2. Powerful magnetic compression & hyper-core
+                    if (_Progress >= 0.2 && _Progress < 0.95)
+                    {
+                        float coilDist = abs(r - 0.42);
+                        float coilMask = smoothstep(0.06, 0.0, coilDist);
+                        float coilPulse = sin(angle * 10.0 + _Progress * 60.0);
+
+                        float coreRadius = 0.3 * (1.0 - 0.3 * pCharge);
+                        float coreGlow = 1.0 - smoothstep(0.0, coreRadius, r);
+                        float corePulse = coreGlow * (1.0 + 0.5 * sin(_Progress * 70.0));
+
+                        float3 coreCol = lerp(_CoreColor.rgb, _PlasmaColor.rgb, pCharge) * corePulse * 2.0 * _CoreIntensity;
+                        coreCol += colWhite * coilMask * max(0.0, coilPulse) * pCharge * 3.5;
+
+                        finalColor += coreCol;
+                        finalAlpha += (coreGlow * 1.3 + coilMask) * saturate(pCharge * 2.0);
+                    }
+
+                    // 3. Explosive power generation discharge burst
+                    if (pBurst > 0.0)
+                    {
+                        float waveRadius = pBurst * 1.4;
+                        float waveDist = abs(r - waveRadius);
+                        float waveMask = smoothstep(0.2, 0.0, waveDist) * smoothstep(1.4, 0.0, r);
+                        float flash = (1.0 - smoothstep(0.0, 0.5, r)) * pBurst;
+
+                        float3 burstCol = lerp(_PlasmaColor.rgb, colWhite, pBurst) * (waveMask * 5.0 + flash * 4.0) * _CoreIntensity;
+                        finalColor += burstCol;
+                        finalAlpha += (waveMask + flash) * pBurst * 1.5;
                     }
                 }
+                // ====================================================
+                // STATE B: HIGH-SPEED OVERDRIVE / RAPID INTERVAL STATE
+                // (Features high-intensity idle animation driven by fractional progress)
+                // ====================================================
+                else
+                {
+                    // Derive smooth high-speed idle animation entirely from progress fraction
+                    float idleAnim = frac(_Progress * 15.0) * 2.0 * PI;
 
+                    float coreGlow = 1.0 - smoothstep(0.0, 0.45, r);
+                    float vortex = sin(angle * 16.0 - r * 35.0 + idleAnim * 3.0);
+                    float ringDist = abs(r - 0.52);
+                    float ringMask = smoothstep(0.08, 0.0, ringDist);
+                    float electricArcs = step(0.75, sin(angle * 12.0 + idleAnim * 5.0));
+
+                    float3 overdriveCol = lerp(_PlasmaColor.rgb, colGold, abs(vortex)) * coreGlow * 3.0 * _CoreIntensity;
+                    overdriveCol += colWhite * ringMask * (1.5 + electricArcs * 2.0);
+
+                    finalColor += overdriveCol;
+                    finalAlpha += (coreGlow * 1.5 + ringMask * 1.0);
+                }
+
+                // Powerful global reactor containment aura
+                float outerGlow = (1.0 - smoothstep(0.0, 0.9, r)) * 0.3;
+                finalAlpha = max(finalAlpha, outerGlow);
+
+                // Global clamp & UI integration
                 finalColor = saturate(finalColor);
                 finalAlpha = saturate(finalAlpha * IN.color.a);
 
