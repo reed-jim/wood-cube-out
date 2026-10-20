@@ -107,93 +107,110 @@ Shader "UI/Custom/QuantumRiftVortexNode"
                 return output;
             }
 
-            // Evaluates pattern intensity and returns unique color palettes per power level
-            void evaluatePowerEffect(float2 st, int powerLevel, float timeVal, float dist, float angle, out float pattern, out float3 tintA, out float3 tintB)
+            // Evaluates pattern intensity, custom color palettes, and strange-matter distance warping per power level
+            void evaluatePowerEffect(float2 st, int powerLevel, float timeVal, float rawDist, float angle, out float pattern, out float warpedDist, out float3 tintA, out float3 tintB)
             {
                 pattern = 0.0;
+                warpedDist = rawDist;
                 tintA = _Color.rgb;
                 tintB = _RimColor.rgb;
 
                 if (powerLevel == 1)
                 {
-                    // Level 1: Deep Purple & Cyan Rings
-                    float rings = sin(dist * (_Layers * 2.0) - timeVal + angle * 2.0) * 0.5 + 0.5;
+                    // 1. Clean Circular Rings (Standard Precise Geometry)
+                    float rings = sin(rawDist * (_Layers * 2.0) - timeVal + angle * 2.0) * 0.5 + 0.5;
                     pattern = pow(rings, 3.0);
+                    warpedDist = rawDist;
                     tintA = _Color.rgb;
                     tintB = _RimColor.rgb;
                 }
                 else if (powerLevel == 2)
                 {
-                    // Level 2: Electric Cobalt Blue & Ice White
-                    float spiral = angle * 2.0 + (dist * (_Layers * 1.5)) - timeVal;
+                    // 2. Clean Circular Spiral Galaxy
+                    float spiral = angle * 2.0 + (rawDist * (_Layers * 1.5)) - timeVal;
                     pattern = pow(sin(spiral) * 0.5 + 0.5, 4.0);
+                    warpedDist = rawDist;
                     tintA = float3(0.0, 0.3, 0.9);
                     tintB = float3(0.7, 0.9, 1.0);
                 }
                 else if (powerLevel == 3)
                 {
-                    // Level 3: Fiery Gold & Amber Starburst
+                    // 3. Strange Matter: 6-Fold Crystalline Star Burst (Spills outward into sharp spikes)
+                    float starWarp = rawDist + sin(angle * 6.0 - timeVal) * 0.12;
                     float star = abs(cos(angle * 3.0 - timeVal));
-                    pattern = smoothstep(0.1, 0.9, saturate(star * (1.0 - dist * 1.8)));
+                    pattern = smoothstep(0.1, 0.9, saturate(star * (1.0 - starWarp * 1.8)));
+                    warpedDist = starWarp;
                     tintA = float3(1.0, 0.4, 0.0);
                     tintB = float3(1.0, 0.9, 0.2);
                 }
                 else if (powerLevel == 4)
                 {
-                    // Level 4: Emerald Green & Mint Crystal Lattice
-                    float hex = cos(angle * 6.0 - timeVal) * sin(dist * 18.0 + timeVal * 0.5);
+                    // 4. Strange Matter: Hexagonal Fractal Web with Organic Distortion
+                    float hexWarp = rawDist + cos(angle * 6.0 - timeVal) * 0.08 * sin(rawDist * 10.0);
+                    float hex = cos(angle * 6.0 - timeVal) * sin(rawDist * 18.0 + timeVal * 0.5);
                     pattern = saturate(hex * 2.0 + 0.5);
+                    warpedDist = hexWarp;
                     tintA = float3(0.0, 0.6, 0.2);
                     tintB = float3(0.2, 1.0, 0.6);
                 }
                 else if (powerLevel == 5)
                 {
-                    // Level 5: Neon Turquoise & Deep Teal Radar
+                    // 5. Clean Circular Quantum Radar Sweep
                     float sweep = sin(angle - timeVal * 1.5) * 0.5 + 0.5;
-                    float ringWave = cos(dist * 25.0 - timeVal * 2.0) * 0.5 + 0.5;
+                    float ringWave = cos(rawDist * 25.0 - timeVal * 2.0) * 0.5 + 0.5;
                     pattern = pow(sweep * ringWave, 2.0) * 3.0;
+                    warpedDist = rawDist;
                     tintA = float3(0.0, 0.4, 0.8);
                     tintB = float3(0.0, 1.0, 0.9);
                 }
                 else if (powerLevel == 6)
                 {
-                    // Level 6: Crimson Red & Hot Magenta Blades
-                    float blade1 = sin(angle * 3.0 + dist * 12.0 - timeVal * 2.5);
-                    float blade2 = cos(angle * -3.0 + dist * 12.0 - timeVal * 2.5);
+                    // 6. Strange Matter: Asymmetric Plasma Shear Tear (Torn organic boundary)
+                    float tearWarp = rawDist + sin(angle * 4.0 + timeVal) * cos(rawDist * 15.0 - timeVal) * 0.15;
+                    float blade1 = sin(angle * 3.0 + rawDist * 12.0 - timeVal * 2.5);
+                    float blade2 = cos(angle * -3.0 + rawDist * 12.0 - timeVal * 2.5);
                     pattern = pow(saturate(blade1 * blade2 + 0.5), 3.0);
+                    warpedDist = tearWarp;
                     tintA = float3(0.9, 0.0, 0.2);
                     tintB = float3(1.0, 0.3, 0.7);
                 }
                 else if (powerLevel == 7)
                 {
-                    // Level 7: Neon Violet & Electric Indigo Spikes
-                    float portalSpikes = abs(sin(angle * 5.0 - timeVal * 2.0)) * saturate(1.2 - dist * 2.0);
+                    // 7. Strange Matter: Multi-Pointed Organic Amorphous Blob
+                    float blobWarp = rawDist + sin(angle * 5.0 - timeVal * 2.0) * 0.18;
+                    float portalSpikes = abs(sin(angle * 5.0 - timeVal * 2.0)) * saturate(1.2 - blobWarp * 2.0);
                     pattern = smoothstep(0.05, 0.8, portalSpikes);
+                    warpedDist = blobWarp;
                     tintA = float3(0.4, 0.0, 1.0);
                     tintB = float3(0.7, 0.4, 1.0);
                 }
                 else if (powerLevel == 8)
                 {
-                    // Level 8: Radioactive Lime & Toxic Yellow Gears
-                    float irisGear = abs(sin(angle * 8.0 - timeVal * 1.5)) * cos(dist * 15.0 - timeVal);
+                    // 8. Clean Circular Cybernetic Iris Shutter
+                    float irisGear = abs(sin(angle * 8.0 - timeVal * 1.5)) * cos(rawDist * 15.0 - timeVal);
                     pattern = pow(saturate(irisGear * 1.5), 2.0);
+                    warpedDist = rawDist;
                     tintA = float3(0.3, 0.8, 0.0);
                     tintB = float3(0.9, 1.0, 0.1);
                 }
                 else if (powerLevel == 9)
                 {
-                    // Level 9: Solar Plasma Orange & Bright Yellow Flares
-                    float flare = sin(angle * 4.0 + sin(dist * 20.0 - timeVal * 3.0));
+                    // 9. Strange Matter: Chaotic Solar Flares with Jagged Tentacle Fringe
+                    float flareWarp = rawDist + sin(angle * 3.0 + sin(rawDist * 20.0 - timeVal)) * 0.2;
+                    float flare = sin(angle * 4.0 + sin(flareWarp * 20.0 - timeVal * 3.0));
                     pattern = pow(saturate(flare * 0.5 + 0.5), 3.0);
+                    warpedDist = flareWarp;
                     tintA = float3(1.0, 0.3, 0.0);
                     tintB = float3(1.0, 0.8, 0.1);
                 }
                 else 
                 {
-                    // Level 10: Cyberpunk Pink & Laser Cyan Singularity
-                    float v1 = sin(angle * 6.0 + (dist * 16.0) - (timeVal * 3.0));
-                    float v2 = cos(angle * -4.0 - (dist * 12.0) + (timeVal * 2.0));
+                    // 10. Strange Matter: Ultimate Liquid Quantum Singularity (Swirling amorphous void)
+                    float voidWarp = rawDist + cos(angle * 7.0 - timeVal * 2.0) * 0.12 + sin(rawDist * 12.0 + timeVal) * 0.08;
+                    float v1 = sin(angle * 6.0 + (voidWarp * 16.0) - (timeVal * 3.0));
+                    float v2 = cos(angle * -4.0 - (voidWarp * 12.0) + (timeVal * 2.0));
                     pattern = pow(saturate((v1 + v2) * 0.5 + 0.5), 4.0);
+                    warpedDist = voidWarp;
                     tintA = float3(1.0, 0.0, 0.5);
                     tintB = float3(0.0, 1.0, 0.9);
                 }
@@ -217,7 +234,7 @@ Shader "UI/Custom/QuantumRiftVortexNode"
                 float2 stG = st;
                 float2 stB = st - dir * aberrationStrength;
 
-                float distR = length(stR), distG = length(stG), distB = length(stB);
+                float rawDistR = length(stR), rawDistG = length(stG), rawDistB = length(stB);
                 float angleR = atan2(stR.y, stR.x), angleG = atan2(st.y, st.x), angleB = atan2(stB.y, stB.x);
 
                 float3 finalColor = float3(0,0,0);
@@ -225,16 +242,17 @@ Shader "UI/Custom/QuantumRiftVortexNode"
 
                 if (isUnlocked > 0.5)
                 {
-                    float coreVoidG = smoothstep(dynamicHorizon - 0.03, dynamicHorizon + 0.03, distG);
-                    float photonRimG = smoothstep(0.03, 0.0, abs(distG - dynamicHorizon));
-
-                    // Evaluate unique patterns and distinct color palettes per channel
+                    // Evaluate unique patterns, warped shapes, and palettes per channel
                     float patR, patG, patB;
+                    float warpedDistR, warpedDistG, warpedDistB;
                     float3 tintR_A, tintR_B, tintG_A, tintG_B, tintB_A, tintB_B;
                     
-                    evaluatePowerEffect(stR, powerLevel, timeVal, distR, angleR, patR, tintR_A, tintR_B);
-                    evaluatePowerEffect(stG, powerLevel, timeVal, distG, angleG, patG, tintG_A, tintG_B);
-                    evaluatePowerEffect(stB, powerLevel, timeVal, distB, angleB, patB, tintB_A, tintB_B);
+                    evaluatePowerEffect(stR, powerLevel, timeVal, rawDistR, angleR, patR, warpedDistR, tintR_A, tintR_B);
+                    evaluatePowerEffect(stG, powerLevel, timeVal, rawDistG, angleG, patG, warpedDistG, tintG_A, tintG_B);
+                    evaluatePowerEffect(stB, powerLevel, timeVal, rawDistB, angleB, patB, warpedDistB, tintB_A, tintB_B);
+
+                    float coreVoidG = smoothstep(dynamicHorizon - 0.03, dynamicHorizon + 0.03, warpedDistG);
+                    float photonRimG = smoothstep(0.03, 0.0, abs(warpedDistG - dynamicHorizon));
 
                     // Blend colors per channel using the unique power palettes
                     float3 colR = lerp(tintR_A, tintR_B, patR);
@@ -245,14 +263,14 @@ Shader "UI/Custom/QuantumRiftVortexNode"
                     normalStateColor += tintG_B * photonRimG * 4.0;
 
                     // --- UNIFORM HIGH-SPEED STATE (ACROSS ALL POWERS) ---
-                    float hyperspaceTunnel = sin(distG * 40.0 - (timeVal * 3.0)) * 0.5 + 0.5;
-                    float whiteHotCore = smoothstep(0.3, 0.0, distG);
+                    float hyperspaceTunnel = sin(warpedDistG * 40.0 - (timeVal * 3.0)) * 0.5 + 0.5;
+                    float whiteHotCore = smoothstep(0.3, 0.0, warpedDistG);
                     float3 highSpeedColor = lerp(_RimColor.rgb, float3(1.0, 1.0, 1.0), hyperspaceTunnel);
                     highSpeedColor += highSpeedColor * (2.0 + whiteHotCore * (3.0 + pulse));
 
                     // --- SMOOTH TRANSITION BETWEEN STATES ---
                     finalColor = lerp(normalStateColor, highSpeedColor, hyperBlend);
-                    alpha = smoothstep(0.48, 0.44, distG) * saturate((1.0 - coreVoidG) + photonRimG + 0.3);
+                    alpha = smoothstep(0.48, 0.44, warpedDistG) * saturate((1.0 - coreVoidG) + photonRimG + 0.3);
                 }
                 else
                 {
