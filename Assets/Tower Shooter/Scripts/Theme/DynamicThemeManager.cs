@@ -18,6 +18,7 @@ public class DynamicThemeManager : Singleton<DynamicThemeManager>
     public string OnSurfaceHex => GetHex(ElementRole.OnSurface);
     public string ErrorHex => GetHex(ElementRole.Error);
     public string OnErrorHex => GetHex(ElementRole.OnError);
+    public string PrimaryContainerHex => GetHex(ElementRole.PrimaryContainer);
 
     void Start()
     {

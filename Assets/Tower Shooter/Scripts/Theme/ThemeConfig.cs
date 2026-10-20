@@ -140,6 +140,7 @@ public class ThemeConfig : ScriptableObject
         return role switch
         {
             ElementRole.Primary => primary,
+            ElementRole.PrimaryContainer => primaryContainer,
             ElementRole.OnPrimary => onPrimary,
             ElementRole.OnPrimaryContainer => onPrimaryContainer,
             ElementRole.OnSurface => onSurface,

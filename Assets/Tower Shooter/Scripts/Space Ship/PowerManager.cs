@@ -17,6 +17,19 @@ public class PowerManager : Singleton<PowerManager>
     [SerializeField] private float targetScale = 1.15f;
     [SerializeField] private float duration = 0.8f;
 
+    [Header("Text Juice / Shake")]
+    [SerializeField] private float maxShakeOffset = 0.12f;  // Maximum scale distortion cap
+    [SerializeField] private float shakeDecayRate = 12f;    // How fast the shake dies down (higher = snappier)
+    [SerializeField] private float shakeFrequency = 35f;    // How fast/tight the vibration oscillation is
+
+    private float currentShakeIntensity = 0f;
+
+    [Header("Text Juice / Shake")]
+    [SerializeField] private float basePunchAmount = 0.1f;
+    [SerializeField] private float maxPunchAmount = 0.35f;
+
+    private Tween textTween;
+
     private Vector3 originalScale;
     private float shakeIntensity = 0f;
     private float shakeTimer = 0f;
@@ -25,9 +38,10 @@ public class PowerManager : Singleton<PowerManager>
     private double powerOutputPerSecond;
     private string primaryHex;
     private string onPrimaryHex;
+    private string primaryContainerHex;
 
     private float updateTimer = 0f;
-    private const float updateInterval = 1f / 6; // Update once per second
+    private const float updateInterval = 1f / 3; // Update once per second
 
     protected override void MoreActionOnAwake()
     {
@@ -48,11 +62,15 @@ public class PowerManager : Singleton<PowerManager>
 
         primaryHex = DynamicThemeManager.Ins.PrimaryHex;
         onPrimaryHex = DynamicThemeManager.Ins.OnPrimaryHex;
+        primaryContainerHex = DynamicThemeManager.Ins.PrimaryContainerHex;
     }
 
     void Update()
     {
         updateTimer += Time.deltaTime;
+
+        // Cache the previous value before we check for changes
+        double oldDisplayValue = previousTotalValue;
 
         if (updateTimer >= updateInterval)
         {
@@ -62,41 +80,33 @@ public class PowerManager : Singleton<PowerManager>
             double value = ResourceManager.Ins.ChangeResource(ResourceType.Coin, deltaChange);
 
             string powerOutputPerSecondString = $"+{CommonUtil.FormatNumber(powerOutputPerSecond)}/s";
-
-            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{CommonUtil.FormatNumber(value)} ({powerOutputPerSecondString})";
-            // powerOutputPerSecondText.text = $"+{CommonUtil.FormatNumber(powerOutputPerSecond)}<sprite=0 color={primaryHex}>/s";
-
-            // --- Percentage-Based Shake Logic ---
-            if (previousTotalValue > 0)
-            {
-                // Calculate percent change (e.g., 10 / 10000 = 0.001, which is 0.1%)
-                double percentChange = deltaChange / previousTotalValue;
-
-                // Minimum percent threshold to trigger shake (e.g., 0.005 = 0.5%)
-                double minPercentThreshold = 0.005;
-
-                if (percentChange >= minPercentThreshold)
-                {
-                    // Scale intensity based on the percentage change (capped so it doesn't get out of hand)
-                    shakeIntensity = Mathf.Min((float)percentChange * 2f, 0.3f);
-                    shakeTimer = 0.15f; // Duration of the shake effect
-                }
-            }
+            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{CommonUtil.FormatNumber(value)} <color={primaryContainerHex}>({powerOutputPerSecondString})";
 
             previousTotalValue = value;
         }
 
-        // Process the shake effect every frame if active
-        if (shakeTimer > 0f)
+        // --- Immediate Scale Feedback on Value Change ---
+        // If you want it to trigger the exact frame the resource/value changes:
+        if (previousTotalValue > 0 && previousTotalValue != oldDisplayValue)
         {
-            shakeTimer -= Time.deltaTime;
+            double absoluteChange = previousTotalValue - oldDisplayValue;
+            double percentChange = absoluteChange / previousTotalValue;
 
-            float scaleOffset = UnityEngine.Random.Range(-shakeIntensity, shakeIntensity);
-            totalPowerText.transform.localScale = originalScale + Vector3.one * scaleOffset;
-        }
-        else
-        {
-            totalPowerText.transform.localScale = originalScale;
+            // Calculate strength based on delta magnitude
+            float punchStrength = Mathf.Clamp((float)(percentChange * 30f), 0.0f, 0.15f);
+
+            // Stop any active tween immediately
+            textTween.Stop();
+
+            // 1. Instantly pop to the expanded scale the exact frame it changes
+            totalPowerText.transform.localScale = originalScale + Vector3.one * punchStrength;
+
+            // 2. Tween back down smoothly to the original scale
+            textTween = Tween.Scale(
+                target: totalPowerText.transform,
+                endValue: originalScale,
+                duration: updateInterval
+            );
         }
     }
 
