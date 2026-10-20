@@ -103,7 +103,6 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 return output;
             }
 
-            // Helper function to evaluate a specific tier's pattern and color
             void evaluateTier(int tier, float2 st, float dist, float angle, float autoRotation, out float pattern, out float3 tierColor)
             {
                 pattern = 0.0;
@@ -168,13 +167,14 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
 
             half4 frag(Varyings input) : SV_Target
             {
+                // Pure unwarped center coordinates for UI bounds checking
                 float2 st = input.uv - 0.5;
+                float centerDist = length(st);
                 
                 float powerTierVal = saturate(_Power / 100.0) * 9.0;
                 int tierA = clamp(int(floor(powerTierVal)), 0, 8);
                 int tierB = min(tierA + 1, 9);
                 float tierMix = frac(powerTierVal);
-                // Smooth interpolation curve for the crossfade
                 tierMix = tierMix * tierMix * (3.0 - 2.0 * tierMix);
 
                 float pNorm = saturate(_Power / 100.0);
@@ -183,25 +183,25 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 // --- AUTO ROTATION ---
                 float autoRotation = _Time.y * _CycleSpeed * TWO_PI * (1.0 + pNorm * 5.0);
 
-                // --- DOMAIN WARPING ---
+                // --- DOMAIN WARPING (Applied only to internal pattern calculation) ---
                 float warpMag = pExp * 0.3;
                 float warpWave = sin(length(st * 20.0) - autoRotation * 2.0) * warpMag;
                 float2 warpedSt = st + (st * warpWave);
 
-                float dist = length(warpedSt);
+                float warpedDist = length(warpedSt);
                 float angle = atan2(warpedSt.y, warpedSt.x);
 
                 // --- EVALUATE ADJACENT TIERS & SMOOTHLY BLEND ---
                 float patA, patB;
                 float3 colA, colB;
-                evaluateTier(tierA, warpedSt, dist, angle, autoRotation, patA, colA);
-                evaluateTier(tierB, warpedSt, dist, angle, autoRotation, patB, colB);
+                evaluateTier(tierA, warpedSt, warpedDist, angle, autoRotation, patA, colA);
+                evaluateTier(tierB, warpedSt, warpedDist, angle, autoRotation, patB, colB);
 
                 float pattern = lerp(patA, patB, tierMix);
                 float3 tierColor = lerp(colA, colB, tierMix);
 
-                float coreVoid = smoothstep(_EventHorizon - 0.03, _EventHorizon + 0.08, dist);
-                float photonRim = smoothstep(0.03, 0.0, abs(dist - _EventHorizon));
+                float coreVoid = smoothstep(_EventHorizon - 0.03, _EventHorizon + 0.08, warpedDist);
+                float photonRim = smoothstep(0.03, 0.0, abs(warpedDist - _EventHorizon));
 
                 // --- 1. NORMAL VORTEX STATE ---
                 float3 vortexColor = lerp(tierColor * 0.2, tierColor * 2.0, pattern);
@@ -210,19 +210,20 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
 
                 // --- 2. HIGH-SPEED HYPER-DRIVE STATE ---
                 float tunnelFreq = 60.0 + (pNorm * 100.0);
-                float hyperspaceTunnel = pow(abs(sin(dist * tunnelFreq - autoRotation * 3.0)), 2.0);
+                float hyperspaceTunnel = pow(abs(sin(warpedDist * tunnelFreq - autoRotation * 3.0)), 2.0);
                 float starRays = pow(saturate(sin(angle * 16.0 + autoRotation)), 6.0);
                 
-                float whiteHotCore = smoothstep(0.35, 0.0, dist);
+                float whiteHotCore = smoothstep(0.35, 0.0, warpedDist);
                 float3 hyperColor = lerp(_RimColor.rgb, float3(2.5, 2.5, 2.5), hyperspaceTunnel + starRays);
                 hyperColor += hyperColor * (3.0 + whiteHotCore * 8.0);
 
                 // --- 3. BLEND STATES ---
                 float3 finalColor = lerp(vortexColor, hyperColor, saturate(_HighSpeedTransition));
                 
-                // --- STRICT ALPHA TRANSPARENCY ---
-                float circleMask = smoothstep(0.48, 0.42, dist);
-                float alpha = circleMask * saturate(pattern * 1.5 + photonRim * 2.0 + (1.0 - coreVoid) * 0.5);
+                // --- ROBUST UNWARPED EDGE FADE (Guarantees zero sharp border cuts) ---
+                // Fades smoothly from radius 0.48 down to 0.38 to ensure clean boundaries inside the UI Image square bounds (0.5 max)
+                float edgeFade = smoothstep(0.48, 0.38, centerDist);
+                float alpha = edgeFade * saturate(pattern * 1.5 + photonRim * 2.0 + (1.0 - coreVoid) * 0.5);
 
                 half4 col = half4(finalColor, alpha);
 
