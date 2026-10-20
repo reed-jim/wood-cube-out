@@ -9,7 +9,7 @@ Shader "UI/Custom/QuantumRiftVortexNode"
         
         [Header(Node Control)]
         _IsUnlocked ("Node Unlocked", Range(0,1)) = 1
-        [IntRange] _Power ("Power Level (1-6)", Range(1, 6)) = 1
+        [IntRange] _Power ("Power Level (1-10)", Range(1, 10)) = 1
         _Progress ("Jump Charge Progress", Range(0.0, 1.0)) = 0.0
         _SpeedMode ("Speed Mode Transition", Range(0.0, 1.0)) = 0.0
         _Layers ("Rift Layer Density", Range(3, 15)) = 8
@@ -114,79 +114,114 @@ Shader "UI/Custom/QuantumRiftVortexNode"
 
                 float activeProgress = isUnlocked > 0.5 ? _Progress : 0.0;
                 float hyperBlend = saturate(_SpeedMode);
-                float timeVal = activeProgress * TWO_PI * 10.0;
+                float timeVal = activeProgress * TWO_PI * 12.0;
 
                 float3 finalColor = float3(0,0,0);
                 float alpha = 0;
 
                 if (isUnlocked > 0.5)
                 {
-                    float coreVoid = smoothstep(_EventHorizon - 0.02, _EventHorizon + 0.05, dist);
-                    float photonRim = smoothstep(0.02, 0.0, abs(dist - _EventHorizon));
+                    float coreVoid = smoothstep(_EventHorizon - 0.03, _EventHorizon + 0.03, dist);
+                    float photonRim = smoothstep(0.03, 0.0, abs(dist - _EventHorizon));
 
                     float3 normalStateColor = float3(0,0,0);
+                    float patternAlpha = 1.0;
 
-                    // --- 6 DISTINCT POWER EFFECTS (NORMAL STATE) ---
+                    // --- 10 HIGH-CONTRAST, ROTATING, UNBOUNDED EFFECTS (NORMAL STATE) ---
                     if (powerLevel == 1)
                     {
-                        // Power 1: Concentric Pulsing Rings (Subdued Energy)
-                        float rings = sin(dist * (_Layers * 1.5) - timeVal) * 0.5 + 0.5;
-                        normalStateColor = lerp(_Color.rgb, _RimColor.rgb, rings) * (1.0 - coreVoid) * 0.9;
-                        normalStateColor += _RimColor.rgb * photonRim * 1.2;
+                        // 1. Pulsing High-Contrast Energy Rings with Rotating Phase
+                        float rings = sin(dist * (_Layers * 2.0) - timeVal + angle * 2.0) * 0.5 + 0.5;
+                        rings = pow(rings, 3.0); // High contrast curve
+                        normalStateColor = lerp(_Color.rgb, _RimColor.rgb, rings) * 2.0;
+                        normalStateColor += _RimColor.rgb * photonRim * 3.0;
                     }
                     else if (powerLevel == 2)
                     {
-                        // Power 2: Dual Spiral Arms (Standard Vortex)
-                        float spiral = angle * 2.0 + (dist * _Layers) - timeVal;
-                        float arms = sin(spiral) * 0.5 + 0.5;
-                        normalStateColor = lerp(_Color.rgb, _RimColor.rgb, arms) * (1.0 - coreVoid) * 1.5;
-                        normalStateColor += _RimColor.rgb * photonRim * 2.5;
+                        // 2. High-Contrast Dual Spiral Galaxy Arms
+                        float spiral = angle * 2.0 + (dist * (_Layers * 1.5)) - timeVal;
+                        float arms = pow(sin(spiral) * 0.5 + 0.5, 4.0);
+                        normalStateColor = lerp(_Color.rgb, float3(1.0, 1.0, 1.0), arms) * 2.5;
+                        normalStateColor += _RimColor.rgb * photonRim * 4.0;
                     }
                     else if (powerLevel == 3)
                     {
-                        // Power 3: Geometric Starburst / Multi-Node Lattice Matrix
-                        float star = abs(sin(angle * 4.0 + timeVal)) * (1.0 - dist * 2.0);
-                        float ripple = cos(dist * 25.0 - timeVal * 1.5) * 0.5 + 0.5;
-                        float lattice = saturate(star + ripple);
-                        normalStateColor = lerp(_Color.rgb, float3(1.0, 0.8, 0.2), lattice) * (1.0 - coreVoid) * 2.0;
-                        normalStateColor += float3(1.0, 0.9, 0.4) * photonRim * 4.0;
+                        // 3. Sharp Rotating 6-Point Starburst (Breaks Circular Border)
+                        float star = abs(cos(angle * 3.0 - timeVal));
+                        float spike = saturate(star * (1.0 - dist * 1.8));
+                        spike = smoothstep(0.1, 0.9, spike);
+                        normalStateColor = lerp(_RimColor.rgb, float3(1.0, 0.9, 0.2), spike) * 3.0;
+                        normalStateColor += float3(1.0, 1.0, 0.5) * photonRim * 5.0;
                     }
                     else if (powerLevel == 4)
                     {
-                        // Power 4: Triangular Prismatic Hex-Grid Lattice
-                        float prism = sin(angle * 3.0 - timeVal * 2.0) * cos(dist * 15.0 + timeVal);
-                        float prismPattern = saturate(prism * 0.5 + 0.5);
-                        normalStateColor = lerp(_RimColor.rgb, float3(0.2, 1.0, 0.5), prismPattern) * (1.0 - coreVoid) * 1.8;
-                        normalStateColor += float3(0.4, 1.0, 0.6) * photonRim * 3.5;
+                        // 4. Prismatic Hexagonal Rotating Crystal Lattice
+                        float hex = cos(angle * 6.0 - timeVal) * sin(dist * 18.0 + timeVal * 0.5);
+                        float hexMask = saturate(hex * 2.0 + 0.5);
+                        normalStateColor = lerp(float3(0.1, 1.0, 0.4), _Color.rgb, hexMask) * 2.8;
+                        normalStateColor += float3(0.3, 1.0, 0.6) * photonRim * 4.5;
                     }
                     else if (powerLevel == 5)
                     {
-                        // Power 5: High-Frequency Quantum Ripple Waves
-                        float rippleWave = sin(dist * 35.0 - timeVal * 3.0) * 0.5 + 0.5;
-                        float angularPulse = cos(angle * 6.0 + timeVal) * 0.5 + 0.5;
-                        float wavePattern = saturate(rippleWave * angularPulse);
-                        normalStateColor = lerp(_Color.rgb, float3(0.1, 0.6, 1.0), wavePattern) * (1.0 - coreVoid) * 2.2;
-                        normalStateColor += float3(0.3, 0.8, 1.0) * photonRim * 4.5;
+                        // 5. Pulsating Quantum Radar Sweep Wave
+                        float sweep = sin(angle - timeVal * 1.5) * 0.5 + 0.5;
+                        float ringWave = cos(dist * 25.0 - timeVal * 2.0) * 0.5 + 0.5;
+                        float radar = pow(sweep * ringWave, 2.0) * 3.0;
+                        normalStateColor = lerp(_Color.rgb, float3(0.0, 0.8, 1.0), radar) * 2.5;
+                        normalStateColor += float3(0.4, 0.9, 1.0) * photonRim * 4.0;
+                    }
+                    else if (powerLevel == 6)
+                    {
+                        // 6. Overclocked Dual-Shear Plasma Blades
+                        float blade1 = sin(angle * 3.0 + dist * 12.0 - timeVal * 2.5);
+                        float blade2 = cos(angle * -3.0 + dist * 12.0 - timeVal * 2.5);
+                        float blades = pow(saturate(blade1 * blade2 + 0.5), 3.0);
+                        normalStateColor = lerp(float3(1.0, 0.1, 0.4), _RimColor.rgb, blades) * 3.2;
+                        normalStateColor += float3(1.0, 0.4, 0.7) * photonRim * 5.5;
+                    }
+                    else if (powerLevel == 7)
+                    {
+                        // 7. Rotating Asymmetric Energy Portal Spikes (Spills Outward)
+                        float portalSpikes = abs(sin(angle * 5.0 - timeVal * 2.0)) * saturate(1.2 - dist * 2.0);
+                        portalSpikes = smoothstep(0.05, 0.8, portalSpikes);
+                        normalStateColor = lerp(float3(0.0, 0.5, 1.0), float3(1.0, 1.0, 1.0), portalSpikes) * 3.5;
+                        normalStateColor += float3(0.2, 0.8, 1.0) * photonRim * 6.0;
+                    }
+                    else if (powerLevel == 8)
+                    {
+                        // 8. Cybernetic Rotating Iris Shutter Gears
+                        float irisGear = abs(sin(angle * 8.0 - timeVal * 1.5)) * cos(dist * 15.0 - timeVal);
+                        float gearMask = pow(saturate(irisGear * 1.5), 2.0);
+                        normalStateColor = lerp(_Color.rgb, float3(0.9, 0.3, 1.0), gearMask) * 3.0;
+                        normalStateColor += float3(0.9, 0.5, 1.0) * photonRim * 5.0;
+                    }
+                    else if (powerLevel == 9)
+                    {
+                        // 9. Chaotic Magnetic Solar Flares (Jagged Outward Tendrils)
+                        float flare = sin(angle * 4.0 + sin(dist * 20.0 - timeVal * 3.0));
+                        float flareMask = pow(saturate(flare * 0.5 + 0.5), 3.0);
+                        normalStateColor = lerp(float3(1.0, 0.4, 0.0), float3(1.0, 0.9, 0.2), flareMask) * 3.5;
+                        normalStateColor += float3(1.0, 0.7, 0.2) * photonRim * 6.0;
                     }
                     else 
                     {
-                        // Power 6 (Max): Overclocked Singularity Core with Multi-Layer Shear
-                        float s1 = sin(angle * 4.0 + dist * 10.0 - timeVal * 2.0);
-                        float s2 = cos(angle * -4.0 + dist * 10.0 - timeVal * 2.0);
-                        float singularityPattern = saturate(s1 * s2 + 0.5);
-                        normalStateColor = lerp(float3(1.0, 0.2, 0.5), _Color.rgb, singularityPattern) * (1.0 - coreVoid) * 2.5;
-                        normalStateColor += float3(1.0, 0.4, 0.7) * photonRim * 5.0;
+                        // 10. Ultimate Supermassive Multi-Vector Twisted Singularity
+                        float v1 = sin(angle * 6.0 + (dist * 16.0) - (timeVal * 3.0));
+                        float v2 = cos(angle * -4.0 - (dist * 12.0) + (timeVal * 2.0));
+                        float ultimate = pow(saturate((v1 + v2) * 0.5 + 0.5), 4.0);
+                        normalStateColor = lerp(float3(0.1, 1.0, 0.9), float3(1.0, 0.1, 0.7), ultimate) * 4.0;
+                        normalStateColor += float3(1.0, 1.0, 1.0) * photonRim * 7.0;
                     }
 
                     // --- UNIFORM HIGH-SPEED STATE (ACROSS ALL POWERS) ---
                     float hyperspaceTunnel = sin(dist * 40.0 - (timeVal * 3.0)) * 0.5 + 0.5;
                     float whiteHotCore = smoothstep(0.3, 0.0, dist);
                     float3 highSpeedColor = lerp(_RimColor.rgb, float3(1.0, 1.0, 1.0), hyperspaceTunnel);
-                    highSpeedColor += highSpeedColor * (1.5 + whiteHotCore * 2.5);
+                    highSpeedColor += highSpeedColor * (2.0 + whiteHotCore * 3.0);
 
                     // --- SMOOTH TRANSITION BETWEEN STATES ---
                     finalColor = lerp(normalStateColor, highSpeedColor, hyperBlend);
-                    alpha = smoothstep(0.48, 0.45, dist) * saturate((1.0 - coreVoid) + photonRim + 0.2);
+                    alpha = smoothstep(0.48, 0.44, dist) * saturate((1.0 - coreVoid) + photonRim + 0.3);
                 }
                 else
                 {
