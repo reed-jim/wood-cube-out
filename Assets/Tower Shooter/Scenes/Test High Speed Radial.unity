@@ -1347,6 +1347,7 @@ GameObject:
   m_Component:
   - component: {fileID: 740558354}
   - component: {fileID: 740558356}
+  - component: {fileID: 740558357}
   - component: {fileID: 740558355}
   m_Layer: 5
   m_Name: Gear
@@ -1386,7 +1387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 2100000, guid: b92d81b824c413b4181b26d5ecb76808, type: 2}
+  m_Material: {fileID: 2100000, guid: ed1d31554854d4a43915cc62fc3d0972, type: 2}
   m_Color: {r: 0, g: 0.81960785, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1412,6 +1413,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 740558353}
   m_CullTransparentMesh: 1
+--- !u!114 &740558357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740558353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4583cd9d083048e4782312afb3979e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EngineUIAnimator
+  engineMaterial: {fileID: 2100000, guid: ed1d31554854d4a43915cc62fc3d0972, type: 2}
+  cycleDuration: 2
 --- !u!1 &1031423072
 GameObject:
   m_ObjectHideFlags: 0
