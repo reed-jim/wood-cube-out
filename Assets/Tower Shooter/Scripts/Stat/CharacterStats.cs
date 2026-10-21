@@ -12,7 +12,7 @@ public class CharacterStats : MonoBehaviour
     private CharacterStatsData characterStatsData;
 
     public static event Action nodeStatModifiedEvent;
-    public static event Action<StatType, float> OnStatModified;
+    public static event Action<StatType, double> OnStatModified;
 
     private void InitializeStats()
     {
@@ -43,6 +43,8 @@ public class CharacterStats : MonoBehaviour
     public float AddModifier(StatModifier mod, bool isApplyAugmentEffect = true, bool isInvokeStatModifiedEvent = true, bool isSave = true)
     {
         float newValue = GetStat(mod.Type).AddModifier(mod);
+
+        OnStatModified?.Invoke(mod.Type, newValue);
 
         if (isApplyAugmentEffect)
         {

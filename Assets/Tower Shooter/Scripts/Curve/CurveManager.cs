@@ -345,11 +345,12 @@ public class CurveManagerEditor : Editor
             // Table Header
             EditorGUILayout.BeginHorizontal("box");
             EditorGUILayout.LabelField("Lvl", EditorStyles.boldLabel, GUILayout.Width(35));
-            EditorGUILayout.LabelField("Power", EditorStyles.boldLabel, GUILayout.Width(75));
-            EditorGUILayout.LabelField("Speed", EditorStyles.boldLabel, GUILayout.Width(75));
-            EditorGUILayout.LabelField("Crit %", EditorStyles.boldLabel, GUILayout.Width(65));
-            EditorGUILayout.LabelField("Crit Dmg", EditorStyles.boldLabel, GUILayout.Width(75));
-            EditorGUILayout.LabelField("Node Cost", EditorStyles.boldLabel, GUILayout.Width(85));
+            EditorGUILayout.LabelField("Voyage Distance", EditorStyles.boldLabel, GUILayout.Width(150));
+            // EditorGUILayout.LabelField("Power", EditorStyles.boldLabel, GUILayout.Width(75));
+            // EditorGUILayout.LabelField("Speed", EditorStyles.boldLabel, GUILayout.Width(75));
+            // EditorGUILayout.LabelField("Crit %", EditorStyles.boldLabel, GUILayout.Width(65));
+            // EditorGUILayout.LabelField("Crit Dmg", EditorStyles.boldLabel, GUILayout.Width(75));
+            // EditorGUILayout.LabelField("Node Cost", EditorStyles.boldLabel, GUILayout.Width(85));
             EditorGUILayout.EndHorizontal();
 
             // Table Rows
@@ -358,11 +359,12 @@ public class CurveManagerEditor : Editor
                 EditorGUILayout.BeginHorizontal();
 
                 EditorGUILayout.LabelField(i.ToString(), GUILayout.Width(35));
-                EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.Damage, i).ToString("N0"), GUILayout.Width(75));
-                EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.AttackSpeed, i).ToString("F2"), GUILayout.Width(75));
-                EditorGUILayout.LabelField((manager.GetNextStatValue(StatType.CritChance, i) * 100f).ToString("F0") + "%", GUILayout.Width(65));
-                EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.CritMultiplier, i).ToString("F2") + "x", GUILayout.Width(75));
-                EditorGUILayout.LabelField(manager.GetUpgradeNodeCost(i).ToString("N0"), GUILayout.Width(85));
+                EditorGUILayout.LabelField(CommonUtil.FormatNumber(manager.GetVoyageDistance(i)), GUILayout.Width(150));
+                // EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.Damage, i).ToString("N0"), GUILayout.Width(75));
+                // EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.AttackSpeed, i).ToString("F2"), GUILayout.Width(75));
+                // EditorGUILayout.LabelField((manager.GetNextStatValue(StatType.CritChance, i) * 100f).ToString("F0") + "%", GUILayout.Width(65));
+                // EditorGUILayout.LabelField(manager.GetNextStatValue(StatType.CritMultiplier, i).ToString("F2") + "x", GUILayout.Width(75));
+                // EditorGUILayout.LabelField(manager.GetUpgradeNodeCost(i).ToString("N0"), GUILayout.Width(85));
 
                 EditorGUILayout.EndHorizontal();
             }

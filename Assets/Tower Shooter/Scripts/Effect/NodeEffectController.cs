@@ -43,8 +43,13 @@ public class NodeEffectController : MonoBehaviour
     private readonly float[] lastAppliedNodes = new float[9];
     private bool nodesDirty = true;
 
+    private double lastPowerValue;
+    private double lastCycleSpeedValue;
+
     void Awake()
     {
+        CharacterStats.OnStatModified += OnNodeStatModified;
+
         if (uiImage != null && uiImage.material != null)
         {
             materialInstance = new Material(uiImage.material);
@@ -62,44 +67,9 @@ public class NodeEffectController : MonoBehaviour
         for (int i = 0; i < 9; i++) lastAppliedNodes[i] = -1f;
     }
 
-    void Update()
+    void OnDestroy()
     {
-        SetSpeed(serviceLocator.stats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier);
-
-        // if (materialInstance == null) return;
-
-        // // 1. Handle Smooth Transitions
-        // if (smoothTransitions)
-        // {
-        //     progress = Mathf.SmoothDamp(progress, targetProgress, ref progressVelocity, transitionSmoothTime);
-        //     vortexSpeed = Mathf.SmoothDamp(vortexSpeed, targetSpeed, ref speedVelocity, transitionSmoothTime);
-        // }
-        // else
-        // {
-        //     progress = targetProgress;
-        //     vortexSpeed = targetSpeed;
-        // }
-
-        // // 2. Only update Progress if it changed (using an epsilon threshold to avoid float jitter)
-        // if (Mathf.Abs(progress - lastAppliedProgress) > 0.0001f)
-        // {
-        //     materialInstance.SetFloat("_Progress", progress);
-        //     lastAppliedProgress = progress;
-        // }
-
-        // // 3. Only update Spin Speed if it changed
-        // if (Mathf.Abs(vortexSpeed - lastAppliedSpeed) > 0.001f)
-        // {
-        //     materialInstance.SetFloat("_VortexSpeed", vortexSpeed);
-        //     lastAppliedSpeed = vortexSpeed;
-        // }
-
-        // // 4. Only update Node States if a node has been modified
-        // if (nodesDirty)
-        // {
-        //     ApplyNodeStates();
-        //     nodesDirty = false;
-        // }
+        CharacterStats.OnStatModified -= OnNodeStatModified;
     }
 
     private void ApplyNodeStates()
@@ -194,4 +164,14 @@ public class NodeEffectController : MonoBehaviour
 
         nodesDirty = true;
     }
+
+    #region Event
+    private void OnNodeStatModified(StatType statType, double value)
+    {
+        if (statType == StatType.AttackSpeed)
+        {
+            SetSpeed((float)value);
+        }
+    }
+    #endregion
 }
