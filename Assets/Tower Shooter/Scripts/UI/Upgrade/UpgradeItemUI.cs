@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UpgradeItemUI : MonoBehaviour
 {
+    public RectTransform container;
     public TMP_Text upgradeText;
     public TMP_Text coinText;
     public Image statIcon;
@@ -33,6 +34,7 @@ public class UpgradeItemUI : MonoBehaviour
         ResourceManager.changeResourceValueEvent += OnResourceChanged;
         GenericAugmentEffectRuntime.updateNodeStatEvent += UpdateNodeStat;
         FeatureUnlockManager.loadFeatureLockStateDataEvent += OnLoadFeatureLockStateData;
+        FeatureUnlockManager.unlockFeatureEvent += OnUnlockFeature;
 
         upgradeButton.onClick.AddListener(Upgrade);
     }
@@ -43,6 +45,7 @@ public class UpgradeItemUI : MonoBehaviour
         ResourceManager.changeResourceValueEvent -= OnResourceChanged;
         GenericAugmentEffectRuntime.updateNodeStatEvent -= UpdateNodeStat;
         FeatureUnlockManager.loadFeatureLockStateDataEvent -= OnLoadFeatureLockStateData;
+        FeatureUnlockManager.unlockFeatureEvent -= OnUnlockFeature;
     }
 
     public void Init(BaseCharacter node)
@@ -152,19 +155,20 @@ public class UpgradeItemUI : MonoBehaviour
     }
     #endregion
 
+    #region Event
     private void OnAugmentApplied()
     {
-        if(isLocked)
+        if (isLocked)
         {
             return;
         }
-        
+
         UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
     }
 
     private void OnResourceChanged(ResourceType resourceType, double value)
     {
-        if(isLocked)
+        if (isLocked)
         {
             return;
         }
@@ -190,6 +194,17 @@ public class UpgradeItemUI : MonoBehaviour
             return;
         }
     }
+
+    private void OnUnlockFeature(FeatureType featureType)
+    {
+        if (featureType == this.featureType && isLocked)
+        {
+            UnlockEffectController.Ins.PlayUnlockEffect(container, $"{CommonUtil.ToReadableEnumName(featureType)}");
+
+            Unlock();
+        }
+    }
+    #endregion
 
     private void UpdateNodeStat(BaseCharacter node)
     {
