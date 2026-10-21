@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class ThemeableUI : MonoBehaviour
 {
@@ -92,6 +93,8 @@ public class ThemeableUI : MonoBehaviour
 
     private Image cachedImage;
     private TMP_Text cachedText;
+
+    public Action changeThemeEvent;
 
     private void Awake()
     {
@@ -327,6 +330,8 @@ public class ThemeableUI : MonoBehaviour
                 ApplyQualityColor(theme.mythic);
                 break;
         }
+
+        changeThemeEvent?.Invoke();
     }
 
     public void ChangeRole(ElementRole role)
