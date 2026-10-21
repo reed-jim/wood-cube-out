@@ -158,11 +158,73 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                     pattern = pow(abs(sin(angle * 5.0 - dist * 40.0 + autoRotation * 3.0)), 0.5);
                     tierColor = float3(0.2, 2.5, 2.5);
                 } 
-                else 
+                else if (tier == 9)
                 {
                     float sing = sin(angle * 12.0 * dist * 15.0 - autoRotation * 5.0) * 0.5 + 0.5;
                     pattern = pow(sing, 2.0);
                     tierColor = float3(3.0, 3.0, 3.5);
+                }
+                // --- NEW TIERS (10 - 19) FOR ULTRA HIGH POWER ---
+                else if (tier == 10) // Hyper Spiral Burst
+                {
+                    float spiral = sin(angle * 16.0 + dist * 50.0 - autoRotation * 4.0);
+                    pattern = saturate(pow(abs(spiral), 0.3) * 1.5);
+                    tierColor = float3(3.5, 0.5, 1.2);
+                }
+                else if (tier == 11) // Quantum Lattice Grid
+                {
+                    float grid = sin(st.x * 60.0 + autoRotation) * cos(st.y * 60.0 - autoRotation);
+                    pattern = saturate(abs(grid) * sin(angle * 8.0));
+                    tierColor = float3(0.5, 3.5, 2.0);
+                }
+                else if (tier == 12) // Chrono Ring Interference
+                {
+                    float ring1 = sin(dist * 60.0 - autoRotation * 3.0);
+                    float ring2 = cos(angle * 12.0 + dist * 30.0);
+                    pattern = pow(saturate(ring1 * ring2 + 0.5), 1.5);
+                    tierColor = float3(3.8, 2.0, 0.3);
+                }
+                else if (tier == 13) // Solar Ray Flare
+                {
+                    float rays = abs(cos(angle * 20.0 + sin(dist * 30.0)));
+                    pattern = pow(rays, 3.0) * smoothstep(0.0, 0.4, dist);
+                    tierColor = float3(4.0, 0.8, 0.1);
+                }
+                else if (tier == 14) // Dimensional Fracture
+                {
+                    float wave = sin(angle * 14.0 - autoRotation * 6.0) + cos(dist * 70.0);
+                    pattern = saturate(step(0.2, abs(wave)) * wave * 0.5 + 0.5);
+                    tierColor = float3(1.2, 0.2, 4.0);
+                }
+                else if (tier == 15) // Plasma Vortex Pulse
+                {
+                    float pulse = sin(dist * 80.0 - autoRotation * 8.0) * sin(angle * 18.0);
+                    pattern = pow(saturate(pulse * 0.5 + 0.5), 0.4);
+                    tierColor = float3(0.2, 4.0, 3.5);
+                }
+                else if (tier == 16) // Void Nebula Shockwave
+                {
+                    float shock = abs(sin(angle * 24.0 + dist * 90.0 - autoRotation * 5.0));
+                    pattern = pow(shock, 4.0) * 2.0;
+                    tierColor = float3(4.2, 0.2, 3.0);
+                }
+                else if (tier == 17) // Supernova Resonance
+                {
+                    float star = sin(angle * 32.0 + autoRotation * 2.0) * cos(dist * 40.0);
+                    pattern = saturate(star * star * 3.0);
+                    tierColor = float3(4.5, 3.5, 0.5);
+                }
+                else if (tier == 18) // Singularity Breakdown
+                {
+                    float noiseSim = sin(st.x * 100.0 + autoRotation * 10.0) * cos(st.y * 100.0 - autoRotation * 10.0);
+                    pattern = saturate(pow(abs(noiseSim), 0.2) * sin(angle * 10.0));
+                    tierColor = float3(5.0, 1.0, 5.0);
+                }
+                else // Tier 19: Apex God Tier
+                {
+                    float apex = sin(angle * 40.0 - dist * 120.0 + autoRotation * 12.0);
+                    pattern = pow(saturate(apex * 0.5 + 0.5), 0.1); // Extreme brightness threshold
+                    tierColor = float3(5.0, 5.0, 5.0); // Pure HDR White Supernova
                 }
             }
 
@@ -171,19 +233,19 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float2 st = input.uv - 0.5;
                 float centerDist = length(st);
                 
-                // Tier mapping with 100-power safety check
+                // Tier mapping with 100-power safety check (Now scaled across 20 tiers: 0 to 19)
                 float normalizedPower = min(_Power / 100.0, 0.9999);
-                float powerTierVal = normalizedPower * 9.0;
+                float powerTierVal = normalizedPower * 19.0;
                 
-                int tierA = clamp(int(floor(powerTierVal)), 0, 8);
-                int tierB = min(tierA + 1, 9);
+                int tierA = clamp(int(floor(powerTierVal)), 0, 18);
+                int tierB = min(tierA + 1, 19);
                 float tierMix = frac(powerTierVal);
                 tierMix = tierMix * tierMix * (3.0 - 2.0 * tierMix);
 
                 float pNorm = saturate(_Power / 100.0);
                 float pExp = pow(pNorm, 4.0);
 
-                // --- CONSTANT ANIMATION SPEED (Decoupled from power tier scaling) ---
+                // --- CONSTANT ANIMATION SPEED ---
                 float autoRotation = _Time.y * _CycleSpeed * TWO_PI;
 
                 // --- DOMAIN WARPING ---
@@ -211,7 +273,7 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 vortexColor *= (1.0 - coreVoid * 0.98) * (1.0 + pNorm * 4.0);
                 vortexColor += _RimColor.rgb * photonRim * 8.0;
 
-                // --- 2. TOTALLY UNIQUE HIGH-SPEED WARP TUNNEL STATE ---
+                // --- 2. HIGH-SPEED WARP TUNNEL STATE ---
                 float warpSpeed = _Time.y * 15.0;
                 float radialStreaks = pow(abs(sin(angle * 24.0)), 8.0);
                 float tunnelRings = abs(sin(centerDist * 50.0 + warpSpeed));
