@@ -13,6 +13,12 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    public static string ToReadableEnumName<TEnum>(this TEnum value)
+        where TEnum : Enum
+    {
+        return System.Text.RegularExpressions.Regex.Replace(value.ToString(), @"(?<=[a-z0-9])([A-Z])", " $1");
+    }
+
     public static void TryClearTMPSubmesh(TMP_Text text)
     {
         if (text.transform.childCount == 0)
