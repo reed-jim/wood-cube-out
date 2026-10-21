@@ -7,20 +7,23 @@ using System;
 public class UnlockEffectController : MonoBehaviour
 {
     [Header("UI References")]
-    [SerializeField] private GameObject effectRootCanvasGroup; 
-    [SerializeField] private CanvasGroup backgroundDim;        
-    [SerializeField] private RectTransform effectElement;      
-    
+    [SerializeField] private GameObject effectRootCanvasGroup;
+    [SerializeField] private CanvasGroup backgroundDim;
+    [SerializeField] private RectTransform effectElement;
+
     [Header("States Inside Effect Element")]
-    [SerializeField] private GameObject lockIconObject;        
-    [SerializeField] private TextMeshProUGUI featureText;      
-    [SerializeField] private Button continueButton;            
+    [SerializeField] private GameObject lockIconObject;
+    [SerializeField] private TextMeshProUGUI featureText;
+    [SerializeField] private Button continueButton;
     [SerializeField] private Image targetEffectImage;          // Image component using the custom shader material
 
     [Header("Cinematic Slow Pacing Settings")]
     [SerializeField] private float moveToCenterDuration = 1.0f;  // Slower, majestic transition
     [SerializeField] private float unlockTransformDuration = 0.8f;
     [SerializeField] private Ease moveEase = Ease.OutQuart;
+
+    [Header("Test")]
+    [SerializeField] private RectTransform testElementToUnlock;
 
     private Action onContinueCallback;
     private RectTransform canvasRect;
@@ -29,7 +32,7 @@ public class UnlockEffectController : MonoBehaviour
     private void Awake()
     {
         canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
-        
+
         effectRootCanvasGroup.SetActive(false);
         continueButton.gameObject.SetActive(false);
         continueButton.onClick.AddListener(OnContinueClicked);
@@ -76,12 +79,12 @@ public class UnlockEffectController : MonoBehaviour
         unlockSeq.AppendInterval(0.2f); // Brief pause at center for dramatic effect
 
         // Step 2: Unlock transformation & Custom Shader light sweep beam
-        unlockSeq.AppendCallback(() => 
+        unlockSeq.AppendCallback(() =>
         {
             // Lock shrinks away
             lockIconObject.transform.DOScale(0f, 0.35f).SetEase(Ease.InBack)
                 .OnComplete(() => lockIconObject.SetActive(false));
-            
+
             // Text changes to actual unlocked feature name
             featureText.text = unlockedFeatureName;
             featureText.DOColor(Color.white, unlockTransformDuration);
@@ -97,7 +100,7 @@ public class UnlockEffectController : MonoBehaviour
         unlockSeq.AppendInterval(0.4f);
 
         // Step 3: Reveal Continue button gently
-        unlockSeq.AppendCallback(() => 
+        unlockSeq.AppendCallback(() =>
         {
             continueButton.gameObject.SetActive(true);
             continueButton.transform.localScale = Vector3.zero;
@@ -113,8 +116,8 @@ public class UnlockEffectController : MonoBehaviour
         dismissSeq.Append(continueButton.transform.DOScale(0f, 0.25f).SetEase(Ease.InBack));
         dismissSeq.Join(effectElement.DOScale(0f, 0.4f).SetEase(Ease.InBack));
         dismissSeq.Join(backgroundDim.DOFade(0f, 0.4f));
-        
-        dismissSeq.OnComplete(() => 
+
+        dismissSeq.OnComplete(() =>
         {
             effectRootCanvasGroup.SetActive(false);
             continueButton.interactable = true;
@@ -128,4 +131,12 @@ public class UnlockEffectController : MonoBehaviour
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, null, out Vector2 localPoint);
         return localPoint;
     }
+
+    #region Test
+    [ContextMenu("TestUnlockFeature")]
+    private void TestUnlockFeature()
+    {
+        PlayUnlockEffect(testElementToUnlock, "Test Unlock Feature", null);
+    }
+    #endregion
 }
