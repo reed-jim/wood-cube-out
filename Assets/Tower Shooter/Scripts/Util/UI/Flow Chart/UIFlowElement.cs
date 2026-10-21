@@ -9,6 +9,7 @@ namespace UI.FlowChart
     public class UIFlowElement : MonoBehaviour, IBeginDragHandler, IDragHandler
     {
         [Header("Boundary Settings")]
+        [SerializeField] private bool isMovable;
         [SerializeField] private bool clampToBounds = true;
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color limitReachedColor = new Color(1f, 0.4f, 0.4f, 1f); // Soft red tint on limit
@@ -46,6 +47,11 @@ namespace UI.FlowChart
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (!isMovable)
+            {
+                return;
+            }
+
             if (parentCanvas == null || parentContainer == null) return;
 
             float scaleFactor = parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? parentCanvas.scaleFactor : 1f;

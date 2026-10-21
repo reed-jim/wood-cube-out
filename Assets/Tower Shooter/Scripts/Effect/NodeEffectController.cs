@@ -121,8 +121,8 @@ public class NodeEffectController : MonoBehaviour
 
     public void SetSpeed(float newSpeed)
     {
-        float minHighSpeed = 1;
-        float maxHighSpeed = 2;
+        float minHighSpeed = 5;
+        float maxHighSpeed = 10;
 
         if (newSpeed > minHighSpeed)
         {
