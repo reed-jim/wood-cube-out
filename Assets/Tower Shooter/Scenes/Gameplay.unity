@@ -393,6 +393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 20062604}
   - component: {fileID: 20062606}
+  - component: {fileID: 20062607}
   - component: {fileID: 20062605}
   m_Layer: 5
   m_Name: Divider
@@ -418,7 +419,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 4}
+  m_SizeDelta: {x: 240, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &20062605
 MonoBehaviour:
@@ -458,6 +459,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20062603}
   m_CullTransparentMesh: 1
+--- !u!114 &20062607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20062603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
+  role: 29
 --- !u!1001 &25097036
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9256,10 +9270,10 @@ RectTransform:
   - {fileID: 2120134505}
   m_Father: {fileID: 1176471188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 32, y: 32}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 40}
+  m_SizeDelta: {x: 220, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &398947395
 MonoBehaviour:
@@ -9352,7 +9366,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3973caf801ba6864d98890213e90590b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 953de0a59c3f3c7498ecb7496a450d69, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9374,7 +9388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 24
+  role: 6
 --- !u!222 &398947399
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22182,7 +22196,7 @@ MonoBehaviour:
   changeVisibilityButton: {fileID: 398947396}
   changeVisibilityButtonIcon: {fileID: 2120134506}
   showFilterIcon: {fileID: 21300000, guid: 5744e7b6f4f5b064cb017ae960c55bf1, type: 3}
-  hideFilterIcon: {fileID: 21300000, guid: 78e286d7f4a85c44fbbf719b3565106b, type: 3}
+  hideFilterIcon: {fileID: 21300000, guid: eb098a8d94148854ab00cf4c6017a3e7, type: 3}
   isClosed: 0
 --- !u!1 &1184646121
 GameObject:
@@ -29655,9 +29669,9 @@ RectTransform:
   - {fileID: 1688514842}
   m_Father: {fileID: 1176471188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -120, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -200}
   m_SizeDelta: {x: 244, y: 404}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1955286560
@@ -31384,7 +31398,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 28, y: 28}
+  m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2120134506
 MonoBehaviour:
@@ -31406,7 +31420,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 78e286d7f4a85c44fbbf719b3565106b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: eb098a8d94148854ab00cf4c6017a3e7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -31428,7 +31442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 1
+  role: 7
 --- !u!222 &2120134508
 CanvasRenderer:
   m_ObjectHideFlags: 0
