@@ -121,7 +121,19 @@ public class NodeEffectController : MonoBehaviour
 
     public void SetSpeed(float newSpeed)
     {
-        materialInstance.SetFloat("_CycleSpeed", newSpeed);
+        float minHighSpeed = 1;
+        float maxHighSpeed = 2;
+
+        if (newSpeed > minHighSpeed)
+        {
+            materialInstance.SetFloat("_CycleSpeed", minHighSpeed);
+            materialInstance.SetFloat("_HighSpeedTransition", Mathf.Lerp(0, 1, (newSpeed - minHighSpeed) / maxHighSpeed));
+        }
+        else
+        {
+            materialInstance.SetFloat("_CycleSpeed", newSpeed);
+            materialInstance.SetFloat("_HighSpeedTransition", 0);
+        }
     }
 
     public void SetSpinSpeed(float newSpeed)
