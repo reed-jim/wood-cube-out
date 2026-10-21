@@ -13,9 +13,14 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     public StatUpgradeData Upgrade(BaseCharacter node, StatType statType)
     {
-        int upgradeTime = 0;
-
         StatUpgradeData statUpgradeData = GetStatUpgradeData(node, statType);
+
+        return Upgrade(node, statType, statUpgradeData);
+    }
+
+    public StatUpgradeData Upgrade(BaseCharacter node, StatType statType, StatUpgradeData statUpgradeData)
+    {
+        int upgradeTime = 0;
 
         if (node.upgrades.Any(item => item.Type == statType))
         {
@@ -105,6 +110,88 @@ public class UpgradeManager : Singleton<UpgradeManager>
         };
 
         return statUpgradeData;
+    }
+
+    public StatUpgradeData GetStatUpgradeDataMax(BaseCharacter node, StatType statType, double currentCoin)
+    {
+        Stat stat = node.stats.GetStat(statType);
+        float currentValue = stat.Value;
+
+        int currentUpgradeTime = 0;
+        if (node.upgrades.Any(item => item.Type == statType))
+        {
+            StatModifier oldStatModifier = node.upgrades.First(item => item.Type == statType);
+            currentUpgradeTime = oldStatModifier.UpgradeTime;
+        }
+
+        int startUpgradeTime = currentUpgradeTime + 1;
+
+        // Check if player can even afford the first upgrade
+        double firstCost = CurveManager.Ins.GetUpgradeNodeCost(startUpgradeTime);
+        if (currentCoin < firstCost)
+        {
+            return new StatUpgradeData
+            {
+                currentValue = currentValue,
+                nextValue = currentValue,
+                deltaValue = 0,
+                coinRequired = 0
+            };
+        }
+
+        // Binary search to find the maximum levels affordable without a heavy linear loop
+        int low = 1;
+        int high = 100000; // Adjust this upper bound safely based on your game's max level limits
+        int maxLevels = 0;
+        double totalCost = 0;
+        float totalDelta = 0;
+
+        // Fast binary search to find the highest valid level count player can afford
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+            double costSum = 0;
+            bool affordable = true;
+
+            // Calculate total cost for 'mid' levels from startUpgradeTime
+            // (Note: If CurveManager has a cumulative cost formula, you can replace this inner loop with a direct math formula)
+            for (int i = 0; i < mid; i++)
+            {
+                costSum += CurveManager.Ins.GetUpgradeNodeCost(startUpgradeTime + i);
+                if (costSum > currentCoin)
+                {
+                    affordable = false;
+                    break;
+                }
+            }
+
+            if (affordable)
+            {
+                maxLevels = mid;
+                low = mid + 1; // Try buying more
+            }
+            else
+            {
+                high = mid - 1; // Too expensive, try fewer
+            }
+        }
+
+        // Calculate exact total cost and total stat delta for the verified maxLevels
+        for (int i = 0; i < maxLevels; i++)
+        {
+            totalCost += CurveManager.Ins.GetUpgradeNodeCost(startUpgradeTime + i);
+            totalDelta += CurveManager.Ins.GetNextStatValue(statType, startUpgradeTime + i);
+        }
+
+        float newValue = currentValue + totalDelta;
+
+        return new StatUpgradeData
+        {
+            currentValue = currentValue,
+            nextValue = newValue,
+            deltaValue = totalDelta,
+            coinRequired = (float)totalCost
+        };
     }
 }
 

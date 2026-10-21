@@ -84,9 +84,7 @@ public class UpgradeItemUI : MonoBehaviour
 
         if (ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= statUpgradeData.coinRequired)
         {
-            UpgradeManager.Ins.Upgrade(node, statType);
-
-            // ShowAddedStatValueText((statUpgradeData.nextValue / statUpgradeData.currentValue) - 1, transform.position, transform);
+            UpgradeManager.Ins.Upgrade(node, statType, statUpgradeData);
 
             ResourceManager.Ins.DeductResource(ResourceType.Coin, statUpgradeData.coinRequired);
 
@@ -98,8 +96,42 @@ public class UpgradeItemUI : MonoBehaviour
         {
             if (!shakeCoinTextSequence.isAlive)
             {
-                Color initialColor = coinText.color;
+                shakeCoinTextSequence = SaferioTween.PunchAndChangeColor(coinText, effectScale: 1.3f);
+            }
+        }
+    }
 
+    [ContextMenu("Upgrade Max")]
+    public void UpgradeMax()
+    {
+        if (isLocked)
+        {
+            string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+            IngameNotificationManager.Ins.ShowNotification($"Reach <color={primaryHex}>{spaceObjectTypeToUnlock}</color> to upgrade this stat!");
+            return;
+        }
+
+        double currentCoins = ResourceManager.Ins.GetResourceValue(ResourceType.Coin);
+
+        // Get the max upgrade preview data based on available coins
+        StatUpgradeData maxUpgradeData = UpgradeManager.Ins.GetStatUpgradeDataMax(node, statType, currentCoins);
+
+        if (maxUpgradeData.coinRequired > 0 && currentCoins >= maxUpgradeData.coinRequired)
+        {
+            // Execute bulk upgrade in UpgradeManager without individual loop overhead
+            UpgradeManager.Ins.Upgrade(node, statType, maxUpgradeData);
+
+            // Deduct total accumulated cost once
+            ResourceManager.Ins.DeductResource(ResourceType.Coin, maxUpgradeData.coinRequired);
+
+            // Refresh UI text and power output
+            UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
+            PowerManager.Ins.ShowTotalPowerOutputPerSecond();
+        }
+        else
+        {
+            if (!shakeCoinTextSequence.isAlive)
+            {
                 shakeCoinTextSequence = SaferioTween.PunchAndChangeColor(coinText, effectScale: 1.3f);
             }
         }
