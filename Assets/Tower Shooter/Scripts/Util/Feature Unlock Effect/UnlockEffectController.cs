@@ -22,7 +22,7 @@ public class UnlockEffectController : MonoBehaviour
     [SerializeField] private Button continueButton;
 
     [Header("Cinematic Slow Pacing Settings")]
-    [SerializeField] private float moveToCenterDuration = 1.4f; // Slower, more deliberate start
+    [SerializeField] private float moveToCenterDuration = 1.4f;
     [SerializeField] private float unlockTransformDuration = 1.0f;
     [SerializeField] private Ease moveEase = Ease.OutQuart;
 
@@ -32,6 +32,7 @@ public class UnlockEffectController : MonoBehaviour
     private Action onContinueCallback;
     private RectTransform canvasRect;
     private Material effectMaterial;
+    private Vector2 targetOriginalAnchoredPos;
 
     private void Awake()
     {
@@ -67,58 +68,49 @@ public class UnlockEffectController : MonoBehaviour
         if (effectMaterial != null)
         {
             effectMaterial.SetFloat("_SweepPosition", -0.5f);
+            effectMaterial.SetFloat("_UnlockProgress", 0.0f); // Initialize locked[cite: 1]
+            effectMaterial.SetFloat("_DockingEffect", 0.0f);   // Initialize docking effect off[cite: 1]
         }
 
         // 2. Convert coordinates and place at origin target element position
-        Vector2 startAnchoredPos = GetCanvasPosition(elementToUnlock);
-        lockStateContainer.anchoredPosition = startAnchoredPos;
+        targetOriginalAnchoredPos = GetCanvasPosition(elementToUnlock);
+        lockStateContainer.anchoredPosition = targetOriginalAnchoredPos;
+        unlockStateContainer.anchoredPosition = Vector2.zero;
         lockStateContainer.localScale = Vector3.one;
         backgroundDim.alpha = 0f;
 
         // --- CINEMATIC TWEEN SEQUENCE ---
         Sequence unlockSeq = DOTween.Sequence();
 
-        // Step 1: Fade background & smooth, slow glide to screen center
         unlockSeq.Join(backgroundDim.DOFade(0.85f, moveToCenterDuration));
+        unlockSeq.AppendInterval(0.5f);
 
-        unlockSeq.AppendInterval(0.5f); // Delay 0.5 seconds
-        
         unlockSeq.Join(lockStateContainer.DOAnchorPos(Vector2.zero, moveToCenterDuration).SetEase(moveEase));
         unlockSeq.Join(lockStateContainer.DOScale(1.25f, moveToCenterDuration).SetEase(moveEase));
-
-        // Clearer pause at the center to let the player focus before the transformation
         unlockSeq.AppendInterval(0.35f);
 
-        // Step 2: Cross-fade from Lock State to Unlock State + Shader Sweep
         unlockSeq.AppendCallback(() =>
         {
-            // Fade out and shrink Lock State
             lockCanvasGroup.DOFade(0f, 0.4f);
             lockStateContainer.DOScale(0.8f, 0.4f).SetEase(Ease.InBack)
                 .OnComplete(() => lockStateContainer.gameObject.SetActive(false));
 
-            // Fade in and expand Unlock State
             unlockStateContainer.gameObject.SetActive(true);
             unlockCanvasGroup.DOFade(1f, unlockTransformDuration);
             unlockStateContainer.DOScale(1f, unlockTransformDuration).SetEase(Ease.OutBack);
 
-            // Punch scale effect on the whole card container
             unlockStateContainer.DOScale(1.4f, 0.35f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.OutQuad);
         });
 
         if (effectMaterial != null)
         {
-            // Sweep beam animation
+            unlockSeq.Join(effectMaterial.DOFloat(1.0f, "_UnlockProgress", unlockTransformDuration).SetEase(Ease.OutQuad));
             unlockSeq.Join(effectMaterial.DOFloat(1.5f, "_SweepPosition", 1.1f).SetEase(Ease.InOutSine));
-
-            // Punchy brightness flash on the card shader
-            effectMaterial.DOFloat(1.2f, "_UnlockFlash", 0.2f)
-                .SetLoops(2, LoopType.Yoyo);
+            unlockSeq.Join(effectMaterial.DOFloat(1.2f, "_UnlockFlash", 0.55f).SetLoops(2, LoopType.Yoyo));
         }
 
         unlockSeq.AppendInterval(0.5f);
 
-        // Step 3: Reveal Continue button gently
         unlockSeq.AppendCallback(() =>
         {
             continueButton.gameObject.SetActive(true);
@@ -131,19 +123,43 @@ public class UnlockEffectController : MonoBehaviour
     {
         continueButton.interactable = false;
 
-        float dismissDur = 0.45f;
-        float fadeDur = 0.3f;
+        float moveDuration = 0.65f;
+        float fadeDur = 0.25f;
 
         Sequence dismissSeq = DOTween.Sequence();
+        
+        // Hide Continue button instantly
         dismissSeq.Append(continueButton.transform.DOScale(0f, fadeDur).SetEase(Ease.InBack));
-        dismissSeq.Join(unlockStateContainer.DOScale(0f, dismissDur).SetEase(Ease.InBack));
-        dismissSeq.Join(backgroundDim.DOFade(0f, dismissDur));
+        dismissSeq.Join(backgroundDim.DOFade(0f, moveDuration));
 
-        dismissSeq.OnComplete(() =>
+        // Keep progress at 1.0 (fully unlocked) while moving back to destination[cite: 1, 2]
+        if (effectMaterial != null)
         {
-            effectRootCanvasGroup.SetActive(false);
-            continueButton.interactable = true;
-            onContinueCallback?.Invoke();
+            effectMaterial.SetFloat("_UnlockProgress", 1.0f);
+            effectMaterial.SetFloat("_DockingEffect", 0.0f);
+        }
+
+        // Glide the fully unlocked state back to the original slot[cite: 1, 2]
+        dismissSeq.Join(unlockStateContainer.DOAnchorPos(targetOriginalAnchoredPos, moveDuration).SetEase(Ease.InOutQuad));
+
+        // When it arrives at destination, trigger the shader's docking absorption effect
+        dismissSeq.AppendCallback(() =>
+        {
+            if (effectMaterial != null)
+            {
+                effectMaterial.DOFloat(1.0f, "_DockingEffect", 0.3f).SetEase(Ease.InQuad).OnComplete(() =>
+                {
+                    effectRootCanvasGroup.SetActive(false);
+                    continueButton.interactable = true;
+                    onContinueCallback?.Invoke();
+                });
+            }
+            else
+            {
+                effectRootCanvasGroup.SetActive(false);
+                continueButton.interactable = true;
+                onContinueCallback?.Invoke();
+            }
         });
     }
 
