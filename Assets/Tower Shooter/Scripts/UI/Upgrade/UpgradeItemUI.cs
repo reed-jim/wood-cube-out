@@ -1,3 +1,4 @@
+using System.Collections;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -137,6 +138,13 @@ public class UpgradeItemUI : MonoBehaviour
         }
     }
 
+    public bool IsEnoughPowerToUpgrade()
+    {
+        StatUpgradeData statUpgradeData = UpgradeManager.Ins.GetStatUpgradeData(node, statType);
+
+        return ResourceManager.Ins.GetResourceValue(ResourceType.Coin) >= statUpgradeData.coinRequired;
+    }
+
     public void UpdateText(StatUpgradeData statUpgradeData)
     {
         statIcon.sprite = statColorConfigSO.GetIcon(statType);
@@ -166,6 +174,23 @@ public class UpgradeItemUI : MonoBehaviour
             coinText.text = $"<color={errorHex}>{CommonUtil.FormatNumber(statUpgradeData.coinRequired)} <sprite=0 color={errorHex}>";
         }
     }
+
+    #region Auto Clicker
+    private IEnumerator AutoClicking()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 5f);
+
+        while (true)
+        {
+            if (IsEnoughPowerToUpgrade())
+            {
+                Upgrade();
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+    #endregion
 
     #region Lock
     private void Lock()
