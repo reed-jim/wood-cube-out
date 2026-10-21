@@ -19,7 +19,7 @@ namespace UI.FlowChart
         private RectTransform rectTransform;
         private RectTransform parentContainer;
         private Canvas parentCanvas;
-        private Image backgroundImage;
+        [SerializeField] private Image backgroundImage;
 
         private Coroutine flashCoroutine;
 
@@ -32,7 +32,6 @@ namespace UI.FlowChart
             rectTransform = GetComponent<RectTransform>();
             parentCanvas = GetComponentInParent<Canvas>();
             parentContainer = rectTransform.parent as RectTransform;
-            backgroundImage = GetComponent<Image>();
         }
 
         void OnDestroy()

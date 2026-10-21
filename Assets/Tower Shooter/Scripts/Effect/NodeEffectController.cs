@@ -170,7 +170,7 @@ public class NodeEffectController : MonoBehaviour
     {
         if (statType == StatType.AttackSpeed)
         {
-            SetSpeed((float)value);
+            SetSpeed((float)(value * GameConstants.nodeSpeedMultiplier));
         }
     }
     #endregion

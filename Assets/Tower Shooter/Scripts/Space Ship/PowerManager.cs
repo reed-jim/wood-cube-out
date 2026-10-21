@@ -223,9 +223,9 @@ public class PowerManager : Singleton<PowerManager>
         return Math.Pow(10, tier * 2);
     }
 
-    public static int GetPowerProgressForShader(double power)
+    public static float GetPowerProgressForShader(double power)
     {
-        return 10 * GetPowerTier(power);
+        return (float)(2.5 * Math.Log10(Math.Max(power, 1.0)));
     }
 
     public double GetPowerMultiplierBasedOnTier(BaseCharacter node, int tier)
