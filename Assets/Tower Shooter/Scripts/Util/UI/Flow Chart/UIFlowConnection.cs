@@ -88,7 +88,24 @@ namespace UI.FlowChart
 
             Vector2 p1 = GetLocalPoint(sourceElement.RectTransform);
             Vector2 p2 = GetLocalPoint(targetElement.RectTransform);
-            Vector2 midPoint = (p1 + p2) * 0.5f;
+
+            Vector2 borderP1 = p1;
+            Vector2 borderP2 = p2;
+
+            if (p1.x < p2.x)
+            {
+                borderP1.x += 0.5f * sourceElement.RectTransform.sizeDelta.x;
+                borderP2.x -= 0.5f * targetElement.RectTransform.sizeDelta.x;
+            }
+            else
+            {
+                borderP1.x -= 0.5f * sourceElement.RectTransform.sizeDelta.x;
+                borderP2.x += 0.5f * targetElement.RectTransform.sizeDelta.x;
+            }
+
+            Debug.Log($"UpdateBadgePosition {name} {p1} {borderP1.x} {borderP2.x}");
+
+            Vector2 midPoint = (borderP1 + borderP2) * 0.5f;
 
             badgeRect.anchoredPosition = midPoint + operationTextOffset;
         }

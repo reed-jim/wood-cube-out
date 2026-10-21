@@ -185,7 +185,8 @@ public class BaseCharacter : MonoBehaviour
                 double speed = stats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
                 double efficiency = stats.GetStat(StatType.Efficiency).Value;
 
-                speedToSpaceShip = efficiency * (basePower * speed);
+                // speedToSpaceShip = efficiency * (basePower * speed);
+                speedToSpaceShip = basePower * speed;
                 powerText.text = $"{basePower:F2}";
 
                 // --- HIGH SPEED MODE (Delta-time Accumulation) ---
