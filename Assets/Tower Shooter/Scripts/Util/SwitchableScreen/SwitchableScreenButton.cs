@@ -9,6 +9,7 @@ public class SwitchableScreenButton : MonoBehaviour
     [SerializeField] private string id;
 
     [Header("UI")]
+    [SerializeField] private RectTransform container;
     [SerializeField] private Button switchButton;
     [SerializeField] private List<ThemeableUI> themeableElements;
 
@@ -28,6 +29,7 @@ public class SwitchableScreenButton : MonoBehaviour
     {
         switchScreenEvent += OnScreenSwitch;
         FeatureUnlockManager.loadFeatureLockStateDataEvent += OnLoadFeatureLockStateData;
+        FeatureUnlockManager.unlockFeatureEvent += OnUnlockFeature;
 
         switchButton.onClick.AddListener(SwitchScreen);
     }
@@ -36,6 +38,7 @@ public class SwitchableScreenButton : MonoBehaviour
     {
         switchScreenEvent -= OnScreenSwitch;
         FeatureUnlockManager.loadFeatureLockStateDataEvent -= OnLoadFeatureLockStateData;
+        FeatureUnlockManager.unlockFeatureEvent -= OnUnlockFeature;
     }
 
     private void SwitchScreen()
@@ -50,6 +53,7 @@ public class SwitchableScreenButton : MonoBehaviour
         }
     }
 
+    #region Event
     private void OnScreenSwitch(SwitchableScreenType switchableScreenType)
     {
         for (int i = 0; i < themeableElements.Count; i++)
@@ -71,7 +75,7 @@ public class SwitchableScreenButton : MonoBehaviour
         {
             isUnlocked = FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType, out spaceObjectTypeToUnlock);
 
-            lockOverlay.gameObject.SetActive(!isUnlocked);
+            SetLockStateVisually(isUnlocked);
         }
         else
         {
@@ -79,9 +83,25 @@ public class SwitchableScreenButton : MonoBehaviour
         }
     }
 
+    private void OnUnlockFeature(FeatureType featureType)
+    {
+        if (featureType == this.featureType && !IsUnlock())
+        {
+            UnlockEffectController.Ins.PlayUnlockEffect(container, $"{CommonUtil.ToReadableEnumName(featureType)}");
+
+            SetLockStateVisually(true);
+        }
+    }
+    #endregion
+
+    public void SetLockStateVisually(bool isUnlocked)
+    {
+        lockOverlay.gameObject.SetActive(!isUnlocked);
+    }
+
     protected virtual bool IsUnlock()
     {
-        return isUnlocked;
+        return FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType);
     }
 
     protected virtual string GetLockDescription()

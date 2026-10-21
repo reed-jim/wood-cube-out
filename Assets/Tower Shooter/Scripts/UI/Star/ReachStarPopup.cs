@@ -92,8 +92,9 @@ public class ReachStarPopup : BasePopup
             augment.isUnlocked = true;
         }
 
-        goNextStarEvent?.Invoke();
-
-        Hide();
+        Hide(onCompletedAction: () =>
+        {
+            goNextStarEvent?.Invoke();
+        });
     }
 }

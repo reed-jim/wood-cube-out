@@ -231,6 +231,7 @@ RectTransform:
   - {fileID: 653106929}
   - {fileID: 500147988}
   - {fileID: 1508057865}
+  - {fileID: 1097614911}
   - {fileID: 496948522}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9821,6 +9822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
   id: 
+  container: {fileID: 0}
   switchButton: {fileID: 449118458}
   themeableElements:
   - {fileID: 562506659}
@@ -16875,6 +16877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
   id: 
+  container: {fileID: 0}
   switchButton: {fileID: 647468300}
   themeableElements:
   - {fileID: 1004709808}
@@ -21406,6 +21409,108 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1001 &1097614910
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 183248}
+    m_Modifications:
+    - target: {fileID: 8242775230250700878, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_Name
+      value: Unlock Effect Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+--- !u!224 &1097614911 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8299411566924531764, guid: 9e5df2fcd39fce648b32fec605ff56f6, type: 3}
+  m_PrefabInstance: {fileID: 1097614910}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1101193469
 GameObject:
   m_ObjectHideFlags: 0
@@ -27598,6 +27703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchableScreenButton
   id: 
+  container: {fileID: 0}
   switchButton: {fileID: 1730519638}
   themeableElements:
   - {fileID: 1205074759}

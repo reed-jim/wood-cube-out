@@ -36,7 +36,7 @@ public class SpaceShip : Singleton<SpaceShip>
     private const float FramePerSecond = 60;
     private int updateSpeedTick;
 
-    public static event Action<VoyageData> reachStarEvent;
+    public static event Action<SpaceObjectType> startNewVoyageEvent;
 
     protected override void MoreActionOnAwake()
     {
@@ -146,6 +146,8 @@ public class SpaceShip : Singleton<SpaceShip>
             voyageData.remaningKm = GameConstants.KmPerLightYear * CurveManager.Ins.GetVoyageDistance(voyageData.starPathConfigIndex);
 
             StarManager.Ins.SetStarPathConfig(voyageData.starPathConfigIndex);
+
+            startNewVoyageEvent?.Invoke(StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex).spaceObjectType);
 
             Init();
         }

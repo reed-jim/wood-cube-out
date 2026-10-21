@@ -19,6 +19,19 @@ public class FeatureUnlockManager : Singleton<FeatureUnlockManager>
     private FeatureLockStateData featureLockStateData;
 
     public static event Action loadFeatureLockStateDataEvent;
+    public static event Action<FeatureType> unlockFeatureEvent;
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        SpaceShip.startNewVoyageEvent += OnStartNewVoyage;
+    }
+
+    void OnDestroy()
+    {
+        SpaceShip.startNewVoyageEvent -= OnStartNewVoyage;
+    }
 
     void Start()
     {
@@ -49,6 +62,11 @@ public class FeatureUnlockManager : Singleton<FeatureUnlockManager>
         spaceObjectTypeToUnlock = SpaceObjectType.Earth;
 
         return false;
+    }
+
+    public bool IsFeatureUnlocked(FeatureType featureType)
+    {
+        return IsFeatureUnlocked(featureType, out _);
     }
 
     public SpaceObjectType GetSpaceObjectTypeToUnlock(FeatureType featureType)
@@ -94,6 +112,32 @@ public class FeatureUnlockManager : Singleton<FeatureUnlockManager>
 
         SaveFeatureLockStateData();
     }
+
+    #region Event
+    private void OnStartNewVoyage(SpaceObjectType spaceObjectType)
+    {
+        bool isDirty = false;
+
+        for (int i = 0; i < featureLockStateData.featureLockStateDataItems.Count; i++)
+        {
+            FeatureLockStateDataItem featureLockStateDataItem = featureLockStateData.featureLockStateDataItems[i];
+
+            if (featureLockStateDataItem.spaceObjectTypeToUnlock == spaceObjectType)
+            {
+                featureLockStateDataItem.isUnlocked = true;
+
+                unlockFeatureEvent?.Invoke(featureLockStateDataItem.featureType);
+
+                isDirty = true;
+            }
+        }
+
+        if (isDirty)
+        {
+            SaveFeatureLockStateData();
+        }
+    }
+    #endregion
 
     #region Save/Load
     private void LoadFeatureLockStateData()

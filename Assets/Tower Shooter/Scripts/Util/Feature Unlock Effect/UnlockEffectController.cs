@@ -4,7 +4,7 @@ using TMPro;
 using DG.Tweening;
 using System;
 
-public class UnlockEffectController : MonoBehaviour
+public class UnlockEffectController : Singleton<UnlockEffectController>
 {
     [Header("UI References")]
     [SerializeField] private GameObject effectRootCanvasGroup;
@@ -33,9 +33,12 @@ public class UnlockEffectController : MonoBehaviour
     private RectTransform canvasRect;
     private Material effectMaterial;
     private Vector2 targetOriginalAnchoredPos;
+    private bool isBusy;
 
-    private void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
 
         effectRootCanvasGroup.SetActive(false);
@@ -51,6 +54,15 @@ public class UnlockEffectController : MonoBehaviour
 
     public void PlayUnlockEffect(RectTransform elementToUnlock, string featureName, Action onComplete = null)
     {
+        if (isBusy)
+        {
+            return;
+        }
+        else
+        {
+            isBusy = true;
+        }
+
         onContinueCallback = onComplete;
         effectRootCanvasGroup.SetActive(true);
         continueButton.gameObject.SetActive(false);
@@ -68,8 +80,8 @@ public class UnlockEffectController : MonoBehaviour
         if (effectMaterial != null)
         {
             effectMaterial.SetFloat("_SweepPosition", -0.5f);
-            effectMaterial.SetFloat("_UnlockProgress", 0.0f); // Initialize locked[cite: 1]
-            effectMaterial.SetFloat("_DockingEffect", 0.0f);   // Initialize docking effect off[cite: 1]
+            effectMaterial.SetFloat("_UnlockProgress", 0.0f); // Initialize locked
+            effectMaterial.SetFloat("_DockingEffect", 0.0f);   // Initialize docking effect off
         }
 
         // 2. Convert coordinates and place at origin target element position
@@ -127,7 +139,7 @@ public class UnlockEffectController : MonoBehaviour
         float fadeDur = 0.25f;
 
         Sequence dismissSeq = DOTween.Sequence();
-        
+
         // Hide Continue button instantly
         dismissSeq.Append(continueButton.transform.DOScale(0f, fadeDur).SetEase(Ease.InBack));
         dismissSeq.Join(backgroundDim.DOFade(0f, moveDuration));
@@ -152,6 +164,8 @@ public class UnlockEffectController : MonoBehaviour
                     effectRootCanvasGroup.SetActive(false);
                     continueButton.interactable = true;
                     onContinueCallback?.Invoke();
+
+                    isBusy = false;
                 });
             }
             else
