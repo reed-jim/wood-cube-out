@@ -75,8 +75,8 @@ public class AlternativeAugmentEffectRuntime : BaseAugmentEffectRuntime
 
         if (node.currentCycle % 2 == 0)
         {
-            float oldPowerValue = target.GetStat(StatType.Damage).Value;
-            float newPowerValue;
+            double oldPowerValue = target.GetStat(StatType.Damage).Value;
+            double newPowerValue;
 
             target.RemoveModifier(speedIncrease);
             newPowerValue = target.AddModifier(powerIncrease);

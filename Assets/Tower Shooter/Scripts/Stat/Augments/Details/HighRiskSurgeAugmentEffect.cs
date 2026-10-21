@@ -88,7 +88,7 @@ public class HighRiskSurgeAugmentEffectRuntime : BaseAugmentEffectRuntime
 
         if (UnityEngine.Random.value < chanceToBurst)
         {
-            float burstPower = burstPercentToPower * stats.GetStat(StatType.Damage).Value;
+            double burstPower = burstPercentToPower * stats.GetStat(StatType.Damage).Value;
 
             node.GenerateInstantPower(burstPower);
 
@@ -105,7 +105,7 @@ public class HighRiskSurgeAugmentEffectRuntime : BaseAugmentEffectRuntime
         {
             if (debuffStatModifier != null)
             {
-                if (Mathf.Abs(debuffStatModifier.Value) >= maxLosePercent)
+                if (Mathf.Abs((float)debuffStatModifier.Value) >= maxLosePercent)
                 {
                     return;
                 }

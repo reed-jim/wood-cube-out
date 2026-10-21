@@ -30,7 +30,7 @@ public class NodeGroupDetailUI : BasePopup
     {
         nameText.text = nodeGroup.name;
 
-        float totalPower = 0;
+        double totalPower = 0;
 
         for (int i = 0; i < nodeGroup.nodes.Count; i++)
         {

@@ -4,37 +4,37 @@ using UnityEngine;
 
 public class BasePlayer : BaseCharacter
 {
-    public float delayPerShot;
+    // public float delayPerShot;
 
-    void Start()
-    {
-        StartCoroutine(Shooting());
-    }
+    // void Start()
+    // {
+    //     StartCoroutine(Shooting());
+    // }
 
-    public void Shoot()
-    {
-        Projectile projectile = ObjectPoolingEverything.GetFromPool<Projectile>(GameConstants.projectile);
+    // public void Shoot()
+    // {
+    //     Projectile projectile = ObjectPoolingEverything.GetFromPool<Projectile>(GameConstants.projectile);
 
-        float flySpeed = stats.GetStat(StatType.FlySpeed).Value;
-    }
+    //     float flySpeed = stats.GetStat(StatType.FlySpeed).Value;
+    // }
 
-    private IEnumerator Shooting()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+    // private IEnumerator Shooting()
+    // {
+    //     WaitForSeconds waitForSeconds = new WaitForSeconds(1);
 
-        yield return waitForSeconds;
+    //     yield return waitForSeconds;
 
-        float shootSpeed = stats.GetStat(StatType.AttackSpeed).Value;
-        delayPerShot = 1 / shootSpeed;
+    //     float shootSpeed = stats.GetStat(StatType.AttackSpeed).Value;
+    //     delayPerShot = 1 / shootSpeed;
 
-        while (true)
-        {
-            Shoot();
+    //     while (true)
+    //     {
+    //         Shoot();
 
-            shootSpeed = stats.GetStat(StatType.AttackSpeed).Value;
-            delayPerShot = 1 / shootSpeed;
+    //         shootSpeed = stats.GetStat(StatType.AttackSpeed).Value;
+    //         delayPerShot = 1 / shootSpeed;
 
-            yield return new WaitForSeconds(delayPerShot);
-        }
-    }
+    //         yield return new WaitForSeconds(delayPerShot);
+    //     }
+    // }
 }

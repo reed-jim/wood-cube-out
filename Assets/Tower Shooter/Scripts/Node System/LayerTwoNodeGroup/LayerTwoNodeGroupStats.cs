@@ -27,7 +27,7 @@ public class LayerTwoNodeGroupStats : MonoBehaviour
         return newStat;
     }
 
-    public float GetValue(StatType type) => GetStat(type).Value;
+    public double GetValue(StatType type) => GetStat(type).Value;
 
     #region Save/Load
     public void SaveStats()

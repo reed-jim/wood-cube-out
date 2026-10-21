@@ -83,8 +83,8 @@ public class NodeDetailUI : BasePopup
     {
         Stat stat = node.serviceLocator.stats.GetStat(statType);
 
-        float baseValue = stat.BaseValue;
-        float currentValue = stat.Value;
+        double baseValue = stat.BaseValue;
+        double currentValue = stat.Value;
 
         UIElementsOfStats[statType].statText.text = $"{statType}: <color={DynamicThemeManager.Ins.PrimaryHex}>{node.serviceLocator.stats.GetStat(statType).Value}";
     }

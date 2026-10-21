@@ -70,7 +70,7 @@ public class CritBoostSpeedAugmentEffectRuntime : BaseAugmentEffectRuntime
     public int numCycleBoost;
     public int remaningCycle;
 
-    private float bonusPowerEachCycle;
+    private double bonusPowerEachCycle;
 
     public void Init(StatModifierData speedBoost, int numCycleBoost)
     {
@@ -98,9 +98,9 @@ public class CritBoostSpeedAugmentEffectRuntime : BaseAugmentEffectRuntime
 
         if (node.isJustCrit)
         {
-            float powerValue = stats.GetStat(StatType.Damage).Value;
-            float oldSpeedValue = stats.GetStat(StatType.AttackSpeed).Value;
-            float newSpeedValue;
+            double powerValue = stats.GetStat(StatType.Damage).Value;
+            double oldSpeedValue = stats.GetStat(StatType.AttackSpeed).Value;
+            double newSpeedValue;
 
             newSpeedValue = stats.AddModifier(speedStatModifier, isApplyAugmentEffect: false);
 

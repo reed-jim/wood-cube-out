@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class UpgradeManager : Singleton<UpgradeManager>
 {
-    public BaseCharacter player;
-
-    [Header("Customize")]
-    public float percentAddPerUpgrade;
-
     public static event Action<StatType> upgradeStatEvent;
 
     public StatUpgradeData Upgrade(BaseCharacter node, StatType statType)
@@ -55,8 +50,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
         node.upgrades.Add(statModifier);
 
-        float power = node.stats.GetStat(StatType.Damage).Value;
-        float speed = node.stats.GetStat(StatType.AttackSpeed).Value;
+        double power = node.stats.GetStat(StatType.Damage).Value;
+        double speed = node.stats.GetStat(StatType.AttackSpeed).Value;
     }
 
     public void RemoveUpgrade(BaseCharacter node, StatModifier statModifier)
@@ -69,15 +64,15 @@ public class UpgradeManager : Singleton<UpgradeManager>
     public StatUpgradeData GetStatUpgradeData(BaseCharacter node, StatType statType)
     {
         int upgradeTime = 0;
-        float currentValue = 0;
-        float newValue = 0;
-        float deltaValue = 0;
-        float nextCoinRequired = 0;
+        double currentValue = 0;
+        double newValue = 0;
+        double deltaValue = 0;
+        double nextCoinRequired = 0;
 
         Stat stat = node.stats.GetStat(statType);
 
-        float baseStatValue = stat.BaseValue;
-        float currentStatValue = stat.Value;
+        double baseStatValue = stat.BaseValue;
+        double currentStatValue = stat.Value;
 
         if (node.upgrades.Any(item => item.Type == statType))
         {
@@ -115,7 +110,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
     public StatUpgradeData GetStatUpgradeDataMax(BaseCharacter node, StatType statType, double currentCoin)
     {
         Stat stat = node.stats.GetStat(statType);
-        float currentValue = stat.Value;
+        double currentValue = stat.Value;
 
         int currentUpgradeTime = 0;
         if (node.upgrades.Any(item => item.Type == statType))
@@ -144,7 +139,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
         int high = 100000; // Adjust this upper bound safely based on your game's max level limits
         int maxLevels = 0;
         double totalCost = 0;
-        float totalDelta = 0;
+        double totalDelta = 0;
 
         // Fast binary search to find the highest valid level count player can afford
         while (low <= high)
@@ -183,7 +178,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
             totalDelta += CurveManager.Ins.GetNextStatValue(statType, startUpgradeTime + i);
         }
 
-        float newValue = currentValue + totalDelta;
+        double newValue = currentValue + totalDelta;
 
         return new StatUpgradeData
         {
@@ -197,8 +192,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
 public struct StatUpgradeData
 {
-    public float currentValue;
-    public float nextValue;
-    public float deltaValue;
-    public float coinRequired;
+    public double currentValue;
+    public double nextValue;
+    public double deltaValue;
+    public double coinRequired;
 }

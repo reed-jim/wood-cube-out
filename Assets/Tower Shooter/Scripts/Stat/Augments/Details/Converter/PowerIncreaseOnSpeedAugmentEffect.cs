@@ -46,9 +46,9 @@ public class PowerIncreaseOnSpeedAugmentEffectRuntime : MonoBehaviour
 
     public void Apply(CharacterStats stats, float powerPerSpeed)
     {
-        float speed = stats.GetStat(StatType.AttackSpeed).Value;
+        double speed = stats.GetStat(StatType.AttackSpeed).Value;
 
-        float bonusPower = powerPerSpeed * speed;
+        double bonusPower = powerPerSpeed * speed;
 
         StatModifier statModifier = new StatModifier(StatType.Damage, ModifierType.Flat, bonusPower);
 

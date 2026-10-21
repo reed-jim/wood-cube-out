@@ -38,11 +38,11 @@ public class CharacterStats : MonoBehaviour
         return newStat;
     }
 
-    public float GetValue(StatType type) => GetStat(type).Value;
+    public double GetValue(StatType type) => GetStat(type).Value;
 
-    public float AddModifier(StatModifier mod, bool isApplyAugmentEffect = true, bool isInvokeStatModifiedEvent = true, bool isSave = true)
+    public double AddModifier(StatModifier mod, bool isApplyAugmentEffect = true, bool isInvokeStatModifiedEvent = true, bool isSave = true)
     {
-        float newValue = GetStat(mod.Type).AddModifier(mod);
+        double newValue = GetStat(mod.Type).AddModifier(mod);
 
         OnStatModified?.Invoke(mod.Type, newValue);
 

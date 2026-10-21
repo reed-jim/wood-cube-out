@@ -113,7 +113,7 @@ public class PowerManager : Singleton<PowerManager>
         }
     }
 
-    public void AddPower(float power)
+    public void AddPower(double power)
     {
         // ResourceManager.Ins.ChangeResource(ResourceType.Coin, power);
     }
@@ -144,14 +144,14 @@ public class PowerManager : Singleton<PowerManager>
 
             CharacterStats stats = nodes[i].serviceLocator.stats;
 
-            float power = stats.GetStat(StatType.Damage).Value;
-            float cycleSpeed = stats.GetStat(StatType.AttackSpeed).Value;
-            float critChance = stats.GetStat(StatType.CritChance).Value;
-            float CritMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
+            double power = stats.GetStat(StatType.Damage).Value;
+            double cycleSpeed = stats.GetStat(StatType.AttackSpeed).Value;
+            double critChance = stats.GetStat(StatType.CritChance).Value;
+            double CritMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
 
             // Calculate average DPS for this node
-            float averageDamagePerHit = power * (1f + (critChance * (CritMultiplier - 1f)));
-            float nodeDps = averageDamagePerHit * cycleSpeed * GameConstants.nodeSpeedMultiplier;
+            double averageDamagePerHit = power * (1f + (critChance * (CritMultiplier - 1f)));
+            double nodeDps = averageDamagePerHit * cycleSpeed * GameConstants.nodeSpeedMultiplier;
 
             powerOutputPerSecond += nodeDps;
         }
@@ -182,9 +182,9 @@ public class PowerManager : Singleton<PowerManager>
         IngameNotificationManager.Ins.ShowNotification(notificationString, isPlayEffect: true);
     }
 
-    public float GetSpaceShipSpeed()
+    public double GetSpaceShipSpeed()
     {
-        float totalSpeed = 0;
+        double totalSpeed = 0;
 
         for (int i = 0; i < NodeManager.Ins.nodes.Count; i++)
         {

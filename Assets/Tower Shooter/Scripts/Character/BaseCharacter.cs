@@ -14,7 +14,7 @@ public class BaseCharacter : MonoBehaviour
     public CharacterServiceLocator serviceLocator;
     public CharacterStats stats;
 
-    public float speedToSpaceShip;
+    public double speedToSpaceShip;
 
     public NodeData nodeData;
 
@@ -25,7 +25,7 @@ public class BaseCharacter : MonoBehaviour
     public bool isPaused;
     public bool isIdle;
     public int currentCycle;
-    public float lastPowerGenerated;
+    public double lastPowerGenerated;
     public bool isJustCrit;
     public bool isGuaranteedCrit;
     public NodeGroup nodeGroup;
@@ -54,7 +54,7 @@ public class BaseCharacter : MonoBehaviour
 
     // Throttling and accumulation trackers for high speed
     private float highSpeedTimer;
-    private float highSpeedAccumulatedPower;
+    private double highSpeedAccumulatedPower;
     private bool highSpeedHasCrit;
 
     public static event Action<BaseCharacter> cycleCompleteEvent;
@@ -181,9 +181,9 @@ public class BaseCharacter : MonoBehaviour
         {
             if (!isPaused)
             {
-                float basePower = stats.GetStat(StatType.Damage).Value;
-                float speed = stats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
-                float efficiency = stats.GetStat(StatType.Efficiency).Value;
+                double basePower = stats.GetStat(StatType.Damage).Value;
+                double speed = stats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
+                double efficiency = stats.GetStat(StatType.Efficiency).Value;
 
                 speedToSpaceShip = efficiency * (basePower * speed);
                 powerText.text = $"{basePower:F2}";
@@ -191,22 +191,22 @@ public class BaseCharacter : MonoBehaviour
                 // --- HIGH SPEED MODE (Delta-time Accumulation) ---
                 if (speed >= highSpeedThreshold)
                 {
-                    UpdateShaderProperties(1.0f, 1.0f, Time.time * speed * 0.5f);
+                    UpdateShaderProperties(1.0f, 1.0f, (float)(Time.time * speed * 0.5f));
 
-                    float deltaCycles = speed * Time.deltaTime;
-                    float criticalChance = stats.GetStat(StatType.CritChance).Value;
-                    float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
-                    float chanceForMorePower = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
-                    float powerMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
-                    float chanceToRepeat = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
+                    double deltaCycles = speed * Time.deltaTime;
+                    double criticalChance = stats.GetStat(StatType.CritChance).Value;
+                    double criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
+                    double chanceForMorePower = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
+                    double powerMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
+                    double chanceToRepeat = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
 
                     // Calculate average power multiplier per cycle
-                    float avgCritMultiplier = 1f + (Mathf.Clamp01(criticalChance) * (criticalMultiplier - 1f));
-                    float avgMorePowerMultiplier = 1f + (Mathf.Clamp01(chanceForMorePower) * (powerMultiplier - 1f));
-                    float avgRepeatMultiplier = 1f + Mathf.Clamp01(chanceToRepeat);
+                    double avgCritMultiplier = 1f + (criticalChance * (criticalMultiplier - 1f));
+                    double avgMorePowerMultiplier = 1f + (chanceForMorePower * (powerMultiplier - 1f));
+                    double avgRepeatMultiplier = 1f + chanceToRepeat;
 
-                    float powerPerCycle = basePower * avgCritMultiplier * avgMorePowerMultiplier * avgRepeatMultiplier;
-                    float framePower = powerPerCycle * deltaCycles;
+                    double powerPerCycle = basePower * avgCritMultiplier * avgMorePowerMultiplier * avgRepeatMultiplier;
+                    double framePower = powerPerCycle * deltaCycles;
 
                     PowerManager.Ins.AddPower(framePower);
 
@@ -224,7 +224,7 @@ public class BaseCharacter : MonoBehaviour
                         highSpeedHasCrit = false;
                     }
 
-                    int completedCyclesThisFrame = Mathf.FloorToInt(deltaCycles);
+                    int completedCyclesThisFrame = Mathf.FloorToInt((float)deltaCycles);
                     for (int i = 0; i < Mathf.Min(completedCyclesThisFrame, 5); i++)
                     {
                         ApplyAugmentEffectsOnCycleCompletion();
@@ -238,8 +238,8 @@ public class BaseCharacter : MonoBehaviour
                 // --- NORMAL MODE (Discrete Cycles & Tweens) ---
                 else
                 {
-                    float interval = 1f / speed;
-                    float highSpeedVisualFactor = Mathf.Clamp01(speed / highSpeedThreshold);
+                    float interval = (float)(1f / speed);
+                    float highSpeedVisualFactor = (float)(speed / highSpeedThreshold);
 
                     Tween progressTween = Tween.Custom(0f, 1f, duration: interval, ease: Ease.Linear, onValueChange: newVal =>
                     {
@@ -247,19 +247,19 @@ public class BaseCharacter : MonoBehaviour
 
                         nodeEffectController.SetProgress(newVal);
 
-                        UpdateShaderProperties(newVal, highSpeedVisualFactor, Time.time * speed);
+                        UpdateShaderProperties(newVal, highSpeedVisualFactor, (float)(Time.time * speed));
                     });
 
                     yield return progressTween.ToYieldInstruction();
 
                     basePower = stats.GetStat(StatType.Damage).Value;
 
-                    float power = basePower;
-                    float criticalChance = stats.GetStat(StatType.CritChance).Value;
-                    float criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
-                    float chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
-                    float powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
-                    float chanceToRepeatLastCyclePower = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
+                    double power = basePower;
+                    double criticalChance = stats.GetStat(StatType.CritChance).Value;
+                    double criticalMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
+                    double chanceForMorePowerOnCircleCompletion = stats.GetStat(StatType.ChanceForMorePowerOnCycleCompletion).Value;
+                    double powerOnCircleCompletionMultiplier = stats.GetStat(StatType.PowerOnCircleCompletionMultiplier).Value;
+                    double chanceToRepeatLastCyclePower = stats.GetStat(StatType.ChanceToRepeatLastCyclePower).Value;
                     bool isCritical = false;
 
                     // Crit
@@ -322,7 +322,7 @@ public class BaseCharacter : MonoBehaviour
         instanceMaterial.SetFloat(RotationID, rotation);
     }
 
-    public void GenerateInstantPower(float power, float delay = 0.3f)
+    public void GenerateInstantPower(double power, float delay = 0.3f)
     {
         Tween.Delay(delay).OnComplete(() =>
         {
@@ -334,15 +334,15 @@ public class BaseCharacter : MonoBehaviour
         });
     }
 
-    private void ShowGeneratedPowerText(float power, bool isCritical, Vector3 position, Transform parent)
+    private void ShowGeneratedPowerText(double power, bool isCritical, Vector3 position, Transform parent)
     {
         return;
 
-        DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+        // DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
 
-        damageText.transform.SetParent(parent);
+        // damageText.transform.SetParent(parent);
 
-        damageText.ShowDamage(power, position, isCritical, target: transform);
+        // damageText.ShowDamage(power, position, isCritical, target: transform);
     }
 
     private void ApplyAugmentEffectsOnCycleCompletion()

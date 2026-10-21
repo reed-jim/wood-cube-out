@@ -23,7 +23,7 @@ public class VampireAugmentEffect : AugmentEffect
 
         List<BaseCharacter> neighborNodes = NodeManager.Ins.GetNeighborNodes(node);
 
-        float totalPower = 0;
+        double totalPower = 0;
         bool isNoAdjacentNode = true;
 
         List<BaseCharacter> lockedNodes = new List<BaseCharacter>();

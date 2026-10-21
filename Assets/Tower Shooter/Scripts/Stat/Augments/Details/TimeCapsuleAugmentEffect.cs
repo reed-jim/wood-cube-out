@@ -58,7 +58,7 @@ public class TimeCapsuleAugmentEffectRuntime : MonoBehaviour
 {
     public float capsuleCapacity;
     public float burstPowerMultiplier;
-    private float storedPower;
+    private double storedPower;
 
     private StoredPowerCapsuleUI storedPowerCapsuleUI;
 
@@ -90,6 +90,6 @@ public class TimeCapsuleAugmentEffectRuntime : MonoBehaviour
             storedPower = 0;
         }
 
-        storedPowerCapsuleUI.UpdateProgress(storedPower / capsuleCapacity);
+        storedPowerCapsuleUI.UpdateProgress((float)(storedPower / capsuleCapacity));
     }
 }

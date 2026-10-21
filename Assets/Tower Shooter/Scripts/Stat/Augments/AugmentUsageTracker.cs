@@ -3,11 +3,11 @@ using System;
 [Serializable]
 public class AugmentUsageTracker
 {
-    public float totalPowerGenerated;
+    public double totalPowerGenerated;
     public float totalSpeedBuffDuration;
     public float additionalCycleCompleted;
 
-    public AugmentUsageTracker(float power)
+    public AugmentUsageTracker(double power)
     {
         totalPowerGenerated += power;
     }

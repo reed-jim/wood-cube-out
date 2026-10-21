@@ -7,21 +7,21 @@ using UnityEngine;
 public class Stat
 {
     [SerializeField] private StatType statType;
-    [SerializeField] private float baseValue;
+    [SerializeField] private double baseValue;
 
     public List<StatModifier> modifiers = new List<StatModifier>();
-    private float cachedValue;
+    private double cachedValue;
     private bool isDirty = true;
 
     public StatType Type => statType;
 
-    public float BaseValue
+    public double BaseValue
     {
         get => baseValue;
         set { baseValue = value; isDirty = true; OnStatChanged?.Invoke(); }
     }
 
-    public float Value
+    public double Value
     {
         get
         {
@@ -49,13 +49,13 @@ public class Stat
 
     public event Action OnStatChanged;
 
-    public Stat(StatType type, float baseVal)
+    public Stat(StatType type, double baseVal)
     {
         statType = type;
         baseValue = baseVal;
     }
 
-    public float AddModifier(StatModifier mod)
+    public double AddModifier(StatModifier mod)
     {
         // modifiers.Add(mod);
         // isDirty = true;
@@ -155,10 +155,10 @@ public class Stat
         return removed;
     }
 
-    public float CalculateValue()
+    public double CalculateValue()
     {
-        float finalValue = baseValue;
-        float sumPercentAdd = 0f;
+        double finalValue = baseValue;
+        double sumPercentAdd = 0f;
 
         // Order of calculation: Flat -> Percent Additive -> Percent Multiplicative
         if (modifiers == null)
@@ -190,48 +190,6 @@ public class Stat
             }
         }
 
-        return Mathf.Max(0, finalValue); // Clamp non-negative
-    }
-
-    public float PreviewValue(StatModifier additionalStatModifier)
-    {
-        float finalValue = baseValue;
-        float sumPercentAdd = 0f;
-
-        // Order of calculation: Flat -> Percent Additive -> Percent Multiplicative
-        List<StatModifier> previewStatModifiers = new List<StatModifier>();
-
-        previewStatModifiers.Add(additionalStatModifier);
-
-        for (int i = 0; i < modifiers.Count; i++)
-        {
-            previewStatModifiers.Add(modifiers[i]);
-        }
-
-        for (int i = 0; i < previewStatModifiers.Count; i++)
-        {
-            StatModifier mod = previewStatModifiers[i];
-            if (mod.ModType == ModifierType.Flat)
-            {
-                finalValue += mod.Value;
-            }
-            else if (mod.ModType == ModifierType.PercentAdd)
-            {
-                sumPercentAdd += mod.Value;
-            }
-        }
-
-        finalValue *= (1f + sumPercentAdd);
-
-        for (int i = 0; i < previewStatModifiers.Count; i++)
-        {
-            StatModifier mod = previewStatModifiers[i];
-            if (mod.ModType == ModifierType.PercentMult)
-            {
-                finalValue *= (1f + mod.Value);
-            }
-        }
-
-        return Mathf.Max(0, finalValue); // Clamp non-negative
+        return Math.Max(0, finalValue); // Clamp non-negative
     }
 }

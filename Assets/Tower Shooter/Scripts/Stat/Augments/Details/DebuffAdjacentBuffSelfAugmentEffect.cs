@@ -75,7 +75,7 @@ public class DebuffAdjacentBuffSelfAugmentEffectRuntime : BaseAugmentEffectRunti
     private StatModifier buffStatModifier;
     private StatModifier debuffStatModifier;
 
-    private float bonusPower;
+    private double bonusPower;
 
     public void Init(StatModifierData buff, StatModifierData debuff)
     {
@@ -89,8 +89,8 @@ public class DebuffAdjacentBuffSelfAugmentEffectRuntime : BaseAugmentEffectRunti
 
         List<BaseCharacter> adjacentNodes = NodeManager.Ins.GetNeighborNodes(node);
 
-        float oldStatValue;
-        float newStatValue;
+        double oldStatValue;
+        double newStatValue;
 
         for (int i = 0; i < adjacentNodes.Count; i++)
         {

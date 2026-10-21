@@ -10,7 +10,7 @@ public class StatItemUI : MonoBehaviour
 
     public StatColorConfigSO statColorConfigSO;
 
-    public void Init(StatType statType, ModifierType modifierType, float value)
+    public void Init(StatType statType, ModifierType modifierType, double value)
     {
         Color color = ColorUtil.GetColorFromHex(statColorConfigSO.GetHex(statType));
 
@@ -24,7 +24,7 @@ public class StatItemUI : MonoBehaviour
         }
         else
         {
-            valueText.text = $"{sign}{TextUtil.FormatFloat(value * 100)}%  {statType}";
+            valueText.text = $"{sign}{CommonUtil.FormatNumber(value * 100)}%  {statType}";
         }
 
         valueText.color = color;

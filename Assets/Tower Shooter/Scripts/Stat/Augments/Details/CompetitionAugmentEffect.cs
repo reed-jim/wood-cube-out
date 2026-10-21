@@ -65,11 +65,11 @@ public class CompetitionAugmentEffect : AugmentEffect
 
 public class CompetitionAugmentEffectRuntime : BaseAugmentEffectRuntime
 {
-    float maxPower = 0;
+    double maxPower = 0;
     private StatModifier statModifier;
     private BaseCharacter prevStrongestNode = null;
     private BaseCharacter strongestNode = null;
-    private float bonusPower = 0;
+    private double bonusPower = 0;
 
     public void BuffTheMostPowerNode(NodeGroup nodeGroup, StatModifierData damageModifier)
     {
@@ -79,7 +79,7 @@ public class CompetitionAugmentEffectRuntime : BaseAugmentEffectRuntime
 
             if (node.nodeData.isUnlocked)
             {
-                float power = node.serviceLocator.stats.GetStat(StatType.Damage).Value;
+                double power = node.serviceLocator.stats.GetStat(StatType.Damage).Value;
                 if (power > maxPower)
                 {
                     maxPower = power;
@@ -98,9 +98,9 @@ public class CompetitionAugmentEffectRuntime : BaseAugmentEffectRuntime
             prevStrongestNode.serviceLocator.stats.RemoveModifier(statModifier);
         }
 
-        float oldPowerValue = strongestNode.serviceLocator.stats.GetStat(StatType.Damage).Value;
+        double oldPowerValue = strongestNode.serviceLocator.stats.GetStat(StatType.Damage).Value;
 
-        float newPowerValue = strongestNode.serviceLocator.stats.AddModifier(statModifier, isInvokeStatModifiedEvent: false);
+        double newPowerValue = strongestNode.serviceLocator.stats.AddModifier(statModifier, isInvokeStatModifiedEvent: false);
 
         bonusPower = newPowerValue - oldPowerValue;
 

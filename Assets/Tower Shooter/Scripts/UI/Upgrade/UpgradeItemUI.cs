@@ -140,34 +140,30 @@ public class UpgradeItemUI : MonoBehaviour
     public void UpdateText(StatUpgradeData statUpgradeData)
     {
         statIcon.sprite = statColorConfigSO.GetIcon(statType);
-        float delta = statUpgradeData.deltaValue;
+        double delta = statUpgradeData.deltaValue;
 
         if (StatUtil.IsPercentStat(statType))
         {
             upgradeText.text =
-            $"{TextUtil.FormatFloat(statUpgradeData.currentValue * 100)}% (+{TextUtil.FormatFloat(delta * 100)}%)";
+            $"{CommonUtil.FormatNumber(statUpgradeData.currentValue * 100)}% (+{CommonUtil.FormatNumber(delta * 100)}%)";
         }
         else
         {
             upgradeText.text =
-            $"{TextUtil.FormatFloat(statUpgradeData.currentValue)} (+{TextUtil.FormatFloat(delta)})";
+            $"{CommonUtil.FormatNumber(statUpgradeData.currentValue)} (+{CommonUtil.FormatNumber(delta)})";
         }
 
         if (cachedCoinValue >= statUpgradeData.coinRequired)
         {
             string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
 
-            coinText.text = $"<color={primaryHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)} <sprite=0 color={primaryHex}>";
-
-            // costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Primary);
+            coinText.text = $"<color={primaryHex}>{CommonUtil.FormatNumber(statUpgradeData.coinRequired)} <sprite=0 color={primaryHex}>";
         }
         else
         {
             string errorHex = DynamicThemeManager.Ins.ErrorHex;
 
-            coinText.text = $"<color={errorHex}>{TextUtil.FormatFloat(statUpgradeData.coinRequired)} <sprite=0 color={errorHex}>";
-
-            // costIconThemeable.ChangeRole(ThemeableUI.ElementRole.Error);
+            coinText.text = $"<color={errorHex}>{CommonUtil.FormatNumber(statUpgradeData.coinRequired)} <sprite=0 color={errorHex}>";
         }
     }
 
@@ -244,15 +240,5 @@ public class UpgradeItemUI : MonoBehaviour
         {
             UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
         }
-    }
-
-    private void ShowAddedStatValueText(float increaseRatio, Vector3 position, Transform parent)
-    {
-        DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
-
-        damageText.transform.SetParent(parent);
-
-        damageText.ShowDamage(
-            CommonUtil.RoundToDecimalPlaces(increaseRatio * 100, 3), position, isCritical: false, target: transform, prefix: "+", suffix: "%");
     }
 }

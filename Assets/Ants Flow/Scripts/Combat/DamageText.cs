@@ -30,7 +30,7 @@ public class DamageText : MonoBehaviour
 
     // Aggregation tracking
     public Transform CurrentTarget { get; private set; }
-    public float CurrentDamage { get; private set; }
+    public double CurrentDamage { get; private set; }
     public bool IsActive { get; private set; }
 
     private Sequence currentSequence;
@@ -70,7 +70,7 @@ public class DamageText : MonoBehaviour
         // Reset transforms & kill existing tweens
         KillTweens();
 
-        damageText.text = $"{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
+        damageText.text = $"{prefix}{CommonUtil.FormatNumber(CurrentDamage)}{suffix}";
         damageText.rectTransform.sizeDelta = new Vector2(1.5f * damageText.preferredWidth, damageText.preferredHeight);
         damageText.color = isCritical ? critColor : normalColor;
         damageText.alpha = 1f;
@@ -79,7 +79,7 @@ public class DamageText : MonoBehaviour
         {
             string critColorHex = ColorUtil.ColorToHex(critColor);
 
-            damageText.text = $"<sprite=3 color={critColorHex}>{prefix}{TextUtil.FormatFloat(CurrentDamage)}{suffix}";
+            damageText.text = $"<sprite=3 color={critColorHex}>{prefix}{CommonUtil.FormatNumber(CurrentDamage)}{suffix}";
         }
 
         transform.position = spawnPosition;
@@ -130,7 +130,7 @@ public class DamageText : MonoBehaviour
     /// </summary>
     public void ShowAugmentEffect(
         GenericAugmentData augmentConfig,
-        float value,
+        double value,
         Vector3 spawnPosition,
         Transform target,
         bool isMoveHalfway = false,
@@ -203,9 +203,9 @@ public class DamageText : MonoBehaviour
     }
 
     // Format display string based on Augment Operation & Target Stat
-    private string FormatAugmentText(GenericAugmentData config, float value, Color color)
+    private string FormatAugmentText(GenericAugmentData config, double value, Color color)
     {
-        if (config == null) return $"+{TextUtil.FormatFloat(value)}";
+        if (config == null) return $"+{CommonUtil.FormatNumber(value)}";
 
         string hex = ColorUtil.ColorToHex(color);
 
@@ -221,11 +221,11 @@ public class DamageText : MonoBehaviour
                 return $"x{value:F1} {targetStatSpriteTag}";
 
             case EffectOperation.Convert:
-                return $"CONVERT! +{TextUtil.FormatFloat(value)} {targetStatSpriteTag}";
+                return $"CONVERT! +{CommonUtil.FormatNumber(value)} {targetStatSpriteTag}";
 
             default:
                 string sign = value >= 0 ? "+" : "";
-                return $"{sign}{TextUtil.FormatFloat(value)} {targetStatSpriteTag}";
+                return $"{sign}{CommonUtil.FormatNumber(value)} {targetStatSpriteTag}";
         }
     }
 

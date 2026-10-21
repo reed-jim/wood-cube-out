@@ -247,7 +247,7 @@ public class AugmentManager : Singleton<AugmentManager>
     #endregion
 
     #region Augment Usage Tracker
-    public void UpdatePowerGeneratedByAugment(Augment augment, float power)
+    public void UpdatePowerGeneratedByAugment(Augment augment, double power)
     {
         if (augment == null)
         {
@@ -277,7 +277,7 @@ public class AugmentManager : Singleton<AugmentManager>
 
         if (augmentUsageTracker.totalPowerGenerated > 0)
         {
-            result = $"Total Power Generated: {TextUtil.FormatFloat(augmentUsageTracker.totalPowerGenerated)}";
+            result = $"Total Power Generated: {CommonUtil.FormatNumber(augmentUsageTracker.totalPowerGenerated)}";
         }
         else if (augmentUsageTracker.totalSpeedBuffDuration > 0)
         {

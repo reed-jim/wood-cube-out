@@ -47,8 +47,8 @@ public class HealthToDamageRuntime : MonoBehaviour
             stats.RemoveModifier(currentMod);
         }
 
-        float maxHp = stats.GetValue(StatType.MaxHealth);
-        float bonusDamage = (maxHp / 100f) * ratio;
+        double maxHp = stats.GetValue(StatType.MaxHealth);
+        double bonusDamage = (maxHp / 100f) * ratio;
 
         // currentMod = new StatModifier(StatType.Damage, ModifierType.Flat, bonusDamage, 0, source);
         currentMod = new StatModifier(StatType.Damage, ModifierType.Flat, bonusDamage, 0);

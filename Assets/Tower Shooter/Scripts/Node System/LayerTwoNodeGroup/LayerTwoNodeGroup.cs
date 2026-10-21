@@ -54,9 +54,9 @@ public class LayerTwoNodeGroup : MonoBehaviour
         {
             LayerTwoNodeGroupStats layerTwoStats = serviceLocator.layerTwoStats;
 
-            float speed = layerTwoStats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
-            float criticalChance = layerTwoStats.GetStat(StatType.CritChance).Value;
-            float criticalMultiplier = layerTwoStats.GetStat(StatType.CritMultiplier).Value;
+            double speed = layerTwoStats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
+            double criticalChance = layerTwoStats.GetStat(StatType.CritChance).Value;
+            double criticalMultiplier = layerTwoStats.GetStat(StatType.CritMultiplier).Value;
 
             // complete a cycle
             if (interval > 0)
@@ -66,7 +66,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
                 serviceLocator.layerTwoNodeGroupUI.SetGlobalMultiplierText(GetGlobalMultiplier());
             }
 
-            interval = 1f / speed;
+            interval = (float)(1f / speed);
 
             timer = 0;
         }

@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 public static class ScalingMath
 {
-    public static float Evaluate(float baseVal, float input, ScalingFunction func, float factor)
+    public static double Evaluate(float baseVal, double input, ScalingFunction func, float factor)
     {
         switch (func)
         {
@@ -10,13 +11,13 @@ public static class ScalingMath
                 return baseVal + (input * factor);
 
             case ScalingFunction.Exponential:
-                return baseVal * Mathf.Pow(factor <= 0 ? 1.1f : factor, input);
+                return baseVal * Math.Pow(factor <= 0 ? 1.1f : factor, input);
 
             case ScalingFunction.Logarithmic:
-                return baseVal + (Mathf.Log(Mathf.Max(1f, input)) * factor);
+                return baseVal + (Math.Log(Math.Max(1f, input)) * factor);
 
             case ScalingFunction.SquareRoot:
-                return baseVal + (Mathf.Sqrt(Mathf.Max(0f, input)) * factor);
+                return baseVal + (Math.Sqrt(Math.Max(0f, input)) * factor);
 
             case ScalingFunction.Inverse:
                 return factor != 0 ? baseVal + (1f / (input * factor)) : baseVal;
@@ -26,7 +27,7 @@ public static class ScalingMath
         }
     }
 
-    public static float ApplyOperation(EffectOperation op, float targetVal, float calculatedVal)
+    public static double ApplyOperation(EffectOperation op, double targetVal, double calculatedVal)
     {
         switch (op)
         {
@@ -37,10 +38,10 @@ public static class ScalingMath
                 return targetVal * calculatedVal;
 
             case EffectOperation.SquareRoot:
-                return Mathf.Sqrt(Mathf.Max(0f, calculatedVal));
+                return Math.Sqrt(Math.Max(0, calculatedVal));
 
             case EffectOperation.Logarithm:
-                return Mathf.Log(Mathf.Max(1f, calculatedVal));
+                return Math.Log(Math.Max(1f, calculatedVal));
 
             case EffectOperation.Copy:
             case EffectOperation.Convert:

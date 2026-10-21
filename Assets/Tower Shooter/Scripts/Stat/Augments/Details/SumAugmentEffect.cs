@@ -80,7 +80,7 @@ public class SumAugmentEffectRuntime : BaseAugmentEffectRuntime
         List<BaseCharacter> adjacentNodes = NodeManager.Ins.GetNeighborNodes(node);
 
         bool isNoAdjacentNode = true;
-        float totalPower = 0;
+        double totalPower = 0;
 
         for (int i = 0; i < adjacentNodes.Count; i++)
         {
@@ -109,8 +109,8 @@ public class SumAugmentEffectRuntime : BaseAugmentEffectRuntime
                 stats.RemoveModifier(statModifier);
             }
 
-            float oldPowerValue = stats.GetStat(StatType.Damage).Value;
-            float newPowerValue;
+            double oldPowerValue = stats.GetStat(StatType.Damage).Value;
+            double newPowerValue;
 
             statModifier = new StatModifier(StatType.Damage, ModifierType.Flat, totalPower);
 

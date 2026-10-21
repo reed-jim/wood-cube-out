@@ -79,7 +79,7 @@ public class PredictionAugmentEffectRuntime : MonoBehaviour
             }
             else
             {
-                float oldRandomBonusPercent = statModifier.Value;
+                double oldRandomBonusPercent = statModifier.Value;
 
                 stats.RemoveModifier(statModifier);
 

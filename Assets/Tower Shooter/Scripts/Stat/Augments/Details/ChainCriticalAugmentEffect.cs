@@ -43,7 +43,7 @@ public class ChainCriticalAugmentEffectRuntime : BaseAugmentEffectRuntime
 
             bool isNoAdjacentNode = true;
 
-            float totalBonusPower = 0;
+            double totalBonusPower = 0;
 
             for (int i = 0; i < adjacentNodes.Count; i++)
             {

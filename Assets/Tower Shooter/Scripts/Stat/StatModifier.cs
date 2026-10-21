@@ -45,7 +45,7 @@ public class StatModifier
 {
     public StatType Type;
     public ModifierType ModType;
-    public float Value;
+    public double Value;
     public int UpgradeTime;
     public StatModifierSource statModifierSource;
     public readonly object Source; // Identifies origin (e.g., AugmentSO, ItemInstance)
@@ -60,7 +60,7 @@ public class StatModifier
     // }
 
     [JsonConstructor]
-    public StatModifier(StatType type, ModifierType modType, float value, int upgradeTime = 0, StatModifierSource statModifierSource = StatModifierSource.None)
+    public StatModifier(StatType type, ModifierType modType, double value, int upgradeTime = 0, StatModifierSource statModifierSource = StatModifierSource.None)
     {
         Type = type;
         ModType = modType;

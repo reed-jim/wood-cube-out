@@ -79,8 +79,8 @@ public class ShipPowerAugmentEffectRuntime : BaseAugmentEffectRuntime
 
         statModifier = new StatModifier(StatType.Damage, ModifierType.Flat, (float)(percentShipPower * shipPower));
 
-        float oldPowerValue = stats.GetStat(StatType.Damage).Value;
-        float newPowerValue;
+        double oldPowerValue = stats.GetStat(StatType.Damage).Value;
+        double newPowerValue;
 
         newPowerValue = stats.AddModifier(statModifier);
 
