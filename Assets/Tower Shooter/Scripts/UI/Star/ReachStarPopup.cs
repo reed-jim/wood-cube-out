@@ -42,7 +42,9 @@ public class ReachStarPopup : BasePopup
 
         starPathConfig = StarManager.Ins.GetVoyageConfig(voyageData.starPathConfigIndex);
 
-        starName.text = $"You've reached {starPathConfig.starName}";
+        string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+
+        starName.text = $"You've reached <color={primaryHex}>{starPathConfig.starName}";
 
         // starPicture.sprite = starPathConfig.picture;
         // UIUtil.SetSizeKeepRatioY(starPicture, container.sizeDelta.x);

@@ -937,7 +937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592e81d6b60635549873f4979d277f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThemeableUI
-  role: 0
+  role: 24
 --- !u!114 &9047227480353637906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -985,13 +985,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 120.1
+  m_fontSize: 139.85
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 790
-  m_fontStyle: 16
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1406,8 +1406,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   transitionSpeed: 15
-  rippleSpeed: 4
   isPlaySound: 1
+  useMaterialGlow: 1
+  isUseCustomGraphic: 0
+  hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  customGraphic: {fileID: 0}
+  customizeMaterialProperties: 0
+  customGlowRange: 0.25
+  customCornerRadius: 0.1
+  isLongClickEnabled: 0
+  holdThreshold: 0.4
+  repeatInterval: 0.15
+  onLongClickUpgrade:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1225360545801071633
 PrefabInstance:
   m_ObjectHideFlags: 0

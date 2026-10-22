@@ -90,6 +90,8 @@ public class MilestoneFinishEffect : MonoBehaviour
     #region Animations
     private void PlayArrowAnimation()
     {
+        arrowCanvasGroup.gameObject.SetActive(true);
+
         arrow.localPosition = arrowInitialPosition;
         arrowCanvasGroup.alpha = 0;
         clickButton.interactable = false;
