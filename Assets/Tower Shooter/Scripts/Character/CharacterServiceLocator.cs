@@ -11,6 +11,7 @@ public class CharacterServiceLocator : MonoBehaviour
     public StackingUI stackingUI;
     public RecycleModule recycleModule;
     public NodeEffectController nodeEffectController;
+    public AugmentEffectController augmentEffectController;
 
     #region Augment Runtime
     [Header("Augment Runtime")]

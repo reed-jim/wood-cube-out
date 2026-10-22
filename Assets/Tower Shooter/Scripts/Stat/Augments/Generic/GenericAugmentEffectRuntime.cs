@@ -110,6 +110,8 @@ public class GenericAugmentEffectRuntime : BaseAugmentEffectRuntime
             ApplyOperationToTarget(tStat, calculatedVal);
 
             PlayTextVisualEffects(tStat, calculatedVal);
+
+            tStat.serviceLocator.augmentEffectController.PlayEffect(0);
         }
 
         triggerTime++;
