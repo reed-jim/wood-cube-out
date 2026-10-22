@@ -816,6 +816,7 @@ MonoBehaviour:
   transitionSpeed: 15
   isPlaySound: 1
   useMaterialGlow: 1
+  isUseCustomGraphic: 0
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
   customizeMaterialProperties: 0
@@ -924,6 +925,7 @@ MonoBehaviour:
   transitionSpeed: 15
   isPlaySound: 1
   useMaterialGlow: 1
+  isUseCustomGraphic: 0
   hoverTextColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   customGraphic: {fileID: 0}
   customizeMaterialProperties: 0
@@ -1568,6 +1570,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2899478849735082182, guid: 31038555df344a84daafd1d293d6ca99, type: 3}
     - target: {fileID: 2835213765105283550, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: errorSoundPrefab
+      value: 
+      objectReference: {fileID: 7606835583939712495, guid: 3d629426919c2354f8faacebda06aee4, type: 3}
+    - target: {fileID: 2835213765105283550, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: spaceEventItemUI
       value: 
       objectReference: {fileID: 8269539594740469910, guid: 139dbf7c8085a174dafefc1056269f37, type: 3}
@@ -1627,6 +1633,10 @@ PrefabInstance:
       propertyPath: applyAugmentToNodeGroupEffect
       value: 
       objectReference: {fileID: 6663510762302426158, guid: a41d9f7d2b0394a4592c4e6122e0b528, type: 3}
+    - target: {fileID: 5632857769176426286, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7090409953449974092, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: m_Name
       value: MANAGER - DontDestroyOnLoad
@@ -1646,6 +1656,7 @@ PrefabInstance:
     - {fileID: 6443450945720747492, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
     - {fileID: 9027602614922403133, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
     - {fileID: 8167541982882495619, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+    - {fileID: 1870026379653017996, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 328848638671994766, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       insertIndex: -1

@@ -138,6 +138,11 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    public void PlaySoundClickError()
+    {
+        PlaySound(GameConstants.errorSound);
+    }
+
     public void PlaySoundClose()
     {
         if (!_isEnableGameSound)

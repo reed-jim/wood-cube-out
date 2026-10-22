@@ -92,12 +92,16 @@ public class UpgradeItemUI : MonoBehaviour
             UpdateText(UpgradeManager.Ins.GetStatUpgradeData(node, statType));
 
             PowerManager.Ins.ShowTotalPowerOutputPerSecond();
+
+            SoundManager.Instance.PlaySoundClick();
         }
         else
         {
             if (!shakeCoinTextSequence.isAlive)
             {
                 shakeCoinTextSequence = SaferioTween.PunchAndChangeColor(coinText, effectScale: 1.3f);
+
+                SoundManager.Instance.PlaySoundClickError();
             }
         }
     }
