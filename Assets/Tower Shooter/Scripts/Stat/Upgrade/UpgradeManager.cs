@@ -41,6 +41,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
         upgradeStatEvent?.Invoke(statType);
 
+        node.serviceLocator.statUpgradeEffectController.TryTriggerUpgrade();
+
         return statUpgradeData;
     }
 
