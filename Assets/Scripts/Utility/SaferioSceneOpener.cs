@@ -6,46 +6,22 @@ using UnityEngine;
 
 public class SaferioSceneOpener : EditorWindow
 {
-    [MenuItem("Tools/Open Scene/Tracking Consent")]
-    public static void OpenTrackingConsentScene()
-    {
-        EditorSceneManager.OpenScene("Assets/Samples/iOS 14 Advertising Support/1.0.0/01 Context Screen/Context Screen Sample.unity");
-    }
-
-    [MenuItem("Tools/Open Scene/Ads Consent Android")]
-    public static void OpenAdsConsentScene()
-    {
-        EditorSceneManager.OpenScene("Assets/Scenes/User Consent - Android.unity");
-    }
-
-    [MenuItem("Tools/Open Scene/Bootstrap")]
-    public static void OpenBootstrapScene()
-    {
-        EditorSceneManager.OpenScene("Assets/Scenes/Bootstrap.unity");
-    }
-
     [MenuItem("Tools/Open Scene/Loading")]
     public static void OpenLoadingScene()
     {
         EditorSceneManager.OpenScene("Assets/Scenes/Loading.unity");
     }
 
-    [MenuItem("Tools/Open Scene/Menu")]
-    public static void OpenMenuScene()
-    {
-        EditorSceneManager.OpenScene("Assets/Scenes/Menu.unity");
-    }
-
     [MenuItem("Tools/Open Scene/Gameplay")]
     public static void OpenGameplayScene()
     {
-        EditorSceneManager.OpenScene("Assets/Scenes/Gameplay.unity");
+        EditorSceneManager.OpenScene("Assets/Tower Shooter/Scenes/Gameplay.unity");
     }
 
-    [MenuItem("Tools/Open Scene/Level Difficulty Calculator")]
-    public static void OpenLevelDifficultyCalculatorScene()
+    [MenuItem("Tools/Open Scene/Test")]
+    public static void OpenTestScene()
     {
-        EditorSceneManager.OpenScene("Assets/Scenes/Level Difficulty Calculator.unity");
+        EditorSceneManager.OpenScene("Assets/Tower Shooter/Scenes/Test.unity");
     }
 
     [MenuItem("Tools/Open Persistent Save Path")]
