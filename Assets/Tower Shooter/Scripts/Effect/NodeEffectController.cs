@@ -105,7 +105,7 @@ public class NodeEffectController : MonoBehaviour
                 materialInstance.SetFloat("_HighSpeedTransition", 0f);
 
                 accumulatedRotation += vortexSpeed * Time.deltaTime * Mathf.PI * 2f;
-                accumulatedRotation %= Mathf.PI * 2f; // Keep value wrapped to prevent precision issues
+                accumulatedRotation %= Mathf.PI * 2000f; // Keep value wrapped to prevent precision issues
 
                 materialInstance.SetFloat("_RotationAngle", accumulatedRotation);
             }

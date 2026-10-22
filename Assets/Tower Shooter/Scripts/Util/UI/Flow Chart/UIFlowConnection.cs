@@ -103,8 +103,6 @@ namespace UI.FlowChart
                 borderP2.x += 0.5f * targetElement.RectTransform.sizeDelta.x;
             }
 
-            Debug.Log($"UpdateBadgePosition {name} {p1} {borderP1.x} {borderP2.x}");
-
             Vector2 midPoint = (borderP1 + borderP2) * 0.5f;
 
             badgeRect.anchoredPosition = midPoint + operationTextOffset;

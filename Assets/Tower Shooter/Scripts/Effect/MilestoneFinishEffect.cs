@@ -82,6 +82,8 @@ public class MilestoneFinishEffect : MonoBehaviour
             gameObject.SetActive(false);
 
             reachStarEvent?.Invoke(voyageData);
+
+            isReached = false;
         });
     }
 
