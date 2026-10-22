@@ -8,7 +8,7 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
         
         [Header(Vortex Control)]
         _Power ("Effect Power (0 - 100)", Range(0.0, 100.0)) = 10.0
-        _CycleSpeed ("Cycle Rotation Speed", Float) = 1.0
+        _RotationAngle ("Rotation Angle", Float) = 0.0
         _HighSpeedTransition ("High Speed State Transition", Range(0.0, 1.0)) = 0.0
         _Layers ("Rift Layer Density", Range(3, 30)) = 8
         _EventHorizon ("Rift Core Radius", Range(0.05, 0.4)) = 0.2
@@ -83,7 +83,7 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float4 _Color;
                 float4 _RimColor;
                 float _Power;
-                float _CycleSpeed;
+                float _RotationAngle;
                 float _HighSpeedTransition;
                 float _Layers;
                 float _EventHorizon;
@@ -246,7 +246,7 @@ Shader "UI/Custom/QuantumRiftVortexSingle"
                 float pExp = pow(pNorm, 4.0);
 
                 // --- CONSTANT ANIMATION SPEED ---
-                float autoRotation = _Time.y * _CycleSpeed * TWO_PI;
+                float autoRotation = _RotationAngle;
 
                 // --- DOMAIN WARPING ---
                 float warpMag = pExp * 0.15;

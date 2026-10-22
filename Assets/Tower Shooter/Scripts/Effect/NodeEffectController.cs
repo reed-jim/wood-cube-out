@@ -45,6 +45,7 @@ public class NodeEffectController : MonoBehaviour
 
     private double lastPowerValue;
     private double lastCycleSpeedValue;
+    private float accumulatedRotation = 0f;
 
     void Awake()
     {
@@ -70,6 +71,45 @@ public class NodeEffectController : MonoBehaviour
     void OnDestroy()
     {
         CharacterStats.OnStatModified -= OnNodeStatModified;
+    }
+
+    void Update()
+    {
+        // 1. Smoothly interpolate progress and speed if enabled
+        if (smoothTransitions)
+        {
+            progress = Mathf.SmoothDamp(progress, targetProgress, ref progressVelocity, transitionSmoothTime);
+            vortexSpeed = Mathf.SmoothDamp(vortexSpeed, targetSpeed, ref speedVelocity, transitionSmoothTime);
+        }
+        else
+        {
+            progress = targetProgress;
+            vortexSpeed = targetSpeed;
+        }
+
+        float minHighSpeed = 5f;
+        float maxHighSpeed = 10f;
+
+        if (materialInstance != null)
+        {
+            // 2. Check if we are in High-Speed mode or Normal mode
+            if (vortexSpeed > minHighSpeed)
+            {
+                // High-speed mode: let the shader handle the warp tunnel animation via _HighSpeedTransition
+                float transitionVal = Mathf.Clamp01((vortexSpeed - minHighSpeed) / maxHighSpeed);
+                materialInstance.SetFloat("_HighSpeedTransition", transitionVal);
+            }
+            else
+            {
+                // Normal mode: turn off high-speed transition and accumulate rotation angle smoothly
+                materialInstance.SetFloat("_HighSpeedTransition", 0f);
+
+                accumulatedRotation += vortexSpeed * Time.deltaTime * Mathf.PI * 2f;
+                accumulatedRotation %= Mathf.PI * 2f; // Keep value wrapped to prevent precision issues
+
+                materialInstance.SetFloat("_RotationAngle", accumulatedRotation);
+            }
+        }
     }
 
     private void ApplyNodeStates()
@@ -108,12 +148,6 @@ public class NodeEffectController : MonoBehaviour
     // PUBLIC CONTROL FUNCTIONS
     // ==========================================
 
-    public void SetProgress(float newProgress)
-    {
-        targetProgress = Mathf.Clamp01(newProgress);
-        if (!smoothTransitions) progress = targetProgress;
-    }
-
     public void SetPower(float power)
     {
         materialInstance.SetFloat("_Power", power);
@@ -121,31 +155,14 @@ public class NodeEffectController : MonoBehaviour
 
     public void SetSpeed(float newSpeed)
     {
-        float minHighSpeed = 5;
-        float maxHighSpeed = 10;
-
-        if (newSpeed > minHighSpeed)
-        {
-            materialInstance.SetFloat("_CycleSpeed", minHighSpeed);
-            materialInstance.SetFloat("_HighSpeedTransition", Mathf.Lerp(0, 1, (newSpeed - minHighSpeed) / maxHighSpeed));
-        }
-        else
-        {
-            materialInstance.SetFloat("_CycleSpeed", newSpeed);
-            materialInstance.SetFloat("_HighSpeedTransition", 0);
-        }
+        // Drive the smooth target spin speed
+        SetSpinSpeed(newSpeed);
     }
 
     public void SetSpinSpeed(float newSpeed)
     {
         targetSpeed = newSpeed;
         if (!smoothTransitions) vortexSpeed = targetSpeed;
-    }
-
-    public void SetEngineParameters(float newProgress, float newSpeed)
-    {
-        SetProgress(newProgress);
-        SetSpinSpeed(newSpeed);
     }
 
     public void SetNodeState(int x, int y, bool unlocked)
