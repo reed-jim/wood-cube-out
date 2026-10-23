@@ -375,5 +375,21 @@ public class BaseCharacter : MonoBehaviour
         transform.SetParent(initialParent);
         transform.SetSiblingIndex(siblingIndex);
     }
+
+    public double GetTotalPowerOutputPerSecond()
+    {
+        CharacterStats stats = serviceLocator.stats;
+
+        double power = stats.GetStat(StatType.Damage).Value;
+        double cycleSpeed = stats.GetStat(StatType.AttackSpeed).Value;
+        double critChance = stats.GetStat(StatType.CritChance).Value;
+        double CritMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
+
+        // Calculate average DPS for this node
+        double averageDamagePerHit = power * (1f + (critChance * (CritMultiplier - 1f)));
+        double nodeDps = averageDamagePerHit * cycleSpeed * GameConstants.nodeSpeedMultiplier;
+
+        return nodeDps;
+    }
     #endregion
 }

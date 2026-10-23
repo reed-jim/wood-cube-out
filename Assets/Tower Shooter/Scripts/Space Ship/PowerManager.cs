@@ -11,28 +11,15 @@ public class PowerManager : Singleton<PowerManager>
 
     [Header("UI")]
     public TMP_Text totalPowerText;
-    public TMP_Text powerOutputPerSecondText;
 
-    [Header("Text Anim")]
-    [SerializeField] private float targetScale = 1.15f;
-    [SerializeField] private float duration = 0.8f;
-
-    [Header("Text Juice / Shake")]
-    [SerializeField] private float maxShakeOffset = 0.12f;  // Maximum scale distortion cap
-    [SerializeField] private float shakeDecayRate = 12f;    // How fast the shake dies down (higher = snappier)
-    [SerializeField] private float shakeFrequency = 35f;    // How fast/tight the vibration oscillation is
-
-    private float currentShakeIntensity = 0f;
-
-    [Header("Text Juice / Shake")]
-    [SerializeField] private float basePunchAmount = 0.1f;
-    [SerializeField] private float maxPunchAmount = 0.35f;
+    [Header("Power Chain")]
+    public TMP_Text nodePowerText;
+    public TMP_Text nodeEnergyParticleText;
+    public TMP_Text layerTwoText;
 
     private Tween textTween;
 
     private Vector3 originalScale;
-    private float shakeIntensity = 0f;
-    private float shakeTimer = 0f;
     private double previousTotalValue = -1;
     private string previousDisplayText = "";
 
@@ -118,11 +105,6 @@ public class PowerManager : Singleton<PowerManager>
         // ResourceManager.Ins.ChangeResource(ResourceType.Coin, power);
     }
 
-    public void UpdateUI()
-    {
-        totalPowerText.text = $"{ResourceManager.Ins.GetResourceValue(ResourceType.Coin):F2}";
-    }
-
     public double GetTotalPowerOutputPerSecond()
     {
         List<BaseCharacter> nodes = NodeManager.Ins.nodes;
@@ -130,6 +112,8 @@ public class PowerManager : Singleton<PowerManager>
         powerOutputPerSecond = 0;
 
         BaseCharacter mainNode = null;
+
+        double nodePowerOutputPerSecond = 0;
 
         for (int i = 0; i < nodes.Count; i++)
         {
@@ -142,18 +126,7 @@ public class PowerManager : Singleton<PowerManager>
 
             mainNode = node;
 
-            CharacterStats stats = nodes[i].serviceLocator.stats;
-
-            double power = stats.GetStat(StatType.Damage).Value;
-            double cycleSpeed = stats.GetStat(StatType.AttackSpeed).Value;
-            double critChance = stats.GetStat(StatType.CritChance).Value;
-            double CritMultiplier = stats.GetStat(StatType.CritMultiplier).Value;
-
-            // Calculate average DPS for this node
-            double averageDamagePerHit = power * (1f + (critChance * (CritMultiplier - 1f)));
-            double nodeDps = averageDamagePerHit * cycleSpeed * GameConstants.nodeSpeedMultiplier;
-
-            powerOutputPerSecond += nodeDps;
+            nodePowerOutputPerSecond += node.GetTotalPowerOutputPerSecond();
         }
 
         double nodePower = mainNode.serviceLocator.stats.GetStat(StatType.Damage).Value;
@@ -163,13 +136,15 @@ public class PowerManager : Singleton<PowerManager>
         double powerMultiplier = GetPowerMultiplierBasedOnTier(mainNode, powerTier);
         double nextPowerMultiplier = GetPowerMultiplierBasedOnTier(mainNode, powerTier + 1);
 
-        powerOutputPerSecond *= powerMultiplier;
+        powerOutputPerSecond = powerMultiplier * nodePowerOutputPerSecond;
 
         float powerProgressForShader = GetPowerProgressForShader(nodePower);
 
         mainNode.serviceLocator.nodeEffectController.SetPower(powerProgressForShader);
         NodeEnergyParticleController.Ins.SetPower(powerProgressForShader);
         NodeEnergyParticleController.Ins.SetMultiplier(powerMultiplier, nextPowerMultiplier, requiredPowerForNextTier);
+
+        SetTextForAllPowerChainNodes(nodePowerOutputPerSecond, powerMultiplier, powerOutputPerSecond);
 
         return powerOutputPerSecond;
     }
@@ -196,10 +171,26 @@ public class PowerManager : Singleton<PowerManager>
         return spaceShipSpeedMultiplier * totalSpeed;
     }
 
+    #region Event
     private void OnNodeManagerInit()
     {
         GetTotalPowerOutputPerSecond();
     }
+    #endregion
+
+    #region Power Chain
+    private void SetTextForAllPowerChainNodes
+    (
+        double nodePowerPerSecond,
+        double nodeEnergyParticlePowerMultiplier,
+        double totalPowerPerSecond
+    )
+    {
+        nodePowerText.text = $"{CommonUtil.FormatNumber(nodePowerPerSecond)}<sprite=0 color={primaryHex}>/s";
+        nodeEnergyParticleText.text = $"{CommonUtil.FormatNumber(nodeEnergyParticlePowerMultiplier)}";
+        totalPowerText.text = $"{CommonUtil.FormatNumber(totalPowerPerSecond)}<sprite=0 color={primaryHex}>/s";
+    }
+    #endregion
 
     #region Util
     public static int GetPowerTier(double power)
