@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class DebugManager : Singleton<DebugManager>
 {
-    public UnlockAugmentUI unlockAugmentUI;
+
 }
 
 #if UNITY_EDITOR
@@ -94,8 +94,6 @@ public class DebugManagerEditor : Editor
     private void UnlockAllFeatures(DebugManager debugManager)
     {
         FeatureUnlockManager.Ins.UnlockAllFeature();
-
-        debugManager.unlockAugmentUI.ChangeDataToUnlockState();
     }
 }
 #endif

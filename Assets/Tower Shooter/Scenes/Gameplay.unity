@@ -2572,6 +2572,9 @@ MonoBehaviour:
     - featureType: 4
       spaceObjectTypeToUnlock: 0
       isUnlocked: 1
+    - featureType: 6
+      spaceObjectTypeToUnlock: 6
+      isUnlocked: 0
     - featureType: 0
       spaceObjectTypeToUnlock: 3
       isUnlocked: 0
@@ -27098,7 +27101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fae4fe978596fb442a151507625edebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugManager
-  unlockAugmentUI: {fileID: 8156509129844345359}
 --- !u!1 &1619360796
 GameObject:
   m_ObjectHideFlags: 0
@@ -38229,17 +38231,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ebb1825f485454499c4e614f5bda68d, type: 3}
---- !u!114 &8156509129844345359 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2386303767143986011, guid: 1ebb1825f485454499c4e614f5bda68d, type: 3}
-  m_PrefabInstance: {fileID: 8156509129844345358}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a287f4b82cef5834ca476453d97f732f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UnlockAugmentUI
 --- !u!114 &8281193568545885100
 MonoBehaviour:
   m_ObjectHideFlags: 0

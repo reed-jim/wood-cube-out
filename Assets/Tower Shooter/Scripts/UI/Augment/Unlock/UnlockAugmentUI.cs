@@ -21,28 +21,26 @@ public class UnlockAugmentUI : MonoBehaviour
     public Button continueButton;
     public Image fx;
 
-    private UnlockAugmentData unlockAugmentData;
+    public FeatureType featureType;
 
     void Awake()
     {
-        ReachStarPopup.goNextStarEvent += OnGoNextStarEvent;
+        FeatureUnlockManager.loadFeatureLockStateDataEvent += OnLoadFeatureLockStateData;
+        FeatureUnlockManager.unlockFeatureEvent += OnUnlockFeature;
 
         preventClickButton.onClick.AddListener(PreventClick);
         continueButton.onClick.AddListener(ContinueButton);
-
-        LoadUnlockAugmentData();
-
-        Init();
     }
 
     void OnDestroy()
     {
-        ReachStarPopup.goNextStarEvent -= OnGoNextStarEvent;
+        FeatureUnlockManager.loadFeatureLockStateDataEvent -= OnLoadFeatureLockStateData;
+        FeatureUnlockManager.unlockFeatureEvent -= OnUnlockFeature;
     }
 
     private void Init()
     {
-        if (unlockAugmentData.isUnlocked)
+        if (FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType))
         {
             container.gameObject.SetActive(false);
         }
@@ -63,7 +61,7 @@ public class UnlockAugmentUI : MonoBehaviour
 
     private void Unlock()
     {
-        if (unlockAugmentData.isUnlocked)
+        if (FeatureUnlockManager.Ins.IsFeatureUnlocked(featureType))
         {
             return;
         }
@@ -98,8 +96,6 @@ public class UnlockAugmentUI : MonoBehaviour
 
             continueButton.interactable = true;
         });
-
-        ChangeDataToUnlockState();
     }
 
     private void ContinueButton()
@@ -134,32 +130,18 @@ public class UnlockAugmentUI : MonoBehaviour
         IngameNotificationManager.Ins.ShowNotification($"Reach <color={primaryHex}>The Moon</color> to unlock");
     }
 
-    public void ChangeDataToUnlockState()
+    #region Event
+    private void OnLoadFeatureLockStateData()
     {
-        unlockAugmentData.isUnlocked = true;
-
-        SaveUnlockAugmentData();
+        Init();
     }
 
-    private void OnGoNextStarEvent()
+    private void OnUnlockFeature(FeatureType featureType)
     {
-        Unlock();
-    }
-
-    #region Save/Load
-    private void LoadUnlockAugmentData()
-    {
-        unlockAugmentData = DataUtility.Load(SaveSlotManager.Ins.GetSaveKey("UnlockAugmentData"), new UnlockAugmentData());
-    }
-
-    private void SaveUnlockAugmentData()
-    {
-        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("UnlockAugmentData"), unlockAugmentData);
-    }
-
-    public void ResetUnlockAugmentData()
-    {
-        DataUtility.Save(SaveSlotManager.Ins.GetSaveKey("UnlockAugmentData"), new UnlockAugmentData());
+        if (featureType == this.featureType)
+        {
+            Unlock();
+        }
     }
     #endregion
 }
