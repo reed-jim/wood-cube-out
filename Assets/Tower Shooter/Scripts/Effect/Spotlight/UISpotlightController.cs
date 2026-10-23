@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 [RequireComponent(typeof(Image))]
-public class UISpotlightController : MonoBehaviour
+public class UISpotlightController : Singleton<UISpotlightController>
 {
     [SerializeField] private Canvas canvas;
 
@@ -22,8 +22,10 @@ public class UISpotlightController : MonoBehaviour
     private static readonly int ProgressID = Shader.PropertyToID("_Progress");
     private static readonly int FadeAlphaID = Shader.PropertyToID("_FadeAlpha");
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
+        base.MoreActionOnAwake();
+
         uiImage = GetComponent<Image>();
         if (uiImage != null && uiImage.material != null)
         {

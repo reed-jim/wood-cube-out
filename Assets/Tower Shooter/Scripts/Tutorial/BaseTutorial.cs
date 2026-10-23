@@ -1,4 +1,5 @@
 using PrimeTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class BaseTutorial : MonoBehaviour
     public Button nextButton;
     public Button doAgainButton;
     public Transform tutorialElementContainer;
+    [SerializeField] private TMP_Text descriptionText;
 
     public Image tutorialHand;
 
@@ -62,5 +64,10 @@ public class BaseTutorial : MonoBehaviour
     {
         step = 0;
         isWaitForNextStep = false;
+    }
+
+    public void SetDescription(string description)
+    {
+        descriptionText.text = description;
     }
 }
