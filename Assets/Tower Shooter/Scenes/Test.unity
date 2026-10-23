@@ -667,7 +667,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &278133345
 RectTransform:
   m_ObjectHideFlags: 0
@@ -738,7 +738,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISpotlightController
   canvas: {fileID: 1702575354}
-  transitionDuration: 0.3
+  showDuration: 0.35
+  hideDuration: 0.25
   testTarget: {fileID: 405316678}
 --- !u!1 &394092774
 GameObject:
@@ -832,7 +833,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &405316678
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1342,7 +1343,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &669161159
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1942,6 +1943,64 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EngineUIAnimator
   engineMaterial: {fileID: 2100000, guid: b0f06d3c501984748b7b7191da2947e5, type: 2}
   cycleDuration: 5
+--- !u!1 &907538810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 907538811}
+  - component: {fileID: 907538812}
+  m_Layer: 5
+  m_Name: Wiki System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &907538811
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907538810}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1702575355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &907538812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907538810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a474242e5339247b8105b0a13a6176, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WikiSystem
+  currentArticle: {fileID: 0}
+  mainTitleText: {fileID: 0}
+  pageCounterText: {fileID: 0}
+  nextButton: {fileID: 0}
+  prevButton: {fileID: 0}
+  contentParent: {fileID: 0}
+  headerPrefab: {fileID: 0}
+  paragraphPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 0}
+  imagePrefab: {fileID: 0}
 --- !u!114 &973608294 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2185287420588308569, guid: 0033559aec72e16408e019b19f11ff24, type: 3}
@@ -3280,6 +3339,7 @@ RectTransform:
   - {fileID: 405316678}
   - {fileID: 669161159}
   - {fileID: 278133345}
+  - {fileID: 907538811}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
