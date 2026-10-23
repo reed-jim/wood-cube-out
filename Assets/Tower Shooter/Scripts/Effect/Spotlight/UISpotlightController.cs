@@ -65,9 +65,7 @@ public class UISpotlightController : MonoBehaviour
         material.SetFloat(ProgressID, 0f);
         material.SetFloat(FadeAlphaID, 1f);
 
-        currentTween = material.DOFloat(1f, ProgressID, showDuration)
-            .SetEase(Ease.OutCubic)
-            .SetUpdate(true);
+        currentTween = material.DOFloat(1f, ProgressID, showDuration);
     }
 
     /// <summary>
@@ -81,8 +79,6 @@ public class UISpotlightController : MonoBehaviour
 
         // Fade out alpha in place
         currentTween = material.DOFloat(0f, FadeAlphaID, hideDuration)
-            .SetEase(Ease.InCubic)
-            .SetUpdate(true)
             .OnComplete(() =>
             {
                 gameObject.SetActive(false);

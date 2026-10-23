@@ -87,9 +87,11 @@ Shader "Custom/URP_UISpotlight"
 
             float4 frag(v2f i) : SV_Target
             {
-                // Interpolate rect from full screen (0,0,1,1) down to the target rect based on progress
+                // Interpolate rect from full screen (0,0,1,1) down to the target rect
                 float4 currentRect = lerp(float4(0, 0, 1, 1), _TargetRect, _Progress);
-                float currentRadius = lerp(0.5, _CornerRadius, _Progress);
+                
+                // Start with 0 radius at full-screen (progress 0) to prevent corner distortion
+                float currentRadius = lerp(0.0, _CornerRadius, _Progress);
 
                 // Account for screen aspect ratio to prevent corner distortion
                 float aspect = _ScreenParams.x / _ScreenParams.y;
@@ -107,8 +109,6 @@ Shader "Custom/URP_UISpotlight"
                 float4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * i.color;
                 
                 float4 finalColor = lerp(float4(0, 0, 0, 0), _DimColor, mask);
-                
-                // Apply independent fade alpha
                 finalColor.a *= _FadeAlpha;
 
                 return finalColor * texColor.a;
