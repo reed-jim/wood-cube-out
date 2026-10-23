@@ -124,4 +124,11 @@ public class StarManager : Singleton<StarManager>
             starPathConfigIds.Add(id, starPathConfig);
         }
     }
+
+    #region Util
+    public StarPathConfig GetNextStarPathConfig()
+    {
+        return nextStarPathConfig;
+    }
+    #endregion
 }

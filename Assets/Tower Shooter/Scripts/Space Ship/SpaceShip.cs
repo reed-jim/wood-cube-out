@@ -36,6 +36,7 @@ public class SpaceShip : Singleton<SpaceShip>
     private const float FramePerSecond = 60;
     private int updateSpeedTick;
 
+    public static event Action<float> changeCurrentVoyageProgressEvent;
     public static event Action<SpaceObjectType> startNewVoyageEvent;
 
     protected override void MoreActionOnAwake()
@@ -116,20 +117,13 @@ public class SpaceShip : Singleton<SpaceShip>
 
         remaningKmText.text = TextUtil.FormatDistance(remaningKm);
 
-        // Vector3 deltaPosition = kmPerUnit * speedPerFrame * Vector3.right;
-
-        // locationContainer.position -= deltaPosition;
-
-        // for (int i = 0; i < parallaxBackgrounds.Length; i++)
-        // {
-        //     parallaxBackgrounds[i].transform.position -= parallaxBackgroundSpeedMultipliers[i] * deltaPosition;
-        // }
-
         remaningKm -= kmPerFrame;
 
         progress = (float)(1 - remaningKm / totalKm);
 
         VoyageMilestoneUI.Ins.SetVoyageProgress(progress);
+
+        changeCurrentVoyageProgressEvent?.Invoke(progress);
     }
 
     public void StartNewVoyage()
