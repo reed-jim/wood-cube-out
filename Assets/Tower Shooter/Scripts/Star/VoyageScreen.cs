@@ -49,7 +49,7 @@ public class VoyageScreen : MonoBehaviour
 
         normalModeContainer.gameObject.SetActive(true);
 
-        Tween.Alpha(miniModeCanvasGroup, 1, duration: 0.3f);
+        Tween.Alpha(normalModeCanvasGroup, 1, duration: 0.3f);
 
         HideMiniMode();
 
@@ -58,7 +58,7 @@ public class VoyageScreen : MonoBehaviour
 
     private void HideNormalMode()
     {
-        Tween.Alpha(miniModeCanvasGroup, 0, duration: 0.3f)
+        Tween.Alpha(normalModeCanvasGroup, 0, duration: 0.3f)
         .OnComplete(() =>
         {
             normalModeContainer.gameObject.SetActive(false);
