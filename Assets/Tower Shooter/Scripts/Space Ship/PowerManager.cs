@@ -16,6 +16,7 @@ public class PowerManager : Singleton<PowerManager>
     public TMP_Text nodePowerText;
     public TMP_Text nodeEnergyParticleText;
     public TMP_Text layerTwoText;
+    public TMP_Text totalPowerOutputText;
 
     private Tween textTween;
 
@@ -68,7 +69,7 @@ public class PowerManager : Singleton<PowerManager>
 
             // Build the current formatted text representation
             string currentDisplayText = CommonUtil.FormatNumber(value);
-            totalPowerText.text = $"<sprite=0 color={onPrimaryHex}>{currentDisplayText} ({powerOutputPerSecondString})";
+            totalPowerText.text = $"<sprite=0 color={primaryHex}>{currentDisplayText} ({powerOutputPerSecondString})";
 
             // --- Visual-Change Check ---
             // Only trigger feedback if the formatted string on screen actually changed!
@@ -188,7 +189,7 @@ public class PowerManager : Singleton<PowerManager>
     {
         nodePowerText.text = $"{CommonUtil.FormatNumber(nodePowerPerSecond)}<sprite=0 color={primaryHex}>/s";
         nodeEnergyParticleText.text = $"{CommonUtil.FormatNumber(nodeEnergyParticlePowerMultiplier)}";
-        totalPowerText.text = $"{CommonUtil.FormatNumber(totalPowerPerSecond)}<sprite=0 color={primaryHex}>/s";
+        totalPowerOutputText.text = $"{CommonUtil.FormatNumber(totalPowerPerSecond)}<sprite=0 color={primaryHex}>/s";
     }
     #endregion
 

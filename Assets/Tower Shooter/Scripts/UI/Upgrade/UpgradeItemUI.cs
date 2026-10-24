@@ -167,9 +167,9 @@ public class UpgradeItemUI : MonoBehaviour
 
         if (cachedCoinValue >= statUpgradeData.coinRequired)
         {
-            string primaryHex = DynamicThemeManager.Ins.PrimaryHex;
+            string onPrimaryHex = DynamicThemeManager.Ins.OnPrimaryHex;
 
-            coinText.text = $"<color={primaryHex}>{CommonUtil.FormatNumber(statUpgradeData.coinRequired)} <sprite=0 color={primaryHex}>";
+            coinText.text = $"<color={onPrimaryHex}>{CommonUtil.FormatNumber(statUpgradeData.coinRequired)} <sprite=0 color={onPrimaryHex}>";
         }
         else
         {
