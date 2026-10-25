@@ -16,6 +16,7 @@ public class PowerManager : Singleton<PowerManager>
     public TMP_Text nodePowerText;
     public TMP_Text nodeEnergyParticleText;
     public TMP_Text layerTwoText;
+    public TMP_Text equationText;
     public TMP_Text totalPowerOutputText;
 
     private Tween textTween;
@@ -187,9 +188,17 @@ public class PowerManager : Singleton<PowerManager>
         double totalPowerPerSecond
     )
     {
-        nodePowerText.text = $"{CommonUtil.FormatNumber(nodePowerPerSecond)}<sprite=0 color={primaryHex}>/s";
-        nodeEnergyParticleText.text = $"{CommonUtil.FormatNumber(nodeEnergyParticlePowerMultiplier)}";
-        totalPowerOutputText.text = $"{CommonUtil.FormatNumber(totalPowerPerSecond)}<sprite=0 color={primaryHex}>/s";
+        // nodePowerText.text = $"{CommonUtil.FormatNumber(nodePowerPerSecond)}<sprite=0 color={primaryHex}>/s";
+        // nodeEnergyParticleText.text = $"{CommonUtil.FormatNumber(nodeEnergyParticlePowerMultiplier)}";
+
+        string formattedNodePowerPerSecond = $"<color={primaryHex}>{CommonUtil.FormatNumber(nodePowerPerSecond)}</color>";
+        string formattedNodeEnergyParticlePowerMultiplier = $"<color={primaryHex}>{CommonUtil.FormatNumber(nodeEnergyParticlePowerMultiplier)}</color>";
+        string formattedLayerTwoExponent = $"<color={primaryHex}>{1}</color>";
+        string formattedTotalPowerPerSecond = CommonUtil.FormatNumber(totalPowerPerSecond);
+
+        equationText.text =
+            $"{formattedNodePowerPerSecond}<sup>{formattedLayerTwoExponent}</sup> x {formattedNodeEnergyParticlePowerMultiplier} =";
+        totalPowerOutputText.text = $"{formattedTotalPowerPerSecond}<sprite=0 color={primaryHex}>/s";
     }
     #endregion
 

@@ -149,9 +149,9 @@ public class NodeUI : MonoBehaviour
     {
         circleProgress.fillAmount = 0;
 
-        backgroundThemeableUI.ChangeRole(ThemeableUI.ElementRole.SurfaceDim);
-        borderThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
-        textThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+        // backgroundThemeableUI.ChangeRole(ThemeableUI.ElementRole.SurfaceDim);
+        // borderThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
+        // textThemeableUI.ChangeRole(ThemeableUI.ElementRole.OnSurface);
 
         lockIcon.gameObject.SetActive(true);
         // powerText.gameObject.SetActive(false);
@@ -159,9 +159,9 @@ public class NodeUI : MonoBehaviour
 
     public void Unlock()
     {
-        backgroundThemeableUI.ChangeRole(ThemeableUI.ElementRole.Surface);
-        borderThemeableUI.ChangeRole(ThemeableUI.ElementRole.Primary);
-        textThemeableUI.ChangeRole(ThemeableUI.ElementRole.Primary);
+        // backgroundThemeableUI.ChangeRole(ThemeableUI.ElementRole.Surface);
+        // borderThemeableUI.ChangeRole(ThemeableUI.ElementRole.Primary);
+        // textThemeableUI.ChangeRole(ThemeableUI.ElementRole.Primary);
 
         lockIcon.gameObject.SetActive(false);
         // powerText.gameObject.SetActive(true);
