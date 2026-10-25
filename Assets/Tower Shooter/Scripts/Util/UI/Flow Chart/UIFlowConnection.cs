@@ -22,6 +22,7 @@ namespace UI.FlowChart
 
         [Header("Operation Settings")]
         [SerializeField] private FlowOperation operation = FlowOperation.Add;
+        [SerializeField] private RectTransform operationBadge;
         [SerializeField] private TextMeshProUGUI operationBadgeText; // Optional UI text badge placed at the midpoint
 
         [Header("Line Settings")]
@@ -29,7 +30,6 @@ namespace UI.FlowChart
         [SerializeField] private Vector2 operationTextOffset;
 
         private RectTransform containerRect;
-        private RectTransform badgeRect;
 
         protected override void Awake()
         {
@@ -38,7 +38,6 @@ namespace UI.FlowChart
 
             if (operationBadgeText != null)
             {
-                badgeRect = operationBadgeText.rectTransform;
                 UpdateBadgeDisplay();
             }
         }
@@ -84,8 +83,6 @@ namespace UI.FlowChart
 
         private void UpdateBadgePosition()
         {
-            if (badgeRect == null) return;
-
             Vector2 p1 = GetLocalPoint(sourceElement.RectTransform);
             Vector2 p2 = GetLocalPoint(targetElement.RectTransform);
 
@@ -105,7 +102,7 @@ namespace UI.FlowChart
 
             Vector2 midPoint = (borderP1 + borderP2) * 0.5f;
 
-            badgeRect.anchoredPosition = midPoint + operationTextOffset;
+            operationBadge.anchoredPosition = midPoint + operationTextOffset;
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
