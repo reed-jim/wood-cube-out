@@ -216,6 +216,20 @@ public class FactionMapper : Singleton<FactionMapper>
         return mapper.First(item => item.spriteContainer.tileSprite == tileSprite).color;
     }
 
+    public List<Color> GetAllColors()
+    {
+        List<Color> colors = new List<Color>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            ColorSpriteContainerPair colorSpriteContainerPair = mapper[i];
+
+            colors.Add(colorSpriteContainerPair.color);
+        }
+
+        return colors;
+    }
+
 #if UNITY_EDITOR
     [Header("Editor Helper")]
     public List<Sprite> sourceSprites = new List<Sprite>();

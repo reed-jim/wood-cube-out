@@ -207,9 +207,9 @@ namespace AntsFlow
             // size = EditorGUILayout.IntField("Size", size);
             tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
 
-            EditorGUILayout.LabelField("Import Color Palette", EditorStyles.boldLabel);
+            // EditorGUILayout.LabelField("Import Color Palette", EditorStyles.boldLabel);
 
-            hexInput = EditorGUILayout.TextArea(hexInput, GUILayout.MinHeight(180));
+            // hexInput = EditorGUILayout.TextArea(hexInput, GUILayout.MinHeight(180));
 
             // colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
             // moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
@@ -229,10 +229,10 @@ namespace AntsFlow
             //     GenerateLevelFromJson(levelItem, json);
             // }
 
-            if (GUILayout.Button("Auto Fill Factions"))
-            {
-                FillFactionPool();
-            }
+            // if (GUILayout.Button("Auto Fill Factions"))
+            // {
+            //     FillFactionPool();
+            // }
 
             if (GUILayout.Button("GENERATE LEVEL"))
             {
@@ -946,10 +946,15 @@ namespace AntsFlow
         private void ReassignFactionForTiles(LevelItem level)
         {
             BaseTile[] tiles = level.tiles.ToArray();
+            
+            FactionMapper factionMapper =
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+
+            List<Color> colors = factionMapper.GetAllColors();
 
             foreach (var tile in tiles)
             {
-                Color color = FindNearestFaction(tile.Faction, level.factions);
+                Color color = FindNearestFaction(tile.Faction, colors);
                 tile.Faction = color;
                 tile.Faction = color;
             }
