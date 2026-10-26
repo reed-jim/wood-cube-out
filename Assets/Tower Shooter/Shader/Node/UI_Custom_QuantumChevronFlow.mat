@@ -29,22 +29,26 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BeamWidth: 0.05
+    - _Aspect: 1
+    - _BeamWidth: 0.08
     - _ColorMask: 15
-    - _Density: 10
-    - _Power: 100
+    - _Distortion: 0.5
+    - _Exposure: 1.4
+    - _NodeDistance: 0.9
+    - _NodeHeight: 0.15
+    - _NodeWidth: 0.5
+    - _Power: 0
     - _Progress: 0
-    - _Speed: 3
+    - _Speed: 4.5
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _Thickness: 0.5
-    - _Turbulence: 0.131
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.19999996, g: 0.6, b: 1, a: 1}
-    - _RimColor: {r: 0, g: 1, b: 0.8, a: 1}
+    - _Color: {r: 0.15, g: 0.65, b: 1, a: 1}
+    - _HotColor: {r: 1, g: 0.97, b: 0.9, a: 1}
+    - _RimColor: {r: 0, g: 0.95, b: 0.85, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
