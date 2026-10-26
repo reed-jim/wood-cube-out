@@ -70,7 +70,7 @@ public class PowerManager : Singleton<PowerManager>
 
             // Build the current formatted text representation
             string currentDisplayText = CommonUtil.FormatNumber(value);
-            totalPowerText.text = $"<sprite=0 color={primaryHex}>{currentDisplayText} ({powerOutputPerSecondString})";
+            totalPowerText.text = $"<sprite=0 color={primaryHex}>{currentDisplayText}";
 
             // --- Visual-Change Check ---
             // Only trigger feedback if the formatted string on screen actually changed!
