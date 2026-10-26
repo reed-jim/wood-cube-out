@@ -10,12 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baf2ec18aef34d542b4a035253f5c276, type: 3}
-  m_Name: NewWikiArticle
+  m_Name: Test Wiki Article
   m_EditorClassIdentifier: Assembly-CSharp::WikiArticleData
   articleTitle: Article Title
   pages:
   - pageHeaderTitle: 
     contentBlocks:
-    - type: 0
+    - type: 3
       textContent: 
+      imageSprite: {fileID: 21300000, guid: 2f96906aff8659f4b951d98920ae9928, type: 3}
+    - type: 1
+      textContent: Test Paragraph 1
+      imageSprite: {fileID: 0}
+  - pageHeaderTitle: 
+    contentBlocks:
+    - type: 1
+      textContent: Test Paragraph 2
       imageSprite: {fileID: 0}
