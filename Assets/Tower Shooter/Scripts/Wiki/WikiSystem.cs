@@ -9,14 +9,16 @@ public class WikiSystem : MonoBehaviour
     [Header("Data Source")]
     [SerializeField] private WikiArticleData currentArticle;
 
-    [Header("UI References")]
+    [Header("UI References (Main Pane)")]
     [SerializeField] private TextMeshProUGUI mainTitleText;
     [SerializeField] private TextMeshProUGUI pageCounterText;
     [SerializeField] private Button nextButton;
     [SerializeField] private Button prevButton;
-    
-    [Header("Content Container")]
     [SerializeField] private Transform contentParent;
+
+    [Header("GitBook Sidebar References")]
+    [SerializeField] private Transform sidebarContentParent;
+    [SerializeField] private GameObject sidebarButtonPrefab; // Prefab with WikiSidebarButton attached
 
     [Header("Content Item Prefabs")]
     [SerializeField] private WikiContentItem headerPrefab;
@@ -28,6 +30,7 @@ public class WikiSystem : MonoBehaviour
 
     private int currentPageIndex = 0;
     private readonly List<GameObject> spawnedBlockObjects = new List<GameObject>();
+    private readonly List<GameObject> spawnedSidebarButtons = new List<GameObject>();
 
     private void Start()
     {
@@ -41,7 +44,17 @@ public class WikiSystem : MonoBehaviour
     {
         currentArticle = article;
         currentPageIndex = 0;
+        BuildSidebar();
         RefreshUI();
+    }
+
+    public void GoToPage(int index)
+    {
+        if (currentArticle != null && index >= 0 && index < currentArticle.TotalPages)
+        {
+            currentPageIndex = index;
+            RefreshUI();
+        }
     }
 
     public void NextPage()
@@ -62,6 +75,49 @@ public class WikiSystem : MonoBehaviour
         }
     }
 
+    private void BuildSidebar()
+    {
+        // Clear old sidebar buttons
+        foreach (var btn in spawnedSidebarButtons)
+        {
+            if (btn != null) Destroy(btn);
+        }
+        spawnedSidebarButtons.Clear();
+
+        if (currentArticle == null || sidebarContentParent == null || sidebarButtonPrefab == null) return;
+
+        for (int i = 0; i < currentArticle.TotalPages; i++)
+        {
+            WikiPage page = currentArticle.GetPage(i);
+            GameObject btnObj = Instantiate(sidebarButtonPrefab, sidebarContentParent);
+            
+            WikiSidebarButton sidebarBtn = btnObj.GetComponent<WikiSidebarButton>();
+            if (sidebarBtn != null)
+            {
+                string displayTitle = !string.IsNullOrEmpty(page.PageHeaderTitle) ? page.PageHeaderTitle : $"Page {i + 1}";
+                bool isSelected = (i == currentPageIndex);
+                sidebarBtn.Setup(displayTitle, i, isSelected, GoToPage);
+            }
+
+            spawnedSidebarButtons.Add(btnObj);
+        }
+    }
+
+    private void UpdateSidebarSelection()
+    {
+        for (int i = 0; i < spawnedSidebarButtons.Count; i++)
+        {
+            var sidebarBtn = spawnedSidebarButtons[i].GetComponent<WikiSidebarButton>();
+            if (sidebarBtn != null)
+            {
+                WikiPage page = currentArticle.GetPage(i);
+                string displayTitle = !string.IsNullOrEmpty(page.PageHeaderTitle) ? page.PageHeaderTitle : $"Page {i + 1}";
+                bool isSelected = (i == currentPageIndex);
+                sidebarBtn.Setup(displayTitle, i, isSelected, GoToPage);
+            }
+        }
+    }
+
     private void RefreshUI()
     {
         if (currentArticle == null || currentArticle.TotalPages == 0)
@@ -79,6 +135,7 @@ public class WikiSystem : MonoBehaviour
         if (nextButton != null) nextButton.interactable = (currentPageIndex < currentArticle.TotalPages - 1);
         if (prevButton != null) prevButton.interactable = (currentPageIndex > 0);
 
+        UpdateSidebarSelection();
         BuildPageContent(currentArticle.GetPage(currentPageIndex));
 
         OnPageChanged?.Invoke(currentPageIndex + 1, currentArticle.TotalPages);

@@ -21,7 +21,7 @@ public class WikiArticleData : ScriptableObject
 [Serializable]
 public class WikiPage
 {
-    [SerializeField] private string pageHeaderTitle; // Optional title for this specific page
+    [SerializeField] private string pageHeaderTitle = "Untitled Page"; // Used for Sidebar navigation
     [SerializeField] private List<WikiBlock> contentBlocks = new List<WikiBlock>();
 
     public string PageHeaderTitle => pageHeaderTitle;
