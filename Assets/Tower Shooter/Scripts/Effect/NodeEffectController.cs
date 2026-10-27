@@ -73,44 +73,44 @@ public class NodeEffectController : MonoBehaviour
         CharacterStats.OnStatModified -= OnNodeStatModified;
     }
 
-    void Update()
-    {
-        // 1. Smoothly interpolate progress and speed if enabled
-        if (smoothTransitions)
-        {
-            progress = Mathf.SmoothDamp(progress, targetProgress, ref progressVelocity, transitionSmoothTime);
-            vortexSpeed = Mathf.SmoothDamp(vortexSpeed, targetSpeed, ref speedVelocity, transitionSmoothTime);
-        }
-        else
-        {
-            progress = targetProgress;
-            vortexSpeed = targetSpeed;
-        }
+    // void Update()
+    // {
+    //     // 1. Smoothly interpolate progress and speed if enabled
+    //     if (smoothTransitions)
+    //     {
+    //         progress = Mathf.SmoothDamp(progress, targetProgress, ref progressVelocity, transitionSmoothTime);
+    //         vortexSpeed = Mathf.SmoothDamp(vortexSpeed, targetSpeed, ref speedVelocity, transitionSmoothTime);
+    //     }
+    //     else
+    //     {
+    //         progress = targetProgress;
+    //         vortexSpeed = targetSpeed;
+    //     }
 
-        float minHighSpeed = 5f;
-        float maxHighSpeed = 10f;
+    //     float minHighSpeed = 5f;
+    //     float maxHighSpeed = 10f;
 
-        if (materialInstance != null)
-        {
-            // 2. Check if we are in High-Speed mode or Normal mode
-            if (vortexSpeed > minHighSpeed)
-            {
-                // High-speed mode: let the shader handle the warp tunnel animation via _HighSpeedTransition
-                float transitionVal = Mathf.Clamp01((vortexSpeed - minHighSpeed) / maxHighSpeed);
-                materialInstance.SetFloat("_HighSpeedTransition", transitionVal);
-            }
-            else
-            {
-                // Normal mode: turn off high-speed transition and accumulate rotation angle smoothly
-                materialInstance.SetFloat("_HighSpeedTransition", 0f);
+    //     if (materialInstance != null)
+    //     {
+    //         // 2. Check if we are in High-Speed mode or Normal mode
+    //         if (vortexSpeed > minHighSpeed)
+    //         {
+    //             // High-speed mode: let the shader handle the warp tunnel animation via _HighSpeedTransition
+    //             float transitionVal = Mathf.Clamp01((vortexSpeed - minHighSpeed) / maxHighSpeed);
+    //             materialInstance.SetFloat("_HighSpeedTransition", transitionVal);
+    //         }
+    //         else
+    //         {
+    //             // Normal mode: turn off high-speed transition and accumulate rotation angle smoothly
+    //             materialInstance.SetFloat("_HighSpeedTransition", 0f);
 
-                accumulatedRotation += vortexSpeed * Time.deltaTime * Mathf.PI * 2f;
-                accumulatedRotation %= Mathf.PI * 2000f; // Keep value wrapped to prevent precision issues
+    //             accumulatedRotation += vortexSpeed * Time.deltaTime * Mathf.PI * 2f;
+    //             accumulatedRotation %= Mathf.PI * 2000f; // Keep value wrapped to prevent precision issues
 
-                materialInstance.SetFloat("_RotationAngle", accumulatedRotation);
-            }
-        }
-    }
+    //             materialInstance.SetFloat("_RotationAngle", accumulatedRotation);
+    //         }
+    //     }
+    // }
 
     private void ApplyNodeStates()
     {

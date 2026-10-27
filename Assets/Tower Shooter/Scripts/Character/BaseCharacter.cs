@@ -246,6 +246,8 @@ public class BaseCharacter : MonoBehaviour
                     {
                         circleProgress.fillAmount = newVal;
 
+                        serviceLocator.nodeEffectController.SetPower(newVal * 100);
+
                         UpdateShaderProperties(newVal, highSpeedVisualFactor, (float)(Time.time * speed));
                     });
 
