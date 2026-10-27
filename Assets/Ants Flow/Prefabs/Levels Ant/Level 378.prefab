@@ -32040,7 +32040,7 @@ MonoBehaviour:
   isUseManualFactionSetupForFirstAntBoxes: 0
   levelFactionConfig:
     items: []
-  difficulty: 1
+  difficulty: 5
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
@@ -32049,14 +32049,19 @@ MonoBehaviour:
     hiddenAntBoxConfig:
       spawnOrder: 
     frozenAntBoxConfig:
-      spawnOrder: 080000000700000011000000180000001f00000023000000290000003c000000
-      numBoxToUnfreeze: 0400000003000000020000000400000005000000030000000400000003000000
+      spawnOrder: 
+      numBoxToUnfreeze: 
     doubleAntBoxConfig:
-      spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
+      spawnOrder: 
     magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 0c000000320000001000000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
     spawningTileBoxConfig:
-      items: []
+      items:
+      - faction: {r: 0.22352943, g: 0.22352943, b: 0.22352943, a: 1}
+        number: 25
+        startNodeId: 1226
+        numCoverColumn: 4
+        numCoverRow: 6
     bossAreaConfig:
       spawnOrder: 
       startNodeId: 0
@@ -32066,7 +32071,20 @@ MonoBehaviour:
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
-    hardPixelConfigs: []
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 197
+      numRows: 8
+      numCols: 10
+      requiredEatCount: 300
+      prefab: {fileID: 0}
+      prefabIndex: 5
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:

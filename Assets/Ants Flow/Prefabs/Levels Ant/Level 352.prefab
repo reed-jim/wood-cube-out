@@ -32060,21 +32060,21 @@ MonoBehaviour:
   isUseManualFactionSetupForFirstAntBoxes: 0
   levelFactionConfig:
     items: []
-  difficulty: 1
+  difficulty: 3
   initialDifficulty: 0
   overrideInitialDifficulty: 0
   numStartAntBoxes: 6
   easySpawnOrder: 
   specialElementConfig:
     hiddenAntBoxConfig:
-      spawnOrder: 
+      spawnOrder: 050000003200000010000000130000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
     frozenAntBoxConfig:
-      spawnOrder: 080000000700000011000000180000001f00000023000000290000003c000000
-      numBoxToUnfreeze: 0400000003000000020000000400000005000000030000000400000003000000
+      spawnOrder: 
+      numBoxToUnfreeze: 
     doubleAntBoxConfig:
-      spawnOrder: 0b0000001f000000040000000d00000013000000150000001b0000001a0000001c0000001e0000002400000025000000280000003200000033000000
+      spawnOrder: 
     magnetAntBoxConfig:
-      spawnOrder: 06000000050000000c000000320000000d000000100000001100000013000000170000001c000000190000004b000000210000002800000022000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
+      spawnOrder: 060000003200000010000000170000001c0000004b0000002100000028000000270000002f0000002e0000002b0000003400000041000000350000003c000000370000003d000000
     spawningTileBoxConfig:
       items: []
     bossAreaConfig:
@@ -32086,7 +32086,33 @@ MonoBehaviour:
     openCloseAntBoxConfig:
       spawnOrder: 
       initialStates: 
-    hardPixelConfigs: []
+    hardPixelConfigs:
+    - id: 0
+      startNodeId: 50
+      numRows: 10
+      numCols: 10
+      requiredEatCount: 250
+      prefab: {fileID: 0}
+      prefabIndex: 5
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
+    - id: 0
+      startNodeId: 1332
+      numRows: 8
+      numCols: 9
+      requiredEatCount: 350
+      prefab: {fileID: 0}
+      prefabIndex: 5
+      isShowText: 1
+      rotationAngle: 0
+      scaleWidth: 1.01
+      scaleHeight: 1.055
+      offsetX: 0
+      offsetY: 0
     lockedSlotConfig:
       lockedSlotIndices: 
       keyAntBoxConfig:
@@ -32100,7 +32126,7 @@ MonoBehaviour:
       width: 0
       scaleHead: 0
       isFlipHead: 0
-    isContainsHiddenTiles: 1
+    isContainsHiddenTiles: 0
     isContainsWallTiles: 0
   spawnPosition: {x: 0, y: 3, z: 0}
   spawnScale: {x: 0.423, y: 0.423, z: 0.423}
