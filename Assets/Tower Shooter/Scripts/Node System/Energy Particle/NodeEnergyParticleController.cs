@@ -57,9 +57,11 @@ public class NodeEnergyParticleController : Singleton<NodeEnergyParticleControll
         string unitStringPrimary = $"<sprite=0 color={primaryHex}>/s";
         string unitStringOnSurface = $"<sprite=0 color={onSurfaceHex}>/s";
 
-        multiplierText.text =
-            $"<color={onSurfaceHex}>{unitStringOnSurface} x{CommonUtil.FormatNumber(multiplier)}" +
-            $" --> <color={primaryHex}>x{CommonUtil.FormatNumber(nextMultiplier)}";
+        multiplierText.text = $"{CommonUtil.FormatNumber(multiplier)}";
+
+        // multiplierText.text =
+        //     $"<color={onSurfaceHex}>{unitStringOnSurface} x{CommonUtil.FormatNumber(multiplier)}" +
+        //     $" --> <color={primaryHex}>x{CommonUtil.FormatNumber(nextMultiplier)}";
 
         requiredPowerForNextTierText.text = $"Reach <color={primaryHex}>{CommonUtil.FormatNumber(requiredPowerForNextTier)} <sprite=0 color={primaryHex}></color> to upgrade";
     }
