@@ -15,7 +15,7 @@ Shader "UI/URP/EnergyBorderAAALevel"
         _Distortion ("Hextech Distortion", Range(0.0, 1.0)) = 0.4
         _Exposure ("Exposure", Range(0.2, 4.0)) = 1.4
         _Aspect ("Image Aspect (Width / Height)", Float) = 1.0
-        _CornerRadius ("Corner Radius", Range(0.0, 0.4)) = 0.15
+        _CornerRadius ("Corner Radius", Range(0.0, 0.5)) = 0.15
 
         // Stencil / UI Canvas properties
         _StencilComp ("Stencil Comparison", Float) = 8
@@ -175,7 +175,6 @@ Shader "UI/URP/EnergyBorderAAALevel"
             // Parameterize perimeter position (0 to 1 around the rounded box loop)
             float getPerimeterCoord(float2 p, float2 b, float r)
             {
-                // Simple mapping along normalized coordinates for energy flow tracking
                 return frac(p.x * 0.5 + p.y * 0.5 + 0.5);
             }
 
@@ -194,13 +193,16 @@ Shader "UI/URP/EnergyBorderAAALevel"
                 float t = _Time.y * _Speed;
                 float pulseBeat = 0.88 + 0.12 * sin(_Time.y * lerp(2.0, 10.0, p));
 
-                // Box dimensions in aspect-corrected space (half-extents)
-                float2 boxSize = float2(0.45 * _Aspect, 0.45);
+                // Box dimensions expanded to fill the entire UI Image bounds (0.5 half-extent)
+                float2 boxSize = float2(0.5 * _Aspect, 0.5);
                 float sdBox = roundedBoxSdf(pp, boxSize, _CornerRadius);
 
-                // We want a border band: distance from target border width line
+                // Smoothly clip pixels outside the full rounded box bounds
+                float cornerMask = smoothstep(0.002, -0.002, sdBox);
+
+                // Border band distance field
                 float targetDist = _BorderWidth * 0.5;
-                float d = abs(sdBox - (-targetDist)) - targetDist; // Distance to the border center ring
+                float d = abs(sdBox - (-targetDist)) - targetDist; 
                 
                 // Track perimeter coordinate for fluid flow
                 float along = getPerimeterCoord(pp, boxSize, _CornerRadius) + t * 0.1;
@@ -270,9 +272,6 @@ Shader "UI/URP/EnergyBorderAAALevel"
                 }
                 sparks *= prox * 1.2;
 
-                // Frame mask to keep effect constrained strictly to the border region
-                float borderMask = smoothstep(0.005, 0.0, sdBox) * (1.0 - smoothstep(-_BorderWidth - 0.005, -_BorderWidth, sdBox));
-
                 // Compose HDR color matching League/Arcane quality
                 float3 tintMid = lerp(_Color.rgb, _RimColor.rgb, p);
                 float3 hot = _HotColor.rgb;
@@ -283,7 +282,7 @@ Shader "UI/URP/EnergyBorderAAALevel"
                             + halo * tintMid * 0.6
                             + bolts * hot * 3.0
                             + sparks * hot * 2.0
-                            + comet * _RimColor.rgb * 2.0) * borderMask;
+                            + comet * _RimColor.rgb * 2.0) * cornerMask;
 
                 hdr *= brightness * pulseBeat * _Exposure;
 
@@ -296,7 +295,7 @@ Shader "UI/URP/EnergyBorderAAALevel"
                 ldr += (hash21(input.positionCS.xy) - 0.5) / 255.0;
                 ldr = max(ldr, 0.0);
 
-                float a = saturate(max(ldr.r, max(ldr.g, ldr.b)));
+                float a = saturate(max(ldr.r, max(ldr.g, ldr.b))) * cornerMask;
 
                 half4 col = half4(ldr, a);
                 col.rgb *= input.color.rgb * input.color.a;
