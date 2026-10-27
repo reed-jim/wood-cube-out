@@ -1,4 +1,4 @@
-Shader "UI/Custom/AAALeagueDualNodeBeam"
+Shader "UI/Custom/AAAContinuousBeam"
 {
     Properties
     {
@@ -9,17 +9,12 @@ Shader "UI/Custom/AAALeagueDualNodeBeam"
 
         [Header(Spell FX Control)]
         _Power ("Effect Power (0 - 100)", Range(0.0, 100.0)) = 50.0
-        _Progress ("Energy Comet Position (0 - 1, A to B)", Range(0.0, 1.0)) = 0.0
+        _Progress ("Energy Comet Position (0 - 1, Top to Bottom)", Range(0.0, 1.0)) = 0.0
         _Speed ("Flow Speed", Float) = 4.5
         _BeamWidth ("Core Focus Width", Range(0.01, 0.25)) = 0.08
         _Distortion ("Hextech Distortion", Range(0.0, 1.0)) = 0.5
         _Exposure ("Exposure", Range(0.2, 4.0)) = 1.4
         _Aspect ("Image Aspect (Width / Height)", Float) = 1.0
-
-        [Header(Node Rect Settings)]
-        _NodeWidth ("Node Rect Half Width", Range(0.05, 0.5)) = 0.2
-        _NodeHeight ("Node Rect Half Height", Range(0.05, 0.5)) = 0.15
-        _NodeDistance ("Node A to B Spacing", Range(0.2, 0.9)) = 0.6
 
         // Stencil / UI Canvas properties
         _StencilComp ("Stencil Comparison", Float) = 8
@@ -61,7 +56,7 @@ Shader "UI/Custom/AAALeagueDualNodeBeam"
 
         Pass
         {
-            Name "UI_AAALeagueDualNodeBeam"
+            Name "UI_AAAContinuousBeam"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -97,9 +92,6 @@ Shader "UI/Custom/AAALeagueDualNodeBeam"
                 float _Distortion;
                 float _Exposure;
                 float _Aspect;
-                float _NodeWidth;
-                float _NodeHeight;
-                float _NodeDistance;
             CBUFFER_END
 
             Varyings vert(Attributes input)
@@ -178,36 +170,6 @@ Shader "UI/Custom/AAALeagueDualNodeBeam"
             }
 
             // ------------------------------------------------------------------
-            // SDF helpers
-            // ------------------------------------------------------------------
-            float roundedBoxSdf(float2 p, float2 b, float r)
-            {
-                float2 q = abs(p) - b + r;
-                return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
-            }
-
-            float2 fmod2(float2 x, float2 y)
-            {
-                return x - y * floor(x / y);
-            }
-
-            float4 hexCoords(float2 uv)
-            {
-                const float2 r = float2(1.0, 1.7320508);
-                float2 h = r * 0.5;
-                float2 a = fmod2(uv, r) - h;
-                float2 b = fmod2(uv - h, r) - h;
-                float2 gv = dot(a, a) < dot(b, b) ? a : b;
-                return float4(gv, uv - gv);
-            }
-
-            float hexDist(float2 p)
-            {
-                p = abs(p);
-                return max(dot(p, float2(0.5, 0.8660254)), p.x);
-            }
-
-            // ------------------------------------------------------------------
             // Fragment
             // ------------------------------------------------------------------
             half4 frag(Varyings input) : SV_Target
@@ -223,15 +185,10 @@ Shader "UI/Custom/AAALeagueDualNodeBeam"
                 float t = _Time.y * _Speed;
                 float pulseBeat = 0.88 + 0.12 * sin(_Time.y * lerp(2.0, 10.0, p));
 
-                float halfDist = _NodeDistance * 0.5;
-                float2 hb = float2(_NodeWidth, _NodeHeight);
-                float cornerR = min(hb.x, hb.y) * 0.35;
-
-                // ============================ BEAM ============================
-                // along: 0 at node A centre, 1 at node B centre (flow = A -> B)
-                float along = saturate((halfDist - pp.y) / _NodeDistance);
-                float env = smoothstep(0.0, 0.15, along) * (1.0 - smoothstep(0.85, 1.0, along));
-                float yMask = smoothstep(0.0, _NodeHeight * 0.9, halfDist - abs(pp.y));
+                // ============================ CONTINUOUS BEAM ============================
+                // along: 0 at top (pp.y = 0.5), 1 at bottom (pp.y = -0.5)
+                float along = saturate(0.5 - pp.y);
+                float env = 1.0; // Full continuous span
 
                 float w = _BeamWidth * lerp(0.5, 1.3, p);
                 float x = pp.x;
@@ -246,7 +203,7 @@ Shader "UI/Custom/AAALeagueDualNodeBeam"
                 float seg = vnoise(float2(along * 10.0 - t * 0.8, _Time.y * 2.0));
                 float dropout = lerp(smoothstep(0.35, 0.65, seg), 1.0, smoothstep(0.05, 0.45, p));
 
-                // Energy bands travelling A -> B
+                // Energy bands travelling top -> bottom
                 float band = pow(0.5 + 0.5 * sin(along * 28.0 - t * 3.0), 6.0);
                 float bandMod = 1.0 + band * lerp(0.3, 1.2, p);
 
@@ -332,75 +289,13 @@ Shader "UI/Custom/AAALeagueDualNodeBeam"
                                + sparks * lerp(hot, _RimColor.rgb, 0.5) * 2.0
                                + comet * lerp(hot, _RimColor.rgb, 0.25) * 1.8
                                + fringe * _RimColor.rgb * 0.8;
-                beamHdr *= brightness * pulseBeat * yMask;
-
-                // ============================ NODES ============================
-                float2 pa = pp - float2(0.0, halfDist);
-                float2 pb = pp + float2(0.0, halfDist);
-                float sdA = roundedBoxSdf(pa, hb, cornerR);
-                float sdB = roundedBoxSdf(pb, hb, cornerR);
-                bool isA = sdA < sdB;
-                float sd = isA ? sdA : sdB;
-                float2 lp = isA ? pa : pb;
-                float dirS = isA ? -1.0 : 1.0; // local y direction pointing at the beam
-
-                float aa = max(fwidth(sd), 1e-4);
-                float inside = 1.0 - smoothstep(-aa, aa, sd);
-                float innerMask = inside * saturate(-sd / 0.03);
-
-                // Glassy fill with vertical gradient
-                float gradY = 0.5 + 0.5 * (lp.y * dirS) / hb.y;
-                float fill = inside * lerp(0.04, 0.14, gradY);
-
-                // Inner edge glow
-                float edgeGlow = exp(sd * 30.0) * inside;
-
-                // Crisp border with corner accent
-                float borderW = 0.006;
-                float border = 1.0 - smoothstep(-aa, aa, abs(sd + borderW) - borderW);
-                float corner = smoothstep(0.6, 1.0, abs(lp.x) / hb.x) * smoothstep(0.6, 1.0, abs(lp.y) / hb.y);
-
-                // Outer bloom
-                float outer = exp(-max(sd, 0.0) * lerp(24.0, 10.0, p)) * (1.0 - inside);
-
-                // Hex lattice with pulsing cells, brighter near the beam port
-                float4 hc = hexCoords(lp * 16.0);
-                float hedge = 0.5 - hexDist(hc.xy);
-                float hexLine = 1.0 - smoothstep(0.0, 0.06, hedge);
-                float cellRand = hash21(hc.zw);
-                float cellAct = pow(0.5 + 0.5 * sin(t * 1.5 + cellRand * 6.2831), 8.0);
-                float2 portPos = float2(0.0, dirS * hb.y);
-                float portDist = length(lp - portPos);
-                float nearPort = exp(-portDist * 4.0);
-                float hexTerm = (hexLine * 0.35 + cellAct * 0.35 * (1.0 - hexLine)) * (0.35 + nearPort) * innerMask;
-
-                // Scan line
-                float sy = lp.y / hb.y;
-                float scanPos = sin(_Time.y * 0.9 + (isA ? 0.0 : 3.1416));
-                float scan = gaussian(sy - scanPos, 0.08) * innerMask * 0.5;
-
-                // Port glow + expanding ring
-                float portGlow = lorentz(portDist, 0.05) * lerp(0.4, 1.6, p);
-                float rr = frac(_Time.y * 0.25 + (isA ? 0.0 : 0.5));
-                float ring = gaussian(portDist - rr * 0.18, 0.008) * (1.0 - rr) * lerp(0.3, 1.0, p);
-
-                float3 nodeHdr = _RimColor.rgb * border * (1.2 + 2.5 * pe) * (1.0 + corner * 1.2)
-                               + _RimColor.rgb * edgeGlow * 0.6 * lerp(0.5, 1.5, p)
-                               + _Color.rgb * fill
-                               + _Color.rgb * hexTerm * 1.2
-                               + _RimColor.rgb * scan
-                               + lerp(_RimColor.rgb, hot, 0.5) * (portGlow + ring) * innerMask
-                               + _RimColor.rgb * outer * 0.35 * lerp(0.4, 1.6, p);
-                nodeHdr *= pulseBeat;
-
-                // Beam sits behind node glass
-                beamHdr *= (1.0 - inside * 0.6);
+                beamHdr *= brightness * pulseBeat;
 
                 // Soft fade at the rect edge so glows never hard-clip
                 float2 e = float2(0.5 * _Aspect - abs(pp.x), 0.5 - abs(pp.y));
                 float edgeFade = smoothstep(0.0, 0.06, min(e.x, e.y));
 
-                float3 hdr = (beamHdr + nodeHdr) * _Exposure * edgeFade;
+                float3 hdr = beamHdr * _Exposure * edgeFade;
 
                 // Filmic-ish tonemap with highlight desaturation
                 float3 ldr = 1.0 - exp(-hdr);

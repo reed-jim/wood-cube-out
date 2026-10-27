@@ -272,6 +272,13 @@ Shader "UI/URP/EnergyBorderAAALevel"
                 }
                 sparks *= prox * 1.2;
 
+                // NEW: Center fade factor. 
+                // sdBox is negative inside. We create a multiplier that drops significantly 
+                // as we move away from the border towards the center.
+                float centerFade = saturate((sdBox + _BorderWidth * 1.5) / (-_BorderWidth * 1.5));
+                // Keep a very faint ambient energy in the core (e.g., 0.05), or set to 0.0 for pitch black center
+                centerFade = lerp(0.02, 1.0, centerFade); 
+
                 // Compose HDR color matching League/Arcane quality
                 float3 tintMid = lerp(_Color.rgb, _RimColor.rgb, p);
                 float3 hot = _HotColor.rgb;
@@ -282,7 +289,7 @@ Shader "UI/URP/EnergyBorderAAALevel"
                             + halo * tintMid * 0.6
                             + bolts * hot * 3.0
                             + sparks * hot * 2.0
-                            + comet * _RimColor.rgb * 2.0) * cornerMask;
+                            + comet * _RimColor.rgb * 2.0) * cornerMask * centerFade;
 
                 hdr *= brightness * pulseBeat * _Exposure;
 
