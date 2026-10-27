@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_URP_UI_RoundedBorder 1
-  m_Shader: {fileID: 4800000, guid: e8fc87d7aa9d4584699b6774d9c826ab, type: 3}
+  m_Name: UI_URP_EnergyBorderAAA
+  m_Shader: {fileID: 4800000, guid: a6e668844496bea48a2b438f07691dba, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -22,21 +22,31 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BorderThickness: 4.3
+    - _Aspect: 1
+    - _BorderWidth: 0.08
     - _ColorMask: 15
-    - _Radius: 3.3
-    - _Smoothness: 1
+    - _CornerRadius: 0.15
+    - _Distortion: 0.4
+    - _Exposure: 1.4
+    - _Power: 50
+    - _Progress: 0
+    - _Speed: 4
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
     m_Colors:
-    - _BorderColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _RectSize: {r: 20, g: 20, b: 0, a: 0}
+    - _Color: {r: 0.15, g: 0.65, b: 1, a: 1}
+    - _HotColor: {r: 1, g: 0.97, b: 0.9, a: 1}
+    - _RimColor: {r: 0, g: 0.95, b: 0.85, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
