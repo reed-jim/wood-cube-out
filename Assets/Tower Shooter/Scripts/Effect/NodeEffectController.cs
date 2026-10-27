@@ -3,8 +3,6 @@ using UnityEngine.UI;
 
 public class NodeEffectController : MonoBehaviour
 {
-    [SerializeField] private CharacterServiceLocator serviceLocator;
-
     [Header("UI")]
     [SerializeField] private Image uiImage;
 

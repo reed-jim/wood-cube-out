@@ -11,8 +11,10 @@ public class LayerTwoNodeGroupUI : MonoBehaviour
     [SerializeField] private Image fill;
     [SerializeField] private TMP_Text globalMultiplierText;
     [SerializeField] private Button selectButton;
-
+    
     [SerializeField] private CanvasGroup lockCanvasGroup;
+
+    [SerializeField] private NodeEffectController nodeEffectController;
 
     private Sequence punchTextSequence;
 
@@ -23,7 +25,8 @@ public class LayerTwoNodeGroupUI : MonoBehaviour
 
     public void SetProgress(float progress)
     {
-        fill.fillAmount = progress;
+        nodeEffectController.SetPower(progress * 100);
+        // fill.fillAmount = progress;
     }
 
     public void SetGlobalMultiplierText(double multiplier)
