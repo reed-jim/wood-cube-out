@@ -11,7 +11,7 @@ Shader "UI/URP/EnergyBorderAAALevel"
         _Power ("Effect Power (0 - 100)", Range(0.0, 100.0)) = 75.0
         _Progress ("Energy Comet Position (0 - 1)", Range(0.0, 1.0)) = 0.0
         _Speed ("Flow Speed", Float) = 4.0
-        _BorderWidth ("Border Width", Range(0.01, 0.25)) = 0.08
+        _BorderWidth ("Border Width", Range(0.00, 0.25)) = 0.08
         _Distortion ("Hextech Distortion", Range(0.0, 1.0)) = 0.4
         _Exposure ("Exposure", Range(0.2, 4.0)) = 1.4
         _Aspect ("Image Aspect (Width / Height)", Float) = 1.0

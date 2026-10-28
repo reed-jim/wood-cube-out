@@ -361,7 +361,6 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
             float ShElevation(float3 pp, float scale)
             {
                 float3 q = pp * scale;
-                // domain warp -> organic coastlines
                 float3 w = float3(ShNoise3(q * 0.8 + float3(7.1, 2.3, 5.9)),
                                   ShNoise3(q * 0.8 + float3(13.7, 8.1, 1.1)),
                                   ShNoise3(q * 0.8 + float3(3.3, 19.2, 9.4))) - 0.5;
@@ -481,13 +480,6 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
                 float bgT = t * _BackgroundSpeed * _GlobalSpeed * 5.0;
                 float pulse = sin(t * _PulseSpeed) * 0.5 + 0.5;
 
-                // ---------------- Directional gradient mask ----------------
-                float angleRad = radians(_GradientAngle);
-                float2 gradDir = float2(cos(angleRad), sin(angleRad));
-                float gradPos = dot(cuv, gradDir) + 0.5;
-                float gradRange = max(_GradientEnd - _GradientStart, 0.0001);
-                float bgAlpha = smoothstep(0.0, 1.0, saturate((gradPos - _GradientStart) / gradRange));
-
                 // ---------------- Sun direction (view space, +z toward camera) ----------------
                 float yaw = radians(_SunYaw);
                 float pit = radians(_SunPitch);
@@ -570,7 +562,8 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
                     }
                     #endif
 
-                    float landMask = smoothstep(sea, sea + 0.02, e);
+                    // Clean sharp step for land/ocean border without extra artifact lines
+                    float landMask = step(sea, e);
                     float alt = saturate((e - sea) / max(1.0 - sea, 0.01));
                     float ridge = ShRidged(pp * scale * 3.0, 3);
                     float moisture = ShFbm(pp * scale * 1.3 + 31.7, 3);
@@ -586,8 +579,6 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
 
                     float3 land = lerp(grass, sand, desert);
                     land = lerp(land, rock, mount);
-                    float beach = (1.0 - smoothstep(0.0, 0.03, e - sea)) * landMask;
-                    land = lerp(land, sand * 1.15, beach * 0.7);
                     float snow = smoothstep(0.55, 0.85, alt + (1.0 - temp) * 0.45 - 0.2);
                     land = lerp(land, _PolarCapColor.rgb, snow);
                     land *= 0.9 + 0.2 * ShNoise3(pp * scale * 12.0);
@@ -596,11 +587,6 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
                     float depth = saturate((sea - e) / 0.2);
                     float3 oceanA = lerp(_ShallowOceanColor.rgb, _OceanColor.rgb, pow(depth, 0.55));
                     oceanA += _ShallowOceanColor.rgb * exp(-depth * 10.0) * 0.35;
-
-                    float coastD = sea - e;
-                    float foamBand = smoothstep(0.03, 0.0, abs(coastD - 0.006));
-                    float foam = foamBand * (0.55 + 0.45 * sin(coastD * 220.0 - t * 2.5 + ShNoise3(pp * 40.0) * 6.0)) * _CoastFoam;
-                    oceanA = lerp(oceanA, float3(0.9, 0.97, 1.0), saturate(foam));
 
                     // ---------- polar caps ----------
                     float capEdge = 1.0 - _PolarCapSize * 0.5 + (ShNoise3(pp * scale * 3.0 + 9.0) - 0.5) * 0.12;
@@ -659,7 +645,7 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
                         float dots = smoothstep(0.80, 0.95, ShNoise3(pp * 55.0));
                         float flick = 0.75 + 0.25 * sin(t * 2.5 + ShHash13(floor(pp * 55.0)) * K_TAU);
                         float cityMask = pop * dots * flick * landMask
-                                       * smoothstep(0.015, 0.07, e - sea)
+                                       * step(sea + 0.01, e)
                                        * (1.0 - smoothstep(0.68, 0.82, lat))
                                        * (1.0 - mount)
                                        * (1.0 - cloudMask * 0.85);
@@ -735,9 +721,9 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
                 }
 
                 // ---------------- Compose (premultiplied) ----------------
-                float alphaP = bgAlpha * (1.0 - cover) + cover;
+                float alphaP = (1.0 - cover) + cover;
                 float3 addRGB = glowRGB + ringRGB;
-                float3 rgbP = space * bgAlpha * (1.0 - cover) + planetCol * cover + addRGB;
+                float3 rgbP = space * (1.0 - cover) + planetCol * cover + addRGB;
                 float alphaOut = saturate(alphaP + max(addRGB.r, max(addRGB.g, addRGB.b)));
                 float3 col = rgbP / max(alphaOut, 1e-4);
 
