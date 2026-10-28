@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class StartEngineScreen : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private RectTransform container;
-    [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Button startEngineButton;
 
     #region Physical Platform Phase 1
@@ -19,6 +17,7 @@ public class StartEngineScreen : MonoBehaviour
     #region Physical Screen Phase 2
     static readonly int Power = Shader.PropertyToID("_Power");
     [SerializeField] Image physicalScreen;
+    [SerializeField] float bootPlatformTime = 0.6f;
     [SerializeField] float bootTime = 0.6f;
     private Material physicalScreenMat;
     #endregion
@@ -44,12 +43,6 @@ public class StartEngineScreen : MonoBehaviour
             Tween.LocalPositionY(physicalScreen.transform, 0, duration: 0.3f)
             .OnComplete(() =>
             {
-                // Tween.Scale(container, 1.2f, duration: bootTime)
-                // .OnComplete(() =>
-                // {
-                //     container.gameObject.SetActive(false);
-                // });
-
                 StartCoroutine(BootingSystem(1));
             });
         }));
@@ -58,7 +51,7 @@ public class StartEngineScreen : MonoBehaviour
     IEnumerator BootingPlatform(Action onComplete)
     {
         float start = physicalPlatformMat.GetFloat(Power);
-        float dur = bootTime;
+        float dur = bootPlatformTime;
 
         for (float t = 0; t < dur; t += Time.unscaledDeltaTime)
         {
@@ -75,11 +68,15 @@ public class StartEngineScreen : MonoBehaviour
     {
         float start = physicalScreenMat.GetFloat(Power);
         float dur = bootTime * Mathf.Abs(target - start);
+
         for (float t = 0; t < dur; t += Time.unscaledDeltaTime)
         {
             physicalScreenMat.SetFloat(Power, Mathf.Lerp(start, target, t / dur));
             yield return null;
         }
+
         physicalScreenMat.SetFloat(Power, target);
+
+        gameObject.SetActive(false);
     }
 }
