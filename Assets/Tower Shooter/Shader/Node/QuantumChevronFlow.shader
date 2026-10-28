@@ -11,7 +11,8 @@ Shader "UI/Custom/AAAContinuousBeam"
         _Power ("Effect Power (0 - 100)", Range(0.0, 100.0)) = 50.0
         _Progress ("Energy Comet Position (0 - 1, Top to Bottom)", Range(0.0, 1.0)) = 0.0
         _Speed ("Flow Speed", Float) = 4.5
-        _BeamWidth ("Core Focus Width", Range(0.01, 0.25)) = 0.08
+        _BeamWidth ("Beam Outer Glow Width", Range(0.01, 0.25)) = 0.08
+        _CoreWidth ("Top & Bottom Spread Horizontal Width", Range(0.01, 1.0)) = 0.35
         _Distortion ("Hextech Distortion", Range(0.0, 1.0)) = 0.5
         _Exposure ("Exposure", Range(0.2, 4.0)) = 1.4
         _Aspect ("Image Aspect (Width / Height)", Float) = 1.0
@@ -89,6 +90,7 @@ Shader "UI/Custom/AAAContinuousBeam"
                 float _Progress;
                 float _Speed;
                 float _BeamWidth;
+                float _CoreWidth;
                 float _Distortion;
                 float _Exposure;
                 float _Aspect;
@@ -106,7 +108,7 @@ Shader "UI/Custom/AAAContinuousBeam"
             }
 
             // ------------------------------------------------------------------
-            // Hash / noise (sin-free, stable across GPUs)
+            // Hash / noise functions
             // ------------------------------------------------------------------
             float hash11(float p)
             {
@@ -175,7 +177,6 @@ Shader "UI/Custom/AAAContinuousBeam"
             half4 frag(Varyings input) : SV_Target
             {
                 float2 uv = input.uv - 0.5;
-                // Height-normalised space so everything stays round on non-square images
                 float2 pp = float2(uv.x * _Aspect, uv.y);
 
                 float aaX = max(fwidth(pp.x), 1e-4);
@@ -185,56 +186,53 @@ Shader "UI/Custom/AAAContinuousBeam"
                 float t = _Time.y * _Speed;
                 float pulseBeat = 0.88 + 0.12 * sin(_Time.y * lerp(2.0, 10.0, p));
 
-                // ============================ CONTINUOUS BEAM ============================
-                // along: 0 at top (pp.y = 0.5), 1 at bottom (pp.y = -0.5)
-                float along = saturate(0.5 - pp.y);
-                float env = 1.0; // Full continuous span
+                // ============================ WIDE HORIZONTAL SPREAD GRADIENT ============================
+                float hGradient = sin(input.uv.x * 3.14159265);
+                hGradient = pow(hGradient, 0.55);
 
-                float w = _BeamWidth * lerp(0.5, 1.3, p);
+                // ============================ TOP -> BOTTOM ENERGY FLOW ============================
+                float along = saturate(0.5 - pp.y); // 0 at top, 1 at bottom
+                float env = 1.0; 
+
+                float w = _BeamWidth * lerp(0.6, 1.4, p);
                 float x = pp.x;
 
-                // Organic centre-line warp (fbm + travelling sine)
                 float amp = _Distortion * lerp(0.008, 0.06, p) * env;
-                float n = fbm(float2(along * 6.0 - t * 0.35, t * 0.12));
-                float warp = ((n - 0.5) * 2.2 + sin(along * 22.0 - t * 1.7) * 0.35) * amp;
+                float n = fbm(float2(along * 5.0 - t * 0.7, t * 0.2));
+                float warp = ((n - 0.5) * 2.2 + sin(along * 20.0 - t * 3.0) * 0.35) * amp;
                 float d = abs(x - warp);
 
-                // Low power = unstable / dropping out, high power = solid
-                float seg = vnoise(float2(along * 10.0 - t * 0.8, _Time.y * 2.0));
+                float seg = vnoise(float2(along * 10.0 - t * 1.5, _Time.y * 2.0));
                 float dropout = lerp(smoothstep(0.35, 0.65, seg), 1.0, smoothstep(0.05, 0.45, p));
 
-                // Energy bands travelling top -> bottom
-                float band = pow(0.5 + 0.5 * sin(along * 28.0 - t * 3.0), 6.0);
-                float bandMod = 1.0 + band * lerp(0.3, 1.2, p);
+                float downwardWave = pow(0.5 + 0.5 * sin((along * 22.0) - (t * 5.0)), 5.0);
+                float band = pow(0.5 + 0.5 * sin(along * 26.0 - t * 4.0), 6.0);
+                float bandMod = 1.0 + (band + downwardWave * 1.8) * lerp(0.3, 1.5, p);
 
-                // Core + glow + halo
                 float flick = 0.88 + 0.12 * sin(_Time.y * 37.0 + along * 40.0);
-                float core = gaussian(d, w * 0.55) * flick * dropout * bandMod;
-                float glow = pow(lorentz(d, w * 1.4), 1.5) * (0.6 + 0.4 * dropout);
-                float halo = exp(-d / (w * (3.0 + 4.0 * p)));
+                float core = gaussian(d, w * 0.5) * flick * dropout * bandMod;
+                float glow = pow(lorentz(d, w * 1.3), 1.5) * (0.6 + 0.4 * dropout);
+                float halo = exp(-d / (w * (2.8 + 3.5 * p)));
 
-                // Double helix strands (unlock with power)
                 float helixOn = smoothstep(0.2, 0.6, p);
-                float hr = w * 1.7 * helixOn * env;
-                float ph = along * 34.0 - t * 2.2;
+                float hr = w * 1.5 * helixOn * env;
+                float ph = along * 30.0 - t * 4.0;
                 float s1 = warp + sin(ph) * hr;
                 float s2 = warp - sin(ph) * hr;
                 float sw = max(w * 0.28, aaX * 1.5);
                 float strands = (gaussian(x - s1, sw) * (0.65 + 0.35 * cos(ph))
                                + gaussian(x - s2, sw) * (0.65 - 0.35 * cos(ph))) * helixOn * dropout;
 
-                // Chromatic fringe at high power
                 float ca = smoothstep(0.4, 1.0, p) * w * 0.35;
                 float fR = max(gaussian(abs(x - warp + ca), w * 0.9) - gaussian(d, w * 0.9), 0.0);
                 float fB = max(gaussian(abs(x - warp - ca), w * 0.9) - gaussian(d, w * 0.9), 0.0);
                 float3 fringe = float3(fR, 0.0, fB) * smoothstep(0.4, 1.0, p);
 
-                // Energy comet (driven by _Progress)
+                // Manual energy comet driven by _Progress slider
                 float dd = frac(_Progress) - along;
                 float cometProfile = dd >= 0.0 ? exp(-dd * 7.0) : exp(dd * 70.0);
                 float comet = cometProfile * (gaussian(d, w * 1.8) * 0.9 + halo * 0.5) * lerp(0.6, 2.0, p);
 
-                // Crackling lightning (re-seeded in time steps)
                 float bolts = 0.0;
                 float boltAmt = smoothstep(0.25, 0.9, p);
                 float boltW = max(w * 0.09, aaX * 1.2);
@@ -242,7 +240,7 @@ Shader "UI/Custom/AAAContinuousBeam"
                 for (int i = 0; i < 2; i++)
                 {
                     float seed = i * 13.7;
-                    float tick = floor(_Time.y * (12.0 + i * 5.0));
+                    float tick = floor(_Time.y * (14.0 + i * 5.0));
                     float g = hash21(float2(tick, seed));
                     float vis = step(lerp(1.1, 0.3, boltAmt), g);
                     float j1 = (vnoise(float2(along * 26.0 + seed + tick * 3.7, tick)) - 0.5) * 2.0;
@@ -253,7 +251,6 @@ Shader "UI/Custom/AAAContinuousBeam"
                 }
                 bolts *= boltAmt * env;
 
-                // Particle sparks (3 parallax layers)
                 float sparks = 0.0;
                 float dens = lerp(0.15, 0.9, p);
                 float prox = exp(-d / (w * (2.5 + 3.0 * p)));
@@ -261,7 +258,7 @@ Shader "UI/Custom/AAAContinuousBeam"
                 for (int L = 0; L < 3; L++)
                 {
                     float sc = 14.0 + L * 9.0;
-                    float2 q = float2(x, -pp.y) * sc - float2(0.0, t * (0.5 + 0.35 * L));
+                    float2 q = float2(x, -pp.y) * sc - float2(0.0, t * (1.2 + 0.5 * L));
                     float2 cell = floor(q);
                     float2 f = frac(q) - 0.5;
                     float2 r = hash22(cell + L * 31.7);
@@ -276,7 +273,26 @@ Shader "UI/Custom/AAAContinuousBeam"
                 }
                 sparks *= prox * lerp(0.6, 1.5, p);
 
-                // Compose beam in HDR
+                // ============================ TOP & BOTTOM HORIZONTAL SPREAD (STRONGER AT CENTER) ============================
+                float distFromTop    = abs(pp.y - 0.5);
+                float distFromBottom = abs(pp.y + 0.5);
+                
+                float topPulse = 0.85 + 0.15 * sin(_Time.y * 12.0);
+                float botPulse = 0.85 + 0.15 * cos(_Time.y * 10.0);
+
+                // Thin vertical height (tight to the surface), but horizontally spread and concentrated heavily at the center (x = 0)
+                float verticalFalloffTop = exp(-distFromTop * 45.0);
+                float verticalFalloffBot = exp(-distFromBottom * 45.0);
+                
+                float horizontalSpread = gaussian(x, _CoreWidth); // Strong at center (x=0), spreading outwards
+
+                float topSpread = verticalFalloffTop * horizontalSpread * topPulse;
+                float botSpread = verticalFalloffBot * horizontalSpread * botPulse;
+
+                float3 coresHdr = ((topSpread * _HotColor.rgb * 5.0 + topSpread * _RimColor.rgb * 2.5)
+                                 + (botSpread * _HotColor.rgb * 5.0 + botSpread * _RimColor.rgb * 2.5)) * (1.4 + p * 0.8) * hGradient;
+
+                // ============================ COMPOSE HDR BEAM ============================
                 float3 tintMid = lerp(_Color.rgb, _RimColor.rgb, p);
                 float3 hot = _HotColor.rgb;
                 float brightness = lerp(0.6, 2.4, pe);
@@ -291,23 +307,19 @@ Shader "UI/Custom/AAAContinuousBeam"
                                + fringe * _RimColor.rgb * 0.8;
                 beamHdr *= brightness * pulseBeat;
 
-                // Soft fade at the rect edge so glows never hard-clip
-                float2 e = float2(0.5 * _Aspect - abs(pp.x), 0.5 - abs(pp.y));
-                float edgeFade = smoothstep(0.0, 0.06, min(e.x, e.y));
+                float edgeFadeY = smoothstep(0.0, 0.05, 0.5 - abs(pp.y));
+                float3 hdr = beamHdr * _Exposure * edgeFadeY * hGradient + coresHdr * _Exposure;
 
-                float3 hdr = beamHdr * _Exposure * edgeFade;
-
-                // Filmic-ish tonemap with highlight desaturation
+                // Filmic tonemap with highlight desaturation
                 float3 ldr = 1.0 - exp(-hdr);
                 float lum = dot(hdr, float3(0.2126, 0.7152, 0.0722));
                 ldr = lerp(ldr, (1.0 - exp(-lum)).xxx, saturate(lum * 0.15));
 
-                // Dither to kill banding in long glow gradients
+                // Dither to prevent gradient banding
                 ldr += (hash21(input.positionCS.xy) - 0.5) / 255.0;
                 ldr = max(ldr, 0.0);
 
-                // Premultiplied output: bright areas occlude, dim glow adds
-                float a = saturate(max(ldr.r, max(ldr.g, ldr.b)));
+                float a = saturate(max(ldr.r, max(ldr.g, ldr.b))) * hGradient;
 
                 half4 col = half4(ldr, a);
                 col.rgb *= input.color.rgb * input.color.a;
