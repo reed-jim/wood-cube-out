@@ -37,7 +37,8 @@ public class StartEngineScreen : MonoBehaviour
     {
         StartCoroutine(BootingPlatform(onComplete: () =>
         {
-            Tween.LocalPositionY(physicalPlatform.transform, -physicalPlatform.rectTransform.sizeDelta.y, duration: 0.3f);
+            Tween.LocalPositionY(
+                physicalPlatform.transform, physicalPlatform.rectTransform.localPosition.y - physicalPlatform.rectTransform.sizeDelta.y, duration: 0.3f);
             Tween.LocalPositionY(physicalScreen.transform, 0, duration: 0.3f)
             .OnComplete(() =>
             {

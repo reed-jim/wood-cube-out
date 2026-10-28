@@ -770,7 +770,9 @@ Shader "UI/Procedural Human Avatar (URP)"
             // =====================================================================
             //  Fragment
             // =====================================================================
-            #define OVER(c_, m_) { float mm_ = saturate(m_); P = (c_) * mm_ + P * (1.0 - mm_); A = mm_ + A * (1.0 - mm_); }
+            #define OVER(c_, m_) { float mm_ = saturate(m_); float3 cc_ = (c_); \
+                if (any(isnan(cc_)) || isnan(mm_)) { mm_ = 0.0; cc_ = 0.0; } \
+                P = cc_ * mm_ + P * (1.0 - mm_); A = mm_ + A * (1.0 - mm_); }
 
             float4 frag(Varyings IN) : SV_Target
             {
@@ -787,7 +789,7 @@ Shader "UI/Procedural Human Avatar (URP)"
                 Face F = Layout(G, age, _Expression);
                 float alive = 1.0 - _Dead;
 
-                float2 hc = float2(0.0, 0.16);
+                float2 hc = float2(0.0, 0.06);
                 float2 q = p - hc;
 
                 float3 skinLin = SkinAlbedo(G, F);
