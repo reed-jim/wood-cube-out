@@ -60,7 +60,7 @@ public class DamageText : MonoBehaviour
         }
     }
 
-    public void ShowDamage(float damage, Vector3 spawnPosition, bool isCritical, Transform target, string prefix = "", string suffix = "", Action<DamageText> onComplete = null)
+    public void ShowDamage(double damage, Vector3 spawnPosition, bool isCritical, Transform target, string prefix = "", string suffix = "", Action<DamageText> onComplete = null)
     {
         IsActive = true;
         CurrentTarget = target;

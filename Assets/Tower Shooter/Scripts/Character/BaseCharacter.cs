@@ -300,7 +300,7 @@ public class BaseCharacter : MonoBehaviour
 
                     currentCycle++;
 
-                    // SoundManager.Instance.PlayCycleComplete();
+                    SoundManager.Instance.PlayCycleComplete();
 
                     cycleCompleteEvent?.Invoke(this);
                 }
@@ -337,13 +337,11 @@ public class BaseCharacter : MonoBehaviour
 
     private void ShowGeneratedPowerText(double power, bool isCritical, Vector3 position, Transform parent)
     {
-        return;
+        DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
 
-        // DamageText damageText = ObjectPoolingEverything.GetFromPool<DamageText>(GameConstants.damageText);
+        damageText.transform.SetParent(parent);
 
-        // damageText.transform.SetParent(parent);
-
-        // damageText.ShowDamage(power, position, isCritical, target: transform);
+        damageText.ShowDamage(power, position, isCritical, target: transform);
     }
 
     private void ApplyAugmentEffectsOnCycleCompletion()

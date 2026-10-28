@@ -150,10 +150,6 @@ Shader "UI/Custom/RadialMoltenLiquid"
                 return saturate((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14));
             }
 
-            // ------------------------------------------------------------
-            // Molten liquid in a banded glass tube. 5 layers:
-            // 1 glass vessel + metal bands, 2 lava body, 3 bubbles, 4 core lava lamp, 5 heat glow
-            // ------------------------------------------------------------
             float vnoise(float2 p)
             {
                 float2 i = floor(p);
@@ -249,8 +245,8 @@ Shader "UI/Custom/RadialMoltenLiquid"
                 float bandM = saturate((0.010 - dB) / px + 0.5) * band;
                 float3 metal = lerp(float3(0.50, 0.52, 0.56), glassTint * 4.0, 0.3) * (0.3 + 0.9 * diff)
                              + pow(saturate(dot(n, H)), 20.0) * 0.4;
-                float rivD = length(float2(dB, abs(r - rc) - hw * 0.72));
-                float rivet = saturate((0.007 - rivD) / px + 0.5) * band;
+                float rivetD = length(float2(dB, abs(r - rc) - hw * 0.72));
+                float rivet = saturate((0.007 - rivetD) / px + 0.5) * band;
                 float3 rivetCol = float3(0.85, 0.88, 0.95) * (0.5 + 0.5 * diff);
 
                 // ---------- Layer 3: bubbles ----------
@@ -308,12 +304,13 @@ Shader "UI/Custom/RadialMoltenLiquid"
                                + (float3(0.8, 0.9, 1.0) * glint + pow(saturate(r / coreR), 6.0) * 0.4 * glassTint * 3.0) * bowl
                                + lerp(glassTint * 3.0, float3(1, 1, 1), 0.6) * saturate(1.2 - abs(r - coreR) / px) * 0.45;
 
-                // ---------- Layer 5: heat glow ----------
+                // ---------- Layer 5: heat glow (UNCOUPLED from fill progress) ----------
                 float dOut = max(dBand, 0.0);
-                float sf = lerp(smoothstep(-0.06, 0.03, (progress - na) * TWO_PI * r) * hasProg, 1.0, hs);
                 float glowShape = exp(-dOut * 34.0) * 0.7 + exp(-dOut * 9.0) * 0.22;
-                float3 glow = liqCol * glowShape * sf * (0.35 + 0.8 * heat + 0.8 * hs) * (1.0 - band);
-                glow += liqCol * exp(-max(r - coreR, 0.0) * 18.0) * 0.3 * (0.3 + 0.7 * progress + hs) * (1.0 - bowl);
+                
+                // Note: Removed 'sf' (progress fade) multiplier here so the glow stays fully lit unconditionally
+                float3 glow = liqCol * glowShape * (0.5 + 0.5 * hs) * (1.0 - band);
+                glow += liqCol * exp(-max(r - coreR, 0.0) * 18.0) * 0.3 * (0.5 + 0.5 * hs) * (1.0 - bowl);
                 glow *= 1.0 - smoothstep(0.80, 0.99, r);
 
                 float3 rgb = ringRGB + coreOut + glow;
