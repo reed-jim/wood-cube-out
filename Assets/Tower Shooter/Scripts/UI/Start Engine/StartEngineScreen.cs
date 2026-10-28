@@ -35,15 +35,16 @@ public class StartEngineScreen : MonoBehaviour
 
     private void StartEngine()
     {
-        physicalScreen.rectTransform.localPosition = new Vector3(0, physicalScreen.rectTransform.sizeDelta.y);
-
         StartCoroutine(BootingPlatform(onComplete: () =>
         {
             Tween.LocalPositionY(physicalPlatform.transform, -physicalPlatform.rectTransform.sizeDelta.y, duration: 0.3f);
             Tween.LocalPositionY(physicalScreen.transform, 0, duration: 0.3f)
             .OnComplete(() =>
             {
-                StartCoroutine(BootingSystem(1));
+                StartCoroutine(BootingSystem(onComplete: () =>
+                {
+                    gameObject.SetActive(false);
+                }));
             });
         }));
     }
@@ -64,19 +65,21 @@ public class StartEngineScreen : MonoBehaviour
         onComplete?.Invoke();
     }
 
-    IEnumerator BootingSystem(float target)
+    IEnumerator BootingSystem(Action onComplete)
     {
         float start = physicalScreenMat.GetFloat(Power);
-        float dur = bootTime * Mathf.Abs(target - start);
+        float dur = bootTime;
 
         for (float t = 0; t < dur; t += Time.unscaledDeltaTime)
         {
-            physicalScreenMat.SetFloat(Power, Mathf.Lerp(start, target, t / dur));
+            physicalScreenMat.SetFloat(Power, Mathf.Lerp(start, 1, t / dur));
             yield return null;
         }
 
-        physicalScreenMat.SetFloat(Power, target);
+        physicalScreenMat.SetFloat(Power, 1);
 
         gameObject.SetActive(false);
+
+        onComplete?.Invoke();
     }
 }
