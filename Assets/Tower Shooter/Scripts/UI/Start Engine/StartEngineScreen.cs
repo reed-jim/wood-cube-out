@@ -1,0 +1,85 @@
+using System;
+using System.Collections;
+using PrimeTween;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class StartEngineScreen : MonoBehaviour
+{
+    [Header("UI")]
+    [SerializeField] private RectTransform container;
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Button startEngineButton;
+
+    #region Physical Platform Phase 1
+    [SerializeField] Image physicalPlatform;
+    private Material physicalPlatformMat;
+    #endregion
+
+    #region Physical Screen Phase 2
+    static readonly int Power = Shader.PropertyToID("_Power");
+    [SerializeField] Image physicalScreen;
+    [SerializeField] float bootTime = 0.6f;
+    private Material physicalScreenMat;
+    #endregion
+
+    void Awake()
+    {
+        startEngineButton.onClick.AddListener(StartEngine);
+
+        physicalPlatformMat = Instantiate(physicalPlatform.material);
+        physicalPlatform.material = physicalPlatformMat;
+
+        physicalScreenMat = Instantiate(physicalScreen.material);
+        physicalScreen.material = physicalScreenMat;
+    }
+
+    private void StartEngine()
+    {
+        physicalScreen.rectTransform.localPosition = new Vector3(0, physicalScreen.rectTransform.sizeDelta.y);
+
+        StartCoroutine(BootingPlatform(onComplete: () =>
+        {
+            Tween.LocalPositionY(physicalPlatform.transform, -physicalPlatform.rectTransform.sizeDelta.y, duration: 0.3f);
+            Tween.LocalPositionY(physicalScreen.transform, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                // Tween.Scale(container, 1.2f, duration: bootTime)
+                // .OnComplete(() =>
+                // {
+                //     container.gameObject.SetActive(false);
+                // });
+
+                StartCoroutine(BootingSystem(1));
+            });
+        }));
+    }
+
+    IEnumerator BootingPlatform(Action onComplete)
+    {
+        float start = physicalPlatformMat.GetFloat(Power);
+        float dur = bootTime;
+
+        for (float t = 0; t < dur; t += Time.unscaledDeltaTime)
+        {
+            physicalPlatformMat.SetFloat(Power, Mathf.Lerp(start, 1, t / dur));
+            yield return null;
+        }
+
+        physicalPlatformMat.SetFloat(Power, 1);
+
+        onComplete?.Invoke();
+    }
+
+    IEnumerator BootingSystem(float target)
+    {
+        float start = physicalScreenMat.GetFloat(Power);
+        float dur = bootTime * Mathf.Abs(target - start);
+        for (float t = 0; t < dur; t += Time.unscaledDeltaTime)
+        {
+            physicalScreenMat.SetFloat(Power, Mathf.Lerp(start, target, t / dur));
+            yield return null;
+        }
+        physicalScreenMat.SetFloat(Power, target);
+    }
+}
