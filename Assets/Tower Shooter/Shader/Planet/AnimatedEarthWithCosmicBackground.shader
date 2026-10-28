@@ -480,6 +480,13 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
                 float bgT = t * _BackgroundSpeed * _GlobalSpeed * 5.0;
                 float pulse = sin(t * _PulseSpeed) * 0.5 + 0.5;
 
+                // ---------------- Directional gradient mask (Restored) ----------------
+                float angleRad = radians(_GradientAngle);
+                float2 gradDir = float2(cos(angleRad), sin(angleRad));
+                float gradPos = dot(cuv, gradDir) + 0.5;
+                float gradRange = max(_GradientEnd - _GradientStart, 0.0001);
+                float bgAlpha = smoothstep(0.0, 1.0, saturate((gradPos - _GradientStart) / gradRange));
+
                 // ---------------- Sun direction (view space, +z toward camera) ----------------
                 float yaw = radians(_SunYaw);
                 float pit = radians(_SunPitch);
@@ -720,10 +727,10 @@ Shader "UI/AnimatedEarthWithCosmicBackground"
                     ringRGB = rc * shape * _RingIntensity * vis;
                 }
 
-                // ---------------- Compose (premultiplied) ----------------
-                float alphaP = (1.0 - cover) + cover;
+                // ---------------- Compose (premultiplied with gradient alpha) ----------------
+                float alphaP = bgAlpha * (1.0 - cover) + cover;
                 float3 addRGB = glowRGB + ringRGB;
-                float3 rgbP = space * (1.0 - cover) + planetCol * cover + addRGB;
+                float3 rgbP = space * bgAlpha * (1.0 - cover) + planetCol * cover + addRGB;
                 float alphaOut = saturate(alphaP + max(addRGB.r, max(addRGB.g, addRGB.b)));
                 float3 col = rgbP / max(alphaOut, 1e-4);
 
