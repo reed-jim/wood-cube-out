@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using LiteDB;
@@ -16,7 +17,10 @@ public class LiteDBRecord
 
 public static class DataUtility
 {
-    private static string GetDatabasePath(string fileName)
+    // Cache database connections to prevent opening/closing the file repeatedly and avoiding sharing violations
+    private static readonly Dictionary<string, LiteDatabase> _dbCache = new Dictionary<string, LiteDatabase>();
+
+    private static string GetPhysicalFilePath(string fileName)
     {
         string dir = Application.persistentDataPath;
         if (!Directory.Exists(dir))
@@ -24,6 +28,21 @@ public static class DataUtility
             Directory.CreateDirectory(dir);
         }
         return Path.Combine(dir, $"{fileName}.db");
+    }
+
+    private static LiteDatabase GetDatabase(string fileName)
+    {
+        if (_dbCache.TryGetValue(fileName, out var existingDb) && existingDb != null)
+        {
+            return existingDb;
+        }
+
+        string path = GetPhysicalFilePath(fileName);
+        string connectionString = $"Filename={path};Connection=Shared;";
+        
+        var db = new LiteDatabase(connectionString);
+        _dbCache[fileName] = db;
+        return db;
     }
 
     public static void Save<T>(string fileName, string key, T data)
@@ -37,25 +56,21 @@ public static class DataUtility
         };
 
         string serializedData = JsonConvert.SerializeObject(data, settings: settings);
-        string dbPath = GetDatabasePath(fileName);
 
         while (attempt < maxRetries)
         {
             try
             {
-                using (var db = new LiteDatabase(dbPath))
+                var db = GetDatabase(fileName);
+                var col = db.GetCollection<LiteDBRecord>("key_value_store");
+                
+                var record = new LiteDBRecord
                 {
-                    var col = db.GetCollection<LiteDBRecord>("key_value_store");
-                    
-                    var record = new LiteDBRecord
-                    {
-                        Key = key,
-                        SerializedValue = serializedData
-                    };
+                    Key = key,
+                    SerializedValue = serializedData
+                };
 
-                    // Upsert inserts if new, updates existing document by Key index automatically
-                    col.Upsert(record);
-                }
+                col.Upsert(record);
                 break;
             }
             catch (Exception e)
@@ -88,21 +103,19 @@ public static class DataUtility
             TypeNameHandling = TypeNameHandling.Auto
         };
 
-        string dbPath = GetDatabasePath(fileName);
+        string physicalPath = GetPhysicalFilePath(fileName);
 
         try
         {
-            if (File.Exists(dbPath))
+            if (File.Exists(physicalPath))
             {
-                using (var db = new LiteDatabase(dbPath))
-                {
-                    var col = db.GetCollection<LiteDBRecord>("key_value_store");
-                    var record = col.FindById(key);
+                var db = GetDatabase(fileName);
+                var col = db.GetCollection<LiteDBRecord>("key_value_store");
+                var record = col.FindById(key);
 
-                    if (record != null && !string.IsNullOrEmpty(record.SerializedValue))
-                    {
-                        return JsonConvert.DeserializeObject<T>(record.SerializedValue, settings: settings);
-                    }
+                if (record != null && !string.IsNullOrEmpty(record.SerializedValue))
+                {
+                    return JsonConvert.DeserializeObject<T>(record.SerializedValue, settings: settings);
                 }
             }
         }
@@ -132,7 +145,7 @@ public static class DataUtility
     public static void RemoveKey(string key)
     {
         string fileName = GameConstants.SAVE_FILE_NAME;
-        string dbPath = GetDatabasePath(fileName);
+        string physicalPath = GetPhysicalFilePath(fileName);
         int attempt = 0;
         int maxRetries = 3;
 
@@ -140,13 +153,11 @@ public static class DataUtility
         {
             try
             {
-                if (File.Exists(dbPath))
+                if (File.Exists(physicalPath))
                 {
-                    using (var db = new LiteDatabase(dbPath))
-                    {
-                        var col = db.GetCollection<LiteDBRecord>("key_value_store");
-                        col.Delete(key);
-                    }
+                    var db = GetDatabase(fileName);
+                    var col = db.GetCollection<LiteDBRecord>("key_value_store");
+                    col.Delete(key);
                 }
                 break;
             }
@@ -156,5 +167,16 @@ public static class DataUtility
                 DebugLogger.LogSimple(message: $"{e}");
             }
         }
+    }
+
+    // Optional: Clean up open database handles when the application quits
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetCache()
+    {
+        foreach (var db in _dbCache.Values)
+        {
+            db?.Dispose();
+        }
+        _dbCache.Clear();
     }
 }
