@@ -1,72 +1,33 @@
 using System;
 using System.IO;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using LiteDB;
 using NamPhuThuy;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
+
+// Document model stored inside LiteDB collections
+public class LiteDBRecord
+{
+    [BsonId]
+    public string Key { get; set; }
+    public string SerializedValue { get; set; }
+}
 
 public static class DataUtility
 {
-    // use to save interface or abstract class
-    private static JsonSerializerSettings settings = new JsonSerializerSettings
+    private static string GetDatabasePath(string fileName)
     {
-        TypeNameHandling = TypeNameHandling.Auto
-    };
-
-    public static void SaveWithReferenceLoopHandling<T>(string fileName, string key, T data)
-    {
-        string filePath = Application.persistentDataPath + $"/{fileName}.json";
-
-        string fileText = "{}";
-
-        if (File.Exists(filePath))
+        string dir = Application.persistentDataPath;
+        if (!Directory.Exists(dir))
         {
-            fileText = File.ReadAllText(filePath);
+            Directory.CreateDirectory(dir);
         }
-
-        try
-        {
-            JObject json = JObject.Parse(fileText);
-
-            if (json.ContainsKey(key))
-            {
-                json[key] = JsonConvert.SerializeObject(data, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                });
-                // json[key] = JsonUtility.ToJson(data);
-            }
-            else
-            {
-                json.Add(key, JsonConvert.SerializeObject(data, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                }));
-                // json.Add(key, JsonUtility.ToJson(data));
-            }
-
-            File.WriteAllText(filePath, json.ToString());
-        }
-        catch (Exception e)
-        {
-            // Debug.Log("SAFERIO " + e.Message);
-        }
-    }
-
-    public static void SaveWithReferenceLoopHandling<T>(string key, T data)
-    {
-        SaveWithReferenceLoopHandling(GameConstants.SAVE_FILE_NAME, key, data);
+        return Path.Combine(dir, $"{fileName}.db");
     }
 
     public static void Save<T>(string fileName, string key, T data)
     {
-        string filePath = Application.persistentDataPath + $"/{fileName}.json";
-
-        string fileText = "{}";
-
         int attempt = 0;
         int maxRetries = 3;
 
@@ -75,30 +36,26 @@ public static class DataUtility
             TypeNameHandling = TypeNameHandling.Auto
         };
 
+        string serializedData = JsonConvert.SerializeObject(data, settings: settings);
+        string dbPath = GetDatabasePath(fileName);
+
         while (attempt < maxRetries)
         {
             try
             {
-                if (File.Exists(filePath))
+                using (var db = new LiteDatabase(dbPath))
                 {
-                    fileText = File.ReadAllText(filePath);
+                    var col = db.GetCollection<LiteDBRecord>("key_value_store");
+                    
+                    var record = new LiteDBRecord
+                    {
+                        Key = key,
+                        SerializedValue = serializedData
+                    };
+
+                    // Upsert inserts if new, updates existing document by Key index automatically
+                    col.Upsert(record);
                 }
-
-                JObject json = JObject.Parse(fileText);
-
-                if (json.ContainsKey(key))
-                {
-                    json[key] = JsonConvert.SerializeObject(data, settings: settings);
-                    // json[key] = JsonUtility.ToJson(data);
-                }
-                else
-                {
-                    json.Add(key, JsonConvert.SerializeObject(data, settings: settings));
-                    // json.Add(key, JsonUtility.ToJson(data));
-                }
-
-                File.WriteAllText(filePath, json.ToString());
-
                 break;
             }
             catch (Exception e)
@@ -119,76 +76,34 @@ public static class DataUtility
         Save(GameConstants.SAVE_FILE_NAME, SaveSlotManager.Ins.GetSaveKey(key), data);
     }
 
-    public async static Task SaveAsync<T>(string fileName, string key, T data)
-    {
-        Save(fileName, key, data);
-
-        // string filePath = Application.persistentDataPath + $"/{fileName}.json";
-
-        // string fileText = "{}";
-
-        // if (File.Exists(filePath))
-        // {
-        //     fileText = await File.ReadAllTextAsync(filePath);
-        // }
-
-        // JObject json = JObject.Parse(fileText);
-
-        // if (json.ContainsKey(key))
-        // {
-        //     json[key] = JsonConvert.SerializeObject(data, settings);
-        // }
-        // else
-        // {
-        //     json.Add(key, JsonConvert.SerializeObject(data, settings));
-        // }
-
-        // await File.WriteAllTextAsync(filePath, json.ToString());
-    }
-
     public static async Task SaveAsync<T>(string key, T data)
     {
-        Save(key, data);
-
-        // await SaveAsync(GameConstants.SAVE_FILE_NAME, key, data);
+        await Task.Run(() => Save(key, data));
     }
 
     public static T Load<T>(string fileName, string key, T defaultValue)
     {
-        string filePath = Application.persistentDataPath + $"/{fileName}.json";
-
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.Auto
         };
 
+        string dbPath = GetDatabasePath(fileName);
+
         try
         {
-            if (File.Exists(filePath))
+            if (File.Exists(dbPath))
             {
-                string data = File.ReadAllText(filePath);
-
-                if (data != "")
+                using (var db = new LiteDatabase(dbPath))
                 {
-                    JObject json = JObject.Parse(data);
+                    var col = db.GetCollection<LiteDBRecord>("key_value_store");
+                    var record = col.FindById(key);
 
-                    if (json.ContainsKey(key))
+                    if (record != null && !string.IsNullOrEmpty(record.SerializedValue))
                     {
-                        return JsonConvert.DeserializeObject<T>(json[key].ToString(), settings: settings);
-                    }
-                    else
-                    {
-                        return defaultValue;
+                        return JsonConvert.DeserializeObject<T>(record.SerializedValue, settings: settings);
                     }
                 }
-                else
-                {
-                    return defaultValue;
-                }
-            }
-            else
-            {
-                return defaultValue;
             }
         }
         catch (Exception e)
@@ -209,38 +124,6 @@ public static class DataUtility
         return Load(GameConstants.SAVE_FILE_NAME, SaveSlotManager.Ins.GetSaveKey(key), defaultValue);
     }
 
-    public static async Task<T> LoadAsync<T>(string fileName, string key, T defaultValue)
-    {
-        string filePath = Application.persistentDataPath + $"/{fileName}.json";
-
-        if (File.Exists(filePath))
-        {
-            string data = await File.ReadAllTextAsync(filePath);
-
-            if (data != "")
-            {
-                JObject json = JObject.Parse(data);
-
-                if (json.ContainsKey(key))
-                {
-                    return JsonConvert.DeserializeObject<T>(json[key].ToString());
-                }
-                else
-                {
-                    return defaultValue;
-                }
-            }
-            else
-            {
-                return defaultValue;
-            }
-        }
-        else
-        {
-            return defaultValue;
-        }
-    }
-
     public static T LoadAsync<T>(string key, T defaultValue)
     {
         return Load(GameConstants.SAVE_FILE_NAME, key, defaultValue);
@@ -248,10 +131,8 @@ public static class DataUtility
 
     public static void RemoveKey(string key)
     {
-        string filePath = Application.persistentDataPath + $"/{GameConstants.SAVE_FILE_NAME}.json";
-
-        string fileText = "{}";
-
+        string fileName = GameConstants.SAVE_FILE_NAME;
+        string dbPath = GetDatabasePath(fileName);
         int attempt = 0;
         int maxRetries = 3;
 
@@ -259,25 +140,20 @@ public static class DataUtility
         {
             try
             {
-                if (File.Exists(filePath))
+                if (File.Exists(dbPath))
                 {
-                    fileText = File.ReadAllText(filePath);
+                    using (var db = new LiteDatabase(dbPath))
+                    {
+                        var col = db.GetCollection<LiteDBRecord>("key_value_store");
+                        col.Delete(key);
+                    }
                 }
-
-                JObject json = JObject.Parse(fileText);
-
-                if (json.ContainsKey(key))
-                {
-                    json.Remove(key);
-                }
-
-                File.WriteAllText(filePath, json.ToString());
-
                 break;
             }
             catch (Exception e)
             {
                 attempt++;
+                DebugLogger.LogSimple(message: $"{e}");
             }
         }
     }

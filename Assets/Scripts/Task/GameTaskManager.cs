@@ -60,7 +60,7 @@ namespace NamPhuThuy.GamePlay
 
         public void SaveTasks()
         {
-            DataUtility.SaveAsync(GameConstants.SAVE_FILE_NAME, GameConstants.WEEKLY_TASKS, _tasks);
+            
         }
 
         private BaseWeeklyTask GenerateTask()

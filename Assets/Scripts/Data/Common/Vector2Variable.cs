@@ -22,16 +22,6 @@ public class Vector2Variable : ScriptableObject
         }
     }
 
-    public void Save(string key)
-    {
-        DataUtility.SaveWithReferenceLoopHandling(key, value);
-    }
-
-    public void Save()
-    {
-        DataUtility.SaveWithReferenceLoopHandling(saveKey, value);
-    }
-
     public void Load()
     {
         value = DataUtility.Load(saveKey, Vector2.zero);
