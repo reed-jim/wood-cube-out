@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UI_Custom_QuantumRiftVortexSingle 1
-  m_Shader: {fileID: 4800000, guid: 1f255247debf3cc4ca62521f4f5e4c42, type: 3}
+  m_Name: UI_Custom_HexTechReactorAAA
+  m_Shader: {fileID: 4800000, guid: 7a6c56e35d2d8bb4d9e2d63e6308b70a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -29,20 +29,28 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Bevel: 0.6
+    - _Bloom: 1
     - _ColorMask: 15
-    - _EventHorizon: 0.2
+    - _EventHorizon: 0.22
+    - _Exposure: 1
+    - _HeatShimmer: 1
     - _HighSpeedTransition: 0
-    - _Layers: 8
-    - _Power: 88.8
-    - _RotationAngle: 996.7
+    - _Layers: 14
+    - _Power: 25
+    - _RingOuter: 0.6
+    - _RotationAngle: 0
+    - _SegmentGap: 0.012
+    - _Sparks: 1
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
+    - _Tonemap: 0.6
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.5, g: 0, b: 1, a: 1}
-    - _RimColor: {r: 0, g: 1, b: 0.8, a: 1}
+    - _Color: {r: 0.049999982, g: 0.079999976, b: 0.14999998, a: 1}
+    - _RimColor: {r: 0, g: 0.85, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
