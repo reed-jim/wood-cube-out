@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: 88e590b2f77ad5b4e9ffa9a74622fa9b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _LOW_QUALITY
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -33,6 +34,7 @@ Material:
     - _AxialPitch: 20
     - _BackgroundBrightness: 1
     - _BackgroundSpeed: 0.3
+    - _BumpStrength: 1.2
     - _CityLightIntensity: 1
     - _CloudCoverage: 0.48
     - _CloudShadow: 0.6
@@ -49,7 +51,7 @@ Material:
     - _GradientStart: 1
     - _GridDensity: 16
     - _GridIntensity: 0.18
-    - _LowQuality: 0
+    - _LowQuality: 1
     - _MeteorIntensity: 0.6
     - _MinEdgeBrightness: 0.6
     - _OceanGloss: 80

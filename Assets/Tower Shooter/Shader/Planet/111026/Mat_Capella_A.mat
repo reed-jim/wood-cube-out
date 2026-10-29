@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: 88e590b2f77ad5b4e9ffa9a74622fa9b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _LOW_QUALITY
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -30,31 +31,58 @@ Material:
     m_Ints: []
     m_Floats:
     - _AtmospherePower: 3.5
+    - _AxialPitch: 20
     - _BackgroundBrightness: 1
     - _BackgroundSpeed: 0.3
+    - _BumpStrength: 1.2
+    - _CityLightIntensity: 1.2
     - _CloudCoverage: 0.3
+    - _CloudShadow: 0.6
     - _CloudSpeed: 1.2
+    - _CoastFoam: 0.6
     - _ColorMask: 15
+    - _Contrast: 1.05
+    - _Exposure: 1
     - _GlobalSpeed: 0.2
     - _GradientAngle: 180
     - _GradientEnd: 1
     - _GradientStart: 1
+    - _LowQuality: 1
+    - _MeteorIntensity: 0.8
     - _MinEdgeBrightness: 0.6
+    - _OceanGloss: 80
+    - _OceanSpecular: 1
     - _PlanetRadius: 0.36
     - _PlanetTilt: 20
     - _PolarCapSize: 0.25
     - _PulseSpeed: 1.5
     - _RimPower: 5
+    - _RingAngle: -20
+    - _RingIntensity: 1
+    - _RingRadius: 0.41
+    - _RingTilt: 0.28
+    - _RingWidth: 0.004
     - _RotationSpeed: 0.25
+    - _Saturation: 1.15
+    - _SeaLevel: 0.54
+    - _StarBrightness: 1.2
+    - _StarDensity: 0.6
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
+    - _SunPitch: 20
+    - _SunYaw: -55
+    - _TerminatorSoftness: 0.3
+    - _Tonemap: 0.5
     - _Turbulence: 3
     - _UseUIAlphaClip: 0
+    - _Vignette: 0.5
     m_Colors:
+    - _AmbientColor: {r: 0.035, g: 0.049999982, b: 0.10999996, a: 1}
     - _AtmosphereColor: {r: 1, g: 0.9, b: 0.5, a: 1}
+    - _CityLightColor: {r: 1, g: 0.72, b: 0.34999996, a: 1}
     - _CloudColor: {r: 1, g: 0.95, b: 0.85, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DustColor: {r: 0.1, g: 0.2, b: 0.3, a: 1}
@@ -64,7 +92,10 @@ Material:
     - _NebulaColorB: {r: 0.01, g: 0.02, b: 0.05, a: 1}
     - _OceanColor: {r: 0.9, g: 0.7, b: 0.3, a: 1}
     - _PolarCapColor: {r: 1, g: 0.95, b: 0.9, a: 1}
+    - _RingColor: {r: 0.24999997, g: 0.85, b: 1, a: 1}
     - _ShallowOceanColor: {r: 1, g: 0.85, b: 0.4, a: 1}
     - _SpaceColor: {r: 0.01, g: 0.02, b: 0.05, a: 1}
+    - _SunColor: {r: 1, g: 0.93, b: 0.82, a: 1}
+    - _TwilightColor: {r: 1, g: 0.45, b: 0.17999998, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
