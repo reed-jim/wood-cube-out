@@ -11,10 +11,10 @@ Shader "UI/URP/UIShapeBorderGlowAAA"
         _FillColor ("Center Fill Color", Color) = (0.02, 0.04, 0.08, 0.5)
 
         [Header(Layout and Padding)]
-        _InternalPadding ("Frame Inset (Glow Margin)", Range(0.0, 0.4)) = 0.12
+        _InternalPadding ("Frame Inset (Glow Margin)", Range(0.0, 1.0)) = 0.12
         _BorderWidth ("Border Thickness", Range(0.001, 0.2)) = 0.03
         _CornerRadius ("Corner Radius", Range(0.0, 0.5)) = 0.08
-        _GlowSpread ("Glow Spread / Bloom Size", Range(0.01, 0.3)) = 0.08
+        _GlowSpread ("Glow Spread / Bloom Size", Range(0.00, 0.3)) = 0.08
         _Exposure ("HDR Exposure", Range(0.2, 5.0)) = 2.0
         _Aspect ("Image Aspect (0 = Auto)", Float) = 0.0
 
