@@ -29,34 +29,32 @@ Material:
     - _AnimSpeed: 1
     - _Aspect: 0
     - _BarHeight: 0.3
+    - _Chamfer: 0.1
     - _ColorMask: 15
-    - _CoreSize: 0.42
-    - _FillBevel: 0.12
-    - _FillPadding: 0.025
-    - _FillTipRound: 0.12
-    - _Fillet: 0.06
-    - _FlowStrength: 0.35
-    - _GlossIntensity: 0.18
-    - _GlowIntensity: 0.8
-    - _GlowRadius: 0.07
-    - _GrooveBevel: 0.07
-    - _GrooveDepth: 0.8
-    - _LightAngle: 125
-    - _MidRadius: 0.24
-    - _MilestoneCount: 4
-    - _NodeRingWidth: 0.035
+    - _CoreSize: 0.45
+    - _FillBevel: 0.1
+    - _FillPadding: 0.03
+    - _Fillet: 0.03
+    - _FinalPower: 3
+    - _FinalReach: 1.4
+    - _FinalSpokes: 10
+    - _FlowStrength: 0.5
+    - _GlowIntensity: 0.85
+    - _GlowRadius: 0.03
+    - _GridScale: 10
+    - _MidRadius: 0.25
+    - _MilestoneCount: 5
+    - _NodeRingWidth: 0.03
     - _NodeSnap: 0.02
-    - _Progress: 1.000018
-    - _PulseWidth: 0.1
-    - _RimIntensity: 0.5
+    - _Progress: 0.5
+    - _PulseWidth: 0.08
     - _RippleRadius: 0.14
-    - _ShadowLength: 0.08
-    - _ShadowStrength: 0.55
-    - _SheenFrequency: 20
+    - _ScanStrength: 0.18
+    - _SegGap: 0.14
+    - _Segments: 45
+    - _SheenFrequency: 30
     - _SheenSpeed: 1.5
-    - _SpecIntensity: 0.6
-    - _SpecPower: 48
-    - _StartEndRadius: 0.36
+    - _StartEndRadius: 0.38
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -64,10 +62,11 @@ Material:
     - _StencilWriteMask: 255
     - _UseCustomMilestones: 1
     m_Colors:
-    - _BgColor: {r: 0.1, g: 0.11, b: 0.14, a: 1}
-    - _FillColor: {r: 0, g: 0.8, b: 1, a: 1}
-    - _FillColorB: {r: 0.45, g: 0.35, b: 1, a: 1}
-    - _MilestoneBgColor: {r: 0.16, g: 0.17, b: 0.21, a: 1}
-    - _PulseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _AccentColor: {r: 1, g: 0.25, b: 0.7, a: 1}
+    - _BgColor: {r: 0.015, g: 0.03, b: 0.05, a: 1}
+    - _FillColor: {r: 0, g: 0.9, b: 1.4, a: 1}
+    - _FillColorB: {r: 0.3, g: 0.4, b: 2, a: 1}
+    - _MilestoneBgColor: {r: 0.04, g: 0.08, b: 0.12, a: 1}
+    - _PulseColor: {r: 0.8, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
