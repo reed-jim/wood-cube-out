@@ -1,15 +1,6 @@
 // ============================================================================
-//  UI/Procedural Human Avatar (URP)
+//  UI/Procedural Human Avatar (URP) - Seamless Front/Back Hair Integration
 //  Fully procedural, texture-less human avatar for UI Image (Canvas) in URP.
-//  - Deterministic: the same _Seed always produces the same person.
-//  - Mirrors ProceduralHumanAvatarUI.cs: age, 5 expressions, Apollo A7L suit,
-//    death / grayscale state.
-//  - Look: SDF layout + pseudo-3D height-field normals, wrapped diffuse with
-//    subsurface tint, T-zone specular, rim fill, AO in sockets / nose / lips,
-//    iris fibres, catch-lights, lashes, strand hair, stubble / beard,
-//    wrinkles, age spots, quilted suit fabric with metal neck rings.
-//  Use on a UI Image with NO sprite, square rect (aspect is auto-corrected to
-//  fit height).
 // ============================================================================
 Shader "UI/Procedural Human Avatar (URP)"
 {
@@ -134,7 +125,7 @@ Shader "UI/Procedural Human Avatar (URP)"
 
             static float g_aa = 0.002;
 
-            float3 S(float3 c) { return pow(max(c, 0.0), 2.2); }          // authoring sRGB -> linear
+            float3 S(float3 c) { return pow(max(c, 0.0), 2.2); }
             float Fill(float d) { return 1.0 - smoothstep(-g_aa, g_aa, d); }
             float FillS(float d, float s) { s = max(s, g_aa); return 1.0 - smoothstep(-s, s, d); }
             float Gauss(float x, float w) { x /= w; return exp(-x * x); }
@@ -200,7 +191,6 @@ Shader "UI/Procedural Human Avatar (URP)"
                 float h = saturate(dot(pa, ba) / dot(ba, ba));
                 return length(pa - ba * h);
             }
-            // Horizontal lens (almond): half length a, half height h
             float sdLens(float2 p, float a, float h)
             {
                 h = max(h, 0.0015);
@@ -211,14 +201,14 @@ Shader "UI/Procedural Human Avatar (URP)"
                 float b = sqrt(max(r * r - d * d, 1e-6));
                 return ((pp.y - b) * d > pp.x * b) ? length(pp - float2(0.0, b)) : length(pp - float2(-d, 0.0)) - r;
             }
-            float3 Shoulder(float3 c)   // soft highlight roll-off
+            float3 Shoulder(float3 c)
             {
                 float3 hi = 0.8 + 0.2 * (1.0 - exp(-(c - 0.8) / 0.2));
                 return float3(c.r < 0.8 ? c.r : hi.r, c.g < 0.8 ? c.g : hi.g, c.b < 0.8 ? c.b : hi.b);
             }
 
             // =====================================================================
-            //  Genetics (all from the seed)
+            //  Genetics
             // =====================================================================
             struct Genes
             {
@@ -265,10 +255,8 @@ Shader "UI/Procedural Human Avatar (URP)"
                 G.hair      = PickHair(Rnd(s, 3u), G.melanin);
                 G.eye       = PickEye(Rnd(s, 4u), G.melanin);
 
-                // EXPANDED RANGES FOR HIGH VARIATION ACROSS SEEDS
                 G.headW  = lerp(0.84, 1.16, Rnd(s, 5u));
                 G.headH  = lerp(0.88, 1.18, Rnd(s, 6u));
-                
                 G.jawW   = lerp(0.72, 1.12, Rnd(s, 7u)) * lerp(0.84, 1.12, G.masc);
                 G.jawSq  = saturate(Rnd(s, 8u) * 0.8 + G.masc * 0.4);
                 G.chin   = lerp(0.80, 1.22, Rnd(s, 9u)) * lerp(0.88, 1.14, G.masc);
@@ -280,12 +268,10 @@ Shader "UI/Procedural Human Avatar (URP)"
 
                 G.browThick = lerp(0.50, 1.45, Rnd(s, 14u)) * lerp(0.60, 1.35, G.masc);
                 G.browArch  = lerp(-0.004, 0.024, Rnd(s, 15u)) * lerp(1.40, 0.60, G.masc);
-                
                 G.noseW     = lerp(0.72, 1.28, Rnd(s, 16u)) * lerp(0.85, 1.18, G.masc);
                 G.noseL     = lerp(0.75, 1.30, Rnd(s, 17u));
                 G.lipW      = lerp(0.80, 1.25, Rnd(s, 18u));
                 G.lipFull   = lerp(0.75, 1.45, Rnd(s, 19u)) * lerp(1.15, 0.80, G.masc);
-                
                 G.earSize   = lerp(0.75, 1.25, Rnd(s, 20u));
                 G.cheek     = lerp(0.78, 1.32, Rnd(s, 21u));
                 G.hairVol   = lerp(0.85, 1.35, Rnd(s, 22u));
@@ -317,11 +303,11 @@ Shader "UI/Procedural Human Avatar (URP)"
             }
 
             // =====================================================================
-            //  Face layout (age + expression driven)
+            //  Face layout
             // =====================================================================
             struct Face
             {
-                float c, e;                         // childness, elderness
+                float c, e;
                 float smile, smirk, open, squint, browLift, browAng;
                 float eyeX, eyeY, eyeA, hU, hL, tilt, browY;
                 float noseY, mouthY, mouthHW, hUp, hLo;
@@ -358,7 +344,6 @@ Shader "UI/Procedural Human Avatar (URP)"
                 F.tilt = G.eyeTilt;
                 F.browY = F.eyeY + 0.055 + F.browLift + 0.004 * F.c;
 
-                // Bind layout modifications directly to nose length/position genes
                 F.noseY = -0.088 * G.noseL + 0.015 * F.c;
                 F.mouthY = -0.210 * lerp(0.9, 1.1, (G.noseL - 0.75) / 0.55) + 0.030 * F.c;
                 F.mouthHW = 0.090 * G.lipW * (1.0 + 0.06 * F.smile) * (1.0 - 0.10 * F.c);
@@ -379,7 +364,6 @@ Shader "UI/Procedural Human Avatar (URP)"
                 return smin(cran, jaw, 0.12);
             }
 
-            // Smooth height field -> pseudo 3D normals
             float Height(float2 q, Genes G, Face F)
             {
                 float d = HeadSDF(q, G, F.c);
@@ -456,9 +440,6 @@ Shader "UI/Procedural Human Avatar (URP)"
                 return S(saturate(c));
             }
 
-            // =====================================================================
-            //  Face texture-free "maps": blush, wrinkles, AO, freckles, spots
-            // =====================================================================
             void FaceMaps(float2 q, Genes G, Face F, float age, inout float3 alb, out float ao, out float spM)
             {
                 ao = 1.0;
@@ -467,7 +448,6 @@ Shader "UI/Procedural Human Avatar (URP)"
                 float2 aq = float2(abs(q.x), q.y);
                 float detail = saturate(1.0 - g_aa * 260.0);
 
-                // colour variation
                 alb *= lerp(float3(0.97, 0.93, 0.92), float3(1.03, 1.0, 1.0), Fbm(q * 6.0 + 3.1));
                 float blush = Bell(aq, float2(0.16, -0.075), float2(0.085, 0.06)) * 0.20 * (1.0 - 0.55 * G.melanin) * (1.0 + 0.5 * F.smile + 0.4 * c);
                 blush += Bell(q, float2(0.0, F.noseY), float2(0.035, 0.04)) * 0.10 * (1.0 - 0.5 * G.melanin);
@@ -475,20 +455,16 @@ Shader "UI/Procedural Human Avatar (URP)"
                 float ue = Bell(aq, float2(F.eyeX, F.eyeY - 0.038), float2(0.06, 0.02)) * (0.10 + 0.25 * F.e);
                 alb = lerp(alb, alb * float3(0.82, 0.78, 0.90), ue);
 
-                // freckles
                 if (G.freckles > 0.0)
                 {
                     float fm = Bell(aq, float2(0.09, -0.03), float2(0.17, 0.09));
                     float fr = smoothstep(0.70, 0.80, Vnoise(q * 95.0));
                     alb = lerp(alb, alb * float3(0.72, 0.55, 0.45), fr * fm * G.freckles * 0.8);
                 }
-                // age spots
                 float sp = smoothstep(0.74, 0.80, Vnoise(q * 16.0 + 11.3)) * e2 * 0.35;
                 alb = lerp(alb, alb * float3(0.70, 0.55, 0.45), sp);
-                // pores
                 alb *= 1.0 - 0.035 * detail + 0.07 * detail * Vnoise(q * 310.0);
 
-                // ---- ambient occlusion ----
                 ao *= 1.0 - 0.30 * saturate(Bell2(q, F.eyeX, F.eyeY + 0.01, 0.09, 0.055)) * (0.7 + 0.5 * F.e);
                 ao *= 1.0 - 0.75 * saturate(Bell2(q, 0.028 * G.noseW, F.noseY - 0.018, 0.011, 0.006));
                 ao *= 1.0 - 0.30 * Bell(q, float2(0.006, F.noseY - 0.040), float2(0.040, 0.012));
@@ -496,7 +472,6 @@ Shader "UI/Procedural Human Avatar (URP)"
                 ao *= 1.0 - 0.22 * Bell(q, float2(0.0, F.mouthY - 0.052), float2(0.06, 0.014));
                 ao *= 1.0 - 0.10 * saturate(Bell2(q, 0.012, F.mouthY + 0.035, 0.005, 0.020));
 
-                // ---- wrinkles ----
                 float wr = e2 * 0.20 * (1.0 - c) + saturate(-F.browAng * 2.5) * 0.10;
                 [unroll] for (int i = 0; i < 3; i++)
                 {
@@ -528,18 +503,16 @@ Shader "UI/Procedural Human Avatar (URP)"
                 float dm = sdSegment(aq, float2(F.mouthHW * 0.98, F.mouthY - 0.01), float2(F.mouthHW * 0.90, F.mouthY - 0.085));
                 ao *= 1.0 - e2 * 0.25 * Gauss(dm, 0.003);
 
-                // specular mask (T-zone)
                 spM = 0.5 + 0.8 * Bell(q, float2(0.0, 0.24), float2(0.14, 0.07))
                     + 0.8 * Bell(q, float2(0.0, F.noseY + 0.03), float2(0.03, 0.07))
                     + 0.5 * Bell(aq, float2(0.15, -0.05), float2(0.06, 0.05));
                 spM *= 1.0 - 0.35 * F.e;
 
-                // death pallor
                 alb = lerp(alb, dot(alb, float3(0.33, 0.33, 0.33)) * float3(0.85, 0.92, 1.05), _Dead * 0.7);
             }
 
             // =====================================================================
-            //  Eyes / brows / mouth
+            //  Eyes, brows, mouth helpers
             // =====================================================================
             void DrawEye(float2 q, float side, Genes G, Face F, float alive, inout float3 col)
             {
@@ -676,27 +649,55 @@ Shader "UI/Procedural Human Avatar (URP)"
             }
 
             // =====================================================================
-            //  Hair
+            //  UNIFIED HAIR SUBSYSTEM (FRONT & BACK MATCHED)
             // =====================================================================
+            
+            float ProceduralHairStrands(float2 q, float scaleFactor)
+            {
+                float s1 = Vnoise(q * float2(40.0, 350.0) * scaleFactor);
+                float s2 = Vnoise(q * float2(120.0, 950.0) * scaleFactor);
+                float s3 = Vnoise(q * float2(300.0, 2200.0) * scaleFactor);
+                return saturate(s1 * 0.45 + s2 * 0.35 + s3 * 0.20);
+            }
+
             void HairBack(float2 q, Genes G, float3 hairBase, float gray, out float alpha, out float3 col)
             {
                 alpha = 0.0; col = 0.0;
                 if (G.hairStyle != 3) return;
                 float vol = G.hairVol;
-                float d = sdRoundBox(q - float2(0.0, -0.12), float2(0.33 * vol, 0.50), 0.26);
-                float n = Vnoise(float2(q.x * 120.0, q.y * 6.0)) * 0.55 + Vnoise(float2(q.x * 330.0, q.y * 10.0)) * 0.45;
-                alpha = Fill(d + (n - 0.5) * 0.02);
+                
+                // Align rounding box profile to smoothly match head scaling
+                float d = sdRoundBox(q - float2(0.0, -0.10), float2(0.31 * vol * G.headW, 0.52), 0.28);
+                
+                float strand = ProceduralHairStrands(q, 1.2);
+                alpha = Fill(d + (strand - 0.5) * 0.016);
 
                 float temple = smoothstep(0.08, 0.26, abs(q.x));
                 float localGray = saturate(gray * (0.75 + 0.7 * temple));
                 float grayN = Vnoise(float2(q.x * 40.0, q.y * 4.0)) * 0.6 + Vnoise(float2(q.x * 11.0, q.y * 14.0)) * 0.4;
                 float gm = smoothstep(1.0 - localGray - 0.25, 1.0 - localGray + 0.25, grayN) * smoothstep(0.0, 0.15, gray);
                 float3 base = lerp(hairBase, S(float3(0.62, 0.62, 0.65)), gm * lerp(0.7, 1.0, smoothstep(0.6, 1.0, gray)));
-                base *= 0.72 + 0.56 * n;
+                base *= 0.60 + 0.80 * strand;
 
+                // Match normal model and anisotropic highlights used in HairFront
                 float nx = clamp(q.x / (0.33 * vol), -1.0, 1.0);
-                float3 N = normalize(float3(nx * 0.8, 0.2, 0.6));
-                col = SuitLight(base, N, 0.75);
+                float3 Nh = normalize(float3(nx * 0.85, 0.25, 0.55));
+                Nh = normalize(Nh + float3((strand - 0.5) * 0.45, (strand - 0.5) * 0.45, 0.0));
+
+                float3 L = LightDir();
+                float diff = saturate(dot(Nh, L) * 0.5 + 0.5);
+                diff = diff * diff * 1.2 + 0.15;
+                float ao = 0.65 + 0.35 * smoothstep(0.0, 0.08, -d);
+
+                float3 H = normalize(L + float3(0, 0, 1));
+                float tDotH = dot(Nh, H);
+                float spec1 = pow(saturate(tDotH), 24.0);
+                float spec2 = pow(saturate(tDotH * 0.85 + 0.15), 64.0);
+                float strandGlint = Vnoise(float2(q.x * 120.0, q.y * 20.0));
+                float3 specC = lerp(float3(1, 1, 1), base * 2.5, 0.4);
+                float3 totalSpec = (spec1 * 0.35 + spec2 * 0.65) * (0.5 + 1.5 * strandGlint) * specC;
+
+                col = base * (diff + 0.20) * ao + totalSpec * 0.35 * ao;
             }
 
             void HairFront(float2 q, Genes G, Face F, float age, float3 hairBase, float gray, float3 skinLin, out float alpha, out float3 col)
@@ -732,12 +733,11 @@ Shader "UI/Procedural Human Avatar (URP)"
                 }
 
                 float rad = length(q);
-                float strand;
-                if (style == 3) strand = Vnoise(float2(q.x * 120.0, q.y * 6.0)) * 0.55 + Vnoise(float2(q.x * 330.0, q.y * 10.0)) * 0.45;
-                else            strand = Vnoise(float2(ang * 26.0, rad * 7.0)) * 0.55 + Vnoise(float2(ang * 85.0, rad * 10.0)) * 0.45;
+                float strand = ProceduralHairStrands(float2(ang * 18.0, rad), 1.2);
+                if (style == 3) strand = ProceduralHairStrands(q, 1.4);
 
-                float aSil = Fill(capD + (strand - 0.5) * 0.016);
-                float aLine = smoothstep(-0.002, 0.012, -dHl + (strand - 0.5) * 0.022);
+                float aSil = Fill(capD + (strand - 0.5) * 0.014);
+                float aLine = smoothstep(-0.003, 0.010, -dHl + (strand - 0.5) * 0.018);
                 alpha = aSil * aLine;
                 if (style == 1) alpha *= 0.62 + 0.38 * smoothstep(0.35, 0.65, Vnoise(q * 260.0));
                 if (style == 5) alpha *= 0.55 + 0.45 * smoothstep(0.35, 0.65, Vnoise(q * 300.0));
@@ -749,30 +749,41 @@ Shader "UI/Procedural Human Avatar (URP)"
                 float gm = smoothstep(1.0 - localGray - 0.25, 1.0 - localGray + 0.25, grayN) * smoothstep(0.0, 0.15, gray);
                 float3 grayC = S(float3(0.62, 0.62, 0.65));
                 float3 base = lerp(hairBase, grayC, gm * lerp(0.7, 1.0, smoothstep(0.6, 1.0, gray)));
-                base *= 0.72 + 0.56 * strand;
+                base *= 0.60 + 0.80 * strand;
 
                 float2 hq = (q - cc) / rr;
                 float z = sqrt(saturate(1.0 - dot(hq, hq)));
                 float3 Nh = normalize(float3(hq.x * 0.9, hq.y * 0.9, z + 0.15));
-                Nh = normalize(Nh + float3((strand - 0.5) * 0.35, (strand - 0.5) * 0.35, 0.0));
+                Nh = normalize(Nh + float3((strand - 0.5) * 0.50, (strand - 0.5) * 0.50, 0.0));
+                
                 float3 L = LightDir();
                 float diff = saturate(dot(Nh, L) * 0.5 + 0.5);
-                diff = diff * diff * 1.2 + 0.1;
-                float ao = 0.55 + 0.45 * smoothstep(0.0, 0.07, -capD);
-                ao *= lerp(0.7, 1.0, smoothstep(0.0, 0.05, -dHl));
+                diff = diff * diff * 1.2 + 0.15;
+                
+                float rootAO = smoothstep(0.0, 0.08, -dHl);
+                float ao = (0.45 + 0.55 * smoothstep(0.0, 0.07, -capD)) * lerp(0.5, 1.0, rootAO);
                 if (style == 4) ao *= 0.65 + 0.7 * Vnoise(q * 38.0);
+
                 float3 H = normalize(L + float3(0, 0, 1));
-                float spec = pow(saturate(dot(Nh, H)), 18.0) * (0.4 + 1.2 * Vnoise(float2(ang * 90.0, rad * 12.0)));
-                float3 specC = lerp(float3(1, 1, 1), base * 3.0, 0.5);
-                col = base * (diff + 0.18) * ao + spec * 0.25 * specC * ao;
+                float tDotH = dot(Nh, H);
+                float spec1 = pow(saturate(tDotH), 24.0);
+                float spec2 = pow(saturate(tDotH * 0.85 + 0.15), 64.0);
+                float strandGlint = Vnoise(float2(ang * 120.0, rad * 20.0));
+                float3 specC = lerp(float3(1, 1, 1), base * 2.5, 0.4);
+                float3 totalSpec = (spec1 * 0.35 + spec2 * 0.65) * (0.5 + 1.5 * strandGlint) * specC;
+
+                col = base * (diff + 0.20) * ao + totalSpec * 0.35 * ao;
+
+                float hairlineOcclusion = smoothstep(-0.015, 0.008, dHl);
+                col = lerp(skinLin * 0.45, col, hairlineOcclusion);
 
                 if (style == 0 || style == 3)
                 {
                     float partX = 0.07 * G.part;
                     float pd = Gauss(q.x - partX, 0.0035) * step(0.12, q.y);
-                    col = lerp(col, skinLin * 0.5, saturate(pd) * 0.6);
+                    col = lerp(col, skinLin * 0.4, saturate(pd) * 0.75);
                 }
-                if (style == 1 || style == 5) col = lerp(skinLin * 0.55, col, 0.65 + 0.35 * smoothstep(0.35, 0.65, Vnoise(q * 260.0)));
+                if (style == 1 || style == 5) col = lerp(skinLin * 0.50, col, 0.60 + 0.40 * smoothstep(0.35, 0.65, Vnoise(q * 260.0)));
             }
 
             // =====================================================================
