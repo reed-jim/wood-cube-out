@@ -188,16 +188,21 @@ public class PowerManager : Singleton<PowerManager>
         double totalPowerPerSecond
     )
     {
-        // nodePowerText.text = $"{CommonUtil.FormatNumber(nodePowerPerSecond)}<sprite=0 color={primaryHex}>/s";
-        // nodeEnergyParticleText.text = $"{CommonUtil.FormatNumber(nodeEnergyParticlePowerMultiplier)}";
+        double prestigeMultiplier = PrestigeManager.Ins.GetCurrentPrestigeMultiplier();
+        double prestigeExponent = PrestigeManager.Ins.GetCurrentPrestigeExponent();
 
         string formattedNodePowerPerSecond = $"<color={primaryHex}>{CommonUtil.FormatNumber(nodePowerPerSecond)}</color>";
         string formattedNodeEnergyParticlePowerMultiplier = $"<color={primaryHex}>{CommonUtil.FormatNumber(nodeEnergyParticlePowerMultiplier)}</color>";
-        string formattedLayerTwoExponent = $"<color={primaryHex}>{1}</color>";
+        string formattedLayerTwoExponent = $"<sup><size=130%><color={primaryHex}>{1}</color></size></sup>";
+
+        string formattedPrestigeMultiplier = $"<color={primaryHex}>{prestigeMultiplier}</color>";
+        string formattedPrestigeExponent = $"<sup><size=130%><color={primaryHex}>{prestigeExponent}</color></size></sup>";
+
         string formattedTotalPowerPerSecond = CommonUtil.FormatNumber(totalPowerPerSecond);
 
         equationText.text =
-            $"{formattedNodePowerPerSecond}<sup>{formattedLayerTwoExponent}</sup> x {formattedNodeEnergyParticlePowerMultiplier} =";
+            $"({formattedNodePowerPerSecond}{formattedLayerTwoExponent} x {formattedNodeEnergyParticlePowerMultiplier}){formattedPrestigeExponent} x {formattedPrestigeMultiplier} =";
+
         totalPowerOutputText.text = $"{formattedTotalPowerPerSecond}<sprite=0 color={primaryHex}>/s";
     }
     #endregion

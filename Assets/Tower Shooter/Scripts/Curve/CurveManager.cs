@@ -80,6 +80,8 @@ public class CurveManager : Singleton<CurveManager>
     public ProgressionConfig offlineIdleCostConfig = new ProgressionConfig();
 
     [Header("Prestige")]
+    public ProgressionConfig prestigeMultiplierConfig = new ProgressionConfig();
+    public ProgressionConfig prestigeExponentConfig = new ProgressionConfig();
     public ProgressionConfig prestigeMaxChanceConfig = new ProgressionConfig();
 
     [Header("Augment")]
@@ -222,10 +224,21 @@ public class CurveManager : Singleton<CurveManager>
     }
     #endregion
 
+    #region Prestige
+    public float GetPrestigeMultiplier(int time)
+    {
+        return GetProgressionValue(prestigeMultiplierConfig, time);
+    }
+    public float GetPrestigeExponent(int time)
+    {
+        return GetProgressionValue(prestigeExponentConfig, time);
+    }
+
     public float GetPrestigeMaxChance(int time)
     {
         return GetProgressionValue(prestigeMaxChanceConfig, time);
     }
+    #endregion
 
     #region Augment
     public float GetAugmentEfficiency(int time)

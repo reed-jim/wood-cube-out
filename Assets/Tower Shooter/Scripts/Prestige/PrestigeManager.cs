@@ -77,6 +77,18 @@ public class PrestigeManager : Singleton<PrestigeManager>
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    #region Util
+    public double GetCurrentPrestigeMultiplier()
+    {
+        return CurveManager.Ins.GetPrestigeMultiplier(prestigeData.prestigeCount);
+    }
+
+    public double GetCurrentPrestigeExponent()
+    {
+        return CurveManager.Ins.GetPrestigeExponent(prestigeData.prestigeCount);
+    }
+    #endregion
 }
 
 [Serializable]
