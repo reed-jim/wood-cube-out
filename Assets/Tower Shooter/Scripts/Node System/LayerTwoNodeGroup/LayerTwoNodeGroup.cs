@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class LayerTwoNodeGroup : MonoBehaviour
+public class LayerTwoNodeGroup : BaseCharacter
 {
-    public LayerTwoNodeGroupServiceLocator serviceLocator;
+    [Header("Layer Two")]
+    public LayerTwoNodeGroupServiceLocator layerTwoNodeGroupServiceLocator;
 
     private float timer;
     private float interval;
@@ -13,7 +14,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
     private LayerTwoNodeGroupData layerTwoNodeGroupData;
 
-    void Awake()
+    protected override void Awake()
     {
         FeatureUnlockManager.loadFeatureLockStateDataEvent += OnLoadFeatureLockStateData;
 
@@ -25,7 +26,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
         FeatureUnlockManager.loadFeatureLockStateDataEvent -= OnLoadFeatureLockStateData;
     }
 
-    private void Init()
+    public override void Init(NodeData nodeData, NodeGroup nodeGroup)
     {
         serviceLocator.stats.LoadStats();
 
@@ -33,11 +34,11 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
         if (isUnlocked)
         {
-            serviceLocator.layerTwoNodeGroupUI.Unlock();
+            layerTwoNodeGroupServiceLocator.layerTwoNodeGroupUI.Unlock();
         }
         else
         {
-            serviceLocator.layerTwoNodeGroupUI.Lock();
+            layerTwoNodeGroupServiceLocator.layerTwoNodeGroupUI.Lock();
         }
 
         isInitDone = true;
@@ -63,7 +64,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
             {
                 layerTwoNodeGroupData.cycleComplete++;
 
-                serviceLocator.layerTwoNodeGroupUI.SetGlobalMultiplierText(GetGlobalMultiplier());
+                layerTwoNodeGroupServiceLocator.layerTwoNodeGroupUI.SetGlobalMultiplierText(GetGlobalMultiplier());
             }
 
             interval = (float)(1f / speed);
@@ -76,7 +77,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
             float progress = timer / interval;
 
-            serviceLocator.layerTwoNodeGroupUI.SetProgress(progress);
+            layerTwoNodeGroupServiceLocator.layerTwoNodeGroupUI.SetProgress(progress);
         }
     }
 

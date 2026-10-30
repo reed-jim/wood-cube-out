@@ -61,12 +61,12 @@ public class BaseCharacter : MonoBehaviour
     public static event Action<BaseCharacter> selectNodeEvent;
     public static event Action<BaseCharacter> selectNodeToApplyAugmentEvent;
 
-    void Awake()
+    protected virtual void Awake()
     {
         upgrades = new List<StatModifier>();
     }
 
-    public void Init(NodeData nodeData, NodeGroup nodeGroup)
+    public virtual void Init(NodeData nodeData, NodeGroup nodeGroup)
     {
         this.nodeData = nodeData;
 
