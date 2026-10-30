@@ -21,6 +21,7 @@ Shader "UI/Custom/AuroraVeilAAA"
         _HeatShimmer ("Ripple & Shimmer", Range(0.0, 2.0)) = 1.0
         _Sparks ("Stardust", Range(0.0, 1.0)) = 1.0
         _Bloom ("Fake Bloom Strength", Range(0.0, 2.0)) = 1.0
+        _Locked ("Locked (0 = unlocked, 1 = locked)", Range(0.0, 1.0)) = 0.0
         _Exposure ("Exposure", Range(0.25, 3.0)) = 1.0
         _Tonemap ("Filmic Tonemap Amount", Range(0.0, 1.0)) = 0.6
 
@@ -105,6 +106,7 @@ Shader "UI/Custom/AuroraVeilAAA"
                 float _HeatShimmer;
                 float _Sparks;
                 float _Bloom;
+                float _Locked;
                 float _Exposure;
                 float _Tonemap;
             CBUFFER_END
@@ -128,6 +130,24 @@ Shader "UI/Custom/AuroraVeilAAA"
             // Helpers (sin-free hashes: stable on mobile / low precision GPUs)
             // ------------------------------------------------------------
             float sq(float x) { return x * x; }
+            
+            float sdRoundBox(float2 p, float2 b, float rad)
+            {
+                float2 q = abs(p) - b + rad;
+                return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - rad;
+            }
+
+            float PadlockSDF(float2 q, out float key)     // q = p / coreR, result in q units
+            {
+                float body = sdRoundBox(q - float2(0.0, -0.18), float2(0.46, 0.36), 0.10);
+                float2 s = q - float2(0.0, 0.16);
+                float arc = abs(length(s) - 0.28) - 0.08;
+                float leg = max(abs(abs(s.x) - 0.28) - 0.08, max(-s.y - 0.2, s.y));
+                float shackle = (s.y > 0.0) ? arc : leg;
+                key = min(length(q - float2(0.0, -0.12)) - 0.09,
+                        sdRoundBox(q - float2(0.0, -0.30), float2(0.035, 0.12), 0.0));
+                return min(body, shackle);
+            }
 
             float hash11(float x)
             {
@@ -189,9 +209,11 @@ Shader "UI/Custom/AuroraVeilAAA"
             // ------------------------------------------------------------
             float4 AuroraGauge(float2 p, float px)
             {
+                float lk = saturate(_Locked);
+                float progress = saturate(_Power * 0.01) * (1.0 - lk);
+                float hs = saturate(_HighSpeedTransition) * (1.0 - lk);
+
                 float t = _Time.y;
-                float progress = saturate(_Power * 0.01);
-                float hs = saturate(_HighSpeedTransition);
                 float hasProg = step(0.001, progress);
                 float full = step(0.999, progress);
                 float speed = 1.0 + 1.5 * hs;
@@ -210,6 +232,11 @@ Shader "UI/Custom/AuroraVeilAAA"
                 cHigh = lerp(cHigh, float3(1.00, 0.30, 0.60), hs * 0.5);
                 float3 activeCol = lerp(baseCol, float3(1.0, 0.90, 0.70), hs * 0.5);
                 float3 hotCol = lerp(activeCol, float3(1.0, 0.97, 0.90), 0.6);
+                float3 greyTint = float3(0.55, 0.62, 0.78);
+                cLow      = lerp(cLow,      greyTint * 0.60, lk);
+                cHigh     = lerp(cHigh,     greyTint * 0.45, lk);
+                activeCol = lerp(activeCol, greyTint * 0.70, lk);
+                hotCol    = lerp(hotCol,    greyTint * 0.90, lk);
                 float3 trackBase = _Color.rgb;
                 float3 dimCol = lerp(trackBase, float3(0.5, 0.6, 0.8), 0.5) * 0.35;
 
@@ -247,7 +274,7 @@ Shader "UI/Custom/AuroraVeilAAA"
 
                 // ---------------- Aurora curtains (3 layers, radial streaks, wavy hem) ----------------
                 float bandIn = smoothstep(inner, inner + 0.06, r);
-                float amp = (0.015 + _SegmentGap * 1.5) * (0.6 + 0.4 * _HeatShimmer);
+                float amp = (0.015 + _SegmentGap * 1.5) * (0.6 + 0.4 * _HeatShimmer) * (1.0 - 0.7 * lk);
                 float F = max(_Layers, 3.0) * 0.28;
                 float3 aur = 0.0;
 
@@ -278,6 +305,8 @@ Shader "UI/Custom/AuroraVeilAAA"
                 }
                 aur *= bandIn * bright * (1.0 + 1.2 * focus);
                 float3 aurShown = aur * lerp(0.07, 1.0, reveal);     // faint ghost where not yet charged
+                float gray = dot(aurShown, float3(0.30, 0.59, 0.11));
+                aurShown = lerp(aurShown, gray.xxx * float3(0.7, 0.78, 0.9), lk * 0.85) * lerp(1.0, 0.6, lk);
                 float aurLum = max3(aurShown);
 
                 // haze spilling around the curtains (bounded by the plate / vignette)
@@ -327,7 +356,7 @@ Shader "UI/Custom/AuroraVeilAAA"
                 float2 pd = p + (float2(vnoise(p * 5.0 + float2(0.0, t * 2.5)), vnoise(p * 5.0 + float2(4.3, t * 2.2))) - 0.5)
                                 * 0.02 * _HeatShimmer;
                 float swirl = fbm4(rot2(pd / coreR, t * (0.8 + 2.5 * hs)) * 2.2 + t * 0.2);
-                float coreI = lerp(0.25 + 0.75 * progress, 1.2, hs);
+                float coreI = lerp(0.25 + 0.75 * progress, 1.2, hs) * (1.0 - 0.75 * lk);
                 float pulse = 1.0 + 0.22 * sin(t * lerp(2.5, 14.0, hs)) * _HeatShimmer;
                 float3 L = normalize(float3(-0.45, 0.55, 0.70));
                 float3 H = normalize(L + float3(0, 0, 1));
@@ -337,6 +366,16 @@ Shader "UI/Custom/AuroraVeilAAA"
                                 + hotCol * pow(cz, 6.0) * 1.0
                                 + cHigh * fres * 0.9) * coreI * pulse;
                 coreRGB = (coreRGB + glint) * coreMask;
+
+                float keyD;
+                float2 qL = p / coreR;
+                float lockD = PadlockSDF(qL, keyD);
+                float lockMask = saturate(0.5 - lockD * coreR / px) * lk;
+                float keyMask  = saturate(0.5 - keyD  * coreR / px) * lockMask;
+                float3 lockRGB = float3(0.55, 0.62, 0.78) * (0.55 + 0.45 * saturate(qL.y * 0.5 + 0.5));
+                coreRGB = lerp(coreRGB, lockRGB, lockMask * coreMask);
+                coreRGB = lerp(coreRGB, float3(0.02, 0.03, 0.05), keyMask * coreMask);
+
                 float3 coreGlow = cLow * exp(-max(r - coreR, 0.0) * 22.0) * coreI * 0.45 * (1.0 - coreMask) * _Bloom;
 
                 float collar = saturate(0.5 - (abs(r - (inner - 0.012)) - 0.003) / px);
@@ -394,7 +433,7 @@ Shader "UI/Custom/AuroraVeilAAA"
             {
                 float2 p = (input.uv - 0.5) * 2.0;
                 float px = max(fwidth(p.x), 1e-4);   // pixel size in gauge space (assumes a square Image)
-
+                
                 float4 col = AuroraGauge(p, px);
 
                 // Hot highlights bleed toward white
