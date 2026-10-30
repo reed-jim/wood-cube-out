@@ -27,7 +27,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
     private void Init()
     {
-        serviceLocator.layerTwoStats.LoadStats();
+        serviceLocator.stats.LoadStats();
 
         isUnlocked = FeatureUnlockManager.Ins.IsFeatureUnlocked(FeatureType.LayerTwo, out spaceObjectTypeToUnlock);
 
@@ -52,7 +52,7 @@ public class LayerTwoNodeGroup : MonoBehaviour
 
         if (timer > interval)
         {
-            LayerTwoNodeGroupStats layerTwoStats = serviceLocator.layerTwoStats;
+            CharacterStats layerTwoStats = serviceLocator.stats;
 
             double speed = layerTwoStats.GetStat(StatType.AttackSpeed).Value * GameConstants.nodeSpeedMultiplier;
             double criticalChance = layerTwoStats.GetStat(StatType.CritChance).Value;

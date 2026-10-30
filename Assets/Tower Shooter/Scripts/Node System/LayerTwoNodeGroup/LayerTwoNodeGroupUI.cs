@@ -11,7 +11,7 @@ public class LayerTwoNodeGroupUI : MonoBehaviour
     [SerializeField] private Image fill;
     [SerializeField] private TMP_Text globalMultiplierText;
     [SerializeField] private Button selectButton;
-    
+
     [SerializeField] private CanvasGroup lockCanvasGroup;
 
     [SerializeField] private NodeEffectController nodeEffectController;
@@ -56,11 +56,11 @@ public class LayerTwoNodeGroupUI : MonoBehaviour
 
     public void Lock()
     {
-        lockCanvasGroup.gameObject.SetActive(true);
+        nodeEffectController.SetLockState(true);
     }
 
     public void Unlock()
     {
-        lockCanvasGroup.gameObject.SetActive(false);
+        nodeEffectController.SetLockState(false);
     }
 }

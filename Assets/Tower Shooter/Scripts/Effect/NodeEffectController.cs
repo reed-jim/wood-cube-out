@@ -146,6 +146,11 @@ public class NodeEffectController : MonoBehaviour
     // PUBLIC CONTROL FUNCTIONS
     // ==========================================
 
+    public void SetLockState(bool isLocked)
+    {
+        materialInstance.SetFloat("_Locked", isLocked ? 1 : 0);
+    }
+
     public void SetPower(float power)
     {
         materialInstance.SetFloat("_Power", power);

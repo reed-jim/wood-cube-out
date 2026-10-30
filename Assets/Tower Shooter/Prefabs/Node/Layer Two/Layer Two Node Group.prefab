@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 958114430506564650}
   - component: {fileID: 3917448601397143195}
   - component: {fileID: 758511836580028073}
-  - component: {fileID: 8924648287447014859}
+  - component: {fileID: 6204710553972813327}
   - component: {fileID: 4863338350116508532}
+  - component: {fileID: 1124340174809566480}
   m_Layer: 5
   m_Name: Layer Two Node Group
   m_TagString: Untagged
@@ -74,9 +75,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53b5efbc403a36c47a9a07431ee6d850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LayerTwoNodeGroupServiceLocator
+  character: {fileID: 1124340174809566480}
+  stats: {fileID: 6204710553972813327}
+  nodeUI: {fileID: 0}
+  healthComponent: {fileID: 0}
+  damageOverTimeReceiver: {fileID: 0}
+  lazyHealthBar: {fileID: 0}
+  stackingUI: {fileID: 0}
+  recycleModule: {fileID: 0}
+  nodeEffectController: {fileID: 0}
+  augmentEffectController: {fileID: 0}
+  statUpgradeEffectController: {fileID: 0}
+  powerIncreaseOnSpeedAugmentEffectRuntime: {fileID: 0}
+  timeCapsuleAugmentEffectRuntime: {fileID: 0}
+  overheatAugmentEffectRuntime: {fileID: 0}
+  chainCriticalAugmentEffectRuntime: {fileID: 0}
+  predictionAugmentEffectRuntime: {fileID: 0}
+  alternativeAugmentEffectRuntime: {fileID: 0}
+  critBoostSpeedAugmentEffectRuntime: {fileID: 0}
+  sumAugmentEffectRuntime: {fileID: 0}
+  debuffAdjacentBuffSelfAugmentEffectRuntime: {fileID: 0}
+  highRiskSurgeAugmentEffectRuntime: {fileID: 0}
+  shipPowerAugmentEffectRuntime: {fileID: 0}
   layerTwoNodeGroup: {fileID: 958114430506564650}
   layerTwoNodeGroupUI: {fileID: 758511836580028073}
-  layerTwoStats: {fileID: 8924648287447014859}
 --- !u!114 &758511836580028073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,7 +117,7 @@ MonoBehaviour:
   selectButton: {fileID: 7719068825914623551}
   lockCanvasGroup: {fileID: 8439450265647378505}
   nodeEffectController: {fileID: 2719502510825662819}
---- !u!114 &8924648287447014859
+--- !u!114 &6204710553972813327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,13 +126,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 818678176106268596}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e0fd6b8f4b4c0b409086dd5b4c2de0a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3234393c056fb8546a0088978ee00dc1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LayerTwoNodeGroupStats
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   serviceLocator: {fileID: 3917448601397143195}
   initialStats:
   - statType: 3
-    baseValue: 10
+    baseValue: 2
     modifiers: []
   - statType: 8
     baseValue: 0
@@ -136,6 +158,35 @@ MonoBehaviour:
   limitReachedColor: {r: 1, g: 0.4, b: 0.4, a: 1}
   themeableUI: {fileID: 717177270516533536}
   backgroundImage: {fileID: 1056231609968147897}
+--- !u!114 &1124340174809566480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818678176106268596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cad96742537050d46811aaad2ddf65fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BaseCharacter
+  id: -1
+  serviceLocator: {fileID: 0}
+  stats: {fileID: 0}
+  speedToSpaceShip: 0
+  upgrades: []
+  ownedAugments: []
+  isPaused: 0
+  isIdle: 0
+  currentCycle: 0
+  lastPowerGenerated: 0
+  isJustCrit: 0
+  isGuaranteedCrit: 0
+  nodeGroup: {fileID: 0}
+  nodeEffectController: {fileID: 0}
+  energyPoints: []
+  highSpeedThreshold: 20
+  damageTextThrottleInterval: 0.15
 --- !u!1 &843035310296541260
 GameObject:
   m_ObjectHideFlags: 0
